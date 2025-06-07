@@ -5,8 +5,6 @@
 namespace ktsu.Semantics;
 
 using System;
-using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 /// <summary>
@@ -177,31 +175,12 @@ internal static class AttributeValidation
 	/// <param name="type">The type of the SemanticString, which contains the validation attributes</param>
 	/// <returns>True if the string passes all validation according to the rules, false otherwise</returns>
 	/// <remarks>
-	/// If no validation attributes are found, the string is considered valid.
-	/// If a ValidateAny attribute is present, the string passes if any validation attribute passes.
-	/// Otherwise (or if ValidateAll is present), the string passes only if all validation attributes pass.
+	/// Uses the Strategy pattern to determine the appropriate validation approach based on type attributes.
+	/// This eliminates code duplication and improves maintainability.
 	/// </remarks>
 	public static bool ValidateAttributes(ISemanticString semanticString, Type type)
 	{
-		// Get all validation attributes defined on the type
-		List<SemanticStringValidationAttribute> validationAttributes = [.. type.GetCustomAttributes<SemanticStringValidationAttribute>(true)];
-
-		// If no validation attributes, the string is valid
-		if (validationAttributes.Count == 0)
-		{
-			return true;
-		}
-
-		// Check if ValidateAny is specified
-		bool validateAny = type.GetCustomAttributes<ValidateAnyAttribute>(true).Any();
-
-		// If ValidateAny is specified, any validation attribute can pass
-		if (validateAny)
-		{
-			return validationAttributes.Any(attr => attr.Validate(semanticString));
-		}
-
-		// Default behavior (or if ValidateAll is specified): all validation attributes must pass
-		return validationAttributes.All(attr => attr.Validate(semanticString));
+		IValidationStrategy strategy = ValidationStrategyFactory.CreateStrategy(type);
+		return strategy.Validate(semanticString, type);
 	}
 }

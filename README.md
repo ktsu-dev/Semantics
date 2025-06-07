@@ -6,6 +6,8 @@
 
 A powerful .NET library for creating type-safe, validated string types using semantic meaning. Transform primitive string obsession into strongly-typed, self-validating domain models.
 
+Built with **SOLID principles** and **DRY (Don't Repeat Yourself)** practices at its core, the library provides a clean, extensible architecture that promotes maintainable and testable code.
+
 ## Overview
 
 The Semantics library enables you to create strongly-typed string wrappers that carry semantic meaning and built-in validation. Instead of passing raw strings around your application, you can create specific types like `EmailAddress`, `FilePath`, or `UserId` that are impossible to misuse and automatically validate their content.
@@ -13,10 +15,13 @@ The Semantics library enables you to create strongly-typed string wrappers that 
 ## Key Features
 
 -   **Type Safety**: Eliminate primitive obsession with strongly-typed string wrappers
+-   **SOLID Architecture**: Built following Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion principles
+-   **Extensible Validation**: Pluggable validation system with custom strategies and rules
+-   **Factory Pattern**: Clean object creation with `ISemanticStringFactory<T>`
+-   **Contract Programming**: Behavioral contracts ensuring Liskov Substitution Principle compliance
 -   **Automatic Validation**: Built-in attribute-based validation system
 -   **Path Handling**: Specialized semantic path types with file system operations
 -   **Quantity Types**: Support for numeric values with units and validation
--   **Extensible**: Easy to create custom semantic string types
 -   **Performance**: Zero-allocation conversions and optimized operations
 -   **Comprehensive**: Full XML documentation and IntelliSense support
 
@@ -37,9 +42,12 @@ using ktsu.Semantics;
 [IsEmail]
 public sealed record EmailAddress : SemanticString<EmailAddress> { }
 
-// Create and use semantic strings
-var email = EmailAddress.FromString<EmailAddress>("user@example.com");
-Console.WriteLine(email); // user@example.com
+// Create using factory pattern (recommended)
+var factory = new SemanticStringFactory<EmailAddress>();
+var email = factory.Create("user@example.com");
+
+// Or use the traditional approach
+var email2 = EmailAddress.FromString<EmailAddress>("user@example.com");
 
 // Type safety prevents mixing incompatible string types
 public void SendEmail(EmailAddress to, string subject) { /* ... */ }
@@ -53,135 +61,150 @@ public void SendEmail(EmailAddress to, string subject) { /* ... */ }
 ```csharp
 using ktsu.Semantics;
 
-// Use built-in path types
-var absolutePath = AbsolutePath.FromString<AbsolutePath>(@"C:\Projects\MyApp");
-var relativePath = RelativePath.FromString<RelativePath>(@"src\Program.cs");
-var filePath = FilePath.FromString<FilePath>(@"C:\temp\data.json");
+// Use built-in path types with factory pattern
+var pathFactory = new SemanticStringFactory<FilePath>();
+var filePath = pathFactory.Create(@"C:\temp\data.json");
 
 // Access path properties
 Console.WriteLine(filePath.FileName);        // data.json
 Console.WriteLine(filePath.FileExtension);   // .json
 Console.WriteLine(filePath.DirectoryPath);   // C:\temp
+
+// Traditional approach still works
+var absolutePath = AbsolutePath.FromString<AbsolutePath>(@"C:\Projects\MyApp");
 Console.WriteLine(absolutePath.Exists);      // True/False
 Console.WriteLine(absolutePath.IsDirectory); // True/False
 ```
 
-### Custom Validation
+### Multiple Validations
 
 ```csharp
-// Create custom validation attributes
-public class IsProductCodeAttribute : SemanticStringValidationAttribute
+// Combine multiple validation attributes
+[IsNotEmpty, IsEmail, HasLength(5, 100)]
+public sealed record ProfessionalEmail : SemanticString<ProfessionalEmail> { }
+
+// Use validation strategies for complex scenarios
+[ValidateAny]
+[IsEmail, IsUrl]
+public sealed record ContactInfo : SemanticString<ContactInfo> { }
+
+var factory = new SemanticStringFactory<ContactInfo>();
+var email = factory.Create("user@example.com");     // ✅ Valid (email)
+var url = factory.Create("https://example.com");    // ✅ Valid (URL)
+```
+
+## Documentation
+
+Comprehensive documentation is available in the [`docs/`](docs/) directory:
+
+-   **[Architecture Guide](docs/architecture.md)** - Detailed overview of SOLID principles, design patterns, and system architecture
+-   **[Advanced Usage Guide](docs/advanced-usage.md)** - Advanced features including custom validation strategies, dependency injection, and best practices
+-   **[Validation Reference](docs/validation-reference.md)** - Complete reference of all built-in validation attributes and strategies
+
+## Examples
+
+Extensive examples demonstrating all library features are available in the [`examples/`](examples/) directory. Start with the [Examples Index](examples/examples-index.md) for organized learning paths:
+
+-   **[Getting Started](examples/getting-started.md)** - Basic usage patterns and your first semantic strings
+-   **[Validation Attributes](examples/validation-attributes.md)** - Built-in validation and custom rules
+-   **[Path Handling](examples/path-handling.md)** - File system paths and validation
+-   **[Factory Pattern](examples/factory-pattern.md)** - Object creation and dependency injection
+-   **[Real-World Scenarios](examples/real-world-scenarios.md)** - Complete domain examples for e-commerce, finance, and more
+
+Each example includes complete, runnable code that you can copy and adapt to your specific needs.
+
+## Common Use Cases
+
+### Domain-Specific Types
+
+```csharp
+// Create strongly-typed identifiers
+[HasLength(8, 12), IsNotEmpty]
+public sealed record UserId : SemanticString<UserId> { }
+
+[HasLength(3, 10), IsNotEmpty]
+public sealed record ProductSku : SemanticString<ProductSku> { }
+
+// Use them in your domain models
+public class Order
 {
-    public override bool Validate(ISemanticString semanticString)
+    public UserId CustomerId { get; set; }
+    public ProductSku[] Items { get; set; }
+}
+```
+
+### Input Validation
+
+```csharp
+public class UserController : ControllerBase
+{
+    private readonly ISemanticStringFactory<EmailAddress> _emailFactory;
+
+    public UserController(ISemanticStringFactory<EmailAddress> emailFactory)
     {
-        string value = semanticString.ToString();
-        // Product codes must be 6 characters, start with letter, followed by 5 digits
-        return Regex.IsMatch(value, @"^[A-Z][0-9]{5}$");
+        _emailFactory = emailFactory;
+    }
+
+    [HttpPost]
+    public IActionResult CreateUser([FromBody] CreateUserRequest request)
+    {
+        if (!_emailFactory.TryCreate(request.Email, out var emailAddress))
+        {
+            return BadRequest("Invalid email format");
+        }
+
+        // emailAddress is guaranteed to be valid
+        var user = new User(emailAddress);
+        return Ok(user);
     }
 }
+```
 
-// Apply custom validation
-[IsProductCode]
-public sealed record ProductCode : SemanticString<ProductCode> { }
+### File System Operations
 
-// Usage with automatic validation
-var validCode = ProductCode.FromString<ProductCode>("A12345");   // ✅ Valid
-var invalidCode = ProductCode.FromString<ProductCode>("123ABC"); // ❌ Throws FormatException
+```csharp
+// Work with type-safe paths
+var sourceFactory = new SemanticStringFactory<FilePath>();
+var destinationFactory = new SemanticStringFactory<DirectoryPath>();
+
+var sourceFile = sourceFactory.Create(@"C:\temp\data.csv");
+var destinationDir = destinationFactory.Create(@"C:\backup\");
+
+if (sourceFile.Exists)
+{
+    // Type-safe file operations
+    File.Copy(sourceFile, Path.Combine(destinationDir, sourceFile.FileName));
+}
 ```
 
 ## Built-in Validation Attributes
 
-The library provides comprehensive validation attributes for common scenarios:
+The library includes comprehensive validation for common scenarios:
 
-### String Validation
+-   **String**: `IsEmail`, `IsUrl`, `IsNotEmpty`, `HasLength`
+-   **Path**: `IsPath`, `IsAbsolutePath`, `IsRelativePath`, `IsFilePath`, `IsDirectoryPath`, `DoesExist`
+-   **Numeric**: `IsPositive`, `IsNegative`, `IsInRange`
 
--   `IsEmailAttribute` - Email address format validation
--   `IsUrlAttribute` - URL format validation
--   `IsNotEmptyAttribute` - Prevents empty/null strings
--   `HasLengthAttribute` - String length constraints
+See the [Validation Reference](docs/validation-reference.md) for complete details.
 
-### Path Validation
-
--   `IsPathAttribute` - Valid path characters and length
--   `IsAbsolutePathAttribute` - Fully qualified paths
--   `IsRelativePathAttribute` - Relative paths
--   `IsFilePathAttribute` - File-specific paths
--   `IsDirectoryPathAttribute` - Directory-specific paths
--   `IsFileNameAttribute` - Valid filename validation
--   `IsExtensionAttribute` - File extension validation
--   `DoesExistAttribute` - File system existence checking
-
-### Quantity Validation
-
--   `IsPositiveAttribute` - Positive numeric values
--   `IsNegativeAttribute` - Negative numeric values
--   `IsInRangeAttribute` - Value range constraints
-
-## Built-in Types
-
-### Path Types
-
--   `Path` - Any valid path
--   `AbsolutePath` - Fully qualified paths
--   `RelativePath` - Relative paths
--   `FilePath` - File paths with file operations
--   `DirectoryPath` - Directory paths
--   `FileName` - Just the filename component
--   `FileExtension` - File extensions (with period)
-
-### String Types
-
--   Base `SemanticString<T>` for custom types
--   Extensible validation system
--   Type-safe conversions and operations
-
-## Advanced Features
-
-### Type Conversions
+## Dependency Injection
 
 ```csharp
-// Safe conversions between compatible types
-var genericPath = Path.FromString<Path>(@"C:\temp\file.txt");
-var specificPath = genericPath.As<FilePath>(); // Convert to more specific type
+// Register in your DI container
+services.AddTransient<ISemanticStringFactory<EmailAddress>, SemanticStringFactory<EmailAddress>>();
+services.AddTransient<ISemanticStringFactory<UserId>, SemanticStringFactory<UserId>>();
 
-// Implicit conversions to primitive types
-string pathString = specificPath;              // Implicit to string
-char[] pathChars = specificPath;               // Implicit to char[]
-ReadOnlySpan<char> pathSpan = specificPath;    // Implicit to span
+// Inject into services
+public class UserService
+{
+    private readonly ISemanticStringFactory<EmailAddress> _emailFactory;
+
+    public UserService(ISemanticStringFactory<EmailAddress> emailFactory)
+    {
+        _emailFactory = emailFactory;
+    }
+}
 ```
-
-### Validation Modes
-
-```csharp
-// Require ALL validation attributes to pass (default)
-[ValidateAll]
-[IsPath, IsAbsolutePath, DoesExist]
-public sealed record ExistingAbsolutePath : SemanticPath<ExistingAbsolutePath> { }
-
-// Require ANY validation attribute to pass
-[ValidateAny]
-[IsEmail, IsUrl]
-public sealed record ContactInfo : SemanticString<ContactInfo> { }
-```
-
-### Path Operations
-
-```csharp
-var from = AbsolutePath.FromString<AbsolutePath>(@"C:\Projects\App");
-var to = AbsolutePath.FromString<AbsolutePath>(@"C:\Projects\Lib\Utils.cs");
-
-// Create relative path between two absolute paths
-var relativePath = RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(from, to);
-Console.WriteLine(relativePath); // ..\Lib\Utils.cs
-```
-
-## Best Practices
-
-1. **Create Domain-Specific Types**: Use semantic strings for domain concepts like `UserId`, `OrderNumber`, `ProductSku`
-2. **Validate at Boundaries**: Create semantic strings at system boundaries (APIs, user input, file I/O)
-3. **Use Type Safety**: Let the compiler prevent string misuse with strong typing
-4. **Combine Validations**: Use multiple validation attributes for comprehensive checking
-5. **Document Intent**: Semantic types make code self-documenting
 
 ## Contributing
 

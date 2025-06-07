@@ -50,6 +50,17 @@ public interface ISemanticString : IComparable, IComparable<ISemanticString>, IE
 	public int Length { get; }
 
 	/// <summary>
+	/// Returns a value indicating whether a specified substring occurs within this string.
+	/// </summary>
+	/// <param name="value">The string to seek.</param>
+	/// <returns>
+	/// <see langword="true"/> if the <paramref name="value"/> parameter occurs within this string,
+	/// or if <paramref name="value"/> is the empty string (""); otherwise, <see langword="false"/>.
+	/// </returns>
+	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+	public bool Contains(string value);
+
+	/// <summary>
 	/// Compares this instance with a specified object and returns an integer that indicates
 	/// whether this instance precedes, follows, or appears in the same position in the sort
 	/// order as the specified object.
@@ -60,17 +71,6 @@ public interface ISemanticString : IComparable, IComparable<ISemanticString>, IE
 	/// appears in the same position in the sort order as the <paramref name="value"/> parameter.
 	/// </returns>
 	public new int CompareTo(object value);
-
-	/// <summary>
-	/// Returns a value indicating whether a specified substring occurs within this string.
-	/// </summary>
-	/// <param name="value">The string to seek.</param>
-	/// <returns>
-	/// <see langword="true"/> if the <paramref name="value"/> parameter occurs within this string,
-	/// or if <paramref name="value"/> is the empty string (""); otherwise, <see langword="false"/>.
-	/// </returns>
-	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	public bool Contains(string value);
 
 	/// <summary>
 	/// Returns a value indicating whether a specified substring occurs within this string,

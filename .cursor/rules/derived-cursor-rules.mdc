@@ -15,6 +15,10 @@ This file defines all project rules, coding standards, workflow guidelines, refe
 
 (Information about project documentation, context, and version changes are recorded here.)
 
+*   Create a `docs` directory for technical documentation.
+*   Move technical information from the `README` file into appropriate documents within the `docs` directory.
+*   Move the content from the architecture document into an appropriate document within the `docs` directory.
+
 When adding XML documentation comments:
 
 *   Ensure comprehensive `<summary>` tags are included for all public types and members.
@@ -33,6 +37,7 @@ When adding XML documentation comments:
 
 *   When using classes like `Path`, `File`, and `Directory` from `System.IO`, fully qualify the class name (e.g., `System.IO.Path`) if a `using System.IO;` statement is not present in the file.
 *   When referencing methods or classes in XML documentation comments, use fully qualified names (e.g., `<see cref="System.IO.Path.IsPathFullyQualified(string)"/>`) to avoid ambiguous references.
+*   Apply SOLID and DRY principles to improve code design.
 
 ## DEBUGGING
 
