@@ -1,0 +1,1 @@
+semantic-strings;type-safety;validation;string-wrapper;domain-modeling;semantic-types;path-handling;strongly-typed;primitive-obsession;value-objects;csharp;dotnet;validation-attributes;filesystem;type-system

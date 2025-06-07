@@ -1,0 +1,521 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
+namespace ktsu.Semantics;
+
+using System.Collections;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Text;
+
+/// <summary>
+/// Base class for all semantic string types using CRTP (Curiously Recurring Template Pattern)
+/// </summary>
+[DebuggerDisplay(value: $"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
+[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Named alternatives provided via static methods")]
+public abstract record SemanticString<TDerived> : ISemanticString
+	where TDerived : SemanticString<TDerived>
+{
+	/// <summary>
+	/// Converts this semantic string to another semantic string type while preserving the underlying string value.
+	/// </summary>
+	/// <typeparam name="TDest">The target semantic string type to convert to.</typeparam>
+	/// <returns>A new instance of the target semantic string type containing the same string value.</returns>
+	/// <exception cref="FormatException">
+	/// The current string value does not meet the validation criteria defined by the target semantic string type.
+	/// </exception>
+	/// <remarks>
+	/// This method enables type conversions between compatible semantic string types:
+	/// <code>
+	/// var filePath = absolutePath.As&lt;FilePath&gt;();
+	/// var url = uriString.As&lt;UrlString&gt;();
+	/// </code>
+	/// The conversion includes validation according to the target type's attributes and requirements.
+	/// </remarks>
+	public TDest As<TDest>()
+		where TDest : SemanticString<TDest>
+		=> FromString<TDest>(WeakString);
+
+	/// <summary>
+	/// Provides a hook for derived types to normalize or canonicalize the input string before storage.
+	/// </summary>
+	/// <param name="input">The input string to be canonicalized.</param>
+	/// <returns>The canonicalized version of the input string.</returns>
+	/// <remarks>
+	/// Override this method in derived types to implement custom normalization logic such as:
+	/// <list type="bullet">
+	/// <item><description>Converting to a standard case (upper/lower)</description></item>
+	/// <item><description>Normalizing path separators</description></item>
+	/// <item><description>Removing or standardizing whitespace</description></item>
+	/// <item><description>Applying cultural-specific transformations</description></item>
+	/// </list>
+	/// The canonicalization occurs before validation, so the normalized value must still pass all validation rules.
+	/// The base implementation returns the input unchanged.
+	/// </remarks>
+	protected virtual string MakeCanonical(string input) => input;
+
+	/// <inheritdoc/>
+	public char[] ToCharArray() => ToCharArray(semanticString: this);
+	/// <inheritdoc/>
+	public char[] ToCharArray(int startIndex, int length) => WeakString.ToCharArray(startIndex: startIndex, length: length);
+
+	// ISemanticString implementation
+	/// <summary>
+	/// Gets or initializes the underlying string value for interoperability with non-semantic string operations.
+	/// </summary>
+	/// <value>
+	/// The raw string value contained within this semantic string. Defaults to <see cref="string.Empty"/>.
+	/// </value>
+	/// <remarks>
+	/// Use this property when you need to interoperate with APIs that expect regular strings.
+	/// The name "WeakString" emphasizes that accessing this property breaks the type safety guarantees
+	/// that semantic strings provide. Consider using implicit conversion to string instead when possible.
+	/// This property is init-only to support record initialization while maintaining immutability.
+	/// </remarks>
+	public string WeakString { get; init; } = string.Empty;
+
+	/// <inheritdoc/>
+	public int Length => WeakString.Length;
+
+	/// <inheritdoc/>
+	public char this[int index] => WeakString[index: index];
+
+	/// <inheritdoc/>
+	public int CompareTo(object? value) => WeakString.CompareTo(value: value);
+	/// <inheritdoc/>
+	public int CompareTo(ISemanticString? other) => WeakString.CompareTo(strB: other?.WeakString);
+
+	/// <inheritdoc/>
+	public bool Contains(string value) => WeakString.Contains(value: value);
+	/// <inheritdoc/>
+	public bool Contains(string value, StringComparison comparisonType) => WeakString.Contains(value: value, comparisonType: comparisonType);
+
+	/// <inheritdoc/>
+	public void CopyTo(int sourceIndex, char[] destination, int destinationIndex, int count) => WeakString.CopyTo(sourceIndex: sourceIndex, destination: destination, destinationIndex: destinationIndex, count: count);
+
+	/// <inheritdoc/>
+	public bool EndsWith(string value) => WeakString.EndsWith(value: value);
+	/// <inheritdoc/>
+	public bool EndsWith(string value, bool ignoreCase, CultureInfo culture) => WeakString.EndsWith(value: value, ignoreCase: ignoreCase, culture: culture);
+	/// <inheritdoc/>
+	public bool EndsWith(string value, StringComparison comparisonType) => WeakString.EndsWith(value: value, comparisonType: comparisonType);
+
+	/// <inheritdoc/>
+	public bool Equals(string value) => WeakString.Equals(value: value);
+	/// <inheritdoc/>
+	public bool Equals(string value, StringComparison comparisonType) => WeakString.Equals(value: value, comparisonType: comparisonType);
+
+	/// <inheritdoc/>
+	public CharEnumerator GetEnumerator() => WeakString.GetEnumerator();
+
+	/// <inheritdoc/>
+	public TypeCode GetTypeCode() => WeakString.GetTypeCode();
+
+	/// <inheritdoc/>
+	public int IndexOf(char value) => WeakString.IndexOf(value: value);
+	/// <inheritdoc/>
+	public int IndexOf(char value, int startIndex) => WeakString.IndexOf(value: value, startIndex: startIndex);
+	/// <inheritdoc/>
+	public int IndexOf(char value, int startIndex, int count) => WeakString.IndexOf(value: value, startIndex: startIndex, count: count);
+	/// <inheritdoc/>
+	public int IndexOf(string value) => WeakString.IndexOf(value: value);
+	/// <inheritdoc/>
+	public int IndexOf(string value, int startIndex) => WeakString.IndexOf(value: value, startIndex: startIndex);
+	/// <inheritdoc/>
+	public int IndexOf(string value, int startIndex, int count) => WeakString.IndexOf(value: value, startIndex: startIndex, count: count);
+	/// <inheritdoc/>
+	public int IndexOf(string value, int startIndex, int count, StringComparison comparisonType) => WeakString.IndexOf(value: value, startIndex: startIndex, count: count, comparisonType: comparisonType);
+	/// <inheritdoc/>
+	public int IndexOf(string value, int startIndex, StringComparison comparisonType) => WeakString.IndexOf(value: value, startIndex: startIndex, comparisonType: comparisonType);
+	/// <inheritdoc/>
+	public int IndexOf(string value, StringComparison comparisonType) => WeakString.IndexOf(value: value, comparisonType: comparisonType);
+
+	/// <inheritdoc/>
+	public int IndexOfAny(char[] anyOf) => WeakString.IndexOfAny(anyOf: anyOf);
+	/// <inheritdoc/>
+	public int IndexOfAny(char[] anyOf, int startIndex) => WeakString.IndexOfAny(anyOf: anyOf, startIndex: startIndex);
+	/// <inheritdoc/>
+	public int IndexOfAny(char[] anyOf, int startIndex, int count) => WeakString.IndexOfAny(anyOf: anyOf, startIndex: startIndex, count: count);
+
+	/// <inheritdoc/>
+	public string Insert(int startIndex, string value) => WeakString.Insert(startIndex: startIndex, value: value);
+
+	/// <inheritdoc/>
+	public bool IsNormalized() => WeakString.IsNormalized();
+	/// <inheritdoc/>
+	public bool IsNormalized(NormalizationForm normalizationForm) => WeakString.IsNormalized(normalizationForm: normalizationForm);
+
+	/// <inheritdoc/>
+	public int LastIndexOf(char value) => WeakString.LastIndexOf(value: value);
+	/// <inheritdoc/>
+	public int LastIndexOf(char value, int startIndex) => WeakString.LastIndexOf(value: value, startIndex: startIndex);
+	/// <inheritdoc/>
+	public int LastIndexOf(char value, int startIndex, int count) => WeakString.LastIndexOf(value: value, startIndex: startIndex, count: count);
+	/// <inheritdoc/>
+	public int LastIndexOf(string value) => WeakString.LastIndexOf(value: value);
+	/// <inheritdoc/>
+	public int LastIndexOf(string value, int startIndex) => WeakString.LastIndexOf(value: value, startIndex: startIndex);
+	/// <inheritdoc/>
+	public int LastIndexOf(string value, int startIndex, int count) => WeakString.LastIndexOf(value: value, startIndex: startIndex, count: count);
+	/// <inheritdoc/>
+	public int LastIndexOf(string value, int startIndex, int count, StringComparison comparisonType) => WeakString.LastIndexOf(value: value, startIndex: startIndex, count: count, comparisonType: comparisonType);
+	/// <inheritdoc/>
+	public int LastIndexOf(string value, int startIndex, StringComparison comparisonType) => WeakString.LastIndexOf(value: value, startIndex: startIndex, comparisonType: comparisonType);
+	/// <inheritdoc/>
+	public int LastIndexOf(string value, StringComparison comparisonType) => WeakString.LastIndexOf(value: value, comparisonType: comparisonType);
+
+	/// <inheritdoc/>
+	public int LastIndexOfAny(char[] anyOf) => WeakString.LastIndexOfAny(anyOf: anyOf);
+	/// <inheritdoc/>
+	public int LastIndexOfAny(char[] anyOf, int startIndex) => WeakString.LastIndexOfAny(anyOf: anyOf, startIndex: startIndex);
+	/// <inheritdoc/>
+	public int LastIndexOfAny(char[] anyOf, int startIndex, int count) => WeakString.LastIndexOfAny(anyOf: anyOf, startIndex: startIndex, count: count);
+
+	/// <inheritdoc/>
+	public string Normalize() => WeakString.Normalize();
+	/// <inheritdoc/>
+	public string Normalize(NormalizationForm normalizationForm) => WeakString.Normalize(normalizationForm: normalizationForm);
+
+	/// <inheritdoc/>
+	public string PadLeft(int totalWidth) => WeakString.PadLeft(totalWidth: totalWidth);
+	/// <inheritdoc/>
+	public string PadLeft(int totalWidth, char paddingChar) => WeakString.PadLeft(totalWidth: totalWidth, paddingChar: paddingChar);
+
+	/// <inheritdoc/>
+	public string PadRight(int totalWidth) => WeakString.PadRight(totalWidth: totalWidth);
+	/// <inheritdoc/>
+	public string PadRight(int totalWidth, char paddingChar) => WeakString.PadRight(totalWidth: totalWidth, paddingChar: paddingChar);
+
+	/// <inheritdoc/>
+	[SuppressMessage("Style", "IDE0057:Use range operator", Justification = "I'd rather wrap the class 1:1 than reimplement it")]
+	public string Remove(int startIndex) => WeakString.Remove(startIndex: startIndex);
+	/// <inheritdoc/>
+	public string Remove(int startIndex, int count) => WeakString.Remove(startIndex: startIndex, count: count);
+
+	/// <inheritdoc/>
+	public string Replace(char oldChar, char newChar) => WeakString.Replace(oldChar: oldChar, newChar: newChar);
+	/// <inheritdoc/>
+	public string Replace(string oldValue, string newValue) => WeakString.Replace(oldValue: oldValue, newValue: newValue);
+
+	/// <inheritdoc/>
+	public string[] Split(char[] separator, int count) => WeakString.Split(separator: separator, count: count);
+	/// <inheritdoc/>
+	public string[] Split(char[] separator, int count, StringSplitOptions options) => WeakString.Split(separator: separator, count: count, options: options);
+	/// <inheritdoc/>
+	public string[] Split(char[] separator, StringSplitOptions options) => WeakString.Split(separator: separator, options: options);
+	/// <inheritdoc/>
+	public string[] Split(params char[] separator) => WeakString.Split(separator: separator);
+	/// <inheritdoc/>
+	public string[] Split(string[] separator, int count, StringSplitOptions options) => WeakString.Split(separator: separator, count: count, options: options);
+	/// <inheritdoc/>
+	public string[] Split(string[] separator, StringSplitOptions options) => WeakString.Split(separator: separator, options: options);
+
+	/// <inheritdoc/>
+	public bool StartsWith(string value) => WeakString.StartsWith(value: value);
+	/// <inheritdoc/>
+	public bool StartsWith(string value, bool ignoreCase, CultureInfo culture) => WeakString.StartsWith(value: value, ignoreCase: ignoreCase, culture: culture);
+	/// <inheritdoc/>
+	public bool StartsWith(string value, StringComparison comparisonType) => WeakString.StartsWith(value: value, comparisonType: comparisonType);
+
+	/// <inheritdoc/>
+	public string Substring(int startIndex) => WeakString[startIndex..];
+	/// <inheritdoc/>
+	public string Substring(int startIndex, int length) => WeakString.Substring(startIndex: startIndex, length: length);
+
+	/// <inheritdoc/>
+	public string ToLower() => WeakString.ToLower();
+	/// <inheritdoc/>
+	public string ToLower(CultureInfo culture) => WeakString.ToLower(culture: culture);
+
+	/// <inheritdoc/>
+	public string ToLowerInvariant() => WeakString.ToLowerInvariant();
+
+	/// <inheritdoc/>
+	public sealed override string ToString() => WeakString;
+	/// <inheritdoc/>
+	public string ToString(IFormatProvider provider) => WeakString.ToString(provider: provider);
+
+	/// <inheritdoc/>
+	public string ToUpper() => WeakString.ToUpper();
+	/// <inheritdoc/>
+	public string ToUpper(CultureInfo culture) => WeakString.ToUpper(culture: culture);
+
+	/// <inheritdoc/>
+	public string ToUpperInvariant() => WeakString.ToUpperInvariant();
+
+	/// <inheritdoc/>
+	public string Trim() => WeakString.Trim();
+	/// <inheritdoc/>
+	public string Trim(params char[] trimChars) => WeakString.Trim(trimChars: trimChars);
+
+	/// <inheritdoc/>
+	public string TrimEnd(params char[] trimChars) => WeakString.TrimEnd(trimChars: trimChars);
+	/// <inheritdoc/>
+	public string TrimStart(params char[] trimChars) => WeakString.TrimStart(trimChars: trimChars);
+
+	/// <summary>
+	/// Returns an enumerator that iterates through the characters in the semantic string.
+	/// </summary>
+	/// <returns>An enumerator that can be used to iterate through the characters in the string.</returns>
+	IEnumerator<char> IEnumerable<char>.GetEnumerator() => ((IEnumerable<char>)WeakString).GetEnumerator();
+
+	/// <summary>
+	/// Returns an enumerator that iterates through the characters in the semantic string.
+	/// </summary>
+	/// <returns>An enumerator that can be used to iterate through the characters in the string.</returns>
+	IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)WeakString).GetEnumerator();
+
+	// SemanticString implementation
+	/// <inheritdoc/>
+	[ExcludeFromCodeCoverage(Justification = "DebuggerDisplay")]
+	protected string GetDebuggerDisplay() => $"({GetType().Name})\"{ToString()}\"";
+
+	/// <inheritdoc/>
+	public static string ToString(ISemanticString? semanticString) => semanticString?.WeakString ?? string.Empty;
+	/// <inheritdoc/>
+	public static char[] ToCharArray(ISemanticString? semanticString) => semanticString?.WeakString.ToCharArray() ?? [];
+	/// <inheritdoc/>
+	public static ReadOnlySpan<char> ToReadOnlySpan(ISemanticString? semanticString) => semanticString is null ? [] : semanticString.WeakString.AsSpan();
+
+	/// <inheritdoc/>
+	public bool IsEmpty() => IsEmpty(semanticString: this);
+
+	/// <summary>
+	/// Determines whether the specified semantic string is empty.
+	/// </summary>
+	/// <param name="semanticString">The semantic string to check.</param>
+	/// <returns><see langword="true"/> if the semantic string is null or has zero length; otherwise, <see langword="false"/>.</returns>
+	private static bool IsEmpty(SemanticString<TDerived>? semanticString) => semanticString?.Length == 0;
+
+	/// <summary>
+	/// Determines whether this semantic string instance is valid according to both basic requirements and attribute validations.
+	/// </summary>
+	/// <returns>
+	/// <see langword="true"/> if the string is valid (non-null and passes all validation attributes); otherwise, <see langword="false"/>.
+	/// </returns>
+	/// <remarks>
+	/// This method performs two levels of validation:
+	/// <list type="number">
+	/// <item><description>Basic validation: ensures the underlying string is not null</description></item>
+	/// <item><description>Attribute validation: validates against all validation attributes applied to the type</description></item>
+	/// </list>
+	/// Override this method in derived types to add custom validation logic beyond attribute-based validation.
+	/// </remarks>
+	public virtual bool IsValid() => IsValid(semanticString: this) && ValidateAttributes();
+
+	/// <summary>
+	/// Determines whether the specified semantic string is valid (not null).
+	/// </summary>
+	/// <param name="semanticString">The semantic string to check.</param>
+	/// <returns><see langword="true"/> if the semantic string is not null and has a non-null WeakString; otherwise, <see langword="false"/>.</returns>
+	private static bool IsValid(SemanticString<TDerived>? semanticString) => semanticString?.WeakString is not null;
+
+	/// <summary>
+	/// Validates that this SemanticString instance meets the criteria defined by
+	/// the validation attributes applied to its type.
+	/// </summary>
+	/// <returns><see langword="true"/> if the string passes all attribute validations; otherwise, <see langword="false"/>.</returns>
+	/// <remarks>
+	/// This method uses reflection to find all validation attributes (classes inheriting from <see cref="SemanticStringValidationAttribute"/>)
+	/// applied to the current type and validates the string value against each one.
+	/// The validation logic respects <see cref="ValidateAllAttribute"/> (default) and <see cref="ValidateAnyAttribute"/> decorations
+	/// to determine whether all attributes must pass or if any single attribute passing is sufficient.
+	/// </remarks>
+	public virtual bool ValidateAttributes() => AttributeValidation.ValidateAttributes(this, GetType());
+
+	// Operators with CRTP
+	/// <summary>
+	/// Explicitly converts a character array to a semantic string of the specified type.
+	/// </summary>
+	/// <param name="value">The character array to convert.</param>
+	/// <returns>A semantic string instance of type <typeparamref name="TDerived"/>.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+	/// <exception cref="FormatException">The character array does not meet the validation criteria for the target type.</exception>
+	public static explicit operator SemanticString<TDerived>(char[]? value) => FromCharArray<TDerived>(value: value);
+
+	/// <summary>
+	/// Explicitly converts a string to a semantic string of the specified type.
+	/// </summary>
+	/// <param name="value">The string to convert.</param>
+	/// <returns>A semantic string instance of type <typeparamref name="TDerived"/>.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+	/// <exception cref="FormatException">The string does not meet the validation criteria for the target type.</exception>
+	public static explicit operator SemanticString<TDerived>(string? value) => FromString<TDerived>(value: value);
+
+	// Type-safe operations returning TDerived
+	/// <summary>
+	/// Creates a new semantic string with the specified prefix prepended to the current value.
+	/// </summary>
+	/// <param name="prefix">The prefix to prepend to the current string value.</param>
+	/// <returns>A new semantic string instance with the prefix prepended.</returns>
+	/// <exception cref="FormatException">The resulting string does not meet the validation criteria for this semantic string type.</exception>
+	public TDerived WithPrefix(string prefix) => (TDerived)$"{prefix}{this}";
+
+	/// <summary>
+	/// Creates a new semantic string with the specified suffix appended to the current value.
+	/// </summary>
+	/// <param name="suffix">The suffix to append to the current string value.</param>
+	/// <returns>A new semantic string instance with the suffix appended.</returns>
+	/// <exception cref="FormatException">The resulting string does not meet the validation criteria for this semantic string type.</exception>
+	public TDerived WithSuffix(string suffix) => (TDerived)$"{this}{suffix}";
+
+	// IComparable implementation with proper generic constraints
+	/// <summary>
+	/// Determines whether one semantic string is less than another.
+	/// </summary>
+	/// <param name="left">The first semantic string to compare.</param>
+	/// <param name="right">The second semantic string to compare.</param>
+	/// <returns><see langword="true"/> if <paramref name="left"/> is less than <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+	public static bool operator <(SemanticString<TDerived>? left, SemanticString<TDerived>? right) => left is null ? right is not null : left.CompareTo(value: right?.WeakString) < 0;
+
+	/// <summary>
+	/// Determines whether one semantic string is less than or equal to another.
+	/// </summary>
+	/// <param name="left">The first semantic string to compare.</param>
+	/// <param name="right">The second semantic string to compare.</param>
+	/// <returns><see langword="true"/> if <paramref name="left"/> is less than or equal to <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+	public static bool operator <=(SemanticString<TDerived>? left, SemanticString<TDerived>? right) => left is null || left.CompareTo(value: right?.WeakString) <= 0;
+
+	/// <summary>
+	/// Determines whether one semantic string is greater than another.
+	/// </summary>
+	/// <param name="left">The first semantic string to compare.</param>
+	/// <param name="right">The second semantic string to compare.</param>
+	/// <returns><see langword="true"/> if <paramref name="left"/> is greater than <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+	public static bool operator >(SemanticString<TDerived>? left, SemanticString<TDerived>? right) => left is not null && left.CompareTo(value: right?.WeakString) > 0;
+
+	/// <summary>
+	/// Determines whether one semantic string is greater than or equal to another.
+	/// </summary>
+	/// <param name="left">The first semantic string to compare.</param>
+	/// <param name="right">The second semantic string to compare.</param>
+	/// <returns><see langword="true"/> if <paramref name="left"/> is greater than or equal to <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+	public static bool operator >=(SemanticString<TDerived>? left, SemanticString<TDerived>? right) => left is null ? right is null : left.CompareTo(value: right?.WeakString) >= 0;
+
+	// Implicit conversions
+	/// <summary>
+	/// Implicitly converts a semantic string to a character array.
+	/// </summary>
+	/// <param name="value">The semantic string to convert.</param>
+	/// <returns>A character array containing the characters of the semantic string, or an empty array if the value is <see langword="null"/>.</returns>
+	public static implicit operator char[](SemanticString<TDerived>? value) => value?.ToCharArray() ?? [];
+
+	/// <summary>
+	/// Implicitly converts a semantic string to a read-only character span.
+	/// </summary>
+	/// <param name="value">The semantic string to convert.</param>
+	/// <returns>A read-only span containing the characters of the semantic string, or an empty span if the value is <see langword="null"/>.</returns>
+	public static implicit operator ReadOnlySpan<char>(SemanticString<TDerived>? value) => value?.ToCharArray() ?? [];
+
+	/// <summary>
+	/// Implicitly converts a semantic string to a regular string.
+	/// </summary>
+	/// <param name="value">The semantic string to convert.</param>
+	/// <returns>The string representation of the semantic string, or <see cref="string.Empty"/> if the value is <see langword="null"/>.</returns>
+	public static implicit operator string(SemanticString<TDerived>? value) => value?.ToString() ?? string.Empty;
+
+	// Factory methods
+	/// <summary>
+	/// Creates a new instance of the specified semantic string type from a character array.
+	/// </summary>
+	/// <typeparam name="TDest">The semantic string type to create.</typeparam>
+	/// <param name="value">The character array to convert.</param>
+	/// <returns>A new instance of the specified semantic string type.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+	/// <exception cref="FormatException">
+	/// The string representation of <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
+	/// </exception>
+	/// <remarks>
+	/// This factory method converts the character array to a string and then creates a semantic string instance,
+	/// applying canonicalization and validation in the process.
+	/// </remarks>
+	public static TDest FromCharArray<TDest>(char[]? value)
+		where TDest : SemanticString<TDest>
+	{
+		ArgumentNullException.ThrowIfNull(value);
+		return FromString<TDest>(value: new string(value: value));
+	}
+
+	/// <summary>
+	/// Creates a new instance of the specified semantic string type from a read-only character span.
+	/// </summary>
+	/// <typeparam name="TDest">The semantic string type to create.</typeparam>
+	/// <param name="value">The read-only character span to convert.</param>
+	/// <returns>A new instance of the specified semantic string type.</returns>
+	/// <exception cref="FormatException">
+	/// The string representation of <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
+	/// </exception>
+	/// <remarks>
+	/// This factory method is optimized for performance when working with character spans,
+	/// avoiding unnecessary allocations until the final string creation.
+	/// The span is converted to a string and then processed through canonicalization and validation.
+	/// </remarks>
+	public static TDest FromReadOnlySpan<TDest>(ReadOnlySpan<char> value)
+		where TDest : SemanticString<TDest>
+		=> FromString<TDest>(value: value.ToString());
+
+	/// <summary>
+	/// Creates a new instance of the specified semantic string type from a string value.
+	/// </summary>
+	/// <typeparam name="TDest">The semantic string type to create.</typeparam>
+	/// <param name="value">The string value to convert.</param>
+	/// <returns>A new instance of the specified semantic string type.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+	/// <exception cref="FormatException">
+	/// The <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
+	/// </exception>
+	/// <remarks>
+	/// This is the primary factory method for creating semantic string instances. It performs the following steps:
+	/// <list type="number">
+	/// <item><description>Creates an instance of the target type</description></item>
+	/// <item><description>Applies canonicalization through the type's <see cref="MakeCanonical"/> method</description></item>
+	/// <item><description>Validates the result using <see cref="IsValid()"/> method</description></item>
+	/// <item><description>Throws <see cref="FormatException"/> if validation fails</description></item>
+	/// </list>
+	/// </remarks>
+	public static TDest FromString<TDest>(string? value)
+		where TDest : SemanticString<TDest>
+	{
+		TDest newInstance = FromStringInternal<TDest>(value: value);
+		return PerformValidation(value: newInstance);
+	}
+
+	/// <summary>
+	/// Internal factory method that creates a new semantic string instance without validation.
+	/// </summary>
+	/// <typeparam name="TDest">The semantic string type to create.</typeparam>
+	/// <param name="value">The string value to convert.</param>
+	/// <returns>A new instance of the specified semantic string type.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+	/// <remarks>
+	/// This method creates the instance and applies canonicalization but does not perform validation.
+	/// It is used internally by the public factory methods which then call validation separately.
+	/// </remarks>
+	private static TDest FromStringInternal<TDest>(string? value)
+		where TDest : SemanticString<TDest>
+	{
+		ArgumentNullException.ThrowIfNull(value);
+
+		Type typeOfTDest = typeof(TDest);
+		TDest newInstance = (TDest)Activator.CreateInstance(type: typeOfTDest)!;
+		typeOfTDest.GetProperty(name: nameof(WeakString))!.SetValue(obj: newInstance, value: newInstance.MakeCanonical(value));
+		return newInstance;
+	}
+
+	/// <summary>
+	/// Validates a semantic string instance and throws an exception if validation fails.
+	/// </summary>
+	/// <typeparam name="TDest">The semantic string type being validated.</typeparam>
+	/// <param name="value">The semantic string instance to validate.</param>
+	/// <returns>The validated semantic string instance.</returns>
+	/// <exception cref="FormatException">The semantic string instance is null or fails validation.</exception>
+	private static TDest PerformValidation<TDest>(TDest? value)
+		where TDest : SemanticString<TDest>
+	{
+		return value != null && value.IsValid()
+			? value
+			: throw new FormatException(message: $"Cannot convert \"{value}\" to {typeof(TDest).Name}");
+	}
+}

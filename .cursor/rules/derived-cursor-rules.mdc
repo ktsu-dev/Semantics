@@ -1,0 +1,43 @@
+---
+description: AI rules derived by SpecStory from the project AI interaction history
+globs: *
+---
+
+## Headers
+
+This file defines all project rules, coding standards, workflow guidelines, references, documentation structures, and best practices for the AI coding assistant. It is a living document that evolves with new user–AI interactions.
+
+## TECH STACK
+
+(Additions to the tech stack are recorded here, including new coding tools or libraries.)
+
+## PROJECT DOCUMENTATION & CONTEXT SYSTEM
+
+(Information about project documentation, context, and version changes are recorded here.)
+
+When adding XML documentation comments:
+
+*   Ensure comprehensive `<summary>` tags are included for all public types and members.
+*   Use detailed `<remarks>` sections to explain usage patterns and important details.
+*   Include proper `<param>` and `<returns>` documentation for methods.
+*   Use `<exception>` documentation for potential exceptions.
+*   Include `<example>` and `<code>` blocks showing usage patterns.
+*   Use `<inheritdoc/>` appropriately for interface implementations.
+*   Incorporate `<see cref="">` for cross-references.
+*   Use detailed `<list>` elements for enumerated information.
+*   Follow Microsoft's documentation standards.
+
+## CODING STANDARDS
+
+(General coding standards and best practices are defined here.)
+
+*   When using classes like `Path`, `File`, and `Directory` from `System.IO`, fully qualify the class name (e.g., `System.IO.Path`) if a `using System.IO;` statement is not present in the file.
+*   When referencing methods or classes in XML documentation comments, use fully qualified names (e.g., `<see cref="System.IO.Path.IsPathFullyQualified(string)"/>`) to avoid ambiguous references.
+
+## DEBUGGING
+
+(Rules and guidelines for debugging are listed here.)
+
+## WORKFLOW & RELEASE RULES
+
+(Workflow and release rules are documented here.)

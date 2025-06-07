@@ -1,0 +1,1 @@
+A powerful .NET library for creating type-safe, validated string types using semantic meaning. Transform primitive string obsession into strongly-typed, self-validating domain models with built-in validation attributes and specialized path handling.
