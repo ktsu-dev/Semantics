@@ -88,7 +88,21 @@ public abstract record SemanticPath<TDerived> : SemanticString<TDerived>
 		string separator = new([System.IO.Path.DirectorySeparatorChar]);
 		if (canonical.EndsWith(separator) && canonical.Length > separator.Length)
 		{
-			canonical = canonical[..^separator.Length];
+			// Check if this is a Windows root path (e.g., "C:\")
+			bool isWindowsRoot = OperatingSystem.IsWindows()
+				&& canonical.Length == 3
+				&& char.IsLetter(canonical[0])
+				&& canonical[1] == ':'
+				&& canonical[2] == System.IO.Path.DirectorySeparatorChar;
+
+			// Check if this is a Unix root path (e.g., "/")
+			bool isUnixRoot = !OperatingSystem.IsWindows() && canonical == separator;
+
+			// Only remove trailing separator if it's not a root path
+			if (!isWindowsRoot && !isUnixRoot)
+			{
+				canonical = canonical[..^separator.Length];
+			}
 		}
 
 		return canonical;

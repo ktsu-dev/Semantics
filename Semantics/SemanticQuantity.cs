@@ -184,7 +184,8 @@ public record SemanticQuantity<TSelf, TStorage>
 	public static TSelf operator *(SemanticQuantity<TSelf, TStorage> left, TStorage right) => Multiply<TSelf>(left, right);
 
 	/// <inheritdoc/>
-	public static TSelf operator /(SemanticQuantity<TSelf, TStorage> left, TStorage right) => Divide<TSelf>(left, right);
+	public static TSelf operator /(SemanticQuantity<TSelf, TStorage> left, TStorage right)
+		=> TStorage.IsZero(right) ? throw new DivideByZeroException("Cannot divide by zero.") : Divide<TSelf>(left, right);
 
 	/// <inheritdoc/>
 	public static TStorage operator /(SemanticQuantity<TSelf, TStorage> left, SemanticQuantity<TSelf, TStorage> right) => DivideToStorage(left, right);
@@ -195,4 +196,10 @@ public record SemanticQuantity<TSelf, TStorage>
 	/// <param name="quantity">The quantity value.</param>
 	/// <returns>A new instance of the derived quantity type.</returns>
 	public static TSelf Create(TStorage quantity) => new TSelf() with { Quantity = quantity };
+
+	/// <summary>
+	/// Returns a string representation of the quantity value.
+	/// </summary>
+	/// <returns>The string representation of the quantity value.</returns>
+	public override string ToString() => Quantity.ToString() ?? string.Empty;
 }

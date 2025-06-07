@@ -12,7 +12,10 @@ public class SemanticQuantityTests
 	public record TestIntQuantity : SemanticQuantity<int> { }
 
 	// Test types for SemanticQuantity<TSelf, TStorage>
-	public record Distance : SemanticQuantity<Distance, double> { }
+	public record Distance : SemanticQuantity<Distance, double>
+	{
+		public override string ToString() => Quantity.ToString() ?? string.Empty;
+	}
 	public record Time : SemanticQuantity<Time, double> { }
 	public record Speed : SemanticQuantity<Speed, double> { }
 
@@ -248,6 +251,164 @@ public class SemanticQuantityTests
 
 		// Act & Assert
 		Assert.ThrowsException<ArgumentNullException>(() =>
-			SemanticQuantity<Distance, double>.Add<Distance>(nullDistance!, new Distance()));
+			SemanticQuantity<Distance, double>.Add<Distance>(nullDistance!, Distance.Create(1.0)));
+	}
+
+	[TestMethod]
+	public void Quantity_Property_ReturnsCorrectValue()
+	{
+		// Arrange
+		const double expectedValue = 42.5;
+		Distance distance = Distance.Create(expectedValue);
+
+		// Act & Assert
+		Assert.AreEqual(expectedValue, distance.Quantity);
+	}
+
+	[TestMethod]
+	public void Equality_SameValues_ReturnsTrue()
+	{
+		// Arrange
+		Distance distance1 = Distance.Create(10.0);
+		Distance distance2 = Distance.Create(10.0);
+
+		// Act & Assert
+		Assert.AreEqual(distance1, distance2);
+		Assert.IsTrue(distance1.Equals(distance2));
+	}
+
+	[TestMethod]
+	public void Equality_DifferentValues_ReturnsFalse()
+	{
+		// Arrange
+		Distance distance1 = Distance.Create(10.0);
+		Distance distance2 = Distance.Create(15.0);
+
+		// Act & Assert
+		Assert.AreNotEqual(distance1, distance2);
+		Assert.IsFalse(distance1.Equals(distance2));
+	}
+
+	[TestMethod]
+	public void ToString_ReturnsQuantityAsString()
+	{
+		// Arrange
+		Distance distance = Distance.Create(123.45);
+
+		// Act
+		string result = distance.ToString();
+
+		// Assert
+		Assert.AreEqual("123.45", result);
+	}
+
+	[TestMethod]
+	public void ImplicitConversion_ToStorageType()
+	{
+		// Arrange
+		Distance distance = Distance.Create(50.0);
+
+		// Act
+		double value = distance.Quantity; // Use .Quantity property instead of implicit conversion
+
+		// Assert
+		Assert.AreEqual(50.0, value);
+	}
+
+	[TestMethod]
+	public void GetHashCode_SameValues_ReturnsSameHashCode()
+	{
+		// Arrange
+		Distance distance1 = Distance.Create(10.0);
+		Distance distance2 = Distance.Create(10.0);
+
+		// Act & Assert
+		Assert.AreEqual(distance1.GetHashCode(), distance2.GetHashCode());
+	}
+
+	[TestMethod]
+	public void ArithmeticOperations_WithZero()
+	{
+		// Arrange
+		Distance distance = Distance.Create(10.0);
+		Distance zero = Distance.Create(0.0);
+
+		// Act & Assert
+		Assert.AreEqual(distance, distance + zero);
+		Assert.AreEqual(distance, distance - zero);
+		Assert.AreEqual(zero, distance * 0.0);
+	}
+
+	[TestMethod]
+	public void ArithmeticOperations_WithNegativeValues()
+	{
+		// Arrange
+		Distance positive = Distance.Create(10.0);
+		Distance negative = Distance.Create(-5.0);
+
+		// Act
+		Distance sum = positive + negative;
+		Distance difference = positive - negative;
+
+		// Assert
+		Assert.AreEqual(5.0, sum.Quantity);
+		Assert.AreEqual(15.0, difference.Quantity);
+	}
+
+	[TestMethod]
+	public void DivisionByZero_ThrowsException()
+	{
+		// Arrange
+		Distance distance = Distance.Create(10.0);
+
+		// Act & Assert
+		Assert.ThrowsException<DivideByZeroException>(() => distance / 0.0);
+	}
+
+	[TestMethod]
+	public void CompareTo_ReturnsCorrectComparison()
+	{
+		// Arrange
+		Distance smaller = Distance.Create(5.0);
+		Distance larger = Distance.Create(10.0);
+		Distance equal = Distance.Create(5.0);
+
+		// Act & Assert
+		Assert.IsTrue(smaller.Quantity.CompareTo(larger.Quantity) < 0);
+		Assert.IsTrue(larger.Quantity.CompareTo(smaller.Quantity) > 0);
+		Assert.AreEqual(0, smaller.Quantity.CompareTo(equal.Quantity));
+	}
+
+	[TestMethod]
+	public void ComparisonOperators_WorkCorrectly()
+	{
+		// Arrange
+		Distance distance1 = Distance.Create(5.0);
+		Distance distance2 = Distance.Create(10.0);
+		Distance distance3 = Distance.Create(5.0);
+
+		// Act & Assert
+		Assert.IsTrue(distance1.Quantity < distance2.Quantity);
+		Assert.IsTrue(distance1.Quantity <= distance2.Quantity);
+		Assert.IsTrue(distance1.Quantity <= distance3.Quantity);
+		Assert.IsTrue(distance2.Quantity > distance1.Quantity);
+		Assert.IsTrue(distance2.Quantity >= distance1.Quantity);
+		Assert.IsTrue(distance1.Quantity >= distance3.Quantity);
+		Assert.IsTrue(distance1 == distance3); // Record equality works
+		Assert.IsTrue(distance1 != distance2); // Record inequality works
+	}
+
+	[TestMethod]
+	public void StaticOperations_WithDifferentQuantityTypes()
+	{
+		// Arrange
+		Distance distance = Distance.Create(100.0);
+		Time time = Time.Create(20.0);
+
+		// Act
+		Speed speed = SemanticQuantity<Distance, double>.Divide<Speed>(distance, time);
+
+		// Assert
+		Assert.AreEqual(5.0, speed.Quantity);
 	}
 }

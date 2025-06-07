@@ -32,7 +32,20 @@ public sealed class IsPathAttribute : SemanticStringValidationAttribute
 	public override bool Validate(ISemanticString semanticString)
 	{
 		string value = semanticString.ToString();
-		return string.IsNullOrEmpty(value) || (value.Length <= 256 && !value.Intersect(System.IO.Path.GetInvalidPathChars()).Any());
+		if (string.IsNullOrEmpty(value))
+		{
+			return true;
+		}
+
+		if (value.Length > 256)
+		{
+			return false;
+		}
+
+		// Check for characters from GetInvalidPathChars() and additional problematic characters
+		// In .NET Core+, GetInvalidPathChars() doesn't include all characters that can cause issues in paths
+		char[] invalidChars = [.. System.IO.Path.GetInvalidPathChars(), '<', '>', '|'];
+		return !value.Intersect(invalidChars).Any();
 	}
 }
 
