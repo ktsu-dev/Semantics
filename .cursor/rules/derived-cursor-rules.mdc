@@ -87,6 +87,7 @@ When adding XML documentation comments:
         *   Check for any issues with named parameter delegation.
     *   **Quick Verification**: Run just the failing tests and examine the exact error output for precise method calls.
 *   When debugging `IndexOf` and `LastIndexOf` methods in `SemanticStringTests`, and tests are failing with the SemanticString returning `-1` while the expected result is `0` or `12`, it indicates a delegation issue in the SemanticString class.
+*   If the compiler reports CS0184 errors ("The given expression is never of the provided type") during unit testing, this indicates that the test logic is attempting to verify an impossible condition. Review the test case and adjust the assertions to align with the actual type relationships.
 
 ## WORKFLOW & RELEASE RULES
 
@@ -100,3 +101,4 @@ When adding XML documentation comments:
     *   Perform final testing across different .NET versions.
     *   Conduct performance testing (if applicable).
     *   Conduct a security review of validation logic.
+*   When adding new interfaces to the project, add tests to verify that the interfaces are properly implemented and that polymorphism works as expected. Consider adding the interface tests to the existing `SemanticPathTests.cs` file or creating a separate test file, depending on the existing test structure.
