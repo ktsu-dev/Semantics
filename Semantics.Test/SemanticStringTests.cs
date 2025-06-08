@@ -737,7 +737,7 @@ public class StringTests
 		Assert.AreEqual(12, semanticString.LastIndexOf("HELLO", StringComparison.OrdinalIgnoreCase));
 		Assert.AreEqual(-1, semanticString.LastIndexOf("HELLO", StringComparison.Ordinal)); // Case sensitive - should not find "HELLO" in "Hello"
 		Assert.AreEqual(0, semanticString.LastIndexOf("HELLO", 10, StringComparison.OrdinalIgnoreCase)); // Correct behavior
-		Assert.AreEqual(0, semanticString.LastIndexOf("HELLO", 10, 5, StringComparison.OrdinalIgnoreCase));
+		Assert.AreEqual(-1, semanticString.LastIndexOf("HELLO", 10, 5, StringComparison.OrdinalIgnoreCase));
 	}
 
 	[TestMethod]
@@ -752,7 +752,7 @@ public class StringTests
 
 		// Test string-based IndexOf with start index
 		Assert.AreEqual(12, semanticString.IndexOf("hello", 5)); // Correct behavior
-		Assert.AreEqual(12, semanticString.IndexOf("hello", 5, 8));
+		Assert.AreEqual(-1, semanticString.IndexOf("hello", 5, 8));
 	}
 
 	[TestMethod]
@@ -766,7 +766,7 @@ public class StringTests
 
 		// Test string-based LastIndexOf with start index
 		Assert.AreEqual(0, semanticString.LastIndexOf("hello", 10)); // Correct behavior
-		Assert.AreEqual(0, semanticString.LastIndexOf("hello", 10, 8));
+		Assert.AreEqual(-1, semanticString.LastIndexOf("hello", 10, 8));
 	}
 
 	// Tests for edge cases and error conditions

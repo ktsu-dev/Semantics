@@ -57,9 +57,45 @@ When adding XML documentation comments:
     *   The `IsPathAttribute` should explicitly check for characters like `<` and `>` in addition to those returned by `Path.GetInvalidPathChars()` because `.NET` versions after `.NET Framework` may return a reduced set of invalid characters from `Path.GetInvalidPathChars()`.
 *   When debugging `SemanticStringTests` involving `IndexOf` or `LastIndexOf` methods, and tests are failing due to incorrect expected values, always double-check the expected values against the actual return values of the corresponding .NET string methods. The tests might have incorrect expectations.
 *   When debugging `SemanticStringTests` and encountering failures in `IndexOf` and `LastIndexOf` methods, particularly in tests like `LastIndexOf_WithStringComparisonVariants_ReturnsCorrectResults`, `IndexOf_WithStartIndexVariants_ReturnsCorrectResults`, and `LastIndexOf_WithStartIndexVariants_ReturnsCorrectResults`, carefully examine the implementation of the `WeakString` class (if the `SemanticString` class delegates to it) and ensure the logic correctly handles different `StringComparison` options and `startIndex` values. If the `SemanticString` class delegates to the `WeakString` property, ensure the logic correctly handles different `StringComparison` options and `startIndex` values.
+*   When `SemanticStringTests` are failing, especially for `IndexOf` and `LastIndexOf` methods, it's a high priority to:
+    *   Debug and fix the `IndexOf`/`LastIndexOf` method implementations.
+    *   Verify that all method overloads work correctly with their underlying `WeakString` implementations.
+    *   Run the full test suite to ensure a 100% pass rate.
+    *   Consider a code review of the string operation forwarding logic.
+*   When debugging `IndexOf` and `LastIndexOf` methods in `SemanticStringTests`, and tests are failing, gather the following information:
+    *   **Exact Test Scenarios**: Run the failing test scenarios with regular .NET strings to understand their behavior.
+        ```csharp
+        // Test case 1 (e.g., line 740):
+        string test1 = "Hello World Hello";
+        var result1 = test1.LastIndexOf("HELLO", 10, StringComparison.OrdinalIgnoreCase);
+        // Record the result
+
+        // Test case 2 (e.g., line 755):  
+        string test2 = "hello world hello";
+        var result2 = test2.IndexOf("hello", 5);
+        // Record the result
+
+        // Test case 3 (e.g., line 769):
+        string test3 = "hello world hello"; 
+        var result3 = test3.LastIndexOf("hello", 10);
+        // Record the result
+        ```
+    *   **Test Expectations vs Reality**: Compare the expected values in the failing tests with the actual results obtained from the native string methods.
+    *   **SemanticString Delegation Issue**: If `SemanticString` delegates to a `WeakString` property:
+        *   Verify that the `WeakString` property is properly initialized with the correct string value.
+        *   Check for any issues with named parameter delegation.
+    *   **Quick Verification**: Run just the failing tests and examine the exact error output for precise method calls.
+*   When debugging `IndexOf` and `LastIndexOf` methods in `SemanticStringTests`, and tests are failing with the SemanticString returning `-1` while the expected result is `0` or `12`, it indicates a delegation issue in the SemanticString class.
 
 ## WORKFLOW & RELEASE RULES
 
 (Workflow and release rules are documented here.)
 
 *   The main project `README.md` should mention the `examples` directory and its purpose.
+*   Before releasing a version:
+    *   Fix all failing tests; a 100% pass rate is required.
+    *   Update the version from `1.0.0-pre.1` to `1.0.0` (or the appropriate version number).
+    *   Update `CHANGELOG.md` with proper release notes.
+    *   Perform final testing across different .NET versions.
+    *   Conduct performance testing (if applicable).
+    *   Conduct a security review of validation logic.
