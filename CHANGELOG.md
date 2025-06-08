@@ -1,6 +1,8 @@
-## v1.0.0-pre.1 (prerelease)
+## v1.0.0 (patch)
 
-Incremental prerelease update.
+Changes since v1.0.0-pre.1:
+
+- Add DebugConsole project and initial tests for SemanticString functionality ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.0-pre.1 (prerelease)
 
 - initial version ([@matt-edmondson](https://github.com/matt-edmondson))
