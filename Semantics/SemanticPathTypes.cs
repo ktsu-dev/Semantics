@@ -5,10 +5,87 @@
 namespace ktsu.Semantics;
 
 /// <summary>
+/// Base interface for all path types
+/// </summary>
+public interface IPath
+{
+}
+
+/// <summary>
+/// Interface for absolute (fully qualified) paths
+/// </summary>
+public interface IAbsolutePath : IPath
+{
+}
+
+/// <summary>
+/// Interface for relative (not fully qualified) paths
+/// </summary>
+public interface IRelativePath : IPath
+{
+}
+
+/// <summary>
+/// Interface for file paths (paths to files)
+/// </summary>
+public interface IFilePath : IPath
+{
+}
+
+/// <summary>
+/// Interface for directory paths (paths to directories)
+/// </summary>
+public interface IDirectoryPath : IPath
+{
+}
+
+/// <summary>
+/// Interface for absolute file paths
+/// </summary>
+public interface IAbsoluteFilePath : IFilePath, IAbsolutePath
+{
+}
+
+/// <summary>
+/// Interface for relative file paths
+/// </summary>
+public interface IRelativeFilePath : IFilePath, IRelativePath
+{
+}
+
+/// <summary>
+/// Interface for absolute directory paths
+/// </summary>
+public interface IAbsoluteDirectoryPath : IDirectoryPath, IAbsolutePath
+{
+}
+
+/// <summary>
+/// Interface for relative directory paths
+/// </summary>
+public interface IRelativeDirectoryPath : IDirectoryPath, IRelativePath
+{
+}
+
+/// <summary>
+/// Interface for filenames (without directory path)
+/// </summary>
+public interface IFileName
+{
+}
+
+/// <summary>
+/// Interface for file extensions (starts with a period)
+/// </summary>
+public interface IFileExtension
+{
+}
+
+/// <summary>
 /// Represents any path
 /// </summary>
 [IsPath]
-public sealed record Path : SemanticPath<Path>
+public sealed record Path : SemanticPath<Path>, IPath
 {
 }
 
@@ -16,7 +93,7 @@ public sealed record Path : SemanticPath<Path>
 /// Represents an absolute (fully qualified) path
 /// </summary>
 [IsPath, IsAbsolutePath]
-public sealed record AbsolutePath : SemanticAbsolutePath<AbsolutePath>
+public sealed record AbsolutePath : SemanticAbsolutePath<AbsolutePath>, IAbsolutePath
 {
 }
 
@@ -24,7 +101,7 @@ public sealed record AbsolutePath : SemanticAbsolutePath<AbsolutePath>
 /// Represents a relative (not fully qualified) path
 /// </summary>
 [IsPath, IsRelativePath]
-public sealed record RelativePath : SemanticRelativePath<RelativePath>
+public sealed record RelativePath : SemanticRelativePath<RelativePath>, IRelativePath
 {
 }
 
@@ -32,7 +109,7 @@ public sealed record RelativePath : SemanticRelativePath<RelativePath>
 /// Represents a file path (path to a file)
 /// </summary>
 [IsPath, IsFilePath]
-public sealed record FilePath : SemanticFilePath<FilePath>
+public sealed record FilePath : SemanticFilePath<FilePath>, IFilePath
 {
 }
 
@@ -40,7 +117,7 @@ public sealed record FilePath : SemanticFilePath<FilePath>
 /// Represents an absolute file path
 /// </summary>
 [IsPath, IsAbsolutePath, IsFilePath]
-public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>
+public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbsoluteFilePath
 {
 }
 
@@ -48,7 +125,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>
 /// Represents a relative file path
 /// </summary>
 [IsPath, IsRelativePath, IsFilePath]
-public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>
+public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRelativeFilePath
 {
 }
 
@@ -56,7 +133,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>
 /// Represents a directory path (path to a directory)
 /// </summary>
 [IsPath, IsDirectoryPath]
-public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>
+public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDirectoryPath
 {
 }
 
@@ -64,7 +141,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>
 /// Represents an absolute directory path
 /// </summary>
 [IsPath, IsAbsolutePath, IsDirectoryPath]
-public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirectoryPath>
+public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirectoryPath>, IAbsoluteDirectoryPath
 {
 }
 
@@ -72,7 +149,7 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 /// Represents a relative directory path
 /// </summary>
 [IsPath, IsRelativePath, IsDirectoryPath]
-public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirectoryPath>
+public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirectoryPath>, IRelativeDirectoryPath
 {
 }
 
@@ -80,7 +157,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 /// Represents a filename (without directory path)
 /// </summary>
 [IsFileName]
-public sealed record FileName : SemanticString<FileName>
+public sealed record FileName : SemanticString<FileName>, IFileName
 {
 }
 
@@ -88,6 +165,6 @@ public sealed record FileName : SemanticString<FileName>
 /// Represents a file extension (starts with a period)
 /// </summary>
 [IsExtension]
-public sealed record FileExtension : SemanticString<FileExtension>
+public sealed record FileExtension : SemanticString<FileExtension>, IFileExtension
 {
 }

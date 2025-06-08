@@ -39,6 +39,7 @@ When adding XML documentation comments:
 *   When referencing methods or classes in XML documentation comments, use fully qualified names (e.g., `<see cref="System.IO.Path.IsPathFullyQualified(string)"/>`) to avoid ambiguous references.
 *   Apply SOLID and DRY principles to improve code design.
 *   When encountering CS0101 errors (namespace already contains a definition), and the definitions have different validation logic, rename one of the classes to avoid the conflict. Update all references to the renamed class.
+*   When creating a type hierarchy, define interfaces for each level of abstraction to enable polymorphism. This includes base interfaces (e.g., `IPath`), category interfaces (e.g., `IAbsolutePath`, `IRelativePath`, `IFilePath`, `IDirectoryPath`), and composite interfaces (e.g., `IAbsoluteFilePath`, `IRelativeFilePath`, `IAbsoluteDirectoryPath`, `IRelativeDirectoryPath`). Implement these interfaces in the corresponding concrete classes.
 
 ## DEBUGGING
 
