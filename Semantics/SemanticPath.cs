@@ -14,6 +14,7 @@ namespace ktsu.Semantics;
 /// <item><description>File system existence checking</description></item>
 /// <item><description>Path canonicalization (directory separator normalization)</description></item>
 /// <item><description>Type-safe path operations</description></item>
+/// <item><description>Implicit string conversion for transparent usage (inherited from SemanticString)</description></item>
 /// </list>
 /// All path types are automatically validated using the <see cref="IsPathAttribute"/> to ensure
 /// they contain valid path characters and reasonable lengths.
@@ -22,6 +23,7 @@ namespace ktsu.Semantics;
 public abstract record SemanticPath<TDerived> : SemanticString<TDerived>
 	where TDerived : SemanticPath<TDerived>
 {
+
 	/// <summary>
 	/// Gets a value indicating whether this path exists on the filesystem as either a file or directory.
 	/// </summary>
@@ -82,10 +84,10 @@ public abstract record SemanticPath<TDerived> : SemanticString<TDerived>
 		string canonical = base.MakeCanonical(input);
 
 		// Normalize directory separators to the current platform's preferred separator
-		canonical = canonical.Replace(System.IO.Path.AltDirectorySeparatorChar, System.IO.Path.DirectorySeparatorChar);
+		canonical = canonical.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
 		// Remove trailing directory separator (except for root paths)
-		string separator = new([System.IO.Path.DirectorySeparatorChar]);
+		string separator = new([Path.DirectorySeparatorChar]);
 		if (canonical.EndsWith(separator) && canonical.Length > separator.Length)
 		{
 			// Check if this is a Windows root path (e.g., "C:\")
@@ -93,7 +95,7 @@ public abstract record SemanticPath<TDerived> : SemanticString<TDerived>
 				&& canonical.Length == 3
 				&& char.IsLetter(canonical[0])
 				&& canonical[1] == ':'
-				&& canonical[2] == System.IO.Path.DirectorySeparatorChar;
+				&& canonical[2] == Path.DirectorySeparatorChar;
 
 			// Check if this is a Unix root path (e.g., "/")
 			bool isUnixRoot = !OperatingSystem.IsWindows() && canonical == separator;
@@ -136,16 +138,16 @@ public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 		ArgumentNullException.ThrowIfNull(from);
 		ArgumentNullException.ThrowIfNull(to);
 
-		FileInfo fromInfo = new(System.IO.Path.GetFullPath(from.ToString()));
-		FileInfo toInfo = new(System.IO.Path.GetFullPath(to.ToString()));
+		FileInfo fromInfo = new(Path.GetFullPath(from.ToString()));
+		FileInfo toInfo = new(Path.GetFullPath(to.ToString()));
 
 		// Use unix-style separators because they work on windows too
 		const string separator = "/";
 		const string altSeparator = "\\";
 
-		string fromPath = System.IO.Path.GetFullPath(fromInfo.FullName)
+		string fromPath = Path.GetFullPath(fromInfo.FullName)
 			.Replace(altSeparator, separator, StringComparison.Ordinal);
-		string toPath = System.IO.Path.GetFullPath(toInfo.FullName)
+		string toPath = Path.GetFullPath(toInfo.FullName)
 			.Replace(altSeparator, separator, StringComparison.Ordinal);
 
 		// Handle directory paths - ensure they end with separator
@@ -226,12 +228,12 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 	/// <summary>
 	/// Gets the filename portion of the path
 	/// </summary>
-	public FileName FileName => FileName.FromString<FileName>(System.IO.Path.GetFileName(ToString()));
+	public FileName FileName => FileName.FromString<FileName>(Path.GetFileName(ToString()));
 
 	/// <summary>
 	/// Gets the directory portion of the path
 	/// </summary>
-	public DirectoryPath DirectoryPath => DirectoryPath.FromString<DirectoryPath>(System.IO.Path.GetDirectoryName(ToString()) ?? "");
+	public DirectoryPath DirectoryPath => DirectoryPath.FromString<DirectoryPath>(Path.GetDirectoryName(ToString()) ?? "");
 }
 
 /// <summary>
@@ -241,4 +243,81 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 public abstract record SemanticDirectoryPath<TDerived> : SemanticPath<TDerived>
 	where TDerived : SemanticDirectoryPath<TDerived>
 {
+	/// <summary>
+	/// Gets the files and directories contained in this directory as semantic path types.
+	/// Files are returned as the appropriate file path type, and directories as the appropriate directory path type.
+	/// </summary>
+	/// <value>
+	/// A collection of <see cref="IPath"/> objects representing the contents of the directory.
+	/// Returns an empty collection if the directory doesn't exist or cannot be accessed.
+	/// </value>
+	/// <remarks>
+	/// The returned types depend on the current directory type:
+	/// <list type="bullet">
+	/// <item><description><see cref="AbsoluteDirectoryPath"/> returns <see cref="AbsoluteFilePath"/> and <see cref="AbsoluteDirectoryPath"/> objects</description></item>
+	/// <item><description><see cref="RelativeDirectoryPath"/> returns <see cref="RelativeFilePath"/> and <see cref="RelativeDirectoryPath"/> objects</description></item>
+	/// <item><description><see cref="DirectoryPath"/> returns <see cref="FilePath"/> and <see cref="DirectoryPath"/> objects</description></item>
+	/// </list>
+	/// </remarks>
+	public virtual IEnumerable<IPath> Contents
+	{
+		get
+		{
+			string directoryPath = ToString();
+			if (!Directory.Exists(directoryPath))
+			{
+				return [];
+			}
+
+			try
+			{
+				List<IPath> contents = [];
+
+				// Get all files and directories
+				string[] entries = Directory.GetFileSystemEntries(directoryPath);
+
+				foreach (string entry in entries)
+				{
+					if (File.Exists(entry))
+					{
+						// It's a file - create appropriate file path type
+						contents.Add(CreateFilePath(entry));
+					}
+					else if (Directory.Exists(entry))
+					{
+						// It's a directory - create appropriate directory path type
+						contents.Add(CreateDirectoryPath(entry));
+					}
+				}
+
+				return contents;
+			}
+			catch (UnauthorizedAccessException)
+			{
+				// Return empty collection if access denied
+				return [];
+			}
+			catch (DirectoryNotFoundException)
+			{
+				// Return empty collection if directory not found
+				return [];
+			}
+		}
+	}
+
+	/// <summary>
+	/// Creates an appropriate file path type based on the current directory path type.
+	/// </summary>
+	/// <param name="filePath">The file path to wrap.</param>
+	/// <returns>An <see cref="IFilePath"/> of the appropriate type.</returns>
+	protected virtual IFilePath CreateFilePath(string filePath) =>
+		FilePath.FromString<FilePath>(filePath);
+
+	/// <summary>
+	/// Creates an appropriate directory path type based on the current directory path type.
+	/// </summary>
+	/// <param name="directoryPath">The directory path to wrap.</param>
+	/// <returns>An <see cref="IDirectoryPath"/> of the appropriate type.</returns>
+	protected virtual IDirectoryPath CreateDirectoryPath(string directoryPath) =>
+		DirectoryPath.FromString<DirectoryPath>(directoryPath);
 }

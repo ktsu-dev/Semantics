@@ -41,6 +41,15 @@ When adding XML documentation comments:
 *   Apply SOLID and DRY principles to improve code design.
 *   When encountering CS0101 errors (namespace already contains a definition), and the definitions have different validation logic, rename one of the classes to avoid the conflict. Update all references to the renamed class.
 *   When creating a type hierarchy, define interfaces for each level of abstraction to enable polymorphism. This includes base interfaces (e.g., `IPath`), category interfaces (e.g., `IAbsolutePath`, `IRelativePath`, `IFilePath`, `IDirectoryPath`), and composite interfaces (e.g., `IAbsoluteFilePath`, `IRelativeFilePath`, `IAbsoluteDirectoryPath`, `IRelativeDirectoryPath`). Implement these interfaces in the corresponding concrete classes.
+*   All directory paths should have a public property called `Contents` that gets the files and directories in that directory as the appropriate semantic path types.
+*   When using interface types in string operations (e.g., with `System.IO.Path` methods or string concatenation), cast the interface to its concrete type and call the `ToString()` method explicitly. For example: `Path.Combine(((DirectoryPath)directoryPath).ToString(), ((FileName)fileName).ToString())`.
+*   When concatenating a string with the result of `ToString()` on a semantic type, use null protection to avoid potential null reference exceptions. For example: `"prefix_" + (path.ToString() ?? string.Empty)`.
+*   Semantic paths support file system existence checking properties: `Exists` (true if the path exists as either a file or directory), `IsDirectory` (true if the path exists as a directory), and `IsFile` (true if the path exists as a file).
+*   Semantic paths support implicit conversion to system strings, allowing them to be transparently passed in place of string parameters.
+*   Semantic strings support implicit conversion to `string`, `char[]`, and `ReadOnlySpan<char>`.
+*   When using interface types for semantic paths (e.g., `IAbsolutePath`, `IFilePath`), the implicit string conversion does not work. In these cases, you must either:
+    *   Cast the interface to its concrete type and call `ToString()`.
+    *   Call `ToString()` explicitly on the interface type.
 
 ## DEBUGGING
 
@@ -89,6 +98,19 @@ When adding XML documentation comments:
     *   **Quick Verification**: Run just the failing tests and examine the exact error output for precise method calls.
 *   When debugging `IndexOf` and `LastIndexOf` methods in `SemanticStringTests`, and tests are failing with the SemanticString returning `-1` while the expected result is `0` or `12`, it indicates a delegation issue in the SemanticString class.
 *   If the compiler reports CS0184 errors ("The given expression is never of the provided type") during unit testing, this indicates that the test logic is attempting to verify an impossible condition. Review the test case and adjust the assertions to align with the actual type relationships.
+*   When resolving CS1503 errors (Argument cannot convert from type X to type Y), carefully examine the method signature and the types of the arguments being passed. Ensure that the arguments are of the correct type or can be implicitly converted to the expected type. Review the relevant interfaces and classes to ensure they are being used correctly.
+*   When resolving CA1859 errors (Change type of variable 'variableName' from 'InterfaceName' to 'ClassName' for improved performance), consider changing the variable type as suggested by the analyzer to improve performance.
+*   If a `CS8600` error ("Converting null literal or possible null value to non-nullable type") persists despite null-checking and handling, review the project's nullable reference types configuration and ensure it aligns with the intended behavior. The error might be a false positive or require project-specific adjustments.
+*   When debugging `FormatException` errors originating from `SemanticString<TDest>.PerformValidation`, especially during `RelativeDirectoryPath_Contents_ReturnsRelativePathTypes`, `SemanticPath_PathTypes`, or `SemanticPath_MakeCanonical_WithMixedSeparators_ShouldNormalize` tests, carefully review the validation logic and ensure that the input string adheres to the expected format for the target type `TDest`. Pay close attention to the following:
+    *   **Relative vs. Absolute Paths**: Ensure that the input string matches the expected type (e.g., `RelativeDirectoryPath` should not start with a root directory).
+    *   **Path Separators**: Verify that the path separators are consistent and correctly normalized (if normalization is expected).
+    *   **Invalid Characters**: Ensure that the path does not contain any invalid characters or sequences.
+*   When a test expects `System.ArgumentException` but gets `System.FormatException`, it indicates that the validation logic is throwing a `FormatException` when it should be throwing an `ArgumentException`. Review the validation logic and update it to throw the correct exception type based on the nature of the error. For example, if the error is due to an invalid argument value, throw `ArgumentException`; if it's due to an invalid format, throw `FormatException`.
+*   When debugging `RelativeDirectoryPath_Contents_ReturnsRelativePathTypes` test failures, ensure that the test uses `AbsoluteDirectoryPath` instances when testing contents of absolute directory paths. Ensure there are no tab characters in the test file.
+*   When debugging `SemanticPath_RootPath_Unix` test failures, ensure that path canonicalization correctly handles Unix root paths ("/") and doesn't convert them to Windows path separators ("\\").
+*   When debugging `SemanticPath_PathTypes` test failures, ensure that the correct path type (e.g., `AbsolutePath`, `RelativePath`) is used in the test case based on whether the path is absolute or relative.
+*   When debugging `SemanticPath_PathLength_TooLong` test failures, ensure that the validation logic throws `ArgumentException` when the path length is too long, not `FormatException`. **Note:** This rule is incorrect; the validation logic throws `FormatException` for path length violations. The tests should expect `FormatException`.
+*   When debugging `SemanticPath_MakeCanonical_WithMixedSeparators_ShouldNormalize` test failures, ensure that the test uses the correct path type (e.g., `AbsolutePath`, `RelativePath`) based on whether the path is absolute or relative.
 
 ## WORKFLOW & RELEASE RULES
 
@@ -103,3 +125,4 @@ When adding XML documentation comments:
     *   Conduct performance testing (if applicable).
     *   Conduct a security review of validation logic.
 *   When adding new interfaces to the project, add tests to verify that the interfaces are properly implemented and that polymorphism works as expected. Consider adding the interface tests to the existing `SemanticPathTests.cs` file or creating a separate test file, depending on the existing test structure.
+*   Determine if interfaces can implicitly cast to system strings so that they can be passed transparently where strings are normally used.

@@ -307,12 +307,12 @@ public class ErrorHandlingTests
 	public void SemanticPath_InvalidPathCharacters_ThrowsFormatException()
 	{
 		// Test path validation with invalid characters
-		char[] invalidChars = System.IO.Path.GetInvalidPathChars();
+		char[] invalidChars = Path.GetInvalidPathChars();
 		if (invalidChars.Length > 0)
 		{
 			string invalidPath = "C:\\test" + invalidChars[0] + "path";
 			Assert.ThrowsException<FormatException>(() =>
-				Path.FromString<Path>(invalidPath));
+				AbsolutePath.FromString<AbsolutePath>(invalidPath));
 		}
 	}
 
@@ -320,7 +320,7 @@ public class ErrorHandlingTests
 	public void SemanticFileName_InvalidFileNameCharacters_ThrowsFormatException()
 	{
 		// Test filename validation with invalid characters
-		char[] invalidChars = System.IO.Path.GetInvalidFileNameChars();
+		char[] invalidChars = Path.GetInvalidFileNameChars();
 		if (invalidChars.Length > 0)
 		{
 			string invalidFileName = "test" + invalidChars[0] + "file.txt";

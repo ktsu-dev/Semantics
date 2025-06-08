@@ -37,6 +37,15 @@ public interface IFilePath : IPath
 /// </summary>
 public interface IDirectoryPath : IPath
 {
+	/// <summary>
+	/// Gets the files and directories contained in this directory as semantic path types.
+	/// Files are returned as the appropriate file path type, and directories as the appropriate directory path type.
+	/// </summary>
+	/// <value>
+	/// A collection of <see cref="IPath"/> objects representing the contents of the directory.
+	/// Returns an empty collection if the directory doesn't exist or cannot be accessed.
+	/// </value>
+	public IEnumerable<IPath> Contents { get; }
 }
 
 /// <summary>
@@ -78,14 +87,6 @@ public interface IFileName
 /// Interface for file extensions (starts with a period)
 /// </summary>
 public interface IFileExtension
-{
-}
-
-/// <summary>
-/// Represents any path
-/// </summary>
-[IsPath]
-public sealed record Path : SemanticPath<Path>, IPath
 {
 }
 
@@ -143,6 +144,21 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 [IsPath, IsAbsolutePath, IsDirectoryPath]
 public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirectoryPath>, IAbsoluteDirectoryPath
 {
+	/// <summary>
+	/// Creates an absolute file path for files in this directory.
+	/// </summary>
+	/// <param name="filePath">The file path to wrap.</param>
+	/// <returns>An <see cref="AbsoluteFilePath"/> object.</returns>
+	protected override IFilePath CreateFilePath(string filePath) =>
+		AbsoluteFilePath.FromString<AbsoluteFilePath>(filePath);
+
+	/// <summary>
+	/// Creates an absolute directory path for subdirectories in this directory.
+	/// </summary>
+	/// <param name="directoryPath">The directory path to wrap.</param>
+	/// <returns>An <see cref="AbsoluteDirectoryPath"/> object.</returns>
+	protected override IDirectoryPath CreateDirectoryPath(string directoryPath) =>
+		FromString<AbsoluteDirectoryPath>(directoryPath);
 }
 
 /// <summary>
@@ -151,6 +167,21 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 [IsPath, IsRelativePath, IsDirectoryPath]
 public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirectoryPath>, IRelativeDirectoryPath
 {
+	/// <summary>
+	/// Creates a relative file path for files in this directory.
+	/// </summary>
+	/// <param name="filePath">The file path to wrap.</param>
+	/// <returns>A <see cref="RelativeFilePath"/> object.</returns>
+	protected override IFilePath CreateFilePath(string filePath) =>
+		RelativeFilePath.FromString<RelativeFilePath>(filePath);
+
+	/// <summary>
+	/// Creates a relative directory path for subdirectories in this directory.
+	/// </summary>
+	/// <param name="directoryPath">The directory path to wrap.</param>
+	/// <returns>A <see cref="RelativeDirectoryPath"/> object.</returns>
+	protected override IDirectoryPath CreateDirectoryPath(string directoryPath) =>
+		FromString<RelativeDirectoryPath>(directoryPath);
 }
 
 /// <summary>

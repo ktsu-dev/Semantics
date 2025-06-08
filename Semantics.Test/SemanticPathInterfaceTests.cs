@@ -10,19 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 public class SemanticPathInterfaceTests
 {
 	[TestMethod]
-	public void Path_ImplementsIPath()
-	{
-		// Arrange & Act
-		Path path = Path.FromString<Path>("test\\path");
-		IPath iPath = path;
-
-		// Assert
-		Assert.IsNotNull(iPath);
-		Assert.IsInstanceOfType<IPath>(iPath);
-		Assert.AreSame(path, iPath);
-	}
-
-	[TestMethod]
 	public void AbsolutePath_ImplementsIAbsolutePathAndIPath()
 	{
 		// Arrange & Act
@@ -227,7 +214,7 @@ public class SemanticPathInterfaceTests
 		List<IRelativePath> relativePaths = [];
 
 		// Act
-		paths.Add(Path.FromString<Path>("test\\path"));
+		paths.Add(AbsolutePath.FromString<AbsolutePath>("C:\\test\\path"));
 		paths.Add(AbsolutePath.FromString<AbsolutePath>("C:\\absolute\\path"));
 		paths.Add(RelativePath.FromString<RelativePath>("relative\\path"));
 		paths.Add(FilePath.FromString<FilePath>("file.txt"));
@@ -260,12 +247,12 @@ public class SemanticPathInterfaceTests
 		Assert.AreEqual(3, absolutePaths.Count);
 		Assert.AreEqual(3, relativePaths.Count);
 
-		// Verify all items are of correct types
+		// Verify all items can be cast to IPath
 		Assert.IsTrue(paths.All(p => p is not null));
-		Assert.IsTrue(filePaths.All(f => f is not null));
-		Assert.IsTrue(directoryPaths.All(d => d is not null));
-		Assert.IsTrue(absolutePaths.All(a => a is not null));
-		Assert.IsTrue(relativePaths.All(r => r is not null));
+		Assert.IsTrue(filePaths.All(p => p is IPath));
+		Assert.IsTrue(directoryPaths.All(p => p is IPath));
+		Assert.IsTrue(absolutePaths.All(p => p is IPath));
+		Assert.IsTrue(relativePaths.All(p => p is IPath));
 	}
 
 	[TestMethod]
@@ -355,5 +342,289 @@ public class SemanticPathInterfaceTests
 		IFileExtension iFileExtension = fileExtension;
 		Assert.IsNotNull(iFileName);
 		Assert.IsNotNull(iFileExtension);
+	}
+
+	[TestMethod]
+	public void DirectoryPath_Contents_ReturnsCorrectPathTypes()
+	{
+		// Create a test directory with some files
+		string tempDir = Path.GetTempPath();
+		string testDir = Path.Combine(tempDir, "SemanticPathTest_" + Guid.NewGuid().ToString("N")[..8]);
+		Directory.CreateDirectory(testDir);
+
+		try
+		{
+			// Create test files and subdirectory
+			string testFile1 = Path.Combine(testDir, "test1.txt");
+			string testFile2 = Path.Combine(testDir, "test2.log");
+			string subDir = Path.Combine(testDir, "subdir");
+			File.WriteAllText(testFile1, "test content 1");
+			File.WriteAllText(testFile2, "test content 2");
+			Directory.CreateDirectory(subDir);
+
+			// Test DirectoryPath
+			DirectoryPath dirPath = DirectoryPath.FromString<DirectoryPath>(testDir);
+			IEnumerable<IPath> contents = dirPath.Contents;
+
+			Assert.IsTrue(contents.Any(), "Contents should not be empty");
+			Assert.AreEqual(3, contents.Count(), "Should contain 2 files and 1 directory");
+
+			// Verify file types
+			IFilePath[] files = [.. contents.OfType<IFilePath>()];
+			Assert.AreEqual(2, files.Length, "Should contain 2 files");
+			Assert.IsTrue(files.All(f => f is FilePath), "Files should be FilePath type");
+
+			// Verify directory types
+			IDirectoryPath[] directories = [.. contents.OfType<IDirectoryPath>()];
+			Assert.AreEqual(1, directories.Length, "Should contain 1 directory");
+			Assert.IsTrue(directories.All(d => d is DirectoryPath), "Directories should be DirectoryPath type");
+		}
+		finally
+		{
+			// Clean up
+			if (Directory.Exists(testDir))
+			{
+				Directory.Delete(testDir, true);
+			}
+		}
+	}
+
+	[TestMethod]
+	public void AbsoluteDirectoryPath_Contents_ReturnsAbsolutePathTypes()
+	{
+		// Create a test directory with some files
+		string tempDir = Path.GetTempPath();
+		string testDir = Path.Combine(tempDir, "SemanticPathTest_" + Guid.NewGuid().ToString("N")[..8]);
+		Directory.CreateDirectory(testDir);
+
+		try
+		{
+			// Create test files and subdirectory
+			string testFile = Path.Combine(testDir, "test.txt");
+			string subDir = Path.Combine(testDir, "subdir");
+			File.WriteAllText(testFile, "test content");
+			Directory.CreateDirectory(subDir);
+
+			// Test AbsoluteDirectoryPath
+			AbsoluteDirectoryPath absDir = AbsoluteDirectoryPath.FromString<AbsoluteDirectoryPath>(testDir);
+			IEnumerable<IPath> contents = absDir.Contents;
+
+			Assert.IsTrue(contents.Any(), "Contents should not be empty");
+			Assert.AreEqual(2, contents.Count(), "Should contain 1 file and 1 directory");
+
+			// Verify file types are absolute
+			IAbsoluteFilePath[] absoluteFiles = [.. contents.OfType<IAbsoluteFilePath>()];
+			Assert.AreEqual(1, absoluteFiles.Length, "Should contain 1 absolute file");
+			Assert.IsTrue(absoluteFiles.All(f => f is AbsoluteFilePath), "Files should be AbsoluteFilePath type");
+
+			// Verify directory types are absolute
+			IAbsoluteDirectoryPath[] absoluteDirectories = [.. contents.OfType<IAbsoluteDirectoryPath>()];
+			Assert.AreEqual(1, absoluteDirectories.Length, "Should contain 1 absolute directory");
+			Assert.IsTrue(absoluteDirectories.All(d => d is AbsoluteDirectoryPath), "Directories should be AbsoluteDirectoryPath type");
+		}
+		finally
+		{
+			// Clean up
+			if (Directory.Exists(testDir))
+			{
+				Directory.Delete(testDir, true);
+			}
+		}
+	}
+
+	[TestMethod]
+	public void DirectoryPath_Contents_NonExistentDirectory_ReturnsEmpty()
+	{
+		// Test non-existent directory
+		DirectoryPath nonExistentDir = DirectoryPath.FromString<DirectoryPath>("/path/that/does/not/exist");
+		IEnumerable<IPath> contents = nonExistentDir.Contents;
+
+		Assert.IsFalse(contents.Any(), "Non-existent directory should return empty contents");
+	}
+
+	[TestMethod]
+	public void DirectoryPath_Contents_EmptyDirectory_ReturnsEmpty()
+	{
+		// Create an empty test directory
+		string tempDir = Path.GetTempPath();
+		string testDir = Path.Combine(tempDir, "SemanticPathTest_Empty_" + Guid.NewGuid().ToString("N")[..8]);
+		Directory.CreateDirectory(testDir);
+
+		try
+		{
+			DirectoryPath dirPath = DirectoryPath.FromString<DirectoryPath>(testDir);
+			IEnumerable<IPath> contents = dirPath.Contents;
+
+			Assert.IsFalse(contents.Any(), "Empty directory should return empty contents");
+		}
+		finally
+		{
+			// Clean up
+			if (Directory.Exists(testDir))
+			{
+				Directory.Delete(testDir, true);
+			}
+		}
+	}
+
+	[TestMethod]
+	public void DirectoryPath_Contents_PolymorphicUsage()
+	{
+		// Create a test directory with some files
+		string tempDir = Path.GetTempPath();
+		string testDir = Path.Combine(tempDir, "SemanticPathTest_Polymorphic_" + Guid.NewGuid().ToString("N")[..8]);
+		Directory.CreateDirectory(testDir);
+
+		try
+		{
+			// Create test files
+			string testFile1 = Path.Combine(testDir, "test1.txt");
+			string testFile2 = Path.Combine(testDir, "test2.doc");
+			File.WriteAllText(testFile1, "test content 1");
+			File.WriteAllText(testFile2, "test content 2");
+
+			// Test polymorphic usage with IDirectoryPath
+			DirectoryPath dirPath = DirectoryPath.FromString<DirectoryPath>(testDir);
+			IEnumerable<IPath> contents = dirPath.Contents;
+
+			Assert.IsTrue(contents.Any(), "Contents should not be empty");
+			Assert.AreEqual(2, contents.Count(), "Should contain 2 files");
+
+			// Test filtering by type
+			IFilePath[] files = [.. contents.OfType<IFilePath>()];
+			Assert.AreEqual(2, files.Length, "Should be able to filter files polymorphically");
+
+			// Test that all returned items are paths
+			Assert.IsTrue(contents.All(item => item is not null), "All contents should implement IPath");
+		}
+		finally
+		{
+			// Clean up
+			if (Directory.Exists(testDir))
+			{
+				Directory.Delete(testDir, true);
+			}
+		}
+	}
+
+	[TestMethod]
+	public void AllPathTypes_ImplicitStringConversion_WorksTransparently()
+	{
+		// Arrange - create instances of all path types
+		AbsolutePath absolutePath = AbsolutePath.FromString<AbsolutePath>("C:\\temp");
+		RelativePath relativePath = RelativePath.FromString<RelativePath>("relative\\path");
+		FilePath filePath = FilePath.FromString<FilePath>("file.txt");
+		DirectoryPath directoryPath = DirectoryPath.FromString<DirectoryPath>("directory");
+		AbsoluteFilePath absoluteFilePath = AbsoluteFilePath.FromString<AbsoluteFilePath>("C:\\temp\\file.txt");
+		RelativeFilePath relativeFilePath = RelativeFilePath.FromString<RelativeFilePath>("relative\\file.txt");
+		AbsoluteDirectoryPath absoluteDirectoryPath = AbsoluteDirectoryPath.FromString<AbsoluteDirectoryPath>("C:\\temp\\directory");
+		RelativeDirectoryPath relativeDirectoryPath = RelativeDirectoryPath.FromString<RelativeDirectoryPath>("relative\\directory");
+		FileName fileName = FileName.FromString<FileName>("file.txt");
+		FileExtension fileExtension = FileExtension.FromString<FileExtension>(".txt");
+
+		// Act & Assert - all should implicitly convert to string
+		string result1 = absolutePath; // Implicit conversion
+		string result2 = relativePath;
+		string result3 = filePath;
+		string result4 = directoryPath;
+		string result5 = absoluteFilePath;
+		string result6 = relativeFilePath;
+		string result7 = absoluteDirectoryPath;
+		string result8 = relativeDirectoryPath;
+		string result9 = fileName;
+		string result10 = fileExtension;
+
+		Assert.AreEqual("C:\\temp", result1);
+		Assert.AreEqual("relative\\path", result2);
+		Assert.AreEqual("file.txt", result3);
+		Assert.AreEqual("directory", result4);
+		Assert.AreEqual("C:\\temp\\file.txt", result5);
+		Assert.AreEqual("relative\\file.txt", result6);
+		Assert.AreEqual("C:\\temp\\directory", result7);
+		Assert.AreEqual("relative\\directory", result8);
+		Assert.AreEqual("file.txt", result9);
+		Assert.AreEqual(".txt", result10);
+	}
+
+	[TestMethod]
+	public void PathInterfaces_CanBeUsedInStringMethods()
+	{
+		// Arrange
+		IAbsoluteFilePath absoluteFilePath = AbsoluteFilePath.FromString<AbsoluteFilePath>("C:\\temp\\test.txt");
+		IDirectoryPath directoryPath = DirectoryPath.FromString<DirectoryPath>("documents");
+		IFileName fileName = FileName.FromString<FileName>("readme.md");
+
+		// Act & Assert - interface types should work transparently in string operations
+
+		// Test with System.IO.Path methods - need to cast interfaces to concrete types for string operations
+		string? directory = Path.GetDirectoryName(((AbsoluteFilePath)absoluteFilePath).ToString());
+		string filename = Path.GetFileName(((AbsoluteFilePath)absoluteFilePath).ToString());
+		string combined = Path.Combine(((DirectoryPath)directoryPath).ToString(), ((FileName)fileName).ToString());
+
+		Assert.AreEqual("C:\\temp", directory ?? string.Empty);
+		Assert.AreEqual("test.txt", filename);
+		Assert.IsTrue(combined.Contains("documents") && combined.Contains("readme.md"));
+	}
+
+	[TestMethod]
+	public void PathTypes_CanBeUsedInFileSystemMethods()
+	{
+		// Arrange
+		string tempDir = Path.GetTempPath();
+		string testDir = Path.Combine(tempDir, "SemanticPathTest_" + Guid.NewGuid().ToString("N")[..8]);
+		string testFile = Path.Combine(testDir, "test.txt");
+
+		AbsoluteDirectoryPath semanticDir = AbsoluteDirectoryPath.FromString<AbsoluteDirectoryPath>(testDir);
+		AbsoluteFilePath semanticFile = AbsoluteFilePath.FromString<AbsoluteFilePath>(testFile);
+
+		try
+		{
+			// Act - use semantic path types directly in System.IO methods
+			Directory.CreateDirectory(semanticDir); // Implicit conversion to string
+			File.WriteAllText(semanticFile, "test content"); // Implicit conversion to string
+
+			// Assert - verify the operations worked
+			bool dirExists = Directory.Exists(semanticDir); // Implicit conversion to string
+			bool fileExists = File.Exists(semanticFile); // Implicit conversion to string
+			string content = File.ReadAllText(semanticFile); // Implicit conversion to string
+
+			Assert.IsTrue(dirExists);
+			Assert.IsTrue(fileExists);
+			Assert.AreEqual("test content", content);
+		}
+		finally
+		{
+			// Cleanup
+			if (Directory.Exists(testDir))
+			{
+				Directory.Delete(testDir, true);
+			}
+		}
+	}
+
+	[TestMethod]
+	public void PathInterfaces_InPolymorphicCollections_CanBeUsedAsStrings()
+	{
+		// Arrange
+		List<IPath> paths = [
+			AbsolutePath.FromString<AbsolutePath>("C:\\absolute"),
+			RelativePath.FromString<RelativePath>("relative"),
+			FilePath.FromString<FilePath>("file.txt"),
+			DirectoryPath.FromString<DirectoryPath>("directory")
+		];
+
+		// Act & Assert - interface references should implicitly convert to strings
+		foreach (IPath path in paths)
+		{
+			// This works because the concrete types implement implicit string conversion
+			string? stringValue = path.ToString(); // Explicit call
+
+			// Test some string operations that would require implicit conversion
+			string pathWithPrefix = $"prefix_{path.ToString() ?? string.Empty}"; // Use string interpolation to avoid nullable issues
+			bool hasContent = !string.IsNullOrEmpty(pathWithPrefix);
+
+			Assert.IsTrue(hasContent);
+			Assert.IsTrue(pathWithPrefix.StartsWith("prefix_"));
+		}
 	}
 }

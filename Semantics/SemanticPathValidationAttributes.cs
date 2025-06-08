@@ -13,7 +13,7 @@ using System.IO;
 /// This attribute enforces the following rules:
 /// <list type="bullet">
 /// <item><description>Path length must not exceed 256 characters</description></item>
-/// <item><description>Path must not contain any characters returned by <see cref="System.IO.Path.GetInvalidPathChars()"/></description></item>
+/// <item><description>Path must not contain any characters returned by <see cref="Path.GetInvalidPathChars()"/></description></item>
 /// <item><description>Empty or null strings are considered valid</description></item>
 /// </list>
 /// The 256-character limit provides a reasonable balance between compatibility and practical usage,
@@ -44,7 +44,7 @@ public sealed class IsPathAttribute : SemanticStringValidationAttribute
 
 		// Check for characters from GetInvalidPathChars() and additional problematic characters
 		// In .NET Core+, GetInvalidPathChars() doesn't include all characters that can cause issues in paths
-		char[] invalidChars = [.. System.IO.Path.GetInvalidPathChars(), '<', '>', '|'];
+		char[] invalidChars = [.. Path.GetInvalidPathChars(), '<', '>', '|'];
 		return !value.Intersect(invalidChars).Any();
 	}
 }
@@ -61,7 +61,7 @@ public sealed class IsPathAttribute : SemanticStringValidationAttribute
 /// <item><description><c>../file.txt</c> - file in parent directory</description></item>
 /// <item><description><c>./folder/file.txt</c> - file in subdirectory (explicit current directory)</description></item>
 /// </list>
-/// This validation uses <see cref="System.IO.Path.IsPathFullyQualified(string)"/> to determine if a path is absolute.
+/// This validation uses <see cref="Path.IsPathFullyQualified(string)"/> to determine if a path is absolute.
 /// Empty or null strings are considered valid relative paths.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
@@ -77,7 +77,7 @@ public sealed class IsRelativePathAttribute : SemanticStringValidationAttribute
 	public override bool Validate(ISemanticString semanticString)
 	{
 		string value = semanticString.ToString();
-		return string.IsNullOrEmpty(value) || !System.IO.Path.IsPathFullyQualified(value);
+		return string.IsNullOrEmpty(value) || !Path.IsPathFullyQualified(value);
 	}
 }
 
@@ -92,7 +92,7 @@ public sealed class IsRelativePathAttribute : SemanticStringValidationAttribute
 /// <item><description><c>/usr/local/bin</c> - Unix/Linux absolute path</description></item>
 /// <item><description><c>\\server\share\file.txt</c> - UNC path</description></item>
 /// </list>
-/// This validation uses <see cref="System.IO.Path.IsPathFullyQualified(string)"/> with a directory separator appended
+/// This validation uses <see cref="Path.IsPathFullyQualified(string)"/> with a directory separator appended
 /// to handle edge cases where the path might be interpreted differently.
 /// Empty or null strings are considered valid for flexibility in initialization scenarios.
 /// </remarks>
@@ -109,7 +109,7 @@ public sealed class IsAbsolutePathAttribute : SemanticStringValidationAttribute
 	public override bool Validate(ISemanticString semanticString)
 	{
 		string value = semanticString.ToString();
-		return string.IsNullOrEmpty(value) || System.IO.Path.IsPathFullyQualified(value + System.IO.Path.DirectorySeparatorChar);
+		return string.IsNullOrEmpty(value) || Path.IsPathFullyQualified(value + Path.DirectorySeparatorChar);
 	}
 }
 
@@ -177,7 +177,7 @@ public sealed class IsFileNameAttribute : SemanticStringValidationAttribute
 	/// <remarks>
 	/// A valid filename must meet the following criteria:
 	/// <list type="bullet">
-	/// <item><description>Must not contain any characters from <see cref="System.IO.Path.GetInvalidFileNameChars()"/></description></item>
+	/// <item><description>Must not contain any characters from <see cref="Path.GetInvalidFileNameChars()"/></description></item>
 	/// <item><description>Must not be an existing directory path</description></item>
 	/// <item><description>Empty or null strings are considered valid</description></item>
 	/// </list>
@@ -185,7 +185,7 @@ public sealed class IsFileNameAttribute : SemanticStringValidationAttribute
 	public override bool Validate(ISemanticString semanticString)
 	{
 		string value = semanticString.ToString();
-		return string.IsNullOrEmpty(value) || (!Directory.Exists(value) && !value.Intersect(System.IO.Path.GetInvalidFileNameChars()).Any());
+		return string.IsNullOrEmpty(value) || (!Directory.Exists(value) && !value.Intersect(Path.GetInvalidFileNameChars()).Any());
 	}
 }
 
