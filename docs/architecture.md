@@ -188,6 +188,51 @@ IValidationRule
 └── [Custom validation rules]
 ```
 
+### Path Interface Hierarchy
+
+The library provides a comprehensive interface hierarchy for path types that enables polymorphism and type-safe operations:
+
+```
+IPath (base interface for all path types)
+├── IAbsolutePath : IPath
+├── IRelativePath : IPath
+├── IFilePath : IPath
+├── IDirectoryPath : IPath
+├── IAbsoluteFilePath : IFilePath, IAbsolutePath
+├── IRelativeFilePath : IFilePath, IRelativePath
+├── IAbsoluteDirectoryPath : IDirectoryPath, IAbsolutePath
+└── IRelativeDirectoryPath : IDirectoryPath, IRelativePath
+
+IFileName (separate hierarchy for non-path file components)
+IFileExtension (separate hierarchy for file extensions)
+```
+
+**Interface Implementation Mapping:**
+
+```csharp
+// Path types implement their corresponding interfaces
+Path : SemanticPath<Path>, IPath
+AbsolutePath : SemanticAbsolutePath<AbsolutePath>, IAbsolutePath
+RelativePath : SemanticRelativePath<RelativePath>, IRelativePath
+FilePath : SemanticFilePath<FilePath>, IFilePath
+DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDirectoryPath
+AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbsoluteFilePath
+RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRelativeFilePath
+AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirectoryPath>, IAbsoluteDirectoryPath
+RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirectoryPath>, IRelativeDirectoryPath
+
+// Non-path types have separate interfaces
+FileName : SemanticString<FileName>, IFileName
+FileExtension : SemanticString<FileExtension>, IFileExtension
+```
+
+**Polymorphic Benefits:**
+
+1. **Type-safe Collections**: Store different path types in the same collection using common interfaces
+2. **Polymorphic Methods**: Write methods that accept any path type or specific categories
+3. **Interface Segregation**: Use the most specific interface needed for your use case
+4. **Extensibility**: Easy to add new path types that integrate with existing polymorphic code
+
 ## Validation System
 
 ### Architecture Overview

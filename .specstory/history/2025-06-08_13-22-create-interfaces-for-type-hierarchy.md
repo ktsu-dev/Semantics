@@ -835,3 +835,192 @@ Excellent! Let me run just our specific interface tests to see how many we creat
 
 ---
 
+```bash
+dotnet test Semantics.Test --filter "FullyQualifiedName~SemanticPathInterfaceTests" --verbosity normal
+```
+
+```
+C:\dev\ktsu-dev\Semantics>dotnet test Semantics.Test --filter "FullyQualifiedName~SemanticPathInterfaceTests" --verbosity norm
+al
+
+Restore complete (0.6s)
+  Semantics succeeded (0.1s) → Semantics\bin\Debug\net9.0\ktsu.Semantics.dll
+  Semantics.Test succeeded (0.1s) → Semantics.Test\bin\Debug\net9.0\ktsu.Semantics.Test.dll
+  Semantics.Test test succeeded (0.8s)
+
+Test summary: total: 301, failed: 0, succeeded: 301, skipped: 0, duration: 0.5s
+Build succeeded in 2.4s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+Let me get a more specific view of just our interface tests:
+
+---
+
+```bash
+dotnet test Semantics.Test --filter "TestClass=SemanticPathInterfaceTests" --list-tests
+```
+
+```
+C:\dev\ktsu-dev\Semantics>dotnet test Semantics.Test --filter "TestClass=SemanticPathInterfaceTests" --list-tests
+
+  C:\dev\ktsu-dev\Semantics\Semantics.Test\Semantics.Test.csproj                                         Restore (0.0s)       
+  Semantics succeeded (0.2s) → Semantics\bin\Debug\net9.0\ktsu.Semantics.dll
+  Semantics.Test succeeded (0.2s) → Semantics.Test\bin\Debug\net9.0\ktsu.Semantics.Test.dll
+  Semantics.Test test succeeded (0.8s)
+
+Test summary: total: 301, failed: 0, succeeded: 301, skipped: 0, duration: 0.5s
+Build succeeded in 2.5s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+It seems like the filter isn't working as expected. Let me check if our tests are actually being run by examining the test output more directly:
+
+---
+
+```bash
+dotnet test Semantics.Test --logger "console;verbosity=detailed" | findstr "SemanticPathInterface"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>dotnet test Semantics.Test --logger "console;verbosity=detailed" | findstr "SemanticPathInterface"
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+Let me run a build first to make sure everything compiles correctly:
+
+---
+
+```bash
+dotnet build Semantics.Test
+```
+
+```
+C:\dev\ktsu-dev\Semantics>dotnet build Semantics.Test
+
+  C:\dev\ktsu-dev\Semantics\Semantics.Test\Semantics.Test.csproj                                         Restore (0.0s)       
+Restore complete (0.5s)
+  Semantics succeeded (0.2s) → Semantics\bin\Debug\net9.0\ktsu.Semantics.dll
+  Semantics.Test succeeded (0.2s) → Semantics.Test\bin\Debug\net9.0\ktsu.Semantics.Test.dll
+
+Build succeeded in 1.7s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+Perfect! The build succeeded with no errors. Now let me verify our test file exists and run the tests to see what we have:
+
+---
+
+<details>
+            <summary>Grep search for "class SemanticPathInterfaceTests" • **1** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/SemanticPathInterfaceTests.cs` | L9 | `public class SemanticPathInterfaceTests` |
+
+</details>
+
+---
+
+_**User**_
+
+add the path interface hierarchy to the documentation and examples
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+I'll add documentation about the path interface hierarchy to both the documentation and examples. Let me first explore the current structure to see where this information should go.
+
+---
+
+<details>
+            <summary>Listed directory docs • **3** results</summary>
+        
+| Name |
+|-------|
+| 📄 `validation-reference.md` |
+| 📄 `advanced-usage.md` |
+| 📄 `architecture.md` |
+
+</details>
+
+---
+
+<details>
+            <summary>Listed directory examples • **9** results</summary>
+        
+| Name |
+|-------|
+| 📄 `validation-attributes.md` |
+| 📄 `real-world-scenarios.md` |
+| 📄 `advanced-validation.md` |
+| 📄 `factory-pattern.md` |
+| 📄 `path-handling.md` |
+| 📄 `string-operations.md` |
+| 📄 `type-conversions.md` |
+| 📄 `getting-started.md` |
+| 📄 `examples-index.md` |
+
+</details>
+
+---
+
+Perfect! I can see there's already a `path-handling.md` example file, which is the perfect place to add interface examples. Let me also check the main README to see if it needs updating, then add the interface documentation.
+
+---
+
+Read file: README.md
+
+---
+
+Now let me check the path-handling.md example to see what's already there and add interface examples:
+
+---
+
+Read file: examples/path-handling.md
+
+---
+
+Now let me also check the architecture documentation to see if interfaces are mentioned there:
+
+---
+
+Read file: docs/architecture.md
+
+---
+
+Perfect! Now I have a good understanding of the documentation structure. Let me create comprehensive documentation for the path interface hierarchy. I'll:
+
+1. Add a section to the architecture documentation about the interface hierarchy
+2. Add extensive examples to the path-handling guide showing polymorphic usage
+3. Update the README if needed
+
+Let's start with adding to the architecture documentation:
+
+---
+
+
+
+---
+
+Now let me add comprehensive interface examples to the path-handling guide:
+
+---
+

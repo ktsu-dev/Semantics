@@ -20,7 +20,7 @@ The Semantics library enables you to create strongly-typed string wrappers that 
 -   **Factory Pattern**: Clean object creation with `ISemanticStringFactory<T>`
 -   **Contract Programming**: Behavioral contracts ensuring Liskov Substitution Principle compliance
 -   **Automatic Validation**: Built-in attribute-based validation system
--   **Path Handling**: Specialized semantic path types with file system operations
+-   **Path Handling**: Specialized semantic path types with file system operations and polymorphic interface hierarchy
 -   **Quantity Types**: Support for numeric values with units and validation
 -   **Performance**: Zero-allocation conversions and optimized operations
 -   **Comprehensive**: Full XML documentation and IntelliSense support
@@ -74,6 +74,21 @@ Console.WriteLine(filePath.DirectoryPath);   // C:\temp
 var absolutePath = AbsolutePath.FromString<AbsolutePath>(@"C:\Projects\MyApp");
 Console.WriteLine(absolutePath.Exists);      // True/False
 Console.WriteLine(absolutePath.IsDirectory); // True/False
+
+// Polymorphic path operations using interfaces
+List<IPath> paths = [
+    AbsoluteFilePath.FromString<AbsoluteFilePath>(@"C:\file.txt"),
+    RelativeDirectoryPath.FromString<RelativeDirectoryPath>(@"temp\dir"),
+    FilePath.FromString<FilePath>(@"document.pdf")
+];
+
+// Filter by interface type
+var filePaths = paths.OfType<IFilePath>().ToList();
+var absolutePaths = paths.OfType<IAbsolutePath>().ToList();
+
+// Polymorphic method parameters
+public void ProcessAnyPath(IPath path) { /* works with any path type */ }
+public void ProcessFileOnly(IFilePath filePath) { /* files only */ }
 ```
 
 ### Multiple Validations
