@@ -1,3 +1,10 @@
+## v1.0.2 (patch)
+
+Changes since v1.0.1:
+
+- Enhance documentation for path interface hierarchy and examples ([@matt-edmondson](https://github.com/matt-edmondson))
+- Add interfaces for path type hierarchy to enable polymorphism ([@matt-edmondson](https://github.com/matt-edmondson))
+- Add comprehensive interface tests for semantic path types ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.1 (patch)
 
 Changes since v1.0.0:
