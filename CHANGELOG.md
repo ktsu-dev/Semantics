@@ -1,3 +1,8 @@
+## v1.0.3 (patch)
+
+Changes since v1.0.2:
+
+- Refactor GitHub Actions workflow to reposition .NET SDK setup step for improved clarity and maintainability. The setup step is now placed after the JDK setup, ensuring a more logical flow in the CI process. ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.2 (patch)
 
 Changes since v1.0.1:
