@@ -806,6 +806,607 @@ Now let me add the examples from the code to the documentation and also add exam
 
 ---
 
+```diff
+  
+  This validation reference provides the foundation for creating robust, type-safe string types with comprehensive validation rules.
++ 
++ ## Practical Examples
++ 
++ ### Domain-Specific Types
++ 
++ ```csharp
++ // API token that must be Base64-encoded
++ [IsBase64]
++ public sealed record ApiToken : SemanticString<ApiToken>;
++ // Usage: var token = "SGVsbG9Xb3JsZA==".As<ApiToken>();
++ 
++ // User's email address for account management
++ [IsEmailAddress]
++ public sealed record UserEmail : SemanticString<UserEmail>;
++ // Usage: var email = "user@company.com".As<UserEmail>();
++ 
++ // Blog post URL slug that's SEO-friendly
++ [RegexMatch(@"^[a-z0-9]+(-[a-z0-9]+)*$")]
++ public sealed record BlogSlug : SemanticString<BlogSlug>;
++ // Usage: var slug = "my-awesome-blog-post".As<BlogSlug>();
++ 
++ // Hexadecimal color code for UI theming
++ [RegexMatch(@"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")]
++ public sealed record ThemeColor : SemanticString<ThemeColor>;
++ // Usage: var color = "#FF5733".As<ThemeColor>();
++ 
++ // JWT authentication token
++ [RegexMatch(@"^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$")]
++ public sealed record AuthToken : SemanticString<AuthToken>;
++ // Usage: var jwt = "header.payload.signature".As<AuthToken>();
++ ```
++ 
++ ### Combining Multiple Validations
++ 
++ ```csharp
++ // Domain name that must end with .com or .org (ValidateAny strategy)
++ [ValidateAny]
++ [EndsWith(".com")]
++ [EndsWith(".org")]
++ public sealed record TrustedDomain : SemanticString<TrustedDomain>;
++ // Usage: var domain = "example.com".As<TrustedDomain>();
++ 
++ // Secure URL with multiple requirements (ValidateAll strategy - default)
++ [ValidateAll]
++ [StartsWith("https://")]
++ [Contains(".example.com")]
++ public sealed record SecureApiUrl : SemanticString<SecureApiUrl>;
++ // Usage: var url = "https://secure.example.com/api".As<SecureApiUrl>();
++ ```
++ 
++ ## Migration from Obsolete Attributes
++ 
++ Some validation attributes validate types that have first-class .NET representations. While these attributes still provide accurate validation, you should prefer the first-class types for better performance, type safety, and API richness.
++ 
++ ### ❌ Discouraged: String-based validation
++ ```csharp
++ // These work but are discouraged
++ [IsVersion]
++ public sealed record SoftwareVersion : SemanticString<SoftwareVersion>;
++ 
++ [IsGuid] 
++ public sealed record UniqueId : SemanticString<UniqueId>;
++ 
++ [IsIpAddress]
++ public sealed record ServerIpAddress : SemanticString<ServerIpAddress>;
++ 
++ [IsDateTime]
++ public sealed record EventTimestamp : SemanticString<EventTimestamp>;
++ 
++ [IsTimeSpan]
++ public sealed record Duration : SemanticString<Duration>;
++ 
++ [IsUri]
++ public sealed record WebsiteUrl : SemanticString<WebsiteUrl>;
++ 
++ [IsDecimal]
++ public sealed record Price : SemanticString<Price>;
++ 
++ [IsDouble]
++ public sealed record Measurement : SemanticString<Measurement>;
++ 
++ [IsInt32]
++ public sealed record Count : SemanticString<Count>;
++ 
++ [IsBoolean]
++ public sealed record Flag : SemanticString<Flag>;
++ ```
++ 
++ ### ✅ Recommended: First-class .NET types
++ ```csharp
++ // Use these instead for better type safety and performance
++ public class SoftwareVersion 
++ {
++     public Version Value { get; }
++     public SoftwareVersion(string version) => Value = Version.Parse(version);
++     // Rich API: Major, Minor, Build, Revision, comparison operators
++ }
++ 
++ public class UniqueId 
++ {
++     public Guid Value { get; }  
++     public UniqueId() => Value = Guid.NewGuid();
++     public UniqueId(string guid) => Value = Guid.Parse(guid);
++     // Built-in: NewGuid(), equality, efficient 16-byte storage
++ }
++ 
++ public class ServerIpAddress 
++ {
++     public IPAddress Value { get; }
++     public ServerIpAddress(string ip) => Value = IPAddress.Parse(ip);
++     // Rich API: IPv4/IPv6 support, network operations, parsing
++ }
++ 
++ // For other types, use System.DateTime, System.TimeSpan, System.Uri, 
++ // System.Decimal, System.Double, System.Int32, System.Boolean directly
++ ```
++ 
++ ### When to Still Use String-based Validation
++ 
++ Use the obsolete validation attributes only when you specifically need:
++ - String-based semantic validation in a larger semantic string system
++ - Validation as part of a string processing pipeline
++ - Compatibility with existing semantic string infrastructure
++ 
++ For new code, prefer the first-class .NET types directly.
+  
+```
+
+---
+
+Now let me delete the ValidationAttributeExamples.cs file since all examples are now in documentation:
+
+---
+
+Deleting the ValidationAttributeExamples.cs file since all examples have been moved to markdown documentation
+
+---
+
+Perfect! I've successfully moved all the validation attribute examples from the code to documentation. Here's what I accomplished:
+
+## ✅ Examples Moved to Documentation
+
+**Added to `docs/validation-reference.md`:**
+
+### 1. **Practical Examples Section**
+- **Domain-Specific Types**: ApiToken, UserEmail, BlogSlug, ThemeColor, AuthToken
+- **Multiple Validation Examples**: TrustedDomain (ValidateAny), SecureApiUrl (ValidateAll)
+
+### 2. **Migration Guidance Section**
+- **❌ Discouraged**: Examples of using obsolete validation attributes (IsVersion, IsGuid, IsIpAddress, etc.)
+- **✅ Recommended**: How to use first-class .NET types instead (Version, Guid, IPAddress, etc.)
+- **When to Still Use**: Clear guidance on the rare cases where string-based validation is still appropriate
+
+### 3. **Benefits Highlighted**
+- Type safety and performance advantages
+- Rich API capabilities of first-class types
+- Specific examples of better alternatives
+
+## ✅ Code Cleanup
+- **Deleted**: `ValidationAttributeExamples.cs` file entirely
+- **Result**: No more obsolete examples in code causing compiler warnings
+- **Benefit**: Cleaner codebase focused on current best practices
+
+This approach provides:
+- **Better Documentation**: Examples are searchable, versionable, and don't cause compiler warnings
+- **Clear Migration Path**: Developers can see exactly how to transition from obsolete patterns
+- **Educational Value**: Side-by-side comparison of discouraged vs. recommended approaches
+- **Clean Codebase**: No obsolete examples cluttering the production code
+
+The documentation now serves as a comprehensive guide for both current best practices and migration from deprecated patterns.
+
+---
+
+_**User**_
+
+organize the validation directory
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+Let me first explore the current structure of the validation directory to understand how it's organized and identify areas for improvement:
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Validation • **8** results</summary>
+        
+| Name |
+|-------|
+| 📁 `Attributes` |
+| 📄 `SemanticStringValidationAttributes.cs` |
+| 📄 `SemanticPathValidationAttributes.cs` |
+| 📁 `Strategies` |
+| 📁 `Rules` |
+| 📄 `IValidationStrategy.cs` |
+| 📄 `IValidationRule.cs` |
+| 📄 `ValidationRuleBase.cs` |
+
+</details>
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Validation/Attributes • **12** results</summary>
+        
+| Name |
+|-------|
+| 📁 `String` |
+| 📁 `Format` |
+| 📁 `Casing` |
+| 📄 `SemanticStringValidationAttribute.cs` |
+| 📁 `Path` |
+| 📄 `RegexMatchAttribute.cs` |
+| 📄 `PrefixAndSuffixAttribute.cs` |
+| 📄 `ContainsAttribute.cs` |
+| 📄 `EndsWithAttribute.cs` |
+| 📄 `StartsWithAttribute.cs` |
+| 📄 `ValidateAnyAttribute.cs` |
+| 📄 `ValidateAllAttribute.cs` |
+
+</details>
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Validation/Attributes/String • **12** results</summary>
+        
+| Name |
+|-------|
+| 📄 `IsEmailAddressAttribute.cs` |
+| 📄 `IsBase64Attribute.cs` |
+| 📄 `IsBooleanAttribute.cs` |
+| 📄 `IsInt32Attribute.cs` |
+| 📄 `IsDoubleAttribute.cs` |
+| 📄 `IsDecimalAttribute.cs` |
+| 📄 `IsUriAttribute.cs` |
+| 📄 `IsTimeSpanAttribute.cs` |
+| 📄 `IsDateTimeAttribute.cs` |
+| 📄 `IsGuidAttribute.cs` |
+| 📄 `IsIpAddressAttribute.cs` |
+| 📄 `IsVersionAttribute.cs` |
+
+</details>
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Validation/Attributes/Format • **7** results</summary>
+        
+| Name |
+|-------|
+| 📄 `HasMinimumLinesAttribute.cs` |
+| 📄 `HasMaximumLinesAttribute.cs` |
+| 📄 `HasExactLinesAttribute.cs` |
+| 📄 `HasNonWhitespaceContentAttribute.cs` |
+| 📄 `IsEmptyOrWhitespaceAttribute.cs` |
+| 📄 `IsMultiLineAttribute.cs` |
+| 📄 `IsSingleLineAttribute.cs` |
+
+</details>
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Validation/Attributes/Path • **10** results</summary>
+        
+| Name |
+|-------|
+| 📄 `IsValidPathAttribute.cs` |
+| 📄 `IsValidFileNameAttribute.cs` |
+| 📄 `IsExtensionAttribute.cs` |
+| 📄 `DoesExistAttribute.cs` |
+| 📄 `IsFileNameAttribute.cs` |
+| 📄 `IsFilePathAttribute.cs` |
+| 📄 `IsDirectoryPathAttribute.cs` |
+| 📄 `IsAbsolutePathAttribute.cs` |
+| 📄 `IsRelativePathAttribute.cs` |
+| 📄 `IsPathAttribute.cs` |
+
+</details>
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Validation/Attributes/Casing • **9** results</summary>
+        
+| Name |
+|-------|
+| 📄 `IsTitleCaseAttribute.cs` |
+| 📄 `IsSentenceCaseAttribute.cs` |
+| 📄 `IsUpperCaseAttribute.cs` |
+| 📄 `IsLowerCaseAttribute.cs` |
+| 📄 `IsMacroCaseAttribute.cs` |
+| 📄 `IsSnakeCaseAttribute.cs` |
+| 📄 `IsKebabCaseAttribute.cs` |
+| 📄 `IsCamelCaseAttribute.cs` |
+| 📄 `IsPascalCaseAttribute.cs` |
+
+</details>
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Validation/Strategies • **3** results</summary>
+        
+| Name |
+|-------|
+| 📄 `ValidationStrategyFactory.cs` |
+| 📄 `ValidateAnyStrategy.cs` |
+| 📄 `ValidateAllStrategy.cs` |
+
+</details>
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Validation/Rules • **2** results</summary>
+        
+| Name |
+|-------|
+| 📄 `PatternValidationRule.cs` |
+| 📄 `LengthValidationRule.cs` |
+
+</details>
+
+---
+
+Now I can see the current organization. Let me reorganize it for better structure. I notice several issues:
+
+1. Some attributes are in the root `/Attributes` directory when they should be categorized
+2. The `String` folder contains mixed types - some are for .NET types, some are for actual string formats  
+3. Strategy and validation attributes are mixed in the same level
+4. There are some organizational inconsistencies
+
+Let me create a better organization:
+
+---
+
+```bash
+mkdir -p "Semantics/Validation/Attributes/Quantity"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>mkdir -p "Semantics/Validation/Attributes/Quantity"
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+mkdir -p "Semantics/Validation/Attributes/FirstClassTypes"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>mkdir -p "Semantics/Validation/Attributes/FirstClassTypes"
+A subdirectory or file -p already exists.
+Error occurred while processing: -p.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+Let me create the directories properly using PowerShell:
+
+---
+
+```bash
+md "Semantics\Validation\Attributes\Quantity"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>md "Semantics\Validation\Attributes\Quantity"
+A subdirectory or file Semantics\Validation\Attributes\Quantity already exists.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+md "Semantics\Validation\Attributes\FirstClassTypes"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>md "Semantics\Validation\Attributes\FirstClassTypes"
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+Now let me move the first-class type validation attributes from the String directory to the new FirstClassTypes directory:
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\String\IsVersionAttribute.cs" "Semantics\Validation\Attributes\FirstClassTypes\"
+```
+
+```
+        1 file(s) moved.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\String\IsGuidAttribute.cs" "Semantics\Validation\Attributes\FirstClassTypes\"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>move "Semantics\Validation\Attributes\String\IsGuidAttribute.cs" "Semantics\Validation\Attributes\Fi
+rstClassTypes\"
+        1 file(s) moved.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\String\IsIpAddressAttribute.cs" "Semantics\Validation\Attributes\FirstClassTypes\"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>move "Semantics\Validation\Attributes\String\IsIpAddressAttribute.cs" "Semantics\Validation\Attribut
+es\FirstClassTypes\"
+        1 file(s) moved.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\String\IsDateTimeAttribute.cs" "Semantics\Validation\Attributes\FirstClassTypes\"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>move "Semantics\Validation\Attributes\String\IsDateTimeAttribute.cs" "Semantics\Validation\Attribute
+s\FirstClassTypes\"
+        1 file(s) moved.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\String\IsTimeSpanAttribute.cs" "Semantics\Validation\Attributes\FirstClassTypes\"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>move "Semantics\Validation\Attributes\String\IsTimeSpanAttribute.cs" "Semantics\Validation\Attribute
+s\FirstClassTypes\"
+        1 file(s) moved.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\String\IsUriAttribute.cs" "Semantics\Validation\Attributes\FirstClassTypes\"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>move "Semantics\Validation\Attributes\String\IsUriAttribute.cs" "Semantics\Validation\Attributes\Fir
+stClassTypes\"
+        1 file(s) moved.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\String\IsDecimalAttribute.cs" "Semantics\Validation\Attributes\FirstClassTypes\"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>move "Semantics\Validation\Attributes\String\IsDecimalAttribute.cs" "Semantics\Validation\Attributes
+\FirstClassTypes\"
+        1 file(s) moved.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\String\IsDoubleAttribute.cs" "Semantics\Validation\Attributes\FirstClassTypes\"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>move "Semantics\Validation\Attributes\String\IsDoubleAttribute.cs" "Semantics\Validation\Attributes\
+FirstClassTypes\"
+        1 file(s) moved.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\String\IsInt32Attribute.cs" "Semantics\Validation\Attributes\FirstClassTypes\"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>move "Semantics\Validation\Attributes\String\IsInt32Attribute.cs" "Semantics\Validation\Attributes\F
+irstClassTypes\"
+        1 file(s) moved.
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\String\IsBooleanAttribute.cs" "Semantics\Validation\Attributes\FirstClassTypes\"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>move "Semantics\Validation\Attributes\String\IsBooleanAttribute.cs" "Semantics\Validation\Attributes
+\FirstClassTypes\"
+        1 file(s) moved.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+Now let me check if there are any quantity validation attributes that should be moved to the Quantity directory:
+
+---
+
+<details>
+            <summary>Grep search for "class.*IsPositive.*Attribute|class.*IsNegative.*Attribute|class.*IsInRange.*Attribute|class.*HasLength.*Attribute" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+Let me search for files that might contain quantity validation:
+
+---
+
+<details>
+            <summary>Grep search for "IsPositive|IsNegative|IsInRange|HasLength" • **1** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/ErrorHandlingTests.cs` | L302 | `Assert.IsTrue(double.IsPositiveInfinity(result.Quantity));` |
+
+</details>
+
+---
+
+It looks like the quantity validation attributes might not exist yet, so I'll move the strategy attributes to better organize them. Let me also move the validation strategy attributes that are currently in the root attributes directory:
+
+---
+
+```bash
+move "Semantics\Validation\Attributes\ValidateAnyAttribute.cs" "Semantics\Validation\Strategies\"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>move "Semantics\Validation\Attributes\ValidateAnyAttribute.cs" "Semantics\Validation\Strategies\"
+        1 file(s) moved.
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
 
 
 ---

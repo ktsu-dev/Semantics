@@ -239,3 +239,7 @@ When adding XML documentation comments:
     *   Perform final testing across different .NET versions.
     *   Conduct performance testing (if applicable).
     *   Conduct a security review of validation logic.
+*   The obsolete examples, including `ServerIpAddress`, `UniqueId`, and `SoftwareVersion`, should be moved to documentation. The documentation should show:
+    1.  ❌ **Discouraged approach**: Using semantic strings with obsolete validation attributes
+    2.  ✅ **Recommended approach**: Using first-class .NET types directly
+    3.  **Migration guidance**: How to transition from string-based validation to proper types
