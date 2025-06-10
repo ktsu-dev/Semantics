@@ -36,6 +36,7 @@ When adding XML documentation comments:
 
 (General coding standards and best practices are defined here.)
 
+*   One type definition per file.
 *   When using classes like `Path`, `File`, and `Directory` from `System.IO`, fully qualify the class name (e.g., `System.IO.Path`) if a `using System.IO;` statement is not present in the file.
 *   When referencing methods or classes in XML documentation comments, use fully qualified names (e.g., `<see cref="System.IO.Path.IsPathFullyQualified(string)"/>`) to avoid ambiguous references.
 *   Apply SOLID and DRY principles to improve code design.
@@ -81,6 +82,8 @@ When adding XML documentation comments:
     *   `IsRoot` - Determines if this is a root directory
     *   `GetRelativePathTo(AbsoluteDirectoryPath)` - Creates relative path to another directory
 *   For `RelativeDirectoryPath`:
+    *   `Parent` - Gets the parent directory (appropriately typed)
+    *   `Name` - Gets the directory name
     *   `Depth` - Gets the relative depth (number of directory levels)
     *   `ToAbsolute(AbsoluteDirectoryPath)` - Converts to absolute path using a base
     *   `Normalize()` - Normalizes the path by resolving `.` and `..` components
@@ -98,7 +101,14 @@ When adding XML documentation comments:
 *   ReadOnlySpan\<char> Usage - Use spans for path parsing to reduce allocations
 *   Pooled StringBuilder - For path combination operations
 *   Async Directory Enumeration - For Contents property with large directories
-*   When implementing span semantics, create overloads instead of suffixing with "Span".
+*   Use span semantics instead of suffixing with "Span".
+*   Use ReadOnlySpan overloads instead of creating methods with a Span suffix. If the signature overlaps with existing methods, the return type can be different.
+*   When using implicit operators to convert to `ReadOnlySpan<char>`, use `value is null ? default : value.AsSpan()` instead of `value?.AsSpan() ?? default`.
+*   When calculating directory `Depth`, the value is the number of directory separators in the path.
+*   When implementing `IsChildOf` and `IsParentOf` methods:
+    *   Cache full paths to avoid repeated `Path.GetFullPath` calls
+    *   Ensure the parent path ends with a directory separator for accurate comparison using `StartsWith`.
+    *   Use `StringComparison.OrdinalIgnoreCase` for case-insensitive comparisons.
 
 ## DEBUGGING
 
@@ -175,3 +185,4 @@ When adding XML documentation comments:
 *   When adding new interfaces to the project, add tests to verify that the interfaces are properly implemented and that polymorphism works as expected. Consider adding the interface tests to the existing `SemanticPathTests.cs` file or creating a separate test file, depending on the existing test structure.
 *   Determine if interfaces can implicitly cast to system strings so that they can be passed transparently where strings are normally used.
 *   Split out the non-trivial types from files with multiple types in them
+*   When calculating directory `Depth`, the value is the number of directory separators in the path.
