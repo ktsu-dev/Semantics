@@ -5,6 +5,7 @@
 namespace ktsu.Semantics;
 
 using System;
+using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted double-precision floating-point number.
@@ -20,12 +21,35 @@ using System;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.Double directly instead of semantic string types. Double provides better type safety, performance, built-in mathematical operations, and support for special floating-point values.")]
-public sealed class IsDoubleAttribute : SemanticStringValidationAttribute
+public sealed class IsDoubleAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is a valid double-precision floating-point number.
+	/// Creates the FluentValidation validator for Double validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>True if the string is a valid double, false otherwise.</returns>
-	public override bool Validate(ISemanticString semanticString) => double.TryParse(semanticString.WeakString, out _);
+	/// <returns>A FluentValidation validator for Double strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new DoubleValidator();
+
+	/// <summary>
+	/// FluentValidation validator for Double strings.
+	/// </summary>
+	private sealed class DoubleValidator : FluentValidationAdapter
+	{
+		/// <summary>
+		/// Initializes a new instance of the DoubleValidator class.
+		/// </summary>
+		public DoubleValidator()
+		{
+			RuleFor(value => value)
+				.Must(BeValidDouble)
+				.WithMessage("The value must be a valid double-precision floating-point number.")
+				.When(value => !string.IsNullOrEmpty(value));
+		}
+
+		/// <summary>
+		/// Validates that a string is a valid double-precision floating-point number.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is a valid double, false otherwise</returns>
+		private static bool BeValidDouble(string value) => double.TryParse(value, out _);
+	}
 }

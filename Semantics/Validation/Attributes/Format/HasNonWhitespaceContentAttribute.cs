@@ -5,6 +5,7 @@
 namespace ktsu.Semantics;
 
 using System;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string contains at least some non-whitespace content
@@ -15,18 +16,35 @@ using System;
 /// Examples of invalid strings: "", "   ", "\t\n\r", null
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class HasNonWhitespaceContentAttribute : SemanticStringValidationAttribute
+public sealed class HasNonWhitespaceContentAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string contains non-whitespace content.
+	/// Creates the FluentValidation validator for non-whitespace content validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string contains non-whitespace content; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for non-whitespace content</returns>
+	protected override FluentValidationAdapter CreateValidator() => new NonWhitespaceContentValidator();
+
+	/// <summary>
+	/// FluentValidation validator for non-whitespace content.
+	/// </summary>
+	private sealed class NonWhitespaceContentValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		return !string.IsNullOrWhiteSpace(value);
+		/// <summary>
+		/// Initializes a new instance of the NonWhitespaceContentValidator class.
+		/// </summary>
+		public NonWhitespaceContentValidator()
+		{
+			RuleFor(value => value)
+				.Must(HaveNonWhitespaceContent)
+				.WithMessage("The text must contain at least some non-whitespace content.");
+		}
+
+		/// <summary>
+		/// Validates that a string contains non-whitespace content.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string contains non-whitespace content, false otherwise</returns>
+		private static bool HaveNonWhitespaceContent(string value) =>
+			!string.IsNullOrWhiteSpace(value);
 	}
 }

@@ -6,27 +6,46 @@ namespace ktsu.Semantics;
 
 using System;
 using System.IO;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a path represents a directory (not an existing file)
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsDirectoryPathAttribute : SemanticStringValidationAttribute
+public sealed class IsDirectoryPathAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string represents a directory path by ensuring it's not an existing file.
+	/// Creates the FluentValidation validator for directory path validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is empty, null, or not an existing file; otherwise, <see langword="false"/>.
-	/// </returns>
-	/// <remarks>
-	/// This validation passes if the path doesn't exist as a file, allowing for non-existent directories
-	/// and existing directories. It only fails if the path exists and is specifically a file.
-	/// </remarks>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for directory paths</returns>
+	protected override FluentValidationAdapter CreateValidator() => new DirectoryPathValidator();
+
+	/// <summary>
+	/// FluentValidation validator for directory paths.
+	/// </summary>
+	private sealed class DirectoryPathValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		return string.IsNullOrEmpty(value) || !File.Exists(value);
+		/// <summary>
+		/// Initializes a new instance of the DirectoryPathValidator class.
+		/// </summary>
+		public DirectoryPathValidator()
+		{
+			RuleFor(value => value)
+				.Must(BeValidDirectoryPath)
+				.WithMessage("The path must not be an existing file.")
+				.When(value => !string.IsNullOrEmpty(value));
+		}
+
+		/// <summary>
+		/// Validates that a path represents a directory by ensuring it's not an existing file.
+		/// </summary>
+		/// <param name="value">The path to validate</param>
+		/// <returns>True if the path is not an existing file, false otherwise</returns>
+		/// <remarks>
+		/// This validation passes if the path doesn't exist as a file, allowing for non-existent directories
+		/// and existing directories. It only fails if the path exists and is specifically a file.
+		/// </remarks>
+		private static bool BeValidDirectoryPath(string value) =>
+			string.IsNullOrEmpty(value) || !File.Exists(value);
 	}
 }

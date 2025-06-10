@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string has exactly the specified number of lines
@@ -20,40 +21,63 @@ using System.Linq;
 /// </remarks>
 /// <param name="exactLines">The exact number of lines required.</param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class HasExactLinesAttribute(int exactLines) : SemanticStringValidationAttribute
+public sealed class HasExactLinesAttribute(int exactLines) : FluentSemanticStringValidationAttribute
 {
-
 	/// <summary>
 	/// Gets the exact number of lines required.
 	/// </summary>
 	public int ExactLines { get; } = exactLines;
 
 	/// <summary>
-	/// Validates that the semantic string has exactly the specified number of lines.
+	/// Creates the FluentValidation validator for exact lines validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string has exactly the specified lines; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for exact lines</returns>
+	protected override FluentValidationAdapter CreateValidator() => new ExactLinesValidator(ExactLines);
+
+	/// <summary>
+	/// FluentValidation validator for exact lines.
+	/// </summary>
+	private sealed class ExactLinesValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		private readonly int exactLines;
+
+		/// <summary>
+		/// Initializes a new instance of the ExactLinesValidator class.
+		/// </summary>
+		/// <param name="exactLines">The exact number of lines required</param>
+		public ExactLinesValidator(int exactLines)
 		{
-			return ExactLines == 0;
+			this.exactLines = exactLines;
+
+			RuleFor(value => value)
+				.Must(HaveExactLines)
+				.WithMessage($"The text must have exactly {exactLines} line(s).");
 		}
 
-		// Count line breaks and add 1
-		int lineCount = value.Count(c => c == '\n') + 1;
-
-		// Handle Windows-style line endings (\r\n) - don't double count
-		if (value.Contains("\r\n"))
+		/// <summary>
+		/// Validates that a string has exactly the specified number of lines.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string has exactly the specified lines, false otherwise</returns>
+		private bool HaveExactLines(string value)
 		{
-			int crlfCount = value.Split(["\r\n"], StringSplitOptions.None).Length - 1;
-			int lfOnlyCount = value.Count(c => c == '\n') - crlfCount;
-			lineCount = crlfCount + lfOnlyCount + 1;
-		}
+			if (string.IsNullOrEmpty(value))
+			{
+				return exactLines == 0;
+			}
 
-		return lineCount == ExactLines;
+			// Count line breaks and add 1
+			int lineCount = value.Count(c => c == '\n') + 1;
+
+			// Handle Windows-style line endings (\r\n) - don't double count
+			if (value.Contains("\r\n"))
+			{
+				int crlfCount = value.Split(["\r\n"], StringSplitOptions.None).Length - 1;
+				int lfOnlyCount = value.Count(c => c == '\n') - crlfCount;
+				lineCount = crlfCount + lfOnlyCount + 1;
+			}
+
+			return lineCount == exactLines;
+		}
 	}
 }

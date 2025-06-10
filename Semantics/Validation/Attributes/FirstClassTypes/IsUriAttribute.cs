@@ -5,6 +5,7 @@
 namespace ktsu.Semantics;
 
 using System;
+using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted URI.
@@ -20,12 +21,35 @@ using System;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.Uri directly instead of semantic string types. Uri provides better type safety, performance, built-in component access, and rich API for URI operations.")]
-public sealed class IsUriAttribute : SemanticStringValidationAttribute
+public sealed class IsUriAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is a valid URI.
+	/// Creates the FluentValidation validator for URI validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>True if the string is a valid URI, false otherwise.</returns>
-	public override bool Validate(ISemanticString semanticString) => Uri.TryCreate(semanticString.WeakString, UriKind.Absolute, out _);
+	/// <returns>A FluentValidation validator for URI strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new UriValidator();
+
+	/// <summary>
+	/// FluentValidation validator for URI strings.
+	/// </summary>
+	private sealed class UriValidator : FluentValidationAdapter
+	{
+		/// <summary>
+		/// Initializes a new instance of the UriValidator class.
+		/// </summary>
+		public UriValidator()
+		{
+			RuleFor(value => value)
+				.Must(BeValidUri)
+				.WithMessage("The value must be a valid absolute URI.")
+				.When(value => !string.IsNullOrEmpty(value));
+		}
+
+		/// <summary>
+		/// Validates that a string is a valid URI.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is a valid URI, false otherwise</returns>
+		private static bool BeValidUri(string value) => Uri.TryCreate(value, UriKind.Absolute, out _);
+	}
 }

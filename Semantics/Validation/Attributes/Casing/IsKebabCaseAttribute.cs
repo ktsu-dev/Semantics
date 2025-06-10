@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in kebab-case (lowercase words separated by hyphens)
@@ -16,42 +17,62 @@ using System.Linq;
 /// No spaces, underscores, or uppercase letters are allowed.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsKebabCaseAttribute : SemanticStringValidationAttribute
+public sealed class IsKebabCaseAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is in kebab-case.
+	/// Creates the FluentValidation validator for kebab-case validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is in kebab-case; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for kebab-case strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new KebabCaseValidator();
+
+	/// <summary>
+	/// FluentValidation validator for kebab-case strings.
+	/// </summary>
+	private sealed class KebabCaseValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the KebabCaseValidator class.
+		/// </summary>
+		public KebabCaseValidator()
 		{
-			return true;
+			RuleFor(value => value)
+				.Must(BeValidKebabCase)
+				.WithMessage("The value must be in kebab-case format.")
+				.When(value => !string.IsNullOrEmpty(value));
 		}
 
-		// Cannot start or end with hyphen
-		if (value.StartsWith('-') || value.EndsWith('-'))
+		/// <summary>
+		/// Validates that a string is in kebab-case.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is in kebab-case, false otherwise</returns>
+		private static bool BeValidKebabCase(string value)
 		{
-			return false;
-		}
+			if (string.IsNullOrEmpty(value))
+			{
+				return true;
+			}
 
-		// Cannot have consecutive hyphens
-		if (value.Contains("--"))
-		{
-			return false;
-		}
+			// Cannot start or end with hyphen
+			if (value.StartsWith('-') || value.EndsWith('-'))
+			{
+				return false;
+			}
 
-		// No spaces, underscores, or other separators allowed (except hyphens)
-		if (value.Any(c => char.IsWhiteSpace(c) || c == '_'))
-		{
-			return false;
-		}
+			// Cannot have consecutive hyphens
+			if (value.Contains("--"))
+			{
+				return false;
+			}
 
-		// All characters must be lowercase letters, digits, or hyphens
-		return value.All(c => char.IsLower(c) || char.IsDigit(c) || c == '-');
+			// No spaces, underscores, or other separators allowed (except hyphens)
+			if (value.Any(c => char.IsWhiteSpace(c) || c == '_'))
+			{
+				return false;
+			}
+
+			// All characters must be lowercase letters, digits, or hyphens
+			return value.All(c => char.IsLower(c) || char.IsDigit(c) || c == '-');
+		}
 	}
 }

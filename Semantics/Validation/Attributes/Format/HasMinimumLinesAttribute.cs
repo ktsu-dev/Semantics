@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string has at least the specified minimum number of lines
@@ -20,40 +21,63 @@ using System.Linq;
 /// </remarks>
 /// <param name="minimumLines">The minimum number of lines required.</param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class HasMinimumLinesAttribute(int minimumLines) : SemanticStringValidationAttribute
+public sealed class HasMinimumLinesAttribute(int minimumLines) : FluentSemanticStringValidationAttribute
 {
-
 	/// <summary>
 	/// Gets the minimum number of lines required.
 	/// </summary>
 	public int MinimumLines { get; } = minimumLines;
 
 	/// <summary>
-	/// Validates that the semantic string has at least the minimum number of lines.
+	/// Creates the FluentValidation validator for minimum lines validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string has at least the minimum lines; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for minimum lines</returns>
+	protected override FluentValidationAdapter CreateValidator() => new MinimumLinesValidator(MinimumLines);
+
+	/// <summary>
+	/// FluentValidation validator for minimum lines.
+	/// </summary>
+	private sealed class MinimumLinesValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		private readonly int minimumLines;
+
+		/// <summary>
+		/// Initializes a new instance of the MinimumLinesValidator class.
+		/// </summary>
+		/// <param name="minimumLines">The minimum number of lines required</param>
+		public MinimumLinesValidator(int minimumLines)
 		{
-			return MinimumLines <= 0;
+			this.minimumLines = minimumLines;
+
+			RuleFor(value => value)
+				.Must(HaveMinimumLines)
+				.WithMessage($"The text must have at least {minimumLines} line(s).");
 		}
 
-		// Count line breaks and add 1
-		int lineCount = value.Count(c => c == '\n') + 1;
-
-		// Handle Windows-style line endings (\r\n) - don't double count
-		if (value.Contains("\r\n"))
+		/// <summary>
+		/// Validates that a string has at least the minimum number of lines.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string has at least the minimum lines, false otherwise</returns>
+		private bool HaveMinimumLines(string value)
 		{
-			int crlfCount = value.Split(["\r\n"], StringSplitOptions.None).Length - 1;
-			int lfOnlyCount = value.Count(c => c == '\n') - crlfCount;
-			lineCount = crlfCount + lfOnlyCount + 1;
-		}
+			if (string.IsNullOrEmpty(value))
+			{
+				return minimumLines <= 0;
+			}
 
-		return lineCount >= MinimumLines;
+			// Count line breaks and add 1
+			int lineCount = value.Count(c => c == '\n') + 1;
+
+			// Handle Windows-style line endings (\r\n) - don't double count
+			if (value.Contains("\r\n"))
+			{
+				int crlfCount = value.Split(["\r\n"], StringSplitOptions.None).Length - 1;
+				int lfOnlyCount = value.Count(c => c == '\n') - crlfCount;
+				lineCount = crlfCount + lfOnlyCount + 1;
+			}
+
+			return lineCount >= minimumLines;
+		}
 	}
 }

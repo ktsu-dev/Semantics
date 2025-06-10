@@ -5,6 +5,7 @@
 namespace ktsu.Semantics;
 
 using System;
+using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted 32-bit integer.
@@ -20,12 +21,35 @@ using System;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.Int32 directly instead of semantic string types. Int32 provides better type safety, performance, built-in mathematical operations, and efficient numerical computations.")]
-public sealed class IsInt32Attribute : SemanticStringValidationAttribute
+public sealed class IsInt32Attribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is a valid 32-bit integer.
+	/// Creates the FluentValidation validator for Int32 validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>True if the string is a valid Int32, false otherwise.</returns>
-	public override bool Validate(ISemanticString semanticString) => int.TryParse(semanticString.WeakString, out _);
+	/// <returns>A FluentValidation validator for Int32 strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new Int32Validator();
+
+	/// <summary>
+	/// FluentValidation validator for Int32 strings.
+	/// </summary>
+	private sealed class Int32Validator : FluentValidationAdapter
+	{
+		/// <summary>
+		/// Initializes a new instance of the Int32Validator class.
+		/// </summary>
+		public Int32Validator()
+		{
+			RuleFor(value => value)
+				.Must(BeValidInt32)
+				.WithMessage("The value must be a valid 32-bit integer.")
+				.When(value => !string.IsNullOrEmpty(value));
+		}
+
+		/// <summary>
+		/// Validates that a string is a valid 32-bit integer.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is a valid Int32, false otherwise</returns>
+		private static bool BeValidInt32(string value) => int.TryParse(value, out _);
+	}
 }

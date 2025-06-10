@@ -6,21 +6,53 @@ namespace ktsu.Semantics;
 
 using System;
 using System.IO;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a path string contains valid path characters using span semantics.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsValidPathAttribute : SemanticStringValidationAttribute
+public sealed class IsValidPathAttribute : FluentSemanticStringValidationAttribute
 {
-	private static readonly char[] InvalidPathChars = Path.GetInvalidPathChars();
+	/// <summary>
+	/// Creates the FluentValidation validator for valid path validation.
+	/// </summary>
+	/// <returns>A FluentValidation validator for valid path strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new ValidPathValidator();
 
-	/// <inheritdoc/>
-	public override bool Validate(ISemanticString semanticString)
+	/// <summary>
+	/// FluentValidation validator for valid path strings.
+	/// </summary>
+	private sealed class ValidPathValidator : FluentValidationAdapter
 	{
-		ReadOnlySpan<char> value = semanticString.WeakString.AsSpan();
+		private static readonly char[] InvalidPathChars = Path.GetInvalidPathChars();
 
-		// Use span-based search for invalid characters
-		return value.IndexOfAny(InvalidPathChars) == -1;
+		/// <summary>
+		/// Initializes a new instance of the ValidPathValidator class.
+		/// </summary>
+		public ValidPathValidator()
+		{
+			RuleFor(value => value)
+				.Must(BeValidPath)
+				.WithMessage("The path contains invalid characters.")
+				.When(value => !string.IsNullOrEmpty(value));
+		}
+
+		/// <summary>
+		/// Validates that a path string contains only valid path characters.
+		/// </summary>
+		/// <param name="value">The path string to validate</param>
+		/// <returns>True if the path contains only valid characters, false otherwise</returns>
+		private static bool BeValidPath(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return true;
+			}
+
+			// Use span-based search for invalid characters
+			ReadOnlySpan<char> valueSpan = value.AsSpan();
+			return valueSpan.IndexOfAny(InvalidPathChars) == -1;
+		}
 	}
 }

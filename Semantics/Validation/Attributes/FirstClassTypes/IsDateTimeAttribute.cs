@@ -5,6 +5,7 @@
 namespace ktsu.Semantics;
 
 using System;
+using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted DateTime.
@@ -20,12 +21,35 @@ using System;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.DateTime directly instead of semantic string types. DateTime provides better type safety, performance, built-in comparison operations, and rich API for date/time operations.")]
-public sealed class IsDateTimeAttribute : SemanticStringValidationAttribute
+public sealed class IsDateTimeAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is a valid DateTime.
+	/// Creates the FluentValidation validator for DateTime validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>True if the string is a valid DateTime, false otherwise.</returns>
-	public override bool Validate(ISemanticString semanticString) => DateTime.TryParse(semanticString.WeakString, out _);
+	/// <returns>A FluentValidation validator for DateTime strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new DateTimeValidator();
+
+	/// <summary>
+	/// FluentValidation validator for DateTime strings.
+	/// </summary>
+	private sealed class DateTimeValidator : FluentValidationAdapter
+	{
+		/// <summary>
+		/// Initializes a new instance of the DateTimeValidator class.
+		/// </summary>
+		public DateTimeValidator()
+		{
+			RuleFor(value => value)
+				.Must(BeValidDateTime)
+				.WithMessage("The value must be a valid DateTime.")
+				.When(value => !string.IsNullOrEmpty(value));
+		}
+
+		/// <summary>
+		/// Validates that a string is a valid DateTime.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is a valid DateTime, false otherwise</returns>
+		private static bool BeValidDateTime(string value) => DateTime.TryParse(value, out _);
+	}
 }

@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Net;
+using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted IP address (IPv4 or IPv6).
@@ -20,12 +21,35 @@ using System.Net;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.Net.IPAddress directly instead of semantic string types. IPAddress provides better type safety, performance, built-in IPv4/IPv6 support, and rich API for network operations.")]
-public sealed class IsIpAddressAttribute : SemanticStringValidationAttribute
+public sealed class IsIpAddressAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is a valid IP address.
+	/// Creates the FluentValidation validator for IP address validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>True if the string is a valid IP address, false otherwise.</returns>
-	public override bool Validate(ISemanticString semanticString) => IPAddress.TryParse(semanticString.WeakString, out _);
+	/// <returns>A FluentValidation validator for IP address strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new IpAddressValidator();
+
+	/// <summary>
+	/// FluentValidation validator for IP address strings.
+	/// </summary>
+	private sealed class IpAddressValidator : FluentValidationAdapter
+	{
+		/// <summary>
+		/// Initializes a new instance of the IpAddressValidator class.
+		/// </summary>
+		public IpAddressValidator()
+		{
+			RuleFor(value => value)
+				.Must(BeValidIpAddress)
+				.WithMessage("The value must be a valid IP address (IPv4 or IPv6).")
+				.When(value => !string.IsNullOrEmpty(value));
+		}
+
+		/// <summary>
+		/// Validates that a string is a valid IP address.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is a valid IP address, false otherwise</returns>
+		private static bool BeValidIpAddress(string value) => IPAddress.TryParse(value, out _);
+	}
 }

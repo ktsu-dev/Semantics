@@ -20,7 +20,7 @@ using FluentValidation;
 /// Use this attribute only when you specifically need string-based semantic validation.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-[Obsolete("Consider using System.Guid directly instead of semantic string types. System.Guid provides better type safety, performance, efficient memory usage, and built-in comparison and equality operations.")]
+[Obsolete("Consider using System.Guid directly instead of semantic string types. Guid provides better type safety, performance, built-in GUID operations, and efficient memory usage.")]
 public sealed class IsGuidAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
@@ -41,7 +41,7 @@ public sealed class IsGuidAttribute : FluentSemanticStringValidationAttribute
 		{
 			RuleFor(value => value)
 				.Must(BeValidGuid)
-				.WithMessage("The value must be a valid GUID.")
+				.WithMessage("The value must be a valid GUID/UUID.")
 				.When(value => !string.IsNullOrEmpty(value));
 		}
 

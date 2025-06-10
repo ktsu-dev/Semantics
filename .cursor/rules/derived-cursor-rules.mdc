@@ -140,7 +140,7 @@ When adding XML documentation comments:
     *   `IsDateTimeAttribute` - Now marked as obsolete, encouraging users to use `System.DateTime` instead of semantic string types, highlighting the broader benefits
     *   `IsTimeSpanAttribute` - Now marked as obsolete, encouraging users to use `System.TimeSpan` instead of semantic string types, highlighting the broader benefits
     *   `IsUriAttribute` - Now suggests using `System.Uri` instead of semantic string types, focusing on the comprehensive network API
-    *   `IsDecimalAttribute` - Now suggests using `System.Decimal` instead of semantic string types, focusing on the comprehensive mathematical API
+    *   `IsDecimalAttribute` - Now suggests using `System.DecimalAttribute` instead of semantic string types, focusing on the comprehensive mathematical API
     *   `IsDoubleAttribute` - Now suggests using `System.Double` instead of semantic string types, focusing on the comprehensive mathematical API
     *   `IsInt32Attribute` - Now suggests using `System.Int32` instead of semantic string types, focusing on the comprehensive numerical API
     *   `IsBooleanAttribute` - Now suggests using `System.Boolean` instead of semantic string types, focusing on the comprehensive logical API
@@ -247,3 +247,4 @@ When adding XML documentation comments:
     1.  ❌ **Discouraged approach**: Using semantic strings with obsolete validation attributes
     2.  ✅ **Recommended approach**: Using first-class .NET types directly
     3.  **Migration guidance**: How to transition from string-based validation to proper types
+*   When creating new validation attributes, prefer using `FluentSemanticStringValidationAttribute` as the base class to take advantage of FluentValidation's features.

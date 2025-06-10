@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in MACRO_CASE (uppercase words separated by underscores)
@@ -17,42 +18,62 @@ using System.Linq;
 /// Also known as SCREAMING_SNAKE_CASE or CONSTANT_CASE.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsMacroCaseAttribute : SemanticStringValidationAttribute
+public sealed class IsMacroCaseAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is in MACRO_CASE.
+	/// Creates the FluentValidation validator for MACRO_CASE validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is in MACRO_CASE; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for MACRO_CASE strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new MacroCaseValidator();
+
+	/// <summary>
+	/// FluentValidation validator for MACRO_CASE strings.
+	/// </summary>
+	private sealed class MacroCaseValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the MacroCaseValidator class.
+		/// </summary>
+		public MacroCaseValidator()
 		{
-			return true;
+			RuleFor(value => value)
+				.Must(BeValidMacroCase)
+				.WithMessage("The value must be in MACRO_CASE format.")
+				.When(value => !string.IsNullOrEmpty(value));
 		}
 
-		// Cannot start or end with underscore
-		if (value.StartsWith('_') || value.EndsWith('_'))
+		/// <summary>
+		/// Validates that a string is in MACRO_CASE.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is in MACRO_CASE, false otherwise</returns>
+		private static bool BeValidMacroCase(string value)
 		{
-			return false;
-		}
+			if (string.IsNullOrEmpty(value))
+			{
+				return true;
+			}
 
-		// Cannot have consecutive underscores
-		if (value.Contains("__"))
-		{
-			return false;
-		}
+			// Cannot start or end with underscore
+			if (value.StartsWith('_') || value.EndsWith('_'))
+			{
+				return false;
+			}
 
-		// No spaces, hyphens, or other separators allowed (except underscores)
-		if (value.Any(c => char.IsWhiteSpace(c) || c == '-'))
-		{
-			return false;
-		}
+			// Cannot have consecutive underscores
+			if (value.Contains("__"))
+			{
+				return false;
+			}
 
-		// All characters must be uppercase letters, digits, or underscores
-		return value.All(c => char.IsUpper(c) || char.IsDigit(c) || c == '_');
+			// No spaces, hyphens, or other separators allowed (except underscores)
+			if (value.Any(c => char.IsWhiteSpace(c) || c == '-'))
+			{
+				return false;
+			}
+
+			// All characters must be uppercase letters, digits, or underscores
+			return value.All(c => char.IsUpper(c) || char.IsDigit(c) || c == '_');
+		}
 	}
 }

@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in PascalCase (no spaces, each word starts with uppercase)
@@ -16,36 +17,56 @@ using System.Linq;
 /// No spaces, underscores, or hyphens are allowed.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsPascalCaseAttribute : SemanticStringValidationAttribute
+public sealed class IsPascalCaseAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is in PascalCase.
+	/// Creates the FluentValidation validator for PascalCase validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is in PascalCase; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for PascalCase strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new PascalCaseValidator();
+
+	/// <summary>
+	/// FluentValidation validator for PascalCase strings.
+	/// </summary>
+	private sealed class PascalCaseValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the PascalCaseValidator class.
+		/// </summary>
+		public PascalCaseValidator()
 		{
-			return true;
+			RuleFor(value => value)
+				.Must(BeValidPascalCase)
+				.WithMessage("The value must be in PascalCase format.")
+				.When(value => !string.IsNullOrEmpty(value));
 		}
 
-		// Must start with uppercase letter
-		if (!char.IsUpper(value[0]))
+		/// <summary>
+		/// Validates that a string is in PascalCase.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is in PascalCase, false otherwise</returns>
+		private static bool BeValidPascalCase(string value)
 		{
-			return false;
-		}
+			if (string.IsNullOrEmpty(value))
+			{
+				return true;
+			}
 
-		// No spaces, underscores, hyphens, or other separators allowed
-		if (value.Any(c => char.IsWhiteSpace(c) || c == '_' || c == '-'))
-		{
-			return false;
-		}
+			// Must start with uppercase letter
+			if (!char.IsUpper(value[0]))
+			{
+				return false;
+			}
 
-		// All characters must be letters or digits
-		return value.All(char.IsLetterOrDigit);
+			// No spaces, underscores, hyphens, or other separators allowed
+			if (value.Any(c => char.IsWhiteSpace(c) || c == '_' || c == '-'))
+			{
+				return false;
+			}
+
+			// All characters must be letters or digits
+			return value.All(char.IsLetterOrDigit);
+		}
 	}
 }

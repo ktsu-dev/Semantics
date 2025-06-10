@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.IO;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a path is relative (not fully qualified), meaning it does not start from a root directory.
@@ -23,18 +24,36 @@ using System.IO;
 /// Empty or null strings are considered valid relative paths.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsRelativePathAttribute : SemanticStringValidationAttribute
+public sealed class IsRelativePathAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string represents a relative path.
+	/// Creates the FluentValidation validator for relative path validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is a relative path; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for relative paths</returns>
+	protected override FluentValidationAdapter CreateValidator() => new RelativePathValidator();
+
+	/// <summary>
+	/// FluentValidation validator for relative paths.
+	/// </summary>
+	private sealed class RelativePathValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		return string.IsNullOrEmpty(value) || !Path.IsPathFullyQualified(value);
+		/// <summary>
+		/// Initializes a new instance of the RelativePathValidator class.
+		/// </summary>
+		public RelativePathValidator()
+		{
+			RuleFor(value => value)
+				.Must(BeValidRelativePath)
+				.WithMessage("The path must be relative (not fully qualified).")
+				.When(value => !string.IsNullOrEmpty(value));
+		}
+
+		/// <summary>
+		/// Validates that a path is relative.
+		/// </summary>
+		/// <param name="value">The path to validate</param>
+		/// <returns>True if the path is relative, false otherwise</returns>
+		private static bool BeValidRelativePath(string value) =>
+			string.IsNullOrEmpty(value) || !Path.IsPathFullyQualified(value);
 	}
 }
