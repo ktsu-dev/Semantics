@@ -9,6 +9,7 @@ Changes since v1.0.4:
 -  Add new semantic path types and validation strategies ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add more teats ([@matt-edmondson](https://github.com/matt-edmondson))
 - Integrate FluentValidation into semantic validation attributes ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance documentation and suppress CA1812 warning ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor validation attributes to utilize FluentValidation ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.4 (patch)
 
