@@ -26,11 +26,10 @@ When adding XML documentation comments:
 *   Use detailed `<remarks>` sections to explain usage patterns and important details.
 *   Include proper `<param>` and `<returns>` documentation for methods.
 *   Use `<exception>` documentation for potential exceptions.
-*   Include `<example>` and `<code>` blocks showing usage patterns.
-*   Use `<inheritdoc/>` appropriately for interface implementations.
 *   Incorporate `<see cref="">` for cross-references.
 *   Use detailed `<list>` elements for enumerated information.
 *   Follow Microsoft's documentation standards.
+*   Remove all of the example documentation from the XML comments.
 
 ## CODING STANDARDS
 
@@ -59,7 +58,7 @@ When adding XML documentation comments:
     5.  Similar combinations for the base `DirectoryPath` types
 *   When the linter complains about missing `Divide` methods, don't add them. Instead, silence the error with a `SuppressMessage` attribute. The `SuppressMessage` attribute should use the following justification: `"Path combination is the semantic meaning, not mathematical division"`.
 *   Add methods to the semantic path types to get filename, file extension, directory etc from the appropriate types.
-*   For `AbsoluteFilePath` and `RelativeFilePath`, add a `TypedDirectoryPath` property that returns the directory portion of the path as the correctly typed directory path (`AbsoluteDirectoryPath` or `RelativeDirectoryPath`, respectively). This property should be named after the return type:
+*   For `AbsoluteFilePath` and `RelativeFilePath`, add a property that returns the directory portion of the path as the correctly typed directory path (`AbsoluteDirectoryPath` or `RelativeDirectoryPath`, respectively). This property should be named after the return type:
     *   `AbsoluteFilePath.AbsoluteDirectoryPath`
     *   `RelativeFilePath.RelativeDirectoryPath`
 *   For `DirectoryPath`, `AbsoluteDirectoryPath`, and `RelativeDirectoryPath`, add the following properties:
@@ -101,7 +100,7 @@ When adding XML documentation comments:
 *   ReadOnlySpan\<char> Usage - Use spans for path parsing to reduce allocations
 *   Pooled StringBuilder - For path combination operations
 *   Async Directory Enumeration - For Contents property with large directories
-*   Use span semantics instead of suffixing with "Span".
+*   Use span semantics instead of suffixing with "Span". Instead, use method overloading to provide span-based alternatives.
 *   Use ReadOnlySpan overloads instead of creating methods with a Span suffix. If the signature overlaps with existing methods, the return type can be different.
 *   When using implicit operators to convert to `ReadOnlySpan<char>`, use `value is null ? default : value.AsSpan()` instead of `value?.AsSpan() ?? default`.
 *   When calculating directory `Depth`, the value is the number of directory separators in the path.
@@ -109,6 +108,39 @@ When adding XML documentation comments:
     *   Cache full paths to avoid repeated `Path.GetFullPath` calls
     *   Ensure the parent path ends with a directory separator for accurate comparison using `StartsWith`.
     *   Use `StringComparison.OrdinalIgnoreCase` for case-insensitive comparisons.
+*   For performance, replace `ToString()` calls with `WeakString` where appropriate.
+*   For `IsChildOf()` and `IsParentOf()` methods, use span-based comparison for better performance than string concatenation. Normalize both paths before comparison to handle different separator styles.
+*   When the signatures of existing methods overlap with span-based versions, use method overloading to provide span-based alternatives. If the signatures do not overlap, use different method names.
+*   For the `Depth` property, the value is the number of directory separators in the path.
+*   One type definition per file.
+*   For ease of use, use a single common namespace for all types in the library.
+*   SemanticStringValidationExamples can just be built in semantic types where appropriate
+*   If the signatures of existing methods overlap with span-based versions, use method overloading to provide span-based alternatives. If the signatures do not overlap, use different method names.
+*   The built in semantic string types should not need the string suffix.
+*   For the implicit `ReadOnlySpan<char>` operator, use `value is null ? default : value.AsSpan()` instead of `value?.AsSpan() ?? default`.
+*   When calculating directory `Depth`, the value is the number of directory separators in the path.
+*   The built in semantic string types are either too niche or too simple, create a collection of useful builtin semantic string types with appropriate validations, where they aren't already implemented in dotnet, like Uri is.
+*   Validation attributes should be separated into their own files.
+*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types. This is much more flexible and composable.
+*   Validation attributes for different string casing types should be created, including title, pascal, kebab, snake, camel, macro, upper, lower, and sentence casing. These should be placed in a dedicated subdirectory for casing-related attributes: `Semantics/Validation/Attributes/Casing/`.
+*   These are excellent advanced performance optimization suggestions:
+    *   String Interning for Common Paths - Intern frequently used directory separators and common path roots
+    *   ReadOnlySpan\<char> Usage - Use spans for path parsing to reduce allocations
+    *   Pooled StringBuilder - For path combination operations
+    *   Async Directory Enumeration - For Contents property with large directories
+*   If there is already a first class type in .NET (e.g. `IPAddress`, `Version`, `Guid`), then the validator should direct users to use the first class type instead.
+*   Validators that represent types that have first-class representations in dotnet already should provide accurate validation, but be listed as obsolete, prompting users to use the first class types.
+*   Validators that represent types that have first-class representations in dotnet already should provide accurate validation, but be listed as obsolete, prompting users to use the first class types.
+    *   `IsVersionAttribute` - Now marked as obsolete, encouraging users to use `System.Version` instead of semantic string types, highlighting the broader benefits
+    *   `IsGuidAttribute` - Now marked as obsolete, encouraging users to use `System.Guid` instead of semantic string types, emphasizing type safety and efficiency
+    *   `IsIpAddressAttribute` - Now suggests using `System.Net.IPAddress` instead of semantic string types, focusing on the comprehensive network API
+    *   `IsDateTimeAttribute` - Now marked as obsolete, encouraging users to use `System.DateTime` instead of semantic string types, highlighting the broader benefits
+    *   `IsTimeSpanAttribute` - Now marked as obsolete, encouraging users to use `System.TimeSpan` instead of semantic string types, highlighting the broader benefits
+    *   `IsUriAttribute` - Now suggests using `System.Uri` instead of semantic string types, focusing on the comprehensive network API
+    *   `IsDecimalAttribute` - Now suggests using `System.Decimal` instead of semantic string types, focusing on the comprehensive mathematical API
+    *   `IsDoubleAttribute` - Now suggests using `System.Double` instead of semantic string types, focusing on the comprehensive mathematical API
+    *   `IsInt32Attribute` - Now suggests using `System.Int32` instead of semantic string types, focusing on the comprehensive numerical API
+    *   `IsBooleanAttribute` - Now suggests using `System.Boolean` instead of semantic string types, focusing on the comprehensive logical API
 
 ## DEBUGGING
 
@@ -168,7 +200,11 @@ When adding XML documentation comments:
 *   When debugging `RelativeDirectoryPath_Contents_ReturnsRelativePathTypes` test failures, ensure that the test uses `AbsoluteDirectoryPath` instances when testing contents of absolute directory paths. Ensure there are no tab characters in the test file.
 *   When debugging `SemanticPath_RootPath_Unix` test failures, ensure that path canonicalization correctly handles Unix root paths ("/") and doesn't convert them to Windows path separators ("\\").
 *   When debugging `SemanticPath_PathTypes` test failures, ensure that the correct path type (e.g., `AbsolutePath`, `RelativePath`) is used in the test case based on whether the path is absolute or relative.
-*   When debugging `SemanticPath_PathLength_TooLong` test failures, ensure that the validation logic throws `ArgumentException` when the path length is too long, not `FormatException`. **Note:** This rule is incorrect; the validation logic throws `FormatException` for path length violations. The tests should expect `FormatException`.
+*   When debugging `SemanticPath_PathLength_TooLong` tests, be aware that the validation logic throws `FormatException` for path length violations. The tests should expect `FormatException`.
+*   When debugging `IndexOf` and `LastIndexOf` methods, and tests are failing, it's important to check the following:
+    *   Verify that all method overloads work correctly with their underlying `WeakString` implementations.
+    *   Verify that the `WeakString` property is properly initialized with the correct string value.
+    *   Check for any issues with named parameter delegation.
 
 ## WORKFLOW & RELEASE RULES
 
@@ -186,3 +222,20 @@ When adding XML documentation comments:
 *   Determine if interfaces can implicitly cast to system strings so that they can be passed transparently where strings are normally used.
 *   Split out the non-trivial types from files with multiple types in them
 *   When calculating directory `Depth`, the value is the number of directory separators in the path.
+*   For ease of use, use a single common namespace for all types in the library.
+*   SemanticStringValidationExamples can just be built in semantic types where appropriate
+*   The built in semantic string types should not need the string suffix.
+*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
+*   Validation attributes should be separated into their own files.
+*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
+*   The built in semantic string types are either too niche or too simple, create a collection of useful builtin semantic string types with appropriate validations, where they aren't already implemented in dotnet, like Uri is.
+*   Validation attributes should be separated into their own files.
+*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
+*   Validators that represent types that have first-class representations in dotnet already should provide accurate validation, but be listed as obsolete, prompting users to use the first class types.
+*   Before releasing a version:
+    *   Fix all failing tests; a 100% pass rate is required.
+    *   Update the version from `1.0.0-pre.1` to `1.0.0` (or the appropriate version number).
+    *   Update `CHANGELOG.md` with proper release notes.
+    *   Perform final testing across different .NET versions.
+    *   Conduct performance testing (if applicable).
+    *   Conduct a security review of validation logic.

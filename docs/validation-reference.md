@@ -336,3 +336,128 @@ public sealed record ContactMethod : SemanticString<ContactMethod> { }
 ```
 
 This validation reference provides the foundation for creating robust, type-safe string types with comprehensive validation rules.
+
+## Practical Examples
+
+### Domain-Specific Types
+
+```csharp
+// API token that must be Base64-encoded
+[IsBase64]
+public sealed record ApiToken : SemanticString<ApiToken>;
+// Usage: var token = "SGVsbG9Xb3JsZA==".As<ApiToken>();
+
+// User's email address for account management
+[IsEmailAddress]
+public sealed record UserEmail : SemanticString<UserEmail>;
+// Usage: var email = "user@company.com".As<UserEmail>();
+
+// Blog post URL slug that's SEO-friendly
+[RegexMatch(@"^[a-z0-9]+(-[a-z0-9]+)*$")]
+public sealed record BlogSlug : SemanticString<BlogSlug>;
+// Usage: var slug = "my-awesome-blog-post".As<BlogSlug>();
+
+// Hexadecimal color code for UI theming
+[RegexMatch(@"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")]
+public sealed record ThemeColor : SemanticString<ThemeColor>;
+// Usage: var color = "#FF5733".As<ThemeColor>();
+
+// JWT authentication token
+[RegexMatch(@"^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$")]
+public sealed record AuthToken : SemanticString<AuthToken>;
+// Usage: var jwt = "header.payload.signature".As<AuthToken>();
+```
+
+### Combining Multiple Validations
+
+```csharp
+// Domain name that must end with .com or .org (ValidateAny strategy)
+[ValidateAny]
+[EndsWith(".com")]
+[EndsWith(".org")]
+public sealed record TrustedDomain : SemanticString<TrustedDomain>;
+// Usage: var domain = "example.com".As<TrustedDomain>();
+
+// Secure URL with multiple requirements (ValidateAll strategy - default)
+[ValidateAll]
+[StartsWith("https://")]
+[Contains(".example.com")]
+public sealed record SecureApiUrl : SemanticString<SecureApiUrl>;
+// Usage: var url = "https://secure.example.com/api".As<SecureApiUrl>();
+```
+
+## Migration from Obsolete Attributes
+
+Some validation attributes validate types that have first-class .NET representations. While these attributes still provide accurate validation, you should prefer the first-class types for better performance, type safety, and API richness.
+
+### ❌ Discouraged: String-based validation
+```csharp
+// These work but are discouraged
+[IsVersion]
+public sealed record SoftwareVersion : SemanticString<SoftwareVersion>;
+
+[IsGuid] 
+public sealed record UniqueId : SemanticString<UniqueId>;
+
+[IsIpAddress]
+public sealed record ServerIpAddress : SemanticString<ServerIpAddress>;
+
+[IsDateTime]
+public sealed record EventTimestamp : SemanticString<EventTimestamp>;
+
+[IsTimeSpan]
+public sealed record Duration : SemanticString<Duration>;
+
+[IsUri]
+public sealed record WebsiteUrl : SemanticString<WebsiteUrl>;
+
+[IsDecimal]
+public sealed record Price : SemanticString<Price>;
+
+[IsDouble]
+public sealed record Measurement : SemanticString<Measurement>;
+
+[IsInt32]
+public sealed record Count : SemanticString<Count>;
+
+[IsBoolean]
+public sealed record Flag : SemanticString<Flag>;
+```
+
+### ✅ Recommended: First-class .NET types
+```csharp
+// Use these instead for better type safety and performance
+public class SoftwareVersion 
+{
+    public Version Value { get; }
+    public SoftwareVersion(string version) => Value = Version.Parse(version);
+    // Rich API: Major, Minor, Build, Revision, comparison operators
+}
+
+public class UniqueId 
+{
+    public Guid Value { get; }  
+    public UniqueId() => Value = Guid.NewGuid();
+    public UniqueId(string guid) => Value = Guid.Parse(guid);
+    // Built-in: NewGuid(), equality, efficient 16-byte storage
+}
+
+public class ServerIpAddress 
+{
+    public IPAddress Value { get; }
+    public ServerIpAddress(string ip) => Value = IPAddress.Parse(ip);
+    // Rich API: IPv4/IPv6 support, network operations, parsing
+}
+
+// For other types, use System.DateTime, System.TimeSpan, System.Uri, 
+// System.Decimal, System.Double, System.Int32, System.Boolean directly
+```
+
+### When to Still Use String-based Validation
+
+Use the obsolete validation attributes only when you specifically need:
+- String-based semantic validation in a larger semantic string system
+- Validation as part of a string processing pipeline
+- Compatibility with existing semantic string infrastructure
+
+For new code, prefer the first-class .NET types directly.

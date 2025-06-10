@@ -11,7 +11,8 @@ using System.Globalization;
 using System.Text;
 
 /// <summary>
-/// Base class for all semantic string types using CRTP (Curiously Recurring Template Pattern)
+/// Base class for all semantic string types using CRTP (Curiously Recurring Template Pattern).
+/// Provides type safety and validation for string values that have specific meaning or format requirements.
 /// </summary>
 [DebuggerDisplay(value: $"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Named alternatives provided via static methods")]
