@@ -22,6 +22,10 @@ This file defines all project rules, coding standards, workflow guidelines, refe
 *   Move the content from the architecture document into an appropriate document within the `docs` directory.
 *   Add documentation about the path interface hierarchy to both the architecture documentation and examples.
 *   Put examples in documents, not in code.
+*   **Ensure the documentation is correct.**
+*   The primary problem is that the **README.md file refers to an `examples/` directory at the root level, but the examples are actually located in `docs/examples/`**. All references in `README.md` to the `examples/` directory should be updated to `docs/examples/`.
+*   The architecture documentation should accurately reflect the actual class hierarchy implementation.
+*   The validation reference documentation should be comprehensive and accurate, including newer validation attributes.
 
 When adding XML documentation comments:
 

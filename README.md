@@ -118,13 +118,13 @@ Comprehensive documentation is available in the [`docs/`](docs/) directory:
 
 ## Examples
 
-Extensive examples demonstrating all library features are available in the [`examples/`](examples/) directory. Start with the [Examples Index](examples/examples-index.md) for organized learning paths:
+Extensive examples demonstrating all library features are available in the [`docs/examples/`](docs/examples/) directory. Start with the [Examples Index](docs/examples/examples-index.md) for organized learning paths:
 
--   **[Getting Started](examples/getting-started.md)** - Basic usage patterns and your first semantic strings
--   **[Validation Attributes](examples/validation-attributes.md)** - Built-in validation and custom rules
--   **[Path Handling](examples/path-handling.md)** - File system paths and validation
--   **[Factory Pattern](examples/factory-pattern.md)** - Object creation and dependency injection
--   **[Real-World Scenarios](examples/real-world-scenarios.md)** - Complete domain examples for e-commerce, finance, and more
+-   **[Getting Started](docs/examples/getting-started.md)** - Basic usage patterns and your first semantic strings
+-   **[Validation Attributes](docs/examples/validation-attributes.md)** - Built-in validation and custom rules
+-   **[Path Handling](docs/examples/path-handling.md)** - File system paths and validation
+-   **[Factory Pattern](docs/examples/factory-pattern.md)** - Object creation and dependency injection
+-   **[Real-World Scenarios](docs/examples/real-world-scenarios.md)** - Complete domain examples for e-commerce, finance, and more
 
 Each example includes complete, runnable code that you can copy and adapt to your specific needs.
 

@@ -164,10 +164,18 @@ public abstract class ValidationRuleBase : IValidationRule
 ISemanticString
 ├── SemanticString<TDerived> (abstract base)
     ├── SemanticPath<TDerived> (path-specific base)
-    │   ├── AbsolutePath
-    │   ├── RelativePath
-    │   ├── FilePath
-    │   ├── DirectoryPath
+    │   ├── SemanticAbsolutePath<TDerived> (absolute paths base)
+    │   │   └── AbsolutePath
+    │   ├── SemanticRelativePath<TDerived> (relative paths base)
+    │   │   └── RelativePath
+    │   ├── SemanticFilePath<TDerived> (file paths base)
+    │   │   ├── FilePath
+    │   │   ├── AbsoluteFilePath
+    │   │   └── RelativeFilePath
+    │   ├── SemanticDirectoryPath<TDerived> (directory paths base)
+    │   │   ├── DirectoryPath
+    │   │   ├── AbsoluteDirectoryPath
+    │   │   └── RelativeDirectoryPath
     │   ├── FileName
     │   └── FileExtension
     └── [Custom semantic string types]
@@ -211,7 +219,6 @@ IFileExtension (separate hierarchy for file extensions)
 
 ```csharp
 // Path types implement their corresponding interfaces
-Path : SemanticPath<Path>, IPath
 AbsolutePath : SemanticAbsolutePath<AbsolutePath>, IAbsolutePath
 RelativePath : SemanticRelativePath<RelativePath>, IRelativePath
 FilePath : SemanticFilePath<FilePath>, IFilePath
