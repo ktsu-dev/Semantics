@@ -1,3 +1,8 @@
+## v1.0.6 (patch)
+
+Changes since v1.0.5:
+
+- Update README and architecture documentation for examples directory structure ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.5 (patch)
 
 Changes since v1.0.4:
