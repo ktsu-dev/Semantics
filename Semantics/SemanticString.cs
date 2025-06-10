@@ -270,7 +270,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	// SemanticString implementation
 	/// <inheritdoc/>
 	[ExcludeFromCodeCoverage(Justification = "DebuggerDisplay")]
-	protected string GetDebuggerDisplay() => $"({GetType().Name})\"{ToString()}\"";
+	protected string GetDebuggerDisplay() => $"({GetType().Name})\"{WeakString}\"";
 
 	/// <inheritdoc/>
 	public static string ToString(ISemanticString? semanticString) => semanticString?.WeakString ?? string.Empty;
@@ -407,14 +407,14 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </summary>
 	/// <param name="value">The semantic string to convert.</param>
 	/// <returns>A read-only span containing the characters of the semantic string, or an empty span if the value is <see langword="null"/>.</returns>
-	public static implicit operator ReadOnlySpan<char>(SemanticString<TDerived>? value) => value?.ToCharArray() ?? [];
+	public static implicit operator ReadOnlySpan<char>(SemanticString<TDerived>? value) => value is null ? default : value.AsSpan();
 
 	/// <summary>
 	/// Implicitly converts a semantic string to a regular string.
 	/// </summary>
 	/// <param name="value">The semantic string to convert.</param>
 	/// <returns>The string representation of the semantic string, or <see cref="string.Empty"/> if the value is <see langword="null"/>.</returns>
-	public static implicit operator string(SemanticString<TDerived>? value) => value?.ToString() ?? string.Empty;
+	public static implicit operator string(SemanticString<TDerived>? value) => value?.WeakString ?? string.Empty;
 
 	// Factory methods
 	/// <summary>
@@ -517,5 +517,258 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		return value != null && value.IsValid()
 			? value
 			: throw new FormatException(message: $"Cannot convert \"{value}\" to {typeof(TDest).Name}");
+	}
+
+	/// <summary>
+	/// Gets this semantic string as a read-only span without allocation.
+	/// </summary>
+	/// <value>A read-only span over the characters of this semantic string.</value>
+	/// <remarks>
+	/// This property provides zero-allocation access to the underlying string characters
+	/// and is more efficient than ToCharArray() or implicit char[] conversion.
+	/// </remarks>
+	public ReadOnlySpan<char> AsSpan() => WeakString.AsSpan();
+
+	/// <summary>
+	/// Gets a portion of this semantic string as a read-only span without allocation.
+	/// </summary>
+	/// <param name="start">The starting index of the span.</param>
+	/// <returns>A read-only span over the specified portion of the string.</returns>
+	/// <remarks>
+	/// This method is more efficient than Substring(int) as it doesn't allocate a new string.
+	/// Use this when you need to work with a portion of the string without creating a new string instance.
+	/// </remarks>
+	public ReadOnlySpan<char> AsSpan(int start) => WeakString.AsSpan(start);
+
+	/// <summary>
+	/// Gets a portion of this semantic string as a read-only span without allocation.
+	/// </summary>
+	/// <param name="start">The starting index of the span.</param>
+	/// <param name="length">The length of the span.</param>
+	/// <returns>A read-only span over the specified portion of the string.</returns>
+	/// <remarks>
+	/// This method is more efficient than Substring(int, int) as it doesn't allocate a new string.
+	/// Use this when you need to work with a portion of the string without creating a new string instance.
+	/// </remarks>
+	public ReadOnlySpan<char> AsSpan(int start, int length) => WeakString.AsSpan(start, length);
+
+	/// <summary>
+	/// Finds the first occurrence of a character sequence in the semantic string using span semantics.
+	/// </summary>
+	/// <param name="value">The character sequence to search for.</param>
+	/// <param name="comparisonType">The type of comparison to perform.</param>
+	/// <returns>The index of the first occurrence of the sequence, or -1 if not found.</returns>
+	/// <remarks>
+	/// This overload uses span-based search which can be more efficient than string-based IndexOf for certain scenarios.
+	/// </remarks>
+	public int IndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().IndexOf(value, comparisonType);
+
+	/// <summary>
+	/// Finds the last occurrence of a character sequence in the semantic string using span semantics.
+	/// </summary>
+	/// <param name="value">The character sequence to search for.</param>
+	/// <param name="comparisonType">The type of comparison to perform.</param>
+	/// <returns>The index of the last occurrence of the sequence, or -1 if not found.</returns>
+	/// <remarks>
+	/// This overload uses span-based search which can be more efficient than string-based LastIndexOf for certain scenarios.
+	/// </remarks>
+	public int LastIndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().LastIndexOf(value, comparisonType);
+
+	/// <summary>
+	/// Determines whether the semantic string starts with the specified span using efficient span comparison.
+	/// </summary>
+	/// <param name="value">The span to compare with the beginning of this string.</param>
+	/// <param name="comparisonType">The type of comparison to perform.</param>
+	/// <returns>true if this string starts with the specified span; otherwise, false.</returns>
+	/// <remarks>
+	/// This overload uses span-based comparison which avoids string allocations when working with substrings or spans.
+	/// </remarks>
+	public bool StartsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().StartsWith(value, comparisonType);
+
+	/// <summary>
+	/// Determines whether the semantic string ends with the specified span using efficient span comparison.
+	/// </summary>
+	/// <param name="value">The span to compare with the end of this string.</param>
+	/// <param name="comparisonType">The type of comparison to perform.</param>
+	/// <returns>true if this string ends with the specified span; otherwise, false.</returns>
+	/// <remarks>
+	/// This overload uses span-based comparison which avoids string allocations when working with substrings or spans.
+	/// </remarks>
+	public bool EndsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().EndsWith(value, comparisonType);
+
+	/// <summary>
+	/// Determines whether the semantic string contains the specified span using efficient span comparison.
+	/// </summary>
+	/// <param name="value">The span to search for within this string.</param>
+	/// <param name="comparisonType">The type of comparison to perform.</param>
+	/// <returns>true if this string contains the specified span; otherwise, false.</returns>
+	/// <remarks>
+	/// This overload uses span-based search which can be more efficient than string-based Contains for certain scenarios.
+	/// </remarks>
+	public bool Contains(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().Contains(value, comparisonType);
+
+	/// <summary>
+	/// Counts the number of characters that match the specified predicate using span semantics.
+	/// </summary>
+	/// <param name="predicate">A function to test each character.</param>
+	/// <returns>The number of characters that match the predicate.</returns>
+	/// <remarks>
+	/// This method iterates over the span without allocating additional memory,
+	/// making it efficient for character counting operations.
+	/// </remarks>
+	public int Count(Func<char, bool> predicate)
+	{
+		ArgumentNullException.ThrowIfNull(predicate);
+
+		ReadOnlySpan<char> span = AsSpan();
+		int count = 0;
+		for (int i = 0; i < span.Length; i++)
+		{
+			if (predicate(span[i]))
+			{
+				count++;
+			}
+		}
+		return count;
+	}
+
+	/// <summary>
+	/// Splits the semantic string into spans based on the specified separator without allocating strings.
+	/// </summary>
+	/// <param name="separator">The character that delimits the spans in this string.</param>
+	/// <param name="options">Options to control the splitting behavior.</param>
+	/// <returns>An enumerable of spans that represent the segments of this string separated by the separator.</returns>
+	/// <remarks>
+	/// This method provides a zero-allocation alternative to Split() when you only need to enumerate
+	/// the parts without creating string objects. Use this for performance-critical scenarios.
+	/// </remarks>
+	public SpanSplitEnumerator Split(char separator, StringSplitOptions options = StringSplitOptions.None) => new(AsSpan(), separator, options);
+
+	/// <summary>
+	/// Trims whitespace from both ends of the semantic string using span semantics.
+	/// </summary>
+	/// <returns>A span representing the trimmed portion of the string.</returns>
+	/// <remarks>
+	/// This overload returns a span over the original string without allocating a new string.
+	/// Convert to string only if you need to store the result.
+	/// </remarks>
+	public ReadOnlySpan<char> TrimAsSpan() => AsSpan().Trim();
+
+	/// <summary>
+	/// Trims specified characters from both ends of the semantic string using span semantics.
+	/// </summary>
+	/// <param name="trimChars">The characters to remove.</param>
+	/// <returns>A span representing the trimmed portion of the string.</returns>
+	/// <remarks>
+	/// This overload returns a span over the original string without allocating a new string.
+	/// Convert to string only if you need to store the result.
+	/// </remarks>
+	public ReadOnlySpan<char> TrimAsSpan(ReadOnlySpan<char> trimChars) => AsSpan().Trim(trimChars);
+
+	/// <summary>
+	/// Trims whitespace from the start of the semantic string using span semantics.
+	/// </summary>
+	/// <returns>A span representing the trimmed portion of the string.</returns>
+	/// <remarks>
+	/// This overload returns a span over the original string without allocating a new string.
+	/// Convert to string only if you need to store the result.
+	/// </remarks>
+	public ReadOnlySpan<char> TrimStartAsSpan() => AsSpan().TrimStart();
+
+	/// <summary>
+	/// Trims specified characters from the start of the semantic string using span semantics.
+	/// </summary>
+	/// <param name="trimChars">The characters to remove.</param>
+	/// <returns>A span representing the trimmed portion of the string.</returns>
+	/// <remarks>
+	/// This overload returns a span over the original string without allocating a new string.
+	/// Convert to string only if you need to store the result.
+	/// </remarks>
+	public ReadOnlySpan<char> TrimStartAsSpan(ReadOnlySpan<char> trimChars) => AsSpan().TrimStart(trimChars);
+
+	/// <summary>
+	/// Trims whitespace from the end of the semantic string using span semantics.
+	/// </summary>
+	/// <returns>A span representing the trimmed portion of the string.</returns>
+	/// <remarks>
+	/// This overload returns a span over the original string without allocating a new string.
+	/// Convert to string only if you need to store the result.
+	/// </remarks>
+	public ReadOnlySpan<char> TrimEndAsSpan() => AsSpan().TrimEnd();
+
+	/// <summary>
+	/// Trims specified characters from the end of the semantic string using span semantics.
+	/// </summary>
+	/// <param name="trimChars">The characters to remove.</param>
+	/// <returns>A span representing the trimmed portion of the string.</returns>
+	/// <remarks>
+	/// This overload returns a span over the original string without allocating a new string.
+	/// Convert to string only if you need to store the result.
+	/// </remarks>
+	public ReadOnlySpan<char> TrimEndAsSpan(ReadOnlySpan<char> trimChars) => AsSpan().TrimEnd(trimChars);
+
+	/// <summary>
+	/// Provides efficient enumeration over string segments split by a character separator.
+	/// </summary>
+	/// <remarks>
+	/// This struct avoids allocations by working directly with spans and implements
+	/// the enumerable pattern for use in foreach loops.
+	/// </remarks>
+	public ref struct SpanSplitEnumerator
+	{
+		private ReadOnlySpan<char> _remaining;
+		private readonly char _separator;
+		private readonly StringSplitOptions _options;
+
+		internal SpanSplitEnumerator(ReadOnlySpan<char> span, char separator, StringSplitOptions options)
+		{
+			_remaining = span;
+			_separator = separator;
+			_options = options;
+			Current = default;
+		}
+
+		/// <summary>
+		/// Gets the current span segment.
+		/// </summary>
+		public ReadOnlySpan<char> Current { get; private set; }
+
+		/// <summary>
+		/// Returns this enumerator.
+		/// </summary>
+		/// <returns>This enumerator instance.</returns>
+		public readonly SpanSplitEnumerator GetEnumerator() => this;
+
+		/// <summary>
+		/// Advances to the next segment.
+		/// </summary>
+		/// <returns>true if there is a next segment; otherwise, false.</returns>
+		public bool MoveNext()
+		{
+			if (_remaining.IsEmpty)
+			{
+				return false;
+			}
+
+			int separatorIndex = _remaining.IndexOf(_separator);
+			if (separatorIndex >= 0)
+			{
+				Current = _remaining[..separatorIndex];
+				_remaining = _remaining[(separatorIndex + 1)..];
+			}
+			else
+			{
+				Current = _remaining;
+				_remaining = default;
+			}
+
+			// Handle StringSplitOptions.RemoveEmptyEntries
+			if (_options == StringSplitOptions.RemoveEmptyEntries && Current.IsEmpty)
+			{
+				return MoveNext(); // Recursively skip empty entries
+			}
+
+			return true;
+		}
 	}
 }

@@ -44,12 +44,61 @@ When adding XML documentation comments:
 *   All directory paths should have a public property called `Contents` that gets the files and directories in that directory as the appropriate semantic path types.
 *   When using interface types in string operations (e.g., with `System.IO.Path` methods or string concatenation), cast the interface to its concrete type and call the `ToString()` method explicitly. For example: `Path.Combine(((DirectoryPath)directoryPath).ToString(), ((FileName)fileName).ToString())`.
 *   When concatenating a string with the result of `ToString()` on a semantic type, use null protection to avoid potential null reference exceptions. For example: `"prefix_" + (path.ToString() ?? string.Empty)`.
-*   Semantic paths support file system existence checking properties: `Exists` (true if the path exists as either a file or directory), `IsDirectory` (true if the path exists as a directory), and `IsFile` (true if the path exists as a file).
+*   Semantic paths support file system existence checking properties: `Exists` (true if the path exists as either a file or directory), `IsDirectory` (true if the path exists as a directory), and `IsFile` (true if the path exists as a file.
 *   Semantic paths support implicit conversion to system strings, allowing them to be transparently passed in place of string parameters.
 *   Semantic strings support implicit conversion to `string`, `char[]`, and `ReadOnlySpan<char>`.
 *   When using interface types for semantic paths (e.g., `IAbsolutePath`, `IFilePath`), the implicit string conversion does not work. In these cases, you must either:
     *   Cast the interface to its concrete type and call `ToString()`.
     *   Call `ToString()` explicitly on the interface type.
+*   Implement the `/` operator for all the semantic path types where it makes sense, and make it return the correct type. The operator should allow combining directory paths with relative paths to create new paths. Consider the following combinations:
+    1.  `AbsoluteDirectoryPath` + `RelativeDirectoryPath` → `AbsoluteDirectoryPath`
+    2.  `AbsoluteDirectoryPath` + `RelativeFilePath` → `AbsoluteFilePath`
+    3.  `RelativeDirectoryPath` + `RelativeDirectoryDirectoryPath` → `RelativeDirectoryDirectoryPath`
+    4.  `RelativeDirectoryPath` + `RelativeFilePath` → `RelativeFilePath`
+    5.  Similar combinations for the base `DirectoryPath` types
+*   When the linter complains about missing `Divide` methods, don't add them. Instead, silence the error with a `SuppressMessage` attribute. The `SuppressMessage` attribute should use the following justification: `"Path combination is the semantic meaning, not mathematical division"`.
+*   Add methods to the semantic path types to get filename, file extension, directory etc from the appropriate types.
+*   For `AbsoluteFilePath` and `RelativeFilePath`, add a `TypedDirectoryPath` property that returns the directory portion of the path as the correctly typed directory path (`AbsoluteDirectoryPath` or `RelativeDirectoryPath`, respectively). This property should be named after the return type:
+    *   `AbsoluteFilePath.AbsoluteDirectoryPath`
+    *   `RelativeFilePath.RelativeDirectoryPath`
+*   For `DirectoryPath`, `AbsoluteDirectoryPath`, and `RelativeDirectoryPath`, add the following properties:
+    *   `Parent`: Gets the parent directory of this directory path as the correct semantic type.
+    *   `Name`: Gets the name of this directory (the last component of the path) as a `FileName`.
+*   For `AbsoluteFilePath` and `RelativeFilePath`:
+    *   `FileNameWithoutExtension` - Gets just the filename without extension
+    *   `ChangeExtension(FileExtension)` - Changes the file extension
+    *   `RemoveExtension()` - Removes the file extension
+    *   `IsChildOf(AbsoluteDirectoryPath)` - Checks if the file is within a directory
+    *   `AbsoluteDirectoryPath` - Gets the directory as `AbsoluteDirectoryPath`.
+*   For `RelativeFilePath`:
+    *   `ToAbsolute(AbsoluteDirectoryPath)` - Converts relative to absolute path
+    *   `RelativeDirectoryPath` - Gets the directory as `RelativeDirectoryPath`.
+*   For `AbsoluteDirectoryPath`:
+    *   `IsParentOf(AbsoluteFilePath/AbsoluteDirectoryPath)` - Checks parent-child relationships
+    *   `IsChildOf(AbsoluteDirectoryPath)` - Checks if this is a child of another directory
+    *   `Depth` - Gets the depth from root (0 for root directories)
+    *   `GetAncestors()` - Gets all parent directories up to root
+    *   `IsRoot` - Determines if this is a root directory
+    *   `GetRelativePathTo(AbsoluteDirectoryPath)` - Creates relative path to another directory
+*   For `RelativeDirectoryPath`:
+    *   `Depth` - Gets the relative depth (number of directory levels)
+    *   `ToAbsolute(AbsoluteDirectoryPath)` - Converts to absolute path using a base
+    *   `Normalize()` - Normalizes the path by resolving `.` and `..` components
+*   For the path hierarchy interfaces:
+    *   `AsAbsoluteFilePath()` - Converts to `AbsoluteFilePath`
+    *   `AsRelativeFilePath()` - Converts to `RelativeFilePath`
+    *   `AsAbsoluteDirectoryPath()` - Converts to `AbsoluteDirectoryPath`
+    *   `AsRelativeDirectoryPath()` - Converts to `RelativeDirectoryPath`
+*   Consider caching expensive property computations such as `Path.GetDirectoryName` and `Path.GetFileNameWithoutExtension`. Use lazy initialization with the `??=` operator and private backing fields.
+*   When implementing `IsChildOf` and `IsParentOf` methods:
+    *   Cache full paths to avoid repeated `Path.GetFullPath` calls.
+    *   Ensure the parent path ends with a directory separator for accurate comparison using `StartsWith`.
+    *   Use `StringComparison.OrdinalIgnoreCase` for case-insensitive comparisons.
+*   String Interning for Common Paths - Intern frequently used directory separators and common path roots
+*   ReadOnlySpan\<char> Usage - Use spans for path parsing to reduce allocations
+*   Pooled StringBuilder - For path combination operations
+*   Async Directory Enumeration - For Contents property with large directories
+*   When implementing span semantics, create overloads instead of suffixing with "Span".
 
 ## DEBUGGING
 
@@ -110,7 +159,6 @@ When adding XML documentation comments:
 *   When debugging `SemanticPath_RootPath_Unix` test failures, ensure that path canonicalization correctly handles Unix root paths ("/") and doesn't convert them to Windows path separators ("\\").
 *   When debugging `SemanticPath_PathTypes` test failures, ensure that the correct path type (e.g., `AbsolutePath`, `RelativePath`) is used in the test case based on whether the path is absolute or relative.
 *   When debugging `SemanticPath_PathLength_TooLong` test failures, ensure that the validation logic throws `ArgumentException` when the path length is too long, not `FormatException`. **Note:** This rule is incorrect; the validation logic throws `FormatException` for path length violations. The tests should expect `FormatException`.
-*   When debugging `SemanticPath_MakeCanonical_WithMixedSeparators_ShouldNormalize` test failures, ensure that the test uses the correct path type (e.g., `AbsolutePath`, `RelativePath`) based on whether the path is absolute or relative.
 
 ## WORKFLOW & RELEASE RULES
 
@@ -126,3 +174,4 @@ When adding XML documentation comments:
     *   Conduct a security review of validation logic.
 *   When adding new interfaces to the project, add tests to verify that the interfaces are properly implemented and that polymorphism works as expected. Consider adding the interface tests to the existing `SemanticPathTests.cs` file or creating a separate test file, depending on the existing test structure.
 *   Determine if interfaces can implicitly cast to system strings so that they can be passed transparently where strings are normally used.
+*   Split out the non-trivial types from files with multiple types in them

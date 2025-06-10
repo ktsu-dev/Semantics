@@ -31,7 +31,7 @@ public sealed class IsPathAttribute : SemanticStringValidationAttribute
 	/// </returns>
 	public override bool Validate(ISemanticString semanticString)
 	{
-		string value = semanticString.ToString();
+		string value = semanticString.WeakString;
 		if (string.IsNullOrEmpty(value))
 		{
 			return true;
@@ -76,7 +76,7 @@ public sealed class IsRelativePathAttribute : SemanticStringValidationAttribute
 	/// </returns>
 	public override bool Validate(ISemanticString semanticString)
 	{
-		string value = semanticString.ToString();
+		string value = semanticString.WeakString;
 		return string.IsNullOrEmpty(value) || !Path.IsPathFullyQualified(value);
 	}
 }
@@ -108,7 +108,7 @@ public sealed class IsAbsolutePathAttribute : SemanticStringValidationAttribute
 	/// </returns>
 	public override bool Validate(ISemanticString semanticString)
 	{
-		string value = semanticString.ToString();
+		string value = semanticString.WeakString;
 		return string.IsNullOrEmpty(value) || Path.IsPathFullyQualified(value + Path.DirectorySeparatorChar);
 	}
 }
@@ -132,7 +132,7 @@ public sealed class IsDirectoryPathAttribute : SemanticStringValidationAttribute
 	/// </remarks>
 	public override bool Validate(ISemanticString semanticString)
 	{
-		string value = semanticString.ToString();
+		string value = semanticString.WeakString;
 		return string.IsNullOrEmpty(value) || !File.Exists(value);
 	}
 }
@@ -156,7 +156,7 @@ public sealed class IsFilePathAttribute : SemanticStringValidationAttribute
 	/// </remarks>
 	public override bool Validate(ISemanticString semanticString)
 	{
-		string value = semanticString.ToString();
+		string value = semanticString.WeakString;
 		return string.IsNullOrEmpty(value) || !Directory.Exists(value);
 	}
 }
@@ -184,7 +184,7 @@ public sealed class IsFileNameAttribute : SemanticStringValidationAttribute
 	/// </remarks>
 	public override bool Validate(ISemanticString semanticString)
 	{
-		string value = semanticString.ToString();
+		string value = semanticString.WeakString;
 		return string.IsNullOrEmpty(value) || (!Directory.Exists(value) && !value.Intersect(Path.GetInvalidFileNameChars()).Any());
 	}
 }
@@ -210,7 +210,7 @@ public sealed class DoesExistAttribute : SemanticStringValidationAttribute
 	/// </remarks>
 	public override bool Validate(ISemanticString semanticString)
 	{
-		string value = semanticString.ToString();
+		string value = semanticString.WeakString;
 		return !string.IsNullOrEmpty(value) && (File.Exists(value) || Directory.Exists(value));
 	}
 }
@@ -224,7 +224,43 @@ public sealed class IsExtensionAttribute : SemanticStringValidationAttribute
 	/// <inheritdoc/>
 	public override bool Validate(ISemanticString semanticString)
 	{
-		string value = semanticString.ToString();
+		string value = semanticString.WeakString;
 		return string.IsNullOrEmpty(value) || value.StartsWith('.');
+	}
+}
+
+/// <summary>
+/// Validates that a path string contains valid filename characters using span semantics.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+public sealed class IsValidFileNameAttribute : SemanticStringValidationAttribute
+{
+	private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
+
+	/// <inheritdoc/>
+	public override bool Validate(ISemanticString semanticString)
+	{
+		ReadOnlySpan<char> value = semanticString.WeakString.AsSpan();
+
+		// Use span-based search for invalid characters
+		return value.IndexOfAny(InvalidFileNameChars) == -1;
+	}
+}
+
+/// <summary>
+/// Validates that a path string contains valid path characters using span semantics.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+public sealed class IsValidPathAttribute : SemanticStringValidationAttribute
+{
+	private static readonly char[] InvalidPathChars = Path.GetInvalidPathChars();
+
+	/// <inheritdoc/>
+	public override bool Validate(ISemanticString semanticString)
+	{
+		ReadOnlySpan<char> value = semanticString.WeakString.AsSpan();
+
+		// Use span-based search for invalid characters
+		return value.IndexOfAny(InvalidPathChars) == -1;
 	}
 }

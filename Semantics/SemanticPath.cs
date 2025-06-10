@@ -46,7 +46,7 @@ public abstract record SemanticPath<TDerived> : SemanticString<TDerived>
 	/// This property uses <see cref="Directory.Exists(string)"/> to check for directory existence.
 	/// Returns <see langword="false"/> if the path exists but is a file, or if the path doesn't exist at all.
 	/// </remarks>
-	public bool IsDirectory => Directory.Exists(ToString());
+	public bool IsDirectory => Directory.Exists(WeakString);
 
 	/// <summary>
 	/// Gets a value indicating whether this path exists as a file on the filesystem.
@@ -58,7 +58,7 @@ public abstract record SemanticPath<TDerived> : SemanticString<TDerived>
 	/// This property uses <see cref="File.Exists(string)"/> to check for file existence.
 	/// Returns <see langword="false"/> if the path exists but is a directory, or if the path doesn't exist at all.
 	/// </remarks>
-	public bool IsFile => File.Exists(ToString());
+	public bool IsFile => File.Exists(WeakString);
 
 	/// <summary>
 	/// Normalizes the path by standardizing directory separators and removing trailing separators.
@@ -138,8 +138,8 @@ public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 		ArgumentNullException.ThrowIfNull(from);
 		ArgumentNullException.ThrowIfNull(to);
 
-		FileInfo fromInfo = new(Path.GetFullPath(from.ToString()));
-		FileInfo toInfo = new(Path.GetFullPath(to.ToString()));
+		FileInfo fromInfo = new(Path.GetFullPath(from.WeakString));
+		FileInfo toInfo = new(Path.GetFullPath(to.WeakString));
 
 		// Use unix-style separators because they work on windows too
 		const string separator = "/";
@@ -202,12 +202,19 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 	{
 		get
 		{
-			string value = ToString();
-			string[] parts = value.Split('.');
-			string ext = parts[^1];
-			return ext == value
-				? FileExtension.FromString<FileExtension>("")
-				: FileExtension.FromString<FileExtension>("." + ext);
+			ReadOnlySpan<char> span = WeakString.AsSpan();
+
+			// Find the last dot
+			int lastDotIndex = span.LastIndexOf('.');
+			if (lastDotIndex == -1 || lastDotIndex == span.Length - 1)
+			{
+				// No extension or trailing dot
+				return FileExtension.FromString<FileExtension>("");
+			}
+
+			// Return extension including the dot
+			ReadOnlySpan<char> extension = span[lastDotIndex..];
+			return FileExtension.FromString<FileExtension>(extension.ToString());
 		}
 	}
 
@@ -218,22 +225,31 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 	{
 		get
 		{
-			string[] parts = ToString().Split('.', 2);
-			return parts.Length > 1
-				? FileExtension.FromString<FileExtension>("." + parts[1])
-				: FileExtension.FromString<FileExtension>("");
+			ReadOnlySpan<char> span = WeakString.AsSpan();
+
+			// Find the first dot
+			int firstDotIndex = span.IndexOf('.');
+			if (firstDotIndex == -1)
+			{
+				// No extension
+				return FileExtension.FromString<FileExtension>("");
+			}
+
+			// Return everything from the first dot onward
+			ReadOnlySpan<char> fullExtension = span[firstDotIndex..];
+			return FileExtension.FromString<FileExtension>(fullExtension.ToString());
 		}
 	}
 
 	/// <summary>
 	/// Gets the filename portion of the path
 	/// </summary>
-	public FileName FileName => FileName.FromString<FileName>(Path.GetFileName(ToString()));
+	public FileName FileName => FileName.FromString<FileName>(Path.GetFileName(WeakString));
 
 	/// <summary>
 	/// Gets the directory portion of the path
 	/// </summary>
-	public DirectoryPath DirectoryPath => DirectoryPath.FromString<DirectoryPath>(Path.GetDirectoryName(ToString()) ?? "");
+	public DirectoryPath DirectoryPath => DirectoryPath.FromString<DirectoryPath>(Path.GetDirectoryName(WeakString) ?? "");
 }
 
 /// <summary>
@@ -263,7 +279,7 @@ public abstract record SemanticDirectoryPath<TDerived> : SemanticPath<TDerived>
 	{
 		get
 		{
-			string directoryPath = ToString();
+			string directoryPath = WeakString;
 			if (!Directory.Exists(directoryPath))
 			{
 				return [];

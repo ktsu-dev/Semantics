@@ -160,7 +160,8 @@ public sealed class RegexMatchAttribute(string pattern, RegexOptions options = R
 	/// </summary>
 	/// <param name="semanticString">The SemanticString to validate</param>
 	/// <returns>True if the string matches the pattern, false otherwise</returns>
-	public override bool Validate(ISemanticString semanticString) => Regex.IsMatch(semanticString.ToString(), Pattern, Options);
+	/// <inheritdoc/>
+	public override bool Validate(ISemanticString semanticString) => Regex.IsMatch(semanticString.WeakString, Pattern, Options);
 }
 
 /// <summary>
