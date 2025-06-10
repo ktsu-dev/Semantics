@@ -277,3 +277,9 @@ When adding XML documentation comments:
 *   3. **Create a validator class** that inherits from `FluentValidationAdapter`
 *   4. **Define validation rules** in the validator's constructor using FluentValidation syntax
 *   Before increasing test coverage, explore the project structure to understand the current testing setup and identify areas that need more coverage.
+
+## SUPPRESSIONS
+
+(Attributes to suppress code analysis warnings are recorded here.)
+
+*   Suppress CA1812 on `SemanticStringExtensionsTests.TestSemanticString` with an attribute.

@@ -16,6 +16,7 @@ public class SemanticStringExtensionsTests
 	/// <summary>
 	/// Test semantic string implementation for testing purposes.
 	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Test class is instantiated by test framework")]
 	private sealed record TestSemanticString : SemanticString<TestSemanticString>
 	{
 		public TestSemanticString() : this(string.Empty) { }
