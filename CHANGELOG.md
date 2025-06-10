@@ -1,6 +1,15 @@
-## v1.0.4
+## v1.0.5 (patch)
 
 Changes since v1.0.4:
+
+- Refactor semantic validation attributes and introduce new path validation strategies ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor validation attributes and enhance documentation ([@matt-edmondson](https://github.com/matt-edmondson))
+- Implement semantic path operators and enhance path interfaces ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor casing validation attributes to utilize FluentValidation ([@matt-edmondson](https://github.com/matt-edmondson))
+-  Add new semantic path types and validation strategies ([@matt-edmondson](https://github.com/matt-edmondson))
+- Add more teats ([@matt-edmondson](https://github.com/matt-edmondson))
+- Integrate FluentValidation into semantic validation attributes ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor validation attributes to utilize FluentValidation ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.4 (patch)
 
 Changes since v1.0.3:
