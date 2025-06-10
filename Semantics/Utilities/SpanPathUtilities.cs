@@ -58,9 +58,19 @@ internal static class SpanPathUtilities
 			}
 		}
 
-		return lastSeparatorIndex >= 0 && lastSeparatorIndex < path.Length - 1
-			? path[(lastSeparatorIndex + 1)..]
-			: path;
+		if (lastSeparatorIndex >= 0)
+		{
+			// If separator is at the end, return empty span
+			if (lastSeparatorIndex == path.Length - 1)
+			{
+				return default;
+			}
+			// Otherwise return the part after the separator
+			return path[(lastSeparatorIndex + 1)..];
+		}
+
+		// No separator found, return the whole path
+		return path;
 	}
 
 	/// <summary>

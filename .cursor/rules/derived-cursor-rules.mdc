@@ -209,6 +209,7 @@ When adding XML documentation comments:
     *   Verify that all method overloads work correctly with their underlying `WeakString` implementations.
     *   Verify that the `WeakString` property is properly initialized with the correct string value.
     *   Check for any issues with named parameter delegation.
+*   When debugging `SpanPathUtilities.GetFileName` and encountering failing tests with trailing separators, ensure that the method returns an empty span when the path ends with a directory separator.
 
 ## WORKFLOW & RELEASE RULES
 
@@ -248,3 +249,31 @@ When adding XML documentation comments:
     2.  ✅ **Recommended approach**: Using first-class .NET types directly
     3.  **Migration guidance**: How to transition from string-based validation to proper types
 *   When creating new validation attributes, prefer using `FluentSemanticStringValidationAttribute` as the base class to take advantage of FluentValidation's features.
+*   ### Text Validation
+*   - `IsEmailAddressAttribute` - Email format validation with length limits
+*   - `IsBase64Attribute` - Base64 format validation with proper padding checks
+*   - `RegexMatchAttribute` - Pattern matching with customizable regex options
+*   - `StartsWithAttribute` - Prefix validation with string comparison options
+*   - `EndsWithAttribute` - Suffix validation with string comparison options
+*   - `ContainsAttribute` - Substring validation with string comparison options
+*   ### Format Validation
+*   - `IsEmptyOrWhitespaceAttribute` - Validates empty or whitespace-only content
+*   - `IsSingleLineAttribute` - Validates single-line strings (no line breaks)
+*   - `IsMultiLineAttribute` - Validates multi-line strings (contains line breaks)
+*   ### Path Validation
+*   - `IsPathAttribute` - Valid path format with character and length limits
+*   - `DoesExistAttribute` - Path existence validation on filesystem
+*   - `IsExtensionAttribute` - File extension format validation
+*   - `IsAbsolutePathAttribute` - Absolute path validation
+*   ### Casing Validation
+*   - `IsLowerCaseAttribute` - Lowercase string validation
+*   - `IsUpperCaseAttribute` - Uppercase string validation
+*   ### First-Class Type Validation
+*   - `IsGuidAttribute` - GUID format validation
+*   All existing validation attributes continue to work exactly as before. The changes are internal implementation details that don't affect the public API.
+*   When creating new validation attributes:
+*   1. **Inherit from FluentSemanticStringValidationAttribute** instead of `SemanticStringValidationAttribute`
+*   2. **Implement CreateValidator()** to return your custom `FluentValidationAdapter`
+*   3. **Create a validator class** that inherits from `FluentValidationAdapter`
+*   4. **Define validation rules** in the validator's constructor using FluentValidation syntax
+*   Before increasing test coverage, explore the project structure to understand the current testing setup and identify areas that need more coverage.
