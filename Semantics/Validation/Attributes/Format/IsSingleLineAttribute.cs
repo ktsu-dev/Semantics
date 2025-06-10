@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string contains no line breaks (single line)
@@ -16,24 +17,44 @@ using System.Linq;
 /// Examples of invalid strings: "Line 1\nLine 2", "Text with\r\nline breaks"
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsSingleLineAttribute : SemanticStringValidationAttribute
+public sealed class IsSingleLineAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string contains no line breaks.
+	/// Creates the FluentValidation validator for single line validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string contains no line breaks; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for single line strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new SingleLineValidator();
+
+	/// <summary>
+	/// FluentValidation validator for single line strings.
+	/// </summary>
+	private sealed class SingleLineValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the SingleLineValidator class.
+		/// </summary>
+		public SingleLineValidator()
 		{
-			return true;
+			RuleFor(value => value)
+				.Must(BeValidSingleLine)
+				.WithMessage("The value must not contain line breaks.")
+				.When(value => !string.IsNullOrEmpty(value));
 		}
 
-		// Check for any line break characters
-		return !value.Any(c => c == '\n' || c == '\r' || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.LineSeparator);
+		/// <summary>
+		/// Validates that a string contains no line breaks.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string contains no line breaks, false otherwise</returns>
+		private static bool BeValidSingleLine(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return true;
+			}
+
+			// Check for any line break characters
+			return !value.Any(c => c == '\n' || c == '\r' || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.LineSeparator);
+		}
 	}
 }

@@ -5,6 +5,7 @@
 namespace ktsu.Semantics;
 
 using System;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string is either empty, null, or contains only whitespace characters
@@ -15,18 +16,27 @@ using System;
 /// Examples of invalid strings: "Hello", " a ", "text"
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsEmptyOrWhitespaceAttribute : SemanticStringValidationAttribute
+public sealed class IsEmptyOrWhitespaceAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is empty or contains only whitespace.
+	/// Creates the FluentValidation validator for empty or whitespace validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is null, empty, or whitespace only; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for empty or whitespace strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new EmptyOrWhitespaceValidator();
+
+	/// <summary>
+	/// FluentValidation validator for empty or whitespace strings.
+	/// </summary>
+	private sealed class EmptyOrWhitespaceValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		return string.IsNullOrWhiteSpace(value);
+		/// <summary>
+		/// Initializes a new instance of the EmptyOrWhitespaceValidator class.
+		/// </summary>
+		public EmptyOrWhitespaceValidator()
+		{
+			RuleFor(value => value)
+				.Must(string.IsNullOrWhiteSpace)
+				.WithMessage("The value must be empty or contain only whitespace characters.");
+		}
 	}
 }

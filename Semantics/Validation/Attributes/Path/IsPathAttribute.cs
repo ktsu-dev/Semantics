@@ -7,6 +7,7 @@ namespace ktsu.Semantics;
 using System;
 using System.IO;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string represents a valid path with no invalid path characters and a reasonable length.
@@ -22,31 +23,51 @@ using System.Linq;
 /// while being more restrictive than the maximum path lengths supported by most file systems.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsPathAttribute : SemanticStringValidationAttribute
+public sealed class IsPathAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string represents a valid path.
+	/// Creates the FluentValidation validator for path validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is a valid path; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for path strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new PathValidator();
+
+	/// <summary>
+	/// FluentValidation validator for path strings.
+	/// </summary>
+	private sealed class PathValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the PathValidator class.
+		/// </summary>
+		public PathValidator()
 		{
-			return true;
+			RuleFor(value => value)
+				.MaximumLength(256)
+				.WithMessage("Path length cannot exceed 256 characters.")
+				.When(value => !string.IsNullOrEmpty(value));
+
+			RuleFor(value => value)
+				.Must(BeValidPath)
+				.WithMessage("Path contains invalid characters.")
+				.When(value => !string.IsNullOrEmpty(value));
 		}
 
-		if (value.Length > 256)
+		/// <summary>
+		/// Validates that a string represents a valid path.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is a valid path, false otherwise</returns>
+		private static bool BeValidPath(string value)
 		{
-			return false;
-		}
+			if (string.IsNullOrEmpty(value))
+			{
+				return true;
+			}
 
-		// Check for characters from GetInvalidPathChars() and additional problematic characters
-		// In .NET Core+, GetInvalidPathChars() doesn't include all characters that can cause issues in paths
-		char[] invalidChars = [.. Path.GetInvalidPathChars(), '<', '>', '|'];
-		return !value.Intersect(invalidChars).Any();
+			// Check for characters from GetInvalidPathChars() and additional problematic characters
+			// In .NET Core+, GetInvalidPathChars() doesn't include all characters that can cause issues in paths
+			char[] invalidChars = [.. Path.GetInvalidPathChars(), '<', '>', '|'];
+			return !value.Intersect(invalidChars).Any();
+		}
 	}
 }

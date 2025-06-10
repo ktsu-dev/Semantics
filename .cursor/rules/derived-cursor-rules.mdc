@@ -11,6 +11,8 @@ This file defines all project rules, coding standards, workflow guidelines, refe
 
 (Additions to the tech stack are recorded here, including new coding tools or libraries.)
 
+*   FluentValidation
+
 ## PROJECT DOCUMENTATION & CONTEXT SYSTEM
 
 (Information about project documentation, context, and version changes are recorded here.)
@@ -19,6 +21,7 @@ This file defines all project rules, coding standards, workflow guidelines, refe
 *   Move technical information from the `README` file into appropriate documents within the `docs` directory.
 *   Move the content from the architecture document into an appropriate document within the `docs` directory.
 *   Add documentation about the path interface hierarchy to both the architecture documentation and examples.
+*   Put examples in documents, not in code.
 
 When adding XML documentation comments:
 
@@ -141,6 +144,7 @@ When adding XML documentation comments:
     *   `IsDoubleAttribute` - Now suggests using `System.Double` instead of semantic string types, focusing on the comprehensive mathematical API
     *   `IsInt32Attribute` - Now suggests using `System.Int32` instead of semantic string types, focusing on the comprehensive numerical API
     *   `IsBooleanAttribute` - Now suggests using `System.Boolean` instead of semantic string types, focusing on the comprehensive logical API
+*   Use the FluentValidation library to implement the internals of the validation attributes where possible.
 
 ## DEBUGGING
 

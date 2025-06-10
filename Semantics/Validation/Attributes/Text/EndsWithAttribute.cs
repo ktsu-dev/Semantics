@@ -5,12 +5,13 @@
 namespace ktsu.Semantics;
 
 using System;
+using FluentValidation;
 
 /// <summary>
 /// Validates that the string ends with the specified suffix
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-public sealed class EndsWithAttribute(string suffix, StringComparison comparison = StringComparison.Ordinal) : SemanticStringValidationAttribute
+public sealed class EndsWithAttribute(string suffix, StringComparison comparison = StringComparison.Ordinal) : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
 	/// Gets the suffix that the string must end with.
@@ -23,9 +24,32 @@ public sealed class EndsWithAttribute(string suffix, StringComparison comparison
 	public StringComparison Comparison => comparison;
 
 	/// <summary>
-	/// Validates that the SemanticString ends with the specified suffix.
+	/// Creates the FluentValidation validator for suffix validation.
 	/// </summary>
-	/// <param name="semanticString">The SemanticString to validate</param>
-	/// <returns>True if the string ends with the suffix, false otherwise</returns>
-	public override bool Validate(ISemanticString semanticString) => semanticString.EndsWith(suffix, comparison);
+	/// <returns>A FluentValidation validator for suffix validation</returns>
+	protected override FluentValidationAdapter CreateValidator() => new EndsWithValidator(suffix, comparison);
+
+	/// <summary>
+	/// FluentValidation validator for suffix validation.
+	/// </summary>
+	private sealed class EndsWithValidator : FluentValidationAdapter
+	{
+		private readonly string _suffix;
+		private readonly StringComparison _comparison;
+
+		/// <summary>
+		/// Initializes a new instance of the EndsWithValidator class.
+		/// </summary>
+		/// <param name="suffix">The suffix that the string must end with</param>
+		/// <param name="comparison">The comparison type</param>
+		public EndsWithValidator(string suffix, StringComparison comparison)
+		{
+			_suffix = suffix;
+			_comparison = comparison;
+
+			RuleFor(value => value)
+				.Must(value => value?.EndsWith(_suffix, _comparison) == true)
+				.WithMessage($"The value must end with '{_suffix}'.");
+		}
+	}
 }

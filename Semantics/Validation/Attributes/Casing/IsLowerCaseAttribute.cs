@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in lower case (all lowercase letters)
@@ -16,24 +17,44 @@ using System.Linq;
 /// All alphabetic characters must be lowercase. Spaces, digits, and punctuation are allowed.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsLowerCaseAttribute : SemanticStringValidationAttribute
+public sealed class IsLowerCaseAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is in lower case.
+	/// Creates the FluentValidation validator for lowercase validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is in lower case; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for lowercase strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new LowerCaseValidator();
+
+	/// <summary>
+	/// FluentValidation validator for lowercase strings.
+	/// </summary>
+	private sealed class LowerCaseValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the LowerCaseValidator class.
+		/// </summary>
+		public LowerCaseValidator()
 		{
-			return true;
+			RuleFor(value => value)
+				.Must(BeValidLowerCase)
+				.WithMessage("All alphabetic characters must be lowercase.")
+				.When(value => !string.IsNullOrEmpty(value));
 		}
 
-		// All letters must be lowercase
-		return value.All(c => !char.IsLetter(c) || char.IsLower(c));
+		/// <summary>
+		/// Validates that a string is in lower case.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if all alphabetic characters are lowercase, false otherwise</returns>
+		private static bool BeValidLowerCase(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return true;
+			}
+
+			// All letters must be lowercase
+			return value.All(c => !char.IsLetter(c) || char.IsLower(c));
+		}
 	}
 }

@@ -5,12 +5,13 @@
 namespace ktsu.Semantics;
 
 using System;
+using FluentValidation;
 
 /// <summary>
 /// Validates that the string has both the specified prefix and suffix
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-public sealed class PrefixAndSuffixAttribute(string prefix, string suffix, StringComparison comparison = StringComparison.Ordinal) : SemanticStringValidationAttribute
+public sealed class PrefixAndSuffixAttribute(string prefix, string suffix, StringComparison comparison = StringComparison.Ordinal) : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
 	/// Gets the prefix that the string must start with.
@@ -28,9 +29,39 @@ public sealed class PrefixAndSuffixAttribute(string prefix, string suffix, Strin
 	public StringComparison Comparison => comparison;
 
 	/// <summary>
-	/// Validates that the SemanticString starts with the specified prefix and ends with the specified suffix.
+	/// Creates the FluentValidation validator for prefix and suffix validation.
 	/// </summary>
-	/// <param name="semanticString">The SemanticString to validate</param>
-	/// <returns>True if the string starts with the prefix and ends with the suffix, false otherwise</returns>
-	public override bool Validate(ISemanticString semanticString) => semanticString.StartsWith(Prefix, Comparison) && semanticString.EndsWith(Suffix, Comparison);
+	/// <returns>A FluentValidation validator for prefix and suffix validation</returns>
+	protected override FluentValidationAdapter CreateValidator() => new PrefixAndSuffixValidator(prefix, suffix, comparison);
+
+	/// <summary>
+	/// FluentValidation validator for prefix and suffix validation.
+	/// </summary>
+	private sealed class PrefixAndSuffixValidator : FluentValidationAdapter
+	{
+		private readonly string _prefix;
+		private readonly string _suffix;
+		private readonly StringComparison _comparison;
+
+		/// <summary>
+		/// Initializes a new instance of the PrefixAndSuffixValidator class.
+		/// </summary>
+		/// <param name="prefix">The prefix that the string must start with</param>
+		/// <param name="suffix">The suffix that the string must end with</param>
+		/// <param name="comparison">The comparison type</param>
+		public PrefixAndSuffixValidator(string prefix, string suffix, StringComparison comparison)
+		{
+			_prefix = prefix;
+			_suffix = suffix;
+			_comparison = comparison;
+
+			RuleFor(value => value)
+				.Must(value => value?.StartsWith(_prefix, _comparison) == true)
+				.WithMessage($"The value must start with '{_prefix}'.");
+
+			RuleFor(value => value)
+				.Must(value => value?.EndsWith(_suffix, _comparison) == true)
+				.WithMessage($"The value must end with '{_suffix}'.");
+		}
+	}
 }

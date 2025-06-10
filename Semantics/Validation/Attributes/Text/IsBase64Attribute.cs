@@ -5,37 +5,64 @@
 namespace ktsu.Semantics;
 
 using System;
-using System.Text.RegularExpressions;
+using FluentValidation;
 
 /// <summary>
 /// Validates that the string has proper Base64 format (valid characters and padding).
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed partial class IsBase64Attribute : SemanticStringValidationAttribute
+public sealed class IsBase64Attribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string has valid Base64 format.
+	/// Creates the FluentValidation validator for Base64 validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>True if the string has valid Base64 format, false otherwise.</returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for Base64 strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new Base64Validator();
+
+	/// <summary>
+	/// FluentValidation validator for Base64 strings.
+	/// </summary>
+	private sealed class Base64Validator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the Base64Validator class.
+		/// </summary>
+		public Base64Validator()
 		{
-			return true;
+			RuleFor(value => value)
+				.Must(BeValidBase64)
+				.WithMessage("The value must be a valid Base64 string.")
+				.When(value => !string.IsNullOrEmpty(value));
 		}
 
-		// Check length is multiple of 4 (Base64 requirement)
-		if (value.Length % 4 != 0)
+		/// <summary>
+		/// Validates that a string is valid Base64.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is valid Base64, false otherwise</returns>
+		private static bool BeValidBase64(string value)
 		{
-			return false;
-		}
+			if (string.IsNullOrEmpty(value))
+			{
+				return true;
+			}
 
-		// Check for valid Base64 characters and proper padding
-		return MyRegex().IsMatch(value);
+			// Check length is multiple of 4 (Base64 requirement)
+			if (value.Length % 4 != 0)
+			{
+				return false;
+			}
+
+			// Check for valid Base64 characters and proper padding
+			try
+			{
+				Convert.FromBase64String(value);
+				return true;
+			}
+			catch (FormatException)
+			{
+				return false;
+			}
+		}
 	}
-
-	[GeneratedRegex(@"^[A-Za-z0-9+/]*={0,2}$")]
-	private static partial Regex MyRegex();
 }

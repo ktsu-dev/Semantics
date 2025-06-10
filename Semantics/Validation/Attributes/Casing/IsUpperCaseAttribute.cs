@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in UPPER CASE (all uppercase letters)
@@ -16,24 +17,44 @@ using System.Linq;
 /// All alphabetic characters must be uppercase. Spaces, digits, and punctuation are allowed.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsUpperCaseAttribute : SemanticStringValidationAttribute
+public sealed class IsUpperCaseAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is in UPPER CASE.
+	/// Creates the FluentValidation validator for uppercase validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is in UPPER CASE; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for uppercase strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new UpperCaseValidator();
+
+	/// <summary>
+	/// FluentValidation validator for uppercase strings.
+	/// </summary>
+	private sealed class UpperCaseValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the UpperCaseValidator class.
+		/// </summary>
+		public UpperCaseValidator()
 		{
-			return true;
+			RuleFor(value => value)
+				.Must(BeValidUpperCase)
+				.WithMessage("All alphabetic characters must be uppercase.")
+				.When(value => !string.IsNullOrEmpty(value));
 		}
 
-		// All letters must be uppercase
-		return value.All(c => !char.IsLetter(c) || char.IsUpper(c));
+		/// <summary>
+		/// Validates that a string is in upper case.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if all alphabetic characters are uppercase, false otherwise</returns>
+		private static bool BeValidUpperCase(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return true;
+			}
+
+			// All letters must be uppercase
+			return value.All(c => !char.IsLetter(c) || char.IsUpper(c));
+		}
 	}
 }

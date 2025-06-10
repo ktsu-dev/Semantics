@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string contains line breaks (multiple lines)
@@ -16,24 +17,45 @@ using System.Linq;
 /// Examples of invalid strings: "Hello World", "This is a single line", "No line breaks here"
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsMultiLineAttribute : SemanticStringValidationAttribute
+public sealed class IsMultiLineAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string contains line breaks.
+	/// Creates the FluentValidation validator for multi-line validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string contains line breaks; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for multi-line strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new MultiLineValidator();
+
+	/// <summary>
+	/// FluentValidation validator for multi-line strings.
+	/// </summary>
+	private sealed class MultiLineValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the MultiLineValidator class.
+		/// </summary>
+		public MultiLineValidator()
 		{
-			return false; // Empty strings are not multi-line
+			RuleFor(value => value)
+				.NotEmpty()
+				.WithMessage("Multi-line strings cannot be empty.")
+				.Must(BeValidMultiLine)
+				.WithMessage("The value must contain line breaks.");
 		}
 
-		// Check for any line break characters
-		return value.Any(c => c == '\n' || c == '\r' || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.LineSeparator);
+		/// <summary>
+		/// Validates that a string contains line breaks.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string contains line breaks, false otherwise</returns>
+		private static bool BeValidMultiLine(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return false; // Empty strings are not multi-line
+			}
+
+			// Check for any line break characters
+			return value.Any(c => c == '\n' || c == '\r' || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.LineSeparator);
+		}
 	}
 }
