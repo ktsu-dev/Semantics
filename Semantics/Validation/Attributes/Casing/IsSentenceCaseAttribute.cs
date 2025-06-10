@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in sentence case (first letter uppercase, rest lowercase)
@@ -16,49 +17,69 @@ using System.Linq;
 /// Proper nouns and other capitalization rules are not enforced - only the first letter rule.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsSentenceCaseAttribute : SemanticStringValidationAttribute
+public sealed class IsSentenceCaseAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is in sentence case.
+	/// Creates the FluentValidation validator for sentence case validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is in sentence case; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for sentence case strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new SentenceCaseValidator();
+
+	/// <summary>
+	/// FluentValidation validator for sentence case strings.
+	/// </summary>
+	private sealed class SentenceCaseValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the SentenceCaseValidator class.
+		/// </summary>
+		public SentenceCaseValidator()
 		{
-			return true;
+			RuleFor(value => value)
+				.Must(BeValidSentenceCase)
+				.WithMessage("The value must be in sentence case format.")
+				.When(value => !string.IsNullOrEmpty(value));
 		}
 
-		// Find the first letter in the string
-		char? firstLetter = value.FirstOrDefault(char.IsLetter);
-		if (firstLetter.HasValue && !char.IsUpper(firstLetter.Value))
+		/// <summary>
+		/// Validates that a string is in sentence case.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is in sentence case, false otherwise</returns>
+		private static bool BeValidSentenceCase(string value)
 		{
-			return false;
-		}
-
-		// Check that all other letters after the first are lowercase
-		bool foundFirstLetter = false;
-		foreach (char c in value)
-		{
-			if (char.IsLetter(c))
+			if (string.IsNullOrEmpty(value))
 			{
-				if (!foundFirstLetter)
-				{
-					foundFirstLetter = true; // Skip the first letter
-					continue;
-				}
+				return true;
+			}
 
-				if (char.IsUpper(c))
+			// Find the first letter in the string
+			char? firstLetter = value.FirstOrDefault(char.IsLetter);
+			if (firstLetter.HasValue && !char.IsUpper(firstLetter.Value))
+			{
+				return false;
+			}
+
+			// Check that all other letters after the first are lowercase
+			bool foundFirstLetter = false;
+			foreach (char c in value)
+			{
+				if (char.IsLetter(c))
 				{
-					return false; // Found uppercase letter after the first
+					if (!foundFirstLetter)
+					{
+						foundFirstLetter = true; // Skip the first letter
+						continue;
+					}
+
+					if (char.IsUpper(c))
+					{
+						return false; // Found uppercase letter after the first
+					}
 				}
 			}
-		}
 
-		return true;
+			return true;
+		}
 	}
 }

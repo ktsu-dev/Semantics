@@ -4588,27 +4588,157 @@ Read file: Semantics/Validation/Attributes/Casing/IsMacroCaseAttribute.cs
 
 ---
 
+Now let me migrate these remaining Casing attributes:
 
+---
+
+```diff
+  using System;
+  using System.Linq;
++ using FluentValidation;
+  
+  /// <summary>
+```
+
+```diff
+  /// </remarks>
+  [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+- public sealed class IsSnakeCaseAttribute : SemanticStringValidationAttribute
++ public sealed class IsSnakeCaseAttribute : FluentSemanticStringValidationAttribute
+  {
+  	/// <summary>
+- 	/// Validates that the semantic string is in snake_case.
++ 	/// Creates the FluentValidation validator for snake_case validation.
++ 	/// </summary>
++ 	/// <returns>A FluentValidation validator for snake_case strings</returns>
++ 	protected override FluentValidationAdapter CreateValidator() => new SnakeCaseValidator();
++ 
++ 	/// <summary>
++ 	/// FluentValidation validator for snake_case strings.
+  	/// </summary>
+- 	/// <param name="semanticString">The semantic string to validate.</param>
+- 	/// <returns>
+- 	/// <see langword="true"/> if the string is in snake_case; otherwise, <see langword="false"/>.
+- 	/// </returns>
+- 	public override bool Validate(ISemanticString semanticString)
+- 	{
+- 		string value = semanticString.WeakString;
++ 	private sealed class SnakeCaseValidator : FluentValidationAdapter
++ 	{
++ 		/// <summary>
++ 		/// Initializes a new instance of the SnakeCaseValidator class.
++ 		/// </summary>
++ 		public SnakeCaseValidator()
++ 		{
++ 			RuleFor(value => value)
++ 				.Must(BeValidSnakeCase)
++ 				.WithMessage("The value must be in snake_case format.")
++ 				.When(value => !string.IsNullOrEmpty(value));
++ 		}
++ 
++ 		/// <summary>
++ 		/// Validates that a string is in snake_case.
++ 		/// </summary>
++ 		/// <param name="value">The string to validate</param>
++ 		/// <returns>True if the string is in snake_case, false otherwise</returns>
++ 		private static bool BeValidSnakeCase(string value)
++ 		{
+  			if (string.IsNullOrEmpty(value))
+  			{
+```
+
+```diff
+  			// All characters must be lowercase letters, digits, or underscores
+  			return value.All(c => char.IsLower(c) || char.IsDigit(c) || c == '_');
++ 		}
+  	}
+  }
+```
+
+---
+
+```diff
+  using System;
+  using System.Linq;
++ using FluentValidation;
+  
+  /// <summary>
+```
+
+```diff
+  /// </remarks>
+  [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+- public sealed class IsMacroCaseAttribute : SemanticStringValidationAttribute
++ public sealed class IsMacroCaseAttribute : FluentSemanticStringValidationAttribute
+  {
+  	/// <summary>
+- 	/// Validates that the semantic string is in MACRO_CASE.
++ 	/// Creates the FluentValidation validator for MACRO_CASE validation.
++ 	/// </summary>
++ 	/// <returns>A FluentValidation validator for MACRO_CASE strings</returns>
++ 	protected override FluentValidationAdapter CreateValidator() => new MacroCaseValidator();
++ 
++ 	/// <summary>
++ 	/// FluentValidation validator for MACRO_CASE strings.
+  	/// </summary>
+- 	/// <param name="semanticString">The semantic string to validate.</param>
+- 	/// <returns>
+- 	/// <see langword="true"/> if the string is in MACRO_CASE; otherwise, <see langword="false"/>.
+- 	/// </returns>
+- 	public override bool Validate(ISemanticString semanticString)
+- 	{
+- 		string value = semanticString.WeakString;
++ 	private sealed class MacroCaseValidator : FluentValidationAdapter
++ 	{
++ 		/// <summary>
++ 		/// Initializes a new instance of the MacroCaseValidator class.
++ 		/// </summary>
++ 		public MacroCaseValidator()
++ 		{
++ 			RuleFor(value => value)
++ 				.Must(BeValidMacroCase)
++ 				.WithMessage("The value must be in MACRO_CASE format.")
++ 				.When(value => !string.IsNullOrEmpty(value));
++ 		}
++ 
++ 		/// <summary>
++ 		/// Validates that a string is in MACRO_CASE.
++ 		/// </summary>
++ 		/// <param name="value">The string to validate</param>
++ 		/// <returns>True if the string is in MACRO_CASE, false otherwise</returns>
++ 		private static bool BeValidMacroCase(string value)
++ 		{
+  			if (string.IsNullOrEmpty(value))
+  			{
+```
+
+```diff
+  			// All characters must be uppercase letters, digits, or underscores
+  			return value.All(c => char.IsUpper(c) || char.IsDigit(c) || c == '_');
++ 		}
+  	}
+  }
+```
+
+---
+
+Now let me finish with the last two Casing attributes:
+
+---
+
+Read file: Semantics/Validation/Attributes/Casing/IsTitleCaseAttribute.cs
 
 ---
 
 
 
----
-
-
-
----
-
 
 
 ---
 
+_**User**_
 
-
----
-
-
+continue
 
 ---
 

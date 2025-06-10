@@ -6,6 +6,7 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Globalization;
+using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in title case (each word starts with an uppercase letter)
@@ -16,25 +17,45 @@ using System.Globalization;
 /// Whitespace and punctuation are preserved.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsTitleCaseAttribute : SemanticStringValidationAttribute
+public sealed class IsTitleCaseAttribute : FluentSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Validates that the semantic string is in title case.
+	/// Creates the FluentValidation validator for title case validation.
 	/// </summary>
-	/// <param name="semanticString">The semantic string to validate.</param>
-	/// <returns>
-	/// <see langword="true"/> if the string is in title case; otherwise, <see langword="false"/>.
-	/// </returns>
-	public override bool Validate(ISemanticString semanticString)
+	/// <returns>A FluentValidation validator for title case strings</returns>
+	protected override FluentValidationAdapter CreateValidator() => new TitleCaseValidator();
+
+	/// <summary>
+	/// FluentValidation validator for title case strings.
+	/// </summary>
+	private sealed class TitleCaseValidator : FluentValidationAdapter
 	{
-		string value = semanticString.WeakString;
-		if (string.IsNullOrEmpty(value))
+		/// <summary>
+		/// Initializes a new instance of the TitleCaseValidator class.
+		/// </summary>
+		public TitleCaseValidator()
 		{
-			return true;
+			RuleFor(value => value)
+				.Must(BeValidTitleCase)
+				.WithMessage("The value must be in title case format.")
+				.When(value => !string.IsNullOrEmpty(value));
 		}
 
-		// Use TextInfo.ToTitleCase and compare with original
-		string titleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLowerInvariant());
-		return string.Equals(value, titleCase, StringComparison.Ordinal);
+		/// <summary>
+		/// Validates that a string is in title case.
+		/// </summary>
+		/// <param name="value">The string to validate</param>
+		/// <returns>True if the string is in title case, false otherwise</returns>
+		private static bool BeValidTitleCase(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return true;
+			}
+
+			// Use TextInfo.ToTitleCase and compare with original
+			string titleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLowerInvariant());
+			return string.Equals(value, titleCase, StringComparison.Ordinal);
+		}
 	}
 }
