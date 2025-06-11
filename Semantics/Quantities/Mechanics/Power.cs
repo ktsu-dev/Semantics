@@ -50,6 +50,8 @@ public sealed record Power
 /// </summary>
 public static class PowerConversions
 {
+	private static Conversions.IConversionCalculator<Power> Calculator => Conversions.ConversionRegistry.GetCalculator<Power>();
+
 	/// <summary>
 	/// Converts a value to watts.
 	/// </summary>
@@ -58,7 +60,7 @@ public static class PowerConversions
 	/// <returns>A <see cref="Power"/> representing the value in watts.</returns>
 	public static Power Watts<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Power>();
+		=> Calculator.FromUnit(value, "watts");
 
 	/// <summary>
 	/// Converts a <see cref="Power"/> to a numeric value in watts.
@@ -68,7 +70,7 @@ public static class PowerConversions
 	/// <returns>The numeric value in watts.</returns>
 	public static TNumber Watts<TNumber>(this Power value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber());
+		=> Calculator.ToUnit<TNumber>(value, "watts");
 
 	/// <summary>
 	/// Converts a value to kilowatts.
@@ -78,7 +80,7 @@ public static class PowerConversions
 	/// <returns>A <see cref="Power"/> representing the value in kilowatts.</returns>
 	public static Power Kilowatts<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Power>(PhysicalConstants.Kilo);
+		=> Calculator.FromUnit(value, "kilowatts");
 
 	/// <summary>
 	/// Converts a <see cref="Power"/> to a numeric value in kilowatts.
@@ -88,7 +90,27 @@ public static class PowerConversions
 	/// <returns>The numeric value in kilowatts.</returns>
 	public static TNumber Kilowatts<TNumber>(this Power value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Kilo));
+		=> Calculator.ToUnit<TNumber>(value, "kilowatts");
+
+	/// <summary>
+	/// Converts a value to milliwatts.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
+	/// <param name="value">The value to convert.</param>
+	/// <returns>A <see cref="Power"/> representing the value in milliwatts.</returns>
+	public static Power Milliwatts<TNumber>(this TNumber value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.FromUnit(value, "milliwatts");
+
+	/// <summary>
+	/// Converts a <see cref="Power"/> to a numeric value in milliwatts.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
+	/// <param name="value">The <see cref="Power"/> to convert.</param>
+	/// <returns>The numeric value in milliwatts.</returns>
+	public static TNumber Milliwatts<TNumber>(this Power value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.ToUnit<TNumber>(value, "milliwatts");
 
 	/// <summary>
 	/// Converts a value to megawatts.
@@ -98,7 +120,7 @@ public static class PowerConversions
 	/// <returns>A <see cref="Power"/> representing the value in megawatts.</returns>
 	public static Power Megawatts<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Power>(PhysicalConstants.Mega);
+		=> Calculator.FromUnit(value, "megawatts");
 
 	/// <summary>
 	/// Converts a <see cref="Power"/> to a numeric value in megawatts.
@@ -108,7 +130,7 @@ public static class PowerConversions
 	/// <returns>The numeric value in megawatts.</returns>
 	public static TNumber Megawatts<TNumber>(this Power value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Mega));
+		=> Calculator.ToUnit<TNumber>(value, "megawatts");
 
 	/// <summary>
 	/// Converts a value to gigawatts.
@@ -118,7 +140,7 @@ public static class PowerConversions
 	/// <returns>A <see cref="Power"/> representing the value in gigawatts.</returns>
 	public static Power Gigawatts<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Power>(PhysicalConstants.Giga);
+		=> Calculator.FromUnit(value, "gigawatts");
 
 	/// <summary>
 	/// Converts a <see cref="Power"/> to a numeric value in gigawatts.
@@ -128,7 +150,7 @@ public static class PowerConversions
 	/// <returns>The numeric value in gigawatts.</returns>
 	public static TNumber Gigawatts<TNumber>(this Power value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Giga));
+		=> Calculator.ToUnit<TNumber>(value, "gigawatts");
 
 	/// <summary>
 	/// Converts a value to horsepower.
@@ -138,7 +160,7 @@ public static class PowerConversions
 	/// <returns>A <see cref="Power"/> representing the value in horsepower.</returns>
 	public static Power Horsepower<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Power>(PhysicalConstants.HorsepowerToWattsFactor);
+		=> Calculator.FromUnit(value, "horsepower");
 
 	/// <summary>
 	/// Converts a <see cref="Power"/> to a numeric value in horsepower.
@@ -148,7 +170,7 @@ public static class PowerConversions
 	/// <returns>The numeric value in horsepower.</returns>
 	public static TNumber Horsepower<TNumber>(this Power value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.HorsepowerToWattsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "horsepower");
 
 	/// <summary>
 	/// Converts a value to metric horsepower.
@@ -158,7 +180,7 @@ public static class PowerConversions
 	/// <returns>A <see cref="Power"/> representing the value in metric horsepower.</returns>
 	public static Power MetricHorsepower<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Power>(PhysicalConstants.MetricHorsePowerToWattsFactor);
+		=> Calculator.FromUnit(value, "metric_horsepower");
 
 	/// <summary>
 	/// Converts a <see cref="Power"/> to a numeric value in metric horsepower.
@@ -168,5 +190,5 @@ public static class PowerConversions
 	/// <returns>The numeric value in metric horsepower.</returns>
 	public static TNumber MetricHorsepower<TNumber>(this Power value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.MetricHorsePowerToWattsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "metric_horsepower");
 }

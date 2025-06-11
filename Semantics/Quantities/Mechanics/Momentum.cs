@@ -15,6 +15,7 @@ public sealed record Momentum
 	: PhysicalQuantity<Momentum>
 	, IDerivativeOperators<Momentum, Velocity, Mass>
 	, IDerivativeOperators<Momentum, Mass, Velocity>
+	, IIntegralOperators<Momentum, Velocity, Energy>
 {
 	/// <summary>
 	/// Divides a <see cref="Momentum"/> by a <see cref="Velocity"/> to compute a <see cref="Mass"/>.
@@ -33,6 +34,15 @@ public sealed record Momentum
 	/// <returns>A <see cref="Velocity"/> representing the result of the division.</returns>
 	public static Velocity operator /(Momentum left, Mass right) =>
 		IDerivativeOperators<Momentum, Mass, Velocity>.Derive(left, right);
+
+	/// <summary>
+	/// Multiplies a <see cref="Momentum"/> by a <see cref="Velocity"/> to compute an <see cref="Energy"/>.
+	/// </summary>
+	/// <param name="left">The momentum operand.</param>
+	/// <param name="right">The velocity operand.</param>
+	/// <returns>An <see cref="Energy"/> representing the result of the multiplication.</returns>
+	public static Energy operator *(Momentum left, Velocity right) =>
+		IIntegralOperators<Momentum, Velocity, Energy>.Integrate(left, right);
 }
 
 /// <summary>

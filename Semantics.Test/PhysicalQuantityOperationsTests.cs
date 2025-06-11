@@ -15,7 +15,7 @@ public class PhysicalQuantityOperationsTests
 		Time time = 10.Seconds();
 
 		// Act
-		var velocity = length / time;
+		Velocity velocity = length / time;
 
 		// Assert
 		Assert.AreEqual(10.0, velocity.MetersPerSecond<double>(), 1e-10);
@@ -210,7 +210,7 @@ public class PhysicalQuantityOperationsTests
 		Velocity velocity = 20.MetersPerSecond();
 
 		// Act
-		var kineticEnergy = 0.5 * mass * velocity * velocity;
+		Energy kineticEnergy = 0.5 * mass * velocity * velocity;
 
 		// Assert
 		Assert.AreEqual(2000.0, kineticEnergy.Joules<double>(), 1e-10);
@@ -225,7 +225,7 @@ public class PhysicalQuantityOperationsTests
 		Time time = 10.Seconds();
 
 		// Act
-		var distance = (initialVelocity * time) + (0.5 * acceleration * time * time);
+		Length distance = (initialVelocity * time) + (0.5 * acceleration * time * time);
 
 		// Assert
 		Assert.AreEqual(150.0, distance.Meters<double>(), 1e-10);

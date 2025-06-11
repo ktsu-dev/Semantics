@@ -7,12 +7,14 @@ namespace ktsu.Semantics;
 using System.Numerics;
 using System.Reflection;
 
+// TODO: support both direct use and dependecy injection for physical quantities
+
 /// <summary>
 /// Represents a physical quantity with a specific unit of measurement.
 /// </summary>
 /// <typeparam name="TSelf">The type of the derived class.</typeparam>
 public abstract record PhysicalQuantity<TSelf>
-	: SemanticQuantity<TSelf, double>
+	: SemanticQuantity<TSelf, double> // TODO: support other numeric types implementing INumber through dependency injection
 	, IComparable<TSelf>
 	where TSelf : PhysicalQuantity<TSelf>, new()
 {
@@ -113,6 +115,28 @@ public abstract record PhysicalQuantity<TSelf>
 		where T1 : INumber<T1>
 		where T2 : INumber<T2>
 		=> Create(Math.Clamp(Quantity, Convert.ToDouble(min), Convert.ToDouble(max)));
+
+	/// <summary>
+	/// Returns the minimum of this physical quantity and another.
+	/// </summary>
+	/// <param name="other">The other physical quantity to compare with.</param>
+	/// <returns>A new instance of the physical quantity representing the minimum value.</returns>
+	public TSelf Min(TSelf other)
+	{
+		ArgumentNullException.ThrowIfNull(other);
+		return Create(Math.Min(Quantity, other.Quantity));
+	}
+
+	/// <summary>
+	/// Returns the maximum of this physical quantity and another.
+	/// </summary>
+	/// <param name="other">The other physical quantity to compare with.</param>
+	/// <returns>A new instance of the physical quantity representing the maximum value.</returns>
+	public TSelf Max(TSelf other)
+	{
+		ArgumentNullException.ThrowIfNull(other);
+		return Create(Math.Max(Quantity, other.Quantity));
+	}
 
 	/// <summary>
 	/// Adds a specified value to the physical quantity during a unit conversion.

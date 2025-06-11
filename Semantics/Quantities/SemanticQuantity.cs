@@ -183,6 +183,14 @@ public record SemanticQuantity<TSelf, TStorage>
 	/// <inheritdoc/>
 	public static TSelf operator *(SemanticQuantity<TSelf, TStorage> left, TStorage right) => Multiply<TSelf>(left, right);
 
+	/// <summary>
+	/// Multiplies a scalar by a quantity (commutative multiplication).
+	/// </summary>
+	/// <param name="left">The scalar value.</param>
+	/// <param name="right">The quantity.</param>
+	/// <returns>The product of the scalar and the quantity.</returns>
+	public static TSelf operator *(TStorage left, SemanticQuantity<TSelf, TStorage> right) => Multiply<TSelf>(right, left);
+
 	/// <inheritdoc/>
 	public static TSelf operator /(SemanticQuantity<TSelf, TStorage> left, TStorage right)
 		=> TStorage.IsZero(right) ? throw new DivideByZeroException("Cannot divide by zero.") : Divide<TSelf>(left, right);

@@ -30,6 +30,8 @@ public sealed record Volume
 /// </summary>
 public static class VolumeConversions
 {
+	private static Conversions.IConversionCalculator<Volume> Calculator => Conversions.ConversionRegistry.GetCalculator<Volume>();
+
 	/// <summary>
 	/// Converts a value to cubic meters.
 	/// </summary>
@@ -38,7 +40,7 @@ public static class VolumeConversions
 	/// <returns>A <see cref="Volume"/> representing the value in cubic meters.</returns>
 	public static Volume CubicMeters<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Volume>();
+		=> Calculator.FromUnit(value, "cubic_meters");
 
 	/// <summary>
 	/// Converts a <see cref="Volume"/> to a numeric value in cubic meters.
@@ -48,7 +50,7 @@ public static class VolumeConversions
 	/// <returns>The numeric value in cubic meters.</returns>
 	public static TNumber CubicMeters<TNumber>(this Volume value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber());
+		=> Calculator.ToUnit<TNumber>(value, "cubic_meters");
 
 	/// <summary>
 	/// Converts a value to liters.
@@ -58,7 +60,7 @@ public static class VolumeConversions
 	/// <returns>A <see cref="Volume"/> representing the value in liters.</returns>
 	public static Volume Liters<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Volume>(0.001);
+		=> Calculator.FromUnit(value, "liters");
 
 	/// <summary>
 	/// Converts a <see cref="Volume"/> to a numeric value in liters.
@@ -68,7 +70,7 @@ public static class VolumeConversions
 	/// <returns>The numeric value in liters.</returns>
 	public static TNumber Liters<TNumber>(this Volume value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(0.001));
+		=> Calculator.ToUnit<TNumber>(value, "liters");
 
 	/// <summary>
 	/// Converts a value to milliliters.
@@ -78,7 +80,7 @@ public static class VolumeConversions
 	/// <returns>A <see cref="Volume"/> representing the value in milliliters.</returns>
 	public static Volume Milliliters<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Volume>(1e-6);
+		=> Calculator.FromUnit(value, "milliliters");
 
 	/// <summary>
 	/// Converts a <see cref="Volume"/> to a numeric value in milliliters.
@@ -88,7 +90,7 @@ public static class VolumeConversions
 	/// <returns>The numeric value in milliliters.</returns>
 	public static TNumber Milliliters<TNumber>(this Volume value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(1e-6));
+		=> Calculator.ToUnit<TNumber>(value, "milliliters");
 
 	/// <summary>
 	/// Converts a value to cubic centimeters.
@@ -98,7 +100,7 @@ public static class VolumeConversions
 	/// <returns>A <see cref="Volume"/> representing the value in cubic centimeters.</returns>
 	public static Volume CubicCentimeters<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Volume>(PhysicalConstants.Centi * PhysicalConstants.Centi * PhysicalConstants.Centi);
+		=> Calculator.FromUnit(value, "cubic_centimeters");
 
 	/// <summary>
 	/// Converts a <see cref="Volume"/> to a numeric value in cubic centimeters.
@@ -108,7 +110,7 @@ public static class VolumeConversions
 	/// <returns>The numeric value in cubic centimeters.</returns>
 	public static TNumber CubicCentimeters<TNumber>(this Volume value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Centi * PhysicalConstants.Centi * PhysicalConstants.Centi));
+		=> Calculator.ToUnit<TNumber>(value, "cubic_centimeters");
 
 	// Imperial conversions
 	/// <summary>
@@ -119,7 +121,7 @@ public static class VolumeConversions
 	/// <returns>A <see cref="Volume"/> representing the value in cubic feet.</returns>
 	public static Volume CubicFeet<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Volume>(Math.Pow(PhysicalConstants.FeetToMetersFactor, 3));
+		=> Calculator.FromUnit(value, "cubic_feet");
 
 	/// <summary>
 	/// Converts a <see cref="Volume"/> to a numeric value in cubic feet.
@@ -129,7 +131,7 @@ public static class VolumeConversions
 	/// <returns>The numeric value in cubic feet.</returns>
 	public static TNumber CubicFeet<TNumber>(this Volume value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(Math.Pow(PhysicalConstants.FeetToMetersFactor, 3)));
+		=> Calculator.ToUnit<TNumber>(value, "cubic_feet");
 
 	/// <summary>
 	/// Converts a value to cubic inches.
@@ -139,7 +141,7 @@ public static class VolumeConversions
 	/// <returns>A <see cref="Volume"/> representing the value in cubic inches.</returns>
 	public static Volume CubicInches<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Volume>(Math.Pow(PhysicalConstants.InchesToMetersFactor, 3));
+		=> Calculator.FromUnit(value, "cubic_inches");
 
 	/// <summary>
 	/// Converts a <see cref="Volume"/> to a numeric value in cubic inches.
@@ -149,7 +151,27 @@ public static class VolumeConversions
 	/// <returns>The numeric value in cubic inches.</returns>
 	public static TNumber CubicInches<TNumber>(this Volume value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(Math.Pow(PhysicalConstants.InchesToMetersFactor, 3)));
+		=> Calculator.ToUnit<TNumber>(value, "cubic_inches");
+
+	/// <summary>
+	/// Converts a value to cubic yards.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
+	/// <param name="value">The value to convert.</param>
+	/// <returns>A <see cref="Volume"/> representing the value in cubic yards.</returns>
+	public static Volume CubicYards<TNumber>(this TNumber value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.FromUnit(value, "cubic_yards");
+
+	/// <summary>
+	/// Converts a <see cref="Volume"/> to a numeric value in cubic yards.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
+	/// <param name="value">The <see cref="Volume"/> to convert.</param>
+	/// <returns>The numeric value in cubic yards.</returns>
+	public static TNumber CubicYards<TNumber>(this Volume value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.ToUnit<TNumber>(value, "cubic_yards");
 
 	/// <summary>
 	/// Converts a value to gallons (US).
@@ -159,7 +181,7 @@ public static class VolumeConversions
 	/// <returns>A <see cref="Volume"/> representing the value in gallons.</returns>
 	public static Volume Gallons<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Volume>(0.003785411784);
+		=> Calculator.FromUnit(value, "gallons");
 
 	/// <summary>
 	/// Converts a <see cref="Volume"/> to a numeric value in gallons (US).
@@ -169,5 +191,25 @@ public static class VolumeConversions
 	/// <returns>The numeric value in gallons.</returns>
 	public static TNumber Gallons<TNumber>(this Volume value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(0.003785411784));
+		=> Calculator.ToUnit<TNumber>(value, "gallons");
+
+	/// <summary>
+	/// Converts a value to US gallons.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
+	/// <param name="value">The value to convert.</param>
+	/// <returns>A <see cref="Volume"/> representing the value in US gallons.</returns>
+	public static Volume USGallons<TNumber>(this TNumber value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.FromUnit(value, "gallons");
+
+	/// <summary>
+	/// Converts a <see cref="Volume"/> to a numeric value in US gallons.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
+	/// <param name="value">The <see cref="Volume"/> to convert.</param>
+	/// <returns>The numeric value in US gallons.</returns>
+	public static TNumber USGallons<TNumber>(this Volume value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.ToUnit<TNumber>(value, "gallons");
 }

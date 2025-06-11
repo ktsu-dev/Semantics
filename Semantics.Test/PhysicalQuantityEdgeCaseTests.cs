@@ -7,7 +7,8 @@ namespace ktsu.Semantics.Test;
 [TestClass]
 public class PhysicalQuantityEdgeCaseTests
 {
-	public record TestQuantity : SemanticQuantity<TestQuantity, double> { }
+	[SIUnit("test", "test unit", "test units")]
+	public record TestQuantity : PhysicalQuantity<TestQuantity> { }
 
 	[TestMethod]
 	public void Create_WithZeroValue_ShouldWorkCorrectly()
@@ -40,7 +41,7 @@ public class PhysicalQuantityEdgeCaseTests
 		TestQuantity quantity = TestQuantity.Create(10.0);
 
 		// Act
-		var result = quantity.Pow(0);
+		TestQuantity result = quantity.Pow(0);
 
 		// Assert
 		Assert.AreEqual(1.0, result.Quantity);
@@ -53,7 +54,7 @@ public class PhysicalQuantityEdgeCaseTests
 		TestQuantity quantity = TestQuantity.Create(2.0);
 
 		// Act
-		var result = quantity.Pow(-2);
+		TestQuantity result = quantity.Pow(-2);
 
 		// Assert
 		Assert.AreEqual(0.25, result.Quantity, 1e-10);
@@ -66,7 +67,7 @@ public class PhysicalQuantityEdgeCaseTests
 		TestQuantity quantity = TestQuantity.Create(5.0);
 
 		// Act
-		var result = quantity.Clamp(10.0, 20.0);
+		TestQuantity result = quantity.Clamp(10.0, 20.0);
 
 		// Assert
 		Assert.AreEqual(10.0, result.Quantity);
@@ -79,7 +80,7 @@ public class PhysicalQuantityEdgeCaseTests
 		TestQuantity quantity = TestQuantity.Create(25.0);
 
 		// Act
-		var result = quantity.Clamp(10.0, 20.0);
+		TestQuantity result = quantity.Clamp(10.0, 20.0);
 
 		// Assert
 		Assert.AreEqual(20.0, result.Quantity);
@@ -128,7 +129,7 @@ public class PhysicalQuantityEdgeCaseTests
 		TestQuantity quantity = TestQuantity.Create(-10.5);
 
 		// Act
-		var result = quantity.Abs();
+		TestQuantity result = quantity.Abs();
 
 		// Assert
 		Assert.AreEqual(10.5, result.Quantity);
@@ -141,7 +142,7 @@ public class PhysicalQuantityEdgeCaseTests
 		TestQuantity quantity = TestQuantity.Create(10.5);
 
 		// Act
-		var result = quantity.Abs();
+		TestQuantity result = quantity.Abs();
 
 		// Assert
 		Assert.AreEqual(10.5, result.Quantity);
@@ -155,7 +156,7 @@ public class PhysicalQuantityEdgeCaseTests
 		TestQuantity quantity2 = TestQuantity.Create(10.0);
 
 		// Act
-		var result = quantity1.Min(quantity2);
+		TestQuantity result = quantity1.Min(quantity2);
 
 		// Assert
 		Assert.AreEqual(5.0, result.Quantity);
@@ -169,7 +170,7 @@ public class PhysicalQuantityEdgeCaseTests
 		TestQuantity quantity2 = TestQuantity.Create(10.0);
 
 		// Act
-		var result = quantity1.Max(quantity2);
+		TestQuantity result = quantity1.Max(quantity2);
 
 		// Assert
 		Assert.AreEqual(10.0, result.Quantity);

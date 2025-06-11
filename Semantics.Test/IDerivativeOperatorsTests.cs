@@ -28,7 +28,7 @@ public class IDerivativeOperatorsTests
 		MockQuantity result = MockQuantity.Derive(left, right);
 
 		// Assert
-		Assert.AreEqual(5.0, result.Quantity<double>());
+		Assert.AreEqual(5.0, result.Quantity);
 	}
 
 	[TestMethod]
@@ -53,6 +53,6 @@ public class IDerivativeOperatorsTests
 		MockQuantity result = MockQuantity.Derive(left, right);
 
 		// Assert
-		Assert.AreEqual(-5.0, result.Quantity<double>());
+		Assert.AreEqual(-5.0, result.Quantity);
 	}
 }

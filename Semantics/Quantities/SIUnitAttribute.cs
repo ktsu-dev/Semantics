@@ -13,6 +13,12 @@ namespace ktsu.Semantics;
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class SIUnitAttribute(string symbol, string singular, string plural) : Attribute
+// TODO: separate into SIUnit and attribute
+// TODO: define derived SIUnits for each unit type
+// TODO: define attributes for each derived SIUnit
+// TODO: move conversions to each derived SIUnit
+// TODO: streamline SI to imperial conversions
+// TODO: streamline metric magnitude conversions
 {
 	/// <summary>
 	/// Gets the symbol of the SI unit (e.g., "m" for meters).

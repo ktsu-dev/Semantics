@@ -105,7 +105,7 @@ public class PhysicalQuantityExtensionMethodTests
 		Volume liters = 1000.Liters();
 		Volume milliliters = 500.Milliliters();
 		Volume cubicFeet = 35.CubicFeet();
-		var gallons = 10.USGallons();
+		Volume gallons = 10.USGallons();
 
 		// Assert
 		Assert.AreEqual(5.0, cubicMeters.CubicMeters<double>(), 1e-10);
@@ -142,7 +142,7 @@ public class PhysicalQuantityExtensionMethodTests
 		Velocity metersPerSecond = 10.MetersPerSecond();
 		Velocity kilometersPerHour = 36.KilometersPerHour();
 		Velocity milesPerHour = 60.MilesPerHour();
-		var knots = 20.Knots();
+		Velocity knots = 20.Knots();
 
 		// Assert
 		Assert.AreEqual(10.0, metersPerSecond.MetersPerSecond<double>(), 1e-10);
@@ -159,8 +159,8 @@ public class PhysicalQuantityExtensionMethodTests
 	{
 		// Act
 		Force newtons = 100.Newtons();
-		var poundForce = 25.PoundForce();
-		var kiloNewtons = 5.KiloNewtons();
+		Force poundForce = 25.PoundForce();
+		Force kiloNewtons = 5.KiloNewtons();
 
 		// Assert
 		Assert.AreEqual(100.0, newtons.Newtons<double>(), 1e-10);
@@ -175,9 +175,9 @@ public class PhysicalQuantityExtensionMethodTests
 		Energy joules = 1000.Joules();
 		Energy kilojoules = 2.Kilojoules();
 		Energy calories = 500.Calories();
-		var kilocalories = 2.5.Kilocalories();
-		var wattHours = 250.WattHours();
-		var kilowattHours = 1.5.KilowattHours();
+		Energy kilocalories = 2.5.Kilocalories();
+		Energy wattHours = 250.WattHours();
+		Energy kilowattHours = 1.5.KilowattHours();
 
 		// Assert
 		Assert.AreEqual(1000.0, joules.Joules<double>(), 1e-10);

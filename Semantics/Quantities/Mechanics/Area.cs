@@ -39,6 +39,8 @@ public sealed record Area
 /// </summary>
 public static class AreaConversions
 {
+	private static Conversions.IConversionCalculator<Area> Calculator => Conversions.ConversionRegistry.GetCalculator<Area>();
+
 	/// <summary>
 	/// Converts a value to square meters.
 	/// </summary>
@@ -47,7 +49,7 @@ public static class AreaConversions
 	/// <returns>An <see cref="Area"/> representing the value in square meters.</returns>
 	public static Area SquareMeters<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Area>();
+		=> Calculator.FromUnit(value, "square_meters");
 
 	/// <summary>
 	/// Converts an <see cref="Area"/> to a numeric value in square meters.
@@ -57,7 +59,7 @@ public static class AreaConversions
 	/// <returns>The numeric value in square meters.</returns>
 	public static TNumber SquareMeters<TNumber>(this Area value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber());
+		=> Calculator.ToUnit<TNumber>(value, "square_meters");
 
 	/// <summary>
 	/// Converts a value to square kilometers.
@@ -67,7 +69,7 @@ public static class AreaConversions
 	/// <returns>An <see cref="Area"/> representing the value in square kilometers.</returns>
 	public static Area SquareKilometers<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Area>(PhysicalConstants.Kilo * PhysicalConstants.Kilo);
+		=> Calculator.FromUnit(value, "square_kilometers");
 
 	/// <summary>
 	/// Converts an <see cref="Area"/> to a numeric value in square kilometers.
@@ -77,7 +79,7 @@ public static class AreaConversions
 	/// <returns>The numeric value in square kilometers.</returns>
 	public static TNumber SquareKilometers<TNumber>(this Area value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Kilo * PhysicalConstants.Kilo));
+		=> Calculator.ToUnit<TNumber>(value, "square_kilometers");
 
 	/// <summary>
 	/// Converts a value to square centimeters.
@@ -87,7 +89,7 @@ public static class AreaConversions
 	/// <returns>An <see cref="Area"/> representing the value in square centimeters.</returns>
 	public static Area SquareCentimeters<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Area>(PhysicalConstants.Centi * PhysicalConstants.Centi);
+		=> Calculator.FromUnit(value, "square_centimeters");
 
 	/// <summary>
 	/// Converts an <see cref="Area"/> to a numeric value in square centimeters.
@@ -97,7 +99,7 @@ public static class AreaConversions
 	/// <returns>The numeric value in square centimeters.</returns>
 	public static TNumber SquareCentimeters<TNumber>(this Area value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Centi * PhysicalConstants.Centi));
+		=> Calculator.ToUnit<TNumber>(value, "square_centimeters");
 
 	/// <summary>
 	/// Converts a value to square millimeters.
@@ -107,7 +109,7 @@ public static class AreaConversions
 	/// <returns>An <see cref="Area"/> representing the value in square millimeters.</returns>
 	public static Area SquareMillimeters<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Area>(PhysicalConstants.Milli * PhysicalConstants.Milli);
+		=> Calculator.FromUnit(value, "square_millimeters");
 
 	/// <summary>
 	/// Converts an <see cref="Area"/> to a numeric value in square millimeters.
@@ -117,7 +119,7 @@ public static class AreaConversions
 	/// <returns>The numeric value in square millimeters.</returns>
 	public static TNumber SquareMillimeters<TNumber>(this Area value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Milli * PhysicalConstants.Milli));
+		=> Calculator.ToUnit<TNumber>(value, "square_millimeters");
 
 	// Imperial and other conversions
 	/// <summary>
@@ -128,7 +130,7 @@ public static class AreaConversions
 	/// <returns>An <see cref="Area"/> representing the value in square feet.</returns>
 	public static Area SquareFeet<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Area>(PhysicalConstants.FeetToMetersFactor * PhysicalConstants.FeetToMetersFactor);
+		=> Calculator.FromUnit(value, "square_feet");
 
 	/// <summary>
 	/// Converts an <see cref="Area"/> to a numeric value in square feet.
@@ -138,7 +140,7 @@ public static class AreaConversions
 	/// <returns>The numeric value in square feet.</returns>
 	public static TNumber SquareFeet<TNumber>(this Area value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.FeetToMetersFactor * PhysicalConstants.FeetToMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "square_feet");
 
 	/// <summary>
 	/// Converts a value to square inches.
@@ -148,7 +150,7 @@ public static class AreaConversions
 	/// <returns>An <see cref="Area"/> representing the value in square inches.</returns>
 	public static Area SquareInches<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Area>(PhysicalConstants.InchesToMetersFactor * PhysicalConstants.InchesToMetersFactor);
+		=> Calculator.FromUnit(value, "square_inches");
 
 	/// <summary>
 	/// Converts an <see cref="Area"/> to a numeric value in square inches.
@@ -158,7 +160,27 @@ public static class AreaConversions
 	/// <returns>The numeric value in square inches.</returns>
 	public static TNumber SquareInches<TNumber>(this Area value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.InchesToMetersFactor * PhysicalConstants.InchesToMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "square_inches");
+
+	/// <summary>
+	/// Converts a value to square yards.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
+	/// <param name="value">The value to convert.</param>
+	/// <returns>An <see cref="Area"/> representing the value in square yards.</returns>
+	public static Area SquareYards<TNumber>(this TNumber value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.FromUnit(value, "square_yards");
+
+	/// <summary>
+	/// Converts an <see cref="Area"/> to a numeric value in square yards.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
+	/// <param name="value">The <see cref="Area"/> to convert.</param>
+	/// <returns>The numeric value in square yards.</returns>
+	public static TNumber SquareYards<TNumber>(this Area value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.ToUnit<TNumber>(value, "square_yards");
 
 	/// <summary>
 	/// Converts a value to acres.
@@ -168,7 +190,7 @@ public static class AreaConversions
 	/// <returns>An <see cref="Area"/> representing the value in acres.</returns>
 	public static Area Acres<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Area>(PhysicalConstants.AcresToSquareMetersFactor);
+		=> Calculator.FromUnit(value, "acres");
 
 	/// <summary>
 	/// Converts an <see cref="Area"/> to a numeric value in acres.
@@ -178,5 +200,25 @@ public static class AreaConversions
 	/// <returns>The numeric value in acres.</returns>
 	public static TNumber Acres<TNumber>(this Area value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.AcresToSquareMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "acres");
+
+	/// <summary>
+	/// Converts a value to hectares.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
+	/// <param name="value">The value to convert.</param>
+	/// <returns>An <see cref="Area"/> representing the value in hectares.</returns>
+	public static Area Hectares<TNumber>(this TNumber value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.FromUnit(value, "hectares");
+
+	/// <summary>
+	/// Converts an <see cref="Area"/> to a numeric value in hectares.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
+	/// <param name="value">The <see cref="Area"/> to convert.</param>
+	/// <returns>The numeric value in hectares.</returns>
+	public static TNumber Hectares<TNumber>(this Area value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.ToUnit<TNumber>(value, "hectares");
 }

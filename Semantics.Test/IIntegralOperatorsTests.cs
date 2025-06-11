@@ -28,6 +28,6 @@ public class IIntegralOperatorsTests
 		MockQuantity result = MockQuantity.Integrate(left, right);
 
 		// Assert
-		Assert.AreEqual(15.0, result.Quantity<double>());
+		Assert.AreEqual(15.0, result.Quantity);
 	}
 }

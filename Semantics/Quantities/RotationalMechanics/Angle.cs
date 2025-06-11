@@ -30,6 +30,8 @@ public sealed record Angle
 /// </summary>
 public static class AngleConversions
 {
+	private static Conversions.IConversionCalculator<Angle> Calculator => Conversions.ConversionRegistry.GetCalculator<Angle>();
+
 	/// <summary>
 	/// Converts a value to radians.
 	/// </summary>
@@ -38,7 +40,7 @@ public static class AngleConversions
 	/// <returns>An <see cref="Angle"/> representing the value in radians.</returns>
 	public static Angle Radians<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Angle>();
+		=> Calculator.FromUnit(value, "radians");
 
 	/// <summary>
 	/// Converts an <see cref="Angle"/> to a numeric value in radians.
@@ -48,7 +50,7 @@ public static class AngleConversions
 	/// <returns>The numeric value in radians.</returns>
 	public static TNumber Radians<TNumber>(this Angle value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber());
+		=> Calculator.ToUnit<TNumber>(value, "radians");
 
 	/// <summary>
 	/// Converts a value to degrees.
@@ -58,7 +60,7 @@ public static class AngleConversions
 	/// <returns>An <see cref="Angle"/> representing the value in degrees.</returns>
 	public static Angle Degrees<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Angle>(PhysicalConstants.DegreesToRadiansFactor);
+		=> Calculator.FromUnit(value, "degrees");
 
 	/// <summary>
 	/// Converts an <see cref="Angle"/> to a numeric value in degrees.
@@ -68,7 +70,7 @@ public static class AngleConversions
 	/// <returns>The numeric value in degrees.</returns>
 	public static TNumber Degrees<TNumber>(this Angle value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.DegreesToRadiansFactor));
+		=> Calculator.ToUnit<TNumber>(value, "degrees");
 
 	/// <summary>
 	/// Converts a value to gradians.
@@ -78,7 +80,7 @@ public static class AngleConversions
 	/// <returns>An <see cref="Angle"/> representing the value in gradians.</returns>
 	public static Angle Gradians<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Angle>(PhysicalConstants.GradiansToRadiansFactor);
+		=> Calculator.FromUnit(value, "gradians");
 
 	/// <summary>
 	/// Converts an <see cref="Angle"/> to a numeric value in gradians.
@@ -88,7 +90,7 @@ public static class AngleConversions
 	/// <returns>The numeric value in gradians.</returns>
 	public static TNumber Gradians<TNumber>(this Angle value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.GradiansToRadiansFactor));
+		=> Calculator.ToUnit<TNumber>(value, "gradians");
 
 	/// <summary>
 	/// Converts a value to arcminutes.
@@ -98,7 +100,7 @@ public static class AngleConversions
 	/// <returns>An <see cref="Angle"/> representing the value in arcminutes.</returns>
 	public static Angle ArcMinutes<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Angle>(PhysicalConstants.MinutesToRadiansFactor);
+		=> Calculator.FromUnit(value, "arcminutes");
 
 	/// <summary>
 	/// Converts an <see cref="Angle"/> to a numeric value in arcminutes.
@@ -108,7 +110,7 @@ public static class AngleConversions
 	/// <returns>The numeric value in arcminutes.</returns>
 	public static TNumber ArcMinutes<TNumber>(this Angle value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.MinutesToRadiansFactor));
+		=> Calculator.ToUnit<TNumber>(value, "arcminutes");
 
 	/// <summary>
 	/// Converts a value to arcseconds.
@@ -118,7 +120,7 @@ public static class AngleConversions
 	/// <returns>An <see cref="Angle"/> representing the value in arcseconds.</returns>
 	public static Angle ArcSeconds<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Angle>(PhysicalConstants.SecondsToRadiansFactor);
+		=> Calculator.FromUnit(value, "arcseconds");
 
 	/// <summary>
 	/// Converts an <see cref="Angle"/> to a numeric value in arcseconds.
@@ -128,7 +130,7 @@ public static class AngleConversions
 	/// <returns>The numeric value in arcseconds.</returns>
 	public static TNumber ArcSeconds<TNumber>(this Angle value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.SecondsToRadiansFactor));
+		=> Calculator.ToUnit<TNumber>(value, "arcseconds");
 
 	/// <summary>
 	/// Converts a value to revolutions.
@@ -138,7 +140,7 @@ public static class AngleConversions
 	/// <returns>An <see cref="Angle"/> representing the value in revolutions.</returns>
 	public static Angle Revolutions<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Angle>(PhysicalConstants.RevolutionsToRadiansFactor);
+		=> Calculator.FromUnit(value, "revolutions");
 
 	/// <summary>
 	/// Converts an <see cref="Angle"/> to a numeric value in revolutions.
@@ -148,7 +150,7 @@ public static class AngleConversions
 	/// <returns>The numeric value in revolutions.</returns>
 	public static TNumber Revolutions<TNumber>(this Angle value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.RevolutionsToRadiansFactor));
+		=> Calculator.ToUnit<TNumber>(value, "revolutions");
 
 	/// <summary>
 	/// Converts a value to cycles.
@@ -158,7 +160,7 @@ public static class AngleConversions
 	/// <returns>An <see cref="Angle"/> representing the value in cycles.</returns>
 	public static Angle Cycles<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Angle>(PhysicalConstants.CyclesToRadiansFactor);
+		=> Calculator.FromUnit(value, "cycles");
 
 	/// <summary>
 	/// Converts an <see cref="Angle"/> to a numeric value in cycles.
@@ -168,7 +170,7 @@ public static class AngleConversions
 	/// <returns>The numeric value in cycles.</returns>
 	public static TNumber Cycles<TNumber>(this Angle value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.CyclesToRadiansFactor));
+		=> Calculator.ToUnit<TNumber>(value, "cycles");
 
 	/// <summary>
 	/// Converts a value to turns.
@@ -178,7 +180,7 @@ public static class AngleConversions
 	/// <returns>An <see cref="Angle"/> representing the value in turns.</returns>
 	public static Angle Turns<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Angle>(PhysicalConstants.TurnsToRadiansFactor);
+		=> Calculator.FromUnit(value, "turns");
 
 	/// <summary>
 	/// Converts an <see cref="Angle"/> to a numeric value in turns.
@@ -188,5 +190,5 @@ public static class AngleConversions
 	/// <returns>The numeric value in turns.</returns>
 	public static TNumber Turns<TNumber>(this Angle value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.TurnsToRadiansFactor));
+		=> Calculator.ToUnit<TNumber>(value, "turns");
 }

@@ -21,6 +21,8 @@ public sealed record Temperature
 /// </summary>
 public static class TemperatureConversions
 {
+	private static Conversions.IConversionCalculator<Temperature> Calculator => Conversions.ConversionRegistry.GetCalculator<Temperature>();
+
 	/// <summary>
 	/// Converts a value to Kelvin.
 	/// </summary>
@@ -29,7 +31,7 @@ public static class TemperatureConversions
 	/// <returns>A <see cref="Temperature"/> representing the value in Kelvin.</returns>
 	public static Temperature Kelvin<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Temperature>();
+		=> Calculator.FromUnit(value, "kelvin");
 
 	/// <summary>
 	/// Converts a <see cref="Temperature"/> to a numeric value in Kelvin.
@@ -39,7 +41,7 @@ public static class TemperatureConversions
 	/// <returns>The numeric value in Kelvin.</returns>
 	public static TNumber Kelvin<TNumber>(this Temperature value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber());
+		=> Calculator.ToUnit<TNumber>(value, "kelvin");
 
 	/// <summary>
 	/// Converts a value to degrees Celsius.
@@ -49,7 +51,7 @@ public static class TemperatureConversions
 	/// <returns>A <see cref="Temperature"/> representing the value in degrees Celsius.</returns>
 	public static Temperature Celsius<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Temperature>(PhysicalConstants.CelsiusToKelvinFactor, PhysicalConstants.CelsiusToKelvinOffset);
+		=> Calculator.FromUnit(value, "celsius");
 
 	/// <summary>
 	/// Converts a <see cref="Temperature"/> to a numeric value in degrees Celsius.
@@ -59,7 +61,7 @@ public static class TemperatureConversions
 	/// <returns>The numeric value in degrees Celsius.</returns>
 	public static TNumber Celsius<TNumber>(this Temperature value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.CelsiusToKelvinFactor, PhysicalConstants.CelsiusToKelvinOffset));
+		=> Calculator.ToUnit<TNumber>(value, "celsius");
 
 	/// <summary>
 	/// Converts a value to degrees Fahrenheit.
@@ -69,11 +71,7 @@ public static class TemperatureConversions
 	/// <returns>A <see cref="Temperature"/> representing the value in degrees Fahrenheit.</returns>
 	public static Temperature Fahrenheit<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-	{
-		// Convert Fahrenheit to Celsius first, then to Kelvin
-		double celsius = (Convert.ToDouble(value) - PhysicalConstants.FahrenheitToCelsiusOffset) / PhysicalConstants.FahrenheitToCelsiusFactor;
-		return celsius.Celsius();
-	}
+		=> Calculator.FromUnit(value, "fahrenheit");
 
 	/// <summary>
 	/// Converts a <see cref="Temperature"/> to a numeric value in degrees Fahrenheit.
@@ -83,10 +81,5 @@ public static class TemperatureConversions
 	/// <returns>The numeric value in degrees Fahrenheit.</returns>
 	public static TNumber Fahrenheit<TNumber>(this Temperature value)
 		where TNumber : INumber<TNumber>
-	{
-		// Convert Kelvin to Celsius first, then to Fahrenheit
-		double celsius = value.Celsius<double>();
-		double fahrenheit = (celsius * PhysicalConstants.FahrenheitToCelsiusFactor) + PhysicalConstants.FahrenheitToCelsiusOffset;
-		return TNumber.CreateChecked(fahrenheit);
-	}
+		=> Calculator.ToUnit<TNumber>(value, "fahrenheit");
 }

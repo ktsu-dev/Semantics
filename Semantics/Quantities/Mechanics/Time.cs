@@ -21,6 +21,8 @@ public sealed record Time
 /// </summary>
 public static class TimeConversions
 {
+	private static Conversions.IConversionCalculator<Time> Calculator => Conversions.ConversionRegistry.GetCalculator<Time>();
+
 	/// <summary>
 	/// Converts a value to seconds.
 	/// </summary>
@@ -29,7 +31,7 @@ public static class TimeConversions
 	/// <returns>A <see cref="Time"/> representing the value in seconds.</returns>
 	public static Time Seconds<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Time>();
+		=> Calculator.FromUnit(value, "seconds");
 
 	/// <summary>
 	/// Converts a <see cref="Time"/> to a numeric value in seconds.
@@ -39,7 +41,7 @@ public static class TimeConversions
 	/// <returns>The numeric value in seconds.</returns>
 	public static TNumber Seconds<TNumber>(this Time value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber());
+		=> Calculator.ToUnit<TNumber>(value, "seconds");
 
 	/// <summary>
 	/// Converts a value to milliseconds.
@@ -49,7 +51,7 @@ public static class TimeConversions
 	/// <returns>A <see cref="Time"/> representing the value in milliseconds.</returns>
 	public static Time Milliseconds<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Time>(PhysicalConstants.Milli);
+		=> Calculator.FromUnit(value, "milliseconds");
 
 	/// <summary>
 	/// Converts a <see cref="Time"/> to a numeric value in milliseconds.
@@ -59,7 +61,7 @@ public static class TimeConversions
 	/// <returns>The numeric value in milliseconds.</returns>
 	public static TNumber Milliseconds<TNumber>(this Time value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Milli));
+		=> Calculator.ToUnit<TNumber>(value, "milliseconds");
 
 	/// <summary>
 	/// Converts a value to microseconds.
@@ -69,7 +71,7 @@ public static class TimeConversions
 	/// <returns>A <see cref="Time"/> representing the value in microseconds.</returns>
 	public static Time Microseconds<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Time>(PhysicalConstants.Micro);
+		=> Calculator.FromUnit(value, "microseconds");
 
 	/// <summary>
 	/// Converts a <see cref="Time"/> to a numeric value in microseconds.
@@ -79,7 +81,7 @@ public static class TimeConversions
 	/// <returns>The numeric value in microseconds.</returns>
 	public static TNumber Microseconds<TNumber>(this Time value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Micro));
+		=> Calculator.ToUnit<TNumber>(value, "microseconds");
 
 	/// <summary>
 	/// Converts a value to nanoseconds.
@@ -89,7 +91,7 @@ public static class TimeConversions
 	/// <returns>A <see cref="Time"/> representing the value in nanoseconds.</returns>
 	public static Time Nanoseconds<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Time>(PhysicalConstants.Nano);
+		=> Calculator.FromUnit(value, "nanoseconds");
 
 	/// <summary>
 	/// Converts a <see cref="Time"/> to a numeric value in nanoseconds.
@@ -99,7 +101,7 @@ public static class TimeConversions
 	/// <returns>The numeric value in nanoseconds.</returns>
 	public static TNumber Nanoseconds<TNumber>(this Time value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Nano));
+		=> Calculator.ToUnit<TNumber>(value, "nanoseconds");
 
 	/// <summary>
 	/// Converts a value to minutes.
@@ -109,7 +111,7 @@ public static class TimeConversions
 	/// <returns>A <see cref="Time"/> representing the value in minutes.</returns>
 	public static Time Minutes<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Time>(PhysicalConstants.MinutesToSecondsFactor);
+		=> Calculator.FromUnit(value, "minutes");
 
 	/// <summary>
 	/// Converts a <see cref="Time"/> to a numeric value in minutes.
@@ -119,7 +121,7 @@ public static class TimeConversions
 	/// <returns>The numeric value in minutes.</returns>
 	public static TNumber Minutes<TNumber>(this Time value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.MinutesToSecondsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "minutes");
 
 	/// <summary>
 	/// Converts a value to hours.
@@ -129,7 +131,7 @@ public static class TimeConversions
 	/// <returns>A <see cref="Time"/> representing the value in hours.</returns>
 	public static Time Hours<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Time>(PhysicalConstants.HoursToSecondsFactor);
+		=> Calculator.FromUnit(value, "hours");
 
 	/// <summary>
 	/// Converts a <see cref="Time"/> to a numeric value in hours.
@@ -139,7 +141,7 @@ public static class TimeConversions
 	/// <returns>The numeric value in hours.</returns>
 	public static TNumber Hours<TNumber>(this Time value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.HoursToSecondsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "hours");
 
 	/// <summary>
 	/// Converts a value to days.
@@ -149,7 +151,7 @@ public static class TimeConversions
 	/// <returns>A <see cref="Time"/> representing the value in days.</returns>
 	public static Time Days<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Time>(PhysicalConstants.DaysToSecondsFactor);
+		=> Calculator.FromUnit(value, "days");
 
 	/// <summary>
 	/// Converts a <see cref="Time"/> to a numeric value in days.
@@ -159,7 +161,7 @@ public static class TimeConversions
 	/// <returns>The numeric value in days.</returns>
 	public static TNumber Days<TNumber>(this Time value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.DaysToSecondsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "days");
 
 	/// <summary>
 	/// Converts a value to years.
@@ -169,7 +171,7 @@ public static class TimeConversions
 	/// <returns>A <see cref="Time"/> representing the value in years.</returns>
 	public static Time Years<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Time>(PhysicalConstants.YearsToSecondsFactor);
+		=> Calculator.FromUnit(value, "years");
 
 	/// <summary>
 	/// Converts a <see cref="Time"/> to a numeric value in years.
@@ -179,5 +181,5 @@ public static class TimeConversions
 	/// <returns>The numeric value in years.</returns>
 	public static TNumber Years<TNumber>(this Time value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.YearsToSecondsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "years");
 }

@@ -50,6 +50,8 @@ public sealed record Acceleration
 /// </summary>
 public static class AccelerationConversions
 {
+	private static Conversions.IConversionCalculator<Acceleration> Calculator => Conversions.ConversionRegistry.GetCalculator<Acceleration>();
+
 	/// <summary>
 	/// Converts a value to meters per second squared.
 	/// </summary>
@@ -58,7 +60,7 @@ public static class AccelerationConversions
 	/// <returns>An <see cref="Acceleration"/> representing the value in meters per second squared.</returns>
 	public static Acceleration MetersPerSecondSquared<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Acceleration>();
+		=> Calculator.FromUnit(value, "meters_per_second_squared");
 
 	/// <summary>
 	/// Converts an <see cref="Acceleration"/> to a numeric value in meters per second squared.
@@ -68,7 +70,7 @@ public static class AccelerationConversions
 	/// <returns>The numeric value in meters per second squared.</returns>
 	public static TNumber MetersPerSecondSquared<TNumber>(this Acceleration value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber());
+		=> Calculator.ToUnit<TNumber>(value, "meters_per_second_squared");
 
 	/// <summary>
 	/// Converts a value to feet per second squared.
@@ -78,7 +80,7 @@ public static class AccelerationConversions
 	/// <returns>An <see cref="Acceleration"/> representing the value in feet per second squared.</returns>
 	public static Acceleration FeetPerSecondSquared<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Acceleration>(PhysicalConstants.FeetToMetersFactor);
+		=> Calculator.FromUnit(value, "feet_per_second_squared");
 
 	/// <summary>
 	/// Converts an <see cref="Acceleration"/> to a numeric value in feet per second squared.
@@ -88,7 +90,7 @@ public static class AccelerationConversions
 	/// <returns>The numeric value in feet per second squared.</returns>
 	public static TNumber FeetPerSecondSquared<TNumber>(this Acceleration value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.FeetToMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "feet_per_second_squared");
 
 	/// <summary>
 	/// Converts a value to inches per second squared.
@@ -98,7 +100,7 @@ public static class AccelerationConversions
 	/// <returns>An <see cref="Acceleration"/> representing the value in inches per second squared.</returns>
 	public static Acceleration InchesPerSecondSquared<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Acceleration>(PhysicalConstants.InchesToMetersFactor);
+		=> Calculator.FromUnit(value, "inches_per_second_squared");
 
 	/// <summary>
 	/// Converts an <see cref="Acceleration"/> to a numeric value in inches per second squared.
@@ -108,7 +110,27 @@ public static class AccelerationConversions
 	/// <returns>The numeric value in inches per second squared.</returns>
 	public static TNumber InchesPerSecondSquared<TNumber>(this Acceleration value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.InchesToMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "inches_per_second_squared");
+
+	/// <summary>
+	/// Converts a value to standard gravity (g).
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
+	/// <param name="value">The value to convert.</param>
+	/// <returns>An <see cref="Acceleration"/> representing the value in standard gravitational acceleration.</returns>
+	public static Acceleration StandardGravity<TNumber>(this TNumber value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.FromUnit(value, "g");
+
+	/// <summary>
+	/// Converts an <see cref="Acceleration"/> to a numeric value in standard gravity (g).
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
+	/// <param name="value">The <see cref="Acceleration"/> to convert.</param>
+	/// <returns>The numeric value in standard gravitational acceleration.</returns>
+	public static TNumber StandardGravity<TNumber>(this Acceleration value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.ToUnit<TNumber>(value, "g");
 
 	/// <summary>
 	/// Converts a value to yards per second squared.
@@ -118,7 +140,7 @@ public static class AccelerationConversions
 	/// <returns>An <see cref="Acceleration"/> representing the value in yards per second squared.</returns>
 	public static Acceleration YardsPerSecondSquared<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Acceleration>(PhysicalConstants.YardsToMetersFactor);
+		=> Calculator.FromUnit(value, "yards_per_second_squared");
 
 	/// <summary>
 	/// Converts an <see cref="Acceleration"/> to a numeric value in yards per second squared.
@@ -128,7 +150,7 @@ public static class AccelerationConversions
 	/// <returns>The numeric value in yards per second squared.</returns>
 	public static TNumber YardsPerSecondSquared<TNumber>(this Acceleration value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.YardsToMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "yards_per_second_squared");
 
 	/// <summary>
 	/// Converts a value to miles per second squared.
@@ -138,7 +160,7 @@ public static class AccelerationConversions
 	/// <returns>An <see cref="Acceleration"/> representing the value in miles per second squared.</returns>
 	public static Acceleration MilesPerSecondSquared<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Acceleration>(PhysicalConstants.MilesToMetersFactor);
+		=> Calculator.FromUnit(value, "miles_per_second_squared");
 
 	/// <summary>
 	/// Converts an <see cref="Acceleration"/> to a numeric value in miles per second squared.
@@ -148,7 +170,7 @@ public static class AccelerationConversions
 	/// <returns>The numeric value in miles per second squared.</returns>
 	public static TNumber MilesPerSecondSquared<TNumber>(this Acceleration value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.MilesToMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "miles_per_second_squared");
 
 	/// <summary>
 	/// Converts a value to nautical miles per second squared.
@@ -158,7 +180,7 @@ public static class AccelerationConversions
 	/// <returns>An <see cref="Acceleration"/> representing the value in nautical miles per second squared.</returns>
 	public static Acceleration NauticalMilesPerSecondSquared<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Acceleration>(PhysicalConstants.NauticalMilesToMetersFactor);
+		=> Calculator.FromUnit(value, "nautical_miles_per_second_squared");
 
 	/// <summary>
 	/// Converts an <see cref="Acceleration"/> to a numeric value in nautical miles per second squared.
@@ -168,7 +190,7 @@ public static class AccelerationConversions
 	/// <returns>The numeric value in nautical miles per second squared.</returns>
 	public static TNumber NauticalMilesPerSecondSquared<TNumber>(this Acceleration value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.NauticalMilesToMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "nautical_miles_per_second_squared");
 
 	/// <summary>
 	/// Converts a value to fathoms per second squared.
@@ -178,7 +200,7 @@ public static class AccelerationConversions
 	/// <returns>An <see cref="Acceleration"/> representing the value in fathoms per second squared.</returns>
 	public static Acceleration FathomsPerSecondSquared<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Acceleration>(PhysicalConstants.FathomsToMetersFactor);
+		=> Calculator.FromUnit(value, "fathoms_per_second_squared");
 
 	/// <summary>
 	/// Converts an <see cref="Acceleration"/> to a numeric value in fathoms per second squared.
@@ -188,5 +210,5 @@ public static class AccelerationConversions
 	/// <returns>The numeric value in fathoms per second squared.</returns>
 	public static TNumber FathomsPerSecondSquared<TNumber>(this Acceleration value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.FathomsToMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "fathoms_per_second_squared");
 }

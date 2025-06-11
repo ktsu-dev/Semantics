@@ -58,8 +58,12 @@ public sealed record Force
 /// <summary>
 /// Provides extension methods for converting values to and from <see cref="Force"/>.
 /// </summary>
+#pragma warning disable CA1708 // Identifiers should differ by more than case - needed for test compatibility
+// TODO: remove CA1708 suppressions
 public static class ForceConversions
 {
+	private static Conversions.IConversionCalculator<Force> Calculator => Conversions.ConversionRegistry.GetCalculator<Force>();
+
 	/// <summary>
 	/// Converts a value to newtons.
 	/// </summary>
@@ -68,7 +72,7 @@ public static class ForceConversions
 	/// <returns>A <see cref="Force"/> representing the value in newtons.</returns>
 	public static Force Newtons<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Force>();
+		=> Calculator.FromUnit(value, "newtons");
 
 	/// <summary>
 	/// Converts a <see cref="Force"/> to a numeric value in newtons.
@@ -78,7 +82,7 @@ public static class ForceConversions
 	/// <returns>The numeric value in newtons.</returns>
 	public static TNumber Newtons<TNumber>(this Force value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber());
+		=> Calculator.ToUnit<TNumber>(value, "newtons");
 
 	/// <summary>
 	/// Converts a value to kilonewtons.
@@ -88,7 +92,7 @@ public static class ForceConversions
 	/// <returns>A <see cref="Force"/> representing the value in kilonewtons.</returns>
 	public static Force Kilonewtons<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Force>(PhysicalConstants.Kilo);
+		=> Calculator.FromUnit(value, "kilonewtons");
 
 	/// <summary>
 	/// Converts a <see cref="Force"/> to a numeric value in kilonewtons.
@@ -98,7 +102,7 @@ public static class ForceConversions
 	/// <returns>The numeric value in kilonewtons.</returns>
 	public static TNumber Kilonewtons<TNumber>(this Force value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Kilo));
+		=> Calculator.ToUnit<TNumber>(value, "kilonewtons");
 
 	/// <summary>
 	/// Converts a value to millinewtons.
@@ -108,7 +112,7 @@ public static class ForceConversions
 	/// <returns>A <see cref="Force"/> representing the value in millinewtons.</returns>
 	public static Force Millinewtons<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Force>(PhysicalConstants.Milli);
+		=> Calculator.FromUnit(value, "millinewtons");
 
 	/// <summary>
 	/// Converts a <see cref="Force"/> to a numeric value in millinewtons.
@@ -118,7 +122,7 @@ public static class ForceConversions
 	/// <returns>The numeric value in millinewtons.</returns>
 	public static TNumber Millinewtons<TNumber>(this Force value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Milli));
+		=> Calculator.ToUnit<TNumber>(value, "millinewtons");
 
 	/// <summary>
 	/// Converts a value to micronewtons.
@@ -128,7 +132,7 @@ public static class ForceConversions
 	/// <returns>A <see cref="Force"/> representing the value in micronewtons.</returns>
 	public static Force Micronewtons<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Force>(PhysicalConstants.Micro);
+		=> Calculator.FromUnit(value, "micronewtons");
 
 	/// <summary>
 	/// Converts a <see cref="Force"/> to a numeric value in micronewtons.
@@ -138,7 +142,7 @@ public static class ForceConversions
 	/// <returns>The numeric value in micronewtons.</returns>
 	public static TNumber Micronewtons<TNumber>(this Force value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Micro));
+		=> Calculator.ToUnit<TNumber>(value, "micronewtons");
 
 	/// <summary>
 	/// Converts a value to pounds-force.
@@ -148,7 +152,7 @@ public static class ForceConversions
 	/// <returns>A <see cref="Force"/> representing the value in pounds-force.</returns>
 	public static Force PoundsForce<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Force>(PhysicalConstants.PoundsForceToNewtonsFactor);
+		=> Calculator.FromUnit(value, "pounds_force");
 
 	/// <summary>
 	/// Converts a <see cref="Force"/> to a numeric value in pounds-force.
@@ -158,5 +162,46 @@ public static class ForceConversions
 	/// <returns>The numeric value in pounds-force.</returns>
 	public static TNumber PoundsForce<TNumber>(this Force value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.PoundsForceToNewtonsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "pounds_force");
+
+	/// <summary>
+	/// Converts a value to pound-force (singular form).
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
+	/// <param name="value">The value to convert.</param>
+	/// <returns>A <see cref="Force"/> representing the value in pound-force.</returns>
+	public static Force PoundForce<TNumber>(this TNumber value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.FromUnit(value, "pounds_force");
+
+	/// <summary>
+	/// Converts a <see cref="Force"/> to a numeric value in pound-force (singular form).
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
+	/// <param name="value">The <see cref="Force"/> to convert.</param>
+	/// <returns>The numeric value in pound-force.</returns>
+	public static TNumber PoundForce<TNumber>(this Force value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.ToUnit<TNumber>(value, "pounds_force");
+
+	/// <summary>
+	/// Converts a value to kilonewtons (alternative capitalization).
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
+	/// <param name="value">The value to convert.</param>
+	/// <returns>A <see cref="Force"/> representing the value in kilonewtons.</returns>
+	public static Force KiloNewtons<TNumber>(this TNumber value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.FromUnit(value, "kilonewtons");
+
+	/// <summary>
+	/// Converts a <see cref="Force"/> to a numeric value in kilonewtons (alternative capitalization).
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
+	/// <param name="value">The <see cref="Force"/> to convert.</param>
+	/// <returns>The numeric value in kilonewtons.</returns>
+	public static TNumber KiloNewtons<TNumber>(this Force value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.ToUnit<TNumber>(value, "kilonewtons");
 }
+#pragma warning restore CA1708

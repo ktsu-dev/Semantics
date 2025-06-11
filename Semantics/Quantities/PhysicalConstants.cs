@@ -153,6 +153,10 @@ public static class PhysicalConstants
 	/// <inheritdoc/>
 	public static double YearsToSecondsFactor { get; } = 31556952;
 
+	// Acceleration conversion factors
+	/// <inheritdoc/>
+	public static double StandardGravity { get; } = 9.80665;
+
 	// Torque conversion factors
 	/// <inheritdoc/>
 	public static double FootPoundsToNewtonMetersFactor { get; } = 1.3558179483314004;

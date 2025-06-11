@@ -59,6 +59,8 @@ public sealed record Velocity
 /// </summary>
 public static class VelocityConversions
 {
+	private static Conversions.IConversionCalculator<Velocity> Calculator => Conversions.ConversionRegistry.GetCalculator<Velocity>();
+
 	/// <summary>
 	/// Converts a value to meters per second.
 	/// </summary>
@@ -67,7 +69,7 @@ public static class VelocityConversions
 	/// <returns>A <see cref="Velocity"/> representing the value in meters per second.</returns>
 	public static Velocity MetersPerSecond<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Velocity>();
+		=> Calculator.FromUnit(value, "meters_per_second");
 
 	/// <summary>
 	/// Converts a <see cref="Velocity"/> to a numeric value in meters per second.
@@ -77,7 +79,7 @@ public static class VelocityConversions
 	/// <returns>The numeric value in meters per second.</returns>
 	public static TNumber MetersPerSecond<TNumber>(this Velocity value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber());
+		=> Calculator.ToUnit<TNumber>(value, "meters_per_second");
 
 	/// <summary>
 	/// Converts a value to feet per second.
@@ -87,7 +89,7 @@ public static class VelocityConversions
 	/// <returns>A <see cref="Velocity"/> representing the value in feet per second.</returns>
 	public static Velocity FeetPerSecond<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Velocity>(PhysicalConstants.FeetToMetersFactor);
+		=> Calculator.FromUnit(value, "feet_per_second");
 
 	/// <summary>
 	/// Converts a <see cref="Velocity"/> to a numeric value in feet per second.
@@ -97,7 +99,7 @@ public static class VelocityConversions
 	/// <returns>The numeric value in feet per second.</returns>
 	public static TNumber FeetPerSecond<TNumber>(this Velocity value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.FeetToMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "feet_per_second");
 
 	/// <summary>
 	/// Converts a value to inches per second.
@@ -107,7 +109,7 @@ public static class VelocityConversions
 	/// <returns>A <see cref="Velocity"/> representing the value in inches per second.</returns>
 	public static Velocity InchesPerSecond<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Velocity>(PhysicalConstants.InchesToMetersFactor);
+		=> Calculator.FromUnit(value, "inches_per_second");
 
 	/// <summary>
 	/// Converts a <see cref="Velocity"/> to a numeric value in inches per second.
@@ -117,7 +119,7 @@ public static class VelocityConversions
 	/// <returns>The numeric value in inches per second.</returns>
 	public static TNumber InchesPerSecond<TNumber>(this Velocity value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.InchesToMetersFactor));
+		=> Calculator.ToUnit<TNumber>(value, "inches_per_second");
 
 	/// <summary>
 	/// Converts a value to miles per hour.
@@ -127,7 +129,7 @@ public static class VelocityConversions
 	/// <returns>A <see cref="Velocity"/> representing the value in miles per hour.</returns>
 	public static Velocity MilesPerHour<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Velocity>(PhysicalConstants.MilesToMetersFactor / PhysicalConstants.HoursToSecondsFactor);
+		=> Calculator.FromUnit(value, "miles_per_hour");
 
 	/// <summary>
 	/// Converts a <see cref="Velocity"/> to a numeric value in miles per hour.
@@ -137,7 +139,7 @@ public static class VelocityConversions
 	/// <returns>The numeric value in miles per hour.</returns>
 	public static TNumber MilesPerHour<TNumber>(this Velocity value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.MilesToMetersFactor / PhysicalConstants.HoursToSecondsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "miles_per_hour");
 
 	/// <summary>
 	/// Converts a value to kilometers per hour.
@@ -147,7 +149,7 @@ public static class VelocityConversions
 	/// <returns>A <see cref="Velocity"/> representing the value in kilometers per hour.</returns>
 	public static Velocity KilometersPerHour<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Velocity>(PhysicalConstants.Kilo / PhysicalConstants.HoursToSecondsFactor);
+		=> Calculator.FromUnit(value, "kilometers_per_hour");
 
 	/// <summary>
 	/// Converts a <see cref="Velocity"/> to a numeric value in kilometers per hour.
@@ -157,5 +159,25 @@ public static class VelocityConversions
 	/// <returns>The numeric value in kilometers per hour.</returns>
 	public static TNumber KilometersPerHour<TNumber>(this Velocity value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Kilo / PhysicalConstants.HoursToSecondsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "kilometers_per_hour");
+
+	/// <summary>
+	/// Converts a value to knots.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
+	/// <param name="value">The value to convert.</param>
+	/// <returns>A <see cref="Velocity"/> representing the value in knots.</returns>
+	public static Velocity Knots<TNumber>(this TNumber value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.FromUnit(value, "knots");
+
+	/// <summary>
+	/// Converts a <see cref="Velocity"/> to a numeric value in knots.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
+	/// <param name="value">The <see cref="Velocity"/> to convert.</param>
+	/// <returns>The numeric value in knots.</returns>
+	public static TNumber Knots<TNumber>(this Velocity value)
+		where TNumber : INumber<TNumber>
+		=> Calculator.ToUnit<TNumber>(value, "knots");
 }

@@ -80,6 +80,8 @@ public sealed record Mass
 /// </summary>
 public static class MassConversions
 {
+	private static Conversions.IConversionCalculator<Mass> Calculator => Conversions.ConversionRegistry.GetCalculator<Mass>();
+
 	/// <summary>
 	/// Converts a value to kilograms.
 	/// </summary>
@@ -88,7 +90,7 @@ public static class MassConversions
 	/// <returns>A <see cref="Mass"/> representing the value in kilograms.</returns>
 	public static Mass Kilograms<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Mass>();
+		=> Calculator.FromUnit(value, "kilograms");
 
 	/// <summary>
 	/// Converts a <see cref="Mass"/> to a numeric value in kilograms.
@@ -98,7 +100,7 @@ public static class MassConversions
 	/// <returns>The numeric value in kilograms.</returns>
 	public static TNumber Kilograms<TNumber>(this Mass value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber());
+		=> Calculator.ToUnit<TNumber>(value, "kilograms");
 
 	/// <summary>
 	/// Converts a value to grams.
@@ -108,7 +110,7 @@ public static class MassConversions
 	/// <returns>A <see cref="Mass"/> representing the value in grams.</returns>
 	public static Mass Grams<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Mass>(PhysicalConstants.Milli);
+		=> Calculator.FromUnit(value, "grams");
 
 	/// <summary>
 	/// Converts a <see cref="Mass"/> to a numeric value in grams.
@@ -118,7 +120,7 @@ public static class MassConversions
 	/// <returns>The numeric value in grams.</returns>
 	public static TNumber Grams<TNumber>(this Mass value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Milli));
+		=> Calculator.ToUnit<TNumber>(value, "grams");
 
 	/// <summary>
 	/// Converts a value to milligrams.
@@ -128,7 +130,7 @@ public static class MassConversions
 	/// <returns>A <see cref="Mass"/> representing the value in milligrams.</returns>
 	public static Mass Milligrams<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Mass>(PhysicalConstants.Micro);
+		=> Calculator.FromUnit(value, "milligrams");
 
 	/// <summary>
 	/// Converts a <see cref="Mass"/> to a numeric value in milligrams.
@@ -138,7 +140,7 @@ public static class MassConversions
 	/// <returns>The numeric value in milligrams.</returns>
 	public static TNumber Milligrams<TNumber>(this Mass value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.Micro));
+		=> Calculator.ToUnit<TNumber>(value, "milligrams");
 
 	/// <summary>
 	/// Converts a value to pounds.
@@ -148,7 +150,7 @@ public static class MassConversions
 	/// <returns>A <see cref="Mass"/> representing the value in pounds.</returns>
 	public static Mass Pounds<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Mass>(PhysicalConstants.PoundsToKilogramsFactor);
+		=> Calculator.FromUnit(value, "pounds");
 
 	/// <summary>
 	/// Converts a <see cref="Mass"/> to a numeric value in pounds.
@@ -158,7 +160,7 @@ public static class MassConversions
 	/// <returns>The numeric value in pounds.</returns>
 	public static TNumber Pounds<TNumber>(this Mass value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.PoundsToKilogramsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "pounds");
 
 	/// <summary>
 	/// Converts a value to ounces.
@@ -168,7 +170,7 @@ public static class MassConversions
 	/// <returns>A <see cref="Mass"/> representing the value in ounces.</returns>
 	public static Mass Ounces<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Mass>(PhysicalConstants.OuncesToKilogramsFactor);
+		=> Calculator.FromUnit(value, "ounces");
 
 	/// <summary>
 	/// Converts a <see cref="Mass"/> to a numeric value in ounces.
@@ -178,7 +180,7 @@ public static class MassConversions
 	/// <returns>The numeric value in ounces.</returns>
 	public static TNumber Ounces<TNumber>(this Mass value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.OuncesToKilogramsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "ounces");
 
 	/// <summary>
 	/// Converts a value to stones.
@@ -188,7 +190,7 @@ public static class MassConversions
 	/// <returns>A <see cref="Mass"/> representing the value in stones.</returns>
 	public static Mass Stones<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Mass>(PhysicalConstants.StonesToKilogramsFactor);
+		=> Calculator.FromUnit(value, "stones");
 
 	/// <summary>
 	/// Converts a <see cref="Mass"/> to a numeric value in stones.
@@ -198,7 +200,7 @@ public static class MassConversions
 	/// <returns>The numeric value in stones.</returns>
 	public static TNumber Stones<TNumber>(this Mass value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.StonesToKilogramsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "stones");
 
 	/// <summary>
 	/// Converts a value to metric tons.
@@ -208,7 +210,7 @@ public static class MassConversions
 	/// <returns>A <see cref="Mass"/> representing the value in metric tons.</returns>
 	public static Mass MetricTons<TNumber>(this TNumber value)
 		where TNumber : INumber<TNumber>
-		=> value.ConvertToQuantity<TNumber, Mass>(PhysicalConstants.MetricTonsToKilogramsFactor);
+		=> Calculator.FromUnit(value, "metric_tons");
 
 	/// <summary>
 	/// Converts a <see cref="Mass"/> to a numeric value in metric tons.
@@ -218,5 +220,5 @@ public static class MassConversions
 	/// <returns>The numeric value in metric tons.</returns>
 	public static TNumber MetricTons<TNumber>(this Mass value)
 		where TNumber : INumber<TNumber>
-		=> TNumber.CreateChecked(value.ConvertToNumber(PhysicalConstants.MetricTonsToKilogramsFactor));
+		=> Calculator.ToUnit<TNumber>(value, "metric_tons");
 }
