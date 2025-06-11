@@ -9,7 +9,7 @@ using System.Numerics;
 /// <summary>
 /// Represents a force physical quantity.
 /// </summary>
-[SIUnit("N", "newton", "newtons")]
+[SIUnit("N", "newton", "newtons")] // TODO: replace hardcoded attributes with predefined ones
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
 public sealed record Force
 	: PhysicalQuantity<Force>
@@ -58,11 +58,10 @@ public sealed record Force
 /// <summary>
 /// Provides extension methods for converting values to and from <see cref="Force"/>.
 /// </summary>
-#pragma warning disable CA1708 // Identifiers should differ by more than case - needed for test compatibility
-// TODO: remove CA1708 suppressions
-public static class ForceConversions
+public static class ForceConversions // TODO extract and consolidate static conversion classes
 {
 	private static Conversions.IConversionCalculator<Force> Calculator => Conversions.ConversionRegistry.GetCalculator<Force>();
+	private static Conversions.TypedForceConversionCalculator TypedCalculator => Conversions.TypedForceConversionCalculator.Instance;
 
 	/// <summary>
 	/// Converts a value to newtons.
@@ -184,24 +183,48 @@ public static class ForceConversions
 		where TNumber : INumber<TNumber>
 		=> Calculator.ToUnit<TNumber>(value, "pounds_force");
 
+	// New strongly-typed conversion methods
 	/// <summary>
-	/// Converts a value to kilonewtons (alternative capitalization).
+	/// Converts a value from the specified SI unit to force.
 	/// </summary>
 	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
 	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Force"/> representing the value in kilonewtons.</returns>
-	public static Force KiloNewtons<TNumber>(this TNumber value)
+	/// <param name="unit">The SI unit to convert from.</param>
+	/// <returns>A <see cref="Force"/> representing the value.</returns>
+	public static Force FromSIUnit<TNumber>(this TNumber value, SIUnit unit)
 		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "kilonewtons");
+		=> TypedCalculator.FromSIUnit(value, unit);
 
 	/// <summary>
-	/// Converts a <see cref="Force"/> to a numeric value in kilonewtons (alternative capitalization).
+	/// Converts a value from the specified imperial unit to force.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
+	/// <param name="value">The value to convert.</param>
+	/// <param name="unit">The imperial unit to convert from.</param>
+	/// <returns>A <see cref="Force"/> representing the value.</returns>
+	public static Force FromImperialUnit<TNumber>(this TNumber value, ImperialUnit unit)
+		where TNumber : INumber<TNumber>
+		=> TypedCalculator.FromImperialUnit(value, unit);
+
+	/// <summary>
+	/// Converts a force to the specified SI unit.
 	/// </summary>
 	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Force"/> to convert.</param>
-	/// <returns>The numeric value in kilonewtons.</returns>
-	public static TNumber KiloNewtons<TNumber>(this Force value)
+	/// <param name="force">The force to convert.</param>
+	/// <param name="unit">The SI unit to convert to.</param>
+	/// <returns>The numeric value in the specified unit.</returns>
+	public static TNumber ToSIUnit<TNumber>(this Force force, SIUnit unit)
 		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "kilonewtons");
+		=> TypedCalculator.ToSIUnit<TNumber>(force, unit);
+
+	/// <summary>
+	/// Converts a force to the specified imperial unit.
+	/// </summary>
+	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
+	/// <param name="force">The force to convert.</param>
+	/// <param name="unit">The imperial unit to convert to.</param>
+	/// <returns>The numeric value in the specified unit.</returns>
+	public static TNumber ToImperialUnit<TNumber>(this Force force, ImperialUnit unit)
+		where TNumber : INumber<TNumber>
+		=> TypedCalculator.ToImperialUnit<TNumber>(force, unit);
 }
-#pragma warning restore CA1708

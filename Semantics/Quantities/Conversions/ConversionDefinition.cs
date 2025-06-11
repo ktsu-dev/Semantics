@@ -10,7 +10,7 @@ namespace ktsu.Semantics.Conversions;
 /// <param name="Unit">The unit name.</param>
 /// <param name="Factor">The conversion factor to multiply by when converting from this unit to base unit.</param>
 /// <param name="Offset">The conversion offset to add when converting from this unit to base unit (default is 0).</param>
-public record ConversionDefinition(string Unit, double Factor, double Offset = 0) // TODO: these should be between SIUnits and some kind of ImperialUnit
+public record ConversionDefinition(string Unit, double Factor, double Offset = 0)
 {
 	/// <summary>
 	/// Converts a value from this unit to the base unit.

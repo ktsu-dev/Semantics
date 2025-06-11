@@ -25,7 +25,6 @@ public sealed class EnergyConversionCalculator : BaseConversionCalculator<Energy
 	{
 		return
 		[
-			// TODO: instead of strings we should use generic types
 			// SI prefixes
 			new ConversionDefinition("millijoules", PhysicalConstants.Milli),
 			new ConversionDefinition("mj", PhysicalConstants.Milli),

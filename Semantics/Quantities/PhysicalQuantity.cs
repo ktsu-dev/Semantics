@@ -7,7 +7,7 @@ namespace ktsu.Semantics;
 using System.Numerics;
 using System.Reflection;
 
-// TODO: support both direct use and dependecy injection for physical quantities
+// TODO: support both direct use and dependency injection for physical quantities
 
 /// <summary>
 /// Represents a physical quantity with a specific unit of measurement.
@@ -21,7 +21,12 @@ public abstract record PhysicalQuantity<TSelf>
 	/// <summary>
 	/// Gets the SI unit attribute associated with the derived class.
 	/// </summary>
-	private static SIUnitAttribute SIUnitAttribute { get; } = typeof(TSelf).GetCustomAttribute<SIUnitAttribute>() ?? new SIUnitAttribute(string.Empty, string.Empty, string.Empty);
+	private static SIUnitAttribute SIUnitAttribute { get; } = typeof(TSelf).GetCustomAttribute<SIUnitAttribute>() ?? new SIUnitAttribute(new SIUnit(string.Empty, string.Empty, string.Empty));
+
+	/// <summary>
+	/// Gets the SI unit for this physical quantity type.
+	/// </summary>
+	protected static SIUnit Unit => SIUnitAttribute.Unit;
 
 	/// <summary>
 	/// Compares the current physical quantity to another instance of the same type.
@@ -39,10 +44,10 @@ public abstract record PhysicalQuantity<TSelf>
 	/// <returns>A string that represents the physical quantity.</returns>
 	public sealed override string ToString()
 	{
-		string symbolComponent = string.IsNullOrWhiteSpace(SIUnitAttribute.Symbol) ? string.Empty : $" {SIUnitAttribute.Symbol}";
+		string symbolComponent = string.IsNullOrWhiteSpace(Unit.Symbol) ? string.Empty : $" {Unit.Symbol}";
 		double absQuantity = Math.Abs(Quantity);
-		bool isPlural = absQuantity > 1;
-		string pluralComponent = isPlural ? SIUnitAttribute.Plural : SIUnitAttribute.Singular;
+		bool isPlural = absQuantity != 1;
+		string pluralComponent = isPlural ? Unit.Plural : Unit.Singular;
 		string nameComponent = string.IsNullOrWhiteSpace(pluralComponent) ? string.Empty : $" ({pluralComponent})";
 		return $"{Quantity}{symbolComponent}{nameComponent}";
 	}

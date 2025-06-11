@@ -12,26 +12,39 @@ namespace ktsu.Semantics;
 /// and their associated SI units.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class)]
-public sealed class SIUnitAttribute(string symbol, string singular, string plural) : Attribute
-// TODO: separate into SIUnit and attribute
-// TODO: define derived SIUnits for each unit type
-// TODO: define attributes for each derived SIUnit
-// TODO: move conversions to each derived SIUnit
-// TODO: streamline SI to imperial conversions
-// TODO: streamline metric magnitude conversions
+public sealed class SIUnitAttribute : Attribute //TODO: remove backwards compatibilty
 {
+	/// <summary>
+	/// Initializes a new instance of the <see cref="SIUnitAttribute"/> class with a strongly-typed SI unit.
+	/// </summary>
+	/// <param name="unit">The SI unit for the physical quantity.</param>
+	public SIUnitAttribute(SIUnit unit) => Unit = unit;
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="SIUnitAttribute"/> class with string parameters for backward compatibility.
+	/// </summary>
+	/// <param name="symbol">The symbol of the SI unit.</param>
+	/// <param name="singular">The singular name of the SI unit.</param>
+	/// <param name="plural">The plural name of the SI unit.</param>
+	public SIUnitAttribute(string symbol, string singular, string plural) => Unit = new SIUnit(symbol, singular, plural);
+
+	/// <summary>
+	/// Gets the SI unit associated with the physical quantity.
+	/// </summary>
+	public SIUnit Unit { get; }
+
 	/// <summary>
 	/// Gets the symbol of the SI unit (e.g., "m" for meters).
 	/// </summary>
-	public string Symbol { get; } = symbol;
+	public string Symbol => Unit.Symbol;
 
 	/// <summary>
 	/// Gets the singular name of the SI unit (e.g., "meter").
 	/// </summary>
-	public string Singular { get; } = singular;
+	public string Singular => Unit.Singular;
 
 	/// <summary>
 	/// Gets the plural name of the SI unit (e.g., "meters").
 	/// </summary>
-	public string Plural { get; } = plural;
+	public string Plural => Unit.Plural;
 }

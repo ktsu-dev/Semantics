@@ -21,7 +21,7 @@ public abstract class BaseConversionCalculator<TQuantity> : IConversionCalculato
 	/// </summary>
 	/// <param name="baseUnit">The base SI unit for this quantity type.</param>
 	/// <param name="conversions">The available conversion definitions.</param>
-	protected BaseConversionCalculator(string baseUnit, IEnumerable<ConversionDefinition> conversions) // TODO: baseUnit should be a SIUnit
+	protected BaseConversionCalculator(string baseUnit, IEnumerable<ConversionDefinition> conversions) // TODO: use typesafe SIUnits
 	{
 		ArgumentNullException.ThrowIfNull(conversions);
 		_baseUnit = baseUnit;
