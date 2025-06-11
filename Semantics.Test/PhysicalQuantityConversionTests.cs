@@ -11,7 +11,7 @@ public class PhysicalQuantityConversionTests
 	public void LengthConversions_ShouldBeConsistent()
 	{
 		// Arrange
-		var length = 10.Meters();
+		Length length = 10.Meters();
 
 		// Act & Assert
 		Assert.AreEqual(0.01, length.Kilometers<double>(), 1e-10);
@@ -30,7 +30,7 @@ public class PhysicalQuantityConversionTests
 	public void TimeConversions_ShouldBeConsistent()
 	{
 		// Arrange
-		var time = 3600.Seconds();
+		Time time = 3600.Seconds();
 
 		// Act & Assert
 		Assert.AreEqual(1.0, time.Hours<double>(), 1e-10);
@@ -39,7 +39,7 @@ public class PhysicalQuantityConversionTests
 		Assert.AreEqual(0.04166667, time.Days<double>(), 1e-7);
 
 		// Test round-trip
-		var roundTripSeconds = time.Minutes<double>().Minutes();
+		Time roundTripSeconds = time.Minutes<double>().Minutes();
 		Assert.AreEqual(3600.0, roundTripSeconds.Seconds<double>(), 1e-10);
 	}
 
@@ -47,7 +47,7 @@ public class PhysicalQuantityConversionTests
 	public void MassConversions_ShouldBeConsistent()
 	{
 		// Arrange
-		var mass = 100.Kilograms();
+		Mass mass = 100.Kilograms();
 
 		// Act & Assert
 		Assert.AreEqual(0.1, mass.MetricTons<double>(), 1e-10);
@@ -57,7 +57,7 @@ public class PhysicalQuantityConversionTests
 		Assert.AreEqual(15.747, mass.Stones<double>(), 1e-3);
 
 		// Test round-trip
-		var roundTripKilograms = mass.Pounds<double>().Pounds();
+		Mass roundTripKilograms = mass.Pounds<double>().Pounds();
 		Assert.AreEqual(100.0, roundTripKilograms.Kilograms<double>(), 1e-3);
 	}
 
@@ -65,18 +65,18 @@ public class PhysicalQuantityConversionTests
 	public void TemperatureConversions_ShouldBeConsistent()
 	{
 		// Arrange
-		var temperature = 373.15.Kelvin();
+		Temperature temperature = 373.15.Kelvin();
 
 		// Act & Assert
 		Assert.AreEqual(100.0, temperature.Celsius<double>(), 1e-10);
 		Assert.AreEqual(212.0, temperature.Fahrenheit<double>(), 1e-10);
 
 		// Test round-trip
-		var roundTripKelvin = temperature.Celsius<double>().Kelvin();
+		Temperature roundTripKelvin = temperature.Celsius<double>().Kelvin();
 		Assert.AreEqual(373.15, roundTripKelvin.Kelvin<double>(), 1e-10);
 
 		// Test another common temperature
-		var freezingPointKelvin = 273.15.Kelvin();
+		Temperature freezingPointKelvin = 273.15.Kelvin();
 		Assert.AreEqual(0.0, freezingPointKelvin.Celsius<double>(), 1e-10);
 		Assert.AreEqual(32.0, freezingPointKelvin.Fahrenheit<double>(), 1e-10);
 	}
@@ -85,7 +85,7 @@ public class PhysicalQuantityConversionTests
 	public void AreaConversions_ShouldBeConsistent()
 	{
 		// Arrange
-		var area = 100.SquareMeters();
+		Area area = 100.SquareMeters();
 
 		// Act & Assert
 		Assert.AreEqual(0.0001, area.SquareKilometers<double>(), 1e-10);
@@ -95,7 +95,7 @@ public class PhysicalQuantityConversionTests
 		Assert.AreEqual(119.599, area.SquareYards<double>(), 1e-3);
 
 		// Test round-trip
-		var roundTripSquareMeters = area.SquareFeet<double>().SquareFeet();
+		Area roundTripSquareMeters = area.SquareFeet<double>().SquareFeet();
 		Assert.AreEqual(100.0, roundTripSquareMeters.SquareMeters<double>(), 1e-3);
 	}
 
@@ -103,7 +103,7 @@ public class PhysicalQuantityConversionTests
 	public void VolumeConversions_ShouldBeConsistent()
 	{
 		// Arrange
-		var volume = 10.CubicMeters();
+		Volume volume = 10.CubicMeters();
 
 		// Act & Assert
 		Assert.AreEqual(10000, volume.Liters<double>(), 1e-10);
@@ -113,7 +113,7 @@ public class PhysicalQuantityConversionTests
 		Assert.AreEqual(2641.721, volume.USGallons<double>(), 1e-3);
 
 		// Test round-trip
-		var roundTripCubicMeters = volume.Liters<double>().Liters();
+		Volume roundTripCubicMeters = volume.Liters<double>().Liters();
 		Assert.AreEqual(10.0, roundTripCubicMeters.CubicMeters<double>(), 1e-10);
 	}
 
@@ -121,7 +121,7 @@ public class PhysicalQuantityConversionTests
 	public void VelocityConversions_ShouldBeConsistent()
 	{
 		// Arrange
-		var speed = 10.MetersPerSecond();
+		Velocity speed = 10.MetersPerSecond();
 
 		// Act & Assert
 		Assert.AreEqual(36, speed.KilometersPerHour<double>(), 1e-10);
@@ -130,7 +130,7 @@ public class PhysicalQuantityConversionTests
 		Assert.AreEqual(32.8084, speed.FeetPerSecond<double>(), 1e-4);
 
 		// Test round-trip
-		var roundTripMetersPerSecond = speed.KilometersPerHour<double>().KilometersPerHour();
+		Velocity roundTripMetersPerSecond = speed.KilometersPerHour<double>().KilometersPerHour();
 		Assert.AreEqual(10.0, roundTripMetersPerSecond.MetersPerSecond<double>(), 1e-10);
 	}
 }

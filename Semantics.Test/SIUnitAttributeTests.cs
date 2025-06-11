@@ -16,7 +16,7 @@ public class SIUnitAttributeTests
 		string expectedPlural = "meters";
 
 		// Act
-		var attribute = new SIUnitAttribute(expectedSymbol, expectedSingular, expectedPlural);
+		SIUnitAttribute attribute = new(expectedSymbol, expectedSingular, expectedPlural);
 
 		// Assert
 		Assert.AreEqual(expectedSymbol, attribute.Symbol);

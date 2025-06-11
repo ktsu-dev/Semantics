@@ -7,11 +7,11 @@ namespace ktsu.Semantics.Test;
 [TestClass]
 public class IIntegralOperatorsTests
 {
-	public record MockQuantity : SemanticQuantity<MockQuantity, double>, IIntegralOperators<MockQuantity, MockQuantity, MockQuantity>
+	public record MockQuantity : PhysicalQuantity<MockQuantity>, IIntegralOperators<MockQuantity, MockQuantity, MockQuantity>
 	{
 		public static MockQuantity Integrate(MockQuantity left, MockQuantity right)
 		{
-			return Create(left.Quantity * right.Quantity);
+			return Multiply<MockQuantity>(left, right);
 		}
 
 		public static MockQuantity operator *(MockQuantity left, MockQuantity right) => Integrate(left, right);
@@ -21,13 +21,13 @@ public class IIntegralOperatorsTests
 	public void Integrate_ShouldReturnCorrectResult()
 	{
 		// Arrange
-		var left = MockQuantity.Create(5.0);
-		var right = MockQuantity.Create(3.0);
+		MockQuantity left = MockQuantity.Create(double.CreateChecked(5.0));
+		MockQuantity right = MockQuantity.Create(double.CreateChecked(3.0));
 
 		// Act
-		var result = MockQuantity.Integrate(left, right);
+		MockQuantity result = MockQuantity.Integrate(left, right);
 
 		// Assert
-		Assert.AreEqual(15.0, result.Quantity);
+		Assert.AreEqual(15.0, result.Quantity<double>());
 	}
 }

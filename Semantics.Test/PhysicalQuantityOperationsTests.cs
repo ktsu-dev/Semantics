@@ -11,8 +11,8 @@ public class PhysicalQuantityOperationsTests
 	public void VelocityFromLengthAndTime_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var length = 100.Meters();
-		var time = 10.Seconds();
+		Length length = 100.Meters();
+		Time time = 10.Seconds();
 
 		// Act
 		var velocity = length / time;
@@ -25,11 +25,11 @@ public class PhysicalQuantityOperationsTests
 	public void AccelerationFromVelocityAndTime_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var velocity = 20.MetersPerSecond();
-		var time = 5.Seconds();
+		Velocity velocity = 20.MetersPerSecond();
+		Time time = 5.Seconds();
 
 		// Act
-		var acceleration = velocity / time;
+		Acceleration acceleration = velocity / time;
 
 		// Assert
 		Assert.AreEqual(4.0, acceleration.MetersPerSecondSquared<double>(), 1e-10);
@@ -39,11 +39,11 @@ public class PhysicalQuantityOperationsTests
 	public void ForceFromMassAndAcceleration_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var mass = 10.Kilograms();
-		var acceleration = 9.8.MetersPerSecondSquared();
+		Mass mass = 10.Kilograms();
+		Acceleration acceleration = 9.8.MetersPerSecondSquared();
 
 		// Act
-		var force = mass * acceleration;
+		Force force = mass * acceleration;
 
 		// Assert
 		Assert.AreEqual(98.0, force.Newtons<double>(), 1e-10);
@@ -53,11 +53,11 @@ public class PhysicalQuantityOperationsTests
 	public void EnergyFromForceAndLength_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var force = 50.Newtons();
-		var length = 2.Meters();
+		Force force = 50.Newtons();
+		Length length = 2.Meters();
 
 		// Act
-		var energy = force * length;
+		Energy energy = force * length;
 
 		// Assert
 		Assert.AreEqual(100.0, energy.Joules<double>(), 1e-10);
@@ -67,11 +67,11 @@ public class PhysicalQuantityOperationsTests
 	public void PowerFromEnergyAndTime_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var energy = 1000.Joules();
-		var time = 5.Seconds();
+		Energy energy = 1000.Joules();
+		Time time = 5.Seconds();
 
 		// Act
-		var power = energy / time;
+		Power power = energy / time;
 
 		// Assert
 		Assert.AreEqual(200.0, power.Watts<double>(), 1e-10);
@@ -81,10 +81,10 @@ public class PhysicalQuantityOperationsTests
 	public void AreaFromLengthSquared_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var length = 5.Meters();
+		Length length = 5.Meters();
 
 		// Act
-		var area = length * length;
+		Area area = length * length;
 
 		// Assert
 		Assert.AreEqual(25.0, area.SquareMeters<double>(), 1e-10);
@@ -94,11 +94,11 @@ public class PhysicalQuantityOperationsTests
 	public void VolumeFromAreaAndLength_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var area = 25.SquareMeters();
-		var height = 4.Meters();
+		Area area = 25.SquareMeters();
+		Length height = 4.Meters();
 
 		// Act
-		var volume = area * height;
+		Volume volume = area * height;
 
 		// Assert
 		Assert.AreEqual(100.0, volume.CubicMeters<double>(), 1e-10);
@@ -108,11 +108,11 @@ public class PhysicalQuantityOperationsTests
 	public void DensityFromMassAndVolume_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var mass = 50.Kilograms();
-		var volume = 5.CubicMeters();
+		Mass mass = 50.Kilograms();
+		Volume volume = 5.CubicMeters();
 
 		// Act
-		var density = mass / volume;
+		Density density = mass / volume;
 
 		// Assert
 		Assert.AreEqual(10.0, density.KilogramsPerCubicMeter<double>(), 1e-10);
@@ -122,11 +122,11 @@ public class PhysicalQuantityOperationsTests
 	public void MassFromDensityAndVolume_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var density = 800.KilogramsPerCubicMeter();
-		var volume = 0.5.CubicMeters();
+		Density density = 800.KilogramsPerCubicMeter();
+		Volume volume = 0.5.CubicMeters();
 
 		// Act
-		var mass = density * volume;
+		Mass mass = density * volume;
 
 		// Assert
 		Assert.AreEqual(400.0, mass.Kilograms<double>(), 1e-10);
@@ -136,11 +136,11 @@ public class PhysicalQuantityOperationsTests
 	public void PressureFromForceAndArea_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var force = 1000.Newtons();
-		var area = 10.SquareMeters();
+		Force force = 1000.Newtons();
+		Area area = 10.SquareMeters();
 
 		// Act
-		var pressure = force / area;
+		Pressure pressure = force / area;
 
 		// Assert
 		Assert.AreEqual(100.0, pressure.Pascals<double>(), 1e-10);
@@ -150,11 +150,11 @@ public class PhysicalQuantityOperationsTests
 	public void ForceFromPressureAndArea_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var pressure = 200.Pascals();
-		var area = 5.SquareMeters();
+		Pressure pressure = 200.Pascals();
+		Area area = 5.SquareMeters();
 
 		// Act
-		var force = pressure * area;
+		Force force = pressure * area;
 
 		// Assert
 		Assert.AreEqual(1000.0, force.Newtons<double>(), 1e-10);
@@ -164,11 +164,11 @@ public class PhysicalQuantityOperationsTests
 	public void MomentumFromMassAndVelocity_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var mass = 5.Kilograms();
-		var velocity = 10.MetersPerSecond();
+		Mass mass = 5.Kilograms();
+		Velocity velocity = 10.MetersPerSecond();
 
 		// Act
-		var momentum = mass * velocity;
+		Momentum momentum = mass * velocity;
 
 		// Assert
 		Assert.AreEqual(50.0, momentum.KilogramMetersPerSecond<double>(), 1e-10);
@@ -178,11 +178,11 @@ public class PhysicalQuantityOperationsTests
 	public void ElectricPotentialFromCurrentAndResistance_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var current = 2.Amperes();
-		var resistance = 10.Ohms();
+		ElectricCurrent current = 2.Amperes();
+		Resistance resistance = 10.Ohms();
 
 		// Act
-		var voltage = current * resistance;
+		ElectricPotential voltage = current * resistance;
 
 		// Assert
 		Assert.AreEqual(20.0, voltage.Volts<double>(), 1e-10);
@@ -192,11 +192,11 @@ public class PhysicalQuantityOperationsTests
 	public void PowerFromVoltageAndCurrent_ShouldCalculateCorrectly()
 	{
 		// Arrange
-		var voltage = 12.Volts();
-		var current = 3.Amperes();
+		ElectricPotential voltage = 12.Volts();
+		ElectricCurrent current = 3.Amperes();
 
 		// Act
-		var power = voltage * current;
+		Power power = voltage * current;
 
 		// Assert
 		Assert.AreEqual(36.0, power.Watts<double>(), 1e-10);
@@ -206,11 +206,11 @@ public class PhysicalQuantityOperationsTests
 	public void ComplexCalculation_ShouldWorkCorrectly()
 	{
 		// Arrange - Calculate kinetic energy: KE = 0.5 * m * v^2
-		var mass = 10.Kilograms();
-		var velocity = 20.MetersPerSecond();
+		Mass mass = 10.Kilograms();
+		Velocity velocity = 20.MetersPerSecond();
 
 		// Act
-		var kineticEnergy = 0.5 * mass * (velocity * velocity);
+		var kineticEnergy = 0.5 * mass * velocity * velocity;
 
 		// Assert
 		Assert.AreEqual(2000.0, kineticEnergy.Joules<double>(), 1e-10);
@@ -220,12 +220,12 @@ public class PhysicalQuantityOperationsTests
 	public void DistanceWithAcceleration_ShouldCalculateCorrectly()
 	{
 		// Arrange - Calculate distance: s = v*t + 0.5*a*t^2
-		var initialVelocity = 5.MetersPerSecond();
-		var acceleration = 2.MetersPerSecondSquared();
-		var time = 10.Seconds();
+		Velocity initialVelocity = 5.MetersPerSecond();
+		Acceleration acceleration = 2.MetersPerSecondSquared();
+		Time time = 10.Seconds();
 
 		// Act
-		var distance = (initialVelocity * time) + (0.5 * acceleration * (time * time));
+		var distance = (initialVelocity * time) + (0.5 * acceleration * time * time);
 
 		// Assert
 		Assert.AreEqual(150.0, distance.Meters<double>(), 1e-10);
