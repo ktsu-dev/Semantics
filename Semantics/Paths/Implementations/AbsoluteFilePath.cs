@@ -21,7 +21,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	{
 		get
 		{
-			return _cachedDirectoryPath ??= AbsoluteDirectoryPath.FromString<AbsoluteDirectoryPath>(
+			return _cachedDirectoryPath ??= AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(
 				Path.GetDirectoryName(WeakString) ?? "");
 		}
 	}
@@ -37,7 +37,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	{
 		get
 		{
-			return _cachedFileNameWithoutExtension ??= FileName.FromString<FileName>(
+			return _cachedFileNameWithoutExtension ??= FileName.Create<FileName>(
 				Path.GetFileNameWithoutExtension(WeakString) ?? "");
 		}
 	}
@@ -51,7 +51,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	{
 		ArgumentNullException.ThrowIfNull(newExtension);
 		string newPath = Path.ChangeExtension(WeakString, newExtension.WeakString);
-		return FromString<AbsoluteFilePath>(newPath);
+		return Create<AbsoluteFilePath>(newPath);
 	}
 
 	/// <summary>
@@ -61,7 +61,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	public AbsoluteFilePath RemoveExtension()
 	{
 		string pathWithoutExtension = Path.ChangeExtension(WeakString, null) ?? "";
-		return FromString<AbsoluteFilePath>(pathWithoutExtension);
+		return Create<AbsoluteFilePath>(pathWithoutExtension);
 	}
 
 	/// <summary>

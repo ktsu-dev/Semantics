@@ -13,7 +13,7 @@ public class PathValidationAttributeTests
 	public void IsPathAttribute_ValidPath_ShouldPass()
 	{
 		// Arrange
-		TestPath validPath = TestPath.FromString<TestPath>("C:\\valid\\path");
+		TestPath validPath = TestPath.Create<TestPath>("C:\\valid\\path");
 
 		// Act & Assert
 		Assert.IsTrue(validPath.IsValid());
@@ -23,7 +23,7 @@ public class PathValidationAttributeTests
 	public void IsPathAttribute_EmptyPath_ShouldPass()
 	{
 		// Arrange
-		TestPath emptyPath = TestPath.FromString<TestPath>("");
+		TestPath emptyPath = TestPath.Create<TestPath>("");
 
 		// Act & Assert
 		Assert.IsTrue(emptyPath.IsValid());
@@ -33,8 +33,8 @@ public class PathValidationAttributeTests
 	public void IsPathAttribute_PathWithInvalidChars_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			TestPath.FromString<TestPath>("C:\\invalid<>path"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			TestPath.Create<TestPath>("C:\\invalid<>path"));
 	}
 
 	[TestMethod]
@@ -44,15 +44,15 @@ public class PathValidationAttributeTests
 		string longPath = "C:\\" + new string('a', 300);
 
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			TestPath.FromString<TestPath>(longPath));
+		Assert.ThrowsExactly<FormatException>(() =>
+			TestPath.Create<TestPath>(longPath));
 	}
 
 	[TestMethod]
 	public void IsAbsolutePathAttribute_WithAbsolutePath_ShouldPass()
 	{
 		// Arrange
-		TestAbsolutePath absolutePath = TestAbsolutePath.FromString<TestAbsolutePath>("C:\\test\\path");
+		TestAbsolutePath absolutePath = TestAbsolutePath.Create<TestAbsolutePath>("C:\\test\\path");
 
 		// Act & Assert
 		Assert.IsTrue(absolutePath.IsValid());
@@ -62,15 +62,15 @@ public class PathValidationAttributeTests
 	public void IsAbsolutePathAttribute_WithRelativePath_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			TestAbsolutePath.FromString<TestAbsolutePath>("relative\\path"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			TestAbsolutePath.Create<TestAbsolutePath>("relative\\path"));
 	}
 
 	[TestMethod]
 	public void IsAbsolutePathAttribute_WithUNCPath_ShouldPass()
 	{
 		// Arrange
-		TestAbsolutePath uncPath = TestAbsolutePath.FromString<TestAbsolutePath>("\\\\server\\share\\file");
+		TestAbsolutePath uncPath = TestAbsolutePath.Create<TestAbsolutePath>("\\\\server\\share\\file");
 
 		// Act & Assert
 		Assert.IsTrue(uncPath.IsValid());
@@ -80,7 +80,7 @@ public class PathValidationAttributeTests
 	public void IsAbsolutePathAttribute_EmptyPath_ShouldPass()
 	{
 		// Arrange
-		TestAbsolutePath emptyPath = TestAbsolutePath.FromString<TestAbsolutePath>("");
+		TestAbsolutePath emptyPath = TestAbsolutePath.Create<TestAbsolutePath>("");
 
 		// Act & Assert
 		Assert.IsTrue(emptyPath.IsValid());
@@ -90,7 +90,7 @@ public class PathValidationAttributeTests
 	public void IsRelativePathAttribute_WithRelativePath_ShouldPass()
 	{
 		// Arrange
-		TestRelativePath relativePath = TestRelativePath.FromString<TestRelativePath>("relative\\path");
+		TestRelativePath relativePath = TestRelativePath.Create<TestRelativePath>("relative\\path");
 
 		// Act & Assert
 		Assert.IsTrue(relativePath.IsValid());
@@ -100,15 +100,15 @@ public class PathValidationAttributeTests
 	public void IsRelativePathAttribute_WithAbsolutePath_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			TestRelativePath.FromString<TestRelativePath>("C:\\absolute\\path"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			TestRelativePath.Create<TestRelativePath>("C:\\absolute\\path"));
 	}
 
 	[TestMethod]
 	public void IsRelativePathAttribute_WithDotPath_ShouldPass()
 	{
 		// Arrange
-		TestRelativePath dotPath = TestRelativePath.FromString<TestRelativePath>("./relative/path");
+		TestRelativePath dotPath = TestRelativePath.Create<TestRelativePath>("./relative/path");
 
 		// Act & Assert
 		Assert.IsTrue(dotPath.IsValid());
@@ -118,7 +118,7 @@ public class PathValidationAttributeTests
 	public void IsRelativePathAttribute_WithParentPath_ShouldPass()
 	{
 		// Arrange
-		TestRelativePath parentPath = TestRelativePath.FromString<TestRelativePath>("../parent/path");
+		TestRelativePath parentPath = TestRelativePath.Create<TestRelativePath>("../parent/path");
 
 		// Act & Assert
 		Assert.IsTrue(parentPath.IsValid());
@@ -128,7 +128,7 @@ public class PathValidationAttributeTests
 	public void IsRelativePathAttribute_EmptyPath_ShouldPass()
 	{
 		// Arrange
-		TestRelativePath emptyPath = TestRelativePath.FromString<TestRelativePath>("");
+		TestRelativePath emptyPath = TestRelativePath.Create<TestRelativePath>("");
 
 		// Act & Assert
 		Assert.IsTrue(emptyPath.IsValid());
@@ -138,7 +138,7 @@ public class PathValidationAttributeTests
 	public void IsFileNameAttribute_ValidFileName_ShouldPass()
 	{
 		// Arrange
-		TestFileName fileName = TestFileName.FromString<TestFileName>("valid_file_name.txt");
+		TestFileName fileName = TestFileName.Create<TestFileName>("valid_file_name.txt");
 
 		// Act & Assert
 		Assert.IsTrue(fileName.IsValid());
@@ -148,15 +148,15 @@ public class PathValidationAttributeTests
 	public void IsFileNameAttribute_FileNameWithInvalidChars_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			TestFileName.FromString<TestFileName>("invalid<>file.txt"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			TestFileName.Create<TestFileName>("invalid<>file.txt"));
 	}
 
 	[TestMethod]
 	public void IsFileNameAttribute_EmptyFileName_ShouldPass()
 	{
 		// Arrange
-		TestFileName emptyFileName = TestFileName.FromString<TestFileName>("");
+		TestFileName emptyFileName = TestFileName.Create<TestFileName>("");
 
 		// Act & Assert
 		Assert.IsTrue(emptyFileName.IsValid());
@@ -166,7 +166,7 @@ public class PathValidationAttributeTests
 	public void IsDirectoryPathAttribute_NonExistentPath_ShouldPass()
 	{
 		// Arrange
-		TestDirectoryPath directoryPath = TestDirectoryPath.FromString<TestDirectoryPath>("C:\\nonexistent\\directory");
+		TestDirectoryPath directoryPath = TestDirectoryPath.Create<TestDirectoryPath>("C:\\nonexistent\\directory");
 
 		// Act & Assert
 		Assert.IsTrue(directoryPath.IsValid());
@@ -176,7 +176,7 @@ public class PathValidationAttributeTests
 	public void IsDirectoryPathAttribute_EmptyPath_ShouldPass()
 	{
 		// Arrange
-		TestDirectoryPath emptyPath = TestDirectoryPath.FromString<TestDirectoryPath>("");
+		TestDirectoryPath emptyPath = TestDirectoryPath.Create<TestDirectoryPath>("");
 
 		// Act & Assert
 		Assert.IsTrue(emptyPath.IsValid());
@@ -186,7 +186,7 @@ public class PathValidationAttributeTests
 	public void IsFilePathAttribute_NonExistentPath_ShouldPass()
 	{
 		// Arrange
-		TestFilePath filePath = TestFilePath.FromString<TestFilePath>("C:\\nonexistent\\file.txt");
+		TestFilePath filePath = TestFilePath.Create<TestFilePath>("C:\\nonexistent\\file.txt");
 
 		// Act & Assert
 		Assert.IsTrue(filePath.IsValid());
@@ -196,7 +196,7 @@ public class PathValidationAttributeTests
 	public void IsFilePathAttribute_EmptyPath_ShouldPass()
 	{
 		// Arrange
-		TestFilePath emptyPath = TestFilePath.FromString<TestFilePath>("");
+		TestFilePath emptyPath = TestFilePath.Create<TestFilePath>("");
 
 		// Act & Assert
 		Assert.IsTrue(emptyPath.IsValid());
@@ -206,23 +206,23 @@ public class PathValidationAttributeTests
 	public void DoesExistAttribute_NonExistentPath_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			TestExistingPath.FromString<TestExistingPath>("C:\\definitely\\does\\not\\exist"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			TestExistingPath.Create<TestExistingPath>("C:\\definitely\\does\\not\\exist"));
 	}
 
 	[TestMethod]
 	public void DoesExistAttribute_EmptyPath_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			TestExistingPath.FromString<TestExistingPath>(""));
+		Assert.ThrowsExactly<FormatException>(() =>
+			TestExistingPath.Create<TestExistingPath>(""));
 	}
 
 	[TestMethod]
 	public void IsExtensionAttribute_ValidExtension_ShouldPass()
 	{
 		// Arrange
-		TestExtension extension = TestExtension.FromString<TestExtension>(".txt");
+		TestExtension extension = TestExtension.Create<TestExtension>(".txt");
 
 		// Act & Assert
 		Assert.IsTrue(extension.IsValid());
@@ -232,15 +232,15 @@ public class PathValidationAttributeTests
 	public void IsExtensionAttribute_ExtensionWithoutDot_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			TestExtension.FromString<TestExtension>("txt"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			TestExtension.Create<TestExtension>("txt"));
 	}
 
 	[TestMethod]
 	public void IsExtensionAttribute_EmptyExtension_ShouldPass()
 	{
 		// Arrange
-		TestExtension emptyExtension = TestExtension.FromString<TestExtension>("");
+		TestExtension emptyExtension = TestExtension.Create<TestExtension>("");
 
 		// Act & Assert
 		Assert.IsTrue(emptyExtension.IsValid());
@@ -250,7 +250,7 @@ public class PathValidationAttributeTests
 	public void IsExtensionAttribute_MultipleDotsExtension_ShouldPass()
 	{
 		// Arrange
-		TestExtension multiExtension = TestExtension.FromString<TestExtension>(".tar.gz");
+		TestExtension multiExtension = TestExtension.Create<TestExtension>(".tar.gz");
 
 		// Act & Assert
 		Assert.IsTrue(multiExtension.IsValid());
@@ -263,7 +263,7 @@ public class PathValidationAttributeTests
 		if (!OperatingSystem.IsWindows())
 		{
 			// Arrange
-			TestAbsolutePath unixPath = TestAbsolutePath.FromString<TestAbsolutePath>("/usr/local/bin");
+			TestAbsolutePath unixPath = TestAbsolutePath.Create<TestAbsolutePath>("/usr/local/bin");
 
 			// Act & Assert
 			Assert.IsTrue(unixPath.IsValid());
@@ -274,7 +274,7 @@ public class PathValidationAttributeTests
 	public void IsRelativePathAttribute_UnixStyleRelativePath_ShouldPass()
 	{
 		// Arrange
-		TestRelativePath unixRelativePath = TestRelativePath.FromString<TestRelativePath>("usr/local/bin");
+		TestRelativePath unixRelativePath = TestRelativePath.Create<TestRelativePath>("usr/local/bin");
 
 		// Act & Assert
 		Assert.IsTrue(unixRelativePath.IsValid());
@@ -288,7 +288,7 @@ public class PathValidationAttributeTests
 		string exactLimitPath = "C:\\" + new string('a', 252); // 2 for C:\ + 252 = 254, add 2 more for file
 
 		// Act
-		TestPath path = TestPath.FromString<TestPath>(exactLimitPath);
+		TestPath path = TestPath.Create<TestPath>(exactLimitPath);
 
 		// Assert
 		Assert.IsTrue(path.IsValid());
@@ -301,15 +301,15 @@ public class PathValidationAttributeTests
 		string overLimitPath = "C:\\" + new string('a', 255); // This will be over 256
 
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			TestPath.FromString<TestPath>(overLimitPath));
+		Assert.ThrowsExactly<FormatException>(() =>
+			TestPath.Create<TestPath>(overLimitPath));
 	}
 
 	[TestMethod]
 	public void IsFileNameAttribute_FileNameWithValidSpecialChars_ShouldPass()
 	{
 		// Arrange - use valid special characters in filename
-		TestFileName fileName = TestFileName.FromString<TestFileName>("file-name_with.special-chars.txt");
+		TestFileName fileName = TestFileName.Create<TestFileName>("file-name_with.special-chars.txt");
 
 		// Act & Assert
 		Assert.IsTrue(fileName.IsValid());

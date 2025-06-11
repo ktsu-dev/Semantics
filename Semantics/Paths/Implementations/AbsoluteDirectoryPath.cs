@@ -25,7 +25,7 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	{
 		get
 		{
-			return _cachedParent ??= FromString<AbsoluteDirectoryPath>(
+			return _cachedParent ??= Create<AbsoluteDirectoryPath>(
 				InternedPathStrings.InternIfCommon(Path.GetDirectoryName(WeakString) ?? InternedPathStrings.Empty));
 		}
 	}
@@ -37,7 +37,7 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// Gets the name of this directory (the last component of the path).
 	/// </summary>
 	/// <value>A <see cref="FileName"/> representing just the directory name.</value>
-	public FileName Name => _cachedName ??= FileName.FromString<FileName>(Path.GetFileName(WeakString) ?? "");
+	public FileName Name => _cachedName ??= FileName.Create<FileName>(Path.GetFileName(WeakString) ?? "");
 
 	// Cache for depth calculation
 	private int? _cachedDepth;
@@ -88,7 +88,7 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// <param name="filePath">The file path to wrap.</param>
 	/// <returns>An <see cref="AbsoluteFilePath"/> object.</returns>
 	protected override IFilePath CreateFilePath(string filePath) =>
-		AbsoluteFilePath.FromString<AbsoluteFilePath>(filePath);
+		AbsoluteFilePath.Create<AbsoluteFilePath>(filePath);
 
 	/// <summary>
 	/// Creates an absolute directory path for subdirectories in this directory.
@@ -96,7 +96,7 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// <param name="directoryPath">The directory path to wrap.</param>
 	/// <returns>An <see cref="AbsoluteDirectoryPath"/> object.</returns>
 	protected override IDirectoryPath CreateDirectoryPath(string directoryPath) =>
-		FromString<AbsoluteDirectoryPath>(directoryPath);
+		Create<AbsoluteDirectoryPath>(directoryPath);
 
 	/// <summary>
 	/// Combines an absolute directory path with a relative directory path using the '/' operator.
@@ -110,8 +110,8 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 		ArgumentNullException.ThrowIfNull(left);
 		ArgumentNullException.ThrowIfNull(right);
 
-		string combinedPath = PooledStringBuilder.CombinePaths([left.WeakString, right.WeakString]);
-		return FromString<AbsoluteDirectoryPath>(combinedPath);
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
+		return Create<AbsoluteDirectoryPath>(combinedPath);
 	}
 
 	/// <summary>
@@ -126,8 +126,8 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 		ArgumentNullException.ThrowIfNull(left);
 		ArgumentNullException.ThrowIfNull(right);
 
-		string combinedPath = PooledStringBuilder.CombinePaths([left.WeakString, right.WeakString]);
-		return AbsoluteFilePath.FromString<AbsoluteFilePath>(combinedPath);
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
+		return AbsoluteFilePath.Create<AbsoluteFilePath>(combinedPath);
 	}
 
 	/// <summary>
@@ -210,7 +210,7 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 		ArgumentNullException.ThrowIfNull(targetDirectory);
 		// Use Path.GetRelativePath to compute the relative path
 		string relativePath = Path.GetRelativePath(WeakString, targetDirectory.WeakString);
-		return RelativeDirectoryPath.FromString<RelativeDirectoryPath>(relativePath);
+		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
 	}
 
 	/// <summary>

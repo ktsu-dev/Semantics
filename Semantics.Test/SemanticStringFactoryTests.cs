@@ -53,7 +53,7 @@ public class SemanticStringFactoryTests
 		SemanticStringFactory<TestSemanticString> factory = SemanticStringFactory<TestSemanticString>.Default;
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() => factory.FromString(null));
+		Assert.ThrowsExactly<ArgumentNullException>(() => factory.FromString(null));
 	}
 
 	[TestMethod]
@@ -78,7 +78,7 @@ public class SemanticStringFactoryTests
 		SemanticStringFactory<TestSemanticString> factory = SemanticStringFactory<TestSemanticString>.Default;
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() => factory.FromCharArray(null));
+		Assert.ThrowsExactly<ArgumentNullException>(() => factory.FromCharArray(null));
 	}
 
 	[TestMethod]

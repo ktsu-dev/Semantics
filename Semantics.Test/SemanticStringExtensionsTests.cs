@@ -58,7 +58,7 @@ public class SemanticStringExtensionsTests
 		string value = null!;
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(value.As<TestSemanticString>);
+		Assert.ThrowsExactly<ArgumentNullException>(value.As<TestSemanticString>);
 	}
 
 	[TestMethod]
@@ -96,7 +96,7 @@ public class SemanticStringExtensionsTests
 		char[] value = null!;
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(value.As<TestSemanticString>);
+		Assert.ThrowsExactly<ArgumentNullException>(value.As<TestSemanticString>);
 	}
 
 	[TestMethod]

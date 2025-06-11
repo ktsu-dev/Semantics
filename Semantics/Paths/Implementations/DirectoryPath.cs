@@ -21,7 +21,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 		get
 		{
 			string? parentPath = Path.GetDirectoryName(WeakString);
-			return FromString<DirectoryPath>(parentPath ?? "");
+			return Create<DirectoryPath>(parentPath ?? "");
 		}
 	}
 
@@ -29,7 +29,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	/// Gets the name of this directory (the last component of the path).
 	/// </summary>
 	/// <value>A <see cref="FileName"/> representing just the directory name.</value>
-	public FileName Name => FileName.FromString<FileName>(Path.GetFileName(WeakString));
+	public FileName Name => FileName.Create<FileName>(Path.GetFileName(WeakString));
 
 	/// <summary>
 	/// Asynchronously enumerates the files and directories contained in this directory as semantic path types.
@@ -57,11 +57,11 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 
 			if (Directory.Exists(item))
 			{
-				yield return FromString<DirectoryPath>(item);
+				yield return Create<DirectoryPath>(item);
 			}
 			else if (File.Exists(item))
 			{
-				yield return FilePath.FromString<FilePath>(item);
+				yield return FilePath.Create<FilePath>(item);
 			}
 		}
 	}
@@ -79,7 +79,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 		ArgumentNullException.ThrowIfNull(right);
 
 		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
-		return FromString<DirectoryPath>(combinedPath);
+		return Create<DirectoryPath>(combinedPath);
 	}
 
 	/// <summary>
@@ -95,6 +95,6 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 		ArgumentNullException.ThrowIfNull(right);
 
 		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
-		return FilePath.FromString<FilePath>(combinedPath);
+		return FilePath.Create<FilePath>(combinedPath);
 	}
 }

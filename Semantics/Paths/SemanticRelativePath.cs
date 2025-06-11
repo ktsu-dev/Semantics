@@ -55,7 +55,7 @@ public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 		string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
 		relativePath = relativePath.Replace(altSeparator, separator, StringComparison.Ordinal);
 
-		return FromString<TRelativePath>(relativePath);
+		return Create<TRelativePath>(relativePath);
 	}
 
 	/// <summary>

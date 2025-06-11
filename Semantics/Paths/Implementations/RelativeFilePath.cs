@@ -21,7 +21,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	{
 		get
 		{
-			return _cachedDirectoryPath ??= RelativeDirectoryPath.FromString<RelativeDirectoryPath>(
+			return _cachedDirectoryPath ??= RelativeDirectoryPath.Create<RelativeDirectoryPath>(
 				Path.GetDirectoryName(WeakString) ?? "");
 		}
 	}
@@ -37,7 +37,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	{
 		get
 		{
-			return _cachedFileNameWithoutExtension ??= FileName.FromString<FileName>(
+			return _cachedFileNameWithoutExtension ??= FileName.Create<FileName>(
 				Path.GetFileNameWithoutExtension(WeakString) ?? "");
 		}
 	}
@@ -51,7 +51,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	{
 		ArgumentNullException.ThrowIfNull(newExtension);
 		string newPath = Path.ChangeExtension(WeakString, newExtension.WeakString);
-		return FromString<RelativeFilePath>(newPath);
+		return Create<RelativeFilePath>(newPath);
 	}
 
 	/// <summary>
@@ -61,7 +61,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	public RelativeFilePath RemoveExtension()
 	{
 		string pathWithoutExtension = Path.ChangeExtension(WeakString, null) ?? "";
-		return FromString<RelativeFilePath>(pathWithoutExtension);
+		return Create<RelativeFilePath>(pathWithoutExtension);
 	}
 
 	/// <summary>
@@ -73,7 +73,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	{
 		ArgumentNullException.ThrowIfNull(baseDirectory);
 		string absolutePath = Path.GetFullPath(Path.Combine(baseDirectory.WeakString, WeakString));
-		return AbsoluteFilePath.FromString<AbsoluteFilePath>(absolutePath);
+		return AbsoluteFilePath.Create<AbsoluteFilePath>(absolutePath);
 	}
 
 	/// <summary>

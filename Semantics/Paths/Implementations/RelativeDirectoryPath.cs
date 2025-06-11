@@ -19,7 +19,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// Gets the parent directory of this relative directory path.
 	/// </summary>
 	/// <value>A <see cref="RelativeDirectoryPath"/> representing the parent directory, or an empty path if this is a root-relative directory.</value>
-	public RelativeDirectoryPath Parent => _cachedParent ??= FromString<RelativeDirectoryPath>(Path.GetDirectoryName(WeakString) ?? "");
+	public RelativeDirectoryPath Parent => _cachedParent ??= Create<RelativeDirectoryPath>(Path.GetDirectoryName(WeakString) ?? "");
 
 	// Cache for directory name
 	private FileName? _cachedName;
@@ -28,7 +28,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// Gets the name of this directory (the last component of the path).
 	/// </summary>
 	/// <value>A <see cref="FileName"/> representing just the directory name.</value>
-	public FileName Name => _cachedName ??= FileName.FromString<FileName>(Path.GetFileName(WeakString) ?? "");
+	public FileName Name => _cachedName ??= FileName.Create<FileName>(Path.GetFileName(WeakString) ?? "");
 
 	// Cache for depth calculation
 	private int? _cachedDepth;
@@ -69,7 +69,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// <param name="filePath">The file path to wrap.</param>
 	/// <returns>A <see cref="RelativeFilePath"/> object.</returns>
 	protected override IFilePath CreateFilePath(string filePath) =>
-		RelativeFilePath.FromString<RelativeFilePath>(filePath);
+		RelativeFilePath.Create<RelativeFilePath>(filePath);
 
 	/// <summary>
 	/// Creates a relative directory path for subdirectories in this directory.
@@ -77,7 +77,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// <param name="directoryPath">The directory path to wrap.</param>
 	/// <returns>A <see cref="RelativeDirectoryPath"/> object.</returns>
 	protected override IDirectoryPath CreateDirectoryPath(string directoryPath) =>
-		FromString<RelativeDirectoryPath>(directoryPath);
+		Create<RelativeDirectoryPath>(directoryPath);
 
 	/// <summary>
 	/// Combines a relative directory path with another relative directory path using the '/' operator.
@@ -91,8 +91,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 		ArgumentNullException.ThrowIfNull(left);
 		ArgumentNullException.ThrowIfNull(right);
 
-		string combinedPath = PooledStringBuilder.CombinePaths([left.WeakString, right.WeakString]);
-		return FromString<RelativeDirectoryPath>(combinedPath);
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
+		return Create<RelativeDirectoryPath>(combinedPath);
 	}
 
 	/// <summary>
@@ -107,8 +107,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 		ArgumentNullException.ThrowIfNull(left);
 		ArgumentNullException.ThrowIfNull(right);
 
-		string combinedPath = PooledStringBuilder.CombinePaths([left.WeakString, right.WeakString]);
-		return RelativeFilePath.FromString<RelativeFilePath>(combinedPath);
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
+		return RelativeFilePath.Create<RelativeFilePath>(combinedPath);
 	}
 
 	/// <summary>
@@ -120,7 +120,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	{
 		ArgumentNullException.ThrowIfNull(baseDirectory);
 		string absolutePath = Path.GetFullPath(Path.Combine(baseDirectory.WeakString, WeakString));
-		return AbsoluteDirectoryPath.FromString<AbsoluteDirectoryPath>(absolutePath);
+		return AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(absolutePath);
 	}
 
 	/// <summary>
@@ -140,7 +140,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 		string fullPath = Path.GetFullPath(Path.Combine(dummyBase, path));
 		string normalized = Path.GetRelativePath(dummyBase, fullPath);
 
-		return FromString<RelativeDirectoryPath>(normalized);
+		return Create<RelativeDirectoryPath>(normalized);
 	}
 
 	/// <summary>

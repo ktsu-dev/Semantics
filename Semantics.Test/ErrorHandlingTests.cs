@@ -17,16 +17,16 @@ public class ErrorHandlingTests
 	public void SemanticString_FromString_WithNullString_ThrowsArgumentNullException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
-			SemanticString<TestSemanticString>.FromString<TestSemanticString>(null));
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
+			SemanticString<TestSemanticString>.Create<TestSemanticString>((string)null!));
 	}
 
 	[TestMethod]
 	public void SemanticString_FromCharArray_WithNullArray_ThrowsArgumentNullException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
-			SemanticString<TestSemanticString>.FromCharArray<TestSemanticString>(null));
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
+			SemanticString<TestSemanticString>.Create<TestSemanticString>((char[])null!));
 	}
 
 	[TestMethod]
@@ -36,7 +36,7 @@ public class ErrorHandlingTests
 		TestQuantity validQuantity = TestQuantity.Create(5.0);
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Add<TestQuantity>(null!, validQuantity));
 	}
 
@@ -47,7 +47,7 @@ public class ErrorHandlingTests
 		TestQuantity validQuantity = TestQuantity.Create(5.0);
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Add<TestQuantity>(validQuantity, null!));
 	}
 
@@ -58,7 +58,7 @@ public class ErrorHandlingTests
 		TestQuantity validQuantity = TestQuantity.Create(5.0);
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Subtract<TestQuantity>(null!, validQuantity));
 	}
 
@@ -69,7 +69,7 @@ public class ErrorHandlingTests
 		TestQuantity validQuantity = TestQuantity.Create(5.0);
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Subtract<TestQuantity>(validQuantity, null!));
 	}
 
@@ -80,21 +80,18 @@ public class ErrorHandlingTests
 		TestQuantity validQuantity = TestQuantity.Create(5.0);
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Multiply<TestQuantity>(null!, validQuantity));
 
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Multiply<TestQuantity>(validQuantity, null!));
 	}
 
 	[TestMethod]
 	public void SemanticQuantity_StaticMultiply_WithNullScalar_ThrowsArgumentNullException()
 	{
-		// Arrange
-		TestQuantity validQuantity = TestQuantity.Create(5.0);
-
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Multiply<TestQuantity>(null!, 2.0));
 	}
 
@@ -105,21 +102,18 @@ public class ErrorHandlingTests
 		TestQuantity validQuantity = TestQuantity.Create(5.0);
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Divide<TestQuantity>(null!, validQuantity));
 
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Divide<TestQuantity>(validQuantity, null!));
 	}
 
 	[TestMethod]
 	public void SemanticQuantity_StaticDivide_WithNullScalar_ThrowsArgumentNullException()
 	{
-		// Arrange
-		TestQuantity validQuantity = TestQuantity.Create(5.0);
-
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Divide<TestQuantity>(null!, 2.0));
 	}
 
@@ -130,10 +124,10 @@ public class ErrorHandlingTests
 		TestQuantity validQuantity = TestQuantity.Create(5.0);
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.DivideToStorage(null!, validQuantity));
 
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.DivideToStorage(validQuantity, null!));
 	}
 
@@ -141,7 +135,7 @@ public class ErrorHandlingTests
 	public void SemanticQuantity_StaticNegate_WithNullArgument_ThrowsArgumentNullException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<TestQuantity, double>.Negate<TestQuantity>(null!));
 	}
 
@@ -149,7 +143,7 @@ public class ErrorHandlingTests
 	public void ValidationStrategyFactory_CreateStrategy_WithNullType_ThrowsArgumentNullException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			ValidationStrategyFactory.CreateStrategy(null!));
 	}
 
@@ -158,10 +152,10 @@ public class ErrorHandlingTests
 	{
 		// Arrange
 		ValidateAllStrategy strategy = new();
-		TestSemanticString semanticString = SemanticString<TestSemanticString>.FromString<TestSemanticString>("test");
+		TestSemanticString semanticString = SemanticString<TestSemanticString>.Create<TestSemanticString>("test");
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			strategy.Validate(semanticString, null!));
 	}
 
@@ -170,10 +164,10 @@ public class ErrorHandlingTests
 	{
 		// Arrange
 		ValidateAnyStrategy strategy = new();
-		TestSemanticString semanticString = SemanticString<TestSemanticString>.FromString<TestSemanticString>("test");
+		TestSemanticString semanticString = SemanticString<TestSemanticString>.Create<TestSemanticString>("test");
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			strategy.Validate(semanticString, null!));
 	}
 
@@ -181,13 +175,13 @@ public class ErrorHandlingTests
 	public void SemanticPath_RelativePath_Make_WithNullArguments_ThrowsArgumentNullException()
 	{
 		// Arrange
-		AbsolutePath validPath = AbsolutePath.FromString<AbsolutePath>("C:\\test");
+		AbsolutePath validPath = AbsolutePath.Create<AbsolutePath>("C:\\test");
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(null!, validPath));
 
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(validPath, null!));
 	}
 
@@ -223,8 +217,8 @@ public class ErrorHandlingTests
 	public void SemanticString_PerformValidation_WithInvalidString_ThrowsFormatException()
 	{
 		// This test verifies that FormatException is thrown for invalid semantic strings
-		Assert.ThrowsException<FormatException>(() =>
-			SemanticString<StartsWithValidSemanticString>.FromString<StartsWithValidSemanticString>("invalid"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			SemanticString<StartsWithValidSemanticString>.Create<StartsWithValidSemanticString>("invalid"));
 	}
 
 	[TestMethod]
@@ -232,7 +226,7 @@ public class ErrorHandlingTests
 	{
 		// This would be an edge case where validation returns null somehow
 		// We can't easily test this directly, but we can test the validation logic
-		StartsWithValidSemanticString validString = SemanticString<StartsWithValidSemanticString>.FromString<StartsWithValidSemanticString>("Valid_test");
+		StartsWithValidSemanticString validString = SemanticString<StartsWithValidSemanticString>.Create<StartsWithValidSemanticString>("Valid_test");
 		Assert.IsTrue(validString.IsValid());
 	}
 
@@ -241,7 +235,7 @@ public class ErrorHandlingTests
 	public void ValidationAttributes_WithEmptyString_HandledCorrectly()
 	{
 		// Test how validation attributes handle empty strings
-		EmptyStringTestSemanticString emptyString = SemanticString<EmptyStringTestSemanticString>.FromString<EmptyStringTestSemanticString>("");
+		EmptyStringTestSemanticString emptyString = SemanticString<EmptyStringTestSemanticString>.Create<EmptyStringTestSemanticString>("");
 		Assert.IsTrue(emptyString.IsValid());
 	}
 
@@ -249,19 +243,20 @@ public class ErrorHandlingTests
 	public void ValidationAttributes_WithWhitespaceString_HandledCorrectly()
 	{
 		// Test validation with whitespace-only strings
-		Assert.ThrowsException<FormatException>(() =>
-			StartsWithValidSemanticString.FromString<StartsWithValidSemanticString>("   "));
+		Assert.ThrowsExactly<FormatException>(() =>
+			StartsWithValidSemanticString.Create<StartsWithValidSemanticString>("   "));
 	}
 
 	[TestMethod]
 	public void ValidationAttributes_CaseSensitivity_HandledCorrectly()
 	{
 		// Test case sensitivity in validation
-		Assert.ThrowsException<FormatException>(() =>
-			StartsWithValidSemanticString.FromString<StartsWithValidSemanticString>("valid_test")); // lowercase 'v'
+		Assert.ThrowsExactly<FormatException>(() =>
+			StartsWithValidSemanticString.Create<StartsWithValidSemanticString>("valid_test")); // lowercase 'v'
 	}
 
 	[TestMethod]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Bug", "S1244:Floating point numbers should not be tested for equality", Justification = "Testing an error case")]
 	public void SemanticQuantity_ExtremeLargeValues_HandledCorrectly()
 	{
 		// Test with very large values
@@ -311,8 +306,8 @@ public class ErrorHandlingTests
 		if (invalidChars.Length > 0)
 		{
 			string invalidPath = "C:\\test" + invalidChars[0] + "path";
-			Assert.ThrowsException<FormatException>(() =>
-				AbsolutePath.FromString<AbsolutePath>(invalidPath));
+			Assert.ThrowsExactly<FormatException>(() =>
+				AbsolutePath.Create<AbsolutePath>(invalidPath));
 		}
 	}
 
@@ -324,8 +319,8 @@ public class ErrorHandlingTests
 		if (invalidChars.Length > 0)
 		{
 			string invalidFileName = "test" + invalidChars[0] + "file.txt";
-			Assert.ThrowsException<FormatException>(() =>
-				FileName.FromString<FileName>(invalidFileName));
+			Assert.ThrowsExactly<FormatException>(() =>
+				FileName.Create<FileName>(invalidFileName));
 		}
 	}
 
@@ -334,7 +329,7 @@ public class ErrorHandlingTests
 	public void SemanticString_As_WithSameType_ReturnsEquivalent()
 	{
 		// Test As conversion with the same type
-		TestSemanticString original = SemanticString<TestSemanticString>.FromString<TestSemanticString>("test");
+		TestSemanticString original = SemanticString<TestSemanticString>.Create<TestSemanticString>("test");
 		TestSemanticString converted = original.As<TestSemanticString>();
 
 		Assert.AreEqual(original.WeakString, converted.WeakString);
@@ -345,7 +340,7 @@ public class ErrorHandlingTests
 	{
 		// Test validation strategy with type that has no validation attributes
 		IValidationStrategy strategy = ValidationStrategyFactory.CreateStrategy(typeof(TestSemanticString));
-		TestSemanticString semanticString = SemanticString<TestSemanticString>.FromString<TestSemanticString>("test");
+		TestSemanticString semanticString = SemanticString<TestSemanticString>.Create<TestSemanticString>("test");
 
 		bool result = strategy.Validate(semanticString, typeof(TestSemanticString));
 		Assert.IsTrue(result);

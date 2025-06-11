@@ -13,7 +13,7 @@ public class AttributeValidationTests
 	public void StartsWith_ValidString_ReturnsTrue()
 	{
 		// Arrange
-		TestStringWithPrefix testString = SemanticString<TestStringWithPrefix>.FromString<TestStringWithPrefix>("PrefixTestString");
+		TestStringWithPrefix testString = SemanticString<TestStringWithPrefix>.Create<TestStringWithPrefix>("PrefixTestString");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -23,14 +23,14 @@ public class AttributeValidationTests
 	public void StartsWith_InvalidString_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() => SemanticString<TestStringWithPrefix>.FromString<TestStringWithPrefix>("NoPrefixString"));
+		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithPrefix>.Create<TestStringWithPrefix>("NoPrefixString"));
 	}
 
 	[TestMethod]
 	public void EndsWith_ValidString_ReturnsTrue()
 	{
 		// Arrange
-		TestStringWithSuffix testString = SemanticString<TestStringWithSuffix>.FromString<TestStringWithSuffix>("TestStringSuffix");
+		TestStringWithSuffix testString = SemanticString<TestStringWithSuffix>.Create<TestStringWithSuffix>("TestStringSuffix");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -40,14 +40,14 @@ public class AttributeValidationTests
 	public void EndsWith_InvalidString_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() => SemanticString<TestStringWithSuffix>.FromString<TestStringWithSuffix>("NoSuffixString"));
+		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithSuffix>.Create<TestStringWithSuffix>("NoSuffixString"));
 	}
 
 	[TestMethod]
 	public void Contains_ValidString_ReturnsTrue()
 	{
 		// Arrange
-		TestStringWithSubstring testString = SemanticString<TestStringWithSubstring>.FromString<TestStringWithSubstring>("Test_Contains_String");
+		TestStringWithSubstring testString = SemanticString<TestStringWithSubstring>.Create<TestStringWithSubstring>("Test_Contains_String");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -57,14 +57,14 @@ public class AttributeValidationTests
 	public void Contains_InvalidString_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() => SemanticString<TestStringWithSubstring>.FromString<TestStringWithSubstring>("TestString"));
+		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithSubstring>.Create<TestStringWithSubstring>("TestString"));
 	}
 
 	[TestMethod]
 	public void PrefixAndSuffix_ValidString_ReturnsTrue()
 	{
 		// Arrange
-		TestStringWithPrefixAndSuffix testString = SemanticString<TestStringWithPrefixAndSuffix>.FromString<TestStringWithPrefixAndSuffix>("PrefixTestSuffix");
+		TestStringWithPrefixAndSuffix testString = SemanticString<TestStringWithPrefixAndSuffix>.Create<TestStringWithPrefixAndSuffix>("PrefixTestSuffix");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -74,21 +74,21 @@ public class AttributeValidationTests
 	public void PrefixAndSuffix_MissingPrefix_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() => SemanticString<TestStringWithPrefixAndSuffix>.FromString<TestStringWithPrefixAndSuffix>("TestSuffix"));
+		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithPrefixAndSuffix>.Create<TestStringWithPrefixAndSuffix>("TestSuffix"));
 	}
 
 	[TestMethod]
 	public void PrefixAndSuffix_MissingSuffix_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() => SemanticString<TestStringWithPrefixAndSuffix>.FromString<TestStringWithPrefixAndSuffix>("PrefixTest"));
+		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithPrefixAndSuffix>.Create<TestStringWithPrefixAndSuffix>("PrefixTest"));
 	}
 
 	[TestMethod]
 	public void RegexMatch_ValidString_ReturnsTrue()
 	{
 		// Arrange
-		TestStringWithRegex testString = SemanticString<TestStringWithRegex>.FromString<TestStringWithRegex>("abc123");
+		TestStringWithRegex testString = SemanticString<TestStringWithRegex>.Create<TestStringWithRegex>("abc123");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -98,14 +98,14 @@ public class AttributeValidationTests
 	public void RegexMatch_InvalidString_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() => SemanticString<TestStringWithRegex>.FromString<TestStringWithRegex>("123abc"));
+		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithRegex>.Create<TestStringWithRegex>("123abc"));
 	}
 
 	[TestMethod]
 	public void ValidateAny_OneValidAttribute_ReturnsTrue()
 	{
 		// Arrange
-		TestStringWithAnyValidation testString = SemanticString<TestStringWithAnyValidation>.FromString<TestStringWithAnyValidation>("PrefixTest");
+		TestStringWithAnyValidation testString = SemanticString<TestStringWithAnyValidation>.Create<TestStringWithAnyValidation>("PrefixTest");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -115,7 +115,7 @@ public class AttributeValidationTests
 	public void ValidateAny_AnotherValidAttribute_ReturnsTrue()
 	{
 		// Arrange
-		TestStringWithAnyValidation testString = SemanticString<TestStringWithAnyValidation>.FromString<TestStringWithAnyValidation>("TestSuffix");
+		TestStringWithAnyValidation testString = SemanticString<TestStringWithAnyValidation>.Create<TestStringWithAnyValidation>("TestSuffix");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -125,14 +125,14 @@ public class AttributeValidationTests
 	public void ValidateAny_NoValidAttributes_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() => SemanticString<TestStringWithAnyValidation>.FromString<TestStringWithAnyValidation>("JustATest"));
+		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithAnyValidation>.Create<TestStringWithAnyValidation>("JustATest"));
 	}
 
 	[TestMethod]
 	public void ValidateAll_AllValidAttributes_ReturnsTrue()
 	{
 		// Arrange
-		TestStringWithAllValidation testString = SemanticString<TestStringWithAllValidation>.FromString<TestStringWithAllValidation>("PrefixTestSuffix");
+		TestStringWithAllValidation testString = SemanticString<TestStringWithAllValidation>.Create<TestStringWithAllValidation>("PrefixTestSuffix");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -142,7 +142,7 @@ public class AttributeValidationTests
 	public void ValidateAll_OneInvalidAttribute_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() => SemanticString<TestStringWithAllValidation>.FromString<TestStringWithAllValidation>("TestSuffix"));
+		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithAllValidation>.Create<TestStringWithAllValidation>("TestSuffix"));
 	}
 }
 

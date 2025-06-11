@@ -13,7 +13,7 @@ public class AdvancedAttributeValidationTests
 	public void MultipleValidationAttributes_AllValid_ReturnsTrue()
 	{
 		// Arrange
-		TestStringWithMultipleValidations testString = SemanticString<TestStringWithMultipleValidations>.FromString<TestStringWithMultipleValidations>("prefix-abc123-suffix");
+		TestStringWithMultipleValidations testString = SemanticString<TestStringWithMultipleValidations>.Create<TestStringWithMultipleValidations>("prefix-abc123-suffix");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -23,15 +23,15 @@ public class AdvancedAttributeValidationTests
 	public void MultipleValidationAttributes_OneInvalid_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			SemanticString<TestStringWithMultipleValidations>.FromString<TestStringWithMultipleValidations>("prefix-123abc-suffix"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			SemanticString<TestStringWithMultipleValidations>.Create<TestStringWithMultipleValidations>("prefix-123abc-suffix"));
 	}
 
 	[TestMethod]
 	public void ComplexRegexPattern_ValidInput_ReturnsTrue()
 	{
 		// Arrange
-		TestStringWithComplexRegex testString = SemanticString<TestStringWithComplexRegex>.FromString<TestStringWithComplexRegex>("user@example.com");
+		TestStringWithComplexRegex testString = SemanticString<TestStringWithComplexRegex>.Create<TestStringWithComplexRegex>("user@example.com");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -41,17 +41,17 @@ public class AdvancedAttributeValidationTests
 	public void ComplexRegexPattern_InvalidInput_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			SemanticString<TestStringWithComplexRegex>.FromString<TestStringWithComplexRegex>("invalid-email"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			SemanticString<TestStringWithComplexRegex>.Create<TestStringWithComplexRegex>("invalid-email"));
 	}
 
 	[TestMethod]
 	public void CombinedValidateAnyWithMultipleAttributes_OneValid_ReturnsTrue()
 	{
 		// These strings should pass with ValidateAny attribute
-		TestStringWithAnyOfThreeValidations prefixOnlyString = SemanticString<TestStringWithAnyOfThreeValidations>.FromString<TestStringWithAnyOfThreeValidations>("prefix-content");
-		TestStringWithAnyOfThreeValidations containsOnlyString = SemanticString<TestStringWithAnyOfThreeValidations>.FromString<TestStringWithAnyOfThreeValidations>("has-special-content");
-		TestStringWithAnyOfThreeValidations suffixOnlyString = SemanticString<TestStringWithAnyOfThreeValidations>.FromString<TestStringWithAnyOfThreeValidations>("content-suffix");
+		TestStringWithAnyOfThreeValidations prefixOnlyString = SemanticString<TestStringWithAnyOfThreeValidations>.Create<TestStringWithAnyOfThreeValidations>("prefix-content");
+		TestStringWithAnyOfThreeValidations containsOnlyString = SemanticString<TestStringWithAnyOfThreeValidations>.Create<TestStringWithAnyOfThreeValidations>("has-special-content");
+		TestStringWithAnyOfThreeValidations suffixOnlyString = SemanticString<TestStringWithAnyOfThreeValidations>.Create<TestStringWithAnyOfThreeValidations>("content-suffix");
 
 		// All should be valid as each satisfies at least one condition
 		Assert.IsTrue(prefixOnlyString.IsValid());
@@ -63,23 +63,23 @@ public class AdvancedAttributeValidationTests
 	public void CombinedValidateAnyWithMultipleAttributes_NoneValid_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			SemanticString<TestStringWithAnyOfThreeValidations>.FromString<TestStringWithAnyOfThreeValidations>("regular-content"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			SemanticString<TestStringWithAnyOfThreeValidations>.Create<TestStringWithAnyOfThreeValidations>("regular-content"));
 	}
 
 	[TestMethod]
 	public void EmptyString_WithValidationAttributes_ThrowsFormatException()
 	{
 		// Act & Assert - Empty string shouldn't match prefix/suffix requirements
-		Assert.ThrowsException<FormatException>(() =>
-			SemanticString<TestStringWithPrefix>.FromString<TestStringWithPrefix>(""));
+		Assert.ThrowsExactly<FormatException>(() =>
+			SemanticString<TestStringWithPrefix>.Create<TestStringWithPrefix>(""));
 	}
 
 	[TestMethod]
 	public void RegexMatch_NumberPattern_ValidatesCorrectly()
 	{
 		// Arrange
-		TestStringWithNumberPattern testString = SemanticString<TestStringWithNumberPattern>.FromString<TestStringWithNumberPattern>("12345");
+		TestStringWithNumberPattern testString = SemanticString<TestStringWithNumberPattern>.Create<TestStringWithNumberPattern>("12345");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -89,14 +89,14 @@ public class AdvancedAttributeValidationTests
 	public void RegexMatch_NumberPattern_InvalidString_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() => SemanticString<TestStringWithNumberPattern>.FromString<TestStringWithNumberPattern>("abc123"));
+		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithNumberPattern>.Create<TestStringWithNumberPattern>("abc123"));
 	}
 
 	[TestMethod]
 	public void MultipleContains_AllMatch_ValidatesCorrectly()
 	{
 		// Arrange
-		TestStringWithMultipleContains testString = SemanticString<TestStringWithMultipleContains>.FromString<TestStringWithMultipleContains>("abcABC123xyz");
+		TestStringWithMultipleContains testString = SemanticString<TestStringWithMultipleContains>.Create<TestStringWithMultipleContains>("abcABC123xyz");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -106,14 +106,14 @@ public class AdvancedAttributeValidationTests
 	public void MultipleContains_OneMissing_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() => SemanticString<TestStringWithMultipleContains>.FromString<TestStringWithMultipleContains>("abc123xyz"));
+		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithMultipleContains>.Create<TestStringWithMultipleContains>("abc123xyz"));
 	}
 
 	[TestMethod]
 	public void EmptyStringRegex_ValidatesCorrectly()
 	{
 		// Arrange
-		TestStringWithEmptyRegex testString = SemanticString<TestStringWithEmptyRegex>.FromString<TestStringWithEmptyRegex>("");
+		TestStringWithEmptyRegex testString = SemanticString<TestStringWithEmptyRegex>.Create<TestStringWithEmptyRegex>("");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -123,7 +123,7 @@ public class AdvancedAttributeValidationTests
 	public void ComplexRegex_UrlPattern_ValidatesCorrectly()
 	{
 		// Arrange
-		TestUrlString testString = SemanticString<TestUrlString>.FromString<TestUrlString>("https://example.com");
+		TestUrlString testString = SemanticString<TestUrlString>.Create<TestUrlString>("https://example.com");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -133,8 +133,8 @@ public class AdvancedAttributeValidationTests
 	public void ComplexRegex_UrlPattern_InvalidFormat_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			SemanticString<TestUrlString>.FromString<TestUrlString>("not-a-url"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			SemanticString<TestUrlString>.Create<TestUrlString>("not-a-url"));
 	}
 
 	// Additional comprehensive tests for edge cases
@@ -143,7 +143,7 @@ public class AdvancedAttributeValidationTests
 	public void RegexMatchAttribute_WithIgnoreCase_ValidatesCorrectly()
 	{
 		// Arrange
-		TestStringWithRegexIgnoreCase testString = SemanticString<TestStringWithRegexIgnoreCase>.FromString<TestStringWithRegexIgnoreCase>("ABC123");
+		TestStringWithRegexIgnoreCase testString = SemanticString<TestStringWithRegexIgnoreCase>.Create<TestStringWithRegexIgnoreCase>("ABC123");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -153,7 +153,7 @@ public class AdvancedAttributeValidationTests
 	public void RegexMatchAttribute_WithIgnoreCase_DifferentCase_ValidatesCorrectly()
 	{
 		// Arrange
-		TestStringWithRegexIgnoreCase testString = SemanticString<TestStringWithRegexIgnoreCase>.FromString<TestStringWithRegexIgnoreCase>("abc123");
+		TestStringWithRegexIgnoreCase testString = SemanticString<TestStringWithRegexIgnoreCase>.Create<TestStringWithRegexIgnoreCase>("abc123");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -163,7 +163,7 @@ public class AdvancedAttributeValidationTests
 	public void StringComparison_OrdinalIgnoreCase_ValidatesCorrectly()
 	{
 		// Arrange
-		TestStringWithCaseInsensitive testString = SemanticString<TestStringWithCaseInsensitive>.FromString<TestStringWithCaseInsensitive>("PREFIX_test_SUFFIX");
+		TestStringWithCaseInsensitive testString = SemanticString<TestStringWithCaseInsensitive>.Create<TestStringWithCaseInsensitive>("PREFIX_test_SUFFIX");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -173,7 +173,7 @@ public class AdvancedAttributeValidationTests
 	public void StringComparison_OrdinalIgnoreCase_DifferentCase_ValidatesCorrectly()
 	{
 		// Arrange
-		TestStringWithCaseInsensitive testString = SemanticString<TestStringWithCaseInsensitive>.FromString<TestStringWithCaseInsensitive>("prefix_test_suffix");
+		TestStringWithCaseInsensitive testString = SemanticString<TestStringWithCaseInsensitive>.Create<TestStringWithCaseInsensitive>("prefix_test_suffix");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -183,7 +183,7 @@ public class AdvancedAttributeValidationTests
 	public void EmptyString_Validation_HandledCorrectly()
 	{
 		// Arrange
-		TestEmptyStringValidation testString = SemanticString<TestEmptyStringValidation>.FromString<TestEmptyStringValidation>("");
+		TestEmptyStringValidation testString = SemanticString<TestEmptyStringValidation>.Create<TestEmptyStringValidation>("");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -193,7 +193,7 @@ public class AdvancedAttributeValidationTests
 	public void MultipleIdenticalAttributes_ValidatesCorrectly()
 	{
 		// Arrange
-		TestStringWithMultipleIdentical testString = SemanticString<TestStringWithMultipleIdentical>.FromString<TestStringWithMultipleIdentical>("PREFIX_test_PREFIX");
+		TestStringWithMultipleIdentical testString = SemanticString<TestStringWithMultipleIdentical>.Create<TestStringWithMultipleIdentical>("PREFIX_test_PREFIX");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -203,7 +203,7 @@ public class AdvancedAttributeValidationTests
 	public void UnicodeCharacters_InValidation_HandledCorrectly()
 	{
 		// Arrange
-		TestStringWithUnicodeValidation testString = SemanticString<TestStringWithUnicodeValidation>.FromString<TestStringWithUnicodeValidation>("🚀Hello World🌟");
+		TestStringWithUnicodeValidation testString = SemanticString<TestStringWithUnicodeValidation>.Create<TestStringWithUnicodeValidation>("🚀Hello World🌟");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -213,7 +213,7 @@ public class AdvancedAttributeValidationTests
 	public void ComplexRegex_Email_ValidatesCorrectly()
 	{
 		// Arrange
-		TestEmailString testString = SemanticString<TestEmailString>.FromString<TestEmailString>("user@example.com");
+		TestEmailString testString = SemanticString<TestEmailString>.Create<TestEmailString>("user@example.com");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -223,15 +223,15 @@ public class AdvancedAttributeValidationTests
 	public void ComplexRegex_Email_InvalidFormat_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			SemanticString<TestEmailString>.FromString<TestEmailString>("invalid-email"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			SemanticString<TestEmailString>.Create<TestEmailString>("invalid-email"));
 	}
 
 	[TestMethod]
 	public void ValidateAll_WithManyAttributes_ValidString_Succeeds()
 	{
 		// Arrange
-		TestStringWithManyValidations testString = SemanticString<TestStringWithManyValidations>.FromString<TestStringWithManyValidations>("PREFIX_middle_content_SUFFIX");
+		TestStringWithManyValidations testString = SemanticString<TestStringWithManyValidations>.Create<TestStringWithManyValidations>("PREFIX_middle_content_SUFFIX");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -241,15 +241,15 @@ public class AdvancedAttributeValidationTests
 	public void ValidateAll_WithManyAttributes_OneFails_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			SemanticString<TestStringWithManyValidations>.FromString<TestStringWithManyValidations>("PREFIX_content_SUFFIX"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			SemanticString<TestStringWithManyValidations>.Create<TestStringWithManyValidations>("PREFIX_content_SUFFIX"));
 	}
 
 	[TestMethod]
 	public void ValidateAny_WithManyAttributes_OneSucceeds_Passes()
 	{
 		// Arrange
-		TestStringWithManyAnyValidations testString = SemanticString<TestStringWithManyAnyValidations>.FromString<TestStringWithManyAnyValidations>("OPTION1_test");
+		TestStringWithManyAnyValidations testString = SemanticString<TestStringWithManyAnyValidations>.Create<TestStringWithManyAnyValidations>("OPTION1_test");
 
 		// Act & Assert
 		Assert.IsTrue(testString.IsValid());
@@ -259,8 +259,8 @@ public class AdvancedAttributeValidationTests
 	public void ValidateAny_WithManyAttributes_AllFail_ThrowsFormatException()
 	{
 		// Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			SemanticString<TestStringWithManyAnyValidations>.FromString<TestStringWithManyAnyValidations>("none_match"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			SemanticString<TestStringWithManyAnyValidations>.Create<TestStringWithManyAnyValidations>("none_match"));
 	}
 }
 

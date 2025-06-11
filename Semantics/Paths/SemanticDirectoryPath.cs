@@ -79,7 +79,7 @@ public abstract record SemanticDirectoryPath<TDerived> : SemanticPath<TDerived>
 	/// <param name="filePath">The file path to wrap.</param>
 	/// <returns>An <see cref="IFilePath"/> of the appropriate type.</returns>
 	protected virtual IFilePath CreateFilePath(string filePath) =>
-		FilePath.FromString<FilePath>(filePath);
+		FilePath.Create<FilePath>(filePath);
 
 	/// <summary>
 	/// Creates an appropriate directory path type based on the current directory path type.
@@ -87,5 +87,5 @@ public abstract record SemanticDirectoryPath<TDerived> : SemanticPath<TDerived>
 	/// <param name="directoryPath">The directory path to wrap.</param>
 	/// <returns>An <see cref="IDirectoryPath"/> of the appropriate type.</returns>
 	protected virtual IDirectoryPath CreateDirectoryPath(string directoryPath) =>
-		DirectoryPath.FromString<DirectoryPath>(directoryPath);
+		DirectoryPath.Create<DirectoryPath>(directoryPath);
 }

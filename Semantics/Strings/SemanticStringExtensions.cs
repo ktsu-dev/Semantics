@@ -37,7 +37,7 @@ public static class SemanticStringExtensions
 	/// </remarks>
 	public static TDerived As<TDerived>(this string? value)
 		where TDerived : SemanticString<TDerived>
-		=> SemanticString<TDerived>.FromString<TDerived>(value: value);
+		=> SemanticString<TDerived>.Create<TDerived>(value: value);
 
 	/// <summary>
 	/// Converts a character array to the specified semantic string type.
@@ -59,7 +59,7 @@ public static class SemanticStringExtensions
 	/// </remarks>
 	public static TDerived As<TDerived>(this char[]? value)
 		where TDerived : SemanticString<TDerived>
-		=> SemanticString<TDerived>.FromCharArray<TDerived>(value: value);
+		=> SemanticString<TDerived>.Create<TDerived>(value: value);
 
 	/// <summary>
 	/// Converts a read-only character span to the specified semantic string type.
@@ -81,5 +81,5 @@ public static class SemanticStringExtensions
 	/// </remarks>
 	public static TDerived As<TDerived>(this ReadOnlySpan<char> value)
 		where TDerived : SemanticString<TDerived>
-		=> SemanticString<TDerived>.FromReadOnlySpan<TDerived>(value: value);
+		=> SemanticString<TDerived>.Create<TDerived>(value: value);
 }

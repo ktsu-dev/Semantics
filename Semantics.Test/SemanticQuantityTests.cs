@@ -250,7 +250,7 @@ public class SemanticQuantityTests
 		Distance? nullDistance = null;
 
 		// Act & Assert
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticQuantity<Distance, double>.Add<Distance>(nullDistance!, Distance.Create(1.0)));
 	}
 
@@ -362,7 +362,7 @@ public class SemanticQuantityTests
 		Distance distance = Distance.Create(10.0);
 
 		// Act & Assert
-		Assert.ThrowsException<DivideByZeroException>(() => distance / 0.0);
+		Assert.ThrowsExactly<DivideByZeroException>(() => distance / 0.0);
 	}
 
 	[TestMethod]

@@ -25,12 +25,12 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 			if (lastDotIndex == -1 || lastDotIndex == span.Length - 1)
 			{
 				// No extension or trailing dot
-				return FileExtension.FromString<FileExtension>("");
+				return FileExtension.Create<FileExtension>("");
 			}
 
 			// Return extension including the dot
 			ReadOnlySpan<char> extension = span[lastDotIndex..];
-			return FileExtension.FromString<FileExtension>(extension.ToString());
+			return FileExtension.Create<FileExtension>(extension.ToString());
 		}
 	}
 
@@ -48,22 +48,22 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 			if (firstDotIndex == -1)
 			{
 				// No extension
-				return FileExtension.FromString<FileExtension>("");
+				return FileExtension.Create<FileExtension>("");
 			}
 
 			// Return everything from the first dot onward
 			ReadOnlySpan<char> fullExtension = span[firstDotIndex..];
-			return FileExtension.FromString<FileExtension>(fullExtension.ToString());
+			return FileExtension.Create<FileExtension>(fullExtension.ToString());
 		}
 	}
 
 	/// <summary>
 	/// Gets the filename portion of the path
 	/// </summary>
-	public FileName FileName => FileName.FromString<FileName>(Path.GetFileName(WeakString));
+	public FileName FileName => FileName.Create<FileName>(Path.GetFileName(WeakString));
 
 	/// <summary>
 	/// Gets the directory portion of the path
 	/// </summary>
-	public DirectoryPath DirectoryPath => DirectoryPath.FromString<DirectoryPath>(Path.GetDirectoryName(WeakString) ?? "");
+	public DirectoryPath DirectoryPath => DirectoryPath.Create<DirectoryPath>(Path.GetDirectoryName(WeakString) ?? "");
 }

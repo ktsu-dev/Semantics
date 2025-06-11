@@ -14,7 +14,7 @@ public class SemanticPathTests
 	public void SemanticPath_BasicUsage()
 	{
 		// Test basic path creation and string conversion
-		AbsolutePath path = AbsolutePath.FromString<AbsolutePath>("C:\\test\\path");
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:\\test\\path");
 		Assert.IsNotNull(path);
 		Assert.AreEqual("C:\\test\\path", path.ToString());
 	}
@@ -23,7 +23,7 @@ public class SemanticPathTests
 	public void SemanticAbsolutePath_WithAbsolutePath_ShouldBeValid()
 	{
 		// Arrange & Act
-		AbsolutePath path = AbsolutePath.FromString<AbsolutePath>("C:\\test\\path");
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:\\test\\path");
 
 		// Assert
 		Assert.IsTrue(path.IsValid());
@@ -33,15 +33,15 @@ public class SemanticPathTests
 	public void SemanticAbsolutePath_WithRelativePath_ShouldThrowException()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			AbsolutePath.FromString<AbsolutePath>("test\\path"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			AbsolutePath.Create<AbsolutePath>("test\\path"));
 	}
 
 	[TestMethod]
 	public void SemanticRelativePath_WithRelativePath_ShouldBeValid()
 	{
 		// Arrange & Act
-		RelativePath path = RelativePath.FromString<RelativePath>("test\\path");
+		RelativePath path = RelativePath.Create<RelativePath>("test\\path");
 
 		// Assert
 		Assert.IsTrue(path.IsValid());
@@ -51,15 +51,15 @@ public class SemanticPathTests
 	public void SemanticRelativePath_WithAbsolutePath_ShouldThrowException()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			RelativePath.FromString<RelativePath>("C:\\test\\path"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			RelativePath.Create<RelativePath>("C:\\test\\path"));
 	}
 
 	[TestMethod]
 	public void SemanticFilePath_FileExtension_ShouldReturnCorrectExtension()
 	{
 		// Arrange
-		FilePath filePath = FilePath.FromString<FilePath>("test.txt");
+		FilePath filePath = FilePath.Create<FilePath>("test.txt");
 
 		// Act
 		FileExtension extension = filePath.FileExtension;
@@ -72,7 +72,7 @@ public class SemanticPathTests
 	public void SemanticFilePath_FileExtension_NoExtension_ShouldReturnEmpty()
 	{
 		// Arrange
-		FilePath filePath = FilePath.FromString<FilePath>("test");
+		FilePath filePath = FilePath.Create<FilePath>("test");
 
 		// Act
 		FileExtension extension = filePath.FileExtension;
@@ -85,7 +85,7 @@ public class SemanticPathTests
 	public void SemanticFilePath_FullFileExtension_MultipleExtensions_ShouldReturnAll()
 	{
 		// Arrange
-		FilePath filePath = FilePath.FromString<FilePath>("test.tar.gz");
+		FilePath filePath = FilePath.Create<FilePath>("test.tar.gz");
 
 		// Act
 		FileExtension fullExtension = filePath.FullFileExtension;
@@ -98,7 +98,7 @@ public class SemanticPathTests
 	public void SemanticFilePath_FileName_ShouldReturnCorrectFileName()
 	{
 		// Arrange
-		FilePath filePath = FilePath.FromString<FilePath>("C:\\folder\\test.txt");
+		FilePath filePath = FilePath.Create<FilePath>("C:\\folder\\test.txt");
 
 		// Act
 		FileName fileName = filePath.FileName;
@@ -111,7 +111,7 @@ public class SemanticPathTests
 	public void SemanticFilePath_DirectoryPath_ShouldReturnCorrectDirectory()
 	{
 		// Arrange
-		FilePath filePath = FilePath.FromString<FilePath>("C:\\folder\\test.txt");
+		FilePath filePath = FilePath.Create<FilePath>("C:\\folder\\test.txt");
 
 		// Act
 		DirectoryPath directoryPath = filePath.DirectoryPath;
@@ -124,7 +124,7 @@ public class SemanticPathTests
 	public void SemanticFileName_WithValidFileName_ShouldBeValid()
 	{
 		// Arrange & Act
-		FileName fileName = FileName.FromString<FileName>("test.txt");
+		FileName fileName = FileName.Create<FileName>("test.txt");
 
 		// Assert
 		Assert.IsTrue(fileName.IsValid());
@@ -134,15 +134,15 @@ public class SemanticPathTests
 	public void SemanticFileName_WithInvalidChars_ShouldThrowException()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			FileName.FromString<FileName>("test<>.txt"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			FileName.Create<FileName>("test<>.txt"));
 	}
 
 	[TestMethod]
 	public void SemanticFileExtension_WithValidExtension_ShouldBeValid()
 	{
 		// Arrange & Act
-		FileExtension extension = FileExtension.FromString<FileExtension>(".txt");
+		FileExtension extension = FileExtension.Create<FileExtension>(".txt");
 
 		// Assert
 		Assert.IsTrue(extension.IsValid());
@@ -152,15 +152,15 @@ public class SemanticPathTests
 	public void SemanticFileExtension_WithoutDot_ShouldThrowException()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsException<FormatException>(() =>
-			FileExtension.FromString<FileExtension>("txt"));
+		Assert.ThrowsExactly<FormatException>(() =>
+			FileExtension.Create<FileExtension>("txt"));
 	}
 
 	[TestMethod]
 	public void SemanticPath_NormalizePath()
 	{
 		// Test path normalization with mixed separators
-		AbsolutePath path = AbsolutePath.FromString<AbsolutePath>("C:/test\\path/");
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:/test\\path/");
 		Assert.IsNotNull(path);
 		// Path should be normalized regardless of input format
 		Assert.IsTrue(path.ToString().Contains("test") && path.ToString().Contains("path"));
@@ -170,7 +170,7 @@ public class SemanticPathTests
 	public void SemanticPath_NonExistentPath()
 	{
 		// Test that non-existent paths can be created but marked appropriately
-		AbsolutePath path = AbsolutePath.FromString<AbsolutePath>("C:\\nonexistent\\path");
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:\\nonexistent\\path");
 		Assert.IsNotNull(path);
 		Assert.AreEqual("C:\\nonexistent\\path", path.ToString());
 	}
@@ -179,7 +179,7 @@ public class SemanticPathTests
 	public void SemanticPath_RootPath()
 	{
 		// Test root path creation
-		AbsolutePath rootPath = AbsolutePath.FromString<AbsolutePath>("C:\\");
+		AbsolutePath rootPath = AbsolutePath.Create<AbsolutePath>("C:\\");
 		Assert.IsNotNull(rootPath);
 		Assert.AreEqual("C:\\", rootPath.ToString());
 	}
@@ -188,7 +188,7 @@ public class SemanticPathTests
 	public void SemanticPath_RootPath_Unix()
 	{
 		// Test Unix root path
-		AbsolutePath rootPath = AbsolutePath.FromString<AbsolutePath>("/");
+		AbsolutePath rootPath = AbsolutePath.Create<AbsolutePath>("/");
 		Assert.IsNotNull(rootPath);
 
 		// On Windows, the MakeCanonical method converts "/" to "\"
@@ -207,13 +207,13 @@ public class SemanticPathTests
 	public void SemanticPath_PathTypes()
 	{
 		// Test different path type recognition with relative path
-		RelativePath relativePath = RelativePath.FromString<RelativePath>("folder/subfolder\\file");
+		RelativePath relativePath = RelativePath.Create<RelativePath>("folder/subfolder\\file");
 		Assert.IsNotNull(relativePath);
 		// These methods should exist based on the path type
 		Assert.IsTrue(relativePath.IsValid());
 
 		// Test with absolute path
-		AbsolutePath absolutePath = AbsolutePath.FromString<AbsolutePath>("C:\\folder/subfolder\\file");
+		AbsolutePath absolutePath = AbsolutePath.Create<AbsolutePath>("C:\\folder/subfolder\\file");
 		Assert.IsNotNull(absolutePath);
 		Assert.IsTrue(absolutePath.IsValid());
 	}
@@ -222,7 +222,7 @@ public class SemanticPathTests
 	public void SemanticPath_EmptyPath_ShouldBeValid()
 	{
 		// Test that empty paths are considered valid per the IsPath attribute
-		AbsolutePath emptyPath = AbsolutePath.FromString<AbsolutePath>("");
+		AbsolutePath emptyPath = AbsolutePath.Create<AbsolutePath>("");
 		Assert.IsTrue(emptyPath.IsValid());
 		Assert.AreEqual("", emptyPath.ToString());
 	}
@@ -232,7 +232,7 @@ public class SemanticPathTests
 	{
 		// Test long but valid path
 		string longButValidPath = "C:\\" + string.Join("\\", Enumerable.Repeat("folder", 20));
-		AbsolutePath path = AbsolutePath.FromString<AbsolutePath>(longButValidPath);
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>(longButValidPath);
 		Assert.IsNotNull(path);
 		Assert.AreEqual(longButValidPath, path.ToString());
 	}
@@ -242,16 +242,16 @@ public class SemanticPathTests
 	{
 		// Test excessively long path (over typical OS limits)
 		string excessivelyLongPath = "C:\\" + string.Join("\\", Enumerable.Repeat("verylongfoldernamethatexceedstypicallimits", 50));
-		Assert.ThrowsException<FormatException>(() =>
-			AbsolutePath.FromString<AbsolutePath>(excessivelyLongPath));
+		Assert.ThrowsExactly<FormatException>(() =>
+			AbsolutePath.Create<AbsolutePath>(excessivelyLongPath));
 	}
 
 	[TestMethod]
 	public void SemanticRelativePath_Make_ShouldCreateCorrectRelativePath()
 	{
 		// Arrange
-		AbsolutePath from = AbsolutePath.FromString<AbsolutePath>("C:\\base\\folder");
-		AbsolutePath to = AbsolutePath.FromString<AbsolutePath>("C:\\base\\other\\file.txt");
+		AbsolutePath from = AbsolutePath.Create<AbsolutePath>("C:\\base\\folder");
+		AbsolutePath to = AbsolutePath.Create<AbsolutePath>("C:\\base\\other\\file.txt");
 
 		// Act
 		RelativePath relativePath = RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(from, to);
@@ -270,13 +270,13 @@ public class SemanticPathTests
 		if (OperatingSystem.IsWindows())
 		{
 			// On Windows, test root drive paths
-			AbsolutePath rootPath = AbsolutePath.FromString<AbsolutePath>("C:\\");
+			AbsolutePath rootPath = AbsolutePath.Create<AbsolutePath>("C:\\");
 			Assert.AreEqual("C:\\", rootPath.ToString());
 		}
 		else
 		{
 			// On Unix-like systems, test root path
-			AbsolutePath rootPath = AbsolutePath.FromString<AbsolutePath>("/");
+			AbsolutePath rootPath = AbsolutePath.Create<AbsolutePath>("/");
 			Assert.AreEqual("/", rootPath.ToString());
 		}
 	}
@@ -285,7 +285,7 @@ public class SemanticPathTests
 	public void SemanticPath_MakeCanonical_WithMixedSeparators_ShouldNormalize()
 	{
 		// Test path with mixed separators - use absolute path
-		AbsolutePath path = AbsolutePath.FromString<AbsolutePath>("C:/folder/subfolder\\file");
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:/folder/subfolder\\file");
 		string expected = "C:" + Path.DirectorySeparatorChar + "folder" + Path.DirectorySeparatorChar + "subfolder" + Path.DirectorySeparatorChar + "file";
 		Assert.AreEqual(expected, path.ToString());
 	}
@@ -294,7 +294,7 @@ public class SemanticPathTests
 	public void SemanticFilePath_FileExtension_WithMultipleDots_ShouldReturnLastExtension()
 	{
 		// Test file with multiple dots in the name
-		FilePath filePath = FilePath.FromString<FilePath>("file.backup.v2.txt");
+		FilePath filePath = FilePath.Create<FilePath>("file.backup.v2.txt");
 		FileExtension extension = filePath.FileExtension;
 		Assert.AreEqual(".txt", extension.ToString());
 	}
@@ -303,7 +303,7 @@ public class SemanticPathTests
 	public void SemanticFilePath_FullFileExtension_WithSingleExtension_ShouldReturnSameAsFileExtension()
 	{
 		// Test that FullFileExtension works correctly with single extensions
-		FilePath filePath = FilePath.FromString<FilePath>("document.pdf");
+		FilePath filePath = FilePath.Create<FilePath>("document.pdf");
 		FileExtension fullExtension = filePath.FullFileExtension;
 		Assert.AreEqual(".pdf", fullExtension.ToString());
 	}
@@ -312,7 +312,7 @@ public class SemanticPathTests
 	public void SemanticFilePath_FileName_WithPathSeparators_ShouldReturnOnlyFileName()
 	{
 		// Test filename extraction from complex paths
-		FilePath filePath = FilePath.FromString<FilePath>("C:\\very\\deep\\folder\\structure\\document.docx");
+		FilePath filePath = FilePath.Create<FilePath>("C:\\very\\deep\\folder\\structure\\document.docx");
 		FileName fileName = filePath.FileName;
 		Assert.AreEqual("document.docx", fileName.ToString());
 	}
@@ -323,7 +323,7 @@ public class SemanticPathTests
 		// Test directory extraction when file is in root
 		if (OperatingSystem.IsWindows())
 		{
-			FilePath filePath = FilePath.FromString<FilePath>("C:\\file.txt");
+			FilePath filePath = FilePath.Create<FilePath>("C:\\file.txt");
 			DirectoryPath directoryPath = filePath.DirectoryPath;
 			Assert.AreEqual("C:\\", directoryPath.ToString());
 		}
@@ -333,7 +333,7 @@ public class SemanticPathTests
 	public void SemanticFilePath_DirectoryPath_WithEmptyResult_ShouldReturnEmpty()
 	{
 		// Test when GetDirectoryName returns null/empty
-		FilePath filePath = FilePath.FromString<FilePath>("file.txt");
+		FilePath filePath = FilePath.Create<FilePath>("file.txt");
 		DirectoryPath directoryPath = filePath.DirectoryPath;
 		Assert.AreEqual("", directoryPath.ToString());
 	}
@@ -342,12 +342,12 @@ public class SemanticPathTests
 	public void SemanticRelativePath_Make_WithNullArguments_ShouldThrowArgumentNullException()
 	{
 		// Test null argument handling
-		AbsolutePath validPath = AbsolutePath.FromString<AbsolutePath>("C:\\test");
+		AbsolutePath validPath = AbsolutePath.Create<AbsolutePath>("C:\\test");
 
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(null!, validPath));
 
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(validPath, null!));
 	}
 
@@ -355,8 +355,8 @@ public class SemanticPathTests
 	public void SemanticRelativePath_Make_WithDirectoryPaths_ShouldHandleCorrectly()
 	{
 		// Test relative path creation between directories
-		AbsolutePath from = AbsolutePath.FromString<AbsolutePath>("C:\\base\\folder1");
-		AbsolutePath to = AbsolutePath.FromString<AbsolutePath>("C:\\base\\folder2");
+		AbsolutePath from = AbsolutePath.Create<AbsolutePath>("C:\\base\\folder1");
+		AbsolutePath to = AbsolutePath.Create<AbsolutePath>("C:\\base\\folder2");
 
 		RelativePath relativePath = RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(from, to);
 		Assert.IsNotNull(relativePath);
@@ -367,7 +367,7 @@ public class SemanticPathTests
 	public void SemanticFileName_EmptyFileName_ShouldBeValid()
 	{
 		// Test that empty filenames are valid per the IsFileName attribute
-		FileName emptyFileName = FileName.FromString<FileName>("");
+		FileName emptyFileName = FileName.Create<FileName>("");
 		Assert.IsTrue(emptyFileName.IsValid());
 	}
 
@@ -375,7 +375,7 @@ public class SemanticPathTests
 	public void SemanticFileExtension_EmptyExtension_ShouldBeValid()
 	{
 		// Test that empty extensions are valid (no extension case)
-		FileExtension emptyExtension = FileExtension.FromString<FileExtension>("");
+		FileExtension emptyExtension = FileExtension.Create<FileExtension>("");
 		Assert.IsTrue(emptyExtension.IsValid());
 	}
 }
