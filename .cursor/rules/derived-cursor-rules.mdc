@@ -26,6 +26,8 @@ This file defines all project rules, coding standards, workflow guidelines, refe
 *   The primary problem is that the **README.md file refers to an `examples/` directory at the root level, but the examples are actually located in `docs/examples/`**. All references in `README.md` to the `examples/` directory should be updated to `docs/examples/`.
 *   The architecture documentation should accurately reflect the actual class hierarchy implementation.
 *   The validation reference documentation should be comprehensive and accurate, including newer validation attributes.
+*   Update the `README.md` and `docs/` to describe the whole library.
+*   Create a `docs/complete-library-guide.md` file to provide a comprehensive overview of all features and components in the ktsu.Semantics library.
 
 When adding XML documentation comments:
 
@@ -145,10 +147,12 @@ When adding XML documentation comments:
     *   `IsTimeSpanAttribute` - Now marked as obsolete, encouraging users to use `System.TimeSpan` instead of semantic string types, highlighting the broader benefits
     *   `IsUriAttribute` - Now suggests using `System.Uri` instead of semantic string types, focusing on the comprehensive network API
     *   `IsDecimalAttribute` - Now suggests using `System.DecimalAttribute` instead of semantic string types, focusing on the comprehensive mathematical API
-    *   `IsDoubleAttribute` - Now suggests using `System.Double` instead of semantic string types, focusing on the comprehensive mathematical API
-    *   `IsInt32Attribute` - Now suggests using `System.Int32` instead of semantic string types, focusing on the comprehensive numerical API
-    *   `IsBooleanAttribute` - Now suggests using `System.Boolean` instead of semantic string types, focusing on the comprehensive logical API
+    *   `IsDoubleAttribute` - Now suggests using `System.DoubleAttribute` instead of semantic string types, focusing on the comprehensive mathematical API
+    *   `IsInt32Attribute` - Now suggests using `System.Int32Attribute` instead of semantic string types, focusing on the comprehensive numerical API
+    *   `IsBooleanAttribute` - Now suggests using `System.BooleanAttribute` instead of semantic string types, focusing on the comprehensive logical API
 *   Use the FluentValidation library to implement the internals of the validation attributes where possible.
+*   Provide feature parity between direct static methods and factory methods so users can choose their preferred pattern without losing functionality.
+*   Use overloading with a more communicative common name for `From` and `TryFrom` methods instead of specifically type named variants.
 
 ## DEBUGGING
 
@@ -281,6 +285,10 @@ When adding XML documentation comments:
 *   3. **Create a validator class** that inherits from `FluentValidationAdapter`
 *   4. **Define validation rules** in the validator's constructor using FluentValidation syntax
 *   Before increasing test coverage, explore the project structure to understand the current testing setup and identify areas that need more coverage.
+*   Update the project description to reflect the comprehensive nature of the library. The description should be: "A comprehensive .NET library for creating type-safe, validated string and quantity types using semantic meaning. Transform primitive string and numeric obsession into strongly-typed, self-validating domain models with 50+ validation attributes, polymorphic path handling, arithmetic quantity operations, and performance-optimized utilities. Includes factory pattern support, dependency injection integration, and enterprise-ready features for building robust, maintainable applications."
+*   Before determining whether the direct methods should support all the features of the factories, investigate the implications of doing so.
+*   Ensure that the direct static methods provide feature parity with the factory methods.
+*   Use overloading with a more communicative common name for `From` and `TryFrom` methods instead of specifically type named variants.
 
 ## SUPPRESSIONS
 

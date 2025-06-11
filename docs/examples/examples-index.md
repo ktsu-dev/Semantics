@@ -2,6 +2,8 @@
 
 This directory contains comprehensive examples demonstrating all functionality of the Semantics library. The examples are organized by topic for easy navigation and learning.
 
+**📖 For a complete overview of all library features, see the [Complete Library Guide](../complete-library-guide.md).**
+
 ## Quick Start
 
 If you're new to the Semantics library, start with [Getting Started](getting-started.md) for basic usage patterns.
