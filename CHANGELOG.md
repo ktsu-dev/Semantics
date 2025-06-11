@@ -1,6 +1,8 @@
-## v1.0.6
+## v1.0.7 (patch)
 
-No significant changes detected since v1.0.6.
+Changes since v1.0.6:
+
+- Update README and documentation to provide a comprehensive overview of the ktsu.Semantics library ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.6 (patch)
 
 Changes since v1.0.5:
