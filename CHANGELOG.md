@@ -2,6 +2,7 @@
 
 Changes since v1.0.7:
 
+- Organize quantities ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add tests ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add tests ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.7 (patch)
