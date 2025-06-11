@@ -3,6 +3,7 @@
 Changes since v1.0.7:
 
 - Add tests ([@matt-edmondson](https://github.com/matt-edmondson))
+- Add tests ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.7 (patch)
 
 Changes since v1.0.6:
