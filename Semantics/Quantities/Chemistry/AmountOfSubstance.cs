@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("mol", "mole", "moles")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record AmountOfSubstance
 	: PhysicalQuantity<AmountOfSubstance>
 	, IIntegralOperators<AmountOfSubstance, MolarMass, Mass>

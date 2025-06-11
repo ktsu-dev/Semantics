@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("rad/s", "radian per second", "radians per second")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record AngularVelocity
 	: PhysicalQuantity<AngularVelocity>
 	, IIntegralOperators<AngularVelocity, Time, Angle>

@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("N⋅m", "newton meter", "newton meters")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record Torque
 	: PhysicalQuantity<Torque>
 	, IIntegralOperators<Torque, Angle, Energy>

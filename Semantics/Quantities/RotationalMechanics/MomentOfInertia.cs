@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("kg⋅m²", "kilogram square meter", "kilogram square meters")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record MomentOfInertia
 	: PhysicalQuantity<MomentOfInertia>
 	, IIntegralOperators<MomentOfInertia, AngularVelocity, AngularMomentum>

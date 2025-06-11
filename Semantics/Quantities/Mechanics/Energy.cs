@@ -9,7 +9,7 @@ using System.Numerics;
 /// <summary>
 /// Represents an energy physical quantity.
 /// </summary>
-[SIUnit("J", "joule", "joules")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Joule))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
 public sealed record Energy
 	: PhysicalQuantity<Energy>

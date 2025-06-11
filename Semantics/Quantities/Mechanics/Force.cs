@@ -9,7 +9,7 @@ using System.Numerics;
 /// <summary>
 /// Represents a force physical quantity.
 /// </summary>
-[SIUnit("N", "newton", "newtons")] // TODO: replace hardcoded attributes with predefined ones
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Newton))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
 public sealed record Force
 	: PhysicalQuantity<Force>
@@ -58,7 +58,8 @@ public sealed record Force
 /// <summary>
 /// Provides extension methods for converting values to and from <see cref="Force"/>.
 /// </summary>
-public static class ForceConversions // TODO extract and consolidate static conversion classes
+[Obsolete("Use UnifiedConversions extension methods instead for strongly-typed unit conversions.")]
+public static class ForceConversions
 {
 	private static Conversions.IConversionCalculator<Force> Calculator => Conversions.ConversionRegistry.GetCalculator<Force>();
 	private static Conversions.TypedForceConversionCalculator TypedCalculator => Conversions.TypedForceConversionCalculator.Instance;

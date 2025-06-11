@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("W", "watt", "watts")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record Power
 	: PhysicalQuantity<Power>
 	, IIntegralOperators<Power, Time, Energy>

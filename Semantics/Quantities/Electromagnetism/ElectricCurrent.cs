@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("A", "ampere", "amperes")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record ElectricCurrent
 	: PhysicalQuantity<ElectricCurrent>
 	, IIntegralOperators<ElectricCurrent, Time, Charge>

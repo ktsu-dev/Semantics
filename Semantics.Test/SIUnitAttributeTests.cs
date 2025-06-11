@@ -8,6 +8,7 @@ namespace ktsu.Semantics.Test;
 public class SIUnitAttributeTests
 {
 	[TestMethod]
+	[Obsolete]
 	public void Constructor_ShouldSetPropertiesCorrectly()
 	{
 		// Arrange

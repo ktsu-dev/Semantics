@@ -10,13 +10,15 @@ using System.Reflection;
 // TODO: support both direct use and dependency injection for physical quantities
 
 /// <summary>
-/// Represents a physical quantity with a specific unit of measurement.
+/// Represents a physical quantity with a specific unit of measurement using a configurable numeric type.
 /// </summary>
 /// <typeparam name="TSelf">The type of the derived class.</typeparam>
-public abstract record PhysicalQuantity<TSelf>
-	: SemanticQuantity<TSelf, double> // TODO: support other numeric types implementing INumber through dependency injection
+/// <typeparam name="TNumber">The numeric type for the quantity value (e.g., double, decimal, float).</typeparam>
+public abstract record PhysicalQuantity<TSelf, TNumber>
+	: SemanticQuantity<TSelf, TNumber>
 	, IComparable<TSelf>
-	where TSelf : PhysicalQuantity<TSelf>, new()
+	where TSelf : PhysicalQuantity<TSelf, TNumber>, new()
+	where TNumber : struct, INumber<TNumber>, IComparable<TNumber>
 {
 	/// <summary>
 	/// Gets the SI unit attribute associated with the derived class.
@@ -45,7 +47,7 @@ public abstract record PhysicalQuantity<TSelf>
 	public sealed override string ToString()
 	{
 		string symbolComponent = string.IsNullOrWhiteSpace(Unit.Symbol) ? string.Empty : $" {Unit.Symbol}";
-		double absQuantity = Math.Abs(Quantity);
+		double absQuantity = Math.Abs(Convert.ToDouble(Quantity));
 		bool isPlural = absQuantity != 1;
 		string pluralComponent = isPlural ? Unit.Plural : Unit.Singular;
 		string nameComponent = string.IsNullOrWhiteSpace(pluralComponent) ? string.Empty : $" ({pluralComponent})";
@@ -58,7 +60,7 @@ public abstract record PhysicalQuantity<TSelf>
 	/// <param name="left">The first physical quantity.</param>
 	/// <param name="right">The second physical quantity.</param>
 	/// <returns>True if <paramref name="left"/> is less than <paramref name="right"/>; otherwise, false.</returns>
-	public static bool operator <(PhysicalQuantity<TSelf> left, TSelf right) =>
+	public static bool operator <(PhysicalQuantity<TSelf, TNumber> left, TSelf right) =>
 		left is null ? right is not null : left.CompareTo(right) < 0;
 
 	/// <summary>
@@ -67,7 +69,7 @@ public abstract record PhysicalQuantity<TSelf>
 	/// <param name="left">The first physical quantity.</param>
 	/// <param name="right">The second physical quantity.</param>
 	/// <returns>True if <paramref name="left"/> is less than or equal to <paramref name="right"/>; otherwise, false.</returns>
-	public static bool operator <=(PhysicalQuantity<TSelf> left, TSelf right) =>
+	public static bool operator <=(PhysicalQuantity<TSelf, TNumber> left, TSelf right) =>
 		left is null || left.CompareTo(right) <= 0;
 
 	/// <summary>
@@ -76,7 +78,7 @@ public abstract record PhysicalQuantity<TSelf>
 	/// <param name="left">The first physical quantity.</param>
 	/// <param name="right">The second physical quantity.</param>
 	/// <returns>True if <paramref name="left"/> is greater than <paramref name="right"/>; otherwise, false.</returns>
-	public static bool operator >(PhysicalQuantity<TSelf> left, TSelf right) =>
+	public static bool operator >(PhysicalQuantity<TSelf, TNumber> left, TSelf right) =>
 		left is not null && left.CompareTo(right) > 0;
 
 	/// <summary>
@@ -85,7 +87,7 @@ public abstract record PhysicalQuantity<TSelf>
 	/// <param name="left">The first physical quantity.</param>
 	/// <param name="right">The second physical quantity.</param>
 	/// <returns>True if <paramref name="left"/> is greater than or equal to <paramref name="right"/>; otherwise, false.</returns>
-	public static bool operator >=(PhysicalQuantity<TSelf> left, TSelf right) =>
+	public static bool operator >=(PhysicalQuantity<TSelf, TNumber> left, TSelf right) =>
 		left is null ? right is null : left.CompareTo(right) >= 0;
 
 	/// <summary>
@@ -99,14 +101,15 @@ public abstract record PhysicalQuantity<TSelf>
 		where TPower : INumber<TPower>
 	{
 		ArgumentNullException.ThrowIfNull(power);
-		return Create(Math.Pow(Quantity, Convert.ToDouble(power)));
+		double result = Math.Pow(Convert.ToDouble(Quantity), Convert.ToDouble(power));
+		return Create(TNumber.CreateChecked(result));
 	}
 
 	/// <summary>
 	/// Returns the absolute value of the physical quantity.
 	/// </summary>
 	/// <returns>A new instance of the physical quantity with an absolute value.</returns>
-	public TSelf Abs() => Create(Math.Abs(Quantity));
+	public TSelf Abs() => Create(TNumber.Abs(Quantity));
 
 	/// <summary>
 	/// Clamps the physical quantity to the specified minimum and maximum values.
@@ -119,7 +122,12 @@ public abstract record PhysicalQuantity<TSelf>
 	public TSelf Clamp<T1, T2>(T1 min, T2 max)
 		where T1 : INumber<T1>
 		where T2 : INumber<T2>
-		=> Create(Math.Clamp(Quantity, Convert.ToDouble(min), Convert.ToDouble(max)));
+	{
+		TNumber minValue = TNumber.CreateChecked(min);
+		TNumber maxValue = TNumber.CreateChecked(max);
+		TNumber clampedValue = Quantity < minValue ? minValue : Quantity > maxValue ? maxValue : Quantity;
+		return Create(clampedValue);
+	}
 
 	/// <summary>
 	/// Returns the minimum of this physical quantity and another.
@@ -129,7 +137,7 @@ public abstract record PhysicalQuantity<TSelf>
 	public TSelf Min(TSelf other)
 	{
 		ArgumentNullException.ThrowIfNull(other);
-		return Create(Math.Min(Quantity, other.Quantity));
+		return Create(Quantity < other.Quantity ? Quantity : other.Quantity);
 	}
 
 	/// <summary>
@@ -140,7 +148,7 @@ public abstract record PhysicalQuantity<TSelf>
 	public TSelf Max(TSelf other)
 	{
 		ArgumentNullException.ThrowIfNull(other);
-		return Create(Math.Max(Quantity, other.Quantity));
+		return Create(Quantity > other.Quantity ? Quantity : other.Quantity);
 	}
 
 	/// <summary>
@@ -148,7 +156,20 @@ public abstract record PhysicalQuantity<TSelf>
 	/// </summary>
 	/// <param name="other">The value to add.</param>
 	/// <returns>A new instance of the physical quantity with the added value.</returns>
-	protected TSelf ConversionAdd(double other) => Create(Quantity + other);
+	protected TSelf ConversionAdd(TNumber other) => Create(Quantity + other);
+}
+
+/// <summary>
+/// Represents a physical quantity with a specific unit of measurement using double precision.
+/// This is the default implementation for backward compatibility.
+/// </summary>
+/// <typeparam name="TSelf">The type of the derived class.</typeparam>
+public abstract record PhysicalQuantity<TSelf>
+	: PhysicalQuantity<TSelf, double>
+	, IComparable<TSelf>
+	where TSelf : PhysicalQuantity<TSelf>, new()
+{
+	// All implementation is inherited from PhysicalQuantity<TSelf, double>
 }
 
 /// <summary>

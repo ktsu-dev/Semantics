@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("C", "coulomb", "coulombs")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record Charge
 	: PhysicalQuantity<Charge>
 	, IDerivativeOperators<Charge, Time, ElectricCurrent>

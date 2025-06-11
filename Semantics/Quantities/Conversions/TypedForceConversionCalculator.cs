@@ -21,7 +21,7 @@ public sealed class TypedForceConversionCalculator : TypedConversionCalculator<F
 	{
 	}
 
-		private static IEnumerable<SIUnit> GetForceAvailableSIUnits()
+	private static IEnumerable<SIUnit> GetForceAvailableSIUnits()
 	{
 		return
 		[

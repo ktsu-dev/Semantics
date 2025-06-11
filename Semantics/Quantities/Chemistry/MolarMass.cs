@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("kg/mol", "kilogram per mole", "kilograms per mole")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record MolarMass
 	: PhysicalQuantity<MolarMass>
 	, IIntegralOperators<MolarMass, AmountOfSubstance, Mass>

@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("m²", "square meter", "square meters")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record Area
 	: PhysicalQuantity<Area>
 	, IIntegralOperators<Area, Illuminance, LuminousFlux>

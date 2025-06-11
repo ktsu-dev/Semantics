@@ -8,6 +8,7 @@ namespace ktsu.Semantics.Test;
 public class PhysicalQuantityEdgeCaseTests
 {
 	[SIUnit("test", "test unit", "test units")]
+	[Obsolete]
 	public record TestQuantity : PhysicalQuantity<TestQuantity> { }
 
 	[TestMethod]

@@ -47,6 +47,61 @@ public static class SIUnits
 	/// <summary>Hertz - SI derived unit of frequency.</summary>
 	public static readonly SIUnit Hertz = new("Hz", "hertz", "hertz");
 
+	/// <summary>Volt - SI derived unit of electric potential.</summary>
+	public static readonly SIUnit Volt = new("V", "volt", "volts");
+
+	/// <summary>Coulomb - SI derived unit of electric charge.</summary>
+	public static readonly SIUnit Coulomb = new("C", "coulomb", "coulombs");
+
+	/// <summary>Radian - SI derived unit of angle.</summary>
+	public static readonly SIUnit Radian = new("rad", "radian", "radians");
+
+	/// <summary>Steradian - SI derived unit of solid angle.</summary>
+	public static readonly SIUnit Steradian = new("sr", "steradian", "steradians");
+
+	/// <summary>Lumen - SI derived unit of luminous flux.</summary>
+	public static readonly SIUnit Lumen = new("lm", "lumen", "lumens");
+
+	/// <summary>Lux - SI derived unit of illuminance.</summary>
+	public static readonly SIUnit Lux = new("lx", "lux", "lux");
+
+	// Composite units
+	/// <summary>Meter per second - SI derived unit of velocity.</summary>
+	public static readonly SIUnit MeterPerSecond = new("m/s", "meter per second", "meters per second");
+
+	/// <summary>Meter per second squared - SI derived unit of acceleration.</summary>
+	public static readonly SIUnit MeterPerSecondSquared = new("m/s²", "meter per second squared", "meters per second squared");
+
+	/// <summary>Meter per second cubed - SI derived unit of jerk.</summary>
+	public static readonly SIUnit MeterPerSecondCubed = new("m/s³", "meter per second cubed", "meters per second cubed");
+
+	/// <summary>Square meter - SI derived unit of area.</summary>
+	public static readonly SIUnit SquareMeter = new("m²", "square meter", "square meters");
+
+	/// <summary>Cubic meter - SI derived unit of volume.</summary>
+	public static readonly SIUnit CubicMeter = new("m³", "cubic meter", "cubic meters");
+
+	/// <summary>Kilogram per cubic meter - SI derived unit of density.</summary>
+	public static readonly SIUnit KilogramPerCubicMeter = new("kg/m³", "kilogram per cubic meter", "kilograms per cubic meter");
+
+	/// <summary>Kilogram meter per second - SI derived unit of momentum.</summary>
+	public static readonly SIUnit KilogramMeterPerSecond = new("kg⋅m/s", "kilogram meter per second", "kilogram meters per second");
+
+	/// <summary>Newton meter - SI derived unit of torque.</summary>
+	public static readonly SIUnit NewtonMeter = new("N⋅m", "newton meter", "newton meters");
+
+	/// <summary>Kilogram square meter - SI derived unit of moment of inertia.</summary>
+	public static readonly SIUnit KilogramSquareMeter = new("kg⋅m²", "kilogram square meter", "kilogram square meters");
+
+	/// <summary>Radian per second - SI derived unit of angular velocity.</summary>
+	public static readonly SIUnit RadianPerSecond = new("rad/s", "radian per second", "radians per second");
+
+	/// <summary>Radian per second squared - SI derived unit of angular acceleration.</summary>
+	public static readonly SIUnit RadianPerSecondSquared = new("rad/s²", "radian per second squared", "radians per second squared");
+
+	/// <summary>Kilogram per mole - SI derived unit of molar mass.</summary>
+	public static readonly SIUnit KilogramPerMole = new("kg/mol", "kilogram per mole", "kilograms per mole");
+
 	// Length units
 	/// <summary>Millimeter - derived unit of length.</summary>
 	public static readonly DerivedSIUnit Millimeter = new("mm", "millimeter", "millimeters", Meter, PhysicalConstants.Milli);

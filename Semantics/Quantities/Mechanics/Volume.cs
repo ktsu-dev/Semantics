@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("m³", "cubic meter", "cubic meters")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record Volume
 	: PhysicalQuantity<Volume>
 	, IIntegralOperators<Volume, Density, Mass>

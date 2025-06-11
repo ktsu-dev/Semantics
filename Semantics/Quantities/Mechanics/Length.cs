@@ -9,7 +9,7 @@ using System.Numerics;
 /// <summary>
 /// Represents a length physical quantity.
 /// </summary>
-[SIUnit("m", "meter", "meters")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Meter))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
 public sealed record Length
 	: PhysicalQuantity<Length>

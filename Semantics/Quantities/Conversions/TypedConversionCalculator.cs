@@ -103,10 +103,9 @@ public abstract class TypedConversionCalculator<TQuantity> : ITypedConversionCal
 		ArgumentNullException.ThrowIfNull(unit);
 		double doubleValue = Convert.ToDouble(value);
 
-		if (unit == _baseSIUnit)
-			return PhysicalQuantity<TQuantity>.Create(doubleValue);
-
-		return unit is DerivedSIUnit derivedUnit && derivedUnit.BaseUnit == _baseSIUnit
+		return unit == _baseSIUnit
+			? PhysicalQuantity<TQuantity>.Create(doubleValue)
+			: unit is DerivedSIUnit derivedUnit && derivedUnit.BaseUnit == _baseSIUnit
 			? PhysicalQuantity<TQuantity>.Create(derivedUnit.ToBase(doubleValue))
 			: throw new ArgumentException($"Unit '{unit}' is not supported for {typeof(TQuantity).Name}", nameof(unit));
 	}
@@ -117,7 +116,9 @@ public abstract class TypedConversionCalculator<TQuantity> : ITypedConversionCal
 		ArgumentNullException.ThrowIfNull(unit);
 
 		if (unit.SIBaseUnit != _baseSIUnit)
+		{
 			throw new ArgumentException($"Imperial unit '{unit}' does not convert to base SI unit '{_baseSIUnit}' for {typeof(TQuantity).Name}", nameof(unit));
+		}
 
 		double doubleValue = Convert.ToDouble(value);
 		double siValue = unit.ToSI(doubleValue);
@@ -130,10 +131,9 @@ public abstract class TypedConversionCalculator<TQuantity> : ITypedConversionCal
 		ArgumentNullException.ThrowIfNull(quantity);
 		ArgumentNullException.ThrowIfNull(unit);
 
-		if (unit == _baseSIUnit)
-			return TNumber.CreateChecked(quantity.Quantity);
-
-		return unit is DerivedSIUnit derivedUnit && derivedUnit.BaseUnit == _baseSIUnit
+		return unit == _baseSIUnit
+			? TNumber.CreateChecked(quantity.Quantity)
+			: unit is DerivedSIUnit derivedUnit && derivedUnit.BaseUnit == _baseSIUnit
 			? TNumber.CreateChecked(derivedUnit.FromBase(quantity.Quantity))
 			: throw new ArgumentException($"Unit '{unit}' is not supported for {typeof(TQuantity).Name}", nameof(unit));
 	}
@@ -145,7 +145,9 @@ public abstract class TypedConversionCalculator<TQuantity> : ITypedConversionCal
 		ArgumentNullException.ThrowIfNull(unit);
 
 		if (unit.SIBaseUnit != _baseSIUnit)
+		{
 			throw new ArgumentException($"Imperial unit '{unit}' does not convert to base SI unit '{_baseSIUnit}' for {typeof(TQuantity).Name}", nameof(unit));
+		}
 
 		double convertedValue = unit.FromSI(quantity.Quantity);
 		return TNumber.CreateChecked(convertedValue);

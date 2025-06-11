@@ -11,6 +11,7 @@ using System.Numerics;
 /// </summary>
 [SIUnit("lx", "lux", "lux")]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
+[Obsolete]
 public sealed record Illuminance
 	: PhysicalQuantity<Illuminance>
 	, IIntegralOperators<Illuminance, Area, LuminousFlux>
