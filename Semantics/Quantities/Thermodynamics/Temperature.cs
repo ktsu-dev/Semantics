@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a temperature physical quantity.
 /// </summary>
-[SIUnit("K", "kelvin", "kelvins")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Kelvin))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Temperature
 	: PhysicalQuantity<Temperature>
 {

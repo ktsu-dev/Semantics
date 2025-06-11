@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a torque physical quantity.
 /// </summary>
-[SIUnit("N⋅m", "newton meter", "newton meters")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.NewtonMeter))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Torque
 	: PhysicalQuantity<Torque>
 	, IIntegralOperators<Torque, Angle, Energy>

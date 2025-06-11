@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a solid angle physical quantity.
 /// </summary>
-[SIUnit("sr", "steradian", "steradians")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Steradian))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record SolidAngle
 	: PhysicalQuantity<SolidAngle>
 	, IIntegralOperators<SolidAngle, LuminousIntensity, LuminousFlux>

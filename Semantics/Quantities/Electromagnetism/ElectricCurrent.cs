@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents an electric current physical quantity.
 /// </summary>
-[SIUnit("A", "ampere", "amperes")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Ampere))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record ElectricCurrent
 	: PhysicalQuantity<ElectricCurrent>
 	, IIntegralOperators<ElectricCurrent, Time, Charge>

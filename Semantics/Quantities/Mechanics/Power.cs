@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a power physical quantity.
 /// </summary>
-[SIUnit("W", "watt", "watts")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Watt))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Power
 	: PhysicalQuantity<Power>
 	, IIntegralOperators<Power, Time, Energy>

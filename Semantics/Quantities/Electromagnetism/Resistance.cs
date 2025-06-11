@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents an electrical resistance physical quantity.
 /// </summary>
-[SIUnit("Ω", "ohm", "ohms")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Ohm))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Resistance
 	: PhysicalQuantity<Resistance>
 	, IIntegralOperators<Resistance, ElectricCurrent, ElectricPotential>

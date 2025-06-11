@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents an electric charge physical quantity.
 /// </summary>
-[SIUnit("C", "coulomb", "coulombs")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Coulomb))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Charge
 	: PhysicalQuantity<Charge>
 	, IDerivativeOperators<Charge, Time, ElectricCurrent>

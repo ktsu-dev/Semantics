@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents an amount of substance physical quantity.
 /// </summary>
-[SIUnit("mol", "mole", "moles")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Mole))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record AmountOfSubstance
 	: PhysicalQuantity<AmountOfSubstance>
 	, IIntegralOperators<AmountOfSubstance, MolarMass, Mass>

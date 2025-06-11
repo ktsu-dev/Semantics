@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a jerk physical quantity.
 /// </summary>
-[SIUnit("m/s³", "meter per second cubed", "meters per second cubed")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.MeterPerSecondCubed))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Jerk
 	: PhysicalQuantity<Jerk>
 	, IIntegralOperators<Jerk, Time, Acceleration>

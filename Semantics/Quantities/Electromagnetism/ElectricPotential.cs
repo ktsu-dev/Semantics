@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents an electric potential physical quantity.
 /// </summary>
-[SIUnit("V", "volt", "volts")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Volt))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record ElectricPotential
 	: PhysicalQuantity<ElectricPotential>
 	, IIntegralOperators<ElectricPotential, ElectricCurrent, Power>

@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a luminous flux physical quantity.
 /// </summary>
-[SIUnit("lm", "lumen", "lumens")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Lumen))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record LuminousFlux
 	: PhysicalQuantity<LuminousFlux>
 	, IDerivativeOperators<LuminousFlux, SolidAngle, LuminousIntensity>

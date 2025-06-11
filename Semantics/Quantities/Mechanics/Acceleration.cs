@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents an acceleration physical quantity.
 /// </summary>
-[SIUnit("m/s²", "meter per second squared", "meters per second squared")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.MeterPerSecondSquared))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Acceleration
 	: PhysicalQuantity<Acceleration>
 	, IIntegralOperators<Acceleration, Mass, Force>

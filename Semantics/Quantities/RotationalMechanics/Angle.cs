@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents an angle physical quantity.
 /// </summary>
-[SIUnit("rad", "radian", "radians")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Radian))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Angle
 	: PhysicalQuantity<Angle>
 	, IDerivativeOperators<Angle, Time, AngularVelocity>

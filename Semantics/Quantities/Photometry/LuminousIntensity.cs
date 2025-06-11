@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a luminous intensity physical quantity.
 /// </summary>
-[SIUnit("cd", "candela", "candelas")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Candela))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record LuminousIntensity
 	: PhysicalQuantity<LuminousIntensity>
 	, IIntegralOperators<LuminousIntensity, SolidAngle, LuminousFlux>

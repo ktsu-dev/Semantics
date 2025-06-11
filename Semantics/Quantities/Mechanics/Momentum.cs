@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a momentum physical quantity.
 /// </summary>
-[SIUnit("kg·m/s", "kilogram meter per second", "kilogram meters per second")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.KilogramMeterPerSecond))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Momentum
 	: PhysicalQuantity<Momentum>
 	, IDerivativeOperators<Momentum, Velocity, Mass>

@@ -102,6 +102,12 @@ public static class SIUnits
 	/// <summary>Kilogram per mole - SI derived unit of molar mass.</summary>
 	public static readonly SIUnit KilogramPerMole = new("kg/mol", "kilogram per mole", "kilograms per mole");
 
+	/// <summary>Ohm - SI derived unit of electrical resistance.</summary>
+	public static readonly SIUnit Ohm = new("Ω", "ohm", "ohms");
+
+	/// <summary>Kilogram square meter per second - SI derived unit of angular momentum.</summary>
+	public static readonly SIUnit KilogramSquareMeterPerSecond = new("kg⋅m²/s", "kilogram square meter per second", "kilogram square meters per second");
+
 	// Length units
 	/// <summary>Millimeter - derived unit of length.</summary>
 	public static readonly DerivedSIUnit Millimeter = new("mm", "millimeter", "millimeters", Meter, PhysicalConstants.Milli);

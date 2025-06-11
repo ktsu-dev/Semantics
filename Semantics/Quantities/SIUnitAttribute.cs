@@ -20,7 +20,12 @@ public sealed class SIUnitAttribute : Attribute
 	/// Initializes a new instance of the <see cref="SIUnitAttribute"/> class with a strongly-typed SI unit.
 	/// </summary>
 	/// <param name="unit">The SI unit for the physical quantity.</param>
-	public SIUnitAttribute(SIUnit unit) => Unit = unit;
+	public SIUnitAttribute(SIUnit unit)
+	{
+		Unit = unit;
+		UnitType = null;
+		UnitPropertyName = null;
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SIUnitAttribute"/> class using a predefined unit from SIUnits class.
@@ -39,6 +44,8 @@ public sealed class SIUnitAttribute : Attribute
 		}
 
 		Unit = unit;
+		UnitType = unitType;
+		UnitPropertyName = unitPropertyName;
 	}
 
 	/// <summary>
@@ -48,7 +55,12 @@ public sealed class SIUnitAttribute : Attribute
 	/// <param name="singular">The singular name of the SI unit.</param>
 	/// <param name="plural">The plural name of the SI unit.</param>
 	[Obsolete("Use SIUnitAttribute(SIUnit unit) constructor with predefined units from SIUnits class instead.")]
-	public SIUnitAttribute(string symbol, string singular, string plural) => Unit = new SIUnit(symbol, singular, plural);
+	public SIUnitAttribute(string symbol, string singular, string plural)
+	{
+		Unit = new SIUnit(symbol, singular, plural);
+		UnitType = null;
+		UnitPropertyName = null;
+	}
 
 	/// <summary>
 	/// Gets the SI unit associated with the physical quantity.
@@ -69,5 +81,14 @@ public sealed class SIUnitAttribute : Attribute
 	/// Gets the plural name of the SI unit (e.g., "meters").
 	/// </summary>
 	public string Plural => Unit.Plural;
-	public Type UnitType { get; }
+
+	/// <summary>
+	/// Gets the type containing the static unit property.
+	/// </summary>
+	public Type? UnitType { get; }
+
+	/// <summary>
+	/// Gets the name of the static property that returns the SIUnit.
+	/// </summary>
+	public string? UnitPropertyName { get; }
 }

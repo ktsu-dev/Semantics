@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a molar mass physical quantity.
 /// </summary>
-[SIUnit("kg/mol", "kilogram per mole", "kilograms per mole")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.KilogramPerMole))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record MolarMass
 	: PhysicalQuantity<MolarMass>
 	, IIntegralOperators<MolarMass, AmountOfSubstance, Mass>

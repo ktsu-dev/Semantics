@@ -153,8 +153,8 @@ public static class TypedConversionRegistry
 		// Try to find an existing typed calculator
 		return quantityType.Name switch
 		{
-			nameof(Force) => (ITypedConversionCalculator<TQuantity>)TypedForceConversionCalculator.Instance,
-			nameof(Energy) => (ITypedConversionCalculator<TQuantity>)TypedEnergyConversionCalculator.Instance,
+			"Force" => (ITypedConversionCalculator<TQuantity>)(object)TypedForceConversionCalculator.Instance,
+			"Energy" => (ITypedConversionCalculator<TQuantity>)(object)TypedEnergyConversionCalculator.Instance,
 			_ => new GenericTypedConversionCalculator<TQuantity>()
 		};
 	}

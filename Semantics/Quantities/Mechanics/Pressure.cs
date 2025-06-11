@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a pressure physical quantity.
 /// </summary>
-[SIUnit("Pa", "pascal", "pascals")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Pascal))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Pressure
 	: PhysicalQuantity<Pressure>
 	, IIntegralOperators<Pressure, Area, Force>

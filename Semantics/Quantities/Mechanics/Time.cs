@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents a time physical quantity.
 /// </summary>
-[SIUnit("s", "second", "seconds")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.Second))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Time
 	: PhysicalQuantity<Time>
 {

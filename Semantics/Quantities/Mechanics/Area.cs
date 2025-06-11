@@ -9,9 +9,9 @@ using System.Numerics;
 /// <summary>
 /// Represents an area physical quantity.
 /// </summary>
-[SIUnit("m²", "square meter", "square meters")]
+[SIUnit(typeof(SIUnits), nameof(SIUnits.SquareMeter))]
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-[Obsolete]
+
 public sealed record Area
 	: PhysicalQuantity<Area>
 	, IIntegralOperators<Area, Illuminance, LuminousFlux>
