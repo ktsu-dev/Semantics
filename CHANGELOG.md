@@ -2,6 +2,7 @@
 
 Changes since v1.0.7:
 
+- Refactor conversions ([@matt-edmondson](https://github.com/matt-edmondson))
 - Organize quantities ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add tests ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add tests ([@matt-edmondson](https://github.com/matt-edmondson))
