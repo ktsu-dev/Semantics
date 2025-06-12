@@ -28,6 +28,13 @@ This file defines all project rules, coding standards, workflow guidelines, refe
 *   The validation reference documentation should be comprehensive and accurate, including newer validation attributes.
 *   Update the `README.md` and `docs/` to describe the whole library.
 *   Create a `docs/complete-library-guide.md` file to provide a comprehensive overview of all features and components in the ktsu.Semantics library.
+*   Before we continue implementing more domains, search the quantities, units, and dimensions for hard coded values that should be defined as physical constants and define them somewhere appropriate. Add this to the TODO document as part of the implementation guidelines.
+*   Apply the constants in any appropriate calculations in the quantities units and dimensions, you may define derived constants as well and create unit tests comparing the constant derived values vs calculated derived values using the fundamental constants
+*   **Management Rules for Physical Constants:**
+    1.  Use `PhysicalConstants.Generic` methods for type-safe access
+    2.  Add new constants to `PhysicalConstants.cs` before using them
+    3.  Refactor existing hard-coded values when implementing new domains
+    4.  Document constant sources (CODATA, NIST, ISO/IEC)
 
 When adding XML documentation comments:
 
@@ -144,7 +151,7 @@ When adding XML documentation comments:
     *   `IsGuidAttribute` - Now marked as obsolete, encouraging users to use `System.Guid` instead of semantic string types, emphasizing type safety and efficiency
     *   `IsIpAddressAttribute` - Now suggests using `System.Net.IPAddress` instead of semantic string types, focusing on the comprehensive network API
     *   `IsDateTimeAttribute` - Now marked as obsolete, encouraging users to use `System.DateTime` instead of semantic string types, highlighting the broader benefits
-    *   `IsTimeSpanAttribute` - Now marked as obsolete, encouraging users to use `System.TimeSpan` instead of semantic string types, highlighting the broader benefits
+    *   `IsTimeSpanAttribute` - Now marked as obsolete, encouraging users to use `System.TimeSpanAttribute` instead of semantic string types, highlighting the broader benefits
     *   `IsUriAttribute` - Now suggests using `System.Uri` instead of semantic string types, focusing on the comprehensive network API
     *   `IsDecimalAttribute` - Now suggests using `System.DecimalAttribute` instead of semantic string types, focusing on the comprehensive mathematical API
     *   `IsDoubleAttribute` - Now suggests using `System.DoubleAttribute` instead of semantic string types, focusing on the comprehensive mathematical API
@@ -249,6 +256,17 @@ When adding XML documentation comments:
     *   Follow the existing code style and patterns.
     *   Include XML documentation comments.
     *   Implement mathematical relationships between related quantities.
+*   Before we continue implementing more domains, search the quantities, units, and dimensions for hard coded values that should be defined as physical constants and define them somewhere appropriate. Add this to the TODO document as part of the implementation guidelines.
+*   Apply the constants in any appropriate calculations in the quantities units and dimensions, you may define derived constants as well and create unit tests comparing the constant derived values vs calculated derived values using the fundamental constants
+*   **Management Rules for Physical Constants:**
+    1.  Use `PhysicalConstants.Generic` methods for type-safe access
+    2.  Add new constants to `PhysicalConstants.cs` before using them
+    3.  Refactor existing hard-coded values when implementing new domains
+    4.  Document constant sources (CODATA, NIST, ISO/IEC)
+*   When a file is missing the standard header, add the following to the top of the file:
+```csharp
+// Copyright (c) KTSU. All rights reserved.
+```
 
 ## DEBUGGING
 
@@ -326,29 +344,4 @@ When adding XML documentation comments:
 *   When encountering CS0200 errors, Property or indexer 'PhysicalQuantity<SoundIntensityLevel<T>, T>.Value' cannot be assigned to -- it is read only, make sure you are not trying to assign to a read-only property.
 *   When encountering CA1062 errors, In externally visible method 'SoundPressureLevel<T> SoundPressureLevel<T>.FromSoundPressure(SoundPressure<T> soundPressure)', validate parameter 'soundPressure' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null' add a null check for the reference parameter.
 *   When fixing CS0704 errors (Cannot do non-virtual member lookup in 'T' because it is a type parameter), add the appropriate generic constraints (e.g., `where T : struct, INumber<T>, IFloatingPoint<T>`).
-*   When fixing CA1062 errors (In externally visible method X, validate parameter Y is non-null before using it), add `ArgumentNullException.ThrowIfNull(parameterName)` at the beginning of the method.
-*   When a file is missing the standard header, add the following to the top of the file:
-```csharp
-// Copyright (c) KTSU. All rights reserved.
-```
-
-## WORKFLOW & RELEASE RULES
-
-(Workflow and release rules are documented here.)
-
-*   The main project `README.md` should mention the `examples` directory and its purpose.
-*   Before releasing a version:
-    *   Fix all failing tests; a 100% pass rate is required.
-    *   Update the version from `1.0.0-pre.1` to `1.0.0` (or the appropriate version number).
-    *   Update `CHANGELOG.md` with proper release notes.
-    *   Perform final testing across different .NET versions.
-    *   Conduct performance testing (if applicable).
-    *   Conduct a security review of validation logic.
-*   When adding new interfaces to the project, add tests to verify that the interfaces are properly implemented and that polymorphism works as expected. Consider adding the interface tests to the existing `SemanticPathTests.cs` file or creating a separate test file, depending on the existing test structure.
-*   Determine if interfaces can implicitly cast to system strings so that they can be passed transparently where strings are normally used.
-*   Split out the non-trivial types from files with multiple types in them
-*   When calculating directory `Depth`, the value is the number of directory separators in the path.
-*   For ease of use, use a single common namespace for all types in the library.
-*   SemanticStringValidationExamples can just be built in semantic types where appropriate
-*   The built in semantic string types should not need the string suffix.
-*
+*   When fixing CA1062 errors (In externally visible method X, validate parameter Y is non-null before using it), add `ArgumentNullException.ThrowIfNull(parameterName

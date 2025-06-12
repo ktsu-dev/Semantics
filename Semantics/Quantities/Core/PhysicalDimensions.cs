@@ -9,53 +9,73 @@ using System.Collections.Frozen;
 /// <inheritdoc/>
 public static class PhysicalDimensions
 {
+	// Bootstrap units to break circular dependencies
+	private static readonly BootstrapUnit BootstrapRadian = new("radian", "rad");
+	private static readonly BootstrapUnit BootstrapMeter = new("meter", "m");
+	private static readonly BootstrapUnit BootstrapKilogram = new("kilogram", "kg");
+	private static readonly BootstrapUnit BootstrapSecond = new("second", "s");
+	private static readonly BootstrapUnit BootstrapAmpere = new("ampere", "A");
+	private static readonly BootstrapUnit BootstrapKelvin = new("kelvin", "K");
+	private static readonly BootstrapUnit BootstrapMole = new("mole", "mol");
+	private static readonly BootstrapUnit BootstrapCandela = new("candela", "cd");
+
 	/// <summary>Dimensionless quantity [1].</summary>
-	public static readonly PhysicalDimension Dimensionless = new(baseUnit: Units.Radian);
+	public static readonly PhysicalDimension Dimensionless = new(baseUnit: BootstrapRadian);
 
 	/// <summary>Length dimension [L].</summary>
-	public static readonly PhysicalDimension Length = new(baseUnit: Units.Meter, length: 1);
+	public static readonly PhysicalDimension Length = new(baseUnit: BootstrapMeter, length: 1);
 
 	/// <summary>Mass dimension [M].</summary>
-	public static readonly PhysicalDimension Mass = new(baseUnit: Units.Kilogram, mass: 1);
+	public static readonly PhysicalDimension Mass = new(baseUnit: BootstrapKilogram, mass: 1);
 
 	/// <summary>Time dimension [T].</summary>
-	public static readonly PhysicalDimension Time = new(baseUnit: Units.Second, time: 1);
+	public static readonly PhysicalDimension Time = new(baseUnit: BootstrapSecond, time: 1);
 
 	/// <summary>Electric current dimension [I].</summary>
-	public static readonly PhysicalDimension ElectricCurrent = new(baseUnit: Units.Ampere, electricCurrent: 1);
+	public static readonly PhysicalDimension ElectricCurrent = new(baseUnit: BootstrapAmpere, electricCurrent: 1);
 
 	/// <summary>Temperature dimension [Θ].</summary>
-	public static readonly PhysicalDimension Temperature = new(baseUnit: Units.Kelvin, temperature: 1);
+	public static readonly PhysicalDimension Temperature = new(baseUnit: BootstrapKelvin, temperature: 1);
 
 	/// <summary>Amount of substance dimension [N].</summary>
-	public static readonly PhysicalDimension AmountOfSubstance = new(baseUnit: Units.Mole, amountOfSubstance: 1);
+	public static readonly PhysicalDimension AmountOfSubstance = new(baseUnit: BootstrapMole, amountOfSubstance: 1);
 
 	/// <summary>Luminous intensity dimension [J].</summary>
-	public static readonly PhysicalDimension LuminousIntensity = new(baseUnit: Units.Candela, luminousIntensity: 1);
+	public static readonly PhysicalDimension LuminousIntensity = new(baseUnit: BootstrapCandela, luminousIntensity: 1);
+
+	// Additional bootstrap units for derived dimensions
+	private static readonly BootstrapUnit BootstrapSquareMeter = new("square meter", "m²");
+	private static readonly BootstrapUnit BootstrapCubicMeter = new("cubic meter", "m³");
+	private static readonly BootstrapUnit BootstrapMetersPerSecond = new("meters per second", "m/s");
+	private static readonly BootstrapUnit BootstrapMetersPerSecondSquared = new("meters per second squared", "m/s²");
+	private static readonly BootstrapUnit BootstrapNewton = new("newton", "N");
+	private static readonly BootstrapUnit BootstrapPascal = new("pascal", "Pa");
+	private static readonly BootstrapUnit BootstrapJoule = new("joule", "J");
+	private static readonly BootstrapUnit BootstrapWatt = new("watt", "W");
 
 	/// <summary>Area dimension [L²].</summary>
-	public static readonly PhysicalDimension Area = new(baseUnit: Units.SquareMeter, length: 2);
+	public static readonly PhysicalDimension Area = new(baseUnit: BootstrapSquareMeter, length: 2);
 
 	/// <summary>Volume dimension [L³].</summary>
-	public static readonly PhysicalDimension Volume = new(baseUnit: Units.CubicMeter, length: 3);
+	public static readonly PhysicalDimension Volume = new(baseUnit: BootstrapCubicMeter, length: 3);
 
 	/// <summary>Velocity dimension [L T⁻¹].</summary>
-	public static readonly PhysicalDimension Velocity = new(baseUnit: Units.MetersPerSecond, length: 1, time: -1);
+	public static readonly PhysicalDimension Velocity = new(baseUnit: BootstrapMetersPerSecond, length: 1, time: -1);
 
 	/// <summary>Acceleration dimension [L T⁻²].</summary>
-	public static readonly PhysicalDimension Acceleration = new(baseUnit: Units.MetersPerSecondSquared, length: 1, time: -2);
+	public static readonly PhysicalDimension Acceleration = new(baseUnit: BootstrapMetersPerSecondSquared, length: 1, time: -2);
 
 	/// <summary>Force dimension [M L T⁻²].</summary>
-	public static readonly PhysicalDimension Force = new(mass: 1, length: 1, time: -2, baseUnit: Units.Newton);
+	public static readonly PhysicalDimension Force = new(mass: 1, length: 1, time: -2, baseUnit: BootstrapNewton);
 
 	/// <summary>Pressure dimension [M L⁻¹ T⁻²].</summary>
-	public static readonly PhysicalDimension Pressure = new(mass: 1, length: -1, time: -2, baseUnit: Units.Pascal);
+	public static readonly PhysicalDimension Pressure = new(mass: 1, length: -1, time: -2, baseUnit: BootstrapPascal);
 
 	/// <summary>Energy dimension [M L² T⁻²].</summary>
-	public static readonly PhysicalDimension Energy = new(mass: 1, length: 2, time: -2, baseUnit: Units.Joule);
+	public static readonly PhysicalDimension Energy = new(mass: 1, length: 2, time: -2, baseUnit: BootstrapJoule);
 
 	/// <summary>Power dimension [M L² T⁻³].</summary>
-	public static readonly PhysicalDimension Power = new(mass: 1, length: 2, time: -3, baseUnit: Units.Watt);
+	public static readonly PhysicalDimension Power = new(mass: 1, length: 2, time: -3, baseUnit: BootstrapWatt);
 
 	/// <summary>Electric potential dimension [M L² T⁻³ I⁻¹].</summary>
 	public static readonly PhysicalDimension ElectricPotential = new(mass: 1, length: 2, time: -3, electricCurrent: -1, baseUnit: Units.Volt);

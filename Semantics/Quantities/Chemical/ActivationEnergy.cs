@@ -38,7 +38,7 @@ public sealed record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>,
 		T k2 = rateConstant2.In(Units.PerSecond);
 		T t1 = temperature1.In(Units.Kelvin);
 		T t2 = temperature2.In(Units.Kelvin);
-		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
+		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
 
 		T lnRatio = T.CreateChecked(Math.Log(double.CreateChecked(k2 / k1)));
 		T tempDifference = (T.One / t1) - (T.One / t2);
@@ -80,7 +80,7 @@ public sealed record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>,
 		T ea = In(Units.JoulesPerMole);
 		T t1 = temperature1.In(Units.Kelvin);
 		T t2 = temperature2.In(Units.Kelvin);
-		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
+		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
 
 		T exponent = ea / gasConstant * ((T.One / t1) - (T.One / t2));
 		return T.CreateChecked(Math.Exp(double.CreateChecked(exponent)));

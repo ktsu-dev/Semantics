@@ -47,7 +47,7 @@ public sealed record PH<T> : PhysicalQuantity<PH<T>, T>
 	public PH<T> ToPOH()
 	{
 		T pHValue = In(Units.Radian);
-		T kw = T.CreateChecked(14.0); // Water dissociation constant at 25°C
+		T kw = PhysicalConstants.Generic.WaterIonProduct<T>();
 		T pOHValue = kw - pHValue;
 		return Create(pOHValue);
 	}
@@ -56,7 +56,7 @@ public sealed record PH<T> : PhysicalQuantity<PH<T>, T>
 	public static class CommonValues
 	{
 		/// <summary>Pure water at 25°C: pH 7.0 (neutral).</summary>
-		public static PH<T> NeutralWater => Create(T.CreateChecked(7.0));
+		public static PH<T> NeutralWater => Create(PhysicalConstants.Generic.NeutralPH<T>());
 
 		/// <summary>Battery acid: pH ~0.0 (extremely acidic).</summary>
 		public static PH<T> BatteryAcid => Create(T.CreateChecked(0.0));
@@ -85,7 +85,7 @@ public sealed record PH<T> : PhysicalQuantity<PH<T>, T>
 	public bool IsAcidic()
 	{
 		T pHValue = In(Units.Radian);
-		T neutral = T.CreateChecked(7.0);
+		T neutral = PhysicalConstants.Generic.NeutralPH<T>();
 		return pHValue < neutral;
 	}
 
@@ -94,7 +94,7 @@ public sealed record PH<T> : PhysicalQuantity<PH<T>, T>
 	public bool IsBasic()
 	{
 		T pHValue = In(Units.Radian);
-		T neutral = T.CreateChecked(7.0);
+		T neutral = PhysicalConstants.Generic.NeutralPH<T>();
 		return pHValue > neutral;
 	}
 
@@ -103,7 +103,7 @@ public sealed record PH<T> : PhysicalQuantity<PH<T>, T>
 	public bool IsNeutral()
 	{
 		T pHValue = In(Units.Radian);
-		T neutral = T.CreateChecked(7.0);
+		T neutral = PhysicalConstants.Generic.NeutralPH<T>();
 		T tolerance = T.CreateChecked(0.01);
 		return T.Abs(pHValue - neutral) < tolerance;
 	}

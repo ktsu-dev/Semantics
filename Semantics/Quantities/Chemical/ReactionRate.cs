@@ -87,7 +87,7 @@ public sealed record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>
 		ArgumentNullException.ThrowIfNull(rateConstant);
 
 		T k = rateConstant.In(Units.PerSecond);
-		T ln2 = T.CreateChecked(0.693147); // ln(2)
+		T ln2 = PhysicalConstants.Generic.Ln2<T>();
 		T halfLife = ln2 / k;
 		return Time<T>.Create(halfLife);
 	}

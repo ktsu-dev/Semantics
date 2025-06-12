@@ -33,7 +33,7 @@ public sealed record RateConstant<T> : PhysicalQuantity<RateConstant<T>, T>
 
 		T ea = activationEnergy.In(Units.JoulesPerMole);
 		T temp = temperature.In(Units.Kelvin);
-		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
+		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
 
 		T exponent = -ea / (gasConstant * temp);
 		T k = preExponentialFactor * T.CreateChecked(Math.Exp(double.CreateChecked(exponent)));
@@ -56,7 +56,7 @@ public sealed record RateConstant<T> : PhysicalQuantity<RateConstant<T>, T>
 		T t1 = temperature1.In(Units.Kelvin);
 		T t2 = temperature2.In(Units.Kelvin);
 		T ea = activationEnergy.In(Units.JoulesPerMole);
-		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
+		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
 
 		T exponent = ea / gasConstant * ((T.One / t1) - (T.One / t2));
 		T ratio = T.CreateChecked(Math.Exp(double.CreateChecked(exponent)));

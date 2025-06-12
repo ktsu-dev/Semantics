@@ -25,8 +25,7 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	/// <returns>The amount of substance in moles.</returns>
 	public static AmountOfSubstance<T> FromEntities(T numberOfEntities)
 	{
-		// N_A = 6.02214076 × 10²³ entities/mol
-		T avogadroNumber = T.CreateChecked(6.02214076e23);
+		T avogadroNumber = PhysicalConstants.Generic.AvogadroNumber<T>();
 		T moles = numberOfEntities / avogadroNumber;
 		return Create(moles);
 	}
@@ -35,7 +34,7 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	/// <returns>The number of entities (atoms, molecules, ions).</returns>
 	public T GetNumberOfEntities()
 	{
-		T avogadroNumber = T.CreateChecked(6.02214076e23);
+		T avogadroNumber = PhysicalConstants.Generic.AvogadroNumber<T>();
 		T moles = In(Units.Mole);
 		return moles * avogadroNumber;
 	}
@@ -56,7 +55,7 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	/// <returns>The molar volume at STP (22.414 L/mol).</returns>
 	public Volume<T> GetMolarVolumeAtSTP()
 	{
-		T molarVolumeSTP = T.CreateChecked(22.414); // L/mol at STP
+		T molarVolumeSTP = PhysicalConstants.Generic.MolarVolumeSTP<T>();
 		T moles = In(Units.Mole);
 		T volumeInLiters = moles * molarVolumeSTP;
 		return Volume<T>.Create(volumeInLiters);
