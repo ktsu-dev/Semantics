@@ -95,19 +95,27 @@ This document tracks the implementation progress of physical quantity domains in
 - [ ] `Illuminance.cs` - Lux, foot-candles
 - [ ] `Luminance.cs` - cd/m², nits
 
-## Acoustic Domain 📋
+## Acoustic Domain 🚧
 **Location:** `Quantities/Acoustic/`
-**Status:** Frequency implemented, detailed TODO created  
+**Status:** Core acoustic quantities implemented  
 **Reference:** See `Acoustic/README.md` for comprehensive implementation plan
 
 ### Implemented ✅
 - [x] `Frequency.cs` - Hz, kHz, MHz
+- [x] `Wavelength.cs` - Wave spatial period
+- [x] `SoundPressure.cs` - Pa, μPa, RMS measurements
+- [x] `SoundIntensity.cs` - W/m² units
+- [x] `SoundPower.cs` - Total acoustic power
+- [x] `AcousticImpedance.cs` - Pa·s/m, rayl
+- [x] `SoundSpeed.cs` - Velocity of sound waves
+- [x] `SoundAbsorption.cs` - Energy absorption coefficient
+- [x] `ReverberationTime.cs` - Decay time of sound
 
 ### Priority Items  
-- [ ] `SoundPressure.cs` - Pa, μPa, RMS measurements
 - [ ] `SoundPressureLevel.cs` - dB SPL scale
-- [ ] `SoundIntensity.cs` - W/m² units
-- [ ] `AcousticImpedance.cs` - Pa·s/m, rayl
+- [ ] `SoundIntensityLevel.cs` - dB IL scale
+- [ ] `SoundPowerLevel.cs` - dB PWL scale
+- [ ] `ReflectionCoefficient.cs` - Sound reflection ratio
 
 ## Future Domains 🔍
 

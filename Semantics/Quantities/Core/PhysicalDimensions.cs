@@ -111,6 +111,60 @@ public static class PhysicalDimensions
 	/// <summary>AC impedance dimension [M L² T⁻³ I⁻²].</summary>
 	public static readonly PhysicalDimension ImpedanceAC = new(mass: 1, length: 2, time: -3, electricCurrent: -2, baseUnit: Units.Ohm);
 
+	/// <summary>Sound pressure dimension [M L⁻¹ T⁻²].</summary>
+	public static readonly PhysicalDimension SoundPressure = new(mass: 1, length: -1, time: -2, baseUnit: Units.Pascal);
+
+	/// <summary>Sound intensity dimension [M T⁻³].</summary>
+	public static readonly PhysicalDimension SoundIntensity = new(mass: 1, time: -3, baseUnit: Units.Watt);
+
+	/// <summary>Sound power dimension [M L² T⁻³].</summary>
+	public static readonly PhysicalDimension SoundPower = new(mass: 1, length: 2, time: -3, baseUnit: Units.Watt);
+
+	/// <summary>Acoustic impedance dimension [M L⁻² T⁻¹].</summary>
+	public static readonly PhysicalDimension AcousticImpedance = new(mass: 1, length: -2, time: -1, baseUnit: Units.Pascal);
+
+	/// <summary>Sound speed dimension [L T⁻¹].</summary>
+	public static readonly PhysicalDimension SoundSpeed = new(length: 1, time: -1, baseUnit: Units.MetersPerSecond);
+
+	/// <summary>Sound absorption coefficient dimension [1].</summary>
+	public static readonly PhysicalDimension SoundAbsorption = new(baseUnit: Units.Radian);
+
+	/// <summary>Reverberation time dimension [T].</summary>
+	public static readonly PhysicalDimension ReverberationTime = new(time: 1, baseUnit: Units.Second);
+
+	/// <summary>Wavelength dimension [L].</summary>
+	public static readonly PhysicalDimension Wavelength = new(length: 1, baseUnit: Units.Meter);
+
+	/// <summary>Wave number dimension [L⁻¹].</summary>
+	public static readonly PhysicalDimension WaveNumber = new(length: -1, baseUnit: Units.Meter);
+
+	/// <summary>Heat dimension [M L² T⁻²].</summary>
+	public static readonly PhysicalDimension Heat = new(mass: 1, length: 2, time: -2, baseUnit: Units.Joule);
+
+	/// <summary>Entropy dimension [M L² T⁻² Θ⁻¹].</summary>
+	public static readonly PhysicalDimension Entropy = new(mass: 1, length: 2, time: -2, temperature: -1, baseUnit: Units.Joule);
+
+	/// <summary>Thermal conductivity dimension [M L T⁻³ Θ⁻¹].</summary>
+	public static readonly PhysicalDimension ThermalConductivity = new(mass: 1, length: 1, time: -3, temperature: -1, baseUnit: Units.Watt);
+
+	/// <summary>Heat capacity dimension [M L² T⁻² Θ⁻¹].</summary>
+	public static readonly PhysicalDimension HeatCapacity = new(mass: 1, length: 2, time: -2, temperature: -1, baseUnit: Units.Joule);
+
+	/// <summary>Specific heat dimension [L² T⁻² Θ⁻¹].</summary>
+	public static readonly PhysicalDimension SpecificHeat = new(length: 2, time: -2, temperature: -1, baseUnit: Units.Joule);
+
+	/// <summary>Heat transfer coefficient dimension [M T⁻³ Θ⁻¹].</summary>
+	public static readonly PhysicalDimension HeatTransferCoefficient = new(mass: 1, time: -3, temperature: -1, baseUnit: Units.Watt);
+
+	/// <summary>Thermal expansion coefficient dimension [Θ⁻¹].</summary>
+	public static readonly PhysicalDimension ThermalExpansion = new(temperature: -1, baseUnit: Units.Kelvin);
+
+	/// <summary>Thermal diffusivity dimension [L² T⁻¹].</summary>
+	public static readonly PhysicalDimension ThermalDiffusivity = new(length: 2, time: -1, baseUnit: Units.Meter);
+
+	/// <summary>Thermal resistance dimension [Θ T³ M⁻¹ L⁻²].</summary>
+	public static readonly PhysicalDimension ThermalResistance = new(temperature: 1, time: 3, mass: -1, length: -2, baseUnit: Units.Kelvin);
+
 	/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>
 	public static FrozenSet<PhysicalDimension> All { get; } = new HashSet<PhysicalDimension>(
 		[
@@ -147,6 +201,24 @@ public static class PhysicalDimensions
 			Permittivity,
 			ElectricConductivity,
 			ElectricPowerDensity,
-			ImpedanceAC
+			ImpedanceAC,
+			SoundPressure,
+			SoundIntensity,
+			SoundPower,
+			AcousticImpedance,
+			SoundSpeed,
+			SoundAbsorption,
+			ReverberationTime,
+			Wavelength,
+			WaveNumber,
+			Heat,
+			Entropy,
+			ThermalConductivity,
+			HeatCapacity,
+			SpecificHeat,
+			HeatTransferCoefficient,
+			ThermalExpansion,
+			ThermalDiffusivity,
+			ThermalResistance
 		]).ToFrozenSet();
 }

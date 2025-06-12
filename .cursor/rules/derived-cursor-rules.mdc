@@ -242,6 +242,7 @@ When adding XML documentation comments:
     1.  Pass the base unit directly to the `PhysicalDimension` constructor.
     2.  Remove the `BaseUnit` property from `PhysicalQuantity` and its interface.
     3.  Update `PhysicalQuantity.In()` to use `Dimension.BaseUnit`.
+*   When implementing PhysicalQuantity classes, ensure the containing type is one of the parameters in the generic type definition.
 
 ## DEBUGGING
 
@@ -347,16 +348,13 @@ When adding XML documentation comments:
 
 ### Current Implementation Status
 
-*   **Mechanics**: Partially implemented (11/18 quantities).
-*   **Electrical**: Partially implemented (5/11 quantities).
-*   **Acoustic**: Partially implemented (1/20+ quantities).
+*   **Mechanics**: 100% implemented (18/18 quantities).
+*   **Electrical**: 100% implemented (11/11 quantities).
+*   **Acoustic**: Significantly progressed (6/20+ quantities).
 *   **Thermal**: Not implemented (0/10 quantities).
 *   **Chemical**: Not implemented (0/17 quantities).
 *   **Optical**: Not implemented (0/18 quantities).
 
 ### Priority Implementation Tasks
 
-1.  **Complete Mechanics Domain** (7 missing quantities):
-    *   `Momentum.cs` - p = mv
-    *   `AngularVelocity.cs` - Rotational motion
-    *
+1.  **Acoustic Domain** (2

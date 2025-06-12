@@ -1579,6 +1579,937 @@ Perfect! Now I've completed both the Mechanics and Electrical domains. Let me no
 
 ---
 
+Excellent! I've completed both the Mechanics and Electrical domains. Now let me build the project to ensure everything compiles correctly:
+
+---
+
+```bash
+cd Semantics && dotnet build
+```
+
+```
+C:\dev\ktsu-dev\Semantics>cd Semantics && dotnet build
+Microsoft Windows [Version 10.0.26100.4061]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\dev\ktsu-dev\Semantics>cd Semantics && dotnet build
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Restore complete (2.4s)
+  Semantics succeeded (5.9s) → bin\Debug\net9.0\ktsu.Semantics.dll
+
+Build succeeded in 9.0s
+
+C:\dev\ktsu-dev\Semantics\Semantics>
+```
+
+---
+
+
+
+---
+
+Perfect! The build succeeded without any compilation errors. Now let me provide a summary of what I've accomplished and what the next steps are to complete the quantities implementation.
+
+## ✅ Completed Tasks
+
+### **Mechanics Domain - 100% Complete**
+Successfully implemented all 7 missing mechanics quantities:
+
+1. **`Momentum.cs`** - Linear momentum (p = mv) with relationships to mass and velocity
+2. **`AngularVelocity.cs`** - Rotational motion in radians per second
+3. **`AngularAcceleration.cs`** - Rate of angular velocity change
+4. **`Torque.cs`** - Rotational force (τ = F × r) with relationships to force and length
+5. **`MomentOfInertia.cs`** - Rotational mass with relationships to mass and area
+6. **`Density.cs`** - Mass per unit volume (ρ = m/V) with complete relationships
+7. **`SpecificGravity.cs`** - Dimensionless density ratio relative to reference density
+
+### **Electrical Domain - 100% Complete**  
+Successfully implemented all 6 missing electrical quantities:
+
+1. **`ElectricField.cs`** - Electric field strength (V/m) with relationships to potential and length
+2. **`ElectricFlux.cs`** - Electric flux through surfaces with relationships to field and area
+3. **`Permittivity.cs`** - Electric field response in materials (F/m)
+4. **`ElectricConductivity.cs`** - Electrical conductivity (S/m) with current density relationships
+5. **`ElectricPowerDensity.cs`** - Power per unit volume with relationships to power and volume
+6. **`ImpedanceAC.cs`** - AC impedance with relationships to voltage and current
+
+### **Infrastructure Updates**
+- Added all necessary physical dimensions to `PhysicalDimensions.cs`
+- Updated the frozen collection to include all new dimensions
+- All quantities follow the established patterns with proper XML documentation
+- Implemented complete mathematical relationships between related quantities
+- All quantities compile successfully without errors
+
+## 🚀 Next Priority Steps
+
+### **1. Acoustic Domain** (High Priority - Only 1/20+ implemented)
+The acoustic domain has the most missing quantities and should be tackled next:
+
+**Missing quantities to implement:**
+- `SoundPressure.cs` - Acoustic pressure variations
+- `SoundIntensity.cs` - Acoustic power per unit area  
+- `SoundPower.cs` - Total acoustic power
+- `Wavelength.cs` - Distance between wave peaks
+- `WaveNumber.cs` - Spatial frequency
+- `AcousticImpedance.cs` - Sound transmission properties
+- `Reverberation.cs` - Echo and room acoustics
+- `SoundAbsorption.cs` - Sound energy absorption
+- Plus ~12 more specialized acoustic quantities
+
+### **2. Thermal Domain** (Medium Priority - 0/10 implemented)
+Complete thermal physics implementation:
+- `HeatCapacity.cs`, `ThermalConductivity.cs`, `HeatFlux.cs`, etc.
+
+### **3. Chemical Domain** (Medium Priority - 0/17 implemented)  
+Chemistry and material science quantities:
+- `MolarMass.cs`, `Molarity.cs`, `ReactionRate.cs`, etc.
+
+### **4. Optical Domain** (Lower Priority - 0/18 implemented)
+Optics and electromagnetic radiation:
+- `LuminousFlux.cs`, `Illuminance.cs`, `RefractiveIndex.cs`, etc.
+
+The foundation is now solid with complete Mechanics and Electrical domains. The project builds successfully and is ready for the next phase of implementation!
+
+---
+
+_**User**_
+
+continue
+
+---
+
+_**Assistant**_
+
+Great! Let's continue with the next priority domain - **Acoustic**. Since it only has 1 out of 20+ quantities implemented, it's the most incomplete domain. Let me start by examining the existing acoustic implementation and then add the missing physical dimensions and quantities.
+
+---
+
+Could not find file 'Semantics/Quantities/Acoustic/Frequency.cs' in the workspace.
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Quantities/Acoustic • **1** results</summary>
+        
+| Name |
+|-------|
+| 📄 `README.md` |
+
+</details>
+
+---
+
+I see that the Acoustic domain doesn't have any implemented quantities yet, just a README. Let me check if Frequency is implemented elsewhere:
+
+---
+
+<details>
+            <summary>Grep search for "class.*Frequency.*PhysicalQuantity" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+<details>
+            <summary>Grep search for "Frequency.*PhysicalDimension" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+Let me check what's already in PhysicalDimensions to see if Frequency is there:
+
+---
+
+<details>
+            <summary>Grep search for "Frequency.*=.*new"" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+<details>
+            <summary>Grep search for "Frequency"" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+<details>
+            <summary>Grep search for "Frequency" • **9** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/TODO_DOMAINS.md` | L99 | `**Status:** Frequency implemented, detailed TODO created` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/TODO_DOMAINS.md` | L103 | `- [x] `Frequency.cs` - Hz, kHz, MHz` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Optical/README.md` | L10 | `- [ ] `Frequency.cs` - Already partially in Acoustics (expand for optics)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Optical/README.md` | L13 | `- [ ] `Wavenumber.cs` - Spatial frequency` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Optical/README.md` | L95 | `var speedOfLight = wavelength * frequency;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L338 | `/// <summary>Hertz - SI derived unit of frequency.</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L339 | `public static readonly IUnit Hertz = new Unit("hertz", "Hz", PhysicalDimensions.Frequency, UnitSystem.SIDerived);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L342 | `public static readonly IUnit Kilohertz = new Unit("kilohertz", "kHz", PhysicalDimensions.Frequency, UnitSystem.SIDerived, MetricMagnitudes.Kilo);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L345 | `public static readonly IUnit Megahertz = new Unit("megahertz", "MHz", PhysicalDimensions.Frequency, UnitSystem.SIDerived, MetricMagnitudes.Mega);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L393 | `// Frequency Units: hertz (Hz), terahertz (THz)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L71 | `/// <summary>Frequency dimension [T⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L72 | `public static readonly PhysicalDimension Frequency = new(baseUnit: Units.Hertz, time: -1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L136 | `Frequency,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensionExtensions.cs` | L330 | `// Frequency: .Terahertz(), .PetaHertz()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensionExtensions.cs` | L353 | `// Frequency: .Hertz(), .Kilohertz(), .Megahertz()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/README.md` | L7 | `- [ ] `Frequency.cs` - **IMPLEMENTED** Sound wave frequency` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/README.md` | L71 | `- [ ] `Pitch.cs` - Perceived frequency` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/README.md` | L74 | `- [ ] `Sharpness.cs` - High-frequency content perception` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/README.md` | L89 | `var soundSpeed = wavelength * frequency;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-12_03-24-tasks-for-completing-quantities-implementation.md` | L391 | `| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Optical/README.md` | L10 | `- [ ] `Frequency.cs` - Already partially in Acoustics (expand for optics)` |` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-12_03-24-tasks-for-completing-quantities-implementation.md` | L392 | `| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Optical/README.md` | L13 | `- [ ] `Wavenumber.cs` - Spatial frequency` |` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-12_03-24-tasks-for-completing-quantities-implementation.md` | L430 | `| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/README.md` | L7 | `- [ ] `Frequency.cs` - **IMPLEMENTED** Sound wave frequency` |` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-12_03-24-tasks-for-completing-quantities-implementation.md` | L469 | `- ✅ `Frequency.cs` (mentioned as implemented)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-12_02-50-merging-physical-quantity-and-dimension.md` | L552 | `+ 		if (dimension == PhysicalDimensions.Frequency) return Units.Hertz;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-12_02-50-merging-physical-quantity-and-dimension.md` | L1189 | `- 		if (dimension == PhysicalDimensions.Frequency)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-12_02-50-merging-physical-quantity-and-dimension.md` | L1263 | `+ 		[PhysicalDimensions.Frequency] = Units.Hertz,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-12_02-50-merging-physical-quantity-and-dimension.md` | L1878 | `/// <summary>Frequency dimension [T⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-12_02-50-merging-physical-quantity-and-dimension.md` | L1879 | `- 	public static readonly PhysicalDimension Frequency = new(time: -1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-12_02-50-merging-physical-quantity-and-dimension.md` | L1880 | `+ 	public static readonly PhysicalDimension Frequency = new(time: -1, baseUnit: Units.Hertz);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-08_14-38-implement-division-operator-for-path-types.md` | L3763 | `- High-frequency path operations` |
+
+</details>
+
+---
+
+I can see that Frequency dimension exists in PhysicalDimensions.cs, but the actual Frequency.cs quantity class is missing. Let me first implement the missing acoustic dimensions and then create all the acoustic quantities. Let me check what acoustic dimensions need to be added:
+
+---
+
+Read file: Semantics/Quantities/Acoustic/README.md
+
+---
+
+Now I need to add the missing acoustic dimensions to PhysicalDimensions.cs. Let me add them:
+
+---
+
+
+
+---
+
+Now I need to add these new dimensions to the All collection:
+
+---
+
+
+
+---
+
+Now let me implement the core acoustic quantities. I'll start with the most fundamental ones:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a frequency quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.Frequency;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the Frequency class.
++ 	/// </summary>
++ 	public Frequency() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new Frequency from a value in hertz.
++ 	/// </summary>
++ 	/// <param name="hertz">The value in hertz.</param>
++ 	/// <returns>A new Frequency instance.</returns>
++ 	public static Frequency<T> FromHertz(T hertz) => Create(hertz);
++ 
++ 	/// <summary>
++ 	/// Creates a new Frequency from a value in kilohertz.
++ 	/// </summary>
++ 	/// <param name="kilohertz">The value in kilohertz.</param>
++ 	/// <returns>A new Frequency instance.</returns>
++ 	public static Frequency<T> FromKilohertz(T kilohertz) => Create(kilohertz * T.CreateChecked(1000));
++ 
++ 	/// <summary>
++ 	/// Creates a new Frequency from a value in megahertz.
++ 	/// </summary>
++ 	/// <param name="megahertz">The value in megahertz.</param>
++ 	/// <returns>A new Frequency instance.</returns>
++ 	public static Frequency<T> FromMegahertz(T megahertz) => Create(megahertz * T.CreateChecked(1_000_000));
++ 
++ 	/// <summary>
++ 	/// Divides one by time to create frequency.
++ 	/// </summary>
++ 	/// <param name="one">The value one.</param>
++ 	/// <param name="time">The time period.</param>
++ 	/// <returns>The resulting frequency.</returns>
++ 	public static Frequency<T> Divide(T one, Time<T> time)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(time);
++ 		return Create(one / time.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Multiplies frequency by wavelength to get speed.
++ 	/// </summary>
++ 	/// <param name="frequency">The frequency.</param>
++ 	/// <param name="wavelength">The wavelength.</param>
++ 	/// <returns>The resulting speed.</returns>
++ 	public static Velocity<T> Multiply(Frequency<T> frequency, Wavelength<T> wavelength)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(frequency);
++ 		ArgumentNullException.ThrowIfNull(wavelength);
++ 		return Velocity<T>.Create(frequency.Value * wavelength.Value);
++ 	}
++ } 
+```
+
+---
+
+I need to create Wavelength first. Let me implement the core acoustic quantities in parallel:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a wavelength quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record Wavelength<T> : PhysicalQuantity<Wavelength<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.Wavelength;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the Wavelength class.
++ 	/// </summary>
++ 	public Wavelength() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new Wavelength from a value in meters.
++ 	/// </summary>
++ 	/// <param name="meters">The value in meters.</param>
++ 	/// <returns>A new Wavelength instance.</returns>
++ 	public static Wavelength<T> FromMeters(T meters) => Create(meters);
++ 
++ 	/// <summary>
++ 	/// Creates a new Wavelength from a value in millimeters.
++ 	/// </summary>
++ 	/// <param name="millimeters">The value in millimeters.</param>
++ 	/// <returns>A new Wavelength instance.</returns>
++ 	public static Wavelength<T> FromMillimeters(T millimeters) => Create(millimeters / T.CreateChecked(1000));
++ 
++ 	/// <summary>
++ 	/// Creates a new Wavelength from a value in micrometers.
++ 	/// </summary>
++ 	/// <param name="micrometers">The value in micrometers.</param>
++ 	/// <returns>A new Wavelength instance.</returns>
++ 	public static Wavelength<T> FromMicrometers(T micrometers) => Create(micrometers / T.CreateChecked(1_000_000));
++ 
++ 	/// <summary>
++ 	/// Divides speed by frequency to create wavelength.
++ 	/// </summary>
++ 	/// <param name="speed">The wave speed.</param>
++ 	/// <param name="frequency">The frequency.</param>
++ 	/// <returns>The resulting wavelength.</returns>
++ 	public static Wavelength<T> Divide(Velocity<T> speed, Frequency<T> frequency)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(speed);
++ 		ArgumentNullException.ThrowIfNull(frequency);
++ 		return Create(speed.Value / frequency.Value);
++ 	}
++ } 
+```
+
+---
+
+Now let me implement the core acoustic quantities in parallel:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a sound pressure quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record SoundPressure<T> : PhysicalQuantity<SoundPressure<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SoundPressure;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the SoundPressure class.
++ 	/// </summary>
++ 	public SoundPressure() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundPressure from a value in pascals.
++ 	/// </summary>
++ 	/// <param name="pascals">The value in pascals.</param>
++ 	/// <returns>A new SoundPressure instance.</returns>
++ 	public static SoundPressure<T> FromPascals(T pascals) => Create(pascals);
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundPressure from a value in micropascals.
++ 	/// </summary>
++ 	/// <param name="micropascals">The value in micropascals.</param>
++ 	/// <returns>A new SoundPressure instance.</returns>
++ 	public static SoundPressure<T> FromMicropascals(T micropascals) => Create(micropascals / T.CreateChecked(1_000_000));
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundPressure from a value in bars.
++ 	/// </summary>
++ 	/// <param name="bars">The value in bars.</param>
++ 	/// <returns>A new SoundPressure instance.</returns>
++ 	public static SoundPressure<T> FromBars(T bars) => Create(bars * T.CreateChecked(100_000));
++ 
++ 	/// <summary>
++ 	/// Squares sound pressure for intensity calculations.
++ 	/// </summary>
++ 	/// <returns>The squared sound pressure.</returns>
++ 	public T Squared() => Value * Value;
++ } 
+```
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a sound intensity quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record SoundIntensity<T> : PhysicalQuantity<SoundIntensity<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SoundIntensity;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the SoundIntensity class.
++ 	/// </summary>
++ 	public SoundIntensity() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundIntensity from a value in watts per square meter.
++ 	/// </summary>
++ 	/// <param name="wattsPerSquareMeter">The value in watts per square meter.</param>
++ 	/// <returns>A new SoundIntensity instance.</returns>
++ 	public static SoundIntensity<T> FromWattsPerSquareMeter(T wattsPerSquareMeter) => Create(wattsPerSquareMeter);
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundIntensity from a value in microwatts per square centimeter.
++ 	/// </summary>
++ 	/// <param name="microwattsPerSquareCentimeter">The value in microwatts per square centimeter.</param>
++ 	/// <returns>A new SoundIntensity instance.</returns>
++ 	public static SoundIntensity<T> FromMicrowattsPerSquareCentimeter(T microwattsPerSquareCentimeter) => 
++ 		Create(microwattsPerSquareCentimeter / T.CreateChecked(100));
++ 
++ 	/// <summary>
++ 	/// Divides sound power by area to create sound intensity.
++ 	/// </summary>
++ 	/// <param name="soundPower">The sound power.</param>
++ 	/// <param name="area">The area.</param>
++ 	/// <returns>The resulting sound intensity.</returns>
++ 	public static SoundIntensity<T> Divide(SoundPower<T> soundPower, Area<T> area)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(soundPower);
++ 		ArgumentNullException.ThrowIfNull(area);
++ 		return Create(soundPower.Value / area.Value);
++ 	}
++ } 
+```
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a sound power quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record SoundPower<T> : PhysicalQuantity<SoundPower<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SoundPower;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the SoundPower class.
++ 	/// </summary>
++ 	public SoundPower() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundPower from a value in watts.
++ 	/// </summary>
++ 	/// <param name="watts">The value in watts.</param>
++ 	/// <returns>A new SoundPower instance.</returns>
++ 	public static SoundPower<T> FromWatts(T watts) => Create(watts);
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundPower from a value in milliwatts.
++ 	/// </summary>
++ 	/// <param name="milliwatts">The value in milliwatts.</param>
++ 	/// <returns>A new SoundPower instance.</returns>
++ 	public static SoundPower<T> FromMilliwatts(T milliwatts) => Create(milliwatts / T.CreateChecked(1000));
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundPower from a value in acoustic watts.
++ 	/// </summary>
++ 	/// <param name="acousticWatts">The value in acoustic watts.</param>
++ 	/// <returns>A new SoundPower instance.</returns>
++ 	public static SoundPower<T> FromAcousticWatts(T acousticWatts) => Create(acousticWatts);
++ 
++ 	/// <summary>
++ 	/// Multiplies sound intensity by area to create sound power.
++ 	/// </summary>
++ 	/// <param name="soundIntensity">The sound intensity.</param>
++ 	/// <param name="area">The area.</param>
++ 	/// <returns>The resulting sound power.</returns>
++ 	public static SoundPower<T> Multiply(SoundIntensity<T> soundIntensity, Area<T> area)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(soundIntensity);
++ 		ArgumentNullException.ThrowIfNull(area);
++ 		return Create(soundIntensity.Value * area.Value);
++ 	}
++ } 
+```
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents an acoustic impedance quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record AcousticImpedance<T> : PhysicalQuantity<AcousticImpedance<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.AcousticImpedance;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the AcousticImpedance class.
++ 	/// </summary>
++ 	public AcousticImpedance() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new AcousticImpedance from a value in pascal-seconds per meter.
++ 	/// </summary>
++ 	/// <param name="pascalSecondsPerMeter">The value in pascal-seconds per meter.</param>
++ 	/// <returns>A new AcousticImpedance instance.</returns>
++ 	public static AcousticImpedance<T> FromPascalSecondsPerMeter(T pascalSecondsPerMeter) => Create(pascalSecondsPerMeter);
++ 
++ 	/// <summary>
++ 	/// Creates a new AcousticImpedance from a value in rayls.
++ 	/// </summary>
++ 	/// <param name="rayls">The value in rayls.</param>
++ 	/// <returns>A new AcousticImpedance instance.</returns>
++ 	public static AcousticImpedance<T> FromRayls(T rayls) => Create(rayls);
++ 
++ 	/// <summary>
++ 	/// Multiplies density by sound speed to create acoustic impedance.
++ 	/// </summary>
++ 	/// <param name="density">The density.</param>
++ 	/// <param name="soundSpeed">The sound speed.</param>
++ 	/// <returns>The resulting acoustic impedance.</returns>
++ 	public static AcousticImpedance<T> Multiply(Density<T> density, SoundSpeed<T> soundSpeed)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(density);
++ 		ArgumentNullException.ThrowIfNull(soundSpeed);
++ 		return Create(density.Value * soundSpeed.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Divides sound pressure by velocity to create acoustic impedance.
++ 	/// </summary>
++ 	/// <param name="soundPressure">The sound pressure.</param>
++ 	/// <param name="velocity">The particle velocity.</param>
++ 	/// <returns>The resulting acoustic impedance.</returns>
++ 	public static AcousticImpedance<T> Divide(SoundPressure<T> soundPressure, Velocity<T> velocity)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(soundPressure);
++ 		ArgumentNullException.ThrowIfNull(velocity);
++ 		return Create(soundPressure.Value / velocity.Value);
++ 	}
++ } 
+```
+
+---
+
+I need to create SoundSpeed first. Let me implement it:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a sound speed quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record SoundSpeed<T> : PhysicalQuantity<SoundSpeed<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SoundSpeed;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the SoundSpeed class.
++ 	/// </summary>
++ 	public SoundSpeed() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundSpeed from a value in meters per second.
++ 	/// </summary>
++ 	/// <param name="metersPerSecond">The value in meters per second.</param>
++ 	/// <returns>A new SoundSpeed instance.</returns>
++ 	public static SoundSpeed<T> FromMetersPerSecond(T metersPerSecond) => Create(metersPerSecond);
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundSpeed from a value in feet per second.
++ 	/// </summary>
++ 	/// <param name="feetPerSecond">The value in feet per second.</param>
++ 	/// <returns>A new SoundSpeed instance.</returns>
++ 	public static SoundSpeed<T> FromFeetPerSecond(T feetPerSecond) => Create(feetPerSecond * T.CreateChecked(0.3048));
++ 
++ 	/// <summary>
++ 	/// Multiplies wavelength by frequency to create sound speed.
++ 	/// </summary>
++ 	/// <param name="wavelength">The wavelength.</param>
++ 	/// <param name="frequency">The frequency.</param>
++ 	/// <returns>The resulting sound speed.</returns>
++ 	public static SoundSpeed<T> Multiply(Wavelength<T> wavelength, Frequency<T> frequency)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(wavelength);
++ 		ArgumentNullException.ThrowIfNull(frequency);
++ 		return Create(wavelength.Value * frequency.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Converts SoundSpeed to Velocity.
++ 	/// </summary>
++ 	/// <returns>The equivalent velocity.</returns>
++ 	public Velocity<T> ToVelocity() => Velocity<T>.Create(Value);
++ } 
+```
+
+---
+
+Now let me build the project to check for any compilation errors:
+
+---
+
+```bash
+dotnet build
+```
+
+```
+C:\dev\ktsu-dev\Semantics\Semantics>dotnet build
+
+  C:\dev\ktsu-dev\Semantics\Semantics\Semantics.csproj                                                   Restore (0.0s)
+Restore complete (0.5s)
+  Semantics succeeded (1.5s) → bin\Debug\net9.0\ktsu.Semantics.dll
+
+Build succeeded in 2.7s
+
+C:\dev\ktsu-dev\Semantics\Semantics>
+```
+
+---
+
+Excellent! The build succeeded. Now let me continue implementing more acoustic quantities. Let me add a few more important ones:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a sound absorption coefficient quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record SoundAbsorption<T> : PhysicalQuantity<SoundAbsorption<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SoundAbsorption;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the SoundAbsorption class.
++ 	/// </summary>
++ 	public SoundAbsorption() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundAbsorption from a dimensionless coefficient (0-1).
++ 	/// </summary>
++ 	/// <param name="coefficient">The absorption coefficient (0-1).</param>
++ 	/// <returns>A new SoundAbsorption instance.</returns>
++ 	public static SoundAbsorption<T> FromCoefficient(T coefficient) => Create(coefficient);
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundAbsorption from a percentage value.
++ 	/// </summary>
++ 	/// <param name="percentage">The absorption percentage (0-100).</param>
++ 	/// <returns>A new SoundAbsorption instance.</returns>
++ 	public static SoundAbsorption<T> FromPercentage(T percentage) => Create(percentage / T.CreateChecked(100));
++ 
++ 	/// <summary>
++ 	/// Calculates the reflection coefficient (1 - absorption).
++ 	/// </summary>
++ 	/// <returns>The reflection coefficient.</returns>
++ 	public T ReflectionCoefficient() => T.CreateChecked(1) - Value;
++ 
++ 	/// <summary>
++ 	/// Converts to percentage.
++ 	/// </summary>
++ 	/// <returns>The absorption as a percentage.</returns>
++ 	public T ToPercentage() => Value * T.CreateChecked(100);
++ } 
+```
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a reverberation time quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record ReverberationTime<T> : PhysicalQuantity<ReverberationTime<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.ReverberationTime;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the ReverberationTime class.
++ 	/// </summary>
++ 	public ReverberationTime() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new ReverberationTime from a value in seconds.
++ 	/// </summary>
++ 	/// <param name="seconds">The value in seconds.</param>
++ 	/// <returns>A new ReverberationTime instance.</returns>
++ 	public static ReverberationTime<T> FromSeconds(T seconds) => Create(seconds);
++ 
++ 	/// <summary>
++ 	/// Creates a new ReverberationTime from T60 measurement.
++ 	/// </summary>
++ 	/// <param name="t60">The T60 time in seconds.</param>
++ 	/// <returns>A new ReverberationTime instance.</returns>
++ 	public static ReverberationTime<T> FromT60(T t60) => Create(t60);
++ 
++ 	/// <summary>
++ 	/// Creates a new ReverberationTime from T30 measurement (extrapolated to T60).
++ 	/// </summary>
++ 	/// <param name="t30">The T30 time in seconds.</param>
++ 	/// <returns>A new ReverberationTime instance.</returns>
++ 	public static ReverberationTime<T> FromT30(T t30) => Create(t30 * T.CreateChecked(2));
++ 
++ 	/// <summary>
++ 	/// Calculates reverberation time using Sabine formula: RT = 0.161 * V / A.
++ 	/// </summary>
++ 	/// <param name="volume">The room volume.</param>
++ 	/// <param name="totalAbsorption">The total absorption.</param>
++ 	/// <returns>The calculated reverberation time.</returns>
++ 	public static ReverberationTime<T> CalculateSabine(Volume<T> volume, T totalAbsorption)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(volume);
++ 		return Create(T.CreateChecked(0.161) * volume.Value / totalAbsorption);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Converts ReverberationTime to Time.
++ 	/// </summary>
++ 	/// <returns>The equivalent time.</returns>
++ 	public Time<T> ToTime() => Time<T>.Create(Value);
++ } 
+```
+
+---
+
+Now let me update the TODO_DOMAINS.md to mark the Acoustic domain as significantly progressed:
+
+---
+
+
+
+---
+
+Let me check the current content of the TODO_DOMAINS.md file:
+
+---
+
+Read file: Semantics/TODO_DOMAINS.md
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
 
 
 ---
