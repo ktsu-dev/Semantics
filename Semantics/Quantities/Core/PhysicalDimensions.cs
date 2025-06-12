@@ -138,6 +138,39 @@ public static class PhysicalDimensions
 	/// <summary>Wave number dimension [L⁻¹].</summary>
 	public static readonly PhysicalDimension WaveNumber = new(length: -1, baseUnit: Units.Meter);
 
+	/// <summary>Sound pressure level dimension [1] (dB SPL).</summary>
+	public static readonly PhysicalDimension SoundPressureLevel = new(baseUnit: Units.Radian);
+
+	/// <summary>Sound intensity level dimension [1] (dB IL).</summary>
+	public static readonly PhysicalDimension SoundIntensityLevel = new(baseUnit: Units.Radian);
+
+	/// <summary>Sound power level dimension [1] (dB PWL).</summary>
+	public static readonly PhysicalDimension SoundPowerLevel = new(baseUnit: Units.Radian);
+
+	/// <summary>Reflection coefficient dimension [1].</summary>
+	public static readonly PhysicalDimension ReflectionCoefficient = new(baseUnit: Units.Radian);
+
+	/// <summary>Noise reduction coefficient dimension [1].</summary>
+	public static readonly PhysicalDimension NoiseReductionCoefficient = new(baseUnit: Units.Radian);
+
+	/// <summary>Sound transmission class dimension [1].</summary>
+	public static readonly PhysicalDimension SoundTransmissionClass = new(baseUnit: Units.Radian);
+
+	/// <summary>Loudness dimension [1] (sones).</summary>
+	public static readonly PhysicalDimension Loudness = new(baseUnit: Units.Radian);
+
+	/// <summary>Pitch dimension [T⁻¹] (frequency-based).</summary>
+	public static readonly PhysicalDimension Pitch = new(time: -1, baseUnit: Units.Hertz);
+
+	/// <summary>Sharpness dimension [1] (acum).</summary>
+	public static readonly PhysicalDimension Sharpness = new(baseUnit: Units.Radian);
+
+	/// <summary>Sensitivity dimension [M⁻¹ L⁻¹ T² I] (V/Pa for microphones).</summary>
+	public static readonly PhysicalDimension Sensitivity = new(mass: -1, length: -1, time: 2, electricCurrent: 1, baseUnit: Units.Volt);
+
+	/// <summary>Directionality index dimension [1] (dB).</summary>
+	public static readonly PhysicalDimension DirectionalityIndex = new(baseUnit: Units.Radian);
+
 	/// <summary>Heat dimension [M L² T⁻²].</summary>
 	public static readonly PhysicalDimension Heat = new(mass: 1, length: 2, time: -2, baseUnit: Units.Joule);
 
@@ -211,6 +244,17 @@ public static class PhysicalDimensions
 			ReverberationTime,
 			Wavelength,
 			WaveNumber,
+			SoundPressureLevel,
+			SoundIntensityLevel,
+			SoundPowerLevel,
+			ReflectionCoefficient,
+			NoiseReductionCoefficient,
+			SoundTransmissionClass,
+			Loudness,
+			Pitch,
+			Sharpness,
+			Sensitivity,
+			DirectionalityIndex,
 			Heat,
 			Entropy,
 			ThermalConductivity,

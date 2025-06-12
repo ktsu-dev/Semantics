@@ -316,6 +316,9 @@ When adding XML documentation comments:
 *   When encountering CS1591 errors (The /doc compiler option was specified, but one or more constructs did not have comments), add XML documentation comments to all public types and members.
 *   When encountering CA1502 errors, refactor the code to decrease its complexity.
 *   When encountering CS1503 errors (Argument 1: cannot convert from 'int' to 'ktsu.Semantics.IUnit') in `PhysicalDimension.cs` during operator overloading, ensure that the constructor calls include the required `IUnit` parameter with a proper base unit.
+*   When encountering CS0108 errors, 'SoundPressureLevel<T>.Create(T)' hides inherited member, add the `new` keyword if hiding was intended.
+*   When encountering CS0200 errors, Property or indexer 'PhysicalQuantity<SoundIntensityLevel<T>, T>.Value' cannot be assigned to -- it is read only, make sure you are not trying to assign to a read-only property.
+*   When encountering CA1062 errors, In externally visible method 'SoundPressureLevel<T> SoundPressureLevel<T>.FromSoundPressure(SoundPressure<T> soundPressure)', validate parameter 'soundPressure' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null' add a null check for the reference parameter.
 
 ## WORKFLOW & RELEASE RULES
 
@@ -341,20 +344,4 @@ When adding XML documentation comments:
 *   Instead of creating generic built-in types like `Base6String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
 *   The built in semantic string types are too niche or too simple, create a collection of useful builtin semantic string types with appropriate validations, where they aren't already implemented in dotnet, like Uri is.
 *   Validation attributes should be separated into their own files.
-*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
-*   **When implementing PhysicalQuantity classes, ensure the containing type is one of the parameters in the generic type definition.**
-
-## QUANTITIES IMPLEMENTATION STRATEGY
-
-### Current Implementation Status
-
-*   **Mechanics**: 100% implemented (18/18 quantities).
-*   **Electrical**: 100% implemented (11/11 quantities).
-*   **Acoustic**: Significantly progressed (9/20+ quantities).
-*   **Thermal**: Significantly progressed (4/10 quantities).
-*   **Chemical**: Not implemented (0/17 quantities).
-*   **Optical**: Not implemented (0/18 quantities).
-
-### Priority Implementation Tasks
-
-1.  **Acoustic Domain** (1
+*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc

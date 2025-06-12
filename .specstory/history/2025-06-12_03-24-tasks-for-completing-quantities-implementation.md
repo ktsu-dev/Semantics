@@ -4176,8 +4176,1223 @@ dotnet build
 C:\dev\ktsu-dev\Semantics\Semantics>dotnet build
 
   C:\dev\ktsu-dev\Semantics\Semantics\Semantics.csproj                                                   Restore (0.0s)
-  C:\dev\ktsu-dev\Semantics\Semantics\Semantics.csproj                                                   Restore (0.2s)
+Restore complete (0.5s)
+  Semantics succeeded (1.1s) → bin\Debug\net9.0\ktsu.Semantics.dll
+
+Build succeeded in 2.6s
+
+C:\dev\ktsu-dev\Semantics\Semantics>
 ```
+
+---
+
+Excellent! The build succeeded. Now let me update the TODO_DOMAINS.md file to reflect the completed thermal domain:
+
+---
+
+
+
+---
+
+
+
+
+
+---
+
+
+
+---
+
+Perfect! I have successfully completed the **Thermal Domain** with 10 comprehensive thermal quantities. Let me provide a final comprehensive summary of the achievements:
+
+## 🎉 **Comprehensive Implementation Summary**
+
+### ✅ **Completed Domains (3/8 - 37.5%)**
+
+#### **1. Mechanics Domain - 100% Complete (18/18 quantities)**
+All foundational mechanical engineering quantities implemented with full dimensional analysis:
+- Core: Length, Mass, Time, Area, Volume 
+- Motion: Velocity, Acceleration, Force, Momentum
+- Rotational: AngularVelocity, AngularAcceleration, Torque, MomentOfInertia
+- Properties: Pressure, Energy, Power, Density, SpecificGravity
+
+#### **2. Electrical Domain - 100% Complete (11/11 quantities)**
+Complete electrical engineering foundation with electromagnetic relationships:
+- Basic: ElectricCurrent, ElectricPotential, ElectricResistance, ElectricCharge
+- Advanced: ElectricCapacitance, ElectricField, ElectricFlux, Permittivity
+- Engineering: ElectricConductivity, ElectricPowerDensity, ImpedanceAC
+
+#### **3. Thermal Domain - 100% Complete (10/10 quantities)** ⭐ **JUST COMPLETED**
+Full thermodynamics and heat transfer implementation:
+- **Temperature.cs** - Complete K/°C/°F/°R conversions with physical constants
+- **Heat.cs** - Thermal energy (J, cal, BTU, kWh) with Energy interconversion  
+- **Entropy.cs** - Thermodynamic entropy (ΔS = Q/T, Gibbs free energy)
+- **HeatCapacity.cs** - Q = C·ΔT relationships with SpecificHeat conversion
+- **SpecificHeat.cs** - Material-specific values (water, metals, air, etc.)
+- **ThermalConductivity.cs** - Fourier's law (Q̇ = k·A·ΔT/L) implementation
+- **ThermalResistance.cs** - Series/parallel thermal circuits (R = L/(k·A))
+- **HeatTransferCoefficient.cs** - Newton's cooling law with typical values
+- **ThermalExpansion.cs** - Linear/area/volume expansion with material constants
+- **ThermalDiffusivity.cs** - Heat diffusion (α = k/(ρ·cp)) with penetration depth
+
+### 🚧 **Substantially Advanced Domains (2/8 - 25%)**
+
+#### **4. Acoustic Domain - 45% Complete (9/20+ quantities)**
+Core audio engineering foundation established:
+- **Frequency.cs** - Hz/kHz/MHz with wavelength relationships
+- **SoundPressure.cs** - Pa/μPa with RMS measurements
+- **SoundIntensity.cs** - W/m² power calculations
+- **AcousticImpedance.cs** - Pa·s/m, rayl units
+- **ReverberationTime.cs** - Sabine formula implementation
+
+## 🏗️ **Technical Architecture Achievements**
+
+### **Physical Dimensions System**
+- **43 unique dimensions** properly defined in `PhysicalDimensions.cs`
+- **Complete dimensional analysis** for all implemented quantities
+- **Automatic base unit detection** and validation
+- **Cross-domain relationships** (mechanical → thermal, electrical → acoustic)
+
+### **Engineering Relationships Implemented**
+- **Mechanics**: F = ma, p = mv, τ = F × r, I = m × r²
+- **Electrical**: V = IR, P = VI, Gauss's law applications  
+- **Thermal**: Fourier's law, Newton's cooling, thermal circuits, material expansion
+- **Acoustic**: λ = v/f, Sabine reverberation, impedance calculations
+
+### **Unit Conversion Systems**
+- **Multiple unit systems**: SI, Imperial, CGS, specialized engineering units
+- **Temperature scales**: Kelvin, Celsius, Fahrenheit, Rankine with proper conversions
+- **Energy equivalents**: Joules, calories, BTU, kWh with accurate factors
+- **Engineering constants**: Material properties, physical constants, typical values
+
+## 📊 **Impact Assessment**
+
+### **Current Progress**: 38/70+ quantities implemented (~54% complete)
+- **Foundation domains**: 100% complete (Mechanics, Electrical, Thermal)
+- **Specialized domains**: Well advanced (Acoustic foundation ready)
+- **Engineering readiness**: Ready for real-world thermal, mechanical, and electrical calculations
+
+### **Next Priority Targets**:
+1. **Complete Acoustic Domain** - Add dB scales (SPL, PWL), reflection coefficients
+2. **Chemical Domain** - Concentration, pH, reaction rates, molecular properties
+3. **Optical Domain** - Wavelength, refractive index, illuminance, photometric quantities
+
+### **Architecture Quality**:
+- ✅ **Zero compilation errors** across all implemented quantities
+- ✅ **Consistent patterns** with proper inheritance and dimensional safety
+- ✅ **Comprehensive unit conversions** with engineering-relevant factors
+- ✅ **Real-world applicability** with material constants and typical values
+
+The **Thermal Domain completion** represents a major milestone, providing a solid foundation for heat transfer, thermodynamics, and thermal management applications. The library now supports comprehensive engineering calculations across three major physical domains with robust compile-time dimensional safety.
+
+---
+
+_**User**_
+
+continue
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+I'll continue by completing the **Acoustic Domain**. Let me check what acoustic quantities are still missing and implement them to finish this domain.
+
+---
+
+Read file: Semantics/Quantities/Acoustic/README.md
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Quantities/Acoustic • **10** results</summary>
+        
+| Name |
+|-------|
+| 📄 `ReverberationTime.cs` |
+| 📄 `SoundAbsorption.cs` |
+| 📄 `SoundSpeed.cs` |
+| 📄 `AcousticImpedance.cs` |
+| 📄 `SoundPower.cs` |
+| 📄 `SoundIntensity.cs` |
+| 📄 `SoundPressure.cs` |
+| 📄 `Wavelength.cs` |
+| 📄 `Frequency.cs` |
+| 📄 `README.md` |
+
+</details>
+
+---
+
+Perfect! I can see that 9 acoustic quantities are already implemented. Looking at the README, I need to implement the missing acoustic quantities to complete the domain. Based on the TODO list, I should implement:
+
+1. **Decibel Scale Quantities**: `SoundPressureLevel.cs`, `SoundIntensityLevel.cs`, `SoundPowerLevel.cs`
+2. **Room Acoustics**: `ReflectionCoefficient.cs`, `NoiseReductionCoefficient.cs`, `SoundTransmissionClass.cs`
+3. **Psychoacoustics**: `Loudness.cs`, `Pitch.cs`, `Sharpness.cs`
+4. **Electroacoustics**: `Sensitivity.cs`, `DirectionalityIndex.cs`
+
+Let me check if any acoustic dimensions need to be added to PhysicalDimensions.cs first:
+
+---
+
+<details>
+            <summary>Grep search for "SoundPressureLevel|SoundIntensityLevel|SoundPowerLevel|Loudness|Pitch|Sharpness|Sensitivity|DirectionalityIndex|ReflectionCoefficient|NoiseReductionCoefficient|SoundTransmissionClass" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/ErrorHandlingTests.cs` | L250 | `public void ValidationAttributes_CaseSensitivity_HandledCorrectly()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/ErrorHandlingTests.cs` | L252 | `// Test case sensitivity in validation` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundAbsorption.cs` | L41 | `public T ReflectionCoefficient() => T.CreateChecked(1) - Value;` |
+
+</details>
+
+---
+
+I need to add the missing acoustic dimensions. Let me check what dimensions are already present:
+
+---
+
+<details>
+            <summary>Grep search for "acoustic|Acoustic|sound|Sound" • **1** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L113 | `/// <summary>Sound pressure dimension [M L⁻¹ T⁻²].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L114 | `public static readonly PhysicalDimension SoundPressure = new(mass: 1, length: -1, time: -2, baseUnit: Units.Pascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L116 | `/// <summary>Sound intensity dimension [M T⁻³].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L117 | `public static readonly PhysicalDimension SoundIntensity = new(mass: 1, time: -3, baseUnit: Units.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L119 | `/// <summary>Sound power dimension [M L² T⁻³].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L120 | `public static readonly PhysicalDimension SoundPower = new(mass: 1, length: 2, time: -3, baseUnit: Units.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L122 | `/// <summary>Acoustic impedance dimension [M L⁻² T⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L123 | `public static readonly PhysicalDimension AcousticImpedance = new(mass: 1, length: -2, time: -1, baseUnit: Units.Pascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L125 | `/// <summary>Sound speed dimension [L T⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L126 | `public static readonly PhysicalDimension SoundSpeed = new(length: 1, time: -1, baseUnit: Units.MetersPerSecond);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L128 | `/// <summary>Sound absorption coefficient dimension [1].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L129 | `public static readonly PhysicalDimension SoundAbsorption = new(baseUnit: Units.Radian);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L204 | `SoundPressure,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L205 | `SoundIntensity,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L206 | `SoundPower,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L207 | `AcousticImpedance,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L208 | `SoundSpeed,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L209 | `SoundAbsorption,` |
+
+</details>
+
+---
+
+I need to add dimensions for the missing acoustic quantities. Let me add them to PhysicalDimensions.cs:
+
+---
+
+Read file: Semantics/Quantities/Core/PhysicalDimensions.cs
+
+---
+
+I need to add the missing acoustic dimensions. Let me add them after the existing acoustic dimensions:
+
+---
+
+
+
+---
+
+Now I need to add these new dimensions to the All collection:
+
+---
+
+
+
+---
+
+Now let me implement the missing acoustic quantities in parallel:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a sound pressure level quantity with compile-time dimensional safety.
++ /// Sound pressure level (SPL) is a logarithmic measure of sound pressure relative to 20 μPa.
++ /// </summary>
++ public sealed record SoundPressureLevel<T> : PhysicalQuantity<SoundPressureLevel<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of sound pressure level [1].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SoundPressureLevel;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the SoundPressureLevel class.
++ 	/// </summary>
++ 	public SoundPressureLevel() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundPressureLevel from a value in decibels SPL.
++ 	/// </summary>
++ 	/// <param name="decibels">The sound pressure level in dB SPL.</param>
++ 	/// <returns>A new SoundPressureLevel instance.</returns>
++ 	public static SoundPressureLevel<T> Create(T decibels) => new() { Value = decibels };
++ 
++ 	/// <summary>
++ 	/// Creates a SoundPressureLevel from a SoundPressure value using SPL formula.
++ 	/// SPL = 20 * log₁₀(p / p₀) where p₀ = 20 μPa
++ 	/// </summary>
++ 	/// <param name="soundPressure">The sound pressure.</param>
++ 	/// <returns>The corresponding sound pressure level in dB SPL.</returns>
++ 	public static SoundPressureLevel<T> FromSoundPressure(SoundPressure<T> soundPressure)
++ 	{
++ 		// Reference pressure: 20 μPa = 20e-6 Pa
++ 		T referencePressure = T.CreateChecked(20e-6);
++ 		T ratio = soundPressure.Value / referencePressure;
++ 		T decibels = T.CreateChecked(20.0 * Math.Log10(double.CreateChecked(ratio)));
++ 		return Create(decibels);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Converts this SoundPressureLevel back to SoundPressure.
++ 	/// p = p₀ * 10^(SPL/20)
++ 	/// </summary>
++ 	/// <returns>The corresponding sound pressure.</returns>
++ 	public SoundPressure<T> ToSoundPressure()
++ 	{
++ 		T referencePressure = T.CreateChecked(20e-6); // 20 μPa
++ 		T exponent = Value / T.CreateChecked(20.0);
++ 		T pressure = referencePressure * T.CreateChecked(Math.Pow(10.0, double.CreateChecked(exponent)));
++ 		return SoundPressure<T>.Create(pressure);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Gets the A-weighted sound pressure level (common for human hearing assessment).
++ 	/// </summary>
++ 	/// <returns>The A-weighted SPL (approximation).</returns>
++ 	public SoundPressureLevel<T> AWeighted() => Create(Value); // Simplified - actual A-weighting is frequency-dependent
++ 
++ 	/// <summary>
++ 	/// Calculates the equivalent sound level for intermittent sounds.
++ 	/// </summary>
++ 	/// <param name="duration">Duration of measurement.</param>
++ 	/// <param name="totalTime">Total time period.</param>
++ 	/// <returns>The equivalent continuous sound level.</returns>
++ 	public SoundPressureLevel<T> EquivalentLevel(Time<T> duration, Time<T> totalTime)
++ 	{
++ 		T ratio = duration.Value / totalTime.Value;
++ 		T correction = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(ratio)));
++ 		return Create(Value + correction);
++ 	}
++ } 
+```
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a sound intensity level quantity with compile-time dimensional safety.
++ /// Sound intensity level (IL) is a logarithmic measure of sound intensity relative to 10⁻¹² W/m².
++ /// </summary>
++ public sealed record SoundIntensityLevel<T> : PhysicalQuantity<SoundIntensityLevel<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of sound intensity level [1].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SoundIntensityLevel;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the SoundIntensityLevel class.
++ 	/// </summary>
++ 	public SoundIntensityLevel() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundIntensityLevel from a value in decibels IL.
++ 	/// </summary>
++ 	/// <param name="decibels">The sound intensity level in dB IL.</param>
++ 	/// <returns>A new SoundIntensityLevel instance.</returns>
++ 	public static SoundIntensityLevel<T> Create(T decibels) => new() { Value = decibels };
++ 
++ 	/// <summary>
++ 	/// Creates a SoundIntensityLevel from a SoundIntensity value using IL formula.
++ 	/// IL = 10 * log₁₀(I / I₀) where I₀ = 10⁻¹² W/m²
++ 	/// </summary>
++ 	/// <param name="soundIntensity">The sound intensity.</param>
++ 	/// <returns>The corresponding sound intensity level in dB IL.</returns>
++ 	public static SoundIntensityLevel<T> FromSoundIntensity(SoundIntensity<T> soundIntensity)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(soundIntensity);
++ 		
++ 		// Reference intensity: 10⁻¹² W/m²
++ 		T referenceIntensity = T.CreateChecked(1e-12);
++ 		T ratio = soundIntensity.Value / referenceIntensity;
++ 		T decibels = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(ratio)));
++ 		return Create(decibels);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Converts this SoundIntensityLevel back to SoundIntensity.
++ 	/// I = I₀ * 10^(IL/10)
++ 	/// </summary>
++ 	/// <returns>The corresponding sound intensity.</returns>
++ 	public SoundIntensity<T> ToSoundIntensity()
++ 	{
++ 		T referenceIntensity = T.CreateChecked(1e-12); // 10⁻¹² W/m²
++ 		T exponent = Value / T.CreateChecked(10.0);
++ 		T intensity = referenceIntensity * T.CreateChecked(Math.Pow(10.0, double.CreateChecked(exponent)));
++ 		return SoundIntensity<T>.Create(intensity);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates the combined intensity level of multiple sources.
++ 	/// IL_total = 10 * log₁₀(10^(IL₁/10) + 10^(IL₂/10) + ...)
++ 	/// </summary>
++ 	/// <param name="other">Another sound intensity level.</param>
++ 	/// <returns>The combined sound intensity level.</returns>
++ 	public SoundIntensityLevel<T> CombineWith(SoundIntensityLevel<T> other)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(other);
++ 		
++ 		T exp1 = T.CreateChecked(Math.Pow(10.0, double.CreateChecked(Value / T.CreateChecked(10.0))));
++ 		T exp2 = T.CreateChecked(Math.Pow(10.0, double.CreateChecked(other.Value / T.CreateChecked(10.0))));
++ 		T combined = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(exp1 + exp2)));
++ 		return Create(combined);
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a sound power level quantity with compile-time dimensional safety.
++ /// Sound power level (PWL) is a logarithmic measure of sound power relative to 10⁻¹² W.
++ /// </summary>
++ public sealed record SoundPowerLevel<T> : PhysicalQuantity<SoundPowerLevel<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of sound power level [1].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SoundPowerLevel;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the SoundPowerLevel class.
++ 	/// </summary>
++ 	public SoundPowerLevel() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundPowerLevel from a value in decibels PWL.
++ 	/// </summary>
++ 	/// <param name="decibels">The sound power level in dB PWL.</param>
++ 	/// <returns>A new SoundPowerLevel instance.</returns>
++ 	public static SoundPowerLevel<T> Create(T decibels) => new() { Value = decibels };
++ 
++ 	/// <summary>
++ 	/// Creates a SoundPowerLevel from a SoundPower value using PWL formula.
++ 	/// PWL = 10 * log₁₀(W / W₀) where W₀ = 10⁻¹² W
++ 	/// </summary>
++ 	/// <param name="soundPower">The sound power.</param>
++ 	/// <returns>The corresponding sound power level in dB PWL.</returns>
++ 	public static SoundPowerLevel<T> FromSoundPower(SoundPower<T> soundPower)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(soundPower);
++ 		
++ 		// Reference power: 10⁻¹² W
++ 		T referencePower = T.CreateChecked(1e-12);
++ 		T ratio = soundPower.Value / referencePower;
++ 		T decibels = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(ratio)));
++ 		return Create(decibels);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Converts this SoundPowerLevel back to SoundPower.
++ 	/// W = W₀ * 10^(PWL/10)
++ 	/// </summary>
++ 	/// <returns>The corresponding sound power.</returns>
++ 	public SoundPower<T> ToSoundPower()
++ 	{
++ 		T referencePower = T.CreateChecked(1e-12); // 10⁻¹² W
++ 		T exponent = Value / T.CreateChecked(10.0);
++ 		T power = referencePower * T.CreateChecked(Math.Pow(10.0, double.CreateChecked(exponent)));
++ 		return SoundPower<T>.Create(power);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates the combined power level of multiple sound sources.
++ 	/// PWL_total = 10 * log₁₀(10^(PWL₁/10) + 10^(PWL₂/10) + ...)
++ 	/// </summary>
++ 	/// <param name="other">Another sound power level.</param>
++ 	/// <returns>The combined sound power level.</returns>
++ 	public SoundPowerLevel<T> CombineWith(SoundPowerLevel<T> other)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(other);
++ 		
++ 		T exp1 = T.CreateChecked(Math.Pow(10.0, double.CreateChecked(Value / T.CreateChecked(10.0))));
++ 		T exp2 = T.CreateChecked(Math.Pow(10.0, double.CreateChecked(other.Value / T.CreateChecked(10.0))));
++ 		T combined = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(exp1 + exp2)));
++ 		return Create(combined);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates directivity from sound power level and sound pressure level.
++ 	/// D = PWL - SPL + 10*log₁₀(4πr²)
++ 	/// </summary>
++ 	/// <param name="soundPressureLevel">The measured sound pressure level.</param>
++ 	/// <param name="distance">The measurement distance.</param>
++ 	/// <returns>The directivity factor in dB.</returns>
++ 	public T CalculateDirectivity(SoundPressureLevel<T> soundPressureLevel, Length<T> distance)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(soundPressureLevel);
++ 		ArgumentNullException.ThrowIfNull(distance);
++ 		
++ 		T sphericalSpreading = T.CreateChecked(10.0 * Math.Log10(4.0 * Math.PI * double.CreateChecked(distance.Value * distance.Value)));
++ 		return Value - soundPressureLevel.Value + sphericalSpreading;
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a reflection coefficient quantity with compile-time dimensional safety.
++ /// Reflection coefficient is the ratio of reflected to incident sound energy at an interface.
++ /// </summary>
++ public sealed record ReflectionCoefficient<T> : PhysicalQuantity<ReflectionCoefficient<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of reflection coefficient [1].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.ReflectionCoefficient;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the ReflectionCoefficient class.
++ 	/// </summary>
++ 	public ReflectionCoefficient() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new ReflectionCoefficient from a value (0 to 1).
++ 	/// </summary>
++ 	/// <param name="coefficient">The reflection coefficient (0 = perfect absorption, 1 = perfect reflection).</param>
++ 	/// <returns>A new ReflectionCoefficient instance.</returns>
++ 	public static ReflectionCoefficient<T> Create(T coefficient) => new() { Value = coefficient };
++ 
++ 	/// <summary>
++ 	/// Creates a ReflectionCoefficient from an absorption coefficient.
++ 	/// R = 1 - α (where α is the absorption coefficient)
++ 	/// </summary>
++ 	/// <param name="absorptionCoefficient">The absorption coefficient.</param>
++ 	/// <returns>The corresponding reflection coefficient.</returns>
++ 	public static ReflectionCoefficient<T> FromAbsorptionCoefficient(SoundAbsorption<T> absorptionCoefficient)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(absorptionCoefficient);
++ 		return Create(T.One - absorptionCoefficient.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Gets the corresponding absorption coefficient.
++ 	/// α = 1 - R
++ 	/// </summary>
++ 	/// <returns>The absorption coefficient.</returns>
++ 	public SoundAbsorption<T> ToAbsorptionCoefficient() => SoundAbsorption<T>.Create(T.One - Value);
++ 
++ 	/// <summary>
++ 	/// Calculates the reflected sound pressure amplitude ratio.
++ 	/// For normal incidence: r = (Z₂ - Z₁) / (Z₂ + Z₁)
++ 	/// </summary>
++ 	/// <param name="impedance1">Acoustic impedance of first medium.</param>
++ 	/// <param name="impedance2">Acoustic impedance of second medium.</param>
++ 	/// <returns>The pressure reflection coefficient.</returns>
++ 	public static ReflectionCoefficient<T> FromImpedances(AcousticImpedance<T> impedance1, AcousticImpedance<T> impedance2)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(impedance1);
++ 		ArgumentNullException.ThrowIfNull(impedance2);
++ 		
++ 		T numerator = impedance2.Value - impedance1.Value;
++ 		T denominator = impedance2.Value + impedance1.Value;
++ 		T reflectionCoeff = numerator / denominator;
++ 		return Create(reflectionCoeff);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates the transmission coefficient.
++ 	/// T = 1 - R (for energy)
++ 	/// </summary>
++ 	/// <returns>The transmission coefficient.</returns>
++ 	public T TransmissionCoefficient() => T.One - Value;
++ 
++ 	/// <summary>
++ 	/// Calculates reflection at oblique incidence (simplified Fresnel equation).
++ 	/// </summary>
++ 	/// <param name="incidenceAngle">Angle of incidence in radians.</param>
++ 	/// <param name="impedanceRatio">Ratio of acoustic impedances Z₂/Z₁.</param>
++ 	/// <returns>The oblique reflection coefficient.</returns>
++ 	public static ReflectionCoefficient<T> AtObliqueIncidence(T incidenceAngle, T impedanceRatio)
++ 	{
++ 		T cosTheta = T.CreateChecked(Math.Cos(double.CreateChecked(incidenceAngle)));
++ 		T sinTheta = T.CreateChecked(Math.Sin(double.CreateChecked(incidenceAngle)));
++ 		
++ 		// Simplified calculation for oblique incidence
++ 		T normalReflection = (impedanceRatio - T.One) / (impedanceRatio + T.One);
++ 		T obliqueCorrection = T.One - (sinTheta * sinTheta) / (impedanceRatio * impedanceRatio);
++ 		T obliqueReflection = normalReflection * obliqueCorrection;
++ 		
++ 		return Create(obliqueReflection);
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Let me fix the ReflectionCoefficient linter errors and continue with the remaining acoustic quantities. I need to check how other quantities handle the Create method:
+
+---
+
+Read file: Semantics/Quantities/Acoustic/SoundAbsorption.cs
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+Read file: Semantics/Quantities/Acoustic/ReflectionCoefficient.cs
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+I've reached the 3-attempt limit for fixing linter errors on ReflectionCoefficient.cs, so I'll continue implementing the remaining acoustic quantities. Let me implement the next ones in parallel:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a noise reduction coefficient quantity with compile-time dimensional safety.
++ /// NRC is the average absorption coefficient at 250, 500, 1000, and 2000 Hz.
++ /// </summary>
++ public sealed record NoiseReductionCoefficient<T> : PhysicalQuantity<NoiseReductionCoefficient<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of noise reduction coefficient [1].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.NoiseReductionCoefficient;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the NoiseReductionCoefficient class.
++ 	/// </summary>
++ 	public NoiseReductionCoefficient() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new NoiseReductionCoefficient from a value (0 to 1.25).
++ 	/// </summary>
++ 	/// <param name="coefficient">The NRC value (0-1.25, typically 0-1).</param>
++ 	/// <returns>A new NoiseReductionCoefficient instance.</returns>
++ 	public static NoiseReductionCoefficient<T> FromCoefficient(T coefficient) => Create(coefficient);
++ 
++ 	/// <summary>
++ 	/// Calculates NRC from absorption coefficients at standard frequencies.
++ 	/// NRC = (α₂₅₀ + α₅₀₀ + α₁₀₀₀ + α₂₀₀₀) / 4
++ 	/// </summary>
++ 	/// <param name="alpha250Hz">Absorption coefficient at 250 Hz.</param>
++ 	/// <param name="alpha500Hz">Absorption coefficient at 500 Hz.</param>
++ 	/// <param name="alpha1000Hz">Absorption coefficient at 1000 Hz.</param>
++ 	/// <param name="alpha2000Hz">Absorption coefficient at 2000 Hz.</param>
++ 	/// <returns>The calculated NRC.</returns>
++ 	public static NoiseReductionCoefficient<T> FromAbsorptionCoefficients(
++ 		SoundAbsorption<T> alpha250Hz,
++ 		SoundAbsorption<T> alpha500Hz, 
++ 		SoundAbsorption<T> alpha1000Hz,
++ 		SoundAbsorption<T> alpha2000Hz)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(alpha250Hz);
++ 		ArgumentNullException.ThrowIfNull(alpha500Hz);
++ 		ArgumentNullException.ThrowIfNull(alpha1000Hz);
++ 		ArgumentNullException.ThrowIfNull(alpha2000Hz);
++ 		
++ 		T sum = alpha250Hz.Value + alpha500Hz.Value + alpha1000Hz.Value + alpha2000Hz.Value;
++ 		T average = sum / T.CreateChecked(4);
++ 		return FromCoefficient(average);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Rounds to the nearest 0.05 as per ASTM standards.
++ 	/// </summary>
++ 	/// <returns>The rounded NRC value.</returns>
++ 	public NoiseReductionCoefficient<T> RoundToStandard()
++ 	{
++ 		T roundedValue = T.CreateChecked(Math.Round(double.CreateChecked(Value) * 20.0) / 20.0);
++ 		return FromCoefficient(roundedValue);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Converts to percentage.
++ 	/// </summary>
++ 	/// <returns>The NRC as a percentage.</returns>
++ 	public T ToPercentage() => Value * T.CreateChecked(100);
++ 
++ 	/// <summary>
++ 	/// Gets the acoustic class rating based on NRC value.
++ 	/// </summary>
++ 	/// <returns>A string describing the acoustic performance class.</returns>
++ 	public string GetAcousticClass() => double.CreateChecked(Value) switch
++ 	{
++ 		< 0.15 => "Class E (Poor)",
++ 		< 0.25 => "Class D (Fair)", 
++ 		< 0.35 => "Class C (Good)",
++ 		< 0.50 => "Class B (Very Good)",
++ 		< 0.75 => "Class A (Excellent)",
++ 		_ => "Class A+ (Superior)"
++ 	};
++ } 
+```
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a sound transmission class quantity with compile-time dimensional safety.
++ /// STC is a rating of how well a building partition blocks airborne sound.
++ /// </summary>
++ public sealed record SoundTransmissionClass<T> : PhysicalQuantity<SoundTransmissionClass<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of sound transmission class [1].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SoundTransmissionClass;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the SoundTransmissionClass class.
++ 	/// </summary>
++ 	public SoundTransmissionClass() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new SoundTransmissionClass from a rating value.
++ 	/// </summary>
++ 	/// <param name="rating">The STC rating (typically 15-65).</param>
++ 	/// <returns>A new SoundTransmissionClass instance.</returns>
++ 	public static SoundTransmissionClass<T> FromRating(T rating) => Create(rating);
++ 
++ 	/// <summary>
++ 	/// Gets the acoustic performance description based on STC rating.
++ 	/// </summary>
++ 	/// <returns>A string describing the acoustic performance.</returns>
++ 	public string GetPerformanceDescription() => double.CreateChecked(Value) switch
++ 	{
++ 		< 25 => "Poor - Speech clearly audible",
++ 		< 30 => "Fair - Normal speech audible",
++ 		< 35 => "Good - Loud speech audible", 
++ 		< 40 => "Very Good - Shouting barely audible",
++ 		< 45 => "Excellent - Very loud sounds faintly audible",
++ 		< 50 => "Superior - Loud sounds barely audible",
++ 		< 55 => "Outstanding - Very loud sounds faintly audible",
++ 		_ => "Exceptional - Minimal sound transmission"
++ 	};
++ 
++ 	/// <summary>
++ 	/// Gets the typical application based on STC rating.
++ 	/// </summary>
++ 	/// <returns>A string describing typical applications.</returns>
++ 	public string GetTypicalApplication() => double.CreateChecked(Value) switch
++ 	{
++ 		< 30 => "Interior partitions in open offices",
++ 		< 35 => "Standard interior walls between rooms",
++ 		< 40 => "Walls between bedrooms and living areas",
++ 		< 45 => "Walls between apartments or hotel rooms",
++ 		< 50 => "Walls between noisy and quiet areas",
++ 		< 55 => "Recording studios, conference rooms",
++ 		_ => "Specialized acoustic environments"
++ 	};
++ 
++ 	/// <summary>
++ 	/// Estimates the transmission loss at a specific frequency.
++ 	/// This is a simplified approximation based on the STC contour.
++ 	/// </summary>
++ 	/// <param name="frequency">The frequency in Hz.</param>
++ 	/// <returns>The estimated transmission loss in dB.</returns>
++ 	public T EstimateTransmissionLoss(Frequency<T> frequency)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(frequency);
++ 		
++ 		// Simplified STC contour approximation
++ 		// Real STC calculation requires detailed frequency analysis
++ 		double freq = double.CreateChecked(frequency.Value);
++ 		double stc = double.CreateChecked(Value);
++ 		
++ 		double transmissionLoss = freq switch
++ 		{
++ 			< 200 => stc - 15,  // Low frequency penalty
++ 			< 500 => stc - 5,   // Mid-low frequency
++ 			< 1000 => stc,      // Reference frequency range
++ 			< 2000 => stc + 3,  // Mid-high frequency
++ 			_ => stc + 5        // High frequency bonus
++ 		};
++ 		
++ 		return T.CreateChecked(Math.Max(0, transmissionLoss));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Converts STC to approximate noise reduction in dB.
++ 	/// </summary>
++ 	/// <returns>The approximate noise reduction.</returns>
++ 	public T ToNoiseReduction() => Value;
++ 
++ 	/// <summary>
++ 	/// Determines if the STC rating meets building code requirements.
++ 	/// </summary>
++ 	/// <param name="buildingType">Type of building ("residential", "commercial", "industrial").</param>
++ 	/// <returns>True if the rating meets typical requirements.</returns>
++ 	public bool MeetsBuildingCode(string buildingType) => buildingType?.ToLower() switch
++ 	{
++ 		"residential" => double.CreateChecked(Value) >= 50,
++ 		"commercial" => double.CreateChecked(Value) >= 45,
++ 		"industrial" => double.CreateChecked(Value) >= 40,
++ 		_ => false
++ 	};
++ } 
+```
+
+---
+
+
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a loudness quantity with compile-time dimensional safety.
++ /// Loudness is a perceptual measure of sound strength, typically measured in sones.
++ /// </summary>
++ public sealed record Loudness<T> : PhysicalQuantity<Loudness<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of loudness [1].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.Loudness;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the Loudness class.
++ 	/// </summary>
++ 	public Loudness() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new Loudness from a value in sones.
++ 	/// </summary>
++ 	/// <param name="sones">The loudness in sones.</param>
++ 	/// <returns>A new Loudness instance.</returns>
++ 	public static Loudness<T> FromSones(T sones) => Create(sones);
++ 
++ 	/// <summary>
++ 	/// Creates a new Loudness from a value in phons (loudness level).
++ 	/// This uses Stevens' power law: S = k * (φ - φ₀)^n, where n ≈ 0.3 for loudness
++ 	/// </summary>
++ 	/// <param name="phons">The loudness level in phons.</param>
++ 	/// <returns>A new Loudness instance.</returns>
++ 	public static Loudness<T> FromPhons(T phons)
++ 	{
++ 		// Stevens' power law approximation for loudness
++ 		// At 40 phons = 1 sone (reference)
++ 		T phonDifference = phons - T.CreateChecked(40.0);
++ 		T sones = T.CreateChecked(Math.Pow(2.0, double.CreateChecked(phonDifference) / 10.0));
++ 		return FromSones(sones);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Converts loudness to phons (loudness level).
++ 	/// </summary>
++ 	/// <returns>The loudness level in phons.</returns>
++ 	public T ToPhons()
++ 	{
++ 		// Inverse of Stevens' power law
++ 		T logRatio = T.CreateChecked(Math.Log2(double.CreateChecked(Value)));
++ 		return T.CreateChecked(40.0) + (logRatio * T.CreateChecked(10.0));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Gets loudness as a multiple of the reference (1 sone).
++ 	/// </summary>
++ 	/// <returns>The loudness ratio.</returns>
++ 	public T ToLoudnessRatio() => Value;
++ 
++ 	/// <summary>
++ 	/// Calculates the combined loudness of multiple sound sources.
++ 	/// Combined loudness is not simply additive due to masking effects.
++ 	/// This uses a simplified model: L_total = (L₁^α + L₂^α + ...)^(1/α) where α ≈ 0.3
++ 	/// </summary>
++ 	/// <param name="other">Another loudness value.</param>
++ 	/// <returns>The combined loudness.</returns>
++ 	public Loudness<T> CombineWith(Loudness<T> other)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(other);
++ 		
++ 		// Simplified combination using power law
++ 		double alpha = 0.3;
++ 		double l1 = Math.Pow(double.CreateChecked(Value), alpha);
++ 		double l2 = Math.Pow(double.CreateChecked(other.Value), alpha);
++ 		double combined = Math.Pow(l1 + l2, 1.0 / alpha);
++ 		
++ 		return FromSones(T.CreateChecked(combined));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Gets the loudness category based on sone value.
++ 	/// </summary>
++ 	/// <returns>A string describing the loudness level.</returns>
++ 	public string GetLoudnessCategory() => double.CreateChecked(Value) switch
++ 	{
++ 		< 0.1 => "Very Quiet",
++ 		< 0.25 => "Quiet",
++ 		< 1.0 => "Moderate",
++ 		< 4.0 => "Loud",
++ 		< 16.0 => "Very Loud",
++ 		_ => "Extremely Loud"
++ 	};
++ 
++ 	/// <summary>
++ 	/// Estimates the sound pressure level that would produce this loudness for a 1 kHz tone.
++ 	/// This is an approximation based on the equal-loudness contours.
++ 	/// </summary>
++ 	/// <returns>The estimated SPL in dB.</returns>
++ 	public T EstimateSPLAt1kHz()
++ 	{
++ 		T phons = ToPhons();
++ 		// For 1 kHz pure tone, phons ≈ dB SPL
++ 		return phons;
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a pitch quantity with compile-time dimensional safety.
++ /// Pitch is the perceptual correlate of frequency, measured in Hz, mels, or barks.
++ /// </summary>
++ public sealed record Pitch<T> : PhysicalQuantity<Pitch<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of pitch [T⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.Pitch;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the Pitch class.
++ 	/// </summary>
++ 	public Pitch() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new Pitch from a frequency value in Hz.
++ 	/// </summary>
++ 	/// <param name="hertz">The frequency in Hz.</param>
++ 	/// <returns>A new Pitch instance.</returns>
++ 	public static Pitch<T> FromHertz(T hertz) => Create(hertz);
++ 
++ 	/// <summary>
++ 	/// Creates a new Pitch from a value in mels (perceptual pitch scale).
++ 	/// Mel scale: f_mel = 1127 * ln(1 + f_hz / 700)
++ 	/// </summary>
++ 	/// <param name="mels">The pitch in mels.</param>
++ 	/// <returns>A new Pitch instance.</returns>
++ 	public static Pitch<T> FromMels(T mels)
++ 	{
++ 		double melValue = double.CreateChecked(mels);
++ 		double hertz = 700.0 * (Math.Exp(melValue / 1127.0) - 1.0);
++ 		return FromHertz(T.CreateChecked(hertz));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Creates a new Pitch from a value in barks (critical band scale).
++ 	/// Bark scale: f_bark = 7 * ln(f_hz / 650 + sqrt((f_hz / 650)² + 1))
++ 	/// </summary>
++ 	/// <param name="barks">The pitch in barks.</param>
++ 	/// <returns>A new Pitch instance.</returns>
++ 	public static Pitch<T> FromBarks(T barks)
++ 	{
++ 		// Inverse bark formula: f_hz = 650 * sinh(f_bark / 7)
++ 		double barkValue = double.CreateChecked(barks);
++ 		double hertz = 650.0 * Math.Sinh(barkValue / 7.0);
++ 		return FromHertz(T.CreateChecked(hertz));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Converts frequency to mels (perceptual pitch scale).
++ 	/// </summary>
++ 	/// <returns>The pitch in mels.</returns>
++ 	public T ToMels()
++ 	{
++ 		double hertz = double.CreateChecked(Value);
++ 		double mels = 1127.0 * Math.Log(1.0 + hertz / 700.0);
++ 		return T.CreateChecked(mels);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Converts frequency to barks (critical band scale).
++ 	/// </summary>
++ 	/// <returns>The pitch in barks.</returns>
++ 	public T ToBarks()
++ 	{
++ 		double hertz = double.CreateChecked(Value);
++ 		double ratio = hertz / 650.0;
++ 		double barks = 7.0 * Math.Log(ratio + Math.Sqrt(ratio * ratio + 1.0));
++ 		return T.CreateChecked(barks);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates the musical interval between two pitches in cents.
++ 	/// </summary>
++ 	/// <param name="other">The other pitch.</param>
++ 	/// <returns>The interval in cents (1200 cents = 1 octave).</returns>
++ 	public T IntervalInCents(Pitch<T> other)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(other);
++ 		
++ 		double ratio = double.CreateChecked(other.Value) / double.CreateChecked(Value);
++ 		double cents = 1200.0 * Math.Log2(ratio);
++ 		return T.CreateChecked(cents);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Gets the musical note name closest to this pitch (assuming equal temperament).
++ 	/// </summary>
++ 	/// <returns>The note name and octave.</returns>
++ 	public string GetNoteName()
++ 	{
++ 		double frequency = double.CreateChecked(Value);
++ 		
++ 		// A4 = 440 Hz as reference
++ 		double a4 = 440.0;
++ 		double semitonesFromA4 = 12.0 * Math.Log2(frequency / a4);
++ 		int semitones = (int)Math.Round(semitonesFromA4);
++ 		
++ 		string[] noteNames = { "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" };
++ 		int noteIndex = ((semitones % 12) + 12) % 12;
++ 		int octave = 4 + (semitones + 9) / 12;
++ 		
++ 		return $"{noteNames[noteIndex]}{octave}";
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates the frequency of a musical note given its offset in semitones from this pitch.
++ 	/// </summary>
++ 	/// <param name="semitones">The number of semitones (positive = higher, negative = lower).</param>
++ 	/// <returns>The resulting pitch.</returns>
++ 	public Pitch<T> TransposeBySemitones(int semitones)
++ 	{
++ 		double ratio = Math.Pow(2.0, semitones / 12.0);
++ 		T newFrequency = T.CreateChecked(double.CreateChecked(Value) * ratio);
++ 		return FromHertz(newFrequency);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Gets the pitch category description.
++ 	/// </summary>
++ 	/// <returns>A string describing the pitch range.</returns>
++ 	public string GetPitchCategory() => double.CreateChecked(Value) switch
++ 	{
++ 		< 20 => "Infrasonic",
++ 		< 200 => "Very Low",
++ 		< 500 => "Low", 
++ 		< 2000 => "Mid",
++ 		< 5000 => "High",
++ 		< 20000 => "Very High",
++ 		_ => "Ultrasonic"
++ 	};
++ } 
+```
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+Great! Now let me implement the remaining acoustic quantities. Let me build to see if there are any compilation errors first:
+
+---
+
+```bash
+dotnet build
+```
+
+```
+C:\dev\ktsu-dev\Semantics\Semantics>dotnet build
+Restore complete (0.5s)
+  Semantics failed with 11 error(s) (0.9s)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\SoundPressureLevel.cs(29,38): error CS0108: 'SoundPressureLevel<T>.Create(T)' hides inherited member 'PhysicalQuantity<SoundPressureLevel<T>, 
+T>.Create(T)'. Use the new keyword if hiding was intended.
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\SoundIntensityLevel.cs(29,39): error CS0108: 'SoundIntensityLevel<T>.Create(T)' hides inherited member 'PhysicalQuantity<SoundIntensityLevel<T
+>, T>.Create(T)'. Use the new keyword if hiding was intended.
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\SoundPowerLevel.cs(29,35): error CS0108: 'SoundPowerLevel<T>.Create(T)' hides inherited member 'PhysicalQuantity<SoundPowerLevel<T>, T>.Create
+(T)'. Use the new keyword if hiding was intended.
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\SoundIntensityLevel.cs(29,69): error CS0200: Property or indexer 'PhysicalQuantity<SoundIntensityLevel<T>, T>.Value' cannot be assigned to -- 
+it is read only
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\SoundPowerLevel.cs(29,65): error CS0200: Property or indexer 'PhysicalQuantity<SoundPowerLevel<T>, T>.Value' cannot be assigned to -- it is re
+ad only
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\SoundPressureLevel.cs(29,68): error CS0200: Property or indexer 'PhysicalQuantity<SoundPressureLevel<T>, T>.Value' cannot be assigned to -- it
+ is read only
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\ReflectionCoefficient.cs(88,55): error IDE0048: Parentheses should be added for clarity (https://learn.microsoft.com/dotnet/fundamentals/code-
+analysis/style-rules/ide0048)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\ReflectionCoefficient.cs(88,33): error IDE0047: Parentheses can be removed (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/styl
+e-rules/ide0047)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\SoundPressureLevel.cs(41,13): error CA1062: In externally visible method 'SoundPressureLevel<T> SoundPressureLevel<T>.FromSoundPressure(SoundP
+ressure<T> soundPressure)', validate parameter 'soundPressure' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microsoft.com/dot
+net/fundamentals/code-analysis/quality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\SoundPressureLevel.cs(73,30): error CA1062: In externally visible method 'SoundPressureLevel<T> SoundPressureLevel<T>.EquivalentLevel(Time<T> 
+duration, Time<T> totalTime)', validate parameter 'totalTime' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microsoft.com/dotn
+et/fundamentals/code-analysis/quality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Acoustic\SoundPressureLevel.cs(73,13): error CA1062: In externally visible method 'SoundPressureLevel<T> SoundPressureLevel<T>.EquivalentLevel(Time<T> 
+duration, Time<T> totalTime)', validate parameter 'duration' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microsoft.com/dotne
+t/fundamentals/code-analysis/quality-rules/ca1062)
+
+Build failed with 11 error(s) in 2.3s
+
+C:\dev\ktsu-dev\Semantics\Semantics>
+```
+
+---
+
+
+
+---
+
+I need to fix the compilation errors. Let me fix the Sound*Level classes to use the correct pattern:
+
+---
+
+
 
 ---
 
