@@ -73,6 +73,21 @@ public static class PhysicalConstants
 	}
 
 	/// <summary>
+	/// Mechanical constants
+	/// </summary>
+	public static class Mechanical
+	{
+		/// <summary>Standard gravitational acceleration: 9.80665 m/s² (exact by definition)</summary>
+		public const double StandardGravity = 9.80665;
+
+		/// <summary>Standard atmospheric pressure: 101,325 Pa (exact by definition)</summary>
+		public const double StandardAtmosphericPressure = 101325.0;
+
+		/// <summary>Pound mass to kilogram: 0.453592 kg/lb (exact)</summary>
+		public const double PoundMassToKilogram = 0.453592;
+	}
+
+	/// <summary>
 	/// Conversion factors for unit systems
 	/// </summary>
 	public static class Conversion
@@ -151,5 +166,14 @@ public static class PhysicalConstants
 
 		/// <summary>Gets neutral pH as type T</summary>
 		public static T NeutralPH<T>() where T : struct, INumber<T> => T.CreateChecked(Chemical.NeutralPH);
+
+		/// <summary>Gets standard gravitational acceleration as type T</summary>
+		public static T StandardGravity<T>() where T : struct, INumber<T> => T.CreateChecked(Mechanical.StandardGravity);
+
+		/// <summary>Gets standard atmospheric pressure as type T</summary>
+		public static T StandardAtmosphericPressure<T>() where T : struct, INumber<T> => T.CreateChecked(Mechanical.StandardAtmosphericPressure);
+
+		/// <summary>Gets pound mass to kilogram conversion as type T</summary>
+		public static T PoundMassToKilogram<T>() where T : struct, INumber<T> => T.CreateChecked(Mechanical.PoundMassToKilogram);
 	}
 }

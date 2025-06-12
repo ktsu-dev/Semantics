@@ -35,6 +35,13 @@ This file defines all project rules, coding standards, workflow guidelines, refe
     2.  Add new constants to `PhysicalConstants.cs` before using them
     3.  Refactor existing hard-coded values when implementing new domains
     4.  Document constant sources (CODATA, NIST, ISO/IEC)
+*   Before we continue implementing more domains, search the quantities, units, and dimensions for hard coded values that should be defined as physical constants and define them somewhere appropriate. Add this to the TODO document as part of the implementation guidelines
+*   Apply the constants in any appropriate calculations in the quantities units and dimensions, you may define derived constants as well and create unit tests comparing the constant derived values vs calculated derived values using the fundamental constants
+*   **Management Rules for Physical Constants:**
+    1.  Use `PhysicalConstants.Generic` methods for type-safe access
+    2.  Add new constants to `PhysicalConstants.cs` before using them
+    3.  Refactor existing hard-coded values when implementing new domains
+    4.  Document constant sources (CODATA, NIST, ISO/IEC)
 
 When adding XML documentation comments:
 
@@ -46,6 +53,44 @@ When adding XML documentation comments:
 *   Use detailed `<list>` elements for enumerated information.
 *   Follow Microsoft's documentation standards.
 *   Remove all of the example documentation from the XML comments.
+*   **Domain Implementation Workflow**
+    1.  Use the Chemical domain as a template.
+    2.  Before coding, search for any hard-coded constants and add them to `PhysicalConstants.cs`.
+    3.  Implement quantities with full unit conversions and dimensional analysis.
+    4.  Add comprehensive unit tests, including mathematical relationship checks.
+    5.  Document all new quantities and constants.
+*   **Always centralize physical constants** in `PhysicalConstants.cs` before using them in any domain.
+*   **Use type-safe generic accessors** for all constants.
+*   **Refactor any hard-coded values** found in new or existing code.
+*   **Document all sources** for constants (CODATA, NIST, ISO/IEC).
+*   **Follow the established code and documentation standards** (file headers, XML docs, null safety, generic constraints).
+*   **Test thoroughly**: unit tests, mathematical verification, integration tests.
+*   **Mechanical Domain Implementation (Highest Priority)**
+    *   Implement quantities like Force, Energy, Power, Pressure, etc., with full unit conversions and dimensional analysis.
+    *   Add comprehensive unit tests, including mathematical relationship checks (e.g., F = m·a, P = F/A, E = F·d).
+    *   Document all new quantities and constants.
+*   **Integration Tests**
+    *   Create tests that use quantities from multiple domains in calculations.
+    *   Verify that units and conversions work seamlessly across domains.
+*   **Performance Benchmarks**
+    *   Add benchmarks for common operations (e.g., unit conversions, arithmetic).
+    *   Optimize as needed.
+*   **Documentation Expansion**
+    *   Update the `docs/complete-library-guide.md` with new domains and features.
+    *   Add usage examples for new quantities.
+    *   Ensure all references in `README.md` and other docs are accurate (e.g., `docs/examples/`).
+*   **Implementation Plan and Tracker**
+    *   **Physical Constants First**: Identify all mechanical constants needed (e.g., gravitational acceleration, standard atmospheric pressure, Planck’s constant if needed for mechanics, etc.). Add them to `PhysicalConstants.cs` under appropriate categories (Fundamental, Mechanical, etc.). Use the `PhysicalConstants.Generic` pattern for type-safe access. Include XML docs and source references (CODATA, NIST, etc.).
+    *   **Define Quantities**:
+        *   Location: `Quantities/Mechanics/`
+        *   Quantities to Implement: Force (`Force.cs`), Pressure (`Pressure.cs`), Energy (`Energy.cs`), Power (`Power.cs`), Torque (`Torque.cs`), Momentum (`Momentum.cs`), AngularVelocity (`AngularVelocity.cs`), AngularAcceleration (`AngularAcceleration.cs`), MomentOfInertia (`MomentOfInertia.cs`), Density (`Density.cs`), SpecificGravity (`SpecificGravity.cs`), and any others listed in your TODOs. Follow the template from the Chemical domain (generic, type-safe, XML docs, unit conversions, etc.).
+    *   **Units and Dimensions**: For each quantity, define the SI and common units in `Units.cs`. Add or update `PhysicalDimensions.cs` as needed for new dimensions (e.g., force, energy).
+    *   **Mathematical Relationships**: Implement relationships (e.g., F = m·a, P = F/A, E = F·d) as static methods or extension methods. Add unit tests to verify these relationships using both constants and calculated values.
+    *   **Testing**: For each quantity: Create unit tests for creation, conversion, and validation. Add mathematical verification tests (e.g., compare calculated force to expected value). Add edge case and error handling tests.
+    *   **Documentation**: Update or create: XML docs for all new types and members. Update `docs/complete-library-guide.md` with new mechanical quantities and usage examples. Update `README.md` and any references to examples (ensure they point to `docs/examples/`).
+    *   **Integration and Performance**: Create tests that use both chemical and mechanical quantities together (e.g., energy calculations involving moles and force). Add benchmarks for common operations (unit conversions, arithmetic, etc.).
+    *   **Review and Refactor**: As you implement, refactor any hard-coded values found in other domains to use the new constants. Ensure all code follows the standards (headers, null safety, XML docs, etc.).
+    *   **Next Domains**: After Mechanical, move to Electromagnetic, then Thermal, then Optical, Acoustic, Nuclear, and Fluid Dynamics, following the same process.
 
 ## CODING STANDARDS
 
@@ -318,30 +363,4 @@ When adding XML documentation comments:
 *   When resolving CS1503 errors (Argument cannot convert from type X to type Y), carefully examine the method signature and the types of the arguments being passed. Ensure that the arguments are of the correct type or can be implicitly converted to the expected type. Review the relevant interfaces and classes to ensure they are being used correctly.
 *   When resolving CA1859 errors (Change type of variable 'variableName' from 'InterfaceName' to 'ClassName' for improved performance), consider changing the variable type as suggested by the analyzer to improve performance.
 *   If a `CS8600` error ("Converting null literal or possible null value to non-nullable type") persists despite null-checking and handling, review the project's nullable reference types configuration and ensure it aligns with the intended behavior. The error might be a false positive or require project-specific adjustments.
-*   When debugging `FormatException` errors originating from `SemanticString<TDest>.PerformValidation`, especially during `RelativeDirectoryPath_Contents_ReturnsRelativePathTypes`, `SemanticPath_PathTypes`, or `SemanticPath_MakeCanonical_WithMixedSeparators_ShouldNormalize` tests, carefully review the validation logic and ensure that the input string adheres to the expected format for the target type `TDest`. Pay close attention to the following:
-    *   **Relative vs. Absolute Paths**: Ensure that the input string matches the expected type (e.g., `RelativeDirectoryPath` should not start with a root directory).
-    *   **Path Separators**: Verify that the path separators are consistent and correctly normalized (if normalization is expected).
-    *   **Invalid Characters**: Ensure that the path does not contain any invalid characters or sequences.
-*   When a test expects `System.ArgumentException` but gets `System.FormatException`, it indicates that the validation logic is throwing a `FormatException` when it should be throwing an `ArgumentException`. Review the validation logic and update it to throw the correct exception type based on the nature of the error. For example, if the error is due to an invalid argument value, throw `ArgumentException`; if it's due to an invalid format, throw `FormatException`.
-*   When debugging `RelativeDirectoryPath_Contents_ReturnsRelativePathTypes` test failures, ensure that the test uses `AbsoluteDirectoryPath` instances when testing contents of absolute directory paths. Ensure there are no tab characters in the test file.
-*   When debugging `SemanticPath_RootPath_Unix` test failures, ensure that path canonicalization correctly handles Unix root paths ("/") and doesn't convert them to Windows path separators ("\\").
-*   When debugging `SemanticPath_PathTypes` test failures, ensure that the correct path type (e.g., `AbsolutePath`, `RelativePath`) is used in the test case based on whether the path is absolute or relative.
-*   When debugging `SemanticPath_PathLength_TooLong` tests, be aware that the validation logic throws `FormatException` for path length violations. The tests should expect `FormatException`.
-*   When debugging `IndexOf` and `LastIndexOf` methods, and tests are failing, it's important to check the following:
-    *   Verify that all method overloads work correctly with their underlying `WeakString` implementations.
-    *   Verify that the `WeakString` property is properly initialized with the correct string value.
-    *   Check for any issues with named parameter delegation.
-*   When debugging `SpanPathUtilities.GetFileName` and encountering failing tests with trailing separators, ensure that the method returns an empty span when the path ends with a directory separator.
-*   When encountering CS0122 errors related to `SemanticString<T>.FromString<TDest>(string?)` being inaccessible, replace all calls to `FromString<TDest>` with `Create<TDest>`.
-*   When encountering CS1715 errors (type must be 'PhysicalDimension' to match overridden member), ensure that the type of the overriding property or member matches the type of the overridden property or member in the base class.
-*   When encountering CA1032 errors in `UnitConversionException.cs` (Failure to provide the full set of constructors), ensure that the exception class provides all the standard exception constructors.
-*   When encountering CS8862 errors in `UnitConversionException.cs` (A constructor declared in a type with parameter list must have 'this' constructor initializer), ensure that constructors with parameters call the primary constructor using `this(...)`.
-*   When encountering CA1062 errors in `UnitExtensions.cs` (An externally visible method dereferences one of its reference arguments without verifying whether that argument is 'null'), add null checks (e.g., `ArgumentNullException.ThrowIfNull()`) for all reference arguments in externally visible methods.
-*   When encountering CS1591 errors (The /doc compiler option was specified, but one or more constructs did not have comments), add XML documentation comments to all public types and members.
-*   When encountering CA1502 errors, refactor the code to decrease its complexity.
-*   When encountering CS1503 errors (Argument 1: cannot convert from 'int' to 'ktsu.Semantics.IUnit') in `PhysicalDimension.cs` during operator overloading, ensure that the constructor calls include the required `IUnit` parameter with a proper base unit.
-*   When encountering CS0108 errors, 'SoundPressureLevel<T>.Create(T)' hides inherited member, add the `new` keyword if hiding was intended.
-*   When encountering CS0200 errors, Property or indexer 'PhysicalQuantity<SoundIntensityLevel<T>, T>.Value' cannot be assigned to -- it is read only, make sure you are not trying to assign to a read-only property.
-*   When encountering CA1062 errors, In externally visible method 'SoundPressureLevel<T> SoundPressureLevel<T>.FromSoundPressure(SoundPressure<T> soundPressure)', validate parameter 'soundPressure' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null' add a null check for the reference parameter.
-*   When fixing CS0704 errors (Cannot do non-virtual member lookup in 'T' because it is a type parameter), add the appropriate generic constraints (e.g., `where T : struct, INumber<T>, IFloatingPoint<T>`).
-*   When fixing CA1062 errors (In externally visible method X, validate parameter Y is non-null before using it), add `ArgumentNullException.ThrowIfNull(parameterName
+*   When debugging `FormatException` errors originating from `SemanticString<TDest>.PerformValidation`, especially during `RelativeDirectoryPath_Contents_ReturnsRelativePathTypes`, `SemanticPath_PathTypes`, or `SemanticPath

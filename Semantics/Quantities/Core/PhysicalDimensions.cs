@@ -52,6 +52,13 @@ public static class PhysicalDimensions
 	private static readonly BootstrapUnit BootstrapPascal = new("pascal", "Pa");
 	private static readonly BootstrapUnit BootstrapJoule = new("joule", "J");
 	private static readonly BootstrapUnit BootstrapWatt = new("watt", "W");
+	private static readonly BootstrapUnit BootstrapVolt = new("volt", "V");
+	private static readonly BootstrapUnit BootstrapOhm = new("ohm", "Ω");
+	private static readonly BootstrapUnit BootstrapCoulomb = new("coulomb", "C");
+	private static readonly BootstrapUnit BootstrapFarad = new("farad", "F");
+	private static readonly BootstrapUnit BootstrapHertz = new("hertz", "Hz");
+	private static readonly BootstrapUnit BootstrapMolar = new("molar", "M");
+	private static readonly BootstrapUnit BootstrapGram = new("gram", "g");
 
 	/// <summary>Area dimension [L²].</summary>
 	public static readonly PhysicalDimension Area = new(baseUnit: BootstrapSquareMeter, length: 2);
@@ -78,19 +85,19 @@ public static class PhysicalDimensions
 	public static readonly PhysicalDimension Power = new(mass: 1, length: 2, time: -3, baseUnit: BootstrapWatt);
 
 	/// <summary>Electric potential dimension [M L² T⁻³ I⁻¹].</summary>
-	public static readonly PhysicalDimension ElectricPotential = new(mass: 1, length: 2, time: -3, electricCurrent: -1, baseUnit: Units.Volt);
+	public static readonly PhysicalDimension ElectricPotential = new(mass: 1, length: 2, time: -3, electricCurrent: -1, baseUnit: BootstrapVolt);
 
 	/// <summary>Electric resistance dimension [M L² T⁻³ I⁻²].</summary>
-	public static readonly PhysicalDimension ElectricResistance = new(mass: 1, length: 2, time: -3, electricCurrent: -2, baseUnit: Units.Ohm);
+	public static readonly PhysicalDimension ElectricResistance = new(mass: 1, length: 2, time: -3, electricCurrent: -2, baseUnit: BootstrapOhm);
 
 	/// <summary>Electric charge dimension [I T].</summary>
-	public static readonly PhysicalDimension ElectricCharge = new(electricCurrent: 1, time: 1, baseUnit: Units.Coulomb);
+	public static readonly PhysicalDimension ElectricCharge = new(electricCurrent: 1, time: 1, baseUnit: BootstrapCoulomb);
 
 	/// <summary>Electric capacitance dimension [M⁻¹ L⁻² T⁴ I²].</summary>
-	public static readonly PhysicalDimension ElectricCapacitance = new(mass: -1, length: -2, time: 4, electricCurrent: 2, baseUnit: Units.Farad);
+	public static readonly PhysicalDimension ElectricCapacitance = new(mass: -1, length: -2, time: 4, electricCurrent: 2, baseUnit: BootstrapFarad);
 
 	/// <summary>Frequency dimension [T⁻¹].</summary>
-	public static readonly PhysicalDimension Frequency = new(baseUnit: Units.Hertz, time: -1);
+	public static readonly PhysicalDimension Frequency = new(baseUnit: BootstrapHertz, time: -1);
 
 	/// <summary>Momentum dimension [M L T⁻¹].</summary>
 	public static readonly PhysicalDimension Momentum = new(mass: 1, length: 1, time: -1, baseUnit: Units.Newton);
@@ -108,7 +115,7 @@ public static class PhysicalDimensions
 	public static readonly PhysicalDimension MomentOfInertia = new(mass: 1, length: 2, baseUnit: Units.Kilogram);
 
 	/// <summary>Density dimension [M L⁻³].</summary>
-	public static readonly PhysicalDimension Density = new(mass: 1, length: -3, baseUnit: Units.Kilogram);
+	public static readonly PhysicalDimension Density = new(mass: 1, length: -3, baseUnit: BootstrapKilogram);
 
 	/// <summary>Concentration dimension [N L⁻³].</summary>
 	public static readonly PhysicalDimension Concentration = new(amountOfSubstance: 1, length: -3, baseUnit: Units.Molar);

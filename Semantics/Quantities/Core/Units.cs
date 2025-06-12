@@ -199,7 +199,7 @@ public static class Units
 	public static readonly IUnit MetersPerSecondSquared = new Unit("meters per second squared", "m/s²", PhysicalDimensions.Acceleration, UnitSystem.SIDerived);
 
 	/// <summary>Standard gravity - Earth's gravitational acceleration.</summary>
-	public static readonly IUnit StandardGravity = new Unit("standard gravity", "g", PhysicalDimensions.Acceleration, UnitSystem.Other, 9.80665);
+	public static readonly IUnit StandardGravity = new Unit("standard gravity", "g", PhysicalDimensions.Acceleration, UnitSystem.Other, PhysicalConstants.Mechanical.StandardGravity);
 
 	/// <summary>Newton - SI derived unit of force.</summary>
 	public static readonly IUnit Newton = new Unit("newton", "N", PhysicalDimensions.Force, UnitSystem.SIDerived);
@@ -208,7 +208,7 @@ public static class Units
 	public static readonly IUnit Kilonewton = new Unit("kilonewton", "kN", PhysicalDimensions.Force, UnitSystem.SIDerived, 1000.0);
 
 	/// <summary>Pound-force - Imperial unit of force.</summary>
-	public static readonly IUnit PoundForce = new Unit("pound-force", "lbf", PhysicalDimensions.Force, UnitSystem.Imperial, 0.453592 * 9.80665);
+	public static readonly IUnit PoundForce = new Unit("pound-force", "lbf", PhysicalDimensions.Force, UnitSystem.Imperial, PhysicalConstants.Mechanical.PoundMassToKilogram * PhysicalConstants.Mechanical.StandardGravity);
 
 	/// <summary>Dyne - CGS unit of force.</summary>
 	public static readonly IUnit Dyne = new Unit("dyne", "dyn", PhysicalDimensions.Force, UnitSystem.CGS, 1e-5);
@@ -223,7 +223,7 @@ public static class Units
 	public static readonly IUnit Bar = new Unit("bar", "bar", PhysicalDimensions.Pressure, UnitSystem.Metric, 100000.0);
 
 	/// <summary>Atmosphere - Standard atmospheric pressure.</summary>
-	public static readonly IUnit Atmosphere = new Unit("atmosphere", "atm", PhysicalDimensions.Pressure, UnitSystem.Other, 101325.0);
+	public static readonly IUnit Atmosphere = new Unit("atmosphere", "atm", PhysicalDimensions.Pressure, UnitSystem.Other, PhysicalConstants.Mechanical.StandardAtmosphericPressure);
 
 	/// <summary>Pounds per square inch - Imperial pressure unit.</summary>
 	public static readonly IUnit PSI = new Unit("pounds per square inch", "psi", PhysicalDimensions.Pressure, UnitSystem.Imperial, 6894.76);
@@ -404,10 +404,20 @@ public static class Units
 	/// <summary>Centipoise - Common dynamic viscosity unit.</summary>
 	public static readonly IUnit Centipoise = new Unit("centipoise", "cP", PhysicalDimensions.DynamicViscosity, UnitSystem.CGS, 0.001);
 
-	//TODO: === FLUID DYNAMICS DOMAIN ===
+	// === FLUID DYNAMICS DOMAIN ===
+
+	/// <summary>Kilogram per cubic meter - SI base unit for density.</summary>
+	public static readonly IUnit KilogramPerCubicMeter = new Unit("kilogram per cubic meter", "kg/m³", PhysicalDimensions.Density, UnitSystem.SIDerived);
+
+	/// <summary>Gram per cubic centimeter - Common density unit.</summary>
+	public static readonly IUnit GramPerCubicCentimeter = new Unit("gram per cubic centimeter", "g/cm³", PhysicalDimensions.Density, UnitSystem.SIDerived, 1000.0);
+
+	/// <summary>Gram per liter - Common density unit for liquids.</summary>
+	public static readonly IUnit GramPerLiter = new Unit("gram per liter", "g/L", PhysicalDimensions.Density, UnitSystem.SIDerived, 1.0);
+
+	//TODO: === REMAINING FLUID DYNAMICS DOMAIN ===
 	// Flow Rate Units: cubic meters per second (m³/s), liters per minute (L/min), gallons per minute (GPM)
 	// Viscosity Units: pascal-second (Pa·s), poise (P), centipoise (cP)
-	// Density Units: kilograms per cubic meter (kg/m³), grams per cubic centimeter (g/cm³)
 	// Surface Tension Units: newtons per meter (N/m), dynes per centimeter (dyn/cm)
 	// Reynolds Number: dimensionless [1]
 
