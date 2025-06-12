@@ -350,11 +350,11 @@ When adding XML documentation comments:
 
 *   **Mechanics**: 100% implemented (18/18 quantities).
 *   **Electrical**: 100% implemented (11/11 quantities).
-*   **Acoustic**: Significantly progressed (6/20+ quantities).
-*   **Thermal**: Not implemented (0/10 quantities).
+*   **Acoustic**: Significantly progressed (9/20+ quantities).
+*   **Thermal**: Significantly progressed (4/10 quantities).
 *   **Chemical**: Not implemented (0/17 quantities).
 *   **Optical**: Not implemented (0/18 quantities).
 
 ### Priority Implementation Tasks
 
-1.  **Acoustic Domain** (2
+1.  **Acoustic Domain** (1

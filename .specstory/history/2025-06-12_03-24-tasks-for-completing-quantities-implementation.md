@@ -2454,7 +2454,1627 @@ Read file: Semantics/TODO_DOMAINS.md
 
 ---
 
+I can see the acoustic section. Let me update it:
 
+---
+
+
+
+---
+
+Perfect! Now let me build the project again to ensure everything is working correctly:
+
+---
+
+```bash
+dotnet build
+```
+
+```
+C:\dev\ktsu-dev\Semantics\Semantics>dotnet build
+
+  C:\dev\ktsu-dev\Semantics\Semantics\Semantics.csproj                                                   Restore (0.0s)
+Restore complete (0.5s)
+  Semantics succeeded (1.9s) → bin\Debug\net9.0\ktsu.Semantics.dll
+
+Build succeeded in 3.2s
+
+C:\dev\ktsu-dev\Semantics\Semantics>
+```
+
+---
+
+Excellent! The build succeeded. Now let me continue with the next priority domain. Based on the TODO_DOMAINS.md, the **Thermal Domain** is next in priority. Let me start implementing the thermal quantities:
+
+---
+
+Read file: Semantics/Quantities/Thermal/README.md
+
+---
+
+I need to check if Temperature is already implemented and what thermal dimensions exist:
+
+---
+
+<details>
+            <summary>Grep search for "Temperature.*PhysicalDimension" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+
+
+
+
+---
+
+
+
+---
+
+<details>
+            <summary>Grep search for "class.*Temperature"" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Quantities/Thermal • **1** results</summary>
+        
+| Name |
+|-------|
+| 📄 `README.md` |
+
+</details>
+
+---
+
+
+
+---
+
+I need to first add the thermal dimensions to PhysicalDimensions.cs and then implement the thermal quantities. Let me add the thermal dimensions:
+
+---
+
+
+
+---
+
+
+
+---
+
+I see the issue - Temperature already exists. Let me check what's already there and remove the duplicate:
+
+---
+
+<details>
+            <summary>Grep search for "Temperature.*=.*new"" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+
+
+---
+
+<details>
+            <summary>Grep search for "Temperature.*PhysicalDimension"" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+
+
+---
+
+<details>
+            <summary>Grep search for "Temperature"" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L16 | `/// <param name="temperature">Power of temperature dimension.</param>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/docs/design-semantic-quantities.md` | L250 | `public static readonly ILinearUnit Kelvin = new LinearUnit("kelvin", "K", "Temperature", 1.0, UnitSystem.SI);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/docs/design-semantic-quantities.md` | L251 | `public static readonly IOffsetUnit Celsius = new OffsetUnit("celsius", "°C", "Temperature", 1.0, 273.15, UnitSystem.SI);` |
+
+</details>
+
+---
+
+
+
+---
+
+It seems Temperature doesn't exist yet. Let me check PhysicalDimensions.cs for any existing Temperature definition:
+
+---
+
+Read file: Semantics/Quantities/Core/PhysicalDimensions.cs
+
+---
+
+
+
+---
+
+I see the issue - Temperature already exists on line 27, and I added a duplicate. Let me remove the duplicate and just add the missing thermal dimensions:
+
+---
+
+
+
+---
+
+Now I need to add the thermal dimensions to the All collection:
+
+---
+
+
+
+---
+
+
+
+---
+
+Now let me build the project to see if the thermal dimensions compile correctly:
+
+---
+
+```bash
+dotnet build
+```
+
+```
+C:\dev\ktsu-dev\Semantics\Semantics>dotnet build
+
+  C:\dev\ktsu-dev\Semantics\Semantics\Semantics.csproj                                                   Restore (0.0s)
+Restore complete (0.5s)
+  Semantics succeeded (0.8s) → bin\Debug\net9.0\ktsu.Semantics.dll
+
+Build succeeded in 1.9s
+
+C:\dev\ktsu-dev\Semantics\Semantics>
+```
+
+---
+
+
+
+---
+
+Perfect! The build succeeded. Now let me implement the core thermal quantities in parallel:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a temperature quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record Temperature<T> : PhysicalQuantity<Temperature<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.Temperature;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the Temperature class.
++ 	/// </summary>
++ 	public Temperature() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new Temperature from a value in Kelvin.
++ 	/// </summary>
++ 	/// <param name="kelvin">The value in Kelvin.</param>
++ 	/// <returns>A new Temperature instance.</returns>
++ 	public static Temperature<T> FromKelvin(T kelvin) => Create(kelvin);
++ 
++ 	/// <summary>
++ 	/// Creates a new Temperature from a value in Celsius.
++ 	/// </summary>
++ 	/// <param name="celsius">The value in Celsius.</param>
++ 	/// <returns>A new Temperature instance.</returns>
++ 	public static Temperature<T> FromCelsius(T celsius) => Create(celsius + T.CreateChecked(273.15));
++ 
++ 	/// <summary>
++ 	/// Creates a new Temperature from a value in Fahrenheit.
++ 	/// </summary>
++ 	/// <param name="fahrenheit">The value in Fahrenheit.</param>
++ 	/// <returns>A new Temperature instance.</returns>
++ 	public static Temperature<T> FromFahrenheit(T fahrenheit) => Create((fahrenheit - T.CreateChecked(32)) * T.CreateChecked(5.0 / 9.0) + T.CreateChecked(273.15));
++ 
++ 	/// <summary>
++ 	/// Creates a new Temperature from a value in Rankine.
++ 	/// </summary>
++ 	/// <param name="rankine">The value in Rankine.</param>
++ 	/// <returns>A new Temperature instance.</returns>
++ 	public static Temperature<T> FromRankine(T rankine) => Create(rankine * T.CreateChecked(5.0 / 9.0));
++ 
++ 	/// <summary>
++ 	/// Converts to Kelvin.
++ 	/// </summary>
++ 	/// <returns>The temperature in Kelvin.</returns>
++ 	public T ToKelvin() => Value;
++ 
++ 	/// <summary>
++ 	/// Converts to Celsius.
++ 	/// </summary>
++ 	/// <returns>The temperature in Celsius.</returns>
++ 	public T ToCelsius() => Value - T.CreateChecked(273.15);
++ 
++ 	/// <summary>
++ 	/// Converts to Fahrenheit.
++ 	/// </summary>
++ 	/// <returns>The temperature in Fahrenheit.</returns>
++ 	public T ToFahrenheit() => (Value - T.CreateChecked(273.15)) * T.CreateChecked(9.0 / 5.0) + T.CreateChecked(32);
++ 
++ 	/// <summary>
++ 	/// Converts to Rankine.
++ 	/// </summary>
++ 	/// <returns>The temperature in Rankine.</returns>
++ 	public T ToRankine() => Value * T.CreateChecked(9.0 / 5.0);
++ 
++ 	/// <summary>
++ 	/// Calculates absolute zero in this temperature scale.
++ 	/// </summary>
++ 	/// <returns>Absolute zero temperature.</returns>
++ 	public static Temperature<T> AbsoluteZero => Create(T.Zero);
++ 
++ 	/// <summary>
++ 	/// Calculates water freezing point (273.15 K, 0°C).
++ 	/// </summary>
++ 	/// <returns>Water freezing point.</returns>
++ 	public static Temperature<T> WaterFreezingPoint => Create(T.CreateChecked(273.15));
++ 
++ 	/// <summary>
++ 	/// Calculates water boiling point (373.15 K, 100°C).
++ 	/// </summary>
++ 	/// <returns>Water boiling point.</returns>
++ 	public static Temperature<T> WaterBoilingPoint => Create(T.CreateChecked(373.15));
++ } 
+```
+
+---
+
+
+
+---
+
+Let me fix the linter errors by adding parentheses:
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+Now let me implement more thermal quantities in parallel:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a heat (thermal energy) quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record Heat<T> : PhysicalQuantity<Heat<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.Heat;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the Heat class.
++ 	/// </summary>
++ 	public Heat() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new Heat from a value in joules.
++ 	/// </summary>
++ 	/// <param name="joules">The value in joules.</param>
++ 	/// <returns>A new Heat instance.</returns>
++ 	public static Heat<T> FromJoules(T joules) => Create(joules);
++ 
++ 	/// <summary>
++ 	/// Creates a new Heat from a value in calories.
++ 	/// </summary>
++ 	/// <param name="calories">The value in calories.</param>
++ 	/// <returns>A new Heat instance.</returns>
++ 	public static Heat<T> FromCalories(T calories) => Create(calories * T.CreateChecked(4.184));
++ 
++ 	/// <summary>
++ 	/// Creates a new Heat from a value in BTU (British Thermal Units).
++ 	/// </summary>
++ 	/// <param name="btu">The value in BTU.</param>
++ 	/// <returns>A new Heat instance.</returns>
++ 	public static Heat<T> FromBTU(T btu) => Create(btu * T.CreateChecked(1055.06));
++ 
++ 	/// <summary>
++ 	/// Creates a new Heat from a value in kilowatt-hours.
++ 	/// </summary>
++ 	/// <param name="kilowattHours">The value in kilowatt-hours.</param>
++ 	/// <returns>A new Heat instance.</returns>
++ 	public static Heat<T> FromKilowattHours(T kilowattHours) => Create(kilowattHours * T.CreateChecked(3600000));
++ 
++ 	/// <summary>
++ 	/// Converts to joules.
++ 	/// </summary>
++ 	/// <returns>The heat in joules.</returns>
++ 	public T ToJoules() => Value;
++ 
++ 	/// <summary>
++ 	/// Converts to calories.
++ 	/// </summary>
++ 	/// <returns>The heat in calories.</returns>
++ 	public T ToCalories() => Value / T.CreateChecked(4.184);
++ 
++ 	/// <summary>
++ 	/// Converts to BTU.
++ 	/// </summary>
++ 	/// <returns>The heat in BTU.</returns>
++ 	public T ToBTU() => Value / T.CreateChecked(1055.06);
++ 
++ 	/// <summary>
++ 	/// Converts to kilowatt-hours.
++ 	/// </summary>
++ 	/// <returns>The heat in kilowatt-hours.</returns>
++ 	public T ToKilowattHours() => Value / T.CreateChecked(3600000);
++ 
++ 	/// <summary>
++ 	/// Converts Heat to Energy.
++ 	/// </summary>
++ 	/// <returns>The equivalent energy.</returns>
++ 	public Energy<T> ToEnergy() => Energy<T>.Create(Value);
++ 
++ 	/// <summary>
++ 	/// Creates Heat from Energy.
++ 	/// </summary>
++ 	/// <param name="energy">The energy to convert.</param>
++ 	/// <returns>The equivalent heat.</returns>
++ 	public static Heat<T> FromEnergy(Energy<T> energy)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(energy);
++ 		return Create(energy.Value);
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Now let me implement more thermal quantities in parallel:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a thermal conductivity quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record ThermalConductivity<T> : PhysicalQuantity<ThermalConductivity<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.ThermalConductivity;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the ThermalConductivity class.
++ 	/// </summary>
++ 	public ThermalConductivity() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new ThermalConductivity from a value in watts per meter-kelvin.
++ 	/// </summary>
++ 	/// <param name="wattsPerMeterKelvin">The value in W/(m·K).</param>
++ 	/// <returns>A new ThermalConductivity instance.</returns>
++ 	public static ThermalConductivity<T> FromWattsPerMeterKelvin(T wattsPerMeterKelvin) => Create(wattsPerMeterKelvin);
++ 
++ 	/// <summary>
++ 	/// Creates a new ThermalConductivity from a value in BTU per hour-foot-Fahrenheit.
++ 	/// </summary>
++ 	/// <param name="btuPerHourFootFahrenheit">The value in BTU/(h·ft·°F).</param>
++ 	/// <returns>A new ThermalConductivity instance.</returns>
++ 	public static ThermalConductivity<T> FromBtuPerHourFootFahrenheit(T btuPerHourFootFahrenheit) => 
++ 		Create(btuPerHourFootFahrenheit * T.CreateChecked(1.7307));
++ 
++ 	/// <summary>
++ 	/// Converts to watts per meter-kelvin.
++ 	/// </summary>
++ 	/// <returns>The thermal conductivity in W/(m·K).</returns>
++ 	public T ToWattsPerMeterKelvin() => Value;
++ 
++ 	/// <summary>
++ 	/// Converts to BTU per hour-foot-Fahrenheit.
++ 	/// </summary>
++ 	/// <returns>The thermal conductivity in BTU/(h·ft·°F).</returns>
++ 	public T ToBtuPerHourFootFahrenheit() => Value / T.CreateChecked(1.7307);
++ 
++ 	/// <summary>
++ 	/// Calculates heat flow rate using Fourier's law: Q̇ = k·A·ΔT/L.
++ 	/// </summary>
++ 	/// <param name="area">The cross-sectional area.</param>
++ 	/// <param name="temperatureDifference">The temperature difference.</param>
++ 	/// <param name="length">The length/thickness.</param>
++ 	/// <returns>The heat flow rate.</returns>
++ 	public Power<T> CalculateHeatFlow(Area<T> area, Temperature<T> temperatureDifference, Length<T> length)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(area);
++ 		ArgumentNullException.ThrowIfNull(temperatureDifference);
++ 		ArgumentNullException.ThrowIfNull(length);
++ 		return Power<T>.Create((Value * area.Value * temperatureDifference.Value) / length.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates thermal resistance: R = L/(k·A).
++ 	/// </summary>
++ 	/// <param name="length">The length/thickness.</param>
++ 	/// <param name="area">The cross-sectional area.</param>
++ 	/// <returns>The thermal resistance.</returns>
++ 	public ThermalResistance<T> CalculateThermalResistance(Length<T> length, Area<T> area)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(length);
++ 		ArgumentNullException.ThrowIfNull(area);
++ 		return ThermalResistance<T>.Create(length.Value / (Value * area.Value));
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Let me fix the linter error by removing unnecessary parentheses:
+
+---
+
+
+
+---
+
+
+
+---
+
+I need to create ThermalResistance first. Let me implement that:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a thermal resistance quantity with compile-time dimensional safety.
++ /// </summary>
++ /// <typeparam name="T">The storage type for the quantity value.</typeparam>
++ public sealed record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <inheritdoc/>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.ThermalResistance;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the ThermalResistance class.
++ 	/// </summary>
++ 	public ThermalResistance() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new ThermalResistance from a value in kelvin per watt.
++ 	/// </summary>
++ 	/// <param name="kelvinPerWatt">The value in K/W.</param>
++ 	/// <returns>A new ThermalResistance instance.</returns>
++ 	public static ThermalResistance<T> FromKelvinPerWatt(T kelvinPerWatt) => Create(kelvinPerWatt);
++ 
++ 	/// <summary>
++ 	/// Creates a new ThermalResistance from a value in Fahrenheit-hour per BTU.
++ 	/// </summary>
++ 	/// <param name="fahrenheitHourPerBtu">The value in °F·h/BTU.</param>
++ 	/// <returns>A new ThermalResistance instance.</returns>
++ 	public static ThermalResistance<T> FromFahrenheitHourPerBtu(T fahrenheitHourPerBtu) => 
++ 		Create(fahrenheitHourPerBtu * T.CreateChecked(1.8956));
++ 
++ 	/// <summary>
++ 	/// Converts to kelvin per watt.
++ 	/// </summary>
++ 	/// <returns>The thermal resistance in K/W.</returns>
++ 	public T ToKelvinPerWatt() => Value;
++ 
++ 	/// <summary>
++ 	/// Converts to Fahrenheit-hour per BTU.
++ 	/// </summary>
++ 	/// <returns>The thermal resistance in °F·h/BTU.</returns>
++ 	public T ToFahrenheitHourPerBtu() => Value / T.CreateChecked(1.8956);
++ 
++ 	/// <summary>
++ 	/// Calculates heat flow rate using thermal resistance: Q̇ = ΔT/R.
++ 	/// </summary>
++ 	/// <param name="temperatureDifference">The temperature difference.</param>
++ 	/// <returns>The heat flow rate.</returns>
++ 	public Power<T> CalculateHeatFlow(Temperature<T> temperatureDifference)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(temperatureDifference);
++ 		return Power<T>.Create(temperatureDifference.Value / Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Adds thermal resistances in series.
++ 	/// </summary>
++ 	/// <param name="left">The first thermal resistance.</param>
++ 	/// <param name="right">The second thermal resistance.</param>
++ 	/// <returns>The total thermal resistance.</returns>
++ 	public static ThermalResistance<T> operator +(ThermalResistance<T> left, ThermalResistance<T> right)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(left);
++ 		ArgumentNullException.ThrowIfNull(right);
++ 		return Create(left.Value + right.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates parallel thermal resistance: 1/R_total = 1/R1 + 1/R2.
++ 	/// </summary>
++ 	/// <param name="other">The other thermal resistance.</param>
++ 	/// <returns>The parallel thermal resistance.</returns>
++ 	public ThermalResistance<T> InParallelWith(ThermalResistance<T> other)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(other);
++ 		return Create(T.CreateChecked(1) / (T.CreateChecked(1) / Value + T.CreateChecked(1) / other.Value));
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Let me fix these linter errors:
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+Great! Now let me build the project to check if everything compiles correctly:
+
+---
+
+```bash
+dotnet build
+```
+
+```
+C:\dev\ktsu-dev\Semantics\Semantics>dotnet build
+
+  C:\dev\ktsu-dev\Semantics\Semantics\Semantics.csproj                                                   Restore (0.0s)
+                                                                                                                 (0.1s)
+Restore complete (0.4s)
+  Semantics succeeded (0.9s) → bin\Debug\net9.0\ktsu.Semantics.dll
+
+Build succeeded in 2.0s
+
+C:\dev\ktsu-dev\Semantics\Semantics>
+```
+
+---
+
+
+
+---
+
+Perfect! The build succeeded. I've made tremendous progress implementing the quantities. Let me provide a comprehensive summary of what we've accomplished:
+
+## ✅ **Major Accomplishments**
+
+### **Mechanics Domain - 100% Complete (18/18)**
+✅ Successfully implemented all 7 missing mechanics quantities:
+- **Momentum.cs** - Linear momentum (p = mv) with mass/velocity relationships
+- **AngularVelocity.cs** - Rotational motion in rad/s  
+- **AngularAcceleration.cs** - Rate of angular velocity change
+- **Torque.cs** - Rotational force (τ = F × r) 
+- **MomentOfInertia.cs** - Rotational mass (I = m × r²)
+- **Density.cs** - Mass per unit volume (ρ = m/V)
+- **SpecificGravity.cs** - Dimensionless density ratio
+
+### **Electrical Domain - 100% Complete (11/11)**  
+✅ Successfully implemented all 6 missing electrical quantities:
+- **ElectricField.cs** - Electric field strength in V/m
+- **ElectricFlux.cs** - Electric flux with Gauss's law
+- **Permittivity.cs** - Electric field response in F/m  
+- **ElectricConductivity.cs** - Conductance per length
+- **ElectricPowerDensity.cs** - Power per unit volume
+- **ImpedanceAC.cs** - Complex AC impedance
+
+### **Acoustic Domain - 45% Complete (9/20+)**
+✅ Successfully implemented 9 core acoustic quantities:
+- **Frequency.cs** - Hz with wavelength relationships
+- **Wavelength.cs** - Wave spatial period  
+- **SoundPressure.cs** - Pressure variations in sound
+- **SoundIntensity.cs** - Sound power per area
+- **SoundPower.cs** - Total acoustic power
+- **AcousticImpedance.cs** - Resistance to sound flow
+- **SoundSpeed.cs** - Velocity of sound waves
+- **SoundAbsorption.cs** - Energy absorption coefficient
+- **ReverberationTime.cs** - Decay time with Sabine formula
+
+### **Thermal Domain - 40% Complete (4/10+)**
+✅ Successfully implemented 4 core thermal quantities:
+- **Temperature.cs** - Complete conversions (K, °C, °F, °R)  
+- **Heat.cs** - Thermal energy (J, cal, BTU, kWh)
+- **ThermalConductivity.cs** - Heat conduction with Fourier's law
+- **ThermalResistance.cs** - Heat flow resistance with thermal circuits
+
+## 🏗️ **Infrastructure Improvements**
+
+### **Physical Dimensions Extended**
+- ✅ Added 7 missing mechanical dimensions
+- ✅ Added 6 missing electrical dimensions  
+- ✅ Added 9 acoustic dimensions
+- ✅ Added 11 thermal dimensions
+
+### **Engineering Relationships Implemented**
+- **Mechanics**: F = ma, p = mv, τ = F × r, I = m × r²
+- **Electrical**: V = IR, P = VI, E = σ/ε  
+- **Acoustic**: λ = v/f, Sabine reverberation formula
+- **Thermal**: Fourier's law (Q̇ = k·A·ΔT/L), thermal resistance circuits
+
+## 📊 **Progress Summary**
+
+- **Domains Completed**: 2/8 (25%) - Mechanics ✅, Electrical ✅  
+- **Domains Advanced**: 2/8 (25%) - Acoustic 🚧, Thermal 🚧
+- **Total Quantities**: 32/60+ implemented (~53% complete)
+- **Zero compilation errors** ✅
+- **All builds successful** ✅
+
+## 🎯 **Next Steps (Immediate Priorities)**
+
+1. **Complete Thermal Domain** (6 quantities remaining)
+2. **Complete Acoustic Domain** (11+ quantities remaining)  
+3. **Start Chemical Domain** (Concentration, pH, ReactionRate)
+4. **Start Optical Domain** (Wavelength, RefractiveIndex, Illuminance)
+
+The quantities implementation is now in excellent shape with solid foundations complete and substantial progress in specialized domains!
+
+---
+
+_**User**_
+
+continue
+
+---
+
+_**Assistant**_
+
+I'll continue implementing the remaining thermal quantities to complete the thermal domain. Let me check what thermal quantities we still need to implement.
+
+---
+
+Read file: Semantics/TODO_DOMAINS.md
+
+---
+
+Now let me check what thermal quantities we have implemented and what's still needed:
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Quantities/Thermal • **5** results</summary>
+        
+| Name |
+|-------|
+| 📄 `ThermalResistance.cs` |
+| 📄 `ThermalConductivity.cs` |
+| 📄 `Heat.cs` |
+| 📄 `Temperature.cs` |
+| 📄 `README.md` |
+
+</details>
+
+---
+
+Let me check the README to see what thermal quantities are planned:
+
+---
+
+Read file: Semantics/Quantities/Thermal/README.md
+
+---
+
+Now let me check what thermal dimensions we have in PhysicalDimensions.cs:
+
+---
+
+<details>
+            <summary>Grep search for "thermal|Thermal|heat|Heat|entropy|Entropy" • **4** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L9 | `/// Represents a thermal resistance quantity with compile-time dimensional safety.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L12 | `public sealed record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.ThermalResistance;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L19 | `/// Initializes a new instance of the ThermalResistance class.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L21 | `public ThermalResistance() : base() { }` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L24 | `/// Creates a new ThermalResistance from a value in kelvin per watt.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L27 | `/// <returns>A new ThermalResistance instance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L28 | `public static ThermalResistance<T> FromKelvinPerWatt(T kelvinPerWatt) => Create(kelvinPerWatt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L31 | `/// Creates a new ThermalResistance from a value in Fahrenheit-hour per BTU.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L34 | `/// <returns>A new ThermalResistance instance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L35 | `public static ThermalResistance<T> FromFahrenheitHourPerBtu(T fahrenheitHourPerBtu) =>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L41 | `/// <returns>The thermal resistance in K/W.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L47 | `/// <returns>The thermal resistance in °F·h/BTU.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L51 | `/// Calculates heat flow rate using thermal resistance: Q̇ = ΔT/R.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L54 | `/// <returns>The heat flow rate.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L55 | `public Power<T> CalculateHeatFlow(Temperature<T> temperatureDifference)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L62 | `/// Adds thermal resistances in series.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L64 | `/// <param name="left">The first thermal resistance.</param>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L65 | `/// <param name="right">The second thermal resistance.</param>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L66 | `/// <returns>The total thermal resistance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L67 | `public static ThermalResistance<T> operator +(ThermalResistance<T> left, ThermalResistance<T> right)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L75 | `/// Adds thermal resistances in series (friendly alternate for operator +).` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L77 | `/// <param name="other">The other thermal resistance.</param>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L78 | `/// <returns>The total thermal resistance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L79 | `public ThermalResistance<T> Add(ThermalResistance<T> other)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L86 | `/// Calculates parallel thermal resistance: 1/R_total = 1/R1 + 1/R2.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L88 | `/// <param name="other">The other thermal resistance.</param>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L89 | `/// <returns>The parallel thermal resistance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L90 | `public ThermalResistance<T> InParallelWith(ThermalResistance<T> other)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L9 | `/// Represents a thermal conductivity quantity with compile-time dimensional safety.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L12 | `public sealed record ThermalConductivity<T> : PhysicalQuantity<ThermalConductivity<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.ThermalConductivity;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L19 | `/// Initializes a new instance of the ThermalConductivity class.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L21 | `public ThermalConductivity() : base() { }` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L24 | `/// Creates a new ThermalConductivity from a value in watts per meter-kelvin.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L27 | `/// <returns>A new ThermalConductivity instance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L28 | `public static ThermalConductivity<T> FromWattsPerMeterKelvin(T wattsPerMeterKelvin) => Create(wattsPerMeterKelvin);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L31 | `/// Creates a new ThermalConductivity from a value in BTU per hour-foot-Fahrenheit.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L34 | `/// <returns>A new ThermalConductivity instance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L35 | `public static ThermalConductivity<T> FromBtuPerHourFootFahrenheit(T btuPerHourFootFahrenheit) =>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L41 | `/// <returns>The thermal conductivity in W/(m·K).</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L47 | `/// <returns>The thermal conductivity in BTU/(h·ft·°F).</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L51 | `/// Calculates heat flow rate using Fourier's law: Q̇ = k·A·ΔT/L.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L56 | `/// <returns>The heat flow rate.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L57 | `public Power<T> CalculateHeatFlow(Area<T> area, Temperature<T> temperatureDifference, Length<T> length)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L66 | `/// Calculates thermal resistance: R = L/(k·A).` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L70 | `/// <returns>The thermal resistance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L71 | `public ThermalResistance<T> CalculateThermalResistance(Length<T> length, Area<T> area)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L75 | `return ThermalResistance<T>.Create(length.Value / (Value * area.Value));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L9 | `/// Represents a heat (thermal energy) quantity with compile-time dimensional safety.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L12 | `public sealed record Heat<T> : PhysicalQuantity<Heat<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Heat;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L19 | `/// Initializes a new instance of the Heat class.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L21 | `public Heat() : base() { }` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L24 | `/// Creates a new Heat from a value in joules.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L27 | `/// <returns>A new Heat instance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L28 | `public static Heat<T> FromJoules(T joules) => Create(joules);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L31 | `/// Creates a new Heat from a value in calories.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L34 | `/// <returns>A new Heat instance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L35 | `public static Heat<T> FromCalories(T calories) => Create(calories * T.CreateChecked(4.184));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L38 | `/// Creates a new Heat from a value in BTU (British Thermal Units).` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L41 | `/// <returns>A new Heat instance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L42 | `public static Heat<T> FromBTU(T btu) => Create(btu * T.CreateChecked(1055.06));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L45 | `/// Creates a new Heat from a value in kilowatt-hours.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L48 | `/// <returns>A new Heat instance.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L49 | `public static Heat<T> FromKilowattHours(T kilowattHours) => Create(kilowattHours * T.CreateChecked(3600000));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L54 | `/// <returns>The heat in joules.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L60 | `/// <returns>The heat in calories.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L66 | `/// <returns>The heat in BTU.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L72 | `/// <returns>The heat in kilowatt-hours.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L76 | `/// Converts Heat to Energy.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L82 | `/// Creates Heat from Energy.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L85 | `/// <returns>The equivalent heat.</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L86 | `public static Heat<T> FromEnergy(Energy<T> energy)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L140 | `/// <summary>Heat dimension [M L² T⁻²].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L141 | `public static readonly PhysicalDimension Heat = new(mass: 1, length: 2, time: -2, baseUnit: Units.Joule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L143 | `/// <summary>Entropy dimension [M L² T⁻² Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L144 | `public static readonly PhysicalDimension Entropy = new(mass: 1, length: 2, time: -2, temperature: -1, baseUnit: Units.Joule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L146 | `/// <summary>Thermal conductivity dimension [M L T⁻³ Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L147 | `public static readonly PhysicalDimension ThermalConductivity = new(mass: 1, length: 1, time: -3, temperature: -1, baseUnit: Units.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L149 | `/// <summary>Heat capacity dimension [M L² T⁻² Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L150 | `public static readonly PhysicalDimension HeatCapacity = new(mass: 1, length: 2, time: -2, temperature: -1, baseUnit: Units.Joule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L152 | `/// <summary>Specific heat dimension [L² T⁻² Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L153 | `public static readonly PhysicalDimension SpecificHeat = new(length: 2, time: -2, temperature: -1, baseUnit: Units.Joule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L155 | `/// <summary>Heat transfer coefficient dimension [M T⁻³ Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L156 | `public static readonly PhysicalDimension HeatTransferCoefficient = new(mass: 1, time: -3, temperature: -1, baseUnit: Units.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L158 | `/// <summary>Thermal expansion coefficient dimension [Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L159 | `public static readonly PhysicalDimension ThermalExpansion = new(temperature: -1, baseUnit: Units.Kelvin);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L161 | `/// <summary>Thermal diffusivity dimension [L² T⁻¹].</summary>` |
+
+</details>
+
+---
+
+Perfect! I can see we have thermal dimensions defined and 4 thermal quantities implemented. Let me continue implementing the remaining thermal quantities. Based on the README and dimensions, I need to implement:
+
+1. `Entropy.cs`
+2. `HeatCapacity.cs` 
+3. `SpecificHeat.cs`
+4. `HeatTransferCoefficient.cs`
+5. `ThermalExpansion.cs`
+6. `ThermalDiffusivity.cs`
+
+Let me implement these in parallel:
+
+---
+
+```diff
+- 
++ using System.Numerics;
++ 
++ namespace ktsu.Semantics;
++ 
++ /// <summary>
++ /// Represents an entropy quantity with compile-time dimensional safety.
++ /// Entropy is a measure of the disorder or randomness in a thermodynamic system.
++ /// </summary>
++ public sealed record Entropy<T> : PhysicalQuantity<Entropy<T>, T>
++ 	where T : INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of entropy [M L² T⁻² Θ⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.Entropy;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the Entropy class.
++ 	/// </summary>
++ 	public Entropy() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new Entropy from a value in joules per kelvin.
++ 	/// </summary>
++ 	/// <param name="joulesPerKelvin">The entropy value in J/K.</param>
++ 	/// <returns>A new Entropy instance.</returns>
++ 	public static Entropy<T> FromJoulesPerKelvin(T joulesPerKelvin) => Create(joulesPerKelvin);
++ 
++ 	/// <summary>
++ 	/// Creates a new Entropy from a value in calories per kelvin.
++ 	/// </summary>
++ 	/// <param name="caloriesPerKelvin">The entropy value in cal/K.</param>
++ 	/// <returns>A new Entropy instance.</returns>
++ 	public static Entropy<T> FromCaloriesPerKelvin(T caloriesPerKelvin) =>
++ 		Create(caloriesPerKelvin * T.CreateChecked(4.184));
++ 
++ 	/// <summary>
++ 	/// Creates a new Entropy from a value in BTU per Rankine.
++ 	/// </summary>
++ 	/// <param name="btuPerRankine">The entropy value in BTU/°R.</param>
++ 	/// <returns>A new Entropy instance.</returns>
++ 	public static Entropy<T> FromBtuPerRankine(T btuPerRankine) =>
++ 		Create(btuPerRankine * T.CreateChecked(1899.1));
++ 
++ 	/// <summary>Gets the entropy in joules per kelvin.</summary>
++ 	/// <returns>The entropy in J/K.</returns>
++ 	public T JoulesPerKelvin => Value;
++ 
++ 	/// <summary>Gets the entropy in calories per kelvin.</summary>
++ 	/// <returns>The entropy in cal/K.</returns>
++ 	public T CaloriesPerKelvin => Value / T.CreateChecked(4.184);
++ 
++ 	/// <summary>Gets the entropy in BTU per Rankine.</summary>
++ 	/// <returns>The entropy in BTU/°R.</returns>
++ 	public T BtuPerRankine => Value / T.CreateChecked(1899.1);
++ 
++ 	/// <summary>
++ 	/// Calculates entropy change using ΔS = Q/T for reversible processes.
++ 	/// </summary>
++ 	/// <param name="heat">The heat transferred.</param>
++ 	/// <param name="temperature">The absolute temperature.</param>
++ 	/// <returns>The entropy change.</returns>
++ 	public static Entropy<T> CalculateEntropyChange(Heat<T> heat, Temperature<T> temperature)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(heat);
++ 		ArgumentNullException.ThrowIfNull(temperature);
++ 		return Create(heat.Value / temperature.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates the Gibbs free energy change: ΔG = ΔH - T·ΔS.
++ 	/// </summary>
++ 	/// <param name="enthalpy">The enthalpy change.</param>
++ 	/// <param name="temperature">The absolute temperature.</param>
++ 	/// <returns>The Gibbs free energy change.</returns>
++ 	public Energy<T> CalculateGibbsFreeEnergy(Energy<T> enthalpy, Temperature<T> temperature)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(enthalpy);
++ 		ArgumentNullException.ThrowIfNull(temperature);
++ 		return Energy<T>.Create(enthalpy.Value - (temperature.Value * Value));
++ 	}
++ } 
+```
+
+---
+
+```diff
+- 
++ using System.Numerics;
++ 
++ namespace ktsu.Semantics;
++ 
++ /// <summary>
++ /// Represents a heat capacity quantity with compile-time dimensional safety.
++ /// Heat capacity is the amount of heat required to change the temperature of an object by one degree.
++ /// </summary>
++ public sealed record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>
++ 	where T : INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of heat capacity [M L² T⁻² Θ⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.HeatCapacity;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the HeatCapacity class.
++ 	/// </summary>
++ 	public HeatCapacity() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new HeatCapacity from a value in joules per kelvin.
++ 	/// </summary>
++ 	/// <param name="joulesPerKelvin">The heat capacity value in J/K.</param>
++ 	/// <returns>A new HeatCapacity instance.</returns>
++ 	public static HeatCapacity<T> FromJoulesPerKelvin(T joulesPerKelvin) => Create(joulesPerKelvin);
++ 
++ 	/// <summary>
++ 	/// Creates a new HeatCapacity from a value in calories per kelvin.
++ 	/// </summary>
++ 	/// <param name="caloriesPerKelvin">The heat capacity value in cal/K.</param>
++ 	/// <returns>A new HeatCapacity instance.</returns>
++ 	public static HeatCapacity<T> FromCaloriesPerKelvin(T caloriesPerKelvin) =>
++ 		Create(caloriesPerKelvin * T.CreateChecked(4.184));
++ 
++ 	/// <summary>
++ 	/// Creates a new HeatCapacity from a value in BTU per Fahrenheit.
++ 	/// </summary>
++ 	/// <param name="btuPerFahrenheit">The heat capacity value in BTU/°F.</param>
++ 	/// <returns>A new HeatCapacity instance.</returns>
++ 	public static HeatCapacity<T> FromBtuPerFahrenheit(T btuPerFahrenheit) =>
++ 		Create(btuPerFahrenheit * T.CreateChecked(1899.1));
++ 
++ 	/// <summary>Gets the heat capacity in joules per kelvin.</summary>
++ 	/// <returns>The heat capacity in J/K.</returns>
++ 	public T JoulesPerKelvin => Value;
++ 
++ 	/// <summary>Gets the heat capacity in calories per kelvin.</summary>
++ 	/// <returns>The heat capacity in cal/K.</returns>
++ 	public T CaloriesPerKelvin => Value / T.CreateChecked(4.184);
++ 
++ 	/// <summary>Gets the heat capacity in BTU per Fahrenheit.</summary>
++ 	/// <returns>The heat capacity in BTU/°F.</returns>
++ 	public T BtuPerFahrenheit => Value / T.CreateChecked(1899.1);
++ 
++ 	/// <summary>
++ 	/// Calculates heat required for temperature change: Q = C·ΔT.
++ 	/// </summary>
++ 	/// <param name="temperatureChange">The temperature change.</param>
++ 	/// <returns>The heat required.</returns>
++ 	public Heat<T> CalculateHeatRequired(Temperature<T> temperatureChange)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(temperatureChange);
++ 		return Heat<T>.Create(Value * temperatureChange.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates temperature change from heat: ΔT = Q/C.
++ 	/// </summary>
++ 	/// <param name="heat">The heat added or removed.</param>
++ 	/// <returns>The temperature change.</returns>
++ 	public Temperature<T> CalculateTemperatureChange(Heat<T> heat)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(heat);
++ 		return Temperature<T>.Create(heat.Value / Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates specific heat capacity: c = C/m.
++ 	/// </summary>
++ 	/// <param name="mass">The mass of the object.</param>
++ 	/// <returns>The specific heat capacity.</returns>
++ 	public SpecificHeat<T> CalculateSpecificHeat(Mass<T> mass)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(mass);
++ 		return SpecificHeat<T>.Create(Value / mass.Value);
++ 	}
++ } 
+```
+
+---
+
+```diff
+- 
++ using System.Numerics;
++ 
++ namespace ktsu.Semantics;
++ 
++ /// <summary>
++ /// Represents a specific heat capacity quantity with compile-time dimensional safety.
++ /// Specific heat is the amount of heat required to change the temperature of one unit mass by one degree.
++ /// </summary>
++ public sealed record SpecificHeat<T> : PhysicalQuantity<SpecificHeat<T>, T>
++ 	where T : INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of specific heat [L² T⁻² Θ⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SpecificHeat;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the SpecificHeat class.
++ 	/// </summary>
++ 	public SpecificHeat() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new SpecificHeat from a value in joules per kilogram-kelvin.
++ 	/// </summary>
++ 	/// <param name="joulesPerKilogramKelvin">The specific heat value in J/(kg·K).</param>
++ 	/// <returns>A new SpecificHeat instance.</returns>
++ 	public static SpecificHeat<T> FromJoulesPerKilogramKelvin(T joulesPerKilogramKelvin) => Create(joulesPerKilogramKelvin);
++ 
++ 	/// <summary>
++ 	/// Creates a new SpecificHeat from a value in calories per gram-kelvin.
++ 	/// </summary>
++ 	/// <param name="caloriesPerGramKelvin">The specific heat value in cal/(g·K).</param>
++ 	/// <returns>A new SpecificHeat instance.</returns>
++ 	public static SpecificHeat<T> FromCaloriesPerGramKelvin(T caloriesPerGramKelvin) =>
++ 		Create(caloriesPerGramKelvin * T.CreateChecked(4184));
++ 
++ 	/// <summary>
++ 	/// Creates a new SpecificHeat from a value in BTU per pound-Fahrenheit.
++ 	/// </summary>
++ 	/// <param name="btuPerPoundFahrenheit">The specific heat value in BTU/(lb·°F).</param>
++ 	/// <returns>A new SpecificHeat instance.</returns>
++ 	public static SpecificHeat<T> FromBtuPerPoundFahrenheit(T btuPerPoundFahrenheit) =>
++ 		Create(btuPerPoundFahrenheit * T.CreateChecked(4186.8));
++ 
++ 	/// <summary>Gets the specific heat in joules per kilogram-kelvin.</summary>
++ 	/// <returns>The specific heat in J/(kg·K).</returns>
++ 	public T JoulesPerKilogramKelvin => Value;
++ 
++ 	/// <summary>Gets the specific heat in calories per gram-kelvin.</summary>
++ 	/// <returns>The specific heat in cal/(g·K).</returns>
++ 	public T CaloriesPerGramKelvin => Value / T.CreateChecked(4184);
++ 
++ 	/// <summary>Gets the specific heat in BTU per pound-Fahrenheit.</summary>
++ 	/// <returns>The specific heat in BTU/(lb·°F).</returns>
++ 	public T BtuPerPoundFahrenheit => Value / T.CreateChecked(4186.8);
++ 
++ 	/// <summary>
++ 	/// Calculates heat required for temperature change: Q = m·c·ΔT.
++ 	/// </summary>
++ 	/// <param name="mass">The mass of the substance.</param>
++ 	/// <param name="temperatureChange">The temperature change.</param>
++ 	/// <returns>The heat required.</returns>
++ 	public Heat<T> CalculateHeatRequired(Mass<T> mass, Temperature<T> temperatureChange)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(mass);
++ 		ArgumentNullException.ThrowIfNull(temperatureChange);
++ 		return Heat<T>.Create(mass.Value * Value * temperatureChange.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates temperature change from heat: ΔT = Q/(m·c).
++ 	/// </summary>
++ 	/// <param name="heat">The heat added or removed.</param>
++ 	/// <param name="mass">The mass of the substance.</param>
++ 	/// <returns>The temperature change.</returns>
++ 	public Temperature<T> CalculateTemperatureChange(Heat<T> heat, Mass<T> mass)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(heat);
++ 		ArgumentNullException.ThrowIfNull(mass);
++ 		return Temperature<T>.Create(heat.Value / (mass.Value * Value));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates total heat capacity: C = m·c.
++ 	/// </summary>
++ 	/// <param name="mass">The mass of the object.</param>
++ 	/// <returns>The total heat capacity.</returns>
++ 	public HeatCapacity<T> CalculateHeatCapacity(Mass<T> mass)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(mass);
++ 		return HeatCapacity<T>.Create(mass.Value * Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Common specific heat values for reference (at room temperature).
++ 	/// </summary>
++ 	public static class CommonValues
++ 	{
++ 		/// <summary>Water: 4184 J/(kg·K)</summary>
++ 		public static SpecificHeat<T> Water => FromJoulesPerKilogramKelvin(T.CreateChecked(4184));
++ 		
++ 		/// <summary>Ice: 2090 J/(kg·K)</summary>
++ 		public static SpecificHeat<T> Ice => FromJoulesPerKilogramKelvin(T.CreateChecked(2090));
++ 		
++ 		/// <summary>Aluminum: 897 J/(kg·K)</summary>
++ 		public static SpecificHeat<T> Aluminum => FromJoulesPerKilogramKelvin(T.CreateChecked(897));
++ 		
++ 		/// <summary>Copper: 385 J/(kg·K)</summary>
++ 		public static SpecificHeat<T> Copper => FromJoulesPerKilogramKelvin(T.CreateChecked(385));
++ 		
++ 		/// <summary>Iron: 449 J/(kg·K)</summary>
++ 		public static SpecificHeat<T> Iron => FromJoulesPerKilogramKelvin(T.CreateChecked(449));
++ 		
++ 		/// <summary>Air: 1005 J/(kg·K)</summary>
++ 		public static SpecificHeat<T> Air => FromJoulesPerKilogramKelvin(T.CreateChecked(1005));
++ 	}
++ } 
+```
+
+---
+
+```diff
+- 
++ using System.Numerics;
++ 
++ namespace ktsu.Semantics;
++ 
++ /// <summary>
++ /// Represents a heat transfer coefficient quantity with compile-time dimensional safety.
++ /// Heat transfer coefficient characterizes convective heat transfer between a surface and a fluid.
++ /// </summary>
++ public sealed record HeatTransferCoefficient<T> : PhysicalQuantity<HeatTransferCoefficient<T>, T>
++ 	where T : INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of heat transfer coefficient [M T⁻³ Θ⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.HeatTransferCoefficient;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the HeatTransferCoefficient class.
++ 	/// </summary>
++ 	public HeatTransferCoefficient() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new HeatTransferCoefficient from a value in watts per square meter-kelvin.
++ 	/// </summary>
++ 	/// <param name="wattsPerSquareMeterKelvin">The heat transfer coefficient value in W/(m²·K).</param>
++ 	/// <returns>A new HeatTransferCoefficient instance.</returns>
++ 	public static HeatTransferCoefficient<T> FromWattsPerSquareMeterKelvin(T wattsPerSquareMeterKelvin) => Create(wattsPerSquareMeterKelvin);
++ 
++ 	/// <summary>
++ 	/// Creates a new HeatTransferCoefficient from a value in BTU per hour-square foot-Fahrenheit.
++ 	/// </summary>
++ 	/// <param name="btuPerHourSquareFootFahrenheit">The heat transfer coefficient value in BTU/(h·ft²·°F).</param>
++ 	/// <returns>A new HeatTransferCoefficient instance.</returns>
++ 	public static HeatTransferCoefficient<T> FromBtuPerHourSquareFootFahrenheit(T btuPerHourSquareFootFahrenheit) =>
++ 		Create(btuPerHourSquareFootFahrenheit * T.CreateChecked(5.678));
++ 
++ 	/// <summary>
++ 	/// Creates a new HeatTransferCoefficient from a value in calories per second-square centimeter-kelvin.
++ 	/// </summary>
++ 	/// <param name="caloriesPerSecondSquareCentimeterKelvin">The heat transfer coefficient value in cal/(s·cm²·K).</param>
++ 	/// <returns>A new HeatTransferCoefficient instance.</returns>
++ 	public static HeatTransferCoefficient<T> FromCaloriesPerSecondSquareCentimeterKelvin(T caloriesPerSecondSquareCentimeterKelvin) =>
++ 		Create(caloriesPerSecondSquareCentimeterKelvin * T.CreateChecked(41840));
++ 
++ 	/// <summary>Gets the heat transfer coefficient in watts per square meter-kelvin.</summary>
++ 	/// <returns>The heat transfer coefficient in W/(m²·K).</returns>
++ 	public T WattsPerSquareMeterKelvin => Value;
++ 
++ 	/// <summary>Gets the heat transfer coefficient in BTU per hour-square foot-Fahrenheit.</summary>
++ 	/// <returns>The heat transfer coefficient in BTU/(h·ft²·°F).</returns>
++ 	public T BtuPerHourSquareFootFahrenheit => Value / T.CreateChecked(5.678);
++ 
++ 	/// <summary>Gets the heat transfer coefficient in calories per second-square centimeter-kelvin.</summary>
++ 	/// <returns>The heat transfer coefficient in cal/(s·cm²·K).</returns>
++ 	public T CaloriesPerSecondSquareCentimeterKelvin => Value / T.CreateChecked(41840);
++ 
++ 	/// <summary>
++ 	/// Calculates convective heat transfer rate using Newton's law of cooling: Q̇ = h·A·ΔT.
++ 	/// </summary>
++ 	/// <param name="area">The heat transfer surface area.</param>
++ 	/// <param name="temperatureDifference">The temperature difference between surface and fluid.</param>
++ 	/// <returns>The heat transfer rate.</returns>
++ 	public Power<T> CalculateHeatTransferRate(Area<T> area, Temperature<T> temperatureDifference)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(area);
++ 		ArgumentNullException.ThrowIfNull(temperatureDifference);
++ 		return Power<T>.Create(Value * area.Value * temperatureDifference.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates convective thermal resistance: R = 1/(h·A).
++ 	/// </summary>
++ 	/// <param name="area">The heat transfer surface area.</param>
++ 	/// <returns>The convective thermal resistance.</returns>
++ 	public ThermalResistance<T> CalculateThermalResistance(Area<T> area)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(area);
++ 		return ThermalResistance<T>.Create(T.One / (Value * area.Value));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Typical heat transfer coefficient ranges for reference.
++ 	/// </summary>
++ 	public static class TypicalValues
++ 	{
++ 		/// <summary>Natural convection in air: 5-25 W/(m²·K)</summary>
++ 		public static HeatTransferCoefficient<T> NaturalConvectionAir => FromWattsPerSquareMeterKelvin(T.CreateChecked(15));
++ 		
++ 		/// <summary>Forced convection in air: 25-250 W/(m²·K)</summary>
++ 		public static HeatTransferCoefficient<T> ForcedConvectionAir => FromWattsPerSquareMeterKelvin(T.CreateChecked(100));
++ 		
++ 		/// <summary>Natural convection in water: 500-1000 W/(m²·K)</summary>
++ 		public static HeatTransferCoefficient<T> NaturalConvectionWater => FromWattsPerSquareMeterKelvin(T.CreateChecked(750));
++ 		
++ 		/// <summary>Forced convection in water: 1000-15000 W/(m²·K)</summary>
++ 		public static HeatTransferCoefficient<T> ForcedConvectionWater => FromWattsPerSquareMeterKelvin(T.CreateChecked(5000));
++ 		
++ 		/// <summary>Boiling water: 2500-35000 W/(m²·K)</summary>
++ 		public static HeatTransferCoefficient<T> BoilingWater => FromWattsPerSquareMeterKelvin(T.CreateChecked(15000));
++ 		
++ 		/// <summary>Condensing steam: 5000-100000 W/(m²·K)</summary>
++ 		public static HeatTransferCoefficient<T> CondensingSteam => FromWattsPerSquareMeterKelvin(T.CreateChecked(25000));
++ 	}
++ } 
+```
+
+---
+
+```diff
+- 
++ using System.Numerics;
++ 
++ namespace ktsu.Semantics;
++ 
++ /// <summary>
++ /// Represents a thermal expansion coefficient quantity with compile-time dimensional safety.
++ /// Thermal expansion coefficient describes how much a material expands per unit temperature change.
++ /// </summary>
++ public sealed record ThermalExpansion<T> : PhysicalQuantity<ThermalExpansion<T>, T>
++ 	where T : INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of thermal expansion coefficient [Θ⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.ThermalExpansion;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the ThermalExpansion class.
++ 	/// </summary>
++ 	public ThermalExpansion() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new ThermalExpansion from a value in per kelvin.
++ 	/// </summary>
++ 	/// <param name="perKelvin">The thermal expansion coefficient value in K⁻¹.</param>
++ 	/// <returns>A new ThermalExpansion instance.</returns>
++ 	public static ThermalExpansion<T> FromPerKelvin(T perKelvin) => Create(perKelvin);
++ 
++ 	/// <summary>
++ 	/// Creates a new ThermalExpansion from a value in per Celsius.
++ 	/// </summary>
++ 	/// <param name="perCelsius">The thermal expansion coefficient value in °C⁻¹.</param>
++ 	/// <returns>A new ThermalExpansion instance.</returns>
++ 	public static ThermalExpansion<T> FromPerCelsius(T perCelsius) => Create(perCelsius);
++ 
++ 	/// <summary>
++ 	/// Creates a new ThermalExpansion from a value in per Fahrenheit.
++ 	/// </summary>
++ 	/// <param name="perFahrenheit">The thermal expansion coefficient value in °F⁻¹.</param>
++ 	/// <returns>A new ThermalExpansion instance.</returns>
++ 	public static ThermalExpansion<T> FromPerFahrenheit(T perFahrenheit) =>
++ 		Create(perFahrenheit * T.CreateChecked(1.8));
++ 
++ 	/// <summary>Gets the thermal expansion coefficient in per kelvin.</summary>
++ 	/// <returns>The thermal expansion coefficient in K⁻¹.</returns>
++ 	public T PerKelvin => Value;
++ 
++ 	/// <summary>Gets the thermal expansion coefficient in per Celsius.</summary>
++ 	/// <returns>The thermal expansion coefficient in °C⁻¹.</returns>
++ 	public T PerCelsius => Value;
++ 
++ 	/// <summary>Gets the thermal expansion coefficient in per Fahrenheit.</summary>
++ 	/// <returns>The thermal expansion coefficient in °F⁻¹.</returns>
++ 	public T PerFahrenheit => Value / T.CreateChecked(1.8);
++ 
++ 	/// <summary>
++ 	/// Calculates linear expansion: ΔL = α·L₀·ΔT.
++ 	/// </summary>
++ 	/// <param name="originalLength">The original length.</param>
++ 	/// <param name="temperatureChange">The temperature change.</param>
++ 	/// <returns>The change in length.</returns>
++ 	public Length<T> CalculateLinearExpansion(Length<T> originalLength, Temperature<T> temperatureChange)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(originalLength);
++ 		ArgumentNullException.ThrowIfNull(temperatureChange);
++ 		return Length<T>.Create(Value * originalLength.Value * temperatureChange.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates final length after thermal expansion: L = L₀·(1 + α·ΔT).
++ 	/// </summary>
++ 	/// <param name="originalLength">The original length.</param>
++ 	/// <param name="temperatureChange">The temperature change.</param>
++ 	/// <returns>The final length.</returns>
++ 	public Length<T> CalculateFinalLength(Length<T> originalLength, Temperature<T> temperatureChange)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(originalLength);
++ 		ArgumentNullException.ThrowIfNull(temperatureChange);
++ 		var expansionFactor = T.One + (Value * temperatureChange.Value);
++ 		return Length<T>.Create(originalLength.Value * expansionFactor);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates area expansion coefficient (approximately 2α for small expansions).
++ 	/// </summary>
++ 	/// <returns>The area expansion coefficient.</returns>
++ 	public ThermalExpansion<T> CalculateAreaExpansionCoefficient()
++ 	{
++ 		return Create(Value * T.CreateChecked(2));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates volume expansion coefficient (approximately 3α for small expansions).
++ 	/// </summary>
++ 	/// <returns>The volume expansion coefficient.</returns>
++ 	public ThermalExpansion<T> CalculateVolumeExpansionCoefficient()
++ 	{
++ 		return Create(Value * T.CreateChecked(3));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Common thermal expansion coefficients for reference (at room temperature).
++ 	/// </summary>
++ 	public static class CommonValues
++ 	{
++ 		/// <summary>Aluminum: 23.1 × 10⁻⁶ K⁻¹</summary>
++ 		public static ThermalExpansion<T> Aluminum => FromPerKelvin(T.CreateChecked(23.1e-6));
++ 		
++ 		/// <summary>Steel: 11.0 × 10⁻⁶ K⁻¹</summary>
++ 		public static ThermalExpansion<T> Steel => FromPerKelvin(T.CreateChecked(11.0e-6));
++ 		
++ 		/// <summary>Copper: 16.5 × 10⁻⁶ K⁻¹</summary>
++ 		public static ThermalExpansion<T> Copper => FromPerKelvin(T.CreateChecked(16.5e-6));
++ 		
++ 		/// <summary>Concrete: 10.0 × 10⁻⁶ K⁻¹</summary>
++ 		public static ThermalExpansion<T> Concrete => FromPerKelvin(T.CreateChecked(10.0e-6));
++ 		
++ 		/// <summary>Glass: 9.0 × 10⁻⁶ K⁻¹</summary>
++ 		public static ThermalExpansion<T> Glass => FromPerKelvin(T.CreateChecked(9.0e-6));
++ 		
++ 		/// <summary>PVC: 52.0 × 10⁻⁶ K⁻¹</summary>
++ 		public static ThermalExpansion<T> PVC => FromPerKelvin(T.CreateChecked(52.0e-6));
++ 	}
++ } 
+```
+
+---
+
+```diff
+- 
++ using System.Numerics;
++ 
++ namespace ktsu.Semantics;
++ 
++ /// <summary>
++ /// Represents a thermal diffusivity quantity with compile-time dimensional safety.
++ /// Thermal diffusivity measures how quickly heat diffuses through a material.
++ /// </summary>
++ public sealed record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity<T>, T>
++ 	where T : INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of thermal diffusivity [L² T⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.ThermalDiffusivity;
++ 
++ 	/// <summary>
++ 	/// Initializes a new instance of the ThermalDiffusivity class.
++ 	/// </summary>
++ 	public ThermalDiffusivity() : base() { }
++ 
++ 	/// <summary>
++ 	/// Creates a new ThermalDiffusivity from a value in square meters per second.
++ 	/// </summary>
++ 	/// <param name="squareMetersPerSecond">The thermal diffusivity value in m²/s.</param>
++ 	/// <returns>A new ThermalDiffusivity instance.</returns>
++ 	public static ThermalDiffusivity<T> FromSquareMetersPerSecond(T squareMetersPerSecond) => Create(squareMetersPerSecond);
++ 
++ 	/// <summary>
++ 	/// Creates a new ThermalDiffusivity from a value in square feet per hour.
++ 	/// </summary>
++ 	/// <param name="squareFeetPerHour">The thermal diffusivity value in ft²/h.</param>
++ 	/// <returns>A new ThermalDiffusivity instance.</returns>
++ 	public static ThermalDiffusivity<T> FromSquareFeetPerHour(T squareFeetPerHour) =>
++ 		Create(squareFeetPerHour * T.CreateChecked(2.581e-5));
++ 
++ 	/// <summary>
++ 	/// Creates a new ThermalDiffusivity from a value in square centimeters per second.
++ 	/// </summary>
++ 	/// <param name="squareCentimetersPerSecond">The thermal diffusivity value in cm²/s.</param>
++ 	/// <returns>A new ThermalDiffusivity instance.</returns>
++ 	public static ThermalDiffusivity<T> FromSquareCentimetersPerSecond(T squareCentimetersPerSecond) =>
++ 		Create(squareCentimetersPerSecond * T.CreateChecked(1e-4));
++ 
++ 	/// <summary>Gets the thermal diffusivity in square meters per second.</summary>
++ 	/// <returns>The thermal diffusivity in m²/s.</returns>
++ 	public T SquareMetersPerSecond => Value;
++ 
++ 	/// <summary>Gets the thermal diffusivity in square feet per hour.</summary>
++ 	/// <returns>The thermal diffusivity in ft²/h.</returns>
++ 	public T SquareFeetPerHour => Value / T.CreateChecked(2.581e-5);
++ 
++ 	/// <summary>Gets the thermal diffusivity in square centimeters per second.</summary>
++ 	/// <returns>The thermal diffusivity in cm²/s.</returns>
++ 	public T SquareCentimetersPerSecond => Value / T.CreateChecked(1e-4);
++ 
++ 	/// <summary>
++ 	/// Calculates thermal diffusivity from material properties: α = k/(ρ·cp).
++ 	/// </summary>
++ 	/// <param name="thermalConductivity">The thermal conductivity.</param>
++ 	/// <param name="density">The material density.</param>
++ 	/// <param name="specificHeat">The specific heat capacity.</param>
++ 	/// <returns>The thermal diffusivity.</returns>
++ 	public static ThermalDiffusivity<T> FromMaterialProperties(
++ 		ThermalConductivity<T> thermalConductivity,
++ 		Density<T> density,
++ 		SpecificHeat<T> specificHeat)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(thermalConductivity);
++ 		ArgumentNullException.ThrowIfNull(density);
++ 		ArgumentNullException.ThrowIfNull(specificHeat);
++ 		return Create(thermalConductivity.Value / (density.Value * specificHeat.Value));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates the characteristic time for heat diffusion: t = L²/α.
++ 	/// </summary>
++ 	/// <param name="characteristicLength">The characteristic length scale.</param>
++ 	/// <returns>The characteristic diffusion time.</returns>
++ 	public Time<T> CalculateDiffusionTime(Length<T> characteristicLength)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(characteristicLength);
++ 		var lengthSquared = characteristicLength.Value * characteristicLength.Value;
++ 		return Time<T>.Create(lengthSquared / Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates the thermal penetration depth: δ = √(α·t).
++ 	/// </summary>
++ 	/// <param name="time">The time duration.</param>
++ 	/// <returns>The thermal penetration depth.</returns>
++ 	public Length<T> CalculatePenetrationDepth(Time<T> time)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(time);
++ 		return Length<T>.Create(T.Sqrt(Value * time.Value));
++ 	}
++ 
++ 	/// <summary>
++ 	/// Calculates thermal conductivity from diffusivity: k = α·ρ·cp.
++ 	/// </summary>
++ 	/// <param name="density">The material density.</param>
++ 	/// <param name="specificHeat">The specific heat capacity.</param>
++ 	/// <returns>The thermal conductivity.</returns>
++ 	public ThermalConductivity<T> CalculateThermalConductivity(Density<T> density, SpecificHeat<T> specificHeat)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(density);
++ 		ArgumentNullException.ThrowIfNull(specificHeat);
++ 		return ThermalConductivity<T>.Create(Value * density.Value * specificHeat.Value);
++ 	}
++ 
++ 	/// <summary>
++ 	/// Common thermal diffusivity values for reference (at room temperature).
++ 	/// </summary>
++ 	public static class CommonValues
++ 	{
++ 		/// <summary>Water: 1.43 × 10⁻⁷ m²/s</summary>
++ 		public static ThermalDiffusivity<T> Water => FromSquareMetersPerSecond(T.CreateChecked(1.43e-7));
++ 		
++ 		/// <summary>Air: 2.2 × 10⁻⁵ m²/s</summary>
++ 		public static ThermalDiffusivity<T> Air => FromSquareMetersPerSecond(T.CreateChecked(2.2e-5));
++ 		
++ 		/// <summary>Aluminum: 9.7 × 10⁻⁵ m²/s</summary>
++ 		public static ThermalDiffusivity<T> Aluminum => FromSquareMetersPerSecond(T.CreateChecked(9.7e-5));
++ 		
++ 		/// <summary>Steel: 1.2 × 10⁻⁵ m²/s</summary>
++ 		public static ThermalDiffusivity<T> Steel => FromSquareMetersPerSecond(T.CreateChecked(1.2e-5));
++ 		
++ 		/// <summary>Copper: 1.11 × 10⁻⁴ m²/s</summary>
++ 		public static ThermalDiffusivity<T> Copper => FromSquareMetersPerSecond(T.CreateChecked(1.11e-4));
++ 		
++ 		/// <summary>Concrete: 5.0 × 10⁻⁷ m²/s</summary>
++ 		public static ThermalDiffusivity<T> Concrete => FromSquareMetersPerSecond(T.CreateChecked(5.0e-7));
++ 		
++ 		/// <summary>Glass: 3.4 × 10⁻⁷ m²/s</summary>
++ 		public static ThermalDiffusivity<T> Glass => FromSquareMetersPerSecond(T.CreateChecked(3.4e-7));
++ 	}
++ } 
+```
+
+---
+
+I see there are linter errors about missing headers and using directives placement. Let me check how other thermal files are structured to understand the correct format:
+
+---
+
+Read file: Semantics/Quantities/Thermal/Temperature.cs
+
+---
+
+Now I understand the correct format. I need to add the copyright header and put the using directive inside the namespace. Let me fix all the thermal files:
+
+---
+
+
+
+---
+
+I need to fix the generic constraint to match the existing pattern. Let me fix this:
+
+---
+
+
+
+---
+
+Now let me fix the other thermal files in parallel:
 
 ---
 
@@ -2478,11 +4098,7 @@ Read file: Semantics/TODO_DOMAINS.md
 
 ---
 
-
-
----
-
-
+Let me fix the remaining linter errors. First, let me fix the ThermalExpansion expression body issues:
 
 ---
 
@@ -2494,11 +4110,74 @@ Read file: Semantics/TODO_DOMAINS.md
 
 ---
 
-
+Now let me fix the ThermalDiffusivity issues:
 
 ---
 
 
+
+---
+
+The issue is with `T.Sqrt()`. Let me check how other files handle square root operations:
+
+---
+
+<details>
+            <summary>Grep search for "Sqrt" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalDiffusivity.cs` | L96 | `return Length<T>.Create(T.Sqrt(Value * time.Value));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalDiffusivity.cs` | L96 | `return Length<T>.Create(T.Sqrt(Value * time.Value));` |
+
+</details>
+
+---
+
+Let me check how other quantities handle mathematical operations:
+
+---
+
+<details>
+            <summary>Grep search for "Math\.|System\.Math" • **5** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/UnitExtensions.cs` | L25 | `UnitSystem.CGS => Math.Abs(unit.ToBaseFactor - 1.0) < 1e-10,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L171 | `public static readonly IUnit Degree = new Unit("degree", "°", PhysicalDimensions.Dimensionless, UnitSystem.Other, Math.PI / 180.0);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L174 | `public static readonly IUnit Gradian = new Unit("gradian", "grad", PhysicalDimensions.Dimensionless, UnitSystem.Other, Math.PI / 200.0);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L177 | `public static readonly IUnit Revolution = new Unit("revolution", "rev", PhysicalDimensions.Dimensionless, UnitSystem.Other, 2.0 * Math.PI);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Unit.cs` | L53 | `Math.Abs(ToBaseFactor - other.ToBaseFactor) < 1e-10 &&` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Unit.cs` | L54 | `Math.Abs(ToBaseOffset - other.ToBaseOffset) < 1e-10 &&` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalQuantity.cs` | L56 | `if (Math.Abs(targetUnit.ToBaseOffset) > 1e-10)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensionExtensions.cs` | L279 | `if (Math.Abs(sourceUnit.ToBaseOffset) > 1e-10)` |
+
+</details>
+
+---
+
+I see that `Math.Sqrt` is used. Let me fix this:
+
+---
+
+
+
+---
+
+Now let me build to check if all the thermal quantities compile correctly:
+
+---
+
+```bash
+dotnet build
+```
+
+```
+C:\dev\ktsu-dev\Semantics\Semantics>dotnet build
+
+  C:\dev\ktsu-dev\Semantics\Semantics\Semantics.csproj                                                   Restore (0.0s)
+  C:\dev\ktsu-dev\Semantics\Semantics\Semantics.csproj                                                   Restore (0.2s)
+```
 
 ---
 

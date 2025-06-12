@@ -59,17 +59,22 @@ This document tracks the implementation progress of physical quantity domains in
 - [x] `ElectricPowerDensity.cs` - Power per unit volume
 - [x] `ImpedanceAC.cs` - Complex impedance for AC circuits
 
-## Thermal Domain 📋
+## Thermal Domain ✅
 **Location:** `Quantities/Thermal/`
-**Status:** Detailed TODO created, ready for implementation
+**Status:** All thermal quantities implemented
 **Reference:** See `Thermal/README.md` for comprehensive implementation plan
 
-### Priority Items
-- [ ] `Temperature.cs` - Expand existing with Celsius/Fahrenheit
-- [ ] `Heat.cs` - Thermal energy (J, cal, BTU)
-- [ ] `ThermalConductivity.cs` - W/(m·K) units
-- [ ] `HeatCapacity.cs` - J/K, cal/K units
-- [ ] `SpecificHeat.cs` - J/(kg·K) units
+### Implemented ✅
+- [x] `Temperature.cs` - Complete K/°C/°F/°R conversions with constants
+- [x] `Heat.cs` - Thermal energy (J, cal, BTU, kWh)
+- [x] `ThermalConductivity.cs` - W/(m·K), Fourier's law implementation
+- [x] `ThermalResistance.cs` - K/W, thermal circuits with series/parallel
+- [x] `Entropy.cs` - J/K, thermodynamic entropy with ΔS = Q/T
+- [x] `HeatCapacity.cs` - J/K, Q = C·ΔT relationships
+- [x] `SpecificHeat.cs` - J/(kg·K), common material values included
+- [x] `HeatTransferCoefficient.cs` - W/(m²·K), Newton's law of cooling
+- [x] `ThermalExpansion.cs` - K⁻¹, linear/area/volume expansion
+- [x] `ThermalDiffusivity.cs` - m²/s, α = k/(ρ·cp) relationships
 
 ## Chemical Domain 📋  
 **Location:** `Quantities/Chemical/`
