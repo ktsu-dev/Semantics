@@ -7,219 +7,99 @@ namespace ktsu.Semantics;
 using System.Numerics;
 
 /// <summary>
-/// Represents an area physical quantity.
+/// Represents an area quantity with compile-time dimensional safety.
 /// </summary>
-[SIUnit(typeof(SIUnits), nameof(SIUnits.SquareMeter))]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-
-public sealed record Area
-	: PhysicalQuantity<Area>
-	, IIntegralOperators<Area, Illuminance, LuminousFlux>
+public sealed record Area : PhysicalQuantity<Area>
 {
-	/// <summary>
-	/// Multiplies an <see cref="Area"/> and a <see cref="Length"/> to compute a <see cref="Volume"/>.
-	/// </summary>
-	/// <param name="left">The <see cref="Area"/> operand.</param>
-	/// <param name="right">The <see cref="Length"/> operand.</param>
-	/// <returns>A <see cref="Volume"/> representing the product of the area and length.</returns>
-	public static Volume operator *(Area left, Length right) =>
-		Multiply<Volume>(left, right);
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimensions.Area;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.SquareMeter;
 
 	/// <summary>
-	/// Multiplies an <see cref="Area"/> by an <see cref="Illuminance"/> to compute a <see cref="LuminousFlux"/>.
+	/// Initializes a new instance of the Area class.
 	/// </summary>
-	/// <param name="left">The area operand.</param>
-	/// <param name="right">The illuminance operand.</param>
-	/// <returns>A <see cref="LuminousFlux"/> representing the result of the multiplication.</returns>
-	public static LuminousFlux operator *(Area left, Illuminance right) =>
-		IIntegralOperators<Area, Illuminance, LuminousFlux>.Integrate(left, right);
+	public Area() : base() { }
+
+	/// <summary>
+	/// Creates a new Area from a value in square meters.
+	/// </summary>
+	/// <param name="squareMeters">The value in square meters.</param>
+	/// <returns>A new Area instance.</returns>
+	public static Area FromSquareMeters(double squareMeters) => Create(squareMeters);
+
+	/// <summary>
+	/// Gets the area value in square meters.
+	/// </summary>
+	/// <returns>The value in square meters.</returns>
+	public double SquareMeters() => Value;
+
+	/// <summary>
+	/// Gets the area value in the specified unit.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in square meters.</returns>
+	public T SquareMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Value);
+
+	/// <summary>
+	/// Gets the area value in square kilometers.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in square kilometers.</returns>
+	public T SquareKilometers<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.SquareKilometer));
+
+	/// <summary>
+	/// Gets the area value in square feet.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in square feet.</returns>
+	public T SquareFeet<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.SquareFoot));
+
+	/// <summary>
+	/// Gets the area value in acres.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in acres.</returns>
+	public T Acres<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Acre));
+
+	/// <summary>
+	/// Multiplies this area by a length to create a volume.
+	/// </summary>
+	/// <param name="left">The area.</param>
+	/// <param name="right">The length.</param>
+	/// <returns>The resulting volume.</returns>
+	public static Volume operator *(Area left, Length right) => Volume.Create(left.Value * right.Value);
+
+	/// <inheritdoc/>
+	public static Volume Multiply(Area left, Area right) => throw new NotImplementedException();
 }
 
 /// <summary>
-/// Provides extension methods for converting values to and from <see cref="Area"/>.
+/// Generic area quantity with configurable storage type.
 /// </summary>
-public static class AreaConversions
+/// <typeparam name="T">The storage type for the quantity value.</typeparam>
+public sealed record Area<T> : PhysicalQuantity<Area<T>, T>
+	where T : struct, INumber<T>
 {
-	private static Conversions.IConversionCalculator<Area> Calculator => Conversions.ConversionRegistry.GetCalculator<Area>();
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimensions.Area;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.SquareMeter;
 
 	/// <summary>
-	/// Converts a value to square meters.
+	/// Initializes a new instance of the Area class.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>An <see cref="Area"/> representing the value in square meters.</returns>
-	public static Area SquareMeters<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "square_meters");
+	public Area() : base() { }
 
 	/// <summary>
-	/// Converts an <see cref="Area"/> to a numeric value in square meters.
+	/// Creates a new Area from a value in square meters.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Area"/> to convert.</param>
-	/// <returns>The numeric value in square meters.</returns>
-	public static TNumber SquareMeters<TNumber>(this Area value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "square_meters");
+	/// <param name="squareMeters">The value in square meters.</param>
+	/// <returns>A new Area instance.</returns>
+	public static Area<T> FromSquareMeters(T squareMeters) => Create(squareMeters);
 
-	/// <summary>
-	/// Converts a value to square kilometers.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>An <see cref="Area"/> representing the value in square kilometers.</returns>
-	public static Area SquareKilometers<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "square_kilometers");
-
-	/// <summary>
-	/// Converts an <see cref="Area"/> to a numeric value in square kilometers.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Area"/> to convert.</param>
-	/// <returns>The numeric value in square kilometers.</returns>
-	public static TNumber SquareKilometers<TNumber>(this Area value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "square_kilometers");
-
-	/// <summary>
-	/// Converts a value to square centimeters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>An <see cref="Area"/> representing the value in square centimeters.</returns>
-	public static Area SquareCentimeters<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "square_centimeters");
-
-	/// <summary>
-	/// Converts an <see cref="Area"/> to a numeric value in square centimeters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Area"/> to convert.</param>
-	/// <returns>The numeric value in square centimeters.</returns>
-	public static TNumber SquareCentimeters<TNumber>(this Area value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "square_centimeters");
-
-	/// <summary>
-	/// Converts a value to square millimeters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>An <see cref="Area"/> representing the value in square millimeters.</returns>
-	public static Area SquareMillimeters<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "square_millimeters");
-
-	/// <summary>
-	/// Converts an <see cref="Area"/> to a numeric value in square millimeters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Area"/> to convert.</param>
-	/// <returns>The numeric value in square millimeters.</returns>
-	public static TNumber SquareMillimeters<TNumber>(this Area value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "square_millimeters");
-
-	// Imperial and other conversions
-	/// <summary>
-	/// Converts a value to square feet.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>An <see cref="Area"/> representing the value in square feet.</returns>
-	public static Area SquareFeet<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "square_feet");
-
-	/// <summary>
-	/// Converts an <see cref="Area"/> to a numeric value in square feet.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Area"/> to convert.</param>
-	/// <returns>The numeric value in square feet.</returns>
-	public static TNumber SquareFeet<TNumber>(this Area value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "square_feet");
-
-	/// <summary>
-	/// Converts a value to square inches.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>An <see cref="Area"/> representing the value in square inches.</returns>
-	public static Area SquareInches<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "square_inches");
-
-	/// <summary>
-	/// Converts an <see cref="Area"/> to a numeric value in square inches.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Area"/> to convert.</param>
-	/// <returns>The numeric value in square inches.</returns>
-	public static TNumber SquareInches<TNumber>(this Area value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "square_inches");
-
-	/// <summary>
-	/// Converts a value to square yards.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>An <see cref="Area"/> representing the value in square yards.</returns>
-	public static Area SquareYards<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "square_yards");
-
-	/// <summary>
-	/// Converts an <see cref="Area"/> to a numeric value in square yards.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Area"/> to convert.</param>
-	/// <returns>The numeric value in square yards.</returns>
-	public static TNumber SquareYards<TNumber>(this Area value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "square_yards");
-
-	/// <summary>
-	/// Converts a value to acres.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>An <see cref="Area"/> representing the value in acres.</returns>
-	public static Area Acres<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "acres");
-
-	/// <summary>
-	/// Converts an <see cref="Area"/> to a numeric value in acres.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Area"/> to convert.</param>
-	/// <returns>The numeric value in acres.</returns>
-	public static TNumber Acres<TNumber>(this Area value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "acres");
-
-	/// <summary>
-	/// Converts a value to hectares.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>An <see cref="Area"/> representing the value in hectares.</returns>
-	public static Area Hectares<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "hectares");
-
-	/// <summary>
-	/// Converts an <see cref="Area"/> to a numeric value in hectares.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Area"/> to convert.</param>
-	/// <returns>The numeric value in hectares.</returns>
-	public static TNumber Hectares<TNumber>(this Area value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "hectares");
+	// Note: Operators are inherited from base class for standard arithmetic operations.
+	// Dimensional operators are defined in the non-generic Area class.
 }

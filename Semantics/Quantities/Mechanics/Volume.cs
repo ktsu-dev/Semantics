@@ -7,210 +7,92 @@ namespace ktsu.Semantics;
 using System.Numerics;
 
 /// <summary>
-/// Represents a volume physical quantity.
+/// Represents a volume quantity with compile-time dimensional safety.
 /// </summary>
-[SIUnit(typeof(SIUnits), nameof(SIUnits.CubicMeter))]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-
-public sealed record Volume
-	: PhysicalQuantity<Volume>
-	, IIntegralOperators<Volume, Density, Mass>
+public sealed record Volume : PhysicalQuantity<Volume>
 {
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimensions.Volume;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.CubicMeter;
+
 	/// <summary>
-	/// Multiplies a <see cref="Volume"/> by a <see cref="Density"/> to compute a <see cref="Mass"/>.
+	/// Initializes a new instance of the Volume class.
 	/// </summary>
-	/// <param name="left">The volume operand.</param>
-	/// <param name="right">The density operand.</param>
-	/// <returns>A <see cref="Mass"/> representing the result of the multiplication.</returns>
-	public static Mass operator *(Volume left, Density right) =>
-		IIntegralOperators<Volume, Density, Mass>.Integrate(left, right);
+	public Volume() : base() { }
+
+	/// <summary>
+	/// Creates a new Volume from a value in cubic meters.
+	/// </summary>
+	/// <param name="cubicMeters">The value in cubic meters.</param>
+	/// <returns>A new Volume instance.</returns>
+	public static Volume FromCubicMeters(double cubicMeters) => Create(cubicMeters);
+
+	/// <summary>
+	/// Gets the volume value in cubic meters.
+	/// </summary>
+	/// <returns>The value in cubic meters.</returns>
+	public double CubicMeters() => Value;
+
+	/// <summary>
+	/// Gets the volume value in the specified unit.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in cubic meters.</returns>
+	public T CubicMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Value);
+
+	/// <summary>
+	/// Gets the volume value in liters.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in liters.</returns>
+	public T Liters<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Liter));
+
+	/// <summary>
+	/// Gets the volume value in milliliters.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in milliliters.</returns>
+	public T Milliliters<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Milliliter));
+
+	/// <summary>
+	/// Gets the volume value in cubic feet.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in cubic feet.</returns>
+	public T CubicFeet<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.CubicFoot));
+
+	/// <summary>
+	/// Gets the volume value in US gallons.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in US gallons.</returns>
+	public T USGallons<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.USGallon));
 }
 
 /// <summary>
-/// Provides extension methods for converting values to and from <see cref="Volume"/>.
+/// Generic volume quantity with configurable storage type.
 /// </summary>
-public static class VolumeConversions
+/// <typeparam name="T">The storage type for the quantity value.</typeparam>
+public sealed record Volume<T> : PhysicalQuantity<Volume<T>, T>
+	where T : struct, INumber<T>
 {
-	private static Conversions.IConversionCalculator<Volume> Calculator => Conversions.ConversionRegistry.GetCalculator<Volume>();
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimensions.Volume;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.CubicMeter;
 
 	/// <summary>
-	/// Converts a value to cubic meters.
+	/// Initializes a new instance of the Volume class.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Volume"/> representing the value in cubic meters.</returns>
-	public static Volume CubicMeters<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "cubic_meters");
+	public Volume() : base() { }
 
 	/// <summary>
-	/// Converts a <see cref="Volume"/> to a numeric value in cubic meters.
+	/// Creates a new Volume from a value in cubic meters.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Volume"/> to convert.</param>
-	/// <returns>The numeric value in cubic meters.</returns>
-	public static TNumber CubicMeters<TNumber>(this Volume value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "cubic_meters");
-
-	/// <summary>
-	/// Converts a value to liters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Volume"/> representing the value in liters.</returns>
-	public static Volume Liters<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "liters");
-
-	/// <summary>
-	/// Converts a <see cref="Volume"/> to a numeric value in liters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Volume"/> to convert.</param>
-	/// <returns>The numeric value in liters.</returns>
-	public static TNumber Liters<TNumber>(this Volume value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "liters");
-
-	/// <summary>
-	/// Converts a value to milliliters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Volume"/> representing the value in milliliters.</returns>
-	public static Volume Milliliters<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "milliliters");
-
-	/// <summary>
-	/// Converts a <see cref="Volume"/> to a numeric value in milliliters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Volume"/> to convert.</param>
-	/// <returns>The numeric value in milliliters.</returns>
-	public static TNumber Milliliters<TNumber>(this Volume value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "milliliters");
-
-	/// <summary>
-	/// Converts a value to cubic centimeters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Volume"/> representing the value in cubic centimeters.</returns>
-	public static Volume CubicCentimeters<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "cubic_centimeters");
-
-	/// <summary>
-	/// Converts a <see cref="Volume"/> to a numeric value in cubic centimeters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Volume"/> to convert.</param>
-	/// <returns>The numeric value in cubic centimeters.</returns>
-	public static TNumber CubicCentimeters<TNumber>(this Volume value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "cubic_centimeters");
-
-	// Imperial conversions
-	/// <summary>
-	/// Converts a value to cubic feet.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Volume"/> representing the value in cubic feet.</returns>
-	public static Volume CubicFeet<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "cubic_feet");
-
-	/// <summary>
-	/// Converts a <see cref="Volume"/> to a numeric value in cubic feet.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Volume"/> to convert.</param>
-	/// <returns>The numeric value in cubic feet.</returns>
-	public static TNumber CubicFeet<TNumber>(this Volume value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "cubic_feet");
-
-	/// <summary>
-	/// Converts a value to cubic inches.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Volume"/> representing the value in cubic inches.</returns>
-	public static Volume CubicInches<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "cubic_inches");
-
-	/// <summary>
-	/// Converts a <see cref="Volume"/> to a numeric value in cubic inches.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Volume"/> to convert.</param>
-	/// <returns>The numeric value in cubic inches.</returns>
-	public static TNumber CubicInches<TNumber>(this Volume value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "cubic_inches");
-
-	/// <summary>
-	/// Converts a value to cubic yards.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Volume"/> representing the value in cubic yards.</returns>
-	public static Volume CubicYards<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "cubic_yards");
-
-	/// <summary>
-	/// Converts a <see cref="Volume"/> to a numeric value in cubic yards.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Volume"/> to convert.</param>
-	/// <returns>The numeric value in cubic yards.</returns>
-	public static TNumber CubicYards<TNumber>(this Volume value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "cubic_yards");
-
-	/// <summary>
-	/// Converts a value to gallons (US).
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Volume"/> representing the value in gallons.</returns>
-	public static Volume Gallons<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "gallons");
-
-	/// <summary>
-	/// Converts a <see cref="Volume"/> to a numeric value in gallons (US).
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Volume"/> to convert.</param>
-	/// <returns>The numeric value in gallons.</returns>
-	public static TNumber Gallons<TNumber>(this Volume value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "gallons");
-
-	/// <summary>
-	/// Converts a value to US gallons.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Volume"/> representing the value in US gallons.</returns>
-	public static Volume USGallons<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "gallons");
-
-	/// <summary>
-	/// Converts a <see cref="Volume"/> to a numeric value in US gallons.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Volume"/> to convert.</param>
-	/// <returns>The numeric value in US gallons.</returns>
-	public static TNumber USGallons<TNumber>(this Volume value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "gallons");
+	/// <param name="cubicMeters">The value in cubic meters.</param>
+	/// <returns>A new Volume instance.</returns>
+	public static Volume<T> FromCubicMeters(T cubicMeters) => Create(cubicMeters);
 }

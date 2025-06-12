@@ -7,180 +7,92 @@ namespace ktsu.Semantics;
 using System.Numerics;
 
 /// <summary>
-/// Represents a time physical quantity.
+/// Represents a time quantity with compile-time dimensional safety.
 /// </summary>
-[SIUnit(typeof(SIUnits), nameof(SIUnits.Second))]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-
-public sealed record Time
-	: PhysicalQuantity<Time>
+public sealed record Time : PhysicalQuantity<Time>
 {
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimension.TimeDimension;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.Second;
+
+	/// <summary>
+	/// Initializes a new instance of the Time class.
+	/// </summary>
+	public Time() : base() { }
+
+	/// <summary>
+	/// Creates a new Time from a value in seconds.
+	/// </summary>
+	/// <param name="seconds">The value in seconds.</param>
+	/// <returns>A new Time instance.</returns>
+	public static Time FromSeconds(double seconds) => Create(seconds);
+
+	/// <summary>
+	/// Gets the time value in seconds.
+	/// </summary>
+	/// <returns>The value in seconds.</returns>
+	public double Seconds() => Value;
+
+	/// <summary>
+	/// Gets the time value in the specified unit.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in seconds.</returns>
+	public T Seconds<T>() where T : struct, INumber<T> => T.CreateChecked(Value);
+
+	/// <summary>
+	/// Gets the time value in minutes.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in minutes.</returns>
+	public T Minutes<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Minute));
+
+	/// <summary>
+	/// Gets the time value in hours.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in hours.</returns>
+	public T Hours<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Hour));
+
+	/// <summary>
+	/// Gets the time value in days.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in days.</returns>
+	public T Days<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Day));
+
+	/// <summary>
+	/// Gets the time value in milliseconds.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in milliseconds.</returns>
+	public T Milliseconds<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Millisecond));
 }
 
 /// <summary>
-/// Provides extension methods for converting values to and from <see cref="Time"/>.
+/// Generic time quantity with configurable storage type.
 /// </summary>
-public static class TimeConversions
+/// <typeparam name="T">The storage type for the quantity value.</typeparam>
+public sealed record Time<T> : PhysicalQuantity<Time<T>, T>
+	where T : struct, INumber<T>
 {
-	private static Conversions.IConversionCalculator<Time> Calculator => Conversions.ConversionRegistry.GetCalculator<Time>();
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimension.TimeDimension;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.Second;
 
 	/// <summary>
-	/// Converts a value to seconds.
+	/// Initializes a new instance of the Time class.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Time"/> representing the value in seconds.</returns>
-	public static Time Seconds<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "seconds");
+	public Time() : base() { }
 
 	/// <summary>
-	/// Converts a <see cref="Time"/> to a numeric value in seconds.
+	/// Creates a new Time from a value in seconds.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Time"/> to convert.</param>
-	/// <returns>The numeric value in seconds.</returns>
-	public static TNumber Seconds<TNumber>(this Time value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "seconds");
-
-	/// <summary>
-	/// Converts a value to milliseconds.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Time"/> representing the value in milliseconds.</returns>
-	public static Time Milliseconds<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "milliseconds");
-
-	/// <summary>
-	/// Converts a <see cref="Time"/> to a numeric value in milliseconds.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Time"/> to convert.</param>
-	/// <returns>The numeric value in milliseconds.</returns>
-	public static TNumber Milliseconds<TNumber>(this Time value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "milliseconds");
-
-	/// <summary>
-	/// Converts a value to microseconds.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Time"/> representing the value in microseconds.</returns>
-	public static Time Microseconds<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "microseconds");
-
-	/// <summary>
-	/// Converts a <see cref="Time"/> to a numeric value in microseconds.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Time"/> to convert.</param>
-	/// <returns>The numeric value in microseconds.</returns>
-	public static TNumber Microseconds<TNumber>(this Time value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "microseconds");
-
-	/// <summary>
-	/// Converts a value to nanoseconds.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Time"/> representing the value in nanoseconds.</returns>
-	public static Time Nanoseconds<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "nanoseconds");
-
-	/// <summary>
-	/// Converts a <see cref="Time"/> to a numeric value in nanoseconds.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Time"/> to convert.</param>
-	/// <returns>The numeric value in nanoseconds.</returns>
-	public static TNumber Nanoseconds<TNumber>(this Time value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "nanoseconds");
-
-	/// <summary>
-	/// Converts a value to minutes.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Time"/> representing the value in minutes.</returns>
-	public static Time Minutes<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "minutes");
-
-	/// <summary>
-	/// Converts a <see cref="Time"/> to a numeric value in minutes.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Time"/> to convert.</param>
-	/// <returns>The numeric value in minutes.</returns>
-	public static TNumber Minutes<TNumber>(this Time value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "minutes");
-
-	/// <summary>
-	/// Converts a value to hours.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Time"/> representing the value in hours.</returns>
-	public static Time Hours<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "hours");
-
-	/// <summary>
-	/// Converts a <see cref="Time"/> to a numeric value in hours.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Time"/> to convert.</param>
-	/// <returns>The numeric value in hours.</returns>
-	public static TNumber Hours<TNumber>(this Time value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "hours");
-
-	/// <summary>
-	/// Converts a value to days.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Time"/> representing the value in days.</returns>
-	public static Time Days<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "days");
-
-	/// <summary>
-	/// Converts a <see cref="Time"/> to a numeric value in days.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Time"/> to convert.</param>
-	/// <returns>The numeric value in days.</returns>
-	public static TNumber Days<TNumber>(this Time value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "days");
-
-	/// <summary>
-	/// Converts a value to years.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Time"/> representing the value in years.</returns>
-	public static Time Years<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "years");
-
-	/// <summary>
-	/// Converts a <see cref="Time"/> to a numeric value in years.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Time"/> to convert.</param>
-	/// <returns>The numeric value in years.</returns>
-	public static TNumber Years<TNumber>(this Time value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "years");
+	/// <param name="seconds">The value in seconds.</param>
+	/// <returns>A new Time instance.</returns>
+	public static Time<T> FromSeconds(T seconds) => Create(seconds);
 }

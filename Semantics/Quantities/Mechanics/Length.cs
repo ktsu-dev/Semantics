@@ -7,279 +7,171 @@ namespace ktsu.Semantics;
 using System.Numerics;
 
 /// <summary>
-/// Represents a length physical quantity.
+/// Represents a length quantity with compile-time dimensional safety.
 /// </summary>
-[SIUnit(typeof(SIUnits), nameof(SIUnits.Meter))]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-public sealed record Length
-	: PhysicalQuantity<Length>
-	, IDerivativeOperators<Length, Time, Velocity>
+public sealed record Length : PhysicalQuantity<Length>
 {
-	/// <summary>
-	/// Multiplies two <see cref="Length"/> instances to compute an <see cref="Area"/>.
-	/// </summary>
-	/// <param name="left">The first <see cref="Length"/> operand.</param>
-	/// <param name="right">The second <see cref="Length"/> operand.</param>
-	/// <returns>An <see cref="Area"/> representing the product of the two lengths.</returns>
-	public static Area operator *(Length left, Length right) =>
-		Multiply<Area>(left, right);
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimensions.Length;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.Meter;
 
 	/// <summary>
-	/// Divides a <see cref="Length"/> by a <see cref="Time"/> to compute a <see cref="Velocity"/>.
+	/// Initializes a new instance of the Length class.
 	/// </summary>
-	/// <param name="left">The length operand.</param>
-	/// <param name="right">The time operand.</param>
-	/// <returns>A <see cref="Velocity"/> representing the result of the division.</returns>
-	public static Velocity operator /(Length left, Time right) =>
-		IDerivativeOperators<Length, Time, Velocity>.Derive(left, right);
+	public Length() : base() { }
+
+	/// <summary>
+	/// Creates a new Length from a value in meters.
+	/// </summary>
+	/// <param name="meters">The value in meters.</param>
+	/// <returns>A new Length instance.</returns>
+	public static Length FromMeters(double meters) => Create(meters);
+
+	/// <summary>
+	/// Gets the length value in meters.
+	/// </summary>
+	/// <returns>The value in meters.</returns>
+	public double Meters() => Value;
+
+	/// <summary>
+	/// Gets the length value in the specified unit.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in meters.</returns>
+	public T Meters<T>() where T : struct, INumber<T> => T.CreateChecked(Value);
+
+	/// <summary>
+	/// Gets the length value in kilometers.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in kilometers.</returns>
+	public T Kilometers<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Kilometer));
+
+	/// <summary>
+	/// Gets the length value in centimeters.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in centimeters.</returns>
+	public T Centimeters<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Centimeter));
+
+	/// <summary>
+	/// Gets the length value in millimeters.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in millimeters.</returns>
+	public T Millimeters<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Millimeter));
+
+	/// <summary>
+	/// Gets the length value in feet.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in feet.</returns>
+	public T Feet<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Foot));
+
+	/// <summary>
+	/// Gets the length value in inches.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in inches.</returns>
+	public T Inches<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Inch));
+
+	/// <summary>
+	/// Gets the length value in yards.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in yards.</returns>
+	public T Yards<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Yard));
+
+	/// <summary>
+	/// Gets the length value in miles.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in miles.</returns>
+	public T Miles<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Mile));
+
+	/// <summary>
+	/// Multiplies this length by another length to create an area.
+	/// </summary>
+	/// <param name="left">The first length.</param>
+	/// <param name="right">The second length.</param>
+	/// <returns>The resulting area.</returns>
+	public static Area operator *(Length left, Length right)
+	{
+		ArgumentNullException.ThrowIfNull(left);
+		ArgumentNullException.ThrowIfNull(right);
+		return Area.Create(left.Value * right.Value);
+	}
+
+	/// <summary>
+	/// Divides this length by time to create a velocity.
+	/// </summary>
+	/// <param name="left">The length.</param>
+	/// <param name="right">The time.</param>
+	/// <returns>The resulting velocity.</returns>
+	public static Velocity operator /(Length left, Time right)
+	{
+		ArgumentNullException.ThrowIfNull(left);
+		ArgumentNullException.ThrowIfNull(right);
+		return Velocity.Create(left.Value / right.Value);
+	}
+
+	/// <summary>
+	/// Gets the absolute value of this length.
+	/// </summary>
+	/// <returns>The absolute length.</returns>
+	public Length Abs() => Create(Math.Abs(Value));
+
+	/// <summary>
+	/// Clamps this length between the specified minimum and maximum values.
+	/// </summary>
+	/// <param name="min">The minimum value.</param>
+	/// <param name="max">The maximum value.</param>
+	/// <returns>The clamped length.</returns>
+	public Length Clamp(double min, double max) => Create(Math.Clamp(Value, min, max));
+
+	/// <summary>
+	/// Raises this length to the specified power.
+	/// </summary>
+	/// <param name="exponent">The exponent.</param>
+	/// <returns>The length raised to the power.</returns>
+	public Length Pow(double exponent) => Create(Math.Pow(Value, exponent));
+
+	/// <inheritdoc/>
+	public static Area Multiply(Length left, Length right) => throw new NotImplementedException();
+	/// <inheritdoc/>
+	public static Velocity Divide(Length left, Length right) => throw new NotImplementedException();
 }
 
 /// <summary>
-/// Provides extension methods for converting values to and from <see cref="Length"/>.
+/// Generic length quantity with configurable storage type.
 /// </summary>
-public static class LengthConversions
+/// <typeparam name="T">The storage type for the quantity value.</typeparam>
+public sealed record Length<T> : PhysicalQuantity<Length<T>, T>
+	where T : struct, INumber<T>
 {
-	private static Conversions.IConversionCalculator<Length> Calculator => Conversions.ConversionRegistry.GetCalculator<Length>();
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimensions.Length;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.Meter;
 
 	/// <summary>
-	/// Converts a value to meters.
+	/// Initializes a new instance of the Length class.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in meters.</returns>
-	public static Length Meters<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "meters");
+	public Length() : base() { }
 
 	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in meters.
+	/// Creates a new Length from a value in meters.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in meters.</returns>
-	public static TNumber Meters<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "meters");
+	/// <param name="meters">The value in meters.</param>
+	/// <returns>A new Length instance.</returns>
+	public static Length<T> FromMeters(T meters) => Create(meters);
 
-	// Metric prefixes
-	/// <summary>
-	/// Converts a value to kilometers.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in kilometers.</returns>
-	public static Length Kilometers<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "kilometers");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in kilometers.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in kilometers.</returns>
-	public static TNumber Kilometers<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "kilometers");
-
-	/// <summary>
-	/// Converts a value to centimeters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in centimeters.</returns>
-	public static Length Centimeters<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "centimeters");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in centimeters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in centimeters.</returns>
-	public static TNumber Centimeters<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "centimeters");
-
-	/// <summary>
-	/// Converts a value to millimeters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in millimeters.</returns>
-	public static Length Millimeters<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "millimeters");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in millimeters.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in millimeters.</returns>
-	public static TNumber Millimeters<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "millimeters");
-
-	/// <summary>
-	/// Converts a value to micrometers.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in micrometers.</returns>
-	public static Length Micrometers<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "micrometers");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in micrometers.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in micrometers.</returns>
-	public static TNumber Micrometers<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "micrometers");
-
-	/// <summary>
-	/// Converts a value to nanometers.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in nanometers.</returns>
-	public static Length Nanometers<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "nanometers");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in nanometers.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in nanometers.</returns>
-	public static TNumber Nanometers<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "nanometers");
-
-	// Imperial and other conversions
-	/// <summary>
-	/// Converts a value to feet.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in feet.</returns>
-	public static Length Feet<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "feet");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in feet.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in feet.</returns>
-	public static TNumber Feet<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "feet");
-
-	/// <summary>
-	/// Converts a value to inches.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in inches.</returns>
-	public static Length Inches<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "inches");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in inches.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in inches.</returns>
-	public static TNumber Inches<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "inches");
-
-	/// <summary>
-	/// Converts a value to yards.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in yards.</returns>
-	public static Length Yards<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "yards");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in yards.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in yards.</returns>
-	public static TNumber Yards<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "yards");
-
-	/// <summary>
-	/// Converts a value to miles.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in miles.</returns>
-	public static Length Miles<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "miles");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in miles.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in miles.</returns>
-	public static TNumber Miles<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "miles");
-
-	/// <summary>
-	/// Converts a value to nautical miles.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in nautical miles.</returns>
-	public static Length NauticalMiles<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "nautical_miles");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in nautical miles.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in nautical miles.</returns>
-	public static TNumber NauticalMiles<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "nautical_miles");
-
-	/// <summary>
-	/// Converts a value to fathoms.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Length"/> representing the value in fathoms.</returns>
-	public static Length Fathoms<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "fathoms");
-
-	/// <summary>
-	/// Converts a <see cref="Length"/> to a numeric value in fathoms.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Length"/> to convert.</param>
-	/// <returns>The numeric value in fathoms.</returns>
-	public static TNumber Fathoms<TNumber>(this Length value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "fathoms");
+	// Note: Operators are inherited from base class for standard arithmetic operations.
+	// Dimensional operators are defined in the non-generic Length class.
 }
+
+// Note: Operator interfaces removed due to C# constraints on binary operators.
+// Dimensional operations are defined directly on each quantity type.

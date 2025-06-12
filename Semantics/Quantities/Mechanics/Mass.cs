@@ -7,219 +7,92 @@ namespace ktsu.Semantics;
 using System.Numerics;
 
 /// <summary>
-/// Represents a mass physical quantity.
+/// Represents a mass quantity with compile-time dimensional safety.
 /// </summary>
-[SIUnit(typeof(SIUnits), nameof(SIUnits.Kilogram))]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-
-public sealed record Mass
-	: PhysicalQuantity<Mass>
-	, IIntegralOperators<Mass, Acceleration, Force>
-	, IDerivativeOperators<Mass, Volume, Density>
-	, IDerivativeOperators<Mass, Density, Volume>
-	, IIntegralOperators<Mass, Velocity, Momentum>
-	, IDerivativeOperators<Mass, MolarMass, AmountOfSubstance>
-	, IDerivativeOperators<Mass, AmountOfSubstance, MolarMass>
+public sealed record Mass : PhysicalQuantity<Mass>
 {
-	/// <summary>
-	/// Multiplies a <see cref="Mass"/> by an <see cref="Acceleration"/> to compute a <see cref="Force"/>.
-	/// </summary>
-	/// <param name="left">The mass operand.</param>
-	/// <param name="right">The acceleration operand.</param>
-	/// <returns>A <see cref="Force"/> representing the result of the multiplication.</returns>
-	public static Force operator *(Mass left, Acceleration right) =>
-		IIntegralOperators<Mass, Acceleration, Force>.Integrate(left, right);
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimensions.Mass;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.Kilogram;
 
 	/// <summary>
-	/// Divides a <see cref="Mass"/> by a <see cref="Volume"/> to compute a <see cref="Density"/>.
+	/// Initializes a new instance of the Mass class.
 	/// </summary>
-	/// <param name="left">The mass operand.</param>
-	/// <param name="right">The volume operand.</param>
-	/// <returns>A <see cref="Density"/> representing the result of the division.</returns>
-	public static Density operator /(Mass left, Volume right) =>
-		IDerivativeOperators<Mass, Volume, Density>.Derive(left, right);
+	public Mass() : base() { }
 
 	/// <summary>
-	/// Divides a <see cref="Mass"/> by a <see cref="Density"/> to compute a <see cref="Volume"/>.
+	/// Creates a new Mass from a value in kilograms.
 	/// </summary>
-	/// <param name="left">The mass operand.</param>
-	/// <param name="right">The density operand.</param>
-	/// <returns>A <see cref="Volume"/> representing the result of the division.</returns>
-	public static Volume operator /(Mass left, Density right) =>
-		IDerivativeOperators<Mass, Density, Volume>.Derive(left, right);
+	/// <param name="kilograms">The value in kilograms.</param>
+	/// <returns>A new Mass instance.</returns>
+	public static Mass FromKilograms(double kilograms) => Create(kilograms);
 
 	/// <summary>
-	/// Multiplies a <see cref="Mass"/> by a <see cref="Velocity"/> to compute a <see cref="Momentum"/>.
+	/// Gets the mass value in kilograms.
 	/// </summary>
-	/// <param name="left">The mass operand.</param>
-	/// <param name="right">The velocity operand.</param>
-	/// <returns>A <see cref="Momentum"/> representing the result of the multiplication.</returns>
-	public static Momentum operator *(Mass left, Velocity right) =>
-		IIntegralOperators<Mass, Velocity, Momentum>.Integrate(left, right);
+	/// <returns>The value in kilograms.</returns>
+	public double Kilograms() => Value;
 
 	/// <summary>
-	/// Divides a <see cref="Mass"/> by a <see cref="MolarMass"/> to compute an <see cref="AmountOfSubstance"/>.
+	/// Gets the mass value in the specified unit.
 	/// </summary>
-	/// <param name="left">The mass operand.</param>
-	/// <param name="right">The molar mass operand.</param>
-	/// <returns>An <see cref="AmountOfSubstance"/> representing the result of the division.</returns>
-	public static AmountOfSubstance operator /(Mass left, MolarMass right) =>
-		IDerivativeOperators<Mass, MolarMass, AmountOfSubstance>.Derive(left, right);
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in kilograms.</returns>
+	public T Kilograms<T>() where T : struct, INumber<T> => T.CreateChecked(Value);
 
 	/// <summary>
-	/// Divides a <see cref="Mass"/> by an <see cref="AmountOfSubstance"/> to compute a <see cref="MolarMass"/>.
+	/// Gets the mass value in grams.
 	/// </summary>
-	/// <param name="left">The mass operand.</param>
-	/// <param name="right">The amount of substance operand.</param>
-	/// <returns>A <see cref="MolarMass"/> representing the result of the division.</returns>
-	public static MolarMass operator /(Mass left, AmountOfSubstance right) =>
-		IDerivativeOperators<Mass, AmountOfSubstance, MolarMass>.Derive(left, right);
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in grams.</returns>
+	public T Grams<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Gram));
+
+	/// <summary>
+	/// Gets the mass value in pounds.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in pounds.</returns>
+	public T Pounds<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Pound));
+
+	/// <summary>
+	/// Gets the mass value in ounces.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in ounces.</returns>
+	public T Ounces<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Ounce));
+
+	/// <summary>
+	/// Gets the mass value in stones.
+	/// </summary>
+	/// <typeparam name="T">The numeric type for the result.</typeparam>
+	/// <returns>The value in stones.</returns>
+	public T Stones<T>() where T : struct, INumber<T> => T.CreateChecked(In(Units.Stone));
 }
 
 /// <summary>
-/// Provides extension methods for converting values to and from <see cref="Mass"/>.
+/// Generic mass quantity with configurable storage type.
 /// </summary>
-public static class MassConversions
+/// <typeparam name="T">The storage type for the quantity value.</typeparam>
+public sealed record Mass<T> : PhysicalQuantity<Mass<T>, T>
+	where T : struct, INumber<T>
 {
-	private static Conversions.IConversionCalculator<Mass> Calculator => Conversions.ConversionRegistry.GetCalculator<Mass>();
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimensions.Mass;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.Kilogram;
 
 	/// <summary>
-	/// Converts a value to kilograms.
+	/// Initializes a new instance of the Mass class.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Mass"/> representing the value in kilograms.</returns>
-	public static Mass Kilograms<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "kilograms");
+	public Mass() : base() { }
 
 	/// <summary>
-	/// Converts a <see cref="Mass"/> to a numeric value in kilograms.
+	/// Creates a new Mass from a value in kilograms.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Mass"/> to convert.</param>
-	/// <returns>The numeric value in kilograms.</returns>
-	public static TNumber Kilograms<TNumber>(this Mass value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "kilograms");
-
-	/// <summary>
-	/// Converts a value to grams.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Mass"/> representing the value in grams.</returns>
-	public static Mass Grams<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "grams");
-
-	/// <summary>
-	/// Converts a <see cref="Mass"/> to a numeric value in grams.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Mass"/> to convert.</param>
-	/// <returns>The numeric value in grams.</returns>
-	public static TNumber Grams<TNumber>(this Mass value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "grams");
-
-	/// <summary>
-	/// Converts a value to milligrams.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Mass"/> representing the value in milligrams.</returns>
-	public static Mass Milligrams<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "milligrams");
-
-	/// <summary>
-	/// Converts a <see cref="Mass"/> to a numeric value in milligrams.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Mass"/> to convert.</param>
-	/// <returns>The numeric value in milligrams.</returns>
-	public static TNumber Milligrams<TNumber>(this Mass value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "milligrams");
-
-	/// <summary>
-	/// Converts a value to pounds.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Mass"/> representing the value in pounds.</returns>
-	public static Mass Pounds<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "pounds");
-
-	/// <summary>
-	/// Converts a <see cref="Mass"/> to a numeric value in pounds.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Mass"/> to convert.</param>
-	/// <returns>The numeric value in pounds.</returns>
-	public static TNumber Pounds<TNumber>(this Mass value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "pounds");
-
-	/// <summary>
-	/// Converts a value to ounces.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Mass"/> representing the value in ounces.</returns>
-	public static Mass Ounces<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "ounces");
-
-	/// <summary>
-	/// Converts a <see cref="Mass"/> to a numeric value in ounces.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Mass"/> to convert.</param>
-	/// <returns>The numeric value in ounces.</returns>
-	public static TNumber Ounces<TNumber>(this Mass value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "ounces");
-
-	/// <summary>
-	/// Converts a value to stones.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Mass"/> representing the value in stones.</returns>
-	public static Mass Stones<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "stones");
-
-	/// <summary>
-	/// Converts a <see cref="Mass"/> to a numeric value in stones.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Mass"/> to convert.</param>
-	/// <returns>The numeric value in stones.</returns>
-	public static TNumber Stones<TNumber>(this Mass value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "stones");
-
-	/// <summary>
-	/// Converts a value to metric tons.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Mass"/> representing the value in metric tons.</returns>
-	public static Mass MetricTons<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "metric_tons");
-
-	/// <summary>
-	/// Converts a <see cref="Mass"/> to a numeric value in metric tons.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Mass"/> to convert.</param>
-	/// <returns>The numeric value in metric tons.</returns>
-	public static TNumber MetricTons<TNumber>(this Mass value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "metric_tons");
+	/// <param name="kilograms">The value in kilograms.</param>
+	/// <returns>A new Mass instance.</returns>
+	public static Mass<T> FromKilograms(T kilograms) => Create(kilograms);
 }

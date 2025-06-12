@@ -4,192 +4,78 @@
 
 namespace ktsu.Semantics;
 
-using System.Numerics;
-
 /// <summary>
-/// Represents a power physical quantity.
+/// Represents a power quantity with dimensional analysis support.
 /// </summary>
-[SIUnit(typeof(SIUnits), nameof(SIUnits.Watt))]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-
-public sealed record Power
-	: PhysicalQuantity<Power>
-	, IIntegralOperators<Power, Time, Energy>
-	, IDerivativeOperators<Power, ElectricCurrent, ElectricPotential>
-	, IDerivativeOperators<Power, ElectricPotential, ElectricCurrent>
+public sealed record Power : PhysicalQuantity<Power>
 {
-	/// <summary>
-	/// Multiplies a <see cref="Power"/> by a <see cref="Time"/> to compute an <see cref="Energy"/>.
-	/// </summary>
-	/// <param name="left">The power operand.</param>
-	/// <param name="right">The time operand.</param>
-	/// <returns>An <see cref="Energy"/> representing the result of the multiplication.</returns>
-	public static Energy operator *(Power left, Time right) =>
-		IIntegralOperators<Power, Time, Energy>.Integrate(left, right);
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimensions.Power;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.Watt;
 
 	/// <summary>
-	/// Divides a <see cref="Power"/> by an <see cref="ElectricCurrent"/> to compute an <see cref="ElectricPotential"/>.
+	/// Initializes a new instance of the Power class.
 	/// </summary>
-	/// <param name="left">The power operand.</param>
-	/// <param name="right">The electric current operand.</param>
-	/// <returns>An <see cref="ElectricPotential"/> representing the result of the division.</returns>
-	public static ElectricPotential operator /(Power left, ElectricCurrent right) =>
-		IDerivativeOperators<Power, ElectricCurrent, ElectricPotential>.Derive(left, right);
+	public Power() : base() { }
 
 	/// <summary>
-	/// Divides a <see cref="Power"/> by an <see cref="ElectricPotential"/> to compute an <see cref="ElectricCurrent"/>.
+	/// Multiplies power by time to get energy.
 	/// </summary>
-	/// <param name="left">The power operand.</param>
-	/// <param name="right">The electric potential operand.</param>
-	/// <returns>An <see cref="ElectricCurrent"/> representing the result of the division.</returns>
-	public static ElectricCurrent operator /(Power left, ElectricPotential right) =>
-		IDerivativeOperators<Power, ElectricPotential, ElectricCurrent>.Derive(left, right);
-}
-
-/// <summary>
-/// Provides extension methods for converting values to and from <see cref="Power"/>.
-/// </summary>
-public static class PowerConversions
-{
-	private static Conversions.IConversionCalculator<Power> Calculator => Conversions.ConversionRegistry.GetCalculator<Power>();
+	/// <param name="power">The power.</param>
+	/// <param name="time">The time.</param>
+	/// <returns>The resulting energy (E = P·t).</returns>
+	public static Energy operator *(Power power, Time time)
+	{
+		ArgumentNullException.ThrowIfNull(power);
+		ArgumentNullException.ThrowIfNull(time);
+		// E = P·t: Energy = Power × Time
+		double resultValue = power.Value * time.Value;
+		return Energy.Create(resultValue);
+	}
 
 	/// <summary>
-	/// Converts a value to watts.
+	/// Multiplies time by power to get energy.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Power"/> representing the value in watts.</returns>
-	public static Power Watts<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "watts");
+	/// <param name="time">The time.</param>
+	/// <param name="power">The power.</param>
+	/// <returns>The resulting energy (E = P·t).</returns>
+	public static Energy operator *(Time time, Power power) => power * time;
 
 	/// <summary>
-	/// Converts a <see cref="Power"/> to a numeric value in watts.
+	/// Divides power by voltage to get current (electrical power).
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Power"/> to convert.</param>
-	/// <returns>The numeric value in watts.</returns>
-	public static TNumber Watts<TNumber>(this Power value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "watts");
+	/// <param name="power">The power.</param>
+	/// <param name="voltage">The voltage.</param>
+	/// <returns>The resulting current (I = P/V).</returns>
+	public static ElectricCurrent operator /(Power power, ElectricPotential voltage)
+	{
+		ArgumentNullException.ThrowIfNull(power);
+		ArgumentNullException.ThrowIfNull(voltage);
+		// I = P/V: Current = Power / Voltage
+		double resultValue = power.Value / voltage.Value;
+		return ElectricCurrent.Create(resultValue);
+	}
 
 	/// <summary>
-	/// Converts a value to kilowatts.
+	/// Divides power by current to get voltage (electrical power).
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Power"/> representing the value in kilowatts.</returns>
-	public static Power Kilowatts<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "kilowatts");
+	/// <param name="power">The power.</param>
+	/// <param name="current">The current.</param>
+	/// <returns>The resulting voltage (V = P/I).</returns>
+	public static ElectricPotential operator /(Power power, ElectricCurrent current)
+	{
+		ArgumentNullException.ThrowIfNull(power);
+		ArgumentNullException.ThrowIfNull(current);
+		// V = P/I: Voltage = Power / Current
+		double resultValue = power.Value / current.Value;
+		return ElectricPotential.Create(resultValue);
+	}
 
-	/// <summary>
-	/// Converts a <see cref="Power"/> to a numeric value in kilowatts.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Power"/> to convert.</param>
-	/// <returns>The numeric value in kilowatts.</returns>
-	public static TNumber Kilowatts<TNumber>(this Power value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "kilowatts");
+	/// <inheritdoc/>
+	public static Energy Multiply(Power left, Power right) => throw new NotImplementedException();
 
-	/// <summary>
-	/// Converts a value to milliwatts.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Power"/> representing the value in milliwatts.</returns>
-	public static Power Milliwatts<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "milliwatts");
-
-	/// <summary>
-	/// Converts a <see cref="Power"/> to a numeric value in milliwatts.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Power"/> to convert.</param>
-	/// <returns>The numeric value in milliwatts.</returns>
-	public static TNumber Milliwatts<TNumber>(this Power value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "milliwatts");
-
-	/// <summary>
-	/// Converts a value to megawatts.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Power"/> representing the value in megawatts.</returns>
-	public static Power Megawatts<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "megawatts");
-
-	/// <summary>
-	/// Converts a <see cref="Power"/> to a numeric value in megawatts.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Power"/> to convert.</param>
-	/// <returns>The numeric value in megawatts.</returns>
-	public static TNumber Megawatts<TNumber>(this Power value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "megawatts");
-
-	/// <summary>
-	/// Converts a value to gigawatts.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Power"/> representing the value in gigawatts.</returns>
-	public static Power Gigawatts<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "gigawatts");
-
-	/// <summary>
-	/// Converts a <see cref="Power"/> to a numeric value in gigawatts.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Power"/> to convert.</param>
-	/// <returns>The numeric value in gigawatts.</returns>
-	public static TNumber Gigawatts<TNumber>(this Power value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "gigawatts");
-
-	/// <summary>
-	/// Converts a value to horsepower.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Power"/> representing the value in horsepower.</returns>
-	public static Power Horsepower<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "horsepower");
-
-	/// <summary>
-	/// Converts a <see cref="Power"/> to a numeric value in horsepower.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Power"/> to convert.</param>
-	/// <returns>The numeric value in horsepower.</returns>
-	public static TNumber Horsepower<TNumber>(this Power value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "horsepower");
-
-	/// <summary>
-	/// Converts a value to metric horsepower.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Power"/> representing the value in metric horsepower.</returns>
-	public static Power MetricHorsepower<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "metric_horsepower");
-
-	/// <summary>
-	/// Converts a <see cref="Power"/> to a numeric value in metric horsepower.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Power"/> to convert.</param>
-	/// <returns>The numeric value in metric horsepower.</returns>
-	public static TNumber MetricHorsepower<TNumber>(this Power value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "metric_horsepower");
+	/// <inheritdoc/>
+	public static ElectricCurrent Divide(Power left, Power right) => throw new NotImplementedException();
 }

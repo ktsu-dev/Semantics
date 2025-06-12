@@ -153,6 +153,43 @@ When adding XML documentation comments:
 *   Use the FluentValidation library to implement the internals of the validation attributes where possible.
 *   Provide feature parity between direct static methods and factory methods so users can choose their preferred pattern without losing functionality.
 *   Use overloading with a more communicative common name for `From` and `TryFrom` methods instead of specifically type named variants.
+*   When migrating the physical quantity functionality into the semantics library:
+    *   The PhysicalQuantity library has:
+        *   31+ physical quantity types (Length, Mass, Time, Energy, Velocity, etc.)
+        *   A sophisticated base class `PhysicalQuantity<TSelf>` that extends `SemanticQuantity<TSelf, StorageType>`
+        *   SI unit attributes for metadata (symbol, singular/plural names)
+        *   Extension methods for unit conversions
+        *   Integral and derivative operator interfaces for physical relationships
+        *   Comprehensive conversion constants
+    *   Create an attribute to define the SI unit for a class.
+    *   Define an interface for integral operations between physical quantities.
+    *   Define an interface for derivative operations between physical quantities.
+    *   Provide conversion factors for various physical quantities and metric prefixes.
+    *   Represent a physical quantity with a specific unit of measurement.
+    *   Provide static methods for converting values to and from physical quantities.
+*   When defining properties in `PhysicalQuantity` classes that override base class properties, ensure the types match exactly. For example, `Acceleration.Dimension` should be of type `PhysicalDimension` to match the overridden member `PhysicalQuantity<Acceleration, double>.Dimension`.
+*   When defining `PhysicalQuantity` classes:
+    *   Ensure the class is non-abstract and has a public parameterless constructor.
+    *   Include XML documentation comments for all constructs.
+    *   Avoid throwing exceptions from methods not expected to throw them.
+    *   Ensure the base class `PhysicalQuantity<TSelf>` has a constructor that takes the required arguments.
+    *   Ensure that all required methods and properties (e.g., `ConvertToUnit`, `Unit`) are defined or accessible in the current context.
+    *   Ensure that all reference arguments are non-null by using `ArgumentNullException.ThrowIfNull()` if necessary.
+*   When defining `PhysicalQuantity` classes, the correct pattern is:
+    ```csharp
+    public override PhysicalDimension Dimension => PhysicalDimensions.SomeDimension;
+    public override IUnit BaseUnit => Units.SomeUnit;
+    public ClassName() : base() { }
+    // Uses inherited Create(double value) method automatically
+    ```
+*   `PhysicalDimensionExtensions.cs` extensions should be to the `INumber` interface, rather than to all of the concrete types.
+*   When creating extension methods for Physical Quantities:
+    *   Use generic `INumber<T>` extensions instead of concrete type overloads. This will make the code more maintainable and work with all numeric types.
+    *   Use `T.CreateChecked()` for conversion factors instead of hardcoded doubles
+    *   Maintain original conversion logic and factors.
+    *   Add proper XML documentation with `<typeparam>` tags.
+    *   For PhysicalQuantity extension methods that use units, and thus the `Create(value, Units.SomeUnit)` syntax, remove the methods entirely.
+    *   Eliminate backward compatibility methods that duplicate functionality.
 
 ## DEBUGGING
 
@@ -218,6 +255,8 @@ When adding XML documentation comments:
     *   Verify that the `WeakString` property is properly initialized with the correct string value.
     *   Check for any issues with named parameter delegation.
 *   When debugging `SpanPathUtilities.GetFileName` and encountering failing tests with trailing separators, ensure that the method returns an empty span when the path ends with a directory separator.
+*   When encountering CS0122 errors related to `SemanticString<T>.FromString<TDest>(string?)` being inaccessible, replace all calls to `FromString<TDest>` with `Create<TDest>`.
+*   When encountering CS1715 errors (type must be 'PhysicalDimension' to match overridden member), ensure that the type of the overriding property or member matches the type of the overridden property or member in the base class.
 
 ## WORKFLOW & RELEASE RULES
 
@@ -289,6 +328,28 @@ When adding XML documentation comments:
 *   Before determining whether the direct methods should support all the features of the factories, investigate the implications of doing so.
 *   Ensure that the direct static methods provide feature parity with the factory methods.
 *   Use overloading with a more communicative common name for `From` and `TryFrom` methods instead of specifically type named variants.
+*   When defining `PhysicalQuantity` classes, the correct pattern is:
+    ```csharp
+    public override PhysicalDimension Dimension => PhysicalDimensions.SomeDimension;
+    public override IUnit BaseUnit => Units.SomeUnit;
+    public ClassName() : base() { }
+    // Uses inherited Create(double value) method automatically
+    ```
+*   When defining `PhysicalQuantity` classes:
+    *   Ensure the class is non-abstract and has a public parameterless constructor.
+    *   Include XML documentation comments for all constructs.
+    *   Avoid throwing exceptions from methods not expected to throw them.
+    *   Ensure the base class `PhysicalQuantity<TSelf>` has a constructor that takes the required arguments.
+    *   Ensure that all required methods and properties (e.g., `ConvertToUnit`, `Unit`) are defined or accessible in the current context.
+    *   Ensure that all reference arguments are non-null by using `ArgumentNullException.ThrowIfNull()` if necessary.
+*   `PhysicalDimensionExtensions.cs` extensions should be to the `INumber` interface, rather than to all of the concrete types.
+*   When creating extension methods for Physical Quantities:
+    *   Use generic `INumber<T>` extensions instead of concrete type overloads. This will make the code more maintainable and work with all numeric types.
+    *   Use `T.CreateChecked()` for conversion factors instead of hardcoded doubles
+    *   Maintain original conversion logic and factors.
+    *   Add proper XML documentation with `<typeparam>` tags.
+    *   For PhysicalQuantity extension methods that use units, and thus the `Create(value, Units.SomeUnit)` syntax, remove the methods entirely.
+    *   Eliminate backward compatibility methods that duplicated functionality.
 
 ## SUPPRESSIONS
 

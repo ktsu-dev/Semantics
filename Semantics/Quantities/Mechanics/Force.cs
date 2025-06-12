@@ -4,228 +4,94 @@
 
 namespace ktsu.Semantics;
 
-using System.Numerics;
-
 /// <summary>
-/// Represents a force physical quantity.
+/// Represents a force quantity with dimensional analysis support.
 /// </summary>
-[SIUnit(typeof(SIUnits), nameof(SIUnits.Newton))]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physical quantity operations")]
-public sealed record Force
-	: PhysicalQuantity<Force>
-	, IDerivativeOperators<Force, Mass, Acceleration>
-	, IDerivativeOperators<Force, Acceleration, Mass>
-	, IIntegralOperators<Force, Length, Energy>
-	, IDerivativeOperators<Force, Area, Pressure>
+public sealed record Force : PhysicalQuantity<Force>
 {
-	/// <summary>
-	/// Divides a <see cref="Force"/> by a <see cref="Mass"/> to compute an <see cref="Acceleration"/>.
-	/// </summary>
-	/// <param name="left">The force operand.</param>
-	/// <param name="right">The mass operand.</param>
-	/// <returns>An <see cref="Acceleration"/> representing the result of the division.</returns>
-	public static Acceleration operator /(Force left, Mass right) =>
-		IDerivativeOperators<Force, Mass, Acceleration>.Derive(left, right);
+	/// <inheritdoc/>
+	public override PhysicalDimension Dimension => PhysicalDimensions.Force;
+
+	/// <inheritdoc/>
+	public override IUnit BaseUnit => Units.Newton;
 
 	/// <summary>
-	/// Divides a <see cref="Force"/> by an <see cref="Acceleration"/> to compute a <see cref="Mass"/>.
+	/// Initializes a new instance of the Force class.
 	/// </summary>
-	/// <param name="left">The force operand.</param>
-	/// <param name="right">The acceleration operand.</param>
-	/// <returns>A <see cref="Mass"/> representing the result of the division.</returns>
-	public static Mass operator /(Force left, Acceleration right) =>
-		IDerivativeOperators<Force, Acceleration, Mass>.Derive(left, right);
+	public Force() : base() { }
 
 	/// <summary>
-	/// Multiplies a <see cref="Force"/> by a <see cref="Length"/> to compute an <see cref="Energy"/>.
+	/// Initializes a new instance of the Force class.
 	/// </summary>
-	/// <param name="left">The force operand.</param>
-	/// <param name="right">The length operand.</param>
-	/// <returns>An <see cref="Energy"/> representing the result of the multiplication.</returns>
-	public static Energy operator *(Force left, Length right) =>
-		IIntegralOperators<Force, Length, Energy>.Integrate(left, right);
+	/// <param name="value">The magnitude of the force.</param>
+	/// <param name="unit">The unit of the force.</param>
+	private Force(double value, IUnit unit) : base(value, unit) { }
 
 	/// <summary>
-	/// Divides a <see cref="Force"/> by an <see cref="Area"/> to compute a <see cref="Pressure"/>.
+	/// Divides a force by a mass to get acceleration.
 	/// </summary>
-	/// <param name="left">The force operand.</param>
-	/// <param name="right">The area operand.</param>
-	/// <returns>A <see cref="Pressure"/> representing the result of the division.</returns>
-	public static Pressure operator /(Force left, Area right) =>
-		IDerivativeOperators<Force, Area, Pressure>.Derive(left, right);
-}
-
-/// <summary>
-/// Provides extension methods for converting values to and from <see cref="Force"/>.
-/// </summary>
-[Obsolete("Use UnifiedConversions extension methods instead for strongly-typed unit conversions.")]
-public static class ForceConversions
-{
-	private static Conversions.IConversionCalculator<Force> Calculator => Conversions.ConversionRegistry.GetCalculator<Force>();
-	private static Conversions.TypedForceConversionCalculator TypedCalculator => Conversions.TypedForceConversionCalculator.Instance;
+	/// <param name="force">The force.</param>
+	/// <param name="mass">The mass.</param>
+	/// <returns>The resulting acceleration (a = F/m).</returns>
+	public static Acceleration operator /(Force force, Mass mass)
+	{
+		// a = F/m: Acceleration = Force / Mass
+		double resultValue = force.Value / mass.Value;
+		return Acceleration.Create(resultValue);
+	}
 
 	/// <summary>
-	/// Converts a value to newtons.
+	/// Divides a force by an acceleration to get mass.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Force"/> representing the value in newtons.</returns>
-	public static Force Newtons<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "newtons");
+	/// <param name="force">The force.</param>
+	/// <param name="acceleration">The acceleration.</param>
+	/// <returns>The resulting mass (m = F/a).</returns>
+	public static Mass operator /(Force force, Acceleration acceleration)
+	{
+		// m = F/a: Mass = Force / Acceleration
+		double resultValue = force.Value / acceleration.Value;
+		IUnit massUnit = Units.Kilogram; // Default to kg for the result
+		return Mass.Create(resultValue, massUnit);
+	}
 
 	/// <summary>
-	/// Converts a <see cref="Force"/> to a numeric value in newtons.
+	/// Multiplies a force by a length to get energy (work).
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Force"/> to convert.</param>
-	/// <returns>The numeric value in newtons.</returns>
-	public static TNumber Newtons<TNumber>(this Force value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "newtons");
+	/// <param name="force">The force.</param>
+	/// <param name="length">The displacement length.</param>
+	/// <returns>The resulting energy (W = F·d).</returns>
+	public static Energy operator *(Force force, Length length)
+	{
+		// W = F·d: Work = Force × Displacement
+		double resultValue = force.Value * length.Value;
+		IUnit energyUnit = Units.Joule; // Default to Joule for the result
+		return Energy.Create(resultValue, energyUnit);
+	}
 
 	/// <summary>
-	/// Converts a value to kilonewtons.
+	/// Multiplies a length by a force to get energy (work).
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Force"/> representing the value in kilonewtons.</returns>
-	public static Force Kilonewtons<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "kilonewtons");
+	/// <param name="length">The displacement length.</param>
+	/// <param name="force">The force.</param>
+	/// <returns>The resulting energy (W = F·d).</returns>
+	public static Energy operator *(Length length, Force force) => force * length;
 
 	/// <summary>
-	/// Converts a <see cref="Force"/> to a numeric value in kilonewtons.
+	/// Divides a force by an area to get pressure.
 	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Force"/> to convert.</param>
-	/// <returns>The numeric value in kilonewtons.</returns>
-	public static TNumber Kilonewtons<TNumber>(this Force value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "kilonewtons");
+	/// <param name="force">The force.</param>
+	/// <param name="area">The area.</param>
+	/// <returns>The resulting pressure (P = F/A).</returns>
+	public static Pressure operator /(Force force, Area area)
+	{
+		// P = F/A: Pressure = Force / Area
+		double resultValue = force.Value / area.Value;
+		IUnit pressureUnit = Units.Pascal; // Default to Pascal for the result
+		return Pressure.Create(resultValue, pressureUnit);
+	}
 
-	/// <summary>
-	/// Converts a value to millinewtons.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Force"/> representing the value in millinewtons.</returns>
-	public static Force Millinewtons<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "millinewtons");
+	/// <inheritdoc/>
+	public static Acceleration Divide(Force left, Force right) => throw new NotImplementedException();
 
-	/// <summary>
-	/// Converts a <see cref="Force"/> to a numeric value in millinewtons.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Force"/> to convert.</param>
-	/// <returns>The numeric value in millinewtons.</returns>
-	public static TNumber Millinewtons<TNumber>(this Force value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "millinewtons");
-
-	/// <summary>
-	/// Converts a value to micronewtons.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Force"/> representing the value in micronewtons.</returns>
-	public static Force Micronewtons<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "micronewtons");
-
-	/// <summary>
-	/// Converts a <see cref="Force"/> to a numeric value in micronewtons.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Force"/> to convert.</param>
-	/// <returns>The numeric value in micronewtons.</returns>
-	public static TNumber Micronewtons<TNumber>(this Force value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "micronewtons");
-
-	/// <summary>
-	/// Converts a value to pounds-force.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Force"/> representing the value in pounds-force.</returns>
-	public static Force PoundsForce<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "pounds_force");
-
-	/// <summary>
-	/// Converts a <see cref="Force"/> to a numeric value in pounds-force.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Force"/> to convert.</param>
-	/// <returns>The numeric value in pounds-force.</returns>
-	public static TNumber PoundsForce<TNumber>(this Force value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "pounds_force");
-
-	/// <summary>
-	/// Converts a value to pound-force (singular form).
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <returns>A <see cref="Force"/> representing the value in pound-force.</returns>
-	public static Force PoundForce<TNumber>(this TNumber value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.FromUnit(value, "pounds_force");
-
-	/// <summary>
-	/// Converts a <see cref="Force"/> to a numeric value in pound-force (singular form).
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="value">The <see cref="Force"/> to convert.</param>
-	/// <returns>The numeric value in pound-force.</returns>
-	public static TNumber PoundForce<TNumber>(this Force value)
-		where TNumber : INumber<TNumber>
-		=> Calculator.ToUnit<TNumber>(value, "pounds_force");
-
-	// New strongly-typed conversion methods
-	/// <summary>
-	/// Converts a value from the specified SI unit to force.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <param name="unit">The SI unit to convert from.</param>
-	/// <returns>A <see cref="Force"/> representing the value.</returns>
-	public static Force FromSIUnit<TNumber>(this TNumber value, SIUnit unit)
-		where TNumber : INumber<TNumber>
-		=> TypedCalculator.FromSIUnit(value, unit);
-
-	/// <summary>
-	/// Converts a value from the specified imperial unit to force.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the value to convert.</typeparam>
-	/// <param name="value">The value to convert.</param>
-	/// <param name="unit">The imperial unit to convert from.</param>
-	/// <returns>A <see cref="Force"/> representing the value.</returns>
-	public static Force FromImperialUnit<TNumber>(this TNumber value, ImperialUnit unit)
-		where TNumber : INumber<TNumber>
-		=> TypedCalculator.FromImperialUnit(value, unit);
-
-	/// <summary>
-	/// Converts a force to the specified SI unit.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="force">The force to convert.</param>
-	/// <param name="unit">The SI unit to convert to.</param>
-	/// <returns>The numeric value in the specified unit.</returns>
-	public static TNumber ToSIUnit<TNumber>(this Force force, SIUnit unit)
-		where TNumber : INumber<TNumber>
-		=> TypedCalculator.ToSIUnit<TNumber>(force, unit);
-
-	/// <summary>
-	/// Converts a force to the specified imperial unit.
-	/// </summary>
-	/// <typeparam name="TNumber">The type of the numeric value.</typeparam>
-	/// <param name="force">The force to convert.</param>
-	/// <param name="unit">The imperial unit to convert to.</param>
-	/// <returns>The numeric value in the specified unit.</returns>
-	public static TNumber ToImperialUnit<TNumber>(this Force force, ImperialUnit unit)
-		where TNumber : INumber<TNumber>
-		=> TypedCalculator.ToImperialUnit<TNumber>(force, unit);
+	public static Energy Multiply(Force left, Force right) => throw new NotImplementedException();
 }
