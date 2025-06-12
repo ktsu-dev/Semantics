@@ -345,6 +345,65 @@ public static class Units
 	/// <summary>Megahertz - 1,000,000 hertz.</summary>
 	public static readonly IUnit Megahertz = new Unit("megahertz", "MHz", PhysicalDimensions.Frequency, UnitSystem.SIDerived, MetricMagnitudes.Mega);
 
+	// === CHEMICAL DOMAIN ===
+
+	/// <summary>Gram per mole - Common unit for molar mass.</summary>
+	public static readonly IUnit GramPerMole = new Unit("gram per mole", "g/mol", PhysicalDimensions.MolarMass, UnitSystem.SIDerived, 0.001);
+
+	/// <summary>Kilogram per mole - SI base unit for molar mass.</summary>
+	public static readonly IUnit KilogramPerMole = new Unit("kilogram per mole", "kg/mol", PhysicalDimensions.MolarMass, UnitSystem.SIDerived);
+
+	/// <summary>Dalton - Atomic mass unit for molecular masses.</summary>
+	public static readonly IUnit Dalton = new Unit("dalton", "Da", PhysicalDimensions.MolarMass, UnitSystem.Atomic, 1.66054e-27);
+
+	/// <summary>Millimolar - 0.001 molar concentration.</summary>
+	public static readonly IUnit Millimolar = new Unit("millimolar", "mM", PhysicalDimensions.Concentration, UnitSystem.SIDerived, 1.0);
+
+	/// <summary>Micromolar - 0.000001 molar concentration.</summary>
+	public static readonly IUnit Micromolar = new Unit("micromolar", "μM", PhysicalDimensions.Concentration, UnitSystem.SIDerived, 0.001);
+
+	/// <summary>Parts per billion - Dimensionless concentration.</summary>
+	public static readonly IUnit PartsPerBillion = new Unit("parts per billion", "ppb", PhysicalDimensions.Dimensionless, UnitSystem.Other, 1e-9);
+
+	/// <summary>Percent by weight - Dimensionless concentration.</summary>
+	public static readonly IUnit PercentByWeight = new Unit("percent by weight", "% w/w", PhysicalDimensions.Dimensionless, UnitSystem.Other, 0.01);
+
+	/// <summary>Moles per second - Reaction rate unit.</summary>
+	public static readonly IUnit MolesPerSecond = new Unit("moles per second", "mol/s", PhysicalDimensions.ReactionRate, UnitSystem.SIDerived, 1000.0);
+
+	/// <summary>Joules per mole - Activation energy unit.</summary>
+	public static readonly IUnit JoulesPerMole = new Unit("joules per mole", "J/mol", PhysicalDimensions.ActivationEnergy, UnitSystem.SIDerived);
+
+	/// <summary>Kilojoules per mole - Common activation energy unit.</summary>
+	public static readonly IUnit KilojoulesPerMole = new Unit("kilojoules per mole", "kJ/mol", PhysicalDimensions.ActivationEnergy, UnitSystem.SIDerived, 1000.0);
+
+	/// <summary>Calories per mole - Traditional activation energy unit.</summary>
+	public static readonly IUnit CaloriesPerMole = new Unit("calories per mole", "cal/mol", PhysicalDimensions.ActivationEnergy, UnitSystem.Other, 4.184);
+
+	/// <summary>Per second - First-order rate constant.</summary>
+	public static readonly IUnit PerSecond = new Unit("per second", "s⁻¹", PhysicalDimensions.RateConstant, UnitSystem.SIDerived);
+
+	/// <summary>Katal - SI unit of enzyme activity.</summary>
+	public static readonly IUnit Katal = new Unit("katal", "kat", PhysicalDimensions.EnzymeActivity, UnitSystem.SIDerived);
+
+	/// <summary>Enzyme unit - Traditional enzyme activity unit.</summary>
+	public static readonly IUnit EnzymeUnit = new Unit("enzyme unit", "U", PhysicalDimensions.EnzymeActivity, UnitSystem.Other, 1.0 / 60.0e6); // μmol/min
+
+	/// <summary>Newton per meter - Surface tension unit.</summary>
+	public static readonly IUnit NewtonPerMeter = new Unit("newton per meter", "N/m", PhysicalDimensions.SurfaceTension, UnitSystem.SIDerived);
+
+	/// <summary>Dyne per centimeter - CGS surface tension unit.</summary>
+	public static readonly IUnit DynePerCentimeter = new Unit("dyne per centimeter", "dyn/cm", PhysicalDimensions.SurfaceTension, UnitSystem.CGS, 1e-3);
+
+	/// <summary>Pascal second - Dynamic viscosity unit.</summary>
+	public static readonly IUnit PascalSecond = new Unit("pascal second", "Pa·s", PhysicalDimensions.DynamicViscosity, UnitSystem.SIDerived);
+
+	/// <summary>Poise - CGS dynamic viscosity unit.</summary>
+	public static readonly IUnit Poise = new Unit("poise", "P", PhysicalDimensions.DynamicViscosity, UnitSystem.CGS, 0.1);
+
+	/// <summary>Centipoise - Common dynamic viscosity unit.</summary>
+	public static readonly IUnit Centipoise = new Unit("centipoise", "cP", PhysicalDimensions.DynamicViscosity, UnitSystem.CGS, 0.001);
+
 	//TODO: === FLUID DYNAMICS DOMAIN ===
 	// Flow Rate Units: cubic meters per second (m³/s), liters per minute (L/min), gallons per minute (GPM)
 	// Viscosity Units: pascal-second (Pa·s), poise (P), centipoise (cP)

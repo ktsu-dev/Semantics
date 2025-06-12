@@ -198,6 +198,36 @@ public static class PhysicalDimensions
 	/// <summary>Thermal resistance dimension [Θ T³ M⁻¹ L⁻²].</summary>
 	public static readonly PhysicalDimension ThermalResistance = new(temperature: 1, time: 3, mass: -1, length: -2, baseUnit: Units.Kelvin);
 
+	/// <summary>Molar mass dimension [M N⁻¹].</summary>
+	public static readonly PhysicalDimension MolarMass = new(mass: 1, amountOfSubstance: -1, baseUnit: Units.Gram);
+
+	/// <summary>pH dimension [1] (dimensionless logarithmic scale).</summary>
+	public static readonly PhysicalDimension pH = new(baseUnit: Units.Radian);
+
+	/// <summary>Reaction rate dimension [N L⁻³ T⁻¹].</summary>
+	public static readonly PhysicalDimension ReactionRate = new(amountOfSubstance: 1, length: -3, time: -1, baseUnit: Units.Molar);
+
+	/// <summary>Activation energy dimension [M L² T⁻² N⁻¹].</summary>
+	public static readonly PhysicalDimension ActivationEnergy = new(mass: 1, length: 2, time: -2, amountOfSubstance: -1, baseUnit: Units.Joule);
+
+	/// <summary>Rate constant dimension varies by reaction order [various].</summary>
+	public static readonly PhysicalDimension RateConstant = new(baseUnit: Units.Second); // First-order default
+
+	/// <summary>Enzyme activity dimension [N T⁻¹].</summary>
+	public static readonly PhysicalDimension EnzymeActivity = new(amountOfSubstance: 1, time: -1, baseUnit: Units.Mole);
+
+	/// <summary>Solubility dimension [N L⁻³].</summary>
+	public static readonly PhysicalDimension Solubility = new(amountOfSubstance: 1, length: -3, baseUnit: Units.Molar);
+
+	/// <summary>Surface tension dimension [M T⁻²].</summary>
+	public static readonly PhysicalDimension SurfaceTension = new(mass: 1, time: -2, baseUnit: Units.Newton);
+
+	/// <summary>Vapor pressure dimension [M L⁻¹ T⁻²].</summary>
+	public static readonly PhysicalDimension VaporPressure = new(mass: 1, length: -1, time: -2, baseUnit: Units.Pascal);
+
+	/// <summary>Dynamic viscosity dimension [M L⁻¹ T⁻¹].</summary>
+	public static readonly PhysicalDimension DynamicViscosity = new(mass: 1, length: -1, time: -1, baseUnit: Units.Pascal);
+
 	/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>
 	public static FrozenSet<PhysicalDimension> All { get; } = new HashSet<PhysicalDimension>(
 		[
@@ -263,6 +293,16 @@ public static class PhysicalDimensions
 			HeatTransferCoefficient,
 			ThermalExpansion,
 			ThermalDiffusivity,
-			ThermalResistance
+			ThermalResistance,
+			MolarMass,
+			pH,
+			ReactionRate,
+			ActivationEnergy,
+			RateConstant,
+			EnzymeActivity,
+			Solubility,
+			SurfaceTension,
+			VaporPressure,
+			DynamicViscosity
 		]).ToFrozenSet();
 }
