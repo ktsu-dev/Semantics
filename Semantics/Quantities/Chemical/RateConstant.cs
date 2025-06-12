@@ -1,4 +1,6 @@
-// Copyright (c) KTSU. All rights reserved.
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
 
 namespace ktsu.Semantics;
 
@@ -10,7 +12,7 @@ using System.Numerics;
 /// </summary>
 /// <typeparam name="T">The numeric type for the rate constant value.</typeparam>
 public sealed record RateConstant<T> : PhysicalQuantity<RateConstant<T>, T>
-	where T : struct, INumber<T>
+	where T : struct, INumber<T>, IFloatingPoint<T>
 {
 	/// <summary>Gets the physical dimension of rate constant [T⁻¹] for first-order reactions.</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.RateConstant;
@@ -34,7 +36,7 @@ public sealed record RateConstant<T> : PhysicalQuantity<RateConstant<T>, T>
 		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
 
 		T exponent = -ea / (gasConstant * temp);
-		T k = preExponentialFactor * T.Exp(exponent);
+		T k = preExponentialFactor * T.CreateChecked(Math.Exp(double.CreateChecked(exponent)));
 		return Create(k);
 	}
 
@@ -56,8 +58,8 @@ public sealed record RateConstant<T> : PhysicalQuantity<RateConstant<T>, T>
 		T ea = activationEnergy.In(Units.JoulesPerMole);
 		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
 
-		T exponent = (ea / gasConstant) * ((T.One / t1) - (T.One / t2));
-		T ratio = T.Exp(exponent);
+		T exponent = ea / gasConstant * ((T.One / t1) - (T.One / t2));
+		T ratio = T.CreateChecked(Math.Exp(double.CreateChecked(exponent)));
 		T k2 = k1 * ratio;
 		return Create(k2);
 	}

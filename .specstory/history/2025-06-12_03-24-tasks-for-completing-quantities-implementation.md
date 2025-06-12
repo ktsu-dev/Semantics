@@ -6013,3 +6013,1815 @@ _**Assistant**_
 
 ---
 
+I'll continue by implementing the next domain in the Semantics library. Let me check the current status and proceed with the next set of physical quantities.
+
+---
+
+Read file: Semantics/TODO_DOMAINS.md
+
+---
+
+Now let me check which domains have the most priority and least implementation. I can see that Chemical Domain and Optical Domain are both marked as "📋 Detailed TODO created, ready for implementation". Let me check if there are any existing Chemical domain quantities to see what's already implemented.
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Quantities/Chemical • **1** results</summary>
+        
+| Name |
+|-------|
+| 📄 `README.md` |
+
+</details>
+
+---
+
+Read file: Semantics/Quantities/Chemical/README.md
+
+---
+
+Perfect! I can see the Chemical domain has a comprehensive plan but no implementations yet. Let me also check if there are any Chemical-related dimensions already defined in `PhysicalDimensions.cs`.
+
+---
+
+<details>
+            <summary>Grep search for "Chemical|Concentration|Molar|pH|Amount" • **32** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/ValidationStrategyTests.cs` | L213 | `[StartsWith("ALPHA")]` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/SemanticPathInterfaceTests.cs` | L206 | `public void PolymorphicCollection_CanStoreAllPathTypes()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/SemanticPathInterfaceTests.cs` | L258 | `public void PolymorphicMethods_CanAcceptInterfaceParameters()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/SemanticPathInterfaceTests.cs` | L270 | `// Act & Assert - Test that polymorphic methods work` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/SemanticPathInterfaceTests.cs` | L470 | `public void DirectoryPath_Contents_PolymorphicUsage()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/SemanticPathInterfaceTests.cs` | L474 | `string testDir = Path.Combine(tempDir, "SemanticPathTest_Polymorphic_" + Guid.NewGuid().ToString("N")[..8]);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/SemanticPathInterfaceTests.cs` | L485 | `// Test polymorphic usage with IDirectoryPath` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/SemanticPathInterfaceTests.cs` | L494 | `Assert.AreEqual(2, files.Length, "Should be able to filter files polymorphically");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/SemanticPathInterfaceTests.cs` | L605 | `public void PathInterfaces_InPolymorphicCollections_CanBeUsedAsStrings()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsUpperCaseAttribute.cs` | L16 | `/// All alphabetic characters must be uppercase. Spaces, digits, and punctuation are allowed.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsUpperCaseAttribute.cs` | L39 | `.WithMessage("All alphabetic characters must be uppercase.")` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsUpperCaseAttribute.cs` | L47 | `/// <returns>True if all alphabetic characters are uppercase, false otherwise</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsSnakeCaseAttribute.cs` | L16 | `/// No spaces, hyphens, or uppercase letters are allowed.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsSnakeCaseAttribute.cs` | L67 | `// No spaces, hyphens, or other separators allowed (except underscores)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsPascalCaseAttribute.cs` | L16 | `/// No spaces, underscores, or hyphens are allowed.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsPascalCaseAttribute.cs` | L61 | `// No spaces, underscores, hyphens, or other separators allowed` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsMacroCaseAttribute.cs` | L16 | `/// No spaces, hyphens, or lowercase letters are allowed.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsMacroCaseAttribute.cs` | L68 | `// No spaces, hyphens, or other separators allowed (except underscores)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsLowerCaseAttribute.cs` | L16 | `/// All alphabetic characters must be lowercase. Spaces, digits, and punctuation are allowed.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsLowerCaseAttribute.cs` | L39 | `.WithMessage("All alphabetic characters must be lowercase.")` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsLowerCaseAttribute.cs` | L47 | `/// <returns>True if all alphabetic characters are lowercase, false otherwise</returns>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsKebabCaseAttribute.cs` | L11 | `/// Validates that a string is in kebab-case (lowercase words separated by hyphens)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsKebabCaseAttribute.cs` | L14 | `/// Kebab-case uses lowercase letters with words separated by hyphens.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsKebabCaseAttribute.cs` | L55 | `// Cannot start or end with hyphen` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsKebabCaseAttribute.cs` | L61 | `// Cannot have consecutive hyphens` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsKebabCaseAttribute.cs` | L67 | `// No spaces, underscores, or other separators allowed (except hyphens)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsKebabCaseAttribute.cs` | L73 | `// All characters must be lowercase letters, digits, or hyphens` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsCamelCaseAttribute.cs` | L16 | `/// No spaces, underscores, or hyphens are allowed.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Validation/Attributes/Casing/IsCamelCaseAttribute.cs` | L61 | `// No spaces, underscores, hyphens, or other separators allowed` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Strings/SemanticString.cs` | L73 | `/// The name "WeakString" emphasizes that accessing this property breaks the type safety guarantees` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Strings/ISemanticString.cs` | L29 | `/// The name "WeakString" emphasizes that this breaks the type safety guarantees.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L12 | `public sealed record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.ThermalResistance;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalExpansion.cs` | L12 | `public sealed record ThermalExpansion<T> : PhysicalQuantity<ThermalExpansion<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalExpansion.cs` | L15 | `/// <summary>Gets the physical dimension of thermal expansion coefficient [Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalExpansion.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.ThermalExpansion;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalDiffusivity.cs` | L12 | `public sealed record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalDiffusivity.cs` | L15 | `/// <summary>Gets the physical dimension of thermal diffusivity [L² T⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalDiffusivity.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.ThermalDiffusivity;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L12 | `public sealed record ThermalConductivity<T> : PhysicalQuantity<ThermalConductivity<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.ThermalConductivity;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Temperature.cs` | L12 | `public sealed record Temperature<T> : PhysicalQuantity<Temperature<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Temperature.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Temperature;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/SpecificHeat.cs` | L10 | `/// Specific heat is the amount of heat required to change the temperature of one unit mass by one degree.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/SpecificHeat.cs` | L12 | `public sealed record SpecificHeat<T> : PhysicalQuantity<SpecificHeat<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/SpecificHeat.cs` | L15 | `/// <summary>Gets the physical dimension of specific heat [L² T⁻² Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/SpecificHeat.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.SpecificHeat;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/HeatTransferCoefficient.cs` | L12 | `public sealed record HeatTransferCoefficient<T> : PhysicalQuantity<HeatTransferCoefficient<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/HeatTransferCoefficient.cs` | L15 | `/// <summary>Gets the physical dimension of heat transfer coefficient [M T⁻³ Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/HeatTransferCoefficient.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.HeatTransferCoefficient;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L12 | `public sealed record Heat<T> : PhysicalQuantity<Heat<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Heat;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/HeatCapacity.cs` | L10 | `/// Heat capacity is the amount of heat required to change the temperature of an object by one degree.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/HeatCapacity.cs` | L12 | `public sealed record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/HeatCapacity.cs` | L15 | `/// <summary>Gets the physical dimension of heat capacity [M L² T⁻² Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/HeatCapacity.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.HeatCapacity;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Entropy.cs` | L12 | `public sealed record Entropy<T> : PhysicalQuantity<Entropy<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Entropy.cs` | L15 | `/// <summary>Gets the physical dimension of entropy [M L² T⁻² Θ⁻¹].</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Entropy.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Entropy;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Acceleration.cs` | L12 | `public sealed record Acceleration<T> : PhysicalQuantity<Acceleration<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Acceleration.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Acceleration;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Area.cs` | L12 | `public sealed record Area<T> : PhysicalQuantity<Area<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Area.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Area;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Energy.cs` | L12 | `public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Energy.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Energy;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Length.cs` | L12 | `public sealed record Length<T> : PhysicalQuantity<Length<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Length.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Length;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Mass.cs` | L12 | `public sealed record Mass<T> : PhysicalQuantity<Mass<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Mass.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Mass;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/MomentOfInertia.cs` | L12 | `public sealed record MomentOfInertia<T> : PhysicalQuantity<MomentOfInertia<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/MomentOfInertia.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.MomentOfInertia;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Momentum.cs` | L12 | `public sealed record Momentum<T> : PhysicalQuantity<Momentum<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Momentum.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Momentum;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Pressure.cs` | L12 | `public sealed record Pressure<T> : PhysicalQuantity<Pressure<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Pressure.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Pressure;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/SpecificGravity.cs` | L12 | `public sealed record SpecificGravity<T> : PhysicalQuantity<SpecificGravity<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/SpecificGravity.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Dimensionless;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Torque.cs` | L12 | `public sealed record Torque<T> : PhysicalQuantity<Torque<T>, T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Torque.cs` | L16 | `public override PhysicalDimension Dimension => PhysicalDimensions.Torque;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Velocity.cs` | L12 | `public sealed record Velocity<T> : PhysicalQuantity<Velocity<T>, T>` |
+
+</details>
+
+---
+
+Let me check if there's already an AmountOfSubstance quantity since it's mentioned in the Chemical README:
+
+---
+
+<details>
+            <summary>Grep search for "AmountOfSubstance|Mole|Chemical" • **5** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/UnitSystem.cs` | L11 | `/// <summary>SI base units (the 7 fundamental units: meter, kilogram, second, ampere, kelvin, mole, candela).</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L26 | `/// <summary>Mole - SI base unit of amount of substance.</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L27 | `public static readonly IUnit Mole = new Unit("mole", "mol", PhysicalDimensions.AmountOfSubstance, UnitSystem.SIBase);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L239 | `/// <summary>Calorie - Common energy unit (thermochemical calorie).</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L320 | `/// <summary>Kilomole - 1000 moles.</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L321 | `public static readonly IUnit Kilomole = new Unit("kilomole", "kmol", PhysicalDimensions.AmountOfSubstance, UnitSystem.SIDerived, MetricMagnitudes.Kilo);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L323 | `/// <summary>Millimole - 0.001 moles.</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L324 | `public static readonly IUnit Millimole = new Unit("millimole", "mmol", PhysicalDimensions.AmountOfSubstance, UnitSystem.SIDerived, MetricMagnitudes.Milli);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L326 | `/// <summary>Molar - Moles per liter.</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L420 | `// Molarity Units: moles per liter (mol/L), millimolar (mM)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/Units.cs` | L423 | `// Buffer Capacity Units: moles per liter per pH unit (mol/(L·pH))` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L30 | `public static readonly PhysicalDimension AmountOfSubstance = new(baseUnit: Units.Mole, amountOfSubstance: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L93 | `public static readonly PhysicalDimension Concentration = new(amountOfSubstance: 1, length: -3, baseUnit: Units.Molar);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L209 | `AmountOfSubstance,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensionExtensions.cs` | L361 | `// Molecular Weight: .Daltons(), .KiloDaltons()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L17 | `/// <param name="amountOfSubstance">Power of amount of substance dimension.</param>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L28 | `int amountOfSubstance = 0,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L47 | `public int AmountOfSubstance { get; } = amountOfSubstance;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L53 | `public bool IsDimensionless => Length == 0 && Mass == 0 && Time == 0 && ElectricCurrent == 0 && Temperature == 0 && AmountOfSubstance == 0 && LuminousIntensity == 0;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L69 | `AmountOfSubstance == other.AmountOfSubstance &&` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L83 | `public override int GetHashCode() => HashCode.Combine(Length, Mass, Time, ElectricCurrent, Temperature, AmountOfSubstance, LuminousIntensity);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L114 | `left.AmountOfSubstance + right.AmountOfSubstance,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L130 | `left.AmountOfSubstance - right.AmountOfSubstance,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L146 | `dimension.AmountOfSubstance * power,` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L187 | `if (AmountOfSubstance != 0)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L189 | `parts.Add(FormatDimension("N", AmountOfSubstance));` |
+
+</details>
+
+---
+
+Great! I can see that AmountOfSubstance dimension and Mole units already exist. Now let me check what Chemical dimensions are already defined in PhysicalDimensions.cs:
+
+---
+
+Read file: Semantics/Quantities/Core/PhysicalDimensions.cs
+
+---
+
+Perfect! I can see that `Concentration` dimension already exists. Now let me proceed to implement the Chemical domain quantities. Based on the Chemical README, I'll implement the core chemical quantities first. Let me create the necessary dimensions and then implement the quantities in parallel.
+
+---
+
+```diff
+  	/// <summary>Thermal resistance dimension [Θ T³ M⁻¹ L⁻²].</summary>
+  	public static readonly PhysicalDimension ThermalResistance = new(temperature: 1, time: 3, mass: -1, length: -2, baseUnit: Units.Kelvin);
++ 
++ 	/// <summary>Molar mass dimension [M N⁻¹].</summary>
++ 	public static readonly PhysicalDimension MolarMass = new(mass: 1, amountOfSubstance: -1, baseUnit: Units.Gram);
++ 
++ 	/// <summary>pH dimension [1] (dimensionless logarithmic scale).</summary>
++ 	public static readonly PhysicalDimension pH = new(baseUnit: Units.Radian);
++ 
++ 	/// <summary>Reaction rate dimension [N L⁻³ T⁻¹].</summary>
++ 	public static readonly PhysicalDimension ReactionRate = new(amountOfSubstance: 1, length: -3, time: -1, baseUnit: Units.Molar);
++ 
++ 	/// <summary>Activation energy dimension [M L² T⁻² N⁻¹].</summary>
++ 	public static readonly PhysicalDimension ActivationEnergy = new(mass: 1, length: 2, time: -2, amountOfSubstance: -1, baseUnit: Units.Joule);
++ 
++ 	/// <summary>Rate constant dimension varies by reaction order [various].</summary>
++ 	public static readonly PhysicalDimension RateConstant = new(baseUnit: Units.Second); // First-order default
++ 
++ 	/// <summary>Enzyme activity dimension [N T⁻¹].</summary>
++ 	public static readonly PhysicalDimension EnzymeActivity = new(amountOfSubstance: 1, time: -1, baseUnit: Units.Mole);
++ 
++ 	/// <summary>Solubility dimension [N L⁻³].</summary>
++ 	public static readonly PhysicalDimension Solubility = new(amountOfSubstance: 1, length: -3, baseUnit: Units.Molar);
++ 
++ 	/// <summary>Surface tension dimension [M T⁻²].</summary>
++ 	public static readonly PhysicalDimension SurfaceTension = new(mass: 1, time: -2, baseUnit: Units.Newton);
++ 
++ 	/// <summary>Vapor pressure dimension [M L⁻¹ T⁻²].</summary>
++ 	public static readonly PhysicalDimension VaporPressure = new(mass: 1, length: -1, time: -2, baseUnit: Units.Pascal);
++ 
++ 	/// <summary>Dynamic viscosity dimension [M L⁻¹ T⁻¹].</summary>
++ 	public static readonly PhysicalDimension DynamicViscosity = new(mass: 1, length: -1, time: -1, baseUnit: Units.Pascal);
+  
+  	/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>
+```
+
+```diff
+  			ThermalExpansion,
+  			ThermalDiffusivity,
+- 			ThermalResistance
++ 			ThermalResistance,
++ 			MolarMass,
++ 			pH,
++ 			ReactionRate,
++ 			ActivationEnergy,
++ 			RateConstant,
++ 			EnzymeActivity,
++ 			Solubility,
++ 			SurfaceTension,
++ 			VaporPressure,
++ 			DynamicViscosity
+  		]).ToFrozenSet();
+  }
+```
+
+---
+
+Now I need to add the chemical units to the Units.cs file:
+
+---
+
+Read file: Semantics/Quantities/Core/Units.cs
+
+---
+
+
+
+---
+
+```diff
+  	/// <summary>Megahertz - 1,000,000 hertz.</summary>
+  	public static readonly IUnit Megahertz = new Unit("megahertz", "MHz", PhysicalDimensions.Frequency, UnitSystem.SIDerived, MetricMagnitudes.Mega);
++ 
++ 	// === CHEMICAL DOMAIN ===
++ 
++ 	/// <summary>Gram per mole - Common unit for molar mass.</summary>
++ 	public static readonly IUnit GramPerMole = new Unit("gram per mole", "g/mol", PhysicalDimensions.MolarMass, UnitSystem.SIDerived, 0.001);
++ 
++ 	/// <summary>Kilogram per mole - SI base unit for molar mass.</summary>
++ 	public static readonly IUnit KilogramPerMole = new Unit("kilogram per mole", "kg/mol", PhysicalDimensions.MolarMass, UnitSystem.SIDerived);
++ 
++ 	/// <summary>Dalton - Atomic mass unit for molecular masses.</summary>
++ 	public static readonly IUnit Dalton = new Unit("dalton", "Da", PhysicalDimensions.MolarMass, UnitSystem.Atomic, 1.66054e-27);
++ 
++ 	/// <summary>Millimolar - 0.001 molar concentration.</summary>
++ 	public static readonly IUnit Millimolar = new Unit("millimolar", "mM", PhysicalDimensions.Concentration, UnitSystem.SIDerived, 1.0);
++ 
++ 	/// <summary>Micromolar - 0.000001 molar concentration.</summary>
++ 	public static readonly IUnit Micromolar = new Unit("micromolar", "μM", PhysicalDimensions.Concentration, UnitSystem.SIDerived, 0.001);
++ 
++ 	/// <summary>Parts per billion - Dimensionless concentration.</summary>
++ 	public static readonly IUnit PartsPerBillion = new Unit("parts per billion", "ppb", PhysicalDimensions.Dimensionless, UnitSystem.Other, 1e-9);
++ 
++ 	/// <summary>Percent by weight - Dimensionless concentration.</summary>
++ 	public static readonly IUnit PercentByWeight = new Unit("percent by weight", "% w/w", PhysicalDimensions.Dimensionless, UnitSystem.Other, 0.01);
++ 
++ 	/// <summary>Moles per second - Reaction rate unit.</summary>
++ 	public static readonly IUnit MolesPerSecond = new Unit("moles per second", "mol/s", PhysicalDimensions.ReactionRate, UnitSystem.SIDerived, 1000.0);
++ 
++ 	/// <summary>Joules per mole - Activation energy unit.</summary>
++ 	public static readonly IUnit JoulesPerMole = new Unit("joules per mole", "J/mol", PhysicalDimensions.ActivationEnergy, UnitSystem.SIDerived);
++ 
++ 	/// <summary>Kilojoules per mole - Common activation energy unit.</summary>
++ 	public static readonly IUnit KilojoulesPerMole = new Unit("kilojoules per mole", "kJ/mol", PhysicalDimensions.ActivationEnergy, UnitSystem.SIDerived, 1000.0);
++ 
++ 	/// <summary>Calories per mole - Traditional activation energy unit.</summary>
++ 	public static readonly IUnit CaloriesPerMole = new Unit("calories per mole", "cal/mol", PhysicalDimensions.ActivationEnergy, UnitSystem.Other, 4.184);
++ 
++ 	/// <summary>Per second - First-order rate constant.</summary>
++ 	public static readonly IUnit PerSecond = new Unit("per second", "s⁻¹", PhysicalDimensions.RateConstant, UnitSystem.SIDerived);
++ 
++ 	/// <summary>Katal - SI unit of enzyme activity.</summary>
++ 	public static readonly IUnit Katal = new Unit("katal", "kat", PhysicalDimensions.EnzymeActivity, UnitSystem.SIDerived);
++ 
++ 	/// <summary>Enzyme unit - Traditional enzyme activity unit.</summary>
++ 	public static readonly IUnit EnzymeUnit = new Unit("enzyme unit", "U", PhysicalDimensions.EnzymeActivity, UnitSystem.Other, 1.0 / 60.0e6); // μmol/min
++ 
++ 	/// <summary>Newton per meter - Surface tension unit.</summary>
++ 	public static readonly IUnit NewtonPerMeter = new Unit("newton per meter", "N/m", PhysicalDimensions.SurfaceTension, UnitSystem.SIDerived);
++ 
++ 	/// <summary>Dyne per centimeter - CGS surface tension unit.</summary>
++ 	public static readonly IUnit DynePerCentimeter = new Unit("dyne per centimeter", "dyn/cm", PhysicalDimensions.SurfaceTension, UnitSystem.CGS, 1e-3);
++ 
++ 	/// <summary>Pascal second - Dynamic viscosity unit.</summary>
++ 	public static readonly IUnit PascalSecond = new Unit("pascal second", "Pa·s", PhysicalDimensions.DynamicViscosity, UnitSystem.SIDerived);
++ 
++ 	/// <summary>Poise - CGS dynamic viscosity unit.</summary>
++ 	public static readonly IUnit Poise = new Unit("poise", "P", PhysicalDimensions.DynamicViscosity, UnitSystem.CGS, 0.1);
++ 
++ 	/// <summary>Centipoise - Common dynamic viscosity unit.</summary>
++ 	public static readonly IUnit Centipoise = new Unit("centipoise", "cP", PhysicalDimensions.DynamicViscosity, UnitSystem.CGS, 0.001);
+  
+  	//TODO: === FLUID DYNAMICS DOMAIN ===
+```
+
+---
+
+Now I'll implement the Chemical domain physical quantities in parallel. Let me create the core chemical quantities first:
+
+---
+
+```diff
+- 
++ // Copyright (c) KTSU. All rights reserved.
++ 
++ using System.Numerics;
++ 
++ namespace ktsu.Semantics;
++ 
++ /// <summary>
++ /// Represents an amount of substance with a specific unit of measurement.
++ /// Amount of substance is a fundamental SI quantity measured in moles.
++ /// </summary>
++ /// <typeparam name="T">The numeric type for the amount value.</typeparam>
++ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of amount of substance [N].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.AmountOfSubstance;
++ 
++ 	/// <summary>Initializes a new instance of the <see cref="AmountOfSubstance{T}"/> class.</summary>
++ 	public AmountOfSubstance() : base() { }
++ 
++ 	/// <summary>Creates an amount from the number of entities and Avogadro's number.</summary>
++ 	/// <param name="numberOfEntities">Number of entities (atoms, molecules, ions).</param>
++ 	/// <returns>The amount of substance in moles.</returns>
++ 	public static AmountOfSubstance<T> FromEntities(T numberOfEntities)
++ 	{
++ 		// N_A = 6.02214076 × 10²³ entities/mol
++ 		var avogadroNumber = T.CreateChecked(6.02214076e23);
++ 		var moles = numberOfEntities / avogadroNumber;
++ 		return Create(moles, Units.Mole);
++ 	}
++ 
++ 	/// <summary>Calculates the number of entities from amount of substance.</summary>
++ 	/// <returns>The number of entities (atoms, molecules, ions).</returns>
++ 	public T GetNumberOfEntities()
++ 	{
++ 		var avogadroNumber = T.CreateChecked(6.02214076e23);
++ 		var moles = In(Units.Mole);
++ 		return moles * avogadroNumber;
++ 	}
++ 
++ 	/// <summary>Calculates mass from amount of substance and molar mass.</summary>
++ 	/// <param name="molarMass">The molar mass of the substance.</param>
++ 	/// <returns>The mass of the substance.</returns>
++ 	public Mass<T> CalculateMass(MolarMass<T> molarMass)
++ 	{
++ 		var molesValue = In(Units.Mole);
++ 		var molarMassValue = molarMass.In(Units.GramPerMole);
++ 		var massInGrams = molesValue * molarMassValue;
++ 		return Mass<T>.Create(massInGrams, Units.Gram);
++ 	}
++ 
++ 	/// <summary>Calculates volume from amount of substance at STP.</summary>
++ 	/// <returns>The molar volume at STP (22.414 L/mol).</returns>
++ 	public Volume<T> GetMolarVolumeAtSTP()
++ 	{
++ 		var molarVolumeSTP = T.CreateChecked(22.414); // L/mol at STP
++ 		var moles = In(Units.Mole);
++ 		var volumeInLiters = moles * molarVolumeSTP;
++ 		return Volume<T>.Create(volumeInLiters, Units.Liter);
++ 	}
++ } 
+```
+
+---
+
+```diff
+  // Copyright (c) KTSU. All rights reserved.
+- 
+- using System.Numerics;
+  
+  namespace ktsu.Semantics;
++ 
++ using System.Numerics;
+  
+  /// <summary>
+```
+
+```diff
+  	{
+  		// N_A = 6.02214076 × 10²³ entities/mol
+- 		var avogadroNumber = T.CreateChecked(6.02214076e23);
+- 		var moles = numberOfEntities / avogadroNumber;
++ 		T avogadroNumber = T.CreateChecked(6.02214076e23);
++ 		T moles = numberOfEntities / avogadroNumber;
+  		return Create(moles, Units.Mole);
+  	}
+```
+
+```diff
+  	public T GetNumberOfEntities()
+  	{
+- 		var avogadroNumber = T.CreateChecked(6.02214076e23);
+- 		var moles = In(Units.Mole);
++ 		T avogadroNumber = T.CreateChecked(6.02214076e23);
++ 		T moles = In(Units.Mole);
+  		return moles * avogadroNumber;
+  	}
+```
+
+```diff
+  	public Mass<T> CalculateMass(MolarMass<T> molarMass)
+  	{
+- 		var molesValue = In(Units.Mole);
+- 		var molarMassValue = molarMass.In(Units.GramPerMole);
+- 		var massInGrams = molesValue * molarMassValue;
++ 		T molesValue = In(Units.Mole);
++ 		T molarMassValue = molarMass.In(Units.GramPerMole);
++ 		T massInGrams = molesValue * molarMassValue;
+  		return Mass<T>.Create(massInGrams, Units.Gram);
+  	}
+```
+
+```diff
+  	public Volume<T> GetMolarVolumeAtSTP()
+  	{
+- 		var molarVolumeSTP = T.CreateChecked(22.414); // L/mol at STP
+- 		var moles = In(Units.Mole);
+- 		var volumeInLiters = moles * molarVolumeSTP;
++ 		T molarVolumeSTP = T.CreateChecked(22.414); // L/mol at STP
++ 		T moles = In(Units.Mole);
++ 		T volumeInLiters = moles * molarVolumeSTP;
+  		return Volume<T>.Create(volumeInLiters, Units.Liter);
+  	}
+```
+
+---
+
+Now I'll create the Chemical quantities in parallel. Let me start by creating several of the core chemical quantities together:
+
+---
+
+```diff
+- 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents concentration with a specific unit of measurement.
++ /// Concentration describes the amount of substance per unit volume.
++ /// </summary>
++ /// <typeparam name="T">The numeric type for the concentration value.</typeparam>
++ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of concentration [N L⁻³].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.Concentration;
++ 
++ 	/// <summary>Initializes a new instance of the <see cref="Concentration{T}"/> class.</summary>
++ 	public Concentration() : base() { }
++ 
++ 	/// <summary>Calculates molarity from amount of substance and volume.</summary>
++ 	/// <param name="amountOfSubstance">The amount of solute.</param>
++ 	/// <param name="volume">The volume of solution.</param>
++ 	/// <returns>The molarity (mol/L).</returns>
++ 	public static Concentration<T> FromMolarity(AmountOfSubstance<T> amountOfSubstance, Volume<T> volume)
++ 	{
++ 		T moles = amountOfSubstance.In(Units.Mole);
++ 		T liters = volume.In(Units.Liter);
++ 		T molarity = moles / liters;
++ 		return Create(molarity);
++ 	}
++ 
++ 	/// <summary>Calculates parts per million concentration.</summary>
++ 	/// <param name="soluteMass">Mass of solute.</param>
++ 	/// <param name="solutionMass">Total mass of solution.</param>
++ 	/// <returns>The concentration in ppm.</returns>
++ 	public static Concentration<T> FromPartsPerMillion(Mass<T> soluteMass, Mass<T> solutionMass)
++ 	{
++ 		T soluteGrams = soluteMass.In(Units.Gram);
++ 		T solutionGrams = solutionMass.In(Units.Gram);
++ 		T ratio = soluteGrams / solutionGrams;
++ 		T ppm = ratio * T.CreateChecked(1e6);
++ 		return Create(ppm);
++ 	}
++ 
++ 	/// <summary>Calculates weight/volume percent concentration.</summary>
++ 	/// <param name="soluteMass">Mass of solute.</param>
++ 	/// <param name="solutionVolume">Volume of solution.</param>
++ 	/// <returns>The concentration in % w/v.</returns>
++ 	public static Concentration<T> FromWeightVolumePercent(Mass<T> soluteMass, Volume<T> solutionVolume)
++ 	{
++ 		T massGrams = soluteMass.In(Units.Gram);
++ 		T volumeML = solutionVolume.In(Units.Milliliter);
++ 		T ratio = massGrams / volumeML;
++ 		T percentWV = ratio * T.CreateChecked(100);
++ 		return Create(percentWV);
++ 	}
++ 
++ 	/// <summary>Dilution calculation: C1V1 = C2V2.</summary>
++ 	/// <param name="initialVolume">Initial volume.</param>
++ 	/// <param name="finalVolume">Final volume after dilution.</param>
++ 	/// <returns>The final concentration after dilution.</returns>
++ 	public Concentration<T> Dilute(Volume<T> initialVolume, Volume<T> finalVolume)
++ 	{
++ 		T c1 = In(Units.Molar);
++ 		T v1 = initialVolume.In(Units.Liter);
++ 		T v2 = finalVolume.In(Units.Liter);
++ 		T c2 = (c1 * v1) / v2;
++ 		return Create(c2);
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Let me continue creating Chemical quantities in parallel. I'll create multiple Chemical quantities at once to implement the domain efficiently:
+
+---
+
+```diff
+- 
++ // Copyright (c) KTSU. All rights reserved.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents molar mass with a specific unit of measurement.
++ /// Molar mass is the mass of one mole of a substance.
++ /// </summary>
++ /// <typeparam name="T">The numeric type for the molar mass value.</typeparam>
++ public sealed record MolarMass<T> : PhysicalQuantity<MolarMass<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of molar mass [M N⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.MolarMass;
++ 
++ 	/// <summary>Initializes a new instance of the <see cref="MolarMass{T}"/> class.</summary>
++ 	public MolarMass() : base() { }
++ 
++ 	/// <summary>Calculates molar mass from atomic masses and composition.</summary>
++ 	/// <param name="totalMass">Total mass of the compound.</param>
++ 	/// <param name="amountOfSubstance">Amount of substance.</param>
++ 	/// <returns>The molar mass.</returns>
++ 	public static MolarMass<T> FromMassAndAmount(Mass<T> totalMass, AmountOfSubstance<T> amountOfSubstance)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(totalMass);
++ 		ArgumentNullException.ThrowIfNull(amountOfSubstance);
++ 
++ 		T massInGrams = totalMass.In(Units.Gram);
++ 		T moles = amountOfSubstance.In(Units.Mole);
++ 		T molarMass = massInGrams / moles;
++ 		return Create(molarMass);
++ 	}
++ 
++ 	/// <summary>Common molecular weights of chemical compounds.</summary>
++ 	public static class CommonValues
++ 	{
++ 		/// <summary>Water (H₂O) molar mass: 18.015 g/mol.</summary>
++ 		public static MolarMass<T> Water => Create(T.CreateChecked(18.015));
++ 
++ 		/// <summary>Carbon dioxide (CO₂) molar mass: 44.010 g/mol.</summary>
++ 		public static MolarMass<T> CarbonDioxide => Create(T.CreateChecked(44.010));
++ 
++ 		/// <summary>Methane (CH₄) molar mass: 16.043 g/mol.</summary>
++ 		public static MolarMass<T> Methane => Create(T.CreateChecked(16.043));
++ 
++ 		/// <summary>Glucose (C₆H₁₂O₆) molar mass: 180.156 g/mol.</summary>
++ 		public static MolarMass<T> Glucose => Create(T.CreateChecked(180.156));
++ 
++ 		/// <summary>Sodium chloride (NaCl) molar mass: 58.440 g/mol.</summary>
++ 		public static MolarMass<T> SodiumChloride => Create(T.CreateChecked(58.440));
++ 
++ 		/// <summary>Ethanol (C₂H₆O) molar mass: 46.069 g/mol.</summary>
++ 		public static MolarMass<T> Ethanol => Create(T.CreateChecked(46.069));
++ 	}
++ 
++ 	/// <summary>Calculates the mass of a given amount of this substance.</summary>
++ 	/// <param name="amount">The amount of substance.</param>
++ 	/// <returns>The total mass.</returns>
++ 	public Mass<T> CalculateMass(AmountOfSubstance<T> amount)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(amount);
++ 
++ 		T molarMassValue = In(Units.GramPerMole);
++ 		T moles = amount.In(Units.Mole);
++ 		T massInGrams = molarMassValue * moles;
++ 		return Mass<T>.Create(massInGrams);
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Now let me continue creating multiple Chemical quantities in parallel to implement the domain efficiently:
+
+---
+
+```diff
+- 
++ // Copyright (c) KTSU. All rights reserved.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents pH (potential of Hydrogen) with logarithmic scale.
++ /// pH is a measure of acidity or alkalinity on a scale from 0-14.
++ /// </summary>
++ /// <typeparam name="T">The numeric type for the pH value.</typeparam>
++ public sealed record pH<T> : PhysicalQuantity<pH<T>, T>
++ 	where T : struct, INumber<T>, IFloatingPoint<T>
++ {
++ 	/// <summary>Gets the physical dimension of pH [1] (dimensionless).</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.pH;
++ 
++ 	/// <summary>Initializes a new instance of the <see cref="pH{T}"/> class.</summary>
++ 	public pH() : base() { }
++ 
++ 	/// <summary>Calculates pH from hydrogen ion concentration.</summary>
++ 	/// <param name="hydrogenConcentration">Hydrogen ion concentration in mol/L.</param>
++ 	/// <returns>The pH value.</returns>
++ 	public static pH<T> FromHydrogenConcentration(Concentration<T> hydrogenConcentration)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(hydrogenConcentration);
++ 
++ 		T concentration = hydrogenConcentration.In(Units.Molar);
++ 		T logValue = T.Log10(concentration);
++ 		T pHValue = -logValue;
++ 		return Create(pHValue);
++ 	}
++ 
++ 	/// <summary>Calculates hydrogen ion concentration from pH.</summary>
++ 	/// <returns>The hydrogen ion concentration in mol/L.</returns>
++ 	public Concentration<T> ToHydrogenConcentration()
++ 	{
++ 		T pHValue = In(Units.Radian); // dimensionless
++ 		T concentration = T.Pow(T.CreateChecked(10), -pHValue);
++ 		return Concentration<T>.Create(concentration);
++ 	}
++ 
++ 	/// <summary>Calculates pOH from pH: pH + pOH = 14 at 25°C.</summary>
++ 	/// <returns>The pOH value.</returns>
++ 	public pH<T> ToPOH()
++ 	{
++ 		T pHValue = In(Units.Radian);
++ 		T kw = T.CreateChecked(14.0); // Water dissociation constant at 25°C
++ 		T pOHValue = kw - pHValue;
++ 		return Create(pOHValue);
++ 	}
++ 
++ 	/// <summary>Common pH values for reference.</summary>
++ 	public static class CommonValues
++ 	{
++ 		/// <summary>Pure water at 25°C: pH 7.0 (neutral).</summary>
++ 		public static pH<T> NeutralWater => Create(T.CreateChecked(7.0));
++ 
++ 		/// <summary>Battery acid: pH ~0.0 (extremely acidic).</summary>
++ 		public static pH<T> BatteryAcid => Create(T.CreateChecked(0.0));
++ 
++ 		/// <summary>Lemon juice: pH ~2.0 (very acidic).</summary>
++ 		public static pH<T> LemonJuice => Create(T.CreateChecked(2.0));
++ 
++ 		/// <summary>Coffee: pH ~5.0 (acidic).</summary>
++ 		public static pH<T> Coffee => Create(T.CreateChecked(5.0));
++ 
++ 		/// <summary>Baking soda: pH ~9.0 (basic).</summary>
++ 		public static pH<T> BakingSoda => Create(T.CreateChecked(9.0));
++ 
++ 		/// <summary>Household ammonia: pH ~11.0 (very basic).</summary>
++ 		public static pH<T> Ammonia => Create(T.CreateChecked(11.0));
++ 
++ 		/// <summary>Household bleach: pH ~12.0 (very basic).</summary>
++ 		public static pH<T> Bleach => Create(T.CreateChecked(12.0));
++ 
++ 		/// <summary>Drain cleaner: pH ~14.0 (extremely basic).</summary>
++ 		public static pH<T> DrainCleaner => Create(T.CreateChecked(14.0));
++ 	}
++ 
++ 	/// <summary>Determines if the solution is acidic (pH &lt; 7).</summary>
++ 	/// <returns>True if acidic, false otherwise.</returns>
++ 	public bool IsAcidic()
++ 	{
++ 		T pHValue = In(Units.Radian);
++ 		T neutral = T.CreateChecked(7.0);
++ 		return pHValue < neutral;
++ 	}
++ 
++ 	/// <summary>Determines if the solution is basic/alkaline (pH &gt; 7).</summary>
++ 	/// <returns>True if basic, false otherwise.</returns>
++ 	public bool IsBasic()
++ 	{
++ 		T pHValue = In(Units.Radian);
++ 		T neutral = T.CreateChecked(7.0);
++ 		return pHValue > neutral;
++ 	}
++ 
++ 	/// <summary>Determines if the solution is neutral (pH = 7).</summary>
++ 	/// <returns>True if neutral, false otherwise.</returns>
++ 	public bool IsNeutral()
++ 	{
++ 		T pHValue = In(Units.Radian);
++ 		T neutral = T.CreateChecked(7.0);
++ 		T tolerance = T.CreateChecked(0.01);
++ 		return T.Abs(pHValue - neutral) < tolerance;
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Let me continue creating more Chemical quantities in parallel. I'll create several more at once:
+
+---
+
+```diff
+- 
++ // Copyright (c) KTSU. All rights reserved.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents reaction rate with a specific unit of measurement.
++ /// Reaction rate measures the speed of a chemical reaction.
++ /// </summary>
++ /// <typeparam name="T">The numeric type for the reaction rate value.</typeparam>
++ public sealed record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of reaction rate [N L⁻³ T⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.ReactionRate;
++ 
++ 	/// <summary>Initializes a new instance of the <see cref="ReactionRate{T}"/> class.</summary>
++ 	public ReactionRate() : base() { }
++ 
++ 	/// <summary>Calculates reaction rate from concentration change over time.</summary>
++ 	/// <param name="concentrationChange">Change in concentration.</param>
++ 	/// <param name="timeInterval">Time interval for the change.</param>
++ 	/// <returns>The reaction rate.</returns>
++ 	public static ReactionRate<T> FromConcentrationChange(Concentration<T> concentrationChange, Time<T> timeInterval)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(concentrationChange);
++ 		ArgumentNullException.ThrowIfNull(timeInterval);
++ 
++ 		T deltaConcentration = concentrationChange.In(Units.Molar);
++ 		T deltaTime = timeInterval.In(Units.Second);
++ 		T rate = deltaConcentration / deltaTime;
++ 		return Create(rate);
++ 	}
++ 
++ 	/// <summary>Calculates reaction rate using rate law: rate = k[A]^m[B]^n.</summary>
++ 	/// <param name="rateConstant">Rate constant.</param>
++ 	/// <param name="concentrationA">Concentration of reactant A.</param>
++ 	/// <param name="orderA">Reaction order for A.</param>
++ 	/// <param name="concentrationB">Concentration of reactant B.</param>
++ 	/// <param name="orderB">Reaction order for B.</param>
++ 	/// <returns>The reaction rate.</returns>
++ 	public static ReactionRate<T> FromRateLaw(RateConstant<T> rateConstant, 
++ 		Concentration<T> concentrationA, T orderA,
++ 		Concentration<T> concentrationB, T orderB)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(rateConstant);
++ 		ArgumentNullException.ThrowIfNull(concentrationA);
++ 		ArgumentNullException.ThrowIfNull(concentrationB);
++ 
++ 		T k = rateConstant.In(Units.PerSecond);
++ 		T cA = concentrationA.In(Units.Molar);
++ 		T cB = concentrationB.In(Units.Molar);
++ 		
++ 		T rateValue = k * T.Pow(cA, orderA) * T.Pow(cB, orderB);
++ 		return Create(rateValue);
++ 	}
++ 
++ 	/// <summary>Calculates rate constant from initial rate and concentrations.</summary>
++ 	/// <param name="concentrationA">Initial concentration of A.</param>
++ 	/// <param name="concentrationB">Initial concentration of B.</param>
++ 	/// <param name="orderA">Reaction order for A.</param>
++ 	/// <param name="orderB">Reaction order for B.</param>
++ 	/// <returns>The rate constant.</returns>
++ 	public RateConstant<T> CalculateRateConstant(Concentration<T> concentrationA, Concentration<T> concentrationB,
++ 		T orderA, T orderB)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(concentrationA);
++ 		ArgumentNullException.ThrowIfNull(concentrationB);
++ 
++ 		T rate = In(Units.MolesPerSecond);
++ 		T cA = concentrationA.In(Units.Molar);
++ 		T cB = concentrationB.In(Units.Molar);
++ 		
++ 		T denominator = T.Pow(cA, orderA) * T.Pow(cB, orderB);
++ 		T k = rate / denominator;
++ 		return RateConstant<T>.Create(k);
++ 	}
++ 
++ 	/// <summary>Calculates half-life for first-order reaction.</summary>
++ 	/// <param name="rateConstant">First-order rate constant.</param>
++ 	/// <returns>The half-life time.</returns>
++ 	public static Time<T> CalculateHalfLife(RateConstant<T> rateConstant)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(rateConstant);
++ 
++ 		T k = rateConstant.In(Units.PerSecond);
++ 		T ln2 = T.CreateChecked(0.693147); // ln(2)
++ 		T halfLife = ln2 / k;
++ 		return Time<T>.Create(halfLife);
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+I need to create the RateConstant and other remaining Chemical quantities in parallel to complete the dependencies:
+
+---
+
+```diff
+- 
++ // Copyright (c) KTSU. All rights reserved.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents a rate constant with a specific unit of measurement.
++ /// Rate constant determines the speed of a chemical reaction.
++ /// </summary>
++ /// <typeparam name="T">The numeric type for the rate constant value.</typeparam>
++ public sealed record RateConstant<T> : PhysicalQuantity<RateConstant<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of rate constant [T⁻¹] for first-order reactions.</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.RateConstant;
++ 
++ 	/// <summary>Initializes a new instance of the <see cref="RateConstant{T}"/> class.</summary>
++ 	public RateConstant() : base() { }
++ 
++ 	/// <summary>Calculates rate constant from Arrhenius equation: k = A * e^(-Ea/RT).</summary>
++ 	/// <param name="preExponentialFactor">Pre-exponential factor A.</param>
++ 	/// <param name="activationEnergy">Activation energy.</param>
++ 	/// <param name="temperature">Temperature.</param>
++ 	/// <returns>The rate constant.</returns>
++ 	public static RateConstant<T> FromArrheniusEquation(T preExponentialFactor, 
++ 		ActivationEnergy<T> activationEnergy, Temperature<T> temperature)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(activationEnergy);
++ 		ArgumentNullException.ThrowIfNull(temperature);
++ 
++ 		T ea = activationEnergy.In(Units.JoulesPerMole);
++ 		T temp = temperature.In(Units.Kelvin);
++ 		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
++ 		
++ 		T exponent = -ea / (gasConstant * temp);
++ 		T k = preExponentialFactor * T.Exp(exponent);
++ 		return Create(k);
++ 	}
++ 
++ 	/// <summary>Calculates temperature dependence ratio: k2/k1 = exp((Ea/R) * (1/T1 - 1/T2)).</summary>
++ 	/// <param name="temperature1">Initial temperature.</param>
++ 	/// <param name="temperature2">Final temperature.</param>
++ 	/// <param name="activationEnergy">Activation energy.</param>
++ 	/// <returns>The rate constant at temperature2.</returns>
++ 	public RateConstant<T> AtTemperature(Temperature<T> temperature1, Temperature<T> temperature2, 
++ 		ActivationEnergy<T> activationEnergy)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(temperature1);
++ 		ArgumentNullException.ThrowIfNull(temperature2);
++ 		ArgumentNullException.ThrowIfNull(activationEnergy);
++ 
++ 		T k1 = In(Units.PerSecond);
++ 		T t1 = temperature1.In(Units.Kelvin);
++ 		T t2 = temperature2.In(Units.Kelvin);
++ 		T ea = activationEnergy.In(Units.JoulesPerMole);
++ 		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
++ 		
++ 		T exponent = (ea / gasConstant) * ((T.One / t1) - (T.One / t2));
++ 		T ratio = T.Exp(exponent);
++ 		T k2 = k1 * ratio;
++ 		return Create(k2);
++ 	}
++ 
++ 	/// <summary>Common rate constant values for reference reactions.</summary>
++ 	public static class CommonValues
++ 	{
++ 		/// <summary>Typical enzyme turnover (kcat): ~1000 s⁻¹.</summary>
++ 		public static RateConstant<T> TypicalEnzyme => Create(T.CreateChecked(1000));
++ 
++ 		/// <summary>Fast protein folding: ~10⁶ s⁻¹.</summary>
++ 		public static RateConstant<T> FastProteinFolding => Create(T.CreateChecked(1e6));
++ 
++ 		/// <summary>DNA replication: ~1000 s⁻¹.</summary>
++ 		public static RateConstant<T> DNAReplication => Create(T.CreateChecked(1000));
++ 
++ 		/// <summary>Slow metabolic process: ~0.01 s⁻¹.</summary>
++ 		public static RateConstant<T> SlowMetabolic => Create(T.CreateChecked(0.01));
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Now let me create the remaining Chemical quantities in parallel:
+
+---
+
+```diff
+- 
++ // Copyright (c) KTSU. All rights reserved.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents activation energy with a specific unit of measurement.
++ /// Activation energy is the minimum energy required for a reaction to occur.
++ /// </summary>
++ /// <typeparam name="T">The numeric type for the activation energy value.</typeparam>
++ public sealed record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of activation energy [M L² T⁻² N⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.ActivationEnergy;
++ 
++ 	/// <summary>Initializes a new instance of the <see cref="ActivationEnergy{T}"/> class.</summary>
++ 	public ActivationEnergy() : base() { }
++ 
++ 	/// <summary>Calculates activation energy from rate constants at two temperatures using Arrhenius equation.</summary>
++ 	/// <param name="rateConstant1">Rate constant at temperature 1.</param>
++ 	/// <param name="rateConstant2">Rate constant at temperature 2.</param>
++ 	/// <param name="temperature1">Temperature 1.</param>
++ 	/// <param name="temperature2">Temperature 2.</param>
++ 	/// <returns>The activation energy.</returns>
++ 	public static ActivationEnergy<T> FromArrheniusPlot(RateConstant<T> rateConstant1, RateConstant<T> rateConstant2,
++ 		Temperature<T> temperature1, Temperature<T> temperature2)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(rateConstant1);
++ 		ArgumentNullException.ThrowIfNull(rateConstant2);
++ 		ArgumentNullException.ThrowIfNull(temperature1);
++ 		ArgumentNullException.ThrowIfNull(temperature2);
++ 
++ 		T k1 = rateConstant1.In(Units.PerSecond);
++ 		T k2 = rateConstant2.In(Units.PerSecond);
++ 		T t1 = temperature1.In(Units.Kelvin);
++ 		T t2 = temperature2.In(Units.Kelvin);
++ 		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
++ 		
++ 		T lnRatio = T.Log(k2 / k1);
++ 		T tempDifference = (T.One / t1) - (T.One / t2);
++ 		T ea = -gasConstant * lnRatio / tempDifference;
++ 		return Create(ea);
++ 	}
++ 
++ 	/// <summary>Common activation energies for various processes.</summary>
++ 	public static class CommonValues
++ 	{
++ 		/// <summary>Water self-ionization: ~55 kJ/mol.</summary>
++ 		public static ActivationEnergy<T> WaterSelfIonization => Create(T.CreateChecked(55000));
++ 
++ 		/// <summary>DNA denaturation: ~150 kJ/mol.</summary>
++ 		public static ActivationEnergy<T> DNADenaturation => Create(T.CreateChecked(150000));
++ 
++ 		/// <summary>Protein denaturation: ~200 kJ/mol.</summary>
++ 		public static ActivationEnergy<T> ProteinDenaturation => Create(T.CreateChecked(200000));
++ 
++ 		/// <summary>Ester hydrolysis: ~70 kJ/mol.</summary>
++ 		public static ActivationEnergy<T> EsterHydrolysis => Create(T.CreateChecked(70000));
++ 
++ 		/// <summary>Simple nucleophilic substitution: ~80 kJ/mol.</summary>
++ 		public static ActivationEnergy<T> NucleophilicSubstitution => Create(T.CreateChecked(80000));
++ 
++ 		/// <summary>Enzyme-catalyzed reaction: ~50 kJ/mol (lowered from uncatalyzed).</summary>
++ 		public static ActivationEnergy<T> EnzymeCatalyzed => Create(T.CreateChecked(50000));
++ 	}
++ 
++ 	/// <summary>Calculates the ratio of rate constants at two temperatures.</summary>
++ 	/// <param name="temperature1">Initial temperature.</param>
++ 	/// <param name="temperature2">Final temperature.</param>
++ 	/// <returns>The ratio k2/k1.</returns>
++ 	public T CalculateRateRatio(Temperature<T> temperature1, Temperature<T> temperature2)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(temperature1);
++ 		ArgumentNullException.ThrowIfNull(temperature2);
++ 
++ 		T ea = In(Units.JoulesPerMole);
++ 		T t1 = temperature1.In(Units.Kelvin);
++ 		T t2 = temperature2.In(Units.Kelvin);
++ 		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
++ 		
++ 		T exponent = (ea / gasConstant) * ((T.One / t1) - (T.One / t2));
++ 		return T.Exp(exponent);
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Let me continue creating the remaining Chemical quantities in parallel:
+
+---
+
+```diff
+- 
++ // Copyright (c) KTSU. All rights reserved.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents enzyme activity with a specific unit of measurement.
++ /// Enzyme activity measures the rate of substrate conversion by an enzyme.
++ /// </summary>
++ /// <typeparam name="T">The numeric type for the enzyme activity value.</typeparam>
++ public sealed record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of enzyme activity [N T⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.EnzymeActivity;
++ 
++ 	/// <summary>Initializes a new instance of the <see cref="EnzymeActivity{T}"/> class.</summary>
++ 	public EnzymeActivity() : base() { }
++ 
++ 	/// <summary>Calculates enzyme activity from substrate conversion rate.</summary>
++ 	/// <param name="substrateConverted">Amount of substrate converted.</param>
++ 	/// <param name="timeInterval">Time interval.</param>
++ 	/// <returns>The enzyme activity.</returns>
++ 	public static EnzymeActivity<T> FromSubstrateConversion(AmountOfSubstance<T> substrateConverted, Time<T> timeInterval)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(substrateConverted);
++ 		ArgumentNullException.ThrowIfNull(timeInterval);
++ 
++ 		T moles = substrateConverted.In(Units.Mole);
++ 		T seconds = timeInterval.In(Units.Second);
++ 		T activity = moles / seconds;
++ 		return Create(activity);
++ 	}
++ 
++ 	/// <summary>Calculates specific activity (activity per unit mass of enzyme).</summary>
++ 	/// <param name="enzymeMass">Mass of enzyme.</param>
++ 	/// <returns>Specific activity in units per gram.</returns>
++ 	public T CalculateSpecificActivity(Mass<T> enzymeMass)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(enzymeMass);
++ 
++ 		T activity = In(Units.Katal);
++ 		T massInGrams = enzymeMass.In(Units.Gram);
++ 		return activity / massInGrams;
++ 	}
++ 
++ 	/// <summary>Michaelis-Menten kinetics: v = (Vmax * [S]) / (Km + [S]).</summary>
++ 	/// <param name="maxVelocity">Maximum velocity (Vmax).</param>
++ 	/// <param name="substrateConcentration">Substrate concentration.</param>
++ 	/// <param name="michaelisConstant">Michaelis constant (Km).</param>
++ 	/// <returns>The reaction velocity.</returns>
++ 	public static EnzymeActivity<T> MichaelisMenten(EnzymeActivity<T> maxVelocity, 
++ 		Concentration<T> substrateConcentration, Concentration<T> michaelisConstant)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(maxVelocity);
++ 		ArgumentNullException.ThrowIfNull(substrateConcentration);
++ 		ArgumentNullException.ThrowIfNull(michaelisConstant);
++ 
++ 		T vmax = maxVelocity.In(Units.Katal);
++ 		T s = substrateConcentration.In(Units.Molar);
++ 		T km = michaelisConstant.In(Units.Molar);
++ 		
++ 		T velocity = vmax * s / (km + s);
++ 		return Create(velocity);
++ 	}
++ 
++ 	/// <summary>Calculates turnover number (kcat) from Vmax and enzyme concentration.</summary>
++ 	/// <param name="maxVelocity">Maximum velocity.</param>
++ 	/// <param name="enzymeConcentration">Total enzyme concentration.</param>
++ 	/// <returns>Turnover number in s⁻¹.</returns>
++ 	public static T CalculateTurnoverNumber(EnzymeActivity<T> maxVelocity, Concentration<T> enzymeConcentration)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(maxVelocity);
++ 		ArgumentNullException.ThrowIfNull(enzymeConcentration);
++ 
++ 		T vmax = maxVelocity.In(Units.Katal);
++ 		T et = enzymeConcentration.In(Units.Molar);
++ 		return vmax / et;
++ 	}
++ 
++ 	/// <summary>Common enzyme activities for reference.</summary>
++ 	public static class CommonValues
++ 	{
++ 		/// <summary>Typical enzyme activity: ~1 μmol/min.</summary>
++ 		public static EnzymeActivity<T> TypicalEnzyme => Create(T.CreateChecked(1e-6 / 60)); // 1 μmol/min in mol/s
++ 
++ 		/// <summary>High activity enzyme: ~1000 μmol/min.</summary>
++ 		public static EnzymeActivity<T> HighActivity => Create(T.CreateChecked(1e-3 / 60)); // 1000 μmol/min in mol/s
++ 
++ 		/// <summary>Catalase (very fast): ~6 × 10⁶ μmol/min.</summary>
++ 		public static EnzymeActivity<T> Catalase => Create(T.CreateChecked(6e3 / 60)); // 6 × 10⁶ μmol/min in mol/s
++ 
++ 		/// <summary>Carbonic anhydrase: ~1 × 10⁶ μmol/min.</summary>
++ 		public static EnzymeActivity<T> CarbonicAnhydrase => Create(T.CreateChecked(1e3 / 60)); // 1 × 10⁶ μmol/min in mol/s
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Let me continue creating Chemical quantities and fix the class reference issues. I'll create the remaining quantities in parallel:
+
+---
+
+```diff
+- 
++ // Copyright (c) KTSU. All rights reserved.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents surface tension with a specific unit of measurement.
++ /// Surface tension is the force per unit length acting on the surface of a liquid.
++ /// </summary>
++ /// <typeparam name="T">The numeric type for the surface tension value.</typeparam>
++ public sealed record SurfaceTension<T> : PhysicalQuantity<SurfaceTension<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of surface tension [M T⁻²].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.SurfaceTension;
++ 
++ 	/// <summary>Initializes a new instance of the <see cref="SurfaceTension{T}"/> class.</summary>
++ 	public SurfaceTension() : base() { }
++ 
++ 	/// <summary>Calculates surface tension from force and length.</summary>
++ 	/// <param name="force">Force acting on the surface.</param>
++ 	/// <param name="length">Length over which the force acts.</param>
++ 	/// <returns>The surface tension.</returns>
++ 	public static SurfaceTension<T> FromForceAndLength(Force<T> force, Length<T> length)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(force);
++ 		ArgumentNullException.ThrowIfNull(length);
++ 
++ 		T forceValue = force.In(Units.Newton);
++ 		T lengthValue = length.In(Units.Meter);
++ 		T tension = forceValue / lengthValue;
++ 		return Create(tension);
++ 	}
++ 
++ 	/// <summary>Calculates surface energy from surface tension and area change.</summary>
++ 	/// <param name="areaChange">Change in surface area.</param>
++ 	/// <returns>The surface energy.</returns>
++ 	public Energy<T> CalculateSurfaceEnergy(Area<T> areaChange)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(areaChange);
++ 
++ 		T tensionValue = In(Units.NewtonPerMeter);
++ 		T areaValue = areaChange.In(Units.SquareMeter);
++ 		T energy = tensionValue * areaValue;
++ 		return Energy<T>.Create(energy);
++ 	}
++ 
++ 	/// <summary>Common surface tension values for various liquids.</summary>
++ 	public static class CommonValues
++ 	{
++ 		/// <summary>Water at 20°C: 0.0728 N/m.</summary>
++ 		public static SurfaceTension<T> Water => Create(T.CreateChecked(0.0728));
++ 
++ 		/// <summary>Mercury at 20°C: 0.486 N/m.</summary>
++ 		public static SurfaceTension<T> Mercury => Create(T.CreateChecked(0.486));
++ 
++ 		/// <summary>Ethanol at 20°C: 0.0223 N/m.</summary>
++ 		public static SurfaceTension<T> Ethanol => Create(T.CreateChecked(0.0223));
++ 
++ 		/// <summary>Benzene at 20°C: 0.0289 N/m.</summary>
++ 		public static SurfaceTension<T> Benzene => Create(T.CreateChecked(0.0289));
++ 
++ 		/// <summary>Olive oil at 20°C: 0.032 N/m.</summary>
++ 		public static SurfaceTension<T> OliveOil => Create(T.CreateChecked(0.032));
++ 
++ 		/// <summary>Soap solution: ~0.025 N/m (reduced from water).</summary>
++ 		public static SurfaceTension<T> SoapSolution => Create(T.CreateChecked(0.025));
++ 	}
++ 
++ 	/// <summary>Calculates capillary rise height using Young-Laplace equation.</summary>
++ 	/// <param name="contactAngle">Contact angle with the surface.</param>
++ 	/// <param name="tubeRadius">Radius of the capillary tube.</param>
++ 	/// <param name="liquidDensity">Density of the liquid.</param>
++ 	/// <param name="gravity">Gravitational acceleration.</param>
++ 	/// <returns>Height of capillary rise.</returns>
++ 	public Length<T> CalculateCapillaryRise(T contactAngle, Length<T> tubeRadius, 
++ 		Density<T> liquidDensity, Acceleration<T> gravity)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(tubeRadius);
++ 		ArgumentNullException.ThrowIfNull(liquidDensity);
++ 		ArgumentNullException.ThrowIfNull(gravity);
++ 
++ 		T gamma = In(Units.NewtonPerMeter);
++ 		T cosTheta = T.Cos(contactAngle);
++ 		T r = tubeRadius.In(Units.Meter);
++ 		T rho = liquidDensity.In(Units.Gram); // kg/m³
++ 		T g = gravity.In(Units.MetersPerSecondSquared);
++ 		
++ 		T height = (T.CreateChecked(2) * gamma * cosTheta) / (rho * g * r);
++ 		return Length<T>.Create(height);
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Let me create the final Chemical quantity:
+
+---
+
+```diff
+- 
++ // Copyright (c) KTSU. All rights reserved.
++ 
++ namespace ktsu.Semantics;
++ 
++ using System.Numerics;
++ 
++ /// <summary>
++ /// Represents dynamic viscosity with a specific unit of measurement.
++ /// Dynamic viscosity measures a fluid's resistance to flow.
++ /// </summary>
++ /// <typeparam name="T">The numeric type for the dynamic viscosity value.</typeparam>
++ public sealed record DynamicViscosity<T> : PhysicalQuantity<DynamicViscosity<T>, T>
++ 	where T : struct, INumber<T>
++ {
++ 	/// <summary>Gets the physical dimension of dynamic viscosity [M L⁻¹ T⁻¹].</summary>
++ 	public override PhysicalDimension Dimension => PhysicalDimensions.DynamicViscosity;
++ 
++ 	/// <summary>Initializes a new instance of the <see cref="DynamicViscosity{T}"/> class.</summary>
++ 	public DynamicViscosity() : base() { }
++ 
++ 	/// <summary>Calculates dynamic viscosity from shear stress and shear rate.</summary>
++ 	/// <param name="shearStress">Shear stress in the fluid.</param>
++ 	/// <param name="shearRate">Shear rate (velocity gradient).</param>
++ 	/// <returns>The dynamic viscosity.</returns>
++ 	public static DynamicViscosity<T> FromShearStressAndRate(Pressure<T> shearStress, T shearRate)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(shearStress);
++ 
++ 		T stress = shearStress.In(Units.Pascal);
++ 		T viscosity = stress / shearRate;
++ 		return Create(viscosity);
++ 	}
++ 
++ 	/// <summary>Calculates kinematic viscosity from dynamic viscosity and density.</summary>
++ 	/// <param name="density">Fluid density.</param>
++ 	/// <returns>The kinematic viscosity.</returns>
++ 	public T CalculateKinematicViscosity(Density<T> density)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(density);
++ 
++ 		T dynamicVisc = In(Units.PascalSecond);
++ 		T rho = density.In(Units.Gram); // kg/m³
++ 		return dynamicVisc / rho;
++ 	}
++ 
++ 	/// <summary>Common dynamic viscosity values for various fluids.</summary>
++ 	public static class CommonValues
++ 	{
++ 		/// <summary>Water at 20°C: 1.002 × 10⁻³ Pa·s.</summary>
++ 		public static DynamicViscosity<T> Water => Create(T.CreateChecked(1.002e-3));
++ 
++ 		/// <summary>Air at 20°C: 1.82 × 10⁻⁵ Pa·s.</summary>
++ 		public static DynamicViscosity<T> Air => Create(T.CreateChecked(1.82e-5));
++ 
++ 		/// <summary>Honey: ~10 Pa·s.</summary>
++ 		public static DynamicViscosity<T> Honey => Create(T.CreateChecked(10));
++ 
++ 		/// <summary>Motor oil SAE 30: ~0.2 Pa·s.</summary>
++ 		public static DynamicViscosity<T> MotorOil => Create(T.CreateChecked(0.2));
++ 
++ 		/// <summary>Glycerol at 20°C: 1.41 Pa·s.</summary>
++ 		public static DynamicViscosity<T> Glycerol => Create(T.CreateChecked(1.41));
++ 
++ 		/// <summary>Blood at 37°C: ~4 × 10⁻³ Pa·s.</summary>
++ 		public static DynamicViscosity<T> Blood => Create(T.CreateChecked(4e-3));
++ 
++ 		/// <summary>Mercury at 20°C: 1.55 × 10⁻³ Pa·s.</summary>
++ 		public static DynamicViscosity<T> Mercury => Create(T.CreateChecked(1.55e-3));
++ 	}
++ 
++ 	/// <summary>Calculates Reynolds number for flow characterization.</summary>
++ 	/// <param name="density">Fluid density.</param>
++ 	/// <param name="velocity">Flow velocity.</param>
++ 	/// <param name="characteristicLength">Characteristic length.</param>
++ 	/// <returns>Reynolds number (dimensionless).</returns>
++ 	public T CalculateReynoldsNumber(Density<T> density, Velocity<T> velocity, Length<T> characteristicLength)
++ 	{
++ 		ArgumentNullException.ThrowIfNull(density);
++ 		ArgumentNullException.ThrowIfNull(velocity);
++ 		ArgumentNullException.ThrowIfNull(characteristicLength);
++ 
++ 		T rho = density.In(Units.Gram); // kg/m³
++ 		T v = velocity.In(Units.MetersPerSecond);
++ 		T l = characteristicLength.In(Units.Meter);
++ 		T mu = In(Units.PascalSecond);
++ 		
++ 		return rho * v * l / mu;
++ 	}
++ } 
+```
+
+---
+
+
+
+---
+
+Now let me try to build the project to see if the Chemical domain is working correctly and fix any compilation errors:
+
+---
+
+```bash
+dotnet build Semantics.sln --configuration Release --verbosity minimal
+```
+
+```
+C:\dev\ktsu-dev\Semantics\Semantics>dotnet build Semantics.sln --configuration Release --verbosity minimal
+MSBUILD : error MSB1009: Project file does not exist.
+Switch: Semantics.sln
+
+C:\dev\ktsu-dev\Semantics\Semantics>
+```
+
+---
+
+```bash
+cd .. && dotnet build Semantics.sln --configuration Release --verbosity minimal
+```
+
+```
+C:\dev\ktsu-dev\Semantics\Semantics>cd .. && dotnet build Semantics.sln --configuration Release --verbosity minimal
+
+  C:\dev\ktsu-dev\Semantics\Semantics.sln                                                                Restore (0.0s)
+Restore complete (1.6s)
+  Semantics failed with 37 error(s) (5.0s)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\AmountOfSubstance.cs(29,10): error CS1501: No overload for method 'Create' takes 2 arguments
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\AmountOfSubstance.cs(49,18): error CS1501: No overload for method 'Create' takes 2 arguments
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ActivationEnergy.cs(41,15): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\AmountOfSubstance.cs(59,20): error CS1501: No overload for method 'Create' takes 2 arguments
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ActivationEnergy.cs(84,10): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\pH.cs(29,16): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\pH.cs(39,21): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\RateConstant.cs(37,32): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ReactionRate.cs(55,21): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ReactionRate.cs(55,41): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ReactionRate.cs(75,19): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ReactionRate.cs(75,39): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\RateConstant.cs(60,13): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\SurfaceTension.cs(85,16): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+entals/code-analysis/quality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\RateConstant.cs(59,16): error IDE0047: Parentheses can be removed (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/i
+de0047)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\SurfaceTension.cs(90,14): error IDE0047: Parentheses can be removed (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules
+/ide0047)
+
+Build failed with 37 error(s) in 7.2s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+I can see there are compilation errors in the Chemical domain. I need to fix these systematically. Let me examine an existing quantity to understand the proper Create method usage:
+
+---
+
+Read file: Semantics/Quantities/Mechanics/Mass.cs
+
+---
+
+I see the pattern now. I need to fix the Chemical quantities to use the correct Create method signature and fix the generic constraint issues. Let me fix them systematically:
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+Now let me fix the generic constraint issues. I need to see what constraints are needed for the math operations:
+
+---
+
+Read file: Semantics/Quantities/Acoustic/SoundPressureLevel.cs
+
+---
+
+
+
+
+
+---
+
+_**User**_
+
+continue
+
+---
+
+_**Assistant**_
+
+I'll continue fixing the compilation errors in the Chemical domain. Let me first check the current build status to see what errors remain.
+
+---
+
+```bash
+dotnet build
+```
+
+```
+C:\dev\ktsu-dev\Semantics>dotnet build
+
+  C:\dev\ktsu-dev\Semantics\Semantics.sln                                                                Restore (0.0s)
+Restore complete (1.2s)
+  Semantics failed with 35 error(s) (1.5s)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ActivationEnergy.cs(41,15): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ActivationEnergy.cs(84,10): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\pH.cs(29,16): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ReactionRate.cs(55,21): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ReactionRate.cs(55,41): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\pH.cs(39,21): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ReactionRate.cs(75,19): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ReactionRate.cs(75,39): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\SurfaceTension.cs(85,16): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\RateConstant.cs(37,32): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\RateConstant.cs(60,13): error CS0704: Cannot do non-virtual member lookup in 'T' because it is a type parameter
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ActivationEnergy.cs(1,1): error IDE0073: A source file contains a header that does not match the required text (https://learn.microsoft.com/do
+tnet/fundamentals/code-analysis/style-rules/ide0073)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\AmountOfSubstance.cs(1,1): error IDE0073: A source file contains a header that does not match the required text (https://learn.microsoft.com/d
+otnet/fundamentals/code-analysis/style-rules/ide0073)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\Concentration.cs(1,1): error IDE0073: A source file is missing a required header. (https://learn.microsoft.com/dotnet/fundamentals/code-analys
+is/style-rules/ide0073)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\DynamicViscosity.cs(1,1): error IDE0073: A source file contains a header that does not match the required text (https://learn.microsoft.com/do
+tnet/fundamentals/code-analysis/style-rules/ide0073)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\EnzymeActivity.cs(1,1): error IDE0073: A source file contains a header that does not match the required text (https://learn.microsoft.com/dotn
+et/fundamentals/code-analysis/style-rules/ide0073)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\MolarMass.cs(1,1): error IDE0073: A source file contains a header that does not match the required text (https://learn.microsoft.com/dotnet/fu
+ndamentals/code-analysis/style-rules/ide0073)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\pH.cs(1,1): error IDE0073: A source file contains a header that does not match the required text (https://learn.microsoft.com/dotnet/fundament
+als/code-analysis/style-rules/ide0073)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\RateConstant.cs(1,1): error IDE0073: A source file contains a header that does not match the required text (https://learn.microsoft.com/dotnet
+/fundamentals/code-analysis/style-rules/ide0073)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ReactionRate.cs(1,1): error IDE0073: A source file contains a header that does not match the required text (https://learn.microsoft.com/dotnet
+/fundamentals/code-analysis/style-rules/ide0073)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\SurfaceTension.cs(1,1): error IDE0073: A source file contains a header that does not match the required text (https://learn.microsoft.com/dotn
+et/fundamentals/code-analysis/style-rules/ide0073)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\pH.cs(12,22): error IDE1006: Naming rule violation: These words must begin with upper case characters: pH (https://learn.microsoft.com/dotnet/
+fundamentals/code-analysis/style-rules/ide1006)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\ActivationEnergy.cs(83,16): error IDE0047: Parentheses can be removed (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rul
+es/ide0047)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\Concentration.cs(26,14): error CA1062: In externally visible method 'Concentration<T> Concentration<T>.FromMolarity(AmountOfSubstance<T> amoun
+tOfSubstance, Volume<T> volume)', validate parameter 'volume' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microsoft.com/dotn
+et/fundamentals/code-analysis/quality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\Concentration.cs(25,13): error CA1062: In externally visible method 'Concentration<T> Concentration<T>.FromMolarity(AmountOfSubstance<T> amoun
+tOfSubstance, Volume<T> volume)', validate parameter 'amountOfSubstance' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microso
+ft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\AmountOfSubstance.cs(47,22): error CA1062: In externally visible method 'Mass<T> AmountOfSubstance<T>.CalculateMass(MolarMass<T> molarMass)', 
+validate parameter 'molarMass' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/q
+uality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\Concentration.cs(66,10): error IDE0047: Parentheses can be removed (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/
+ide0047)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\SurfaceTension.cs(90,14): error IDE0047: Parentheses can be removed (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules
+/ide0047)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\Concentration.cs(51,16): error CA1062: In externally visible method 'Concentration<T> Concentration<T>.FromWeightVolumePercent(Mass<T> soluteM
+ass, Volume<T> solutionVolume)', validate parameter 'solutionVolume' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microsoft.c
+om/dotnet/fundamentals/code-analysis/quality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\Concentration.cs(50,17): error CA1062: In externally visible method 'Concentration<T> Concentration<T>.FromWeightVolumePercent(Mass<T> soluteM
+ass, Volume<T> solutionVolume)', validate parameter 'soluteMass' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microsoft.com/d
+otnet/fundamentals/code-analysis/quality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\Concentration.cs(65,10): error CA1062: In externally visible method 'Concentration<T> Concentration<T>.Dilute(Volume<T> initialVolume, Volume<
+T> finalVolume)', validate parameter 'finalVolume' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microsoft.com/dotnet/fundamen
+tals/code-analysis/quality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\Concentration.cs(64,10): error CA1062: In externally visible method 'Concentration<T> Concentration<T>.Dilute(Volume<T> initialVolume, Volume<
+T> finalVolume)', validate parameter 'initialVolume' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microsoft.com/dotnet/fundam
+entals/code-analysis/quality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\Concentration.cs(38,21): error CA1062: In externally visible method 'Concentration<T> Concentration<T>.FromPartsPerMillion(Mass<T> soluteMass,
+ Mass<T> solutionMass)', validate parameter 'solutionMass' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null'. (https://learn.microsoft.com/dotnet/
+ndamentals/code-analysis/quality-rules/ca1062)
+    C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Chemical\RateConstant.cs(59,16): error IDE0047: Parentheses can be removed (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/i
+de0047)
+
+Build failed with 35 error(s) in 3.1s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+I can see the remaining compilation errors. The main issues are:
+
+1. **CS0704 errors**: Mathematical operations like `T.Log`, `T.Exp`, `T.Pow` require proper generic constraints
+2. **CA1062 errors**: Missing null checks for parameters
+3. **IDE0073 errors**: Missing or incorrect file headers
+4. **IDE0047 errors**: Unnecessary parentheses
+5. **IDE1006 error**: Naming rule violation for `pH` class
+
+Let me fix these systematically. First, I'll check what the correct file header should be by looking at an existing file:
+
+---
+
+Read file: Semantics/Quantities/Mechanics/Length.cs
+
+---
+
+Now I'll fix all the Chemical domain files systematically. Let me start by fixing the mathematical operations that require proper generic constraints:
+
+---
+
+
+
+---
+
+Let me read the current pH file to see its exact content:
+
+---
+
+Read file: Semantics/Quantities/Chemical/pH.cs
+
+---
+
+I can see the issues. Let me fix them systematically. First, I'll fix the pH file:
+
+---
+
+
+
+---
+
+I need to update all the references to `pH<T>` to `PH<T>` throughout the file. Let me fix this:
+
+---
+
+
+
+---
+
+Let me fix all the remaining `pH<T>` references in one go:
+
+---
+
+
+
+---
+
+The issue is with the mathematical operations `T.Log10` and `T.Pow`. These require the generic constraint `IFloatingPoint<T>` which is already there, but the methods need to be called differently. Let me check how other files handle this:
+
+---
+
+<details>
+            <summary>Grep search for "T\.Log" • **4** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Chemical/pH.cs` | L30 | `T logValue = T.Log10(concentration);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Chemical/ActivationEnergy.cs` | L40 | `T lnRatio = T.Log(k2 / k1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Chemical/ActivationEnergy.cs` | L40 | `T lnRatio = T.Log(k2 / k1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Chemical/pH.cs` | L30 | `T logValue = T.Log10(concentration);` |
+
+</details>
+
+---
+
+Let me check how mathematical operations are handled in existing working files:
+
+---
+
+<details>
+            <summary>Grep search for "IFloatingPoint" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Chemical/pH.cs` | L14 | `where T : struct, INumber<T>, IFloatingPoint<T>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Chemical/pH.cs` | L14 | `where T : struct, INumber<T>, IFloatingPoint<T>` |
+
+</details>
+
+---
+
+Let me check how mathematical operations are used in the Acoustic domain which was completed successfully:
+
+---
+
+<details>
+            <summary>Grep search for "Log" • **7** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPressureLevel.cs` | L10 | `/// Sound pressure level (SPL) is a logarithmic measure of sound pressure relative to 20 μPa.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPressureLevel.cs` | L32 | `/// SPL = 20 * log₁₀(p / p₀) where p₀ = 20 μPa` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPressureLevel.cs` | L42 | `T decibels = T.CreateChecked(20.0 * Math.Log10(double.CreateChecked(ratio)));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPressureLevel.cs` | L76 | `T correction = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(ratio)));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPowerLevel.cs` | L10 | `/// Sound power level (PWL) is a logarithmic measure of sound power relative to 10⁻¹² W.` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPowerLevel.cs` | L32 | `/// PWL = 10 * log₁₀(W / W₀) where W₀ = 10⁻¹² W` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPowerLevel.cs` | L43 | `T decibels = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(ratio)));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPowerLevel.cs` | L62 | `/// PWL_total = 10 * log₁₀(10^(PWL₁/10) + 10^(PWL₂/10) + ...)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPowerLevel.cs` | L72 | `T combined = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(exp1 + exp2)));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPowerLevel.cs` | L78 | `/// D = PWL - SPL + 10*log₁₀(4πr²)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPowerLevel.cs` | L88 | `T sphericalSpreading = T.CreateChecked(10.0 * Math.Log10(4.0 * Math.PI * double.CreateChecked(distance.Value * distance.Value)));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundIntensityLevel.cs` | L10 | `/// Sound intensity level (IL) is a logarithmic measure of sound intensity relative to 10⁻¹² W/m².` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundIntensityLevel.cs` | L32 | `/// IL = 10 * log₁₀(I / I₀) where I₀ = 10⁻¹² W/m²` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundIntensityLevel.cs` | L43 | `T decibels = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(ratio)));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundIntensityLevel.cs` | L62 | `/// IL_total = 10 * log₁₀(10^(IL₁/10) + 10^(IL₂/10) + ...)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundIntensityLevel.cs` | L72 | `T combined = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(exp1 + exp2)));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Sensitivity.cs` | L45 | `// dB = 20 * log10(mV/Pa / 1000)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Sensitivity.cs` | L46 | `double dbValue = 20.0 * Math.Log10(double.CreateChecked(mvPerPa) / 1000.0);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Sensitivity.cs` | L100 | `// SPL = Sensitivity + 10*log10(Power)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Sensitivity.cs` | L101 | `T powerDb = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(inputPower.Value)));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Pitch.cs` | L64 | `double mels = 1127.0 * Math.Log(1.0 + (hertz / 700.0));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Pitch.cs` | L76 | `double barks = 7.0 * Math.Log(ratio + Math.Sqrt((ratio * ratio) + 1.0));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Pitch.cs` | L90 | `double cents = 1200.0 * Math.Log2(ratio);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Pitch.cs` | L104 | `double semitonesFromA4 = 12.0 * Math.Log2(frequency / a4);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Loudness.cs` | L52 | `T logRatio = T.CreateChecked(Math.Log2(double.CreateChecked(Value)));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Loudness.cs` | L53 | `return T.CreateChecked(40.0) + (logRatio * T.CreateChecked(10.0));` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/DirectionalityIndex.cs` | L32 | `/// DI = 10 * log₁₀(Q)` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/DirectionalityIndex.cs` | L38 | `T decibels = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(directivityFactor)));` |
+
+</details>
+
+---
+
+Perfect! I can see the pattern. The Acoustic domain uses `Math.Log10(double.CreateChecked(...))` instead of `T.Log10(...)`. Let me fix the pH file using this pattern:
+
+---
+
+
+
+---
+
+Now let me fix the other files with similar issues. Let me check the ActivationEnergy file:
+
+---
+
+Read file: Semantics/Quantities/Chemical/ActivationEnergy.cs
+
+---
+
+I can see the issues in ActivationEnergy.cs. Let me fix them:
+
+---
+
+
+
+---
+
+Now let me fix the mathematical operations in ActivationEnergy.cs:
+
+---
+
+
+
+---
+
+Let me fix the remaining mathematical operation and parentheses issues:
+
+---
+
+
+
+---
+
+Now let me fix the last mathematical operation:
+
+---
+
+
+
+---
+
+Now let me fix the other files with similar issues. Let me check and fix RateConstant.cs:
+
+---
+
+Read file: Semantics/Quantities/Chemical/RateConstant.cs
+
+---
+
+Let me fix RateConstant.cs:
+
+---
+
+
+
+---
+
+Let me fix the mathematical operations in RateConstant.cs:
+
+---
+
+
+
+---
+
+Let me fix the second mathematical operation:
+
+---
+
+
+
+---
+
+Now let me fix the remaining files. Let me check ReactionRate.cs:
+
+---
+
+Read file: Semantics/Quantities/Chemical/ReactionRate.cs
+
+---
+
+Let me fix ReactionRate.cs:
+
+---
+
+
+
+---
+
+Let me fix the mathematical operations in ReactionRate.cs:
+
+---
+
+
+
+---
+
+Let me fix the second set of mathematical operations:
+
+---
+
+
+
+---
+
+Now let me check and fix SurfaceTension.cs:
+
+---
+
+Read file: Semantics/Quantities/Chemical/SurfaceTension.cs
+
+---
+
+Let me fix SurfaceTension.cs:
+
+---
+
+
+
+---
+
+
+
+
+
+---
+

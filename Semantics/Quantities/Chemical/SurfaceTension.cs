@@ -1,4 +1,6 @@
-// Copyright (c) KTSU. All rights reserved.
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
 
 namespace ktsu.Semantics;
 
@@ -10,7 +12,7 @@ using System.Numerics;
 /// </summary>
 /// <typeparam name="T">The numeric type for the surface tension value.</typeparam>
 public sealed record SurfaceTension<T> : PhysicalQuantity<SurfaceTension<T>, T>
-	where T : struct, INumber<T>
+	where T : struct, INumber<T>, IFloatingPoint<T>
 {
 	/// <summary>Gets the physical dimension of surface tension [M T⁻²].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.SurfaceTension;
@@ -82,12 +84,12 @@ public sealed record SurfaceTension<T> : PhysicalQuantity<SurfaceTension<T>, T>
 		ArgumentNullException.ThrowIfNull(gravity);
 
 		T gamma = In(Units.NewtonPerMeter);
-		T cosTheta = T.Cos(contactAngle);
+		T cosTheta = T.CreateChecked(Math.Cos(double.CreateChecked(contactAngle)));
 		T r = tubeRadius.In(Units.Meter);
 		T rho = liquidDensity.In(Units.Gram); // kg/m³
 		T g = gravity.In(Units.MetersPerSecondSquared);
 
-		T height = (T.CreateChecked(2) * gamma * cosTheta) / (rho * g * r);
+		T height = T.CreateChecked(2) * gamma * cosTheta / (rho * g * r);
 		return Length<T>.Create(height);
 	}
 }

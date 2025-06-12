@@ -243,6 +243,12 @@ When adding XML documentation comments:
     2.  Remove the `BaseUnit` property from `PhysicalQuantity` and its interface.
     3.  Update `PhysicalQuantity.In()` to use `Dimension.BaseUnit`.
 *   When implementing PhysicalQuantity classes, ensure the containing type is one of the parameters in the generic type definition.
+*   When creating new quantities, implement the following:
+    *   Add any necessary dimensions to `PhysicalDimensions.cs`.
+    *   Add any new units to `Units.cs`.
+    *   Follow the existing code style and patterns.
+    *   Include XML documentation comments.
+    *   Implement mathematical relationships between related quantities.
 
 ## DEBUGGING
 
@@ -319,6 +325,12 @@ When adding XML documentation comments:
 *   When encountering CS0108 errors, 'SoundPressureLevel<T>.Create(T)' hides inherited member, add the `new` keyword if hiding was intended.
 *   When encountering CS0200 errors, Property or indexer 'PhysicalQuantity<SoundIntensityLevel<T>, T>.Value' cannot be assigned to -- it is read only, make sure you are not trying to assign to a read-only property.
 *   When encountering CA1062 errors, In externally visible method 'SoundPressureLevel<T> SoundPressureLevel<T>.FromSoundPressure(SoundPressure<T> soundPressure)', validate parameter 'soundPressure' is non-null before using it. If appropriate, throw an 'ArgumentNullException' when the argument is 'null' add a null check for the reference parameter.
+*   When fixing CS0704 errors (Cannot do non-virtual member lookup in 'T' because it is a type parameter), add the appropriate generic constraints (e.g., `where T : struct, INumber<T>, IFloatingPoint<T>`).
+*   When fixing CA1062 errors (In externally visible method X, validate parameter Y is non-null before using it), add `ArgumentNullException.ThrowIfNull(parameterName)` at the beginning of the method.
+*   When a file is missing the standard header, add the following to the top of the file:
+```csharp
+// Copyright (c) KTSU. All rights reserved.
+```
 
 ## WORKFLOW & RELEASE RULES
 
@@ -339,9 +351,4 @@ When adding XML documentation comments:
 *   For ease of use, use a single common namespace for all types in the library.
 *   SemanticStringValidationExamples can just be built in semantic types where appropriate
 *   The built in semantic string types should not need the string suffix.
-*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
-*   Validation attributes should be separated into their own files.
-*   Instead of creating generic built-in types like `Base6String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
-*   The built in semantic string types are too niche or too simple, create a collection of useful builtin semantic string types with appropriate validations, where they aren't already implemented in dotnet, like Uri is.
-*   Validation attributes should be separated into their own files.
-*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc
+*

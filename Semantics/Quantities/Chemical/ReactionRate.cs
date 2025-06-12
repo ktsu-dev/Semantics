@@ -1,4 +1,6 @@
-// Copyright (c) KTSU. All rights reserved.
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
 
 namespace ktsu.Semantics;
 
@@ -10,7 +12,7 @@ using System.Numerics;
 /// </summary>
 /// <typeparam name="T">The numeric type for the reaction rate value.</typeparam>
 public sealed record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>
-	where T : struct, INumber<T>
+	where T : struct, INumber<T>, IFloatingPoint<T>
 {
 	/// <summary>Gets the physical dimension of reaction rate [N L⁻³ T⁻¹].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ReactionRate;
@@ -52,7 +54,7 @@ public sealed record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>
 		T cA = concentrationA.In(Units.Molar);
 		T cB = concentrationB.In(Units.Molar);
 
-		T rateValue = k * T.Pow(cA, orderA) * T.Pow(cB, orderB);
+		T rateValue = k * T.CreateChecked(Math.Pow(double.CreateChecked(cA), double.CreateChecked(orderA))) * T.CreateChecked(Math.Pow(double.CreateChecked(cB), double.CreateChecked(orderB)));
 		return Create(rateValue);
 	}
 
@@ -72,7 +74,7 @@ public sealed record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>
 		T cA = concentrationA.In(Units.Molar);
 		T cB = concentrationB.In(Units.Molar);
 
-		T denominator = T.Pow(cA, orderA) * T.Pow(cB, orderB);
+		T denominator = T.CreateChecked(Math.Pow(double.CreateChecked(cA), double.CreateChecked(orderA))) * T.CreateChecked(Math.Pow(double.CreateChecked(cB), double.CreateChecked(orderB)));
 		T k = rate / denominator;
 		return RateConstant<T>.Create(k);
 	}

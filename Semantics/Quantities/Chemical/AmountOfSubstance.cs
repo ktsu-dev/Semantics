@@ -1,4 +1,6 @@
-// Copyright (c) KTSU. All rights reserved.
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
 
 namespace ktsu.Semantics;
 
@@ -43,6 +45,7 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	/// <returns>The mass of the substance.</returns>
 	public Mass<T> CalculateMass(MolarMass<T> molarMass)
 	{
+		ArgumentNullException.ThrowIfNull(molarMass);
 		T molesValue = In(Units.Mole);
 		T molarMassValue = molarMass.In(Units.GramPerMole);
 		T massInGrams = molesValue * molarMassValue;

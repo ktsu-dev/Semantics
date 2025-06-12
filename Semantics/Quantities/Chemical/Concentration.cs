@@ -1,3 +1,7 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
 namespace ktsu.Semantics;
 
 using System.Numerics;
@@ -22,6 +26,8 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 	/// <returns>The molarity (mol/L).</returns>
 	public static Concentration<T> FromMolarity(AmountOfSubstance<T> amountOfSubstance, Volume<T> volume)
 	{
+		ArgumentNullException.ThrowIfNull(amountOfSubstance);
+		ArgumentNullException.ThrowIfNull(volume);
 		T moles = amountOfSubstance.In(Units.Mole);
 		T liters = volume.In(Units.Liter);
 		T molarity = moles / liters;
@@ -34,6 +40,8 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 	/// <returns>The concentration in ppm.</returns>
 	public static Concentration<T> FromPartsPerMillion(Mass<T> soluteMass, Mass<T> solutionMass)
 	{
+		ArgumentNullException.ThrowIfNull(soluteMass);
+		ArgumentNullException.ThrowIfNull(solutionMass);
 		T soluteGrams = soluteMass.In(Units.Gram);
 		T solutionGrams = solutionMass.In(Units.Gram);
 		T ratio = soluteGrams / solutionGrams;
@@ -47,6 +55,8 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 	/// <returns>The concentration in % w/v.</returns>
 	public static Concentration<T> FromWeightVolumePercent(Mass<T> soluteMass, Volume<T> solutionVolume)
 	{
+		ArgumentNullException.ThrowIfNull(soluteMass);
+		ArgumentNullException.ThrowIfNull(solutionVolume);
 		T massGrams = soluteMass.In(Units.Gram);
 		T volumeML = solutionVolume.In(Units.Milliliter);
 		T ratio = massGrams / volumeML;
@@ -60,10 +70,12 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 	/// <returns>The final concentration after dilution.</returns>
 	public Concentration<T> Dilute(Volume<T> initialVolume, Volume<T> finalVolume)
 	{
+		ArgumentNullException.ThrowIfNull(initialVolume);
+		ArgumentNullException.ThrowIfNull(finalVolume);
 		T c1 = In(Units.Molar);
 		T v1 = initialVolume.In(Units.Liter);
 		T v2 = finalVolume.In(Units.Liter);
-		T c2 = (c1 * v1) / v2;
+		T c2 = c1 * v1 / v2;
 		return Create(c2);
 	}
 }

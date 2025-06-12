@@ -1,4 +1,6 @@
-// Copyright (c) KTSU. All rights reserved.
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
 
 namespace ktsu.Semantics;
 
@@ -10,7 +12,7 @@ using System.Numerics;
 /// </summary>
 /// <typeparam name="T">The numeric type for the activation energy value.</typeparam>
 public sealed record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>, T>
-	where T : struct, INumber<T>
+	where T : struct, INumber<T>, IFloatingPoint<T>
 {
 	/// <summary>Gets the physical dimension of activation energy [M L² T⁻² N⁻¹].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ActivationEnergy;
@@ -38,7 +40,7 @@ public sealed record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>,
 		T t2 = temperature2.In(Units.Kelvin);
 		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
 
-		T lnRatio = T.Log(k2 / k1);
+		T lnRatio = T.CreateChecked(Math.Log(double.CreateChecked(k2 / k1)));
 		T tempDifference = (T.One / t1) - (T.One / t2);
 		T ea = -gasConstant * lnRatio / tempDifference;
 		return Create(ea);
@@ -80,7 +82,7 @@ public sealed record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>,
 		T t2 = temperature2.In(Units.Kelvin);
 		T gasConstant = T.CreateChecked(8.314); // J/(mol·K)
 
-		T exponent = (ea / gasConstant) * ((T.One / t1) - (T.One / t2));
-		return T.Exp(exponent);
+		T exponent = ea / gasConstant * ((T.One / t1) - (T.One / t2));
+		return T.CreateChecked(Math.Exp(double.CreateChecked(exponent)));
 	}
 }
