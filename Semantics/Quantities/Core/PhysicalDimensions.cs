@@ -13,37 +13,37 @@ public static class PhysicalDimensions
 	public static readonly PhysicalDimension Dimensionless = new(baseUnit: Units.Radian);
 
 	/// <summary>Length dimension [L].</summary>
-	public static readonly PhysicalDimension Length = new(length: 1, baseUnit: Units.Meter);
+	public static readonly PhysicalDimension Length = new(baseUnit: Units.Meter, length: 1);
 
 	/// <summary>Mass dimension [M].</summary>
-	public static readonly PhysicalDimension Mass = new(mass: 1, baseUnit: Units.Kilogram);
+	public static readonly PhysicalDimension Mass = new(baseUnit: Units.Kilogram, mass: 1);
 
 	/// <summary>Time dimension [T].</summary>
-	public static readonly PhysicalDimension Time = new(time: 1, baseUnit: Units.Second);
+	public static readonly PhysicalDimension Time = new(baseUnit: Units.Second, time: 1);
 
 	/// <summary>Electric current dimension [I].</summary>
-	public static readonly PhysicalDimension ElectricCurrent = new(electricCurrent: 1, baseUnit: Units.Ampere);
+	public static readonly PhysicalDimension ElectricCurrent = new(baseUnit: Units.Ampere, electricCurrent: 1);
 
 	/// <summary>Temperature dimension [Θ].</summary>
-	public static readonly PhysicalDimension Temperature = new(temperature: 1, baseUnit: Units.Kelvin);
+	public static readonly PhysicalDimension Temperature = new(baseUnit: Units.Kelvin, temperature: 1);
 
 	/// <summary>Amount of substance dimension [N].</summary>
-	public static readonly PhysicalDimension AmountOfSubstance = new(amountOfSubstance: 1, baseUnit: Units.Mole);
+	public static readonly PhysicalDimension AmountOfSubstance = new(baseUnit: Units.Mole, amountOfSubstance: 1);
 
 	/// <summary>Luminous intensity dimension [J].</summary>
-	public static readonly PhysicalDimension LuminousIntensity = new(luminousIntensity: 1, baseUnit: Units.Candela);
+	public static readonly PhysicalDimension LuminousIntensity = new(baseUnit: Units.Candela, luminousIntensity: 1);
 
 	/// <summary>Area dimension [L²].</summary>
-	public static readonly PhysicalDimension Area = new(length: 2, baseUnit: Units.SquareMeter);
+	public static readonly PhysicalDimension Area = new(baseUnit: Units.SquareMeter, length: 2);
 
 	/// <summary>Volume dimension [L³].</summary>
-	public static readonly PhysicalDimension Volume = new(length: 3, baseUnit: Units.CubicMeter);
+	public static readonly PhysicalDimension Volume = new(baseUnit: Units.CubicMeter, length: 3);
 
 	/// <summary>Velocity dimension [L T⁻¹].</summary>
-	public static readonly PhysicalDimension Velocity = new(length: 1, time: -1, baseUnit: Units.MetersPerSecond);
+	public static readonly PhysicalDimension Velocity = new(baseUnit: Units.MetersPerSecond, length: 1, time: -1);
 
 	/// <summary>Acceleration dimension [L T⁻²].</summary>
-	public static readonly PhysicalDimension Acceleration = new(length: 1, time: -2, baseUnit: Units.MetersPerSecondSquared);
+	public static readonly PhysicalDimension Acceleration = new(baseUnit: Units.MetersPerSecondSquared, length: 1, time: -2);
 
 	/// <summary>Force dimension [M L T⁻²].</summary>
 	public static readonly PhysicalDimension Force = new(mass: 1, length: 1, time: -2, baseUnit: Units.Newton);
@@ -70,16 +70,16 @@ public static class PhysicalDimensions
 	public static readonly PhysicalDimension ElectricCapacitance = new(mass: -1, length: -2, time: 4, electricCurrent: 2, baseUnit: Units.Farad);
 
 	/// <summary>Frequency dimension [T⁻¹].</summary>
-	public static readonly PhysicalDimension Frequency = new(time: -1, baseUnit: Units.Hertz);
+	public static readonly PhysicalDimension Frequency = new(baseUnit: Units.Hertz, time: -1);
 
 	/// <summary>Momentum dimension [M L T⁻¹].</summary>
 	public static readonly PhysicalDimension Momentum = new(mass: 1, length: 1, time: -1, baseUnit: Units.Newton);
 
 	/// <summary>Angular velocity dimension [T⁻¹].</summary>
-	public static readonly PhysicalDimension AngularVelocity = new(time: -1, baseUnit: Units.Radian);
+	public static readonly PhysicalDimension AngularVelocity = new(baseUnit: Units.Radian, time: -1);
 
 	/// <summary>Angular acceleration dimension [T⁻²].</summary>
-	public static readonly PhysicalDimension AngularAcceleration = new(time: -2, baseUnit: Units.Radian);
+	public static readonly PhysicalDimension AngularAcceleration = new(baseUnit: Units.Radian, time: -2);
 
 	/// <summary>Torque dimension [M L² T⁻²].</summary>
 	public static readonly PhysicalDimension Torque = new(mass: 1, length: 2, time: -2, baseUnit: Units.Newton);

@@ -314,6 +314,7 @@ When adding XML documentation comments:
 *   When encountering CA1062 errors in `UnitExtensions.cs` (An externally visible method dereferences one of its reference arguments without verifying whether that argument is 'null'), add null checks (e.g., `ArgumentNullException.ThrowIfNull()`) for all reference arguments in externally visible methods.
 *   When encountering CS1591 errors (The /doc compiler option was specified, but one or more constructs did not have comments), add XML documentation comments to all public types and members.
 *   When encountering CA1502 errors, refactor the code to decrease its complexity.
+*   When encountering CS1503 errors (Argument 1: cannot convert from 'int' to 'ktsu.Semantics.IUnit') in `PhysicalDimension.cs` during operator overloading, ensure that the constructor calls include the required `IUnit` parameter with a proper base unit.
 
 ## WORKFLOW & RELEASE RULES
 

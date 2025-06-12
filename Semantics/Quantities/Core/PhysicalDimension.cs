@@ -18,15 +18,16 @@ namespace ktsu.Semantics;
 /// <param name="amountOfSubstance">Power of amount of substance dimension.</param>
 /// <param name="luminousIntensity">Power of luminous intensity dimension.</param>
 /// <param name="baseUnit">The SI base unit for this dimension.</param>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S107:Methods should not have too many parameters", Justification = "<Pending>")]
 public readonly struct PhysicalDimension(
+	IUnit baseUnit,
 	int length = 0,
 	int mass = 0,
 	int time = 0,
 	int electricCurrent = 0,
 	int temperature = 0,
 	int amountOfSubstance = 0,
-	int luminousIntensity = 0,
-	IUnit? baseUnit = null) : IEquatable<PhysicalDimension>
+	int luminousIntensity = 0) : IEquatable<PhysicalDimension>
 {
 	/// <summary>The power of Length [L] in this dimension.</summary>
 	public int Length { get; } = length;
@@ -105,7 +106,8 @@ public readonly struct PhysicalDimension(
 	/// <param name="right">The second dimension.</param>
 	/// <returns>The product dimension.</returns>
 	public static PhysicalDimension operator *(PhysicalDimension left, PhysicalDimension right) =>
-		new(left.Length + right.Length,
+		new(left.BaseUnit,
+			left.Length + right.Length,
 			left.Mass + right.Mass,
 			left.Time + right.Time,
 			left.ElectricCurrent + right.ElectricCurrent,
@@ -120,7 +122,8 @@ public readonly struct PhysicalDimension(
 	/// <param name="right">The denominator dimension.</param>
 	/// <returns>The quotient dimension.</returns>
 	public static PhysicalDimension operator /(PhysicalDimension left, PhysicalDimension right) =>
-		new(left.Length - right.Length,
+		new(left.BaseUnit,
+			left.Length - right.Length,
 			left.Mass - right.Mass,
 			left.Time - right.Time,
 			left.ElectricCurrent - right.ElectricCurrent,
@@ -135,7 +138,8 @@ public readonly struct PhysicalDimension(
 	/// <param name="power">The power to raise to.</param>
 	/// <returns>The dimension raised to the power.</returns>
 	public static PhysicalDimension Pow(PhysicalDimension dimension, int power) =>
-		new(dimension.Length * power,
+		new(dimension.BaseUnit,
+			dimension.Length * power,
 			dimension.Mass * power,
 			dimension.Time * power,
 			dimension.ElectricCurrent * power,

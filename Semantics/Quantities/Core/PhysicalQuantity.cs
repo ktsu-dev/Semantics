@@ -78,6 +78,7 @@ public abstract record PhysicalQuantity<TSelf, T>
 	/// </summary>
 	/// <param name="other">The other quantity to compare to.</param>
 	/// <returns>A value indicating the relative order of the quantities.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "<Pending>")]
 	public int CompareTo(IPhysicalQuantity<T>? other)
 	{
 		return other is null
