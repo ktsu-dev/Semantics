@@ -1,3 +1,8 @@
+## v1.0.11 (patch)
+
+Changes since v1.0.10:
+
+- Implement comprehensive chemical quantities including ActivationEnergy, AmountOfSubstance, Concentration, DynamicViscosity, EnzymeActivity, MolarMass, pH, RateConstant, ReactionRate, and SurfaceTension. Update PhysicalDimensions and Units to include new chemical dimensions and units, enhancing the completeness of the quantities implementation. ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.10 (patch)
 
 Changes since v1.0.9:
