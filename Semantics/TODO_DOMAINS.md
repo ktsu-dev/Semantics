@@ -18,9 +18,9 @@ This document tracks the implementation progress of physical quantity domains in
 - [x] Automatic base unit detection
 - [x] Domain-based file organization
 
-## Mechanics Domain 🚧
+## Mechanics Domain ✅
 **Location:** `Quantities/Mechanics/`
-**Status:** Core quantities implemented, some advanced quantities needed
+**Status:** All quantities implemented
 
 ### Implemented ✅
 - [x] `Length.cs` - Distance measurements
@@ -34,19 +34,17 @@ This document tracks the implementation progress of physical quantity domains in
 - [x] `Pressure.cs` - Force per unit area
 - [x] `Energy.cs` - Work and energy quantities
 - [x] `Power.cs` - Rate of energy transfer
+- [x] `Momentum.cs` - p = mv
+- [x] `AngularVelocity.cs` - Rotational motion
+- [x] `AngularAcceleration.cs` - Rate of angular velocity change
+- [x] `Torque.cs` - Rotational force
+- [x] `MomentOfInertia.cs` - Rotational mass
+- [x] `Density.cs` - Mass per unit volume
+- [x] `SpecificGravity.cs` - Density ratio
 
-### TODO 📋
-- [ ] `Momentum.cs` - p = mv
-- [ ] `AngularVelocity.cs` - Rotational motion
-- [ ] `AngularAcceleration.cs` - Rate of angular velocity change
-- [ ] `Torque.cs` - Rotational force
-- [ ] `MomentOfInertia.cs` - Rotational mass
-- [ ] `Density.cs` - Mass per unit volume
-- [ ] `SpecificGravity.cs` - Density ratio
-
-## Electrical Domain 🚧  
+## Electrical Domain ✅  
 **Location:** `Quantities/Electrical/`
-**Status:** Basic electrical quantities implemented
+**Status:** All electrical quantities implemented
 
 ### Implemented ✅
 - [x] `ElectricCurrent.cs` - Flow of electric charge
@@ -54,14 +52,12 @@ This document tracks the implementation progress of physical quantity domains in
 - [x] `ElectricResistance.cs` - Opposition to current flow
 - [x] `ElectricCharge.cs` - Quantity of electricity
 - [x] `ElectricCapacitance.cs` - Charge storage ability
-
-### TODO 📋
-- [ ] `ElectricField.cs` - V/m, N/C units
-- [ ] `ElectricFlux.cs` - Gauss's law applications
-- [ ] `Permittivity.cs` - Electric field response
-- [ ] `ElectricConductivity.cs` - 1/resistance per length
-- [ ] `ElectricPowerDensity.cs` - Power per unit volume
-- [ ] `ImpedanceAC.cs` - Complex impedance for AC circuits
+- [x] `ElectricField.cs` - V/m, N/C units
+- [x] `ElectricFlux.cs` - Gauss's law applications
+- [x] `Permittivity.cs` - Electric field response
+- [x] `ElectricConductivity.cs` - 1/resistance per length
+- [x] `ElectricPowerDensity.cs` - Power per unit volume
+- [x] `ImpedanceAC.cs` - Complex impedance for AC circuits
 
 ## Thermal Domain 📋
 **Location:** `Quantities/Thermal/`

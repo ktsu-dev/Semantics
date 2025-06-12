@@ -338,6 +338,25 @@ When adding XML documentation comments:
 *   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
 *   Validation attributes should be separated into their own files.
 *   Instead of creating generic built-in types like `Base6String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
-*   The built in semantic string types are either too niche or too simple, create a collection of useful builtin semantic string types with appropriate validations, where they aren't already implemented in dotnet, like Uri is.
+*   The built in semantic string types are too niche or too simple, create a collection of useful builtin semantic string types with appropriate validations, where they aren't already implemented in dotnet, like Uri is.
 *   Validation attributes should be separated into their own files.
-*   Instead of creating generic built-in types like `Base6
+*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
+*   **When implementing PhysicalQuantity classes, ensure the containing type is one of the parameters in the generic type definition.**
+
+## QUANTITIES IMPLEMENTATION STRATEGY
+
+### Current Implementation Status
+
+*   **Mechanics**: Partially implemented (11/18 quantities).
+*   **Electrical**: Partially implemented (5/11 quantities).
+*   **Acoustic**: Partially implemented (1/20+ quantities).
+*   **Thermal**: Not implemented (0/10 quantities).
+*   **Chemical**: Not implemented (0/17 quantities).
+*   **Optical**: Not implemented (0/18 quantities).
+
+### Priority Implementation Tasks
+
+1.  **Complete Mechanics Domain** (7 missing quantities):
+    *   `Momentum.cs` - p = mv
+    *   `AngularVelocity.cs` - Rotational motion
+    *

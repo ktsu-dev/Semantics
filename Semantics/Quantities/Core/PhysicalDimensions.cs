@@ -93,6 +93,24 @@ public static class PhysicalDimensions
 	/// <summary>Concentration dimension [N L⁻³].</summary>
 	public static readonly PhysicalDimension Concentration = new(amountOfSubstance: 1, length: -3, baseUnit: Units.Molar);
 
+	/// <summary>Electric field dimension [M L T⁻³ I⁻¹].</summary>
+	public static readonly PhysicalDimension ElectricField = new(mass: 1, length: 1, time: -3, electricCurrent: -1, baseUnit: Units.Volt);
+
+	/// <summary>Electric flux dimension [M L³ T⁻³ I⁻¹].</summary>
+	public static readonly PhysicalDimension ElectricFlux = new(mass: 1, length: 3, time: -3, electricCurrent: -1, baseUnit: Units.Volt);
+
+	/// <summary>Permittivity dimension [M⁻¹ L⁻³ T⁴ I²].</summary>
+	public static readonly PhysicalDimension Permittivity = new(mass: -1, length: -3, time: 4, electricCurrent: 2, baseUnit: Units.Farad);
+
+	/// <summary>Electric conductivity dimension [M⁻¹ L⁻³ T³ I²].</summary>
+	public static readonly PhysicalDimension ElectricConductivity = new(mass: -1, length: -3, time: 3, electricCurrent: 2, baseUnit: Units.Ohm);
+
+	/// <summary>Electric power density dimension [M L⁻¹ T⁻³].</summary>
+	public static readonly PhysicalDimension ElectricPowerDensity = new(mass: 1, length: -1, time: -3, baseUnit: Units.Watt);
+
+	/// <summary>AC impedance dimension [M L² T⁻³ I⁻²].</summary>
+	public static readonly PhysicalDimension ImpedanceAC = new(mass: 1, length: 2, time: -3, electricCurrent: -2, baseUnit: Units.Ohm);
+
 	/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>
 	public static FrozenSet<PhysicalDimension> All { get; } = new HashSet<PhysicalDimension>(
 		[
@@ -123,6 +141,12 @@ public static class PhysicalDimensions
 			Torque,
 			MomentOfInertia,
 			Density,
-			Concentration
+			Concentration,
+			ElectricField,
+			ElectricFlux,
+			Permittivity,
+			ElectricConductivity,
+			ElectricPowerDensity,
+			ImpedanceAC
 		]).ToFrozenSet();
 }
