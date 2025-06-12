@@ -16,9 +16,6 @@ public sealed record Power<T> : PhysicalQuantity<Power<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Power;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Watt;
-
 	/// <summary>
 	/// Initializes a new instance of the Power class.
 	/// </summary>

@@ -16,9 +16,6 @@ public sealed record Area<T> : PhysicalQuantity<Area<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Area;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.SquareMeter;
-
 	/// <summary>
 	/// Initializes a new instance of the Area class.
 	/// </summary>

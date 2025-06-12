@@ -16,9 +16,6 @@ public sealed record Volume<T> : PhysicalQuantity<Volume<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Volume;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.CubicMeter;
-
 	/// <summary>
 	/// Initializes a new instance of the Volume class.
 	/// </summary>

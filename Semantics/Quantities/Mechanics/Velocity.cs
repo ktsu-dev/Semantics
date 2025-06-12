@@ -16,9 +16,6 @@ public sealed record Velocity<T> : PhysicalQuantity<Velocity<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Velocity;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.MetersPerSecond;
-
 	/// <summary>
 	/// Initializes a new instance of the Velocity class.
 	/// </summary>

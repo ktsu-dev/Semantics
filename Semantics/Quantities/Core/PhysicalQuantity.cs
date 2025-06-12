@@ -20,9 +20,6 @@ public abstract record PhysicalQuantity<TSelf, T>
 	/// <summary>Gets the physical dimension of this quantity.</summary>
 	public abstract PhysicalDimension Dimension { get; }
 
-	/// <summary>Gets the SI base unit for this quantity type.</summary>
-	public abstract IUnit BaseUnit { get; }
-
 	/// <summary>Gets the value stored in this quantity.</summary>
 	public T Value => Quantity;
 
@@ -53,7 +50,7 @@ public abstract record PhysicalQuantity<TSelf, T>
 
 		if (!targetUnit.Dimension.Equals(Dimension))
 		{
-			throw new UnitConversionException(BaseUnit, targetUnit, $"Cannot convert {Dimension} to {targetUnit.Dimension}");
+			throw new UnitConversionException(Dimension.BaseUnit, targetUnit, $"Cannot convert {Dimension} to {targetUnit.Dimension}");
 		}
 
 		// Handle offset units (like temperature conversions)
@@ -101,7 +98,7 @@ public abstract record PhysicalQuantity<TSelf, T>
 	/// Returns a string representation of this quantity.
 	/// </summary>
 	/// <returns>A string representation including the value and unit symbol.</returns>
-	public override string ToString() => $"{Value} {BaseUnit.Symbol}";
+	public override string ToString() => $"{Value} {Dimension.BaseUnit.Symbol}";
 	/// <inheritdoc/>
 	public static bool operator <(PhysicalQuantity<TSelf, T> left, PhysicalQuantity<TSelf, T> right) => left is null ? right is not null : left.CompareTo(right) < 0;
 

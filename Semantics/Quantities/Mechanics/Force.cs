@@ -16,9 +16,6 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Force;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Newton;
-
 	/// <summary>
 	/// Initializes a new instance of the Force class.
 	/// </summary>

@@ -16,9 +16,6 @@ public sealed record ElectricCharge<T> : PhysicalQuantity<ElectricCharge<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ElectricCharge;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Coulomb;
-
 	/// <summary>
 	/// Initializes a new instance of the ElectricCharge class.
 	/// </summary>

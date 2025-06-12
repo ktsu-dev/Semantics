@@ -16,9 +16,6 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Energy;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Joule;
-
 	/// <summary>
 	/// Initializes a new instance of the Energy class.
 	/// </summary>

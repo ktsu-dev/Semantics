@@ -16,9 +16,6 @@ public sealed record Time<T> : PhysicalQuantity<Time<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Time;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Second;
-
 	/// <summary>
 	/// Initializes a new instance of the Time class.
 	/// </summary>

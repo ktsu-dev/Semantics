@@ -16,9 +16,6 @@ public sealed record ElectricPotential<T> : PhysicalQuantity<ElectricPotential<T
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ElectricPotential;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Volt;
-
 	/// <summary>
 	/// Initializes a new instance of the ElectricPotential class.
 	/// </summary>

@@ -16,9 +16,6 @@ public sealed record Acceleration<T> : PhysicalQuantity<Acceleration<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Acceleration;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.MetersPerSecondSquared;
-
 	/// <summary>
 	/// Initializes a new instance of the Acceleration class.
 	/// </summary>

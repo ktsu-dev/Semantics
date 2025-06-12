@@ -192,6 +192,66 @@ When adding XML documentation comments:
     *   Eliminate backward compatibility methods that duplicate functionality.
 *   When integrating the unit classes with `PhysicalDimensionExtensions`, conversion factors should be defined only once in the `Units` class. All conversions should use the same authoritative source, ensuring consistency and maintainability. This eliminates duplication and enables extensibility and type safety.
 *   Eliminate the code that implements concrete storage types for quantities and only support the generics. Non-generic overloads can be added later where appropriate.
+*   `PhysicalQuantity` represents an actual measured value:
+    *   It combines a numerical value with dimensional information
+    *   It provides the behavior for quantities (comparison, arithmetic, unit conversion)
+    *   It's an abstract base class that specific quantities inherit from
+    *   It includes business logic like `IsPhysicallyValid`, `In()` method for conversions, etc.
+*   `PhysicalDimension` represents the dimensional analysis aspect:
+    *   It's a mathematical concept that describes what type of measurement something is
+    *   It stores the powers of the 7 fundamental SI base units (length, mass, time, etc.)
+    *   It enables dimensional analysis (e.g., Force = M L T⁻²)
+    *   It's used for compile-time safety and unit conversion validation
+    *   It's a struct that's immutable and lightweight
+*   The relationship between `PhysicalQuantity` and `PhysicalDimension` is compositional, not identical: `PhysicalQuantity` **HAS-A** `PhysicalDimension`, it **IS-NOT-A** `PhysicalDimension`. This is a classic composition relationship where the quantity uses the dimension for validation and type safety.
+*   Do not merge `PhysicalQuantity` and `PhysicalDimension`. Keeping them separate is beneficial because:
+    1.  Single Responsibility: `PhysicalDimension` handles dimensional math, `PhysicalQuantity` handles value storage and behavior
+    2.  Reusability: Multiple quantity types can share the same dimension (e.g., Energy and Torque both have dimension M L² T⁻²)
+    3.  Performance: `PhysicalDimension` is a lightweight struct optimized for dimensional calculations
+    4.  Type Safety: The current design provides excellent compile-time checking
+    5.  Clarity: The separation makes the code's intent much clearer
+*   `BaseUnit` is a property of the dimension, not the quantity.
+*   For any given dimension, there's exactly one SI base unit.
+*   It's repetitive and error-prone for every quantity class to have to manually specify the same BaseUnit for the same dimension.
+*   Instead of:
+    ```16:19:Semantics/Quantities/Mechanics/Force.cs
+    /// <inheritdoc/>
+    public override PhysicalDimension Dimension => PhysicalDimensions.Force;
+
+    /// <inheritdoc/>
+    public override IUnit BaseUnit => Units.Newton;
+    ```
+    The dimension should know its own base unit:
+    ```csharp
+    // In PhysicalDimension
+    public IUnit BaseUnit => GetBaseUnitForDimension(this);
+
+    // Or stored as static lookup
+    public static IUnit GetBaseUnit(PhysicalDimension dimension) => dimension switch
+    {
+        var d when d == PhysicalDimensions.Force => Units.Newton,
+        var d when d == PhysicalDimensions.Energy => Units.Joule,
+        var d when d == PhysicalDimensions.Length => Units.Meter,
+        // etc...
+    };
+    ```
+*   Unit validation logic could be a method on `PhysicalDimension`:
+    ```csharp
+    // In PhysicalDimension
+    public bool IsCompatibleWith(IUnit unit) => this.Equals(unit.Dimension);
+    public void ValidateUnitCompatibility(IUnit unit) => /* validation logic */
+    ```
+*   The following should stay in `PhysicalQuantity`:
+    *   Value storage and retrieval
+    *   Arithmetic operations
+    *   Comparison logic
+    *   `IsPhysicallyValid` (this is about the specific value, not the dimension)
+    *   `In()` conversion method (this operates on the value using dimensional info)
+*   When refactoring `PhysicalQuantity` and `PhysicalDimension`:
+    1.  **Add `BaseUnit` property to `PhysicalDimension`** with a static lookup
+    2.  **Remove `BaseUnit` from `PhysicalQuantity` interface and implementations**
+    3.  **Update `PhysicalQuantity.In()` to use `Dimension.BaseUnit`**
+    4.  **Consider moving unit compatibility validation to `PhysicalDimension`**
 
 ## DEBUGGING
 
@@ -297,52 +357,4 @@ When adding XML documentation comments:
     *   Perform final testing across different .NET versions.
     *   Conduct performance testing (if applicable).
     *   Conduct a security review of validation logic.
-*   The obsolete examples, including `ServerIpAddress`, `UniqueId`, and `SoftwareVersion`, should be moved to documentation. The documentation should show:
-    1.  ❌ **Discouraged approach**: Using semantic strings with obsolete validation attributes
-    2.  ✅ **Recommended approach**: Using first-class .NET types directly
-    3.  **Migration guidance**: How to transition from string-based validation to proper types
-*   When creating new validation attributes, prefer using `FluentSemanticStringValidationAttribute` as the base class to take advantage of FluentValidation's features.
-*   ### Text Validation
-*   - `IsEmailAddressAttribute` - Email format validation with length limits
-*   - `IsBase64Attribute` - Base64 format validation with proper padding checks
-*   - `RegexMatchAttribute` - Pattern matching with customizable regex options
-*   - `StartsWithAttribute` - Prefix validation with string comparison options
-*   - `EndsWithAttribute` - Suffix validation with string comparison options
-*   - `ContainsAttribute` - Substring validation with string comparison options
-*   ### Format Validation
-*   - `IsEmptyOrWhitespaceAttribute` - Validates empty or whitespace-only content
-*   - `IsSingleLineAttribute` - Validates single-line strings (no line breaks)
-*   - `IsMultiLineAttribute` - Validates multi-line strings (contains line breaks)
-*   ### Path Validation
-*   - `IsPathAttribute` - Valid path format with character and length limits
-*   - `DoesExistAttribute` - Path existence validation on filesystem
-*   - `IsExtensionAttribute` - File extension format validation
-*   - `IsAbsolutePathAttribute` - Absolute path validation
-*   ### Casing Validation
-*   - `IsLowerCaseAttribute` - Lowercase string validation
-*   - `IsUpperCaseAttribute` - Uppercase string validation
-*   ### First-Class Type Validation
-*   - `IsGuidAttribute` - GUID format validation
-*   All existing validation attributes continue to work exactly as before. The changes are internal implementation details that don't affect the public API.
-*   When creating new validation attributes:
-*   1. **Inherit from FluentSemanticStringValidationAttribute** instead of `SemanticStringValidationAttribute`
-*   2. **Implement CreateValidator()** to return your custom `FluentValidationAdapter`
-*   3. **Create a validator class** that inherits from `FluentValidationAdapter`
-*   4. **Define validation rules** in the validator's constructor using FluentValidation syntax
-*   Before increasing test coverage, explore the project structure to understand the current testing setup and identify areas that need more coverage.
-*   Update the project description to reflect the comprehensive nature of the library. The description should be: "A comprehensive .NET library for creating type-safe, validated string and quantity types using semantic meaning. Transform primitive string and numeric obsession into strongly-typed, self-validating domain models with 50+ validation attributes, polymorphic path handling, arithmetic quantity operations, and performance-optimized utilities. Includes factory pattern support, dependency injection integration, and enterprise-ready features for building robust, maintainable applications."
-*   Before determining whether the direct methods should support all the features of the factories, investigate the implications of doing so.
-*   Ensure that the direct static methods provide feature parity with the factory methods.
-*   Use overloading with a more communicative common name for `From` and `TryFrom` methods instead of specifically type named variants.
-*   When defining `PhysicalQuantity` classes, the correct pattern is:
-    ```csharp
-    public override PhysicalDimension Dimension => PhysicalDimensions.SomeDimension;
-    public override IUnit BaseUnit => Units.SomeUnit;
-    public ClassName() : base() { }
-    // Uses inherited Create(double value) method automatically
-    ```
-*   When defining `PhysicalQuantity` classes:
-    *   Ensure the class is non-abstract and has a public parameterless constructor.
-    *   Include XML documentation comments for all constructs.
-    *   Avoid throwing exceptions from methods not expected to throw them.
-    *   Ensure the base class `PhysicalQuantity<TSelf>` has a constructor that takes the required arguments
+*   The obsolete examples, including `ServerIpAddress

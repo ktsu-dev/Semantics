@@ -16,9 +16,6 @@ public sealed record Length<T> : PhysicalQuantity<Length<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Length;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Meter;
-
 	/// <summary>
 	/// Initializes a new instance of the Length class.
 	/// </summary>

@@ -16,9 +16,6 @@ public sealed record ElectricCapacitance<T> : PhysicalQuantity<ElectricCapacitan
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ElectricCapacitance;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Farad;
-
 	/// <summary>
 	/// Initializes a new instance of the ElectricCapacitance class.
 	/// </summary>

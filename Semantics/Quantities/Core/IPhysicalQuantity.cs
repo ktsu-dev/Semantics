@@ -16,9 +16,6 @@ public interface IPhysicalQuantity<T> : ISemanticQuantity<T>, IEquatable<IPhysic
 	/// <summary>Gets the physical dimension of this quantity.</summary>
 	public PhysicalDimension Dimension { get; }
 
-	/// <summary>Gets the SI base unit for this quantity type.</summary>
-	public IUnit BaseUnit { get; }
-
 	/// <summary>Converts the quantity value to the specified unit.</summary>
 	/// <param name="targetUnit">The target unit for conversion.</param>
 	/// <returns>The value in the target unit.</returns>

@@ -16,9 +16,6 @@ public sealed record ElectricCurrent<T> : PhysicalQuantity<ElectricCurrent<T>, T
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ElectricCurrent;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Ampere;
-
 	/// <summary>
 	/// Initializes a new instance of the ElectricCurrent class.
 	/// </summary>

@@ -16,9 +16,6 @@ public sealed record ElectricResistance<T> : PhysicalQuantity<ElectricResistance
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ElectricResistance;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Ohm;
-
 	/// <summary>
 	/// Initializes a new instance of the ElectricResistance class.
 	/// </summary>

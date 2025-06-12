@@ -16,9 +16,6 @@ public sealed record Pressure<T> : PhysicalQuantity<Pressure<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Pressure;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Pascal;
-
 	/// <summary>
 	/// Initializes a new instance of the Pressure class.
 	/// </summary>

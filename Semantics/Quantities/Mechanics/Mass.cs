@@ -16,9 +16,6 @@ public sealed record Mass<T> : PhysicalQuantity<Mass<T>, T>
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Mass;
 
-	/// <inheritdoc/>
-	public override IUnit BaseUnit => Units.Kilogram;
-
 	/// <summary>
 	/// Initializes a new instance of the Mass class.
 	/// </summary>
