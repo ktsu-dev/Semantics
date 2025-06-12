@@ -1,3 +1,9 @@
+## v1.0.10 (patch)
+
+Changes since v1.0.9:
+
+- Implement comprehensive acoustic quantities including SoundPressureLevel, SoundIntensityLevel, SoundPowerLevel, ReflectionCoefficient, NoiseReductionCoefficient, SoundTransmissionClass, Loudness, Pitch, Sharpness, Sensitivity, and DirectionalityIndex. Update PhysicalDimensions to include new acoustic dimensions and mark the Acoustic domain as fully implemented in TODO_DOMAINS.md, enhancing the completeness of the quantities implementation. ([@matt-edmondson](https://github.com/matt-edmondson))
+- Implement thermal quantities including Heat, HeatCapacity, SpecificHeat, ThermalConductivity, ThermalExpansion, ThermalDiffusivity, HeatTransferCoefficient, and Entropy. Update TODO_DOMAINS.md to mark the Thermal domain as fully implemented, enhancing the completeness of the quantities implementation. ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.9 (patch)
 
 Changes since v1.0.8:
