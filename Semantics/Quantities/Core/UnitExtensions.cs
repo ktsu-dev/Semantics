@@ -4,6 +4,8 @@
 
 namespace ktsu.Semantics;
 
+using System;
+
 /// <summary>
 /// Extension methods for units.
 /// </summary>
@@ -16,6 +18,8 @@ public static class UnitExtensions
 	/// <returns>True if this is a base unit in its system, false otherwise.</returns>
 	public static bool IsBaseUnit(this IUnit unit)
 	{
+		ArgumentNullException.ThrowIfNull(unit);
+
 		return unit.System switch
 		{
 			UnitSystem.SIBase => true,
@@ -37,14 +41,31 @@ public static class UnitExtensions
 	/// </summary>
 	/// <param name="unit">The unit to check.</param>
 	/// <returns>True if this is an SI unit, false otherwise.</returns>
-	public static bool IsSI(this IUnit unit) => unit.System is UnitSystem.SIBase or UnitSystem.SIDerived;
+	public static bool IsSI(this IUnit unit)
+	{
+		ArgumentNullException.ThrowIfNull(unit);
+		return unit.System is UnitSystem.SIBase or UnitSystem.SIDerived;
+	}
 
 	/// <summary>
 	/// Determines if this unit is metric (SI or other metric systems).
 	/// </summary>
 	/// <param name="unit">The unit to check.</param>
 	/// <returns>True if this is a metric unit, false otherwise.</returns>
-	public static bool IsMetric(this IUnit unit) => unit.System is UnitSystem.SIBase or UnitSystem.SIDerived or UnitSystem.Metric or UnitSystem.CGS;
+	public static bool IsMetric(this IUnit unit)
+	{
+		ArgumentNullException.ThrowIfNull(unit);
+		return unit.System is UnitSystem.SIBase or UnitSystem.SIDerived or UnitSystem.Metric or UnitSystem.CGS;
+	}
 
-	public static bool IsImperial(this IUnit unit) => unit.System is UnitSystem.Imperial or UnitSystem.USCustomary;
+	/// <summary>
+	/// Determines if this unit belongs to Imperial or US Customary systems.
+	/// </summary>
+	/// <param name="unit">The unit to check.</param>
+	/// <returns>True if this is an Imperial or US Customary unit, false otherwise.</returns>
+	public static bool IsImperial(this IUnit unit)
+	{
+		ArgumentNullException.ThrowIfNull(unit);
+		return unit.System is UnitSystem.Imperial or UnitSystem.USCustomary;
+	}
 }

@@ -259,6 +259,10 @@ When adding XML documentation comments:
 *   When debugging `SpanPathUtilities.GetFileName` and encountering failing tests with trailing separators, ensure that the method returns an empty span when the path ends with a directory separator.
 *   When encountering CS0122 errors related to `SemanticString<T>.FromString<TDest>(string?)` being inaccessible, replace all calls to `FromString<TDest>` with `Create<TDest>`.
 *   When encountering CS1715 errors (type must be 'PhysicalDimension' to match overridden member), ensure that the type of the overriding property or member matches the type of the overridden property or member in the base class.
+*   When encountering CA1032 errors in `UnitConversionException.cs` (Failure to provide the full set of constructors), ensure that the exception class provides all the standard exception constructors.
+*   When encountering CS8862 errors in `UnitConversionException.cs` (A constructor declared in a type with parameter list must have 'this' constructor initializer), ensure that constructors with parameters call the primary constructor using `this(...)`.
+*   When encountering CA1062 errors in `UnitExtensions.cs` (An externally visible method dereferences one of its reference arguments without verifying whether that argument is 'null'), add null checks (e.g., `ArgumentNullException.ThrowIfNull()`) for all reference arguments in externally visible methods.
+*   When encountering CS1591 errors (The /doc compiler option was specified, but one or more constructs did not have comments), add XML documentation comments to all public types and members.
 
 ## WORKFLOW & RELEASE RULES
 
@@ -341,13 +345,4 @@ When adding XML documentation comments:
     *   Ensure the class is non-abstract and has a public parameterless constructor.
     *   Include XML documentation comments for all constructs.
     *   Avoid throwing exceptions from methods not expected to throw them.
-    *   Ensure the base class `PhysicalQuantity<TSelf>` has a constructor that takes the required arguments.
-    *   Ensure that all required methods and properties (e.g., `ConvertToUnit`, `Unit`) are defined or accessible in the current context.
-    *   Ensure that all reference arguments are non-null by using `ArgumentNullException.ThrowIfNull()` if necessary.
-*   `PhysicalDimensionExtensions.cs` extensions should be to the `INumber` interface, rather than to all of the concrete types.
-*   When creating extension methods for Physical Quantities:
-    *   Use generic `INumber<T>` extensions instead of concrete type overloads. This will make the code more maintainable and work with all numeric types.
-    *   Use `T.CreateChecked()` for conversion factors instead of hardcoded doubles
-    *   Maintain original conversion logic and factors.
-    *   Add proper XML documentation with `<typeparam>` tags.
-    *   For PhysicalQuantity extension methods that use units, and thus the `Create
+    *   Ensure the base class `PhysicalQuantity<TSelf>` has a constructor that takes the required arguments
