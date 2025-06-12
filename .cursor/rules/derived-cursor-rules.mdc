@@ -178,7 +178,6 @@ When adding XML documentation comments:
 *   When defining `PhysicalQuantity` classes, the correct pattern is:
     ```csharp
     public override PhysicalDimension Dimension => PhysicalDimensions.SomeDimension;
-    public override IUnit BaseUnit => Units.SomeUnit;
     public ClassName() : base() { }
     // Uses inherited Create(double value) method automatically
     ```
@@ -213,15 +212,7 @@ When adding XML documentation comments:
 *   `BaseUnit` is a property of the dimension, not the quantity.
 *   For any given dimension, there's exactly one SI base unit.
 *   It's repetitive and error-prone for every quantity class to have to manually specify the same BaseUnit for the same dimension.
-*   Instead of:
-    ```16:19:Semantics/Quantities/Mechanics/Force.cs
-    /// <inheritdoc/>
-    public override PhysicalDimension Dimension => PhysicalDimensions.Force;
-
-    /// <inheritdoc/>
-    public override IUnit BaseUnit => Units.Newton;
-    ```
-    The dimension should know its own base unit:
+*   The dimension should know its own base unit:
     ```csharp
     // In PhysicalDimension
     public IUnit BaseUnit => GetBaseUnitForDimension(this);
@@ -248,10 +239,9 @@ When adding XML documentation comments:
     *   `IsPhysicallyValid` (this is about the specific value, not the dimension)
     *   `In()` conversion method (this operates on the value using dimensional info)
 *   When refactoring `PhysicalQuantity` and `PhysicalDimension`:
-    1.  **Add `BaseUnit` property to `PhysicalDimension`** with a static lookup
-    2.  **Remove `BaseUnit` from `PhysicalQuantity` interface and implementations**
-    3.  **Update `PhysicalQuantity.In()` to use `Dimension.BaseUnit`**
-    4.  **Consider moving unit compatibility validation to `PhysicalDimension`**
+    1.  Pass the base unit directly to the `PhysicalDimension` constructor.
+    2.  Remove the `BaseUnit` property from `PhysicalQuantity` and its interface.
+    3.  Update `PhysicalQuantity.In()` to use `Dimension.BaseUnit`.
 
 ## DEBUGGING
 
@@ -323,6 +313,7 @@ When adding XML documentation comments:
 *   When encountering CS8862 errors in `UnitConversionException.cs` (A constructor declared in a type with parameter list must have 'this' constructor initializer), ensure that constructors with parameters call the primary constructor using `this(...)`.
 *   When encountering CA1062 errors in `UnitExtensions.cs` (An externally visible method dereferences one of its reference arguments without verifying whether that argument is 'null'), add null checks (e.g., `ArgumentNullException.ThrowIfNull()`) for all reference arguments in externally visible methods.
 *   When encountering CS1591 errors (The /doc compiler option was specified, but one or more constructs did not have comments), add XML documentation comments to all public types and members.
+*   When encountering CA1502 errors, refactor the code to decrease its complexity.
 
 ## WORKFLOW & RELEASE RULES
 
@@ -345,16 +336,7 @@ When adding XML documentation comments:
 *   The built in semantic string types should not need the string suffix.
 *   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
 *   Validation attributes should be separated into their own files.
-*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
+*   Instead of creating generic built-in types like `Base6String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
 *   The built in semantic string types are either too niche or too simple, create a collection of useful builtin semantic string types with appropriate validations, where they aren't already implemented in dotnet, like Uri is.
 *   Validation attributes should be separated into their own files.
-*   Instead of creating generic built-in types like `Base64String`, use validation attributes like `[IsBase64]`, `[IsGuid]`, `[IsEmailAddress]` etc. that can be applied to domain-specific semantic string types.
-*   Validators that represent types that have first-class representations in dotnet already should provide accurate validation, but be listed as obsolete, prompting users to use the first class types.
-*   Before releasing a version:
-    *   Fix all failing tests; a 100% pass rate is required.
-    *   Update the version from `1.0.0-pre.1` to `1.0.0` (or the appropriate version number).
-    *   Update `CHANGELOG.md` with proper release notes.
-    *   Perform final testing across different .NET versions.
-    *   Conduct performance testing (if applicable).
-    *   Conduct a security review of validation logic.
-*   The obsolete examples, including `ServerIpAddress
+*   Instead of creating generic built-in types like `Base6

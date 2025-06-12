@@ -17,6 +17,7 @@ namespace ktsu.Semantics;
 /// <param name="temperature">Power of temperature dimension.</param>
 /// <param name="amountOfSubstance">Power of amount of substance dimension.</param>
 /// <param name="luminousIntensity">Power of luminous intensity dimension.</param>
+/// <param name="baseUnit">The SI base unit for this dimension.</param>
 public readonly struct PhysicalDimension(
 	int length = 0,
 	int mass = 0,
@@ -24,7 +25,8 @@ public readonly struct PhysicalDimension(
 	int electricCurrent = 0,
 	int temperature = 0,
 	int amountOfSubstance = 0,
-	int luminousIntensity = 0) : IEquatable<PhysicalDimension>
+	int luminousIntensity = 0,
+	IUnit? baseUnit = null) : IEquatable<PhysicalDimension>
 {
 	/// <summary>The power of Length [L] in this dimension.</summary>
 	public int Length { get; } = length;
@@ -51,59 +53,7 @@ public readonly struct PhysicalDimension(
 	public bool IsDimensionless => Length == 0 && Mass == 0 && Time == 0 && ElectricCurrent == 0 && Temperature == 0 && AmountOfSubstance == 0 && LuminousIntensity == 0;
 
 	/// <summary>Gets the SI base unit for this dimension.</summary>
-	public IUnit BaseUnit => GetBaseUnit(this);
-
-	/// <summary>
-	/// Gets the SI base unit for the specified dimension.
-	/// </summary>
-	/// <param name="dimension">The dimension to get the base unit for.</param>
-	/// <returns>The SI base unit for the dimension.</returns>
-	/// <exception cref="NotSupportedException">Thrown when no base unit is defined for the dimension.</exception>
-	public static IUnit GetBaseUnit(PhysicalDimension dimension)
-	{
-		// Use a static readonly dictionary for efficient lookup
-		return BaseUnitLookup.TryGetValue(dimension, out IUnit? unit)
-			? unit
-			: throw new NotSupportedException($"No base unit defined for dimension: {dimension}");
-	}
-
-	/// <summary>
-	/// Lookup table for base units by dimension.
-	/// </summary>
-	private static readonly Dictionary<PhysicalDimension, IUnit> BaseUnitLookup = new()
-	{
-		// Base dimensions
-		[PhysicalDimensions.Dimensionless] = Units.Radian, // Dimensionless uses radian as representative unit
-		[PhysicalDimensions.Length] = Units.Meter,
-		[PhysicalDimensions.Mass] = Units.Kilogram,
-		[PhysicalDimensions.Time] = Units.Second,
-		[PhysicalDimensions.ElectricCurrent] = Units.Ampere,
-		[PhysicalDimensions.Temperature] = Units.Kelvin,
-		[PhysicalDimensions.AmountOfSubstance] = Units.Mole,
-		[PhysicalDimensions.LuminousIntensity] = Units.Candela,
-
-		// Derived dimensions
-		[PhysicalDimensions.Area] = Units.SquareMeter,
-		[PhysicalDimensions.Volume] = Units.CubicMeter,
-		[PhysicalDimensions.Velocity] = Units.MetersPerSecond,
-		[PhysicalDimensions.Acceleration] = Units.MetersPerSecondSquared,
-		[PhysicalDimensions.Force] = Units.Newton,
-		[PhysicalDimensions.Pressure] = Units.Pascal,
-		[PhysicalDimensions.Energy] = Units.Joule,
-		[PhysicalDimensions.Power] = Units.Watt,
-		[PhysicalDimensions.ElectricPotential] = Units.Volt,
-		[PhysicalDimensions.ElectricResistance] = Units.Ohm,
-		[PhysicalDimensions.ElectricCharge] = Units.Coulomb,
-		[PhysicalDimensions.ElectricCapacitance] = Units.Farad,
-		[PhysicalDimensions.Frequency] = Units.Hertz,
-		[PhysicalDimensions.Momentum] = Units.Newton, // kg⋅m/s, no dedicated SI unit
-		[PhysicalDimensions.AngularVelocity] = Units.Radian, // rad/s, using radian as base
-		[PhysicalDimensions.AngularAcceleration] = Units.Radian, // rad/s², using radian as base
-		[PhysicalDimensions.Torque] = Units.Newton, // N⋅m, same dimension as energy but conceptually different
-		[PhysicalDimensions.MomentOfInertia] = Units.Kilogram, // kg⋅m², no dedicated SI unit
-		[PhysicalDimensions.Density] = Units.Kilogram, // kg/m³, no dedicated SI unit
-		[PhysicalDimensions.Concentration] = Units.Molar, // mol/L
-	};
+	public IUnit BaseUnit { get; } = baseUnit ?? throw new InvalidOperationException("Base unit must be specified for physical dimensions.");
 
 	/// <summary>
 	/// Determines whether this dimension is equal to another dimension.
