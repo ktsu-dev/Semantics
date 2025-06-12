@@ -3,9 +3,17 @@
 Changes since v1.0.7:
 
 - Refactor conversions ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor PhysicalQuantity and PhysicalDimension relationship by moving BaseUnit property to PhysicalDimension. Update related classes to access BaseUnit through Dimension, enhancing clarity and encapsulation of dimensional properties. ([@matt-edmondson](https://github.com/matt-edmondson))
+- Implement comprehensive quantities for Mechanics and Electrical domains, including new classes for AngularAcceleration, AngularVelocity, Density, ElectricConductivity, ElectricField, and others. Update PhysicalDimensions to include new dimensions and mark all quantities as implemented in TODO_DOMAINS.md, enhancing the overall structure and completeness of the quantities implementation. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor conversions ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor conversions ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance PhysicalDimension constructor to require IUnit parameter, ensuring proper initialization in operator overloads. Update PhysicalDimensions to reflect new constructor signature, improving clarity and preventing type conversion errors. ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor PhysicalDimension to accept BaseUnit in constructor, removing runtime lookup. Update PhysicalDimensions to initialize dimensions with their respective base units, enhancing performance and clarity in dimensional properties. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor conversions ([@matt-edmondson](https://github.com/matt-edmondson))
 - Organize quantities ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor quantities ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor quantities ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor quantities ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add tests ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add tests ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.7 (patch)
