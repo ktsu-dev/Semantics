@@ -1,3 +1,8 @@
+## v1.0.9 (patch)
+
+Changes since v1.0.8:
+
+- Implement core acoustic quantities including Frequency, Wavelength, SoundPressure, SoundIntensity, SoundPower, AcousticImpedance, SoundSpeed, SoundAbsorption, and ReverberationTime. Update PhysicalDimensions to include new acoustic dimensions and mark the Acoustic domain as significantly progressed in TODO_DOMAINS.md, enhancing the completeness of the quantities implementation. ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.8 (patch)
 
 Changes since v1.0.7:
