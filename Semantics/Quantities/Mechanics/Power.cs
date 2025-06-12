@@ -4,10 +4,14 @@
 
 namespace ktsu.Semantics;
 
+using System.Numerics;
+
 /// <summary>
-/// Represents a power quantity with dimensional analysis support.
+/// Represents a power quantity with compile-time dimensional safety.
 /// </summary>
-public sealed record Power : PhysicalQuantity<Power>
+/// <typeparam name="T">The storage type for the quantity value.</typeparam>
+public sealed record Power<T> : PhysicalQuantity<Power<T>, T>
+	where T : struct, INumber<T>
 {
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Power;
@@ -21,61 +25,9 @@ public sealed record Power : PhysicalQuantity<Power>
 	public Power() : base() { }
 
 	/// <summary>
-	/// Multiplies power by time to get energy.
+	/// Creates a new Power from a value in watts.
 	/// </summary>
-	/// <param name="power">The power.</param>
-	/// <param name="time">The time.</param>
-	/// <returns>The resulting energy (E = P·t).</returns>
-	public static Energy operator *(Power power, Time time)
-	{
-		ArgumentNullException.ThrowIfNull(power);
-		ArgumentNullException.ThrowIfNull(time);
-		// E = P·t: Energy = Power × Time
-		double resultValue = power.Value * time.Value;
-		return Energy.Create(resultValue);
-	}
-
-	/// <summary>
-	/// Multiplies time by power to get energy.
-	/// </summary>
-	/// <param name="time">The time.</param>
-	/// <param name="power">The power.</param>
-	/// <returns>The resulting energy (E = P·t).</returns>
-	public static Energy operator *(Time time, Power power) => power * time;
-
-	/// <summary>
-	/// Divides power by voltage to get current (electrical power).
-	/// </summary>
-	/// <param name="power">The power.</param>
-	/// <param name="voltage">The voltage.</param>
-	/// <returns>The resulting current (I = P/V).</returns>
-	public static ElectricCurrent operator /(Power power, ElectricPotential voltage)
-	{
-		ArgumentNullException.ThrowIfNull(power);
-		ArgumentNullException.ThrowIfNull(voltage);
-		// I = P/V: Current = Power / Voltage
-		double resultValue = power.Value / voltage.Value;
-		return ElectricCurrent.Create(resultValue);
-	}
-
-	/// <summary>
-	/// Divides power by current to get voltage (electrical power).
-	/// </summary>
-	/// <param name="power">The power.</param>
-	/// <param name="current">The current.</param>
-	/// <returns>The resulting voltage (V = P/I).</returns>
-	public static ElectricPotential operator /(Power power, ElectricCurrent current)
-	{
-		ArgumentNullException.ThrowIfNull(power);
-		ArgumentNullException.ThrowIfNull(current);
-		// V = P/I: Voltage = Power / Current
-		double resultValue = power.Value / current.Value;
-		return ElectricPotential.Create(resultValue);
-	}
-
-	/// <inheritdoc/>
-	public static Energy Multiply(Power left, Power right) => throw new NotImplementedException();
-
-	/// <inheritdoc/>
-	public static ElectricCurrent Divide(Power left, Power right) => throw new NotImplementedException();
+	/// <param name="watts">The value in watts.</param>
+	/// <returns>A new Power instance.</returns>
+	public static Power<T> FromWatts(T watts) => Create(watts);
 }

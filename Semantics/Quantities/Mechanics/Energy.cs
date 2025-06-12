@@ -4,10 +4,14 @@
 
 namespace ktsu.Semantics;
 
+using System.Numerics;
+
 /// <summary>
-/// Represents an energy quantity with dimensional analysis support.
+/// Represents an energy quantity with compile-time dimensional safety.
 /// </summary>
-public sealed record Energy : PhysicalQuantity<Energy>
+/// <typeparam name="T">The storage type for the quantity value.</typeparam>
+public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
+	where T : struct, INumber<T>
 {
 	/// <inheritdoc/>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Energy;
@@ -21,38 +25,9 @@ public sealed record Energy : PhysicalQuantity<Energy>
 	public Energy() : base() { }
 
 	/// <summary>
-	/// Divides energy by time to get power.
+	/// Creates a new Energy from a value in joules.
 	/// </summary>
-	/// <param name="energy">The energy.</param>
-	/// <param name="time">The time.</param>
-	/// <returns>The resulting power (P = E/t).</returns>
-	public static Power operator /(Energy energy, Time time)
-	{
-		ArgumentNullException.ThrowIfNull(energy);
-		ArgumentNullException.ThrowIfNull(time);
-		// P = E/t: Power = Energy / Time
-		double resultValue = energy.Value / time.Value;
-		return Power.Create(resultValue);
-	}
-
-	/// <summary>
-	/// Divides energy by power to get time.
-	/// </summary>
-	/// <param name="energy">The energy.</param>
-	/// <param name="power">The power.</param>
-	/// <returns>The resulting time (t = E/P).</returns>
-	public static Time operator /(Energy energy, Power power)
-	{
-		ArgumentNullException.ThrowIfNull(energy);
-		ArgumentNullException.ThrowIfNull(power);
-		// t = E/P: Time = Energy / Power
-		double resultValue = energy.Value / power.Value;
-		return Time.Create(resultValue);
-	}
-
-	/// <inheritdoc/>
-	public static Power Divide(Energy left, Energy right) => throw new NotImplementedException();
-
-	/// <inheritdoc/>
-	public static Energy Multiply(Energy left, Energy right) => throw new NotImplementedException();
+	/// <param name="joules">The value in joules.</param>
+	/// <returns>A new Energy instance.</returns>
+	public static Energy<T> FromJoules(T joules) => Create(joules);
 }

@@ -7,29 +7,6 @@ namespace ktsu.Semantics;
 using System.Numerics;
 
 /// <summary>
-/// Abstract base class for all physical quantities, providing core functionality and type safety.
-/// This is a convenience class for double-precision quantities. Use PhysicalQuantity&lt;TSelf, T&gt; for other numeric types.
-/// </summary>
-/// <typeparam name="TSelf">The derived physical quantity type.</typeparam>
-public abstract record PhysicalQuantity<TSelf>
-	: PhysicalQuantity<TSelf, double>
-	where TSelf : PhysicalQuantity<TSelf>, new()
-{
-	/// <summary>
-	/// Initializes a new instance of the PhysicalQuantity class.
-	/// </summary>
-	protected PhysicalQuantity() : base() { }
-
-	/// <summary>
-	/// Creates a new instance with the specified value.
-	/// </summary>
-	/// <param name="value">The value for the quantity.</param>
-	/// <returns>A new instance of the quantity.</returns>
-	public static new TSelf Create(double value) => new TSelf() with { Quantity = value };
-
-}
-
-/// <summary>
 /// Generic PhysicalQuantity with configurable storage type.
 /// </summary>
 /// <typeparam name="TSelf">The derived physical quantity type.</typeparam>

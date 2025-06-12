@@ -190,6 +190,8 @@ When adding XML documentation comments:
     *   Add proper XML documentation with `<typeparam>` tags.
     *   For PhysicalQuantity extension methods that use units, and thus the `Create(value, Units.SomeUnit)` syntax, remove the methods entirely.
     *   Eliminate backward compatibility methods that duplicate functionality.
+*   When integrating the unit classes with `PhysicalDimensionExtensions`, conversion factors should be defined only once in the `Units` class. All conversions should use the same authoritative source, ensuring consistency and maintainability. This eliminates duplication and enables extensibility and type safety.
+*   Eliminate the code that implements concrete storage types for quantities and only support the generics. Non-generic overloads can be added later where appropriate.
 
 ## DEBUGGING
 
@@ -348,11 +350,4 @@ When adding XML documentation comments:
     *   Use `T.CreateChecked()` for conversion factors instead of hardcoded doubles
     *   Maintain original conversion logic and factors.
     *   Add proper XML documentation with `<typeparam>` tags.
-    *   For PhysicalQuantity extension methods that use units, and thus the `Create(value, Units.SomeUnit)` syntax, remove the methods entirely.
-    *   Eliminate backward compatibility methods that duplicated functionality.
-
-## SUPPRESSIONS
-
-(Attributes to suppress code analysis warnings are recorded here.)
-
-*   Suppress CA1812 on `SemanticStringExtensionsTests.TestSemanticString` with an attribute.
+    *   For PhysicalQuantity extension methods that use units, and thus the `Create
