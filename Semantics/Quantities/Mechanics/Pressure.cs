@@ -29,8 +29,6 @@ public sealed record Pressure<T> : PhysicalQuantity<Pressure<T>, T>
 	/// <returns>A new Pressure instance.</returns>
 	public static Pressure<T> FromPascals(T pascals) => Create(pascals);
 
-
-
 	/// <summary>
 	/// Calculates force from pressure and area (F = P×A).
 	/// </summary>
@@ -47,8 +45,6 @@ public sealed record Pressure<T> : PhysicalQuantity<Pressure<T>, T>
 
 		return Force<T>.Create(forceValue);
 	}
-
-
 
 	/// <summary>
 	/// Creates a pressure instance representing standard atmospheric pressure.

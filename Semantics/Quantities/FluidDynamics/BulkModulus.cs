@@ -90,12 +90,7 @@ public sealed record BulkModulus<T> : PhysicalQuantity<BulkModulus<T>, T>
 		T deltaP = pressureChange.In(Units.Pascal);
 		T k = In(Units.Pascal);
 
-		if (k == T.Zero)
-		{
-			throw new InvalidOperationException("Bulk modulus cannot be zero for volume change calculation.");
-		}
-
-		return -deltaP / k;
+		return k == T.Zero ? throw new InvalidOperationException("Bulk modulus cannot be zero for volume change calculation.") : -deltaP / k;
 	}
 
 	/// <summary>Calculates the compressibility from bulk modulus.</summary>
@@ -108,12 +103,7 @@ public sealed record BulkModulus<T> : PhysicalQuantity<BulkModulus<T>, T>
 	{
 		T k = In(Units.Pascal);
 
-		if (k == T.Zero)
-		{
-			throw new InvalidOperationException("Bulk modulus cannot be zero for compressibility calculation.");
-		}
-
-		return T.One / k;
+		return k == T.Zero ? throw new InvalidOperationException("Bulk modulus cannot be zero for compressibility calculation.") : T.One / k;
 	}
 
 	/// <summary>Calculates the speed of sound in the material from bulk modulus and density.</summary>

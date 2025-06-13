@@ -127,12 +127,9 @@ public sealed record KinematicViscosity<T> : PhysicalQuantity<KinematicViscosity
 		T length = characteristicLength.In(Units.Meter);
 		T nu = In(Units.Meter);
 
-		if (nu == T.Zero)
-		{
-			throw new InvalidOperationException("Kinematic viscosity cannot be zero for Reynolds number calculation.");
-		}
-
-		return (v * length) / nu;
+		return nu == T.Zero
+			? throw new InvalidOperationException("Kinematic viscosity cannot be zero for Reynolds number calculation.")
+			: v * length / nu;
 	}
 
 	/// <summary>Determines if the flow is laminar based on Reynolds number criteria.</summary>

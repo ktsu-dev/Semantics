@@ -85,7 +85,7 @@ public sealed record RefractiveIndex<T> : PhysicalQuantity<RefractiveIndex<T>, T
 		T n2 = externalMedium.In(Units.Radian);
 		T numerator = n1 - n2;
 		T denominator = n1 + n2;
-		return (numerator * numerator) / (denominator * denominator);
+		return numerator * numerator / (denominator * denominator);
 	}
 
 	/// <summary>Calculates the speed of light in this medium.</summary>

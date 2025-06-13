@@ -124,12 +124,7 @@ public sealed record Exposure<T> : PhysicalQuantity<Exposure<T>, T>
 		T exposure = In(Units.Coulomb);
 		T timeSeconds = time.In(Units.Second);
 
-		if (timeSeconds == T.Zero)
-		{
-			throw new ArgumentException("Time cannot be zero.", nameof(time));
-		}
-
-		return exposure / timeSeconds;
+		return timeSeconds == T.Zero ? throw new ArgumentException("Time cannot be zero.", nameof(time)) : exposure / timeSeconds;
 	}
 
 	/// <summary>Converts exposure to approximate absorbed dose in air.</summary>

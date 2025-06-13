@@ -116,7 +116,7 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 		ArgumentNullException.ThrowIfNull(temperature);
 
 		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
-		T amountValue = (pressure.Value * volume.Value) / (gasConstant * temperature.Value);
+		T amountValue = pressure.Value * volume.Value / (gasConstant * temperature.Value);
 
 		return Create(amountValue);
 	}
@@ -135,7 +135,7 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 		ArgumentNullException.ThrowIfNull(volume);
 
 		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
-		T pressureValue = (amount.Value * gasConstant * temperature.Value) / volume.Value;
+		T pressureValue = amount.Value * gasConstant * temperature.Value / volume.Value;
 
 		return Pressure<T>.Create(pressureValue);
 	}
@@ -154,7 +154,7 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 		ArgumentNullException.ThrowIfNull(pressure);
 
 		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
-		T volumeValue = (amount.Value * gasConstant * temperature.Value) / pressure.Value;
+		T volumeValue = amount.Value * gasConstant * temperature.Value / pressure.Value;
 
 		return Volume<T>.Create(volumeValue);
 	}
@@ -173,7 +173,7 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 		ArgumentNullException.ThrowIfNull(amount);
 
 		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
-		T temperatureValue = (pressure.Value * volume.Value) / (amount.Value * gasConstant);
+		T temperatureValue = pressure.Value * volume.Value / (amount.Value * gasConstant);
 
 		return Temperature<T>.Create(temperatureValue);
 	}

@@ -117,12 +117,7 @@ public sealed record EquivalentDose<T> : PhysicalQuantity<EquivalentDose<T>, T>
 		T dose = In(Units.Sievert);
 		T timeSeconds = time.In(Units.Second);
 
-		if (timeSeconds == T.Zero)
-		{
-			throw new ArgumentException("Time cannot be zero.", nameof(time));
-		}
-
-		return dose / timeSeconds;
+		return timeSeconds == T.Zero ? throw new ArgumentException("Time cannot be zero.", nameof(time)) : dose / timeSeconds;
 	}
 
 	/// <summary>Determines if the dose exceeds common safety limits.</summary>

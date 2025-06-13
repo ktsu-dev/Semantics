@@ -67,8 +67,6 @@ public sealed record Torque<T> : PhysicalQuantity<Torque<T>, T>
 		return Force<T>.Create(torque.Value / length.Value);
 	}
 
-
-
 	/// <summary>
 	/// Returns the tangential force from the torque and radius.
 	/// </summary>

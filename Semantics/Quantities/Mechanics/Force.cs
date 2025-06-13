@@ -106,10 +106,12 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	public static Power<T> operator *(Velocity<T> velocity, Force<T> force) => force * velocity;
 
 	/// <summary>
-	/// Calculates work/energy from force and distance (W = F·d).
+	/// Calculates work/energy from force and displacement distance (W = F·d).
+	/// Use this when force is applied in the direction of motion.
+	/// For torque calculations, use CalculateTorque() method instead.
 	/// </summary>
-	/// <param name="force">The force.</param>
-	/// <param name="distance">The distance.</param>
+	/// <param name="force">The applied force.</param>
+	/// <param name="distance">The displacement distance in the direction of force.</param>
 	/// <returns>The resulting work/energy.</returns>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Energy<T> operator *(Force<T> force, Length<T> distance)
@@ -123,10 +125,12 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	}
 
 	/// <summary>
-	/// Calculates work/energy from distance and force (W = F·d).
+	/// Calculates work/energy from displacement distance and force (W = F·d).
+	/// Use this when force is applied in the direction of motion.
+	/// For torque calculations, use CalculateTorque() method instead.
 	/// </summary>
-	/// <param name="distance">The distance.</param>
-	/// <param name="force">The force.</param>
+	/// <param name="distance">The displacement distance in the direction of force.</param>
+	/// <param name="force">The applied force.</param>
 	/// <returns>The resulting work/energy.</returns>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Energy<T> operator *(Length<T> distance, Force<T> force) => force * distance;
@@ -166,19 +170,53 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	}
 
 	/// <summary>
-	/// Calculates torque from force and distance (τ = F×r).
+	/// Calculates torque from force and moment arm distance (τ = F×r).
+	/// Use this method when the force is applied perpendicular to the moment arm.
+	/// For work/energy calculations, use the * operator instead.
 	/// </summary>
-	/// <param name="force">The force.</param>
-	/// <param name="distance">The moment arm distance.</param>
+	/// <param name="momentArm">The perpendicular distance from the axis of rotation.</param>
 	/// <returns>The resulting torque.</returns>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
-	public static Torque<T> operator *(Force<T> force, Length<T> distance)
+	public Torque<T> CalculateTorque(Length<T> momentArm)
 	{
-		ArgumentNullException.ThrowIfNull(force);
-		ArgumentNullException.ThrowIfNull(distance);
+		ArgumentNullException.ThrowIfNull(momentArm);
 
-		T torqueValue = force.Value * distance.Value;
+		T torqueValue = Value * momentArm.Value;
 
 		return Torque<T>.Create(torqueValue);
+	}
+
+	/// <summary>
+	/// Calculates torque from force and moment arm distance (τ = F×r).
+	/// Use this method when the force is applied perpendicular to the moment arm.
+	/// For work/energy calculations, use the * operator instead.
+	/// </summary>
+	/// <param name="force">The applied force.</param>
+	/// <param name="momentArm">The perpendicular distance from the axis of rotation.</param>
+	/// <returns>The resulting torque.</returns>
+	public static Torque<T> CalculateTorque(Force<T> force, Length<T> momentArm)
+	{
+		ArgumentNullException.ThrowIfNull(force);
+		ArgumentNullException.ThrowIfNull(momentArm);
+
+		T torqueValue = force.Value * momentArm.Value;
+
+		return Torque<T>.Create(torqueValue);
+	}
+
+	/// <summary>
+	/// Calculates pressure from force and area (P = F/A).
+	/// </summary>
+	/// <param name="force">The applied force.</param>
+	/// <param name="area">The area over which force is applied.</param>
+	/// <returns>The resulting pressure.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Pressure<T> operator /(Force<T> force, Area<T> area)
+	{
+		ArgumentNullException.ThrowIfNull(force);
+		ArgumentNullException.ThrowIfNull(area);
+
+		T pressureValue = force.Value / area.Value;
+
+		return Pressure<T>.Create(pressureValue);
 	}
 }

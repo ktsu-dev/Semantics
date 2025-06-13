@@ -50,7 +50,7 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 			throw new ArgumentException("Kinematic viscosity cannot be zero.", nameof(kinematicViscosity));
 		}
 
-		T reynoldsNumber = (v * length) / nu;
+		T reynoldsNumber = v * length / nu;
 		return Create(reynoldsNumber);
 	}
 
@@ -81,7 +81,7 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 			throw new ArgumentException("Dynamic viscosity cannot be zero.", nameof(dynamicViscosity));
 		}
 
-		T reynoldsNumber = (rho * v * length) / mu;
+		T reynoldsNumber = rho * v * length / mu;
 		return Create(reynoldsNumber);
 	}
 
@@ -108,7 +108,7 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 			throw new ArgumentException("Characteristic length cannot be zero.", nameof(characteristicLength));
 		}
 
-		T criticalVelocity = (reCritical * nu) / length;
+		T criticalVelocity = reCritical * nu / length;
 		return Velocity<T>.Create(criticalVelocity);
 	}
 
@@ -150,18 +150,7 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 	/// <returns>A string describing the flow regime.</returns>
 	public string GetFlowRegime(T? laminarThreshold = null, T? turbulentThreshold = null)
 	{
-		if (IsLaminarFlow(laminarThreshold))
-		{
-			return "Laminar";
-		}
-		else if (IsTurbulentFlow(turbulentThreshold))
-		{
-			return "Turbulent";
-		}
-		else
-		{
-			return "Transitional";
-		}
+		return IsLaminarFlow(laminarThreshold) ? "Laminar" : IsTurbulentFlow(turbulentThreshold) ? "Turbulent" : "Transitional";
 	}
 
 	/// <summary>Calculates the friction factor for pipe flow using appropriate correlations.</summary>
@@ -196,7 +185,7 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 				{
 					// Prandtl equation for smooth pipes
 					T logRe = T.CreateChecked(Math.Log10(double.CreateChecked(re)));
-					return T.One / T.CreateChecked(Math.Pow(2.0 * double.CreateChecked(logRe) - 0.8, 2));
+					return T.One / T.CreateChecked(Math.Pow((2.0 * double.CreateChecked(logRe)) - 0.8, 2));
 				}
 			}
 			else
@@ -214,7 +203,7 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 			T laminarF = T.CreateChecked(64) / re;
 			T turbulentF = T.CreateChecked(0.316) / T.CreateChecked(Math.Pow(double.CreateChecked(re), 0.25));
 			T factor = (re - T.CreateChecked(2300)) / T.CreateChecked(1700); // interpolation factor
-			return laminarF + factor * (turbulentF - laminarF);
+			return laminarF + (factor * (turbulentF - laminarF));
 		}
 	}
 
@@ -253,7 +242,7 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 		ArgumentNullException.ThrowIfNull(length);
 		ArgumentNullException.ThrowIfNull(dynamicViscosity);
 
-		T reynoldsValue = (density.Value * velocity.Value * length.Value) / dynamicViscosity.Value;
+		T reynoldsValue = density.Value * velocity.Value * length.Value / dynamicViscosity.Value;
 
 		return Create(reynoldsValue);
 	}
@@ -271,7 +260,7 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 		ArgumentNullException.ThrowIfNull(length);
 		ArgumentNullException.ThrowIfNull(kinematicViscosity);
 
-		T reynoldsValue = (velocity.Value * length.Value) / kinematicViscosity.Value;
+		T reynoldsValue = velocity.Value * length.Value / kinematicViscosity.Value;
 
 		return Create(reynoldsValue);
 	}
@@ -291,7 +280,7 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 		T airDensity = PhysicalConstants.Generic.StandardAirDensity<T>();
 		T airViscosity = T.CreateChecked(1.825e-5); // Pa·s for air at 20°C
 
-		T reynoldsValue = (airDensity * velocity.Value * length.Value) / airViscosity;
+		T reynoldsValue = airDensity * velocity.Value * length.Value / airViscosity;
 
 		return Create(reynoldsValue);
 	}
@@ -302,7 +291,7 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 	/// <returns>A description of the flow regime.</returns>
 	public string GetPipeFlowRegime()
 	{
-		var re = double.CreateChecked(Value);
+		double re = double.CreateChecked(Value);
 		return re switch
 		{
 			< 2300 => "Laminar",

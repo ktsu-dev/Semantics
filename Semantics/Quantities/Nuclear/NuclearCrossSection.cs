@@ -107,7 +107,7 @@ public sealed record NuclearCrossSection<T> : PhysicalQuantity<NuclearCrossSecti
 	/// Uses the relationship: λ = 1 / Σ = 1 / (σ × N)
 	/// where λ is mean free path, Σ is macroscopic cross section, σ is microscopic cross section, and N is number density.
 	/// </remarks>
-			public T CalculateMeanFreePath(T numberDensity)
+	public T CalculateMeanFreePath(T numberDensity)
 	{
 		T macroscopicCrossSection = CalculateMacroscopicCrossSection(numberDensity);
 

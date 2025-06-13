@@ -124,12 +124,7 @@ public sealed record AbsorbedDose<T> : PhysicalQuantity<AbsorbedDose<T>, T>
 		T dose = In(Units.Gray);
 		T timeSeconds = time.In(Units.Second);
 
-		if (timeSeconds == T.Zero)
-		{
-			throw new ArgumentException("Time cannot be zero.", nameof(time));
-		}
-
-		return dose / timeSeconds;
+		return timeSeconds == T.Zero ? throw new ArgumentException("Time cannot be zero.", nameof(time)) : dose / timeSeconds;
 	}
 
 	/// <summary>Calculates the mass of material from absorbed dose and energy.</summary>

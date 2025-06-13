@@ -80,7 +80,6 @@ public sealed record ReflectionCoefficient<T> : PhysicalQuantity<ReflectionCoeff
 	/// <returns>The oblique reflection coefficient.</returns>
 	public static ReflectionCoefficient<T> AtObliqueIncidence(T incidenceAngle, T impedanceRatio)
 	{
-		T cosTheta = T.CreateChecked(Math.Cos(double.CreateChecked(incidenceAngle)));
 		T sinTheta = T.CreateChecked(Math.Sin(double.CreateChecked(incidenceAngle)));
 
 		// Simplified calculation for oblique incidence

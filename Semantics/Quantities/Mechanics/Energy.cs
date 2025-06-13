@@ -175,8 +175,6 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 		return Length<T>.Create(distanceValue);
 	}
 
-
-
 	/// <summary>
 	/// Calculates gravitational potential energy (PE = mgh).
 	/// </summary>

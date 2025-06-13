@@ -49,8 +49,6 @@ public sealed record SoundIntensity<T> : PhysicalQuantity<SoundIntensity<T>, T>
 		return Create(soundPower.Value / area.Value);
 	}
 
-
-
 	/// <summary>
 	/// Calculates sound power from sound intensity and area (P = I×A).
 	/// </summary>

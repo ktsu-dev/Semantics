@@ -57,7 +57,6 @@ public static class PhysicalDimensions
 	private static readonly BootstrapUnit BootstrapCoulomb = new("coulomb", "C");
 	private static readonly BootstrapUnit BootstrapFarad = new("farad", "F");
 	private static readonly BootstrapUnit BootstrapHertz = new("hertz", "Hz");
-	private static readonly BootstrapUnit BootstrapMolar = new("molar", "M");
 	private static readonly BootstrapUnit BootstrapGram = new("gram", "g");
 
 	/// <summary>Area dimension [L²].</summary>
