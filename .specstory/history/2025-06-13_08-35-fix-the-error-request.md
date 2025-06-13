@@ -3288,7 +3288,280 @@ Read file: DESCRIPTION.md
 
 ---
 
+Read file: TAGS.md
 
+---
+
+<details>
+            <summary>Searched codebase "project description PackageDescription" • **1** results</summary>
+        
+| File | Lines |
+|------|-------|
+| `DESCRIPTION.md` | L1-2 |
+
+</details>
+
+---
+
+
+
+---
+
+<details>
+            <summary>Searched codebase "csproj" • **7** results</summary>
+        
+| File |
+|------|
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+
+</details>
+
+---
+
+Read file: Semantics/Semantics.csproj
+
+---
+
+Now let me examine what recent improvements and changes have been made to understand what needs to be updated in the documentation:
+
+---
+
+<details>
+            <summary>Searched codebase "PhysicalConstants bootstrap units derived constants" • **24** results</summary>
+        
+| File | Lines |
+|------|-------|
+| `Semantics/Quantities/Core/PhysicalConstants.cs` | L52-110 |
+| `Semantics/Quantities/Core/PhysicalConstants.cs` | L1-52 |
+| `Semantics/Quantities/Core/Units.cs` | L197-224 |
+| `Semantics/Quantities/Core/Units.cs` | L251-275 |
+| `Semantics/Quantities/Core/BootstrapUnits.cs` | L45-88 |
+| `Semantics/Quantities/Core/PhysicalConstants.cs` | L110-160 |
+| `Semantics/Quantities/Core/PhysicalConstants.cs` | L382-417 |
+| `.cursor/rules/derived-cursor-rules.mdc` | L208-225 |
+| `Semantics/Quantities/Core/Units.cs` | L224-251 |
+| `Semantics/Quantities/Core/Units.cs` | L116-143 |
+| `Semantics/Quantities/Core/Units.cs` | L143-173 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L766-809 |
+| `Semantics/Quantities/Core/PhysicalConstants.cs` | L160-193 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L809-860 |
+| `Semantics/Quantities/Core/Units.cs` | L275-299 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L1-41 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L383-430 |
+| `Semantics/Quantities/Core/Units.cs` | L38-65 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L1001-1040 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L1166-1212 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L188-215 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L298-338 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L338-383 |
+| `Semantics/Quantities/Core/BootstrapUnits.cs` | L1-45 |
+
+</details>
+
+---
+
+Now I have a good understanding of the current state of the Semantics library. Based on the recent improvements, I'll update the documentation files to reflect the current capabilities and features. Let me update each file:
+
+---
+
+```diff
+- semantic-strings;type-safety;validation;string-wrapper;domain-modeling;semantic-types;path-handling;strongly-typed;primitive-obsession;value-objects;csharp;dotnet;validation-attributes;filesystem;type-system
++ semantic-strings;type-safety;validation;string-wrapper;domain-modeling;semantic-types;path-handling;strongly-typed;primitive-obsession;value-objects;csharp;dotnet;validation-attributes;filesystem;type-system;physics-quantities;physical-constants;dimensional-analysis;unit-conversions;scientific-computing;mechanical-physics;thermal-physics;optical-physics;acoustic-physics;chemical-physics;nuclear-physics;fluid-dynamics;si-units;imperial-units;bootstrap-architecture;performance-optimized;enterprise-ready;factory-pattern;dependency-injection
+  
+```
+
+---
+
+```diff
+- A comprehensive .NET library for creating type-safe, validated string and quantity types using semantic meaning. Transform primitive string and numeric obsession into strongly-typed, self-validating domain models with 50+ validation attributes, polymorphic path handling, arithmetic quantity operations, and performance-optimized utilities. Includes factory pattern support, dependency injection integration, and enterprise-ready features for building robust, maintainable applications.
++ A comprehensive .NET library for creating type-safe, validated string and physics quantity types using semantic meaning. Transform primitive string and numeric obsession into strongly-typed, self-validating domain models with 50+ validation attributes, polymorphic path handling, complete physics system covering 80+ quantities across 8 scientific domains, centralized physical constants with dimensional analysis, and performance-optimized utilities. Features include bootstrap architecture for circular dependency resolution, factory pattern support, dependency injection integration, and enterprise-ready capabilities for building robust, maintainable scientific and domain-specific applications.
+  
+```
+
+---
+
+
+
+---
+
+Now let me update the main README to reflect the current state of the library:
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+Now let me add a section about the physical constants system to the README:
+
+---
+
+
+
+---
+
+
+
+---
+
+Let me read more of the README to see what other sections need updating:
+
+---
+
+Read file: README.md
+
+---
+
+
+
+---
+
+Let me add a section about the physical constants system to the README:
+
+---
+
+
+
+---
+
+
+
+---
+
+Finally, let me add a section about the architectural improvements:
+
+---
+
+
+
+---
+
+
+
+---
+
+Now let me verify the build still works after our documentation updates:
+
+---
+
+```bash
+dotnet build Semantics --verbosity quiet
+```
+
+```
+C:\dev\ktsu-dev\Semantics>dotnet build Semantics --verbosity quiet
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+Perfect! I have successfully updated all the key documentation files to reflect the current state of the Semantics library. Here's a summary of what was updated:
+
+## ✅ **Documentation Updates Completed**
+
+### 🏷️ **TAGS.md**
+- **Added physics-related tags**: `physics-quantities`, `physical-constants`, `dimensional-analysis`, `unit-conversions`, `scientific-computing`
+- **Added domain-specific tags**: `mechanical-physics`, `thermal-physics`, `optical-physics`, `acoustic-physics`, `chemical-physics`, `nuclear-physics`, `fluid-dynamics`
+- **Added technical tags**: `si-units`, `imperial-units`, `bootstrap-architecture`, `performance-optimized`, `enterprise-ready`, `factory-pattern`, `dependency-injection`
+
+### 📄 **DESCRIPTION.md**
+- **Enhanced scope**: Updated from basic "string and quantity types" to comprehensive "string and physics quantity types"
+- **Added specifics**: "80+ quantities across 8 scientific domains", "centralized physical constants with dimensional analysis"
+- **Highlighted architecture**: "bootstrap architecture for circular dependency resolution"
+- **Expanded target audience**: "scientific and domain-specific applications"
+
+### 📖 **README.md**
+- **Updated opening description**: Enhanced to mention "80+ quantities across 8 major scientific domains with dimensional analysis and centralized physical constants"
+- **Enhanced key features**: Added "Bootstrap Architecture", "Physical Constants with validation", and "Comprehensive Testing"
+- **Added Physical Constants System section**: Complete examples showing type-safe access to fundamental constants, temperature constants, and conversion factors
+- **Added Architecture & Design section**: 
+  - **Bootstrap Architecture**: Explains circular dependency resolution strategy
+  - **Derived Constants Validation**: Shows how mathematical relationships are tested and verified
+- **Enhanced physics examples**: Added physical constants usage in the physics quantities section
+
+## 🎯 **Key Improvements Highlighted**
+
+### **Recent Architecture Enhancements**
+- ✅ **Bootstrap Units**: Clean separation in `BootstrapUnits` class to avoid namespace pollution
+- ✅ **Physical Constants**: Centralized constants with comprehensive test coverage
+- ✅ **Derived Constants Validation**: Tests ensure mathematical relationships are correct
+
+### **Enhanced Scientific Capabilities**
+- ✅ **80+ Physics Quantities**: Comprehensive coverage across 8 scientific domains
+- ✅ **Type-Safe Constants**: Generic getter methods for all physical constants
+- ✅ **Dimensional Analysis**: Compile-time safety for physics calculations
+- ✅ **Unit Conversions**: Automatic handling with mathematical validation
+
+### **Enterprise-Ready Features**
+- ✅ **Performance Optimized**: Span-based operations and minimal allocations
+- ✅ **Factory Pattern**: Clean dependency injection integration
+- ✅ **Comprehensive Testing**: Physics relationships and derived constants validation
+- ✅ **Bootstrap Architecture**: Complex type system support without circular dependencies
+
+The documentation now accurately reflects the sophisticated physics system, architectural improvements, and comprehensive testing that has been implemented in the Semantics library! 🚀
+
+---
+
+_**User**_
+
+use spaces for multi wor tags not hypens
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+I'll update the TAGS.md file to use spaces instead of hyphens for multi-word tags.
+
+---
+
+```diff
+- semantic-strings;type-safety;validation;string-wrapper;domain-modeling;semantic-types;path-handling;strongly-typed;primitive-obsession;value-objects;csharp;dotnet;validation-attributes;filesystem;type-system;physics-quantities;physical-constants;dimensional-analysis;unit-conversions;scientific-computing;mechanical-physics;thermal-physics;optical-physics;acoustic-physics;chemical-physics;nuclear-physics;fluid-dynamics;si-units;imperial-units;bootstrap-architecture;performance-optimized;enterprise-ready;factory-pattern;dependency-injection
++ semantic strings;type safety;validation;string wrapper;domain modeling;semantic types;path handling;strongly typed;primitive obsession;value objects;csharp;dotnet;validation attributes;filesystem;type system;physics quantities;physical constants;dimensional analysis;unit conversions;scientific computing;mechanical physics;thermal physics;optical physics;acoustic physics;chemical physics;nuclear physics;fluid dynamics;si units;imperial units;bootstrap architecture;performance optimized;enterprise ready;factory pattern;dependency injection
+  
+```
+
+---
+
+✅ **Updated TAGS.md** to use spaces instead of hyphens for multi-word tags as requested. All multi-word tags now use the preferred space format:
+
+- `semantic-strings` → `semantic strings`
+- `type-safety` → `type safety` 
+- `string-wrapper` → `string wrapper`
+- `domain-modeling` → `domain modeling`
+- `physics-quantities` → `physics quantities`
+- `physical-constants` → `physical constants`
+- `dimensional-analysis` → `dimensional analysis`
+- `unit-conversions` → `unit conversions`
+- And all other multi-word tags converted to space format
+
+Single-word tags like `validation`, `csharp`, `dotnet`, and `filesystem` remain unchanged.
 
 ---
 
