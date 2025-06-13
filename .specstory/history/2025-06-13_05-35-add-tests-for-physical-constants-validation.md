@@ -864,3 +864,47 @@ All 401 tests now pass successfully, including the original 4 tests plus the 13 
 
 ---
 
+_**User**_
+
+where any of the contstants can be derived from fundamental constants or other derived constants, they should be tested in that fashion to make sure they are as accurate as possible through all stages of calculation
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+You're absolutely right! Let me identify all constants that can be derived from fundamental constants or other derived constants and create comprehensive tests to validate the entire calculation chain. This will ensure maximum accuracy through all stages of calculation.
+
+---
+
+Read file: Semantics/Quantities/Core/PhysicalConstants.cs
+
+---
+
+Now let me search for other constants and relationships that might need to be added to identify all derivable constants:
+
+---
+
+<details>
+            <summary>Searched web "fundamental physical constants CODATA derived relationships electron mass proton mass fine structure constant" • **6** results</summary>
+        
+| Title | URL |
+|-------|-----|
+| CODATA recommended values of the fundamental physical ... | https://physics.nist.gov/cuu/Constants/codata.pdf |
+| CODATA recommended values of the fundamental physical ... | https://www.codata.org/uploads/RMP.88.035009.pdf |
+| CODATA Recommended Values of the Fundamental Physical ... | https://physics.nist.gov/cuu/pdf/JPCRD2018CODATA.pdf |
+| CODATA recommended values of the fundamental physical constants: 2018 | https://pmc.ncbi.nlm.nih.gov/articles/PMC9890581/ |
+| Fundamental Physical Constants from NIST | https://physics.nist.gov/cuu/Constants/ |
+| Codata Internationally Recommended 2022 Values of the Fundamental Physical Constants | https://www.nist.gov/publications/codata-internationally-recommended-2022-values-fundamental-physical-constants |
+
+</details>
+
+---
+
+Now
+
+---
+
