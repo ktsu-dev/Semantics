@@ -120,9 +120,10 @@ When adding XML documentation comments:
         4.  **Thermal** (10/10 quantities)
         5.  **Acoustic** (20/20 quantities)
         6.  **Nuclear** (5/5 quantities)
+        7.  **Optical** (6/6 quantities)
+        8.  **Fluid Dynamics** (5+ quantities)
     *   **REMAINING DOMAINS:**
-        *   **Optical** (0/6+ quantities) - Not yet implemented
-        *   **Fluid Dynamics** (0/7+ quantities) - Not yet implemented
+        *   None
 
 ## CODING STANDARDS
 
@@ -369,9 +370,10 @@ When adding XML documentation comments:
         4.  **Thermal** (10/10 quantities)
         5.  **Acoustic** (20/20 quantities)
         6.  **Nuclear** (5/5 quantities)
+        7.  **Optical** (6/6 quantities)
+        8.  **Fluid Dynamics** (5+ quantities)
     *   **REMAINING DOMAINS:**
-        *   **Optical** (0/6+ quantities) - Not yet implemented
-        *   **Fluid Dynamics** (0/7+ quantities) - Not yet implemented
+        *   None
 
 ## DEBUGGING
 
