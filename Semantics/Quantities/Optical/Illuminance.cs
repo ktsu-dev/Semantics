@@ -31,7 +31,7 @@ public sealed record Illuminance<T> : PhysicalQuantity<Illuminance<T>, T>
 	/// <returns>A new Illuminance instance.</returns>
 	public static Illuminance<T> FromFootCandles(T footCandles)
 	{
-		T lux = footCandles * T.CreateChecked(10.764);
+		T lux = footCandles * PhysicalConstants.Generic.FootCandlesToLux<T>();
 		return Create(lux);
 	}
 

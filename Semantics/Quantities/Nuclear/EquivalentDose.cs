@@ -31,7 +31,7 @@ public sealed record EquivalentDose<T> : PhysicalQuantity<EquivalentDose<T>, T>
 	/// <returns>A new EquivalentDose instance.</returns>
 	public static EquivalentDose<T> FromRems(T rems)
 	{
-		T sieverts = rems * T.CreateChecked(0.01);
+		T sieverts = rems * PhysicalConstants.Generic.RemsToSieverts<T>();
 		return Create(sieverts);
 	}
 

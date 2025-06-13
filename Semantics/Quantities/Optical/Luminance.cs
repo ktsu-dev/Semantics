@@ -36,7 +36,7 @@ public sealed record Luminance<T> : PhysicalQuantity<Luminance<T>, T>
 	/// <returns>A new Luminance instance.</returns>
 	public static Luminance<T> FromFootLamberts(T footLamberts)
 	{
-		T candelaPerSquareMeter = footLamberts * T.CreateChecked(3.426);
+		T candelaPerSquareMeter = footLamberts * PhysicalConstants.Generic.FootLambertsToCandelasPerSquareMeter<T>();
 		return Create(candelaPerSquareMeter);
 	}
 

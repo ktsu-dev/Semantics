@@ -137,7 +137,7 @@ public sealed record Exposure<T> : PhysicalQuantity<Exposure<T>, T>
 	{
 		T exposureCperKg = In(Units.Coulomb);
 		T exposureRoentgens = exposureCperKg / T.CreateChecked(2.58e-4);
-		T doseGray = exposureRoentgens * T.CreateChecked(0.00876);
+		T doseGray = exposureRoentgens * PhysicalConstants.Generic.RoentgensToGraysInAir<T>();
 		return AbsorbedDose<T>.Create(doseGray);
 	}
 

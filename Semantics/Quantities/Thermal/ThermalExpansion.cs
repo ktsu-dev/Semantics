@@ -41,7 +41,7 @@ public sealed record ThermalExpansion<T> : PhysicalQuantity<ThermalExpansion<T>,
 	/// <param name="perFahrenheit">The thermal expansion coefficient value in °F⁻¹.</param>
 	/// <returns>A new ThermalExpansion instance.</returns>
 	public static ThermalExpansion<T> FromPerFahrenheit(T perFahrenheit) =>
-		Create(perFahrenheit * T.CreateChecked(1.8));
+		Create(perFahrenheit * PhysicalConstants.Generic.CelsiusToFahrenheitSlope<T>());
 
 	/// <summary>Gets the thermal expansion coefficient in per kelvin.</summary>
 	/// <returns>The thermal expansion coefficient in K⁻¹.</returns>
@@ -53,7 +53,7 @@ public sealed record ThermalExpansion<T> : PhysicalQuantity<ThermalExpansion<T>,
 
 	/// <summary>Gets the thermal expansion coefficient in per Fahrenheit.</summary>
 	/// <returns>The thermal expansion coefficient in °F⁻¹.</returns>
-	public T PerFahrenheit => Value / T.CreateChecked(1.8);
+	public T PerFahrenheit => Value / PhysicalConstants.Generic.CelsiusToFahrenheitSlope<T>();
 
 	/// <summary>
 	/// Calculates linear expansion: ΔL = α·L₀·ΔT.

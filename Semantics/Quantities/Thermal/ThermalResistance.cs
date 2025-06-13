@@ -34,7 +34,7 @@ public sealed record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T
 	/// <param name="fahrenheitHourPerBtu">The value in °F·h/BTU.</param>
 	/// <returns>A new ThermalResistance instance.</returns>
 	public static ThermalResistance<T> FromFahrenheitHourPerBtu(T fahrenheitHourPerBtu) =>
-		Create(fahrenheitHourPerBtu * T.CreateChecked(1.8956));
+		Create(fahrenheitHourPerBtu * PhysicalConstants.Generic.FahrenheitHourPerBtuToKelvinPerWatt<T>());
 
 	/// <summary>
 	/// Converts to kelvin per watt.
@@ -46,7 +46,7 @@ public sealed record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T
 	/// Converts to Fahrenheit-hour per BTU.
 	/// </summary>
 	/// <returns>The thermal resistance in °F·h/BTU.</returns>
-	public T ToFahrenheitHourPerBtu() => Value / T.CreateChecked(1.8956);
+	public T ToFahrenheitHourPerBtu() => Value / PhysicalConstants.Generic.FahrenheitHourPerBtuToKelvinPerWatt<T>();
 
 	/// <summary>
 	/// Calculates heat flow rate using thermal resistance: Q̇ = ΔT/R.

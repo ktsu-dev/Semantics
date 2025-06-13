@@ -31,7 +31,7 @@ public sealed record AbsorbedDose<T> : PhysicalQuantity<AbsorbedDose<T>, T>
 	/// <returns>A new AbsorbedDose instance.</returns>
 	public static AbsorbedDose<T> FromRads(T rads)
 	{
-		T grays = rads * T.CreateChecked(0.01);
+		T grays = rads * PhysicalConstants.Generic.RadsToGrays<T>();
 		return Create(grays);
 	}
 

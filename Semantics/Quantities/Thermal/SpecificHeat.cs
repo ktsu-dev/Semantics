@@ -42,7 +42,7 @@ public sealed record SpecificHeat<T> : PhysicalQuantity<SpecificHeat<T>, T>
 	/// <param name="btuPerPoundFahrenheit">The specific heat value in BTU/(lb·°F).</param>
 	/// <returns>A new SpecificHeat instance.</returns>
 	public static SpecificHeat<T> FromBtuPerPoundFahrenheit(T btuPerPoundFahrenheit) =>
-		Create(btuPerPoundFahrenheit * T.CreateChecked(4186.8));
+		Create(btuPerPoundFahrenheit * PhysicalConstants.Generic.BtuPerPoundFahrenheitToJoulesPerKilogramKelvin<T>());
 
 	/// <summary>Gets the specific heat in joules per kilogram-kelvin.</summary>
 	/// <returns>The specific heat in J/(kg·K).</returns>
@@ -54,7 +54,7 @@ public sealed record SpecificHeat<T> : PhysicalQuantity<SpecificHeat<T>, T>
 
 	/// <summary>Gets the specific heat in BTU per pound-Fahrenheit.</summary>
 	/// <returns>The specific heat in BTU/(lb·°F).</returns>
-	public T BtuPerPoundFahrenheit => Value / T.CreateChecked(4186.8);
+	public T BtuPerPoundFahrenheit => Value / PhysicalConstants.Generic.BtuPerPoundFahrenheitToJoulesPerKilogramKelvin<T>();
 
 	/// <summary>
 	/// Calculates heat required for temperature change: Q = m·c·ΔT.

@@ -34,7 +34,7 @@ public sealed record Entropy<T> : PhysicalQuantity<Entropy<T>, T>
 	/// <param name="caloriesPerKelvin">The entropy value in cal/K.</param>
 	/// <returns>A new Entropy instance.</returns>
 	public static Entropy<T> FromCaloriesPerKelvin(T caloriesPerKelvin) =>
-		Create(caloriesPerKelvin * T.CreateChecked(4.184));
+		Create(caloriesPerKelvin * PhysicalConstants.Generic.CalorieToJoule<T>());
 
 	/// <summary>
 	/// Creates a new Entropy from a value in BTU per Rankine.
@@ -42,7 +42,7 @@ public sealed record Entropy<T> : PhysicalQuantity<Entropy<T>, T>
 	/// <param name="btuPerRankine">The entropy value in BTU/°R.</param>
 	/// <returns>A new Entropy instance.</returns>
 	public static Entropy<T> FromBtuPerRankine(T btuPerRankine) =>
-		Create(btuPerRankine * T.CreateChecked(1899.1));
+		Create(btuPerRankine * PhysicalConstants.Generic.BtuPerFahrenheitToJoulesPerKelvin<T>());
 
 	/// <summary>Gets the entropy in joules per kelvin.</summary>
 	/// <returns>The entropy in J/K.</returns>
@@ -50,11 +50,11 @@ public sealed record Entropy<T> : PhysicalQuantity<Entropy<T>, T>
 
 	/// <summary>Gets the entropy in calories per kelvin.</summary>
 	/// <returns>The entropy in cal/K.</returns>
-	public T CaloriesPerKelvin => Value / T.CreateChecked(4.184);
+	public T CaloriesPerKelvin => Value / PhysicalConstants.Generic.CalorieToJoule<T>();
 
 	/// <summary>Gets the entropy in BTU per Rankine.</summary>
 	/// <returns>The entropy in BTU/°R.</returns>
-	public T BtuPerRankine => Value / T.CreateChecked(1899.1);
+	public T BtuPerRankine => Value / PhysicalConstants.Generic.BtuPerFahrenheitToJoulesPerKelvin<T>();
 
 	/// <summary>
 	/// Calculates entropy change using ΔS = Q/T for reversible processes.

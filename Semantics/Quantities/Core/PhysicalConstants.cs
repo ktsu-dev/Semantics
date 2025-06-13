@@ -148,6 +148,33 @@ public static class PhysicalConstants
 
 		/// <summary>BTU per hour-foot-Fahrenheit to Watts per meter-Kelvin: 1.7307 W/(m·K) per BTU/(h·ft·°F)</summary>
 		public const double BtuPerHourFootFahrenheitToWattsPerMeterKelvin = 1.7307;
+
+		/// <summary>Thermal resistance: Fahrenheit-hour per BTU to Kelvin per Watt: 1.8956 K/W per °F·h/BTU</summary>
+		public const double FahrenheitHourPerBtuToKelvinPerWatt = 1.8956;
+
+		/// <summary>Specific heat: BTU per pound-Fahrenheit to Joules per kilogram-Kelvin: 4186.8 J/(kg·K) per BTU/(lb·°F)</summary>
+		public const double BtuPerPoundFahrenheitToJoulesPerKilogramKelvin = 4186.8;
+
+		/// <summary>Heat transfer coefficient: BTU per hour-square foot-Fahrenheit to Watts per square meter-Kelvin: 5.678 W/(m²·K) per BTU/(h·ft²·°F)</summary>
+		public const double BtuPerHourSquareFootFahrenheitToWattsPerSquareMeterKelvin = 5.678;
+
+		/// <summary>Heat capacity: BTU per Fahrenheit to Joules per Kelvin: 1899.1 J/K per BTU/°F</summary>
+		public const double BtuPerFahrenheitToJoulesPerKelvin = 1899.1;
+
+		/// <summary>Illuminance: foot-candles to lux: 10.764 lux per fc</summary>
+		public const double FootCandlesToLux = 10.764;
+
+		/// <summary>Luminance: foot-lamberts to candelas per square meter: 3.426 cd/m² per fL</summary>
+		public const double FootLambertsToCandelasPerSquareMeter = 3.426;
+
+		/// <summary>Absorbed dose: rads to grays: 0.01 Gy per rad</summary>
+		public const double RadsToGrays = 0.01;
+
+		/// <summary>Equivalent dose: rems to sieverts: 0.01 Sv per rem</summary>
+		public const double RemsToSieverts = 0.01;
+
+		/// <summary>Nuclear exposure: roentgens to absorbed dose in air: 0.00876 Gy per R</summary>
+		public const double RoentgensToGraysInAir = 0.00876;
 	}
 
 	/// <summary>
@@ -322,5 +349,34 @@ public static class PhysicalConstants
 
 		/// <summary>Gets four thirds (4/3) as type T</summary>
 		public static T FourThirds<T>() where T : struct, INumber<T> => T.CreateChecked(Mathematical.FourThirds);
+
+		// === ADDITIONAL CONVERSION CONSTANTS ===
+
+		/// <summary>Gets thermal resistance conversion factor as type T</summary>
+		public static T FahrenheitHourPerBtuToKelvinPerWatt<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.FahrenheitHourPerBtuToKelvinPerWatt);
+
+		/// <summary>Gets specific heat conversion factor as type T</summary>
+		public static T BtuPerPoundFahrenheitToJoulesPerKilogramKelvin<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.BtuPerPoundFahrenheitToJoulesPerKilogramKelvin);
+
+		/// <summary>Gets heat transfer coefficient conversion factor as type T</summary>
+		public static T BtuPerHourSquareFootFahrenheitToWattsPerSquareMeterKelvin<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.BtuPerHourSquareFootFahrenheitToWattsPerSquareMeterKelvin);
+
+		/// <summary>Gets heat capacity conversion factor as type T</summary>
+		public static T BtuPerFahrenheitToJoulesPerKelvin<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.BtuPerFahrenheitToJoulesPerKelvin);
+
+		/// <summary>Gets illuminance conversion factor as type T</summary>
+		public static T FootCandlesToLux<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.FootCandlesToLux);
+
+		/// <summary>Gets luminance conversion factor as type T</summary>
+		public static T FootLambertsToCandelasPerSquareMeter<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.FootLambertsToCandelasPerSquareMeter);
+
+		/// <summary>Gets absorbed dose conversion factor as type T</summary>
+		public static T RadsToGrays<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.RadsToGrays);
+
+		/// <summary>Gets equivalent dose conversion factor as type T</summary>
+		public static T RemsToSieverts<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.RemsToSieverts);
+
+		/// <summary>Gets nuclear exposure conversion factor as type T</summary>
+		public static T RoentgensToGraysInAir<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.RoentgensToGraysInAir);
 	}
 }

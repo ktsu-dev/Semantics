@@ -34,7 +34,7 @@ public sealed record HeatTransferCoefficient<T> : PhysicalQuantity<HeatTransferC
 	/// <param name="btuPerHourSquareFootFahrenheit">The heat transfer coefficient value in BTU/(h·ft²·°F).</param>
 	/// <returns>A new HeatTransferCoefficient instance.</returns>
 	public static HeatTransferCoefficient<T> FromBtuPerHourSquareFootFahrenheit(T btuPerHourSquareFootFahrenheit) =>
-		Create(btuPerHourSquareFootFahrenheit * T.CreateChecked(5.678));
+		Create(btuPerHourSquareFootFahrenheit * PhysicalConstants.Generic.BtuPerHourSquareFootFahrenheitToWattsPerSquareMeterKelvin<T>());
 
 	/// <summary>
 	/// Creates a new HeatTransferCoefficient from a value in calories per second-square centimeter-kelvin.
@@ -50,7 +50,7 @@ public sealed record HeatTransferCoefficient<T> : PhysicalQuantity<HeatTransferC
 
 	/// <summary>Gets the heat transfer coefficient in BTU per hour-square foot-Fahrenheit.</summary>
 	/// <returns>The heat transfer coefficient in BTU/(h·ft²·°F).</returns>
-	public T BtuPerHourSquareFootFahrenheit => Value / T.CreateChecked(5.678);
+	public T BtuPerHourSquareFootFahrenheit => Value / PhysicalConstants.Generic.BtuPerHourSquareFootFahrenheitToWattsPerSquareMeterKelvin<T>();
 
 	/// <summary>Gets the heat transfer coefficient in calories per second-square centimeter-kelvin.</summary>
 	/// <returns>The heat transfer coefficient in cal/(s·cm²·K).</returns>

@@ -13,13 +13,14 @@ This document provides a comprehensive overview of all features and components i
 
 ## Core Components
 
-The Semantics library consists of five main areas:
+The Semantics library consists of six main areas:
 
 1. **Semantic Strings** - Type-safe string wrappers with validation
-2. **Semantic Quantities** - Type-safe numeric values with units  
-3. **Path System** - Comprehensive file system path handling
-4. **Validation System** - 50+ validation attributes across multiple categories
-5. **Performance Utilities** - Optimizations for high-performance scenarios
+2. **Physics Quantities System** - Complete physics library with 80+ quantities across 8 domains
+3. **Physical Constants** - Centralized, type-safe access to fundamental and derived constants
+4. **Path System** - Comprehensive file system path handling
+5. **Validation System** - 50+ validation attributes across multiple categories
+6. **Performance Utilities** - Optimizations for high-performance scenarios
 
 ## Semantic Strings
 
@@ -41,23 +42,89 @@ public void SendEmail(EmailAddress to, UserId userId) { /* ... */ }
 // SendEmail(userId, email); // ❌ Won't compile!
 ```
 
-## Semantic Quantities
+## Physics Quantities System
 
-Type-safe numeric values with units and arithmetic operations:
+A comprehensive physics library with **80+ quantities** across **8 scientific domains** featuring:
+
+- **Type-safe arithmetic** with dimensional analysis
+- **Automatic unit conversions** with compile-time safety  
+- **Physics relationships** as operators (F = ma, E = mc², etc.)
+- **Physical constants** integrated throughout
+- **Generic numeric types** (double, float, decimal) support
+
+### Complete Domain Coverage
+
+#### 🔧 Mechanics (15 quantities)
+Position, velocity, acceleration, force, pressure, energy, power, momentum, torque, angular velocity, angular acceleration, moment of inertia, density, and more.
+
+#### ⚡ Electrical (11 quantities)  
+Voltage, current, resistance, power, charge, capacitance, inductance, electric field, magnetic field, and electrical properties.
+
+#### 🌡️ Thermal (10 quantities)
+Temperature, heat, entropy, thermal conductivity, heat capacity, thermal expansion, and thermodynamic properties.
+
+#### 🧪 Chemical (10 quantities)
+Amount of substance, molarity, reaction rates, pH, molar mass, activation energy, and chemical kinetics.
+
+#### 🔊 Acoustic (20 quantities)
+Sound pressure, intensity, frequency, wavelength, acoustic impedance, loudness, pitch, and audio metrics.
+
+#### ☢️ Nuclear (5 quantities)
+Radioactive activity, absorbed dose, equivalent dose, exposure, and nuclear cross-sections.
+
+#### 💡 Optical (6 quantities)
+Luminous intensity, flux, illuminance, luminance, refractive index, and optical power.
+
+#### 🌊 Fluid Dynamics (5 quantities)
+Viscosity, flow rates, Reynolds numbers, bulk modulus, and fluid properties.
+
+### Usage Examples
 
 ```csharp
-public sealed record Temperature : SemanticQuantity<Temperature, decimal> { }
-public sealed record Distance : SemanticQuantity<Distance, double> { }
+// Create quantities with dimensional safety
+var force = Force<double>.FromNewtons(100.0);
+var distance = Length<double>.FromMeters(5.0);
+var time = Time<double>.FromSeconds(2.0);
 
-var temp1 = Temperature.Create(25.5m);
-var temp2 = Temperature.Create(18.2m);
+// Physics relationships as operators
+var work = force * distance;                    // W = F⋅d (Energy)
+var power = work / time;                        // P = W/t (Power)
+var velocity = distance / time;                 // v = d/t (Velocity)
 
-// Type-safe arithmetic
-var avgTemp = (temp1 + temp2) / 2m;     // Returns Temperature
-var tempDiff = temp1 - temp2;           // Returns Temperature
+// Automatic unit conversions
+Console.WriteLine(work.ToKilowattHours());      // 1.389e-7 kWh
+Console.WriteLine(power.ToHorsepower());        // 6.705e-5 hp
 
-// Prevents unit confusion
-// var invalid = temp1 + distance1;     // ❌ Compiler error!
+// Type safety prevents errors
+// var invalid = force + time;                  // ❌ Compiler error!
+
+// Complex calculations with multiple domains
+var temp = Temperature<double>.FromCelsius(25.0);
+var pressure = Pressure<double>.FromPascals(101325.0);
+var volume = Volume<double>.FromLiters(22.4);
+var gasConstant = PhysicalConstants.Generic.GasConstant<double>();
+
+// Ideal gas law: PV = nRT
+var moles = (pressure * volume) / (gasConstant * temp);
+```
+
+## Physical Constants
+
+Centralized, type-safe access to **100+ physical constants** across all domains:
+
+```csharp
+// Fundamental constants (CODATA 2018)
+var c = PhysicalConstants.Generic.SpeedOfLight<double>();        // 299,792,458 m/s
+var h = PhysicalConstants.Generic.PlanckConstant<double>();      // 6.626070×10⁻³⁴ J⋅s
+var Na = PhysicalConstants.Generic.AvogadroNumber<double>();     // 6.022140×10²³ mol⁻¹
+
+// Derived constants with automatic type conversion
+var g = PhysicalConstants.Generic.StandardGravity<float>();     // 9.80665 m/s²
+var R = PhysicalConstants.Generic.GasConstant<decimal>();       // 8.314462618 J/(mol⋅K)
+
+// Domain-specific constants
+var rho = PhysicalConstants.Generic.StandardAirDensity<double>(); // 1.225 kg/m³
+var c_sound = PhysicalConstants.Generic.SoundSpeedInAir<double>(); // 343 m/s
 ```
 
 ## Path System
@@ -211,4 +278,4 @@ public IActionResult CreateUser([FromBody] CreateUserRequest request)
 }
 ```
 
-This library transforms primitive-obsessed code into strongly-typed, self-validating domain models with comprehensive validation and excellent performance characteristics. 
+This library transforms primitive-obsessed code into strongly-typed, self-validating domain models with comprehensive validation, complete physics capabilities across all major scientific domains, and excellent performance characteristics. With **80+ physics quantities**, **100+ physical constants**, and **50+ validation attributes**, it provides enterprise-ready solutions for scientific computing, engineering applications, and domain modeling. 

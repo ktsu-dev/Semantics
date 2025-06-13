@@ -34,7 +34,7 @@ public sealed record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>
 	/// <param name="caloriesPerKelvin">The heat capacity value in cal/K.</param>
 	/// <returns>A new HeatCapacity instance.</returns>
 	public static HeatCapacity<T> FromCaloriesPerKelvin(T caloriesPerKelvin) =>
-		Create(caloriesPerKelvin * T.CreateChecked(4.184));
+		Create(caloriesPerKelvin * PhysicalConstants.Generic.CalorieToJoule<T>());
 
 	/// <summary>
 	/// Creates a new HeatCapacity from a value in BTU per Fahrenheit.
@@ -42,7 +42,7 @@ public sealed record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>
 	/// <param name="btuPerFahrenheit">The heat capacity value in BTU/°F.</param>
 	/// <returns>A new HeatCapacity instance.</returns>
 	public static HeatCapacity<T> FromBtuPerFahrenheit(T btuPerFahrenheit) =>
-		Create(btuPerFahrenheit * T.CreateChecked(1899.1));
+		Create(btuPerFahrenheit * PhysicalConstants.Generic.BtuPerFahrenheitToJoulesPerKelvin<T>());
 
 	/// <summary>Gets the heat capacity in joules per kelvin.</summary>
 	/// <returns>The heat capacity in J/K.</returns>
@@ -50,11 +50,11 @@ public sealed record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>
 
 	/// <summary>Gets the heat capacity in calories per kelvin.</summary>
 	/// <returns>The heat capacity in cal/K.</returns>
-	public T CaloriesPerKelvin => Value / T.CreateChecked(4.184);
+	public T CaloriesPerKelvin => Value / PhysicalConstants.Generic.CalorieToJoule<T>();
 
 	/// <summary>Gets the heat capacity in BTU per Fahrenheit.</summary>
 	/// <returns>The heat capacity in BTU/°F.</returns>
-	public T BtuPerFahrenheit => Value / T.CreateChecked(1899.1);
+	public T BtuPerFahrenheit => Value / PhysicalConstants.Generic.BtuPerFahrenheitToJoulesPerKelvin<T>();
 
 	/// <summary>
 	/// Calculates heat required for temperature change: Q = C·ΔT.
