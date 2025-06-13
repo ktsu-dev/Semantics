@@ -1,3 +1,8 @@
+## v1.0.14 (patch)
+
+Changes since v1.0.13:
+
+- Enhance the Semantics library by completing the implementation of the Physics Quantities System, which now includes 80+ quantities across 8 scientific domains. Update the README.md and documentation to reflect the comprehensive capabilities, including type-safe arithmetic, automatic unit conversions, and centralized physical constants. Introduce integration and performance benchmarks to validate cross-domain calculations and ensure efficient operations. This update significantly improves the library's usability and functionality for scientific computing and engineering applications. ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.13 (patch)
 
 Changes since v1.0.12:
