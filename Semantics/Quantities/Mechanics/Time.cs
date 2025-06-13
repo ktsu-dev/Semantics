@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Time<T> : PhysicalQuantity<Time<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of time [T].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Time;
 
 	/// <summary>
-	/// Initializes a new instance of the Time class.
+	/// Initializes a new instance of the <see cref="Time{T}"/> class.
 	/// </summary>
 	public Time() : base() { }
 

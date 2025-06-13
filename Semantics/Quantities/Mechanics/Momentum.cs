@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Momentum<T> : PhysicalQuantity<Momentum<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of momentum [M L T⁻¹].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Momentum;
 
 	/// <summary>
-	/// Initializes a new instance of the Momentum class.
+	/// Initializes a new instance of the <see cref="Momentum{T}"/> class.
 	/// </summary>
 	public Momentum() : base() { }
 

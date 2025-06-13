@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record ReverberationTime<T> : PhysicalQuantity<ReverberationTime<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of reverberationtime [T].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ReverberationTime;
 
 	/// <summary>
-	/// Initializes a new instance of the ReverberationTime class.
+	/// Initializes a new instance of the <see cref="ReverberationTime{T}"/> class.
 	/// </summary>
 	public ReverberationTime() : base() { }
 

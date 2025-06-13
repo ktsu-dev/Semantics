@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record ElectricFlux<T> : PhysicalQuantity<ElectricFlux<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of electricflux [M L³ T⁻³ I⁻¹].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ElectricFlux;
 
 	/// <summary>
-	/// Initializes a new instance of the ElectricFlux class.
+	/// Initializes a new instance of the <see cref="ElectricFlux{T}"/> class.
 	/// </summary>
 	public ElectricFlux() : base() { }
 

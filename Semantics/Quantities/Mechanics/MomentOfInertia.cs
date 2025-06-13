@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record MomentOfInertia<T> : PhysicalQuantity<MomentOfInertia<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of momentofinertia [M L²].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.MomentOfInertia;
 
 	/// <summary>
-	/// Initializes a new instance of the MomentOfInertia class.
+	/// Initializes a new instance of the <see cref="MomentOfInertia{T}"/> class.
 	/// </summary>
 	public MomentOfInertia() : base() { }
 

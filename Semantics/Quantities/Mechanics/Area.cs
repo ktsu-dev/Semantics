@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Area<T> : PhysicalQuantity<Area<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of area [L²].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Area;
 
 	/// <summary>
-	/// Initializes a new instance of the Area class.
+	/// Initializes a new instance of the <see cref="Area{T}"/> class.
 	/// </summary>
 	public Area() : base() { }
 

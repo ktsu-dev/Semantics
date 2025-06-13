@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Mass<T> : PhysicalQuantity<Mass<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of mass [M].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Mass;
 
 	/// <summary>
-	/// Initializes a new instance of the Mass class.
+	/// Initializes a new instance of the <see cref="Mass{T}"/> class.
 	/// </summary>
 	public Mass() : base() { }
 

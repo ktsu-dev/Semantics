@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Length<T> : PhysicalQuantity<Length<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of length [L].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Length;
 
 	/// <summary>
-	/// Initializes a new instance of the Length class.
+	/// Initializes a new instance of the <see cref="Length{T}"/> class.
 	/// </summary>
 	public Length() : base() { }
 

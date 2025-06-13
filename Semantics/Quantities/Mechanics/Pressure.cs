@@ -14,11 +14,11 @@ using System.Numerics;
 public sealed record Pressure<T> : PhysicalQuantity<Pressure<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of pressure [M L⁻¹ T⁻²].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Pressure;
 
 	/// <summary>
-	/// Initializes a new instance of the Pressure class.
+	/// Initializes a new instance of the <see cref="Pressure{T}"/> class.
 	/// </summary>
 	public Pressure() : base() { }
 

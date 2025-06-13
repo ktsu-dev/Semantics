@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record SoundAbsorption<T> : PhysicalQuantity<SoundAbsorption<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of soundabsorption [dimensionless].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.SoundAbsorption;
 
 	/// <summary>
-	/// Initializes a new instance of the SoundAbsorption class.
+	/// Initializes a new instance of the <see cref="SoundAbsorption{T}"/> class.
 	/// </summary>
 	public SoundAbsorption() : base() { }
 

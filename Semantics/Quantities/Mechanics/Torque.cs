@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Torque<T> : PhysicalQuantity<Torque<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of torque [M L² T⁻²].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Torque;
 
 	/// <summary>
-	/// Initializes a new instance of the Torque class.
+	/// Initializes a new instance of the <see cref="Torque{T}"/> class.
 	/// </summary>
 	public Torque() : base() { }
 

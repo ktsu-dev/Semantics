@@ -14,11 +14,11 @@ using System.Numerics;
 public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of force [M L T⁻²].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Force;
 
 	/// <summary>
-	/// Initializes a new instance of the Force class.
+	/// Initializes a new instance of the <see cref="Force{T}"/> class.
 	/// </summary>
 	public Force() : base() { }
 

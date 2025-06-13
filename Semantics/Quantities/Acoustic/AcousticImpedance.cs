@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record AcousticImpedance<T> : PhysicalQuantity<AcousticImpedance<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of acousticimpedance [M L⁻² T⁻¹].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.AcousticImpedance;
 
 	/// <summary>
-	/// Initializes a new instance of the AcousticImpedance class.
+	/// Initializes a new instance of the <see cref="AcousticImpedance{T}"/> class.
 	/// </summary>
 	public AcousticImpedance() : base() { }
 

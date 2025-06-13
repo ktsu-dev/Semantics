@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Volume<T> : PhysicalQuantity<Volume<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of volume [L³].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Volume;
 
 	/// <summary>
-	/// Initializes a new instance of the Volume class.
+	/// Initializes a new instance of the <see cref="Volume{T}"/> class.
 	/// </summary>
 	public Volume() : base() { }
 

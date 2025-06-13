@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Heat<T> : PhysicalQuantity<Heat<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of heat [M L² T⁻²].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Heat;
 
 	/// <summary>
-	/// Initializes a new instance of the Heat class.
+	/// Initializes a new instance of the <see cref="Heat{T}"/> class.
 	/// </summary>
 	public Heat() : base() { }
 

@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record SpecificGravity<T> : PhysicalQuantity<SpecificGravity<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of specificgravity [dimensionless].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Dimensionless;
 
 	/// <summary>
-	/// Initializes a new instance of the SpecificGravity class.
+	/// Initializes a new instance of the <see cref="SpecificGravity{T}"/> class.
 	/// </summary>
 	public SpecificGravity() : base() { }
 

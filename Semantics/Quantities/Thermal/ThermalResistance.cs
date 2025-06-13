@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of thermalresistance [M⁻¹ L⁻² T³ Θ].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ThermalResistance;
 
 	/// <summary>
-	/// Initializes a new instance of the ThermalResistance class.
+	/// Initializes a new instance of the <see cref="ThermalResistance{T}"/> class.
 	/// </summary>
 	public ThermalResistance() : base() { }
 

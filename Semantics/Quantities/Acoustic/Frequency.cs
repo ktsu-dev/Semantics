@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of frequency [T⁻¹].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Frequency;
 
 	/// <summary>
-	/// Initializes a new instance of the Frequency class.
+	/// Initializes a new instance of the <see cref="Frequency{T}"/> class.
 	/// </summary>
 	public Frequency() : base() { }
 

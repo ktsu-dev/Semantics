@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Velocity<T> : PhysicalQuantity<Velocity<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of velocity [L T⁻¹].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Velocity;
 
 	/// <summary>
-	/// Initializes a new instance of the Velocity class.
+	/// Initializes a new instance of the <see cref="Velocity{T}"/> class.
 	/// </summary>
 	public Velocity() : base() { }
 

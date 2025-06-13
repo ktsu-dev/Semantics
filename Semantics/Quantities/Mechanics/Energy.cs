@@ -14,11 +14,11 @@ using System.Numerics;
 public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of energy [M L² T⁻²].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Energy;
 
 	/// <summary>
-	/// Initializes a new instance of the Energy class.
+	/// Initializes a new instance of the <see cref="Energy{T}"/> class.
 	/// </summary>
 	public Energy() : base() { }
 

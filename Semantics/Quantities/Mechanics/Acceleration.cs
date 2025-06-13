@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Acceleration<T> : PhysicalQuantity<Acceleration<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of acceleration [L T⁻²].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Acceleration;
 
 	/// <summary>
-	/// Initializes a new instance of the Acceleration class.
+	/// Initializes a new instance of the <see cref="Acceleration{T}"/> class.
 	/// </summary>
 	public Acceleration() : base() { }
 

@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record ElectricCurrent<T> : PhysicalQuantity<ElectricCurrent<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of electriccurrent [I].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.ElectricCurrent;
 
 	/// <summary>
-	/// Initializes a new instance of the ElectricCurrent class.
+	/// Initializes a new instance of the <see cref="ElectricCurrent{T}"/> class.
 	/// </summary>
 	public ElectricCurrent() : base() { }
 

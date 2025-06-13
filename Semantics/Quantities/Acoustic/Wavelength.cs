@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Wavelength<T> : PhysicalQuantity<Wavelength<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of wavelength [L].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Wavelength;
 
 	/// <summary>
-	/// Initializes a new instance of the Wavelength class.
+	/// Initializes a new instance of the <see cref="Wavelength{T}"/> class.
 	/// </summary>
 	public Wavelength() : base() { }
 

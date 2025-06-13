@@ -26,6 +26,11 @@ If you're new to the Semantics library, start with [Getting Started](getting-sta
 -   **[Path Handling](path-handling.md)** - File system paths, existence validation, and path canonicalization
 -   **[Factory Pattern](factory-pattern.md)** - Object creation, dependency injection, and validation strategies
 
+### Physics Examples
+
+-   **[Physics Relationships](PhysicsRelationshipExamples.md)** - Demonstrates physics calculations and relationships between quantities
+-   **[Comprehensive Physics Examples](comprehensive-physics-examples.md)** - Real-world engineering and scientific applications across all 8 physics domains
+
 ### Real-World Usage
 
 -   **[Real-World Scenarios](real-world-scenarios.md)** - Complete domain examples for e-commerce, finance, and configuration
@@ -41,7 +46,11 @@ If you're new to the Semantics library, start with [Getting Started](getting-sta
 ✅ **Custom Canonicalization** - Automatic input normalization  
 ✅ **LINQ Support** - Natural collection operations  
 ✅ **Performance** - Span-based operations and minimal allocations  
-✅ **Enterprise Integration** - ASP.NET Core and dependency injection
+✅ **Enterprise Integration** - ASP.NET Core and dependency injection  
+✅ **Physics Quantities** - 82 quantities across 8 scientific domains  
+✅ **Cross-Domain Physics** - Real-world engineering calculations  
+✅ **Physical Constants** - Type-safe access to fundamental constants  
+✅ **Unit Conversions** - Automatic dimensional analysis and safety
 
 ## Architecture Benefits
 

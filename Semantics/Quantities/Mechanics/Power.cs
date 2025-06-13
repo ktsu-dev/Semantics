@@ -13,11 +13,11 @@ using System.Numerics;
 public sealed record Power<T> : PhysicalQuantity<Power<T>, T>
 	where T : struct, INumber<T>
 {
-	/// <inheritdoc/>
+	/// <summary>Gets the physical dimension of power [M L² T⁻³].</summary>
 	public override PhysicalDimension Dimension => PhysicalDimensions.Power;
 
 	/// <summary>
-	/// Initializes a new instance of the Power class.
+	/// Initializes a new instance of the <see cref="Power{T}"/> class.
 	/// </summary>
 	public Power() : base() { }
 
