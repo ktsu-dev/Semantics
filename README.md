@@ -4,7 +4,7 @@
 [![NuGet Downloads](https://img.shields.io/nuget/dt/ktsu.Semantics.svg)](https://www.nuget.org/packages/ktsu.Semantics/)
 [![Build Status](https://github.com/ktsu-dev/Semantics/workflows/CI/badge.svg)](https://github.com/ktsu-dev/Semantics/actions)
 
-A comprehensive .NET library for creating type-safe, validated types with semantic meaning. Transform primitive string obsession into strongly-typed, self-validating domain models with comprehensive validation, specialized path handling, and a complete physics quantities system covering all major scientific domains.
+A comprehensive .NET library for creating type-safe, validated types with semantic meaning. Transform primitive string and numeric obsession into strongly-typed, self-validating domain models with comprehensive validation, specialized path handling, and a complete physics quantities system covering 80+ quantities across 8 major scientific domains with dimensional analysis and centralized physical constants.
 
 ## Overview
 
@@ -16,11 +16,13 @@ The Semantics library enables you to create strongly-typed wrappers that carry s
 - **Comprehensive Validation**: 50+ built-in validation attributes for all common scenarios
 - **Path Handling**: Specialized path types with polymorphic interfaces and file system operations
 - **Complete Physics System**: 80+ physics quantities across 8 scientific domains with dimensional analysis
-- **Physical Constants**: Centralized, type-safe access to fundamental and derived constants
+- **Physical Constants**: Centralized, type-safe access to fundamental and derived constants with validation
+- **Bootstrap Architecture**: Clean circular dependency resolution for complex type systems
 - **Unit Conversions**: Automatic unit handling with compile-time dimensional safety
 - **Factory Pattern**: Clean object creation with dependency injection support
 - **Performance Optimized**: Span-based operations, pooled builders, and minimal allocations
 - **Enterprise Ready**: Full .NET ecosystem integration (ASP.NET Core, Entity Framework, etc.)
+- **Comprehensive Testing**: Derived constants validation and physics relationship verification
 
 ## 🚀 Quick Start
 
@@ -118,6 +120,11 @@ var power = work / Time<double>.FromSeconds(10.0);    // Results in Power<double
 Console.WriteLine(temp.ToFahrenheit());               // 77°F
 Console.WriteLine(force.ToPounds());                  // 22.48 lbf
 
+// Access physical constants with type safety
+var gasConstant = PhysicalConstants.Generic.GasConstant<double>();       // 8.314 J/(mol·K)
+var speedOfLight = PhysicalConstants.Generic.SpeedOfLight<float>();      // 299,792,458 m/s
+var planckConstant = PhysicalConstants.Generic.PlanckConstant<decimal>(); // Type-safe constant access
+
 // Dimensional analysis prevents errors
 // var invalid = force + temp;                        // ❌ Compiler error!
 ```
@@ -205,6 +212,28 @@ public sealed record ServerAddress : SemanticString<ServerAddress> { }
 public sealed record Port : SemanticQuantity<Port, int> { }
 ```
 
+### Physical Constants System
+
+All physical constants are centralized in `PhysicalConstants` with type-safe generic access:
+
+```csharp
+// Fundamental constants (SI 2019 definitions)
+var c = PhysicalConstants.Generic.SpeedOfLight<double>();        // 299,792,458 m/s
+var h = PhysicalConstants.Generic.PlanckConstant<double>();      // 6.62607015×10⁻³⁴ J⋅s
+var k = PhysicalConstants.Generic.BoltzmannConstant<double>();   // 1.380649×10⁻²³ J/K
+var NA = PhysicalConstants.Generic.AvogadroNumber<double>();     // 6.02214076×10²³ /mol
+
+// Temperature constants
+var T0 = PhysicalConstants.Generic.StandardTemperature<double>(); // 273.15 K
+var P0 = PhysicalConstants.Generic.StandardAtmosphericPressure<double>(); // 101,325 Pa
+
+// Conversion factors with derived validation
+var ftToM = PhysicalConstants.Generic.FeetToMeters<double>();    // 0.3048 m/ft
+var sqFtToSqM = PhysicalConstants.Generic.SquareFeetToSquareMeters<double>(); // Derived: ftToM²
+
+// All constants have comprehensive test coverage ensuring derived values match calculations
+```
+
 ### Complete Physics Domains
 
 The library includes **80+ physics quantities** across **8 scientific domains**:
@@ -277,6 +306,38 @@ var luminance = Luminance<double>.FromCandelasPerSquareMeter(100.0);
 var viscosity = DynamicViscosity<double>.FromPascalSeconds(0.001);
 var flowRate = VolumetricFlowRate<double>.FromCubicMetersPerSecond(0.1);
 var reynolds = ReynoldsNumber<double>.Calculate(velocity, Length<double>.FromMeters(0.1), viscosity);
+```
+
+## 🏛️ Architecture & Design
+
+### Bootstrap Architecture
+
+The library uses a sophisticated bootstrap architecture to resolve circular dependencies:
+
+```csharp
+// BootstrapUnits class provides initial unit definitions during system initialization
+// PhysicalDimensions uses BootstrapUnits to define dimensions without circular dependencies
+// Units class replaces bootstrap units with full unit definitions after initialization
+
+// This clean separation enables complex type systems while maintaining performance
+```
+
+### Derived Constants Validation
+
+All derived physical constants are validated against their fundamental relationships:
+
+```csharp
+// Example: Area conversions are validated to ensure SquareFeetToSquareMeters = FeetToMeters²
+[TestMethod]
+public void DerivedConstants_AreaConversions_MatchCalculatedValues()
+{
+    var feetToMeters = PhysicalConstants.Conversion.FeetToMeters;
+    var calculatedSquareFeet = feetToMeters * feetToMeters;
+    var storedSquareFeet = PhysicalConstants.Conversion.SquareFeetToSquareMeters;
+    
+    Assert.AreEqual(calculatedSquareFeet, storedSquareFeet, tolerance);
+}
+// Comprehensive test coverage ensures physical relationships are mathematically correct
 ```
 
 ## 🏗️ Dependency Injection

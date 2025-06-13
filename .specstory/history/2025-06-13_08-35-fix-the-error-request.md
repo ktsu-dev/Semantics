@@ -2563,7 +2563,728 @@ I'll help you organize the bootstrap units into their own class to keep the Phys
 
 ---
 
+<details>
+            <summary>Searched codebase "bootstrap units PhysicalDimensions" • **25** results</summary>
+        
+| File | Lines |
+|------|-------|
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L27-59 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L1-27 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L59-89 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L89-119 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L212-242 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L149-179 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L179-212 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L302-317 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L272-302 |
+| `Semantics/Quantities/Core/BootstrapUnit.cs` | L1-42 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L119-149 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L242-272 |
+| `Semantics/Quantities/Core/Units.cs` | L38-65 |
+| `Semantics/Quantities/Core/Units.cs` | L116-143 |
+| `Semantics/Quantities/Optical/Luminance.cs` | L1-42 |
+| `Semantics/Quantities/Core/Units.cs` | L65-89 |
+| `Semantics/Quantities/Core/Units.cs` | L251-275 |
+| `Semantics/Quantities/Core/Units.cs` | L326-353 |
+| `Semantics/Quantities/Core/PhysicalDimension.cs` | L85-117 |
+| `Semantics/Quantities/Core/PhysicalQuantity.cs` | L1-50 |
+| `Semantics/Quantities/Core/PhysicalDimension.cs` | L1-46 |
+| `Semantics/Quantities/Core/Units.cs` | L1-38 |
+| `Semantics/Quantities/Core/PhysicalDimension.cs` | L46-85 |
+| `Semantics/Quantities/Core/PhysicalDimensionExtensions.cs` | L1-41 |
+| `Semantics/Quantities/Core/PhysicalDimensions.cs` | L317-411 |
 
+</details>
+
+---
+
+Now I can see that there are many bootstrap units defined directly in the `PhysicalDimensions` class. Let me examine the structure more closely and then create a dedicated class for them:
+
+---
+
+<details>
+            <summary>Grep search for "BootstrapUnit.*=.*new.*BootstrapUnit" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+<details>
+            <summary>Grep search for "BootstrapUnit.*new" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L12 | `private static readonly BootstrapUnit BootstrapRadian = new("radian", "rad");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L13 | `private static readonly BootstrapUnit BootstrapMeter = new("meter", "m");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L14 | `private static readonly BootstrapUnit BootstrapKilogram = new("kilogram", "kg");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L15 | `private static readonly BootstrapUnit BootstrapSecond = new("second", "s");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L16 | `private static readonly BootstrapUnit BootstrapAmpere = new("ampere", "A");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L17 | `private static readonly BootstrapUnit BootstrapKelvin = new("kelvin", "K");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L18 | `private static readonly BootstrapUnit BootstrapMole = new("mole", "mol");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L19 | `private static readonly BootstrapUnit BootstrapCandela = new("candela", "cd");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L22 | `private static readonly BootstrapUnit BootstrapDimensionless = new("dimensionless", "1");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L23 | `private static readonly BootstrapUnit BootstrapDecibel = new("decibel", "dB");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L24 | `private static readonly BootstrapUnit BootstrapPH = new("pH", "pH");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L25 | `private static readonly BootstrapUnit BootstrapCoefficient = new("coefficient", "coeff");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L28 | `private static readonly BootstrapUnit BootstrapGram = new("gram", "g");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L29 | `private static readonly BootstrapUnit BootstrapMolar = new("molar", "M");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L30 | `private static readonly BootstrapUnit BootstrapLumen = new("lumen", "lm");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L31 | `private static readonly BootstrapUnit BootstrapLux = new("lux", "lx");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L32 | `private static readonly BootstrapUnit BootstrapBecquerel = new("becquerel", "Bq");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L33 | `private static readonly BootstrapUnit BootstrapGray = new("gray", "Gy");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L34 | `private static readonly BootstrapUnit BootstrapSievert = new("sievert", "Sv");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L35 | `private static readonly BootstrapUnit BootstrapBarn = new("barn", "b");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L36 | `private static readonly BootstrapUnit BootstrapDiopter = new("diopter", "D");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L63 | `private static readonly BootstrapUnit BootstrapSquareMeter = new("square meter", "m²");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L64 | `private static readonly BootstrapUnit BootstrapCubicMeter = new("cubic meter", "m³");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L65 | `private static readonly BootstrapUnit BootstrapMetersPerSecond = new("meters per second", "m/s");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L66 | `private static readonly BootstrapUnit BootstrapMetersPerSecondSquared = new("meters per second squared", "m/s²");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L67 | `private static readonly BootstrapUnit BootstrapNewton = new("newton", "N");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L68 | `private static readonly BootstrapUnit BootstrapPascal = new("pascal", "Pa");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L69 | `private static readonly BootstrapUnit BootstrapJoule = new("joule", "J");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L70 | `private static readonly BootstrapUnit BootstrapWatt = new("watt", "W");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L71 | `private static readonly BootstrapUnit BootstrapVolt = new("volt", "V");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L72 | `private static readonly BootstrapUnit BootstrapOhm = new("ohm", "Ω");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L73 | `private static readonly BootstrapUnit BootstrapCoulomb = new("coulomb", "C");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L74 | `private static readonly BootstrapUnit BootstrapFarad = new("farad", "F");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L75 | `private static readonly BootstrapUnit BootstrapHertz = new("hertz", "Hz");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L12 | `private static readonly BootstrapUnit BootstrapRadian = new("radian", "rad");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L13 | `private static readonly BootstrapUnit BootstrapMeter = new("meter", "m");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L14 | `private static readonly BootstrapUnit BootstrapKilogram = new("kilogram", "kg");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L15 | `private static readonly BootstrapUnit BootstrapSecond = new("second", "s");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L16 | `private static readonly BootstrapUnit BootstrapAmpere = new("ampere", "A");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L17 | `private static readonly BootstrapUnit BootstrapKelvin = new("kelvin", "K");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L18 | `private static readonly BootstrapUnit BootstrapMole = new("mole", "mol");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L19 | `private static readonly BootstrapUnit BootstrapCandela = new("candela", "cd");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L22 | `private static readonly BootstrapUnit BootstrapDimensionless = new("dimensionless", "1");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L23 | `private static readonly BootstrapUnit BootstrapDecibel = new("decibel", "dB");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L24 | `private static readonly BootstrapUnit BootstrapPH = new("pH", "pH");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L25 | `private static readonly BootstrapUnit BootstrapCoefficient = new("coefficient", "coeff");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L28 | `private static readonly BootstrapUnit BootstrapGram = new("gram", "g");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L29 | `private static readonly BootstrapUnit BootstrapMolar = new("molar", "M");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L30 | `private static readonly BootstrapUnit BootstrapLumen = new("lumen", "lm");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L31 | `private static readonly BootstrapUnit BootstrapLux = new("lux", "lx");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L32 | `private static readonly BootstrapUnit BootstrapBecquerel = new("becquerel", "Bq");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L33 | `private static readonly BootstrapUnit BootstrapGray = new("gray", "Gy");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L34 | `private static readonly BootstrapUnit BootstrapSievert = new("sievert", "Sv");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L35 | `private static readonly BootstrapUnit BootstrapBarn = new("barn", "b");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L36 | `private static readonly BootstrapUnit BootstrapDiopter = new("diopter", "D");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L63 | `private static readonly BootstrapUnit BootstrapSquareMeter = new("square meter", "m²");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L64 | `private static readonly BootstrapUnit BootstrapCubicMeter = new("cubic meter", "m³");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L65 | `private static readonly BootstrapUnit BootstrapMetersPerSecond = new("meters per second", "m/s");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L66 | `private static readonly BootstrapUnit BootstrapMetersPerSecondSquared = new("meters per second squared", "m/s²");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L67 | `private static readonly BootstrapUnit BootstrapNewton = new("newton", "N");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L68 | `private static readonly BootstrapUnit BootstrapPascal = new("pascal", "Pa");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L69 | `private static readonly BootstrapUnit BootstrapJoule = new("joule", "J");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L70 | `private static readonly BootstrapUnit BootstrapWatt = new("watt", "W");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L71 | `private static readonly BootstrapUnit BootstrapVolt = new("volt", "V");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L72 | `private static readonly BootstrapUnit BootstrapOhm = new("ohm", "Ω");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L73 | `private static readonly BootstrapUnit BootstrapCoulomb = new("coulomb", "C");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L74 | `private static readonly BootstrapUnit BootstrapFarad = new("farad", "F");` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L75 | `private static readonly BootstrapUnit BootstrapHertz = new("hertz", "Hz");` |
+
+</details>
+
+---
+
+Perfect! I can see there are many bootstrap units cluttering the `PhysicalDimensions` class. Let me create a dedicated `BootstrapUnits` class to house all these bootstrap units and then refactor the `PhysicalDimensions` class to use them:
+
+---
+
+```diff
+- 
++ // Copyright (c) ktsu.dev
++ // All rights reserved.
++ // Licensed under the MIT license.
++ 
++ namespace ktsu.Semantics;
++ 
++ /// <summary>
++ /// Internal registry of bootstrap units used during initialization to break circular dependencies.
++ /// These units are replaced with actual units after the Units class is initialized.
++ /// </summary>
++ internal static class BootstrapUnits
++ {
++ 	#region Fundamental SI Base Units
++ 	/// <summary>Bootstrap unit for radian angle measurement.</summary>
++ 	internal static readonly BootstrapUnit Radian = new("radian", "rad");
++ 	
++ 	/// <summary>Bootstrap unit for the SI base unit of length.</summary>
++ 	internal static readonly BootstrapUnit Meter = new("meter", "m");
++ 	
++ 	/// <summary>Bootstrap unit for the SI base unit of mass.</summary>
++ 	internal static readonly BootstrapUnit Kilogram = new("kilogram", "kg");
++ 	
++ 	/// <summary>Bootstrap unit for the SI base unit of time.</summary>
++ 	internal static readonly BootstrapUnit Second = new("second", "s");
++ 	
++ 	/// <summary>Bootstrap unit for the SI base unit of electric current.</summary>
++ 	internal static readonly BootstrapUnit Ampere = new("ampere", "A");
++ 	
++ 	/// <summary>Bootstrap unit for the SI base unit of temperature.</summary>
++ 	internal static readonly BootstrapUnit Kelvin = new("kelvin", "K");
++ 	
++ 	/// <summary>Bootstrap unit for the SI base unit of amount of substance.</summary>
++ 	internal static readonly BootstrapUnit Mole = new("mole", "mol");
++ 	
++ 	/// <summary>Bootstrap unit for the SI base unit of luminous intensity.</summary>
++ 	internal static readonly BootstrapUnit Candela = new("candela", "cd");
++ 	#endregion
++ 
++ 	#region Dimensionless and Special Units
++ 	/// <summary>Bootstrap unit for dimensionless quantities.</summary>
++ 	internal static readonly BootstrapUnit Dimensionless = new("dimensionless", "1");
++ 	
++ 	/// <summary>Bootstrap unit for decibel measurements.</summary>
++ 	internal static readonly BootstrapUnit Decibel = new("decibel", "dB");
++ 	
++ 	/// <summary>Bootstrap unit for pH scale measurements.</summary>
++ 	internal static readonly BootstrapUnit PH = new("pH", "pH");
++ 	
++ 	/// <summary>Bootstrap unit for coefficient measurements.</summary>
++ 	internal static readonly BootstrapUnit Coefficient = new("coefficient", "coeff");
++ 	#endregion
++ 
++ 	#region Additional Bootstrap Units for Circular Dependencies
++ 	/// <summary>Bootstrap unit for mass in grams.</summary>
++ 	internal static readonly BootstrapUnit Gram = new("gram", "g");
++ 	
++ 	/// <summary>Bootstrap unit for molar concentration.</summary>
++ 	internal static readonly BootstrapUnit Molar = new("molar", "M");
++ 	
++ 	/// <summary>Bootstrap unit for luminous flux.</summary>
++ 	internal static readonly BootstrapUnit Lumen = new("lumen", "lm");
++ 	
++ 	/// <summary>Bootstrap unit for illuminance.</summary>
++ 	internal static readonly BootstrapUnit Lux = new("lux", "lx");
++ 	
++ 	/// <summary>Bootstrap unit for radioactive activity.</summary>
++ 	internal static readonly BootstrapUnit Becquerel = new("becquerel", "Bq");
++ 	
++ 	/// <summary>Bootstrap unit for absorbed dose.</summary>
++ 	internal static readonly BootstrapUnit Gray = new("gray", "Gy");
++ 	
++ 	/// <summary>Bootstrap unit for equivalent dose.</summary>
++ 	internal static readonly BootstrapUnit Sievert = new("sievert", "Sv");
++ 	
++ 	/// <summary>Bootstrap unit for nuclear cross section.</summary>
++ 	internal static readonly BootstrapUnit Barn = new("barn", "b");
++ 	
++ 	/// <summary>Bootstrap unit for optical power.</summary>
++ 	internal static readonly BootstrapUnit Diopter = new("diopter", "D");
++ 	#endregion
++ 
++ 	#region Derived SI Units Bootstrap
++ 	/// <summary>Bootstrap unit for area.</summary>
++ 	internal static readonly BootstrapUnit SquareMeter = new("square meter", "m²");
++ 	
++ 	/// <summary>Bootstrap unit for volume.</summary>
++ 	internal static readonly BootstrapUnit CubicMeter = new("cubic meter", "m³");
++ 	
++ 	/// <summary>Bootstrap unit for velocity.</summary>
++ 	internal static readonly BootstrapUnit MetersPerSecond = new("meters per second", "m/s");
++ 	
++ 	/// <summary>Bootstrap unit for acceleration.</summary>
++ 	internal static readonly BootstrapUnit MetersPerSecondSquared = new("meters per second squared", "m/s²");
++ 	
++ 	/// <summary>Bootstrap unit for force.</summary>
++ 	internal static readonly BootstrapUnit Newton = new("newton", "N");
++ 	
++ 	/// <summary>Bootstrap unit for pressure.</summary>
++ 	internal static readonly BootstrapUnit Pascal = new("pascal", "Pa");
++ 	
++ 	/// <summary>Bootstrap unit for energy.</summary>
++ 	internal static readonly BootstrapUnit Joule = new("joule", "J");
++ 	
++ 	/// <summary>Bootstrap unit for power.</summary>
++ 	internal static readonly BootstrapUnit Watt = new("watt", "W");
++ 	
++ 	/// <summary>Bootstrap unit for electric potential.</summary>
++ 	internal static readonly BootstrapUnit Volt = new("volt", "V");
++ 	
++ 	/// <summary>Bootstrap unit for electric resistance.</summary>
++ 	internal static readonly BootstrapUnit Ohm = new("ohm", "Ω");
++ 	
++ 	/// <summary>Bootstrap unit for electric charge.</summary>
++ 	internal static readonly BootstrapUnit Coulomb = new("coulomb", "C");
++ 	
++ 	/// <summary>Bootstrap unit for electric capacitance.</summary>
++ 	internal static readonly BootstrapUnit Farad = new("farad", "F");
++ 	
++ 	/// <summary>Bootstrap unit for frequency.</summary>
++ 	internal static readonly BootstrapUnit Hertz = new("hertz", "Hz");
++ 	#endregion
++ } 
+```
+
+---
+
+Now I'll refactor the `PhysicalDimensions` class to use the new `BootstrapUnits` class, removing all the bootstrap unit declarations from it:
+
+---
+
+
+
+---
+
+I need to continue updating the rest of the PhysicalDimensions file to use the BootstrapUnits class. Let me fix the remaining references:
+
+---
+
+
+
+---
+
+
+
+---
+
+Let me continue fixing the remaining bootstrap unit references. I need to find and update all the remaining references:
+
+---
+
+<details>
+            <summary>Grep search for "Bootstrap[A-Z]" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L12 | `public static readonly PhysicalDimension Dimensionless = new(baseUnit: BootstrapUnits.Dimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L15 | `public static readonly PhysicalDimension Length = new(baseUnit: BootstrapUnits.Meter, length: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L18 | `public static readonly PhysicalDimension Mass = new(baseUnit: BootstrapUnits.Kilogram, mass: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L21 | `public static readonly PhysicalDimension Time = new(baseUnit: BootstrapUnits.Second, time: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L24 | `public static readonly PhysicalDimension ElectricCurrent = new(baseUnit: BootstrapUnits.Ampere, electricCurrent: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L27 | `public static readonly PhysicalDimension Temperature = new(baseUnit: BootstrapUnits.Kelvin, temperature: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L30 | `public static readonly PhysicalDimension AmountOfSubstance = new(baseUnit: BootstrapUnits.Mole, amountOfSubstance: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L33 | `public static readonly PhysicalDimension LuminousIntensity = new(baseUnit: BootstrapUnits.Candela, luminousIntensity: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L36 | `public static readonly PhysicalDimension Area = new(baseUnit: BootstrapUnits.SquareMeter, length: 2);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L39 | `public static readonly PhysicalDimension Volume = new(baseUnit: BootstrapUnits.CubicMeter, length: 3);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L42 | `public static readonly PhysicalDimension Velocity = new(baseUnit: BootstrapUnits.MetersPerSecond, length: 1, time: -1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L45 | `public static readonly PhysicalDimension Acceleration = new(baseUnit: BootstrapUnits.MetersPerSecondSquared, length: 1, time: -2);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L48 | `public static readonly PhysicalDimension Force = new(mass: 1, length: 1, time: -2, baseUnit: BootstrapUnits.Newton);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L51 | `public static readonly PhysicalDimension Pressure = new(mass: 1, length: -1, time: -2, baseUnit: BootstrapUnits.Pascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L54 | `public static readonly PhysicalDimension Energy = new(mass: 1, length: 2, time: -2, baseUnit: BootstrapUnits.Joule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L57 | `public static readonly PhysicalDimension Power = new(mass: 1, length: 2, time: -3, baseUnit: BootstrapUnits.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L60 | `public static readonly PhysicalDimension ElectricPotential = new(mass: 1, length: 2, time: -3, electricCurrent: -1, baseUnit: BootstrapUnits.Volt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L63 | `public static readonly PhysicalDimension ElectricResistance = new(mass: 1, length: 2, time: -3, electricCurrent: -2, baseUnit: BootstrapUnits.Ohm);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L66 | `public static readonly PhysicalDimension ElectricCharge = new(electricCurrent: 1, time: 1, baseUnit: BootstrapUnits.Coulomb);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L69 | `public static readonly PhysicalDimension ElectricCapacitance = new(mass: -1, length: -2, time: 4, electricCurrent: 2, baseUnit: BootstrapUnits.Farad);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L72 | `public static readonly PhysicalDimension Frequency = new(baseUnit: BootstrapUnits.Hertz, time: -1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L75 | `public static readonly PhysicalDimension Momentum = new(mass: 1, length: 1, time: -1, baseUnit: BootstrapUnits.Newton);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L78 | `public static readonly PhysicalDimension AngularVelocity = new(baseUnit: BootstrapUnits.Radian, time: -1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L81 | `public static readonly PhysicalDimension AngularAcceleration = new(baseUnit: BootstrapUnits.Radian, time: -2);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L84 | `public static readonly PhysicalDimension Torque = new(mass: 1, length: 2, time: -2, baseUnit: BootstrapUnits.Newton);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L87 | `public static readonly PhysicalDimension MomentOfInertia = new(mass: 1, length: 2, baseUnit: BootstrapUnits.Kilogram);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L90 | `public static readonly PhysicalDimension Density = new(mass: 1, length: -3, baseUnit: BootstrapUnits.Kilogram);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L93 | `public static readonly PhysicalDimension Concentration = new(amountOfSubstance: 1, length: -3, baseUnit: BootstrapUnits.Molar);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L96 | `public static readonly PhysicalDimension ElectricField = new(mass: 1, length: 1, time: -3, electricCurrent: -1, baseUnit: BootstrapUnits.Volt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L99 | `public static readonly PhysicalDimension ElectricFlux = new(mass: 1, length: 3, time: -3, electricCurrent: -1, baseUnit: BootstrapUnits.Volt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L102 | `public static readonly PhysicalDimension Permittivity = new(mass: -1, length: -3, time: 4, electricCurrent: 2, baseUnit: BootstrapUnits.Farad);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L105 | `public static readonly PhysicalDimension ElectricConductivity = new(mass: -1, length: -3, time: 3, electricCurrent: 2, baseUnit: BootstrapUnits.Ohm);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L108 | `public static readonly PhysicalDimension ElectricPowerDensity = new(mass: 1, length: -1, time: -3, baseUnit: BootstrapUnits.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L111 | `public static readonly PhysicalDimension ImpedanceAC = new(mass: 1, length: 2, time: -3, electricCurrent: -2, baseUnit: BootstrapUnits.Ohm);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L114 | `public static readonly PhysicalDimension SoundPressure = new(mass: 1, length: -1, time: -2, baseUnit: BootstrapUnits.Pascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L117 | `public static readonly PhysicalDimension SoundIntensity = new(mass: 1, time: -3, baseUnit: BootstrapUnits.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L120 | `public static readonly PhysicalDimension SoundPower = new(mass: 1, length: 2, time: -3, baseUnit: BootstrapUnits.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L123 | `public static readonly PhysicalDimension AcousticImpedance = new(mass: 1, length: -2, time: -1, baseUnit: BootstrapUnits.Pascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L126 | `public static readonly PhysicalDimension SoundSpeed = new(length: 1, time: -1, baseUnit: BootstrapUnits.MetersPerSecond);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L129 | `public static readonly PhysicalDimension SoundAbsorption = new(baseUnit: BootstrapUnits.Coefficient);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L132 | `public static readonly PhysicalDimension ReverberationTime = new(time: 1, baseUnit: BootstrapUnits.Second);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L135 | `public static readonly PhysicalDimension Wavelength = new(length: 1, baseUnit: BootstrapUnits.Meter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L138 | `public static readonly PhysicalDimension WaveNumber = new(length: -1, baseUnit: BootstrapUnits.Meter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L141 | `public static readonly PhysicalDimension SoundPressureLevel = new(baseUnit: BootstrapUnits.Decibel);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L144 | `public static readonly PhysicalDimension SoundIntensityLevel = new(baseUnit: BootstrapDecibel);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L147 | `public static readonly PhysicalDimension SoundPowerLevel = new(baseUnit: BootstrapDecibel);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L150 | `public static readonly PhysicalDimension ReflectionCoefficient = new(baseUnit: BootstrapCoefficient);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L153 | `public static readonly PhysicalDimension NoiseReductionCoefficient = new(baseUnit: BootstrapCoefficient);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L156 | `public static readonly PhysicalDimension SoundTransmissionClass = new(baseUnit: BootstrapDimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L159 | `public static readonly PhysicalDimension Loudness = new(baseUnit: BootstrapDimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L162 | `public static readonly PhysicalDimension Pitch = new(time: -1, baseUnit: BootstrapHertz);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L165 | `public static readonly PhysicalDimension Sharpness = new(baseUnit: BootstrapDimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L168 | `public static readonly PhysicalDimension Sensitivity = new(mass: -1, length: -1, time: 2, electricCurrent: 1, baseUnit: BootstrapVolt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L171 | `public static readonly PhysicalDimension DirectionalityIndex = new(baseUnit: BootstrapDecibel);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L174 | `public static readonly PhysicalDimension Heat = new(mass: 1, length: 2, time: -2, baseUnit: BootstrapJoule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L177 | `public static readonly PhysicalDimension Entropy = new(mass: 1, length: 2, time: -2, temperature: -1, baseUnit: BootstrapJoule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L180 | `public static readonly PhysicalDimension ThermalConductivity = new(mass: 1, length: 1, time: -3, temperature: -1, baseUnit: BootstrapWatt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L183 | `public static readonly PhysicalDimension HeatCapacity = new(mass: 1, length: 2, time: -2, temperature: -1, baseUnit: BootstrapJoule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L186 | `public static readonly PhysicalDimension SpecificHeat = new(length: 2, time: -2, temperature: -1, baseUnit: BootstrapJoule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L189 | `public static readonly PhysicalDimension HeatTransferCoefficient = new(mass: 1, time: -3, temperature: -1, baseUnit: BootstrapWatt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L192 | `public static readonly PhysicalDimension ThermalExpansion = new(temperature: -1, baseUnit: BootstrapKelvin);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L195 | `public static readonly PhysicalDimension ThermalDiffusivity = new(length: 2, time: -1, baseUnit: BootstrapMeter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L198 | `public static readonly PhysicalDimension ThermalResistance = new(temperature: 1, time: 3, mass: -1, length: -2, baseUnit: BootstrapKelvin);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L201 | `public static readonly PhysicalDimension MolarMass = new(mass: 1, amountOfSubstance: -1, baseUnit: BootstrapGram);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L204 | `public static readonly PhysicalDimension pH = new(baseUnit: BootstrapPH);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L207 | `public static readonly PhysicalDimension ReactionRate = new(amountOfSubstance: 1, length: -3, time: -1, baseUnit: BootstrapMolar);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L210 | `public static readonly PhysicalDimension ActivationEnergy = new(mass: 1, length: 2, time: -2, amountOfSubstance: -1, baseUnit: BootstrapJoule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L213 | `public static readonly PhysicalDimension RateConstant = new(baseUnit: BootstrapSecond); // First-order default` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L216 | `public static readonly PhysicalDimension EnzymeActivity = new(amountOfSubstance: 1, time: -1, baseUnit: BootstrapMole);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L219 | `public static readonly PhysicalDimension Solubility = new(amountOfSubstance: 1, length: -3, baseUnit: BootstrapMolar);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L222 | `public static readonly PhysicalDimension SurfaceTension = new(mass: 1, time: -2, baseUnit: BootstrapNewton);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L225 | `public static readonly PhysicalDimension VaporPressure = new(mass: 1, length: -1, time: -2, baseUnit: BootstrapPascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L228 | `public static readonly PhysicalDimension DynamicViscosity = new(mass: 1, length: -1, time: -1, baseUnit: BootstrapPascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L231 | `public static readonly PhysicalDimension LuminousFlux = new(luminousIntensity: 1, baseUnit: BootstrapLumen);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L234 | `public static readonly PhysicalDimension Illuminance = new(luminousIntensity: 1, length: -2, baseUnit: BootstrapLux);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L237 | `public static readonly PhysicalDimension Luminance = new(luminousIntensity: 1, length: -2, baseUnit: BootstrapCandela);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L240 | `public static readonly PhysicalDimension RefractiveIndex = new(baseUnit: BootstrapDimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L243 | `public static readonly PhysicalDimension OpticalPower = new(length: -1, baseUnit: BootstrapDiopter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L246 | `public static readonly PhysicalDimension RadioactiveActivity = new(time: -1, baseUnit: BootstrapBecquerel);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L249 | `public static readonly PhysicalDimension AbsorbedDose = new(length: 2, time: -2, baseUnit: BootstrapGray);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L252 | `public static readonly PhysicalDimension EquivalentDose = new(length: 2, time: -2, baseUnit: BootstrapSievert);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L255 | `public static readonly PhysicalDimension Exposure = new(mass: -1, time: 1, electricCurrent: 1, baseUnit: BootstrapCoulomb);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L258 | `public static readonly PhysicalDimension NuclearCrossSection = new(length: 2, baseUnit: BootstrapBarn);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L261 | `public static readonly PhysicalDimension KinematicViscosity = new(length: 2, time: -1, baseUnit: BootstrapMeter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L264 | `public static readonly PhysicalDimension BulkModulus = new(mass: 1, length: -1, time: -2, baseUnit: BootstrapPascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L267 | `public static readonly PhysicalDimension VolumetricFlowRate = new(length: 3, time: -1, baseUnit: BootstrapCubicMeter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L270 | `public static readonly PhysicalDimension MassFlowRate = new(mass: 1, time: -1, baseUnit: BootstrapKilogram);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L273 | `public static readonly PhysicalDimension ReynoldsNumber = new(baseUnit: BootstrapDimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L12 | `public static readonly PhysicalDimension Dimensionless = new(baseUnit: BootstrapUnits.Dimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L15 | `public static readonly PhysicalDimension Length = new(baseUnit: BootstrapUnits.Meter, length: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L18 | `public static readonly PhysicalDimension Mass = new(baseUnit: BootstrapUnits.Kilogram, mass: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L21 | `public static readonly PhysicalDimension Time = new(baseUnit: BootstrapUnits.Second, time: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L24 | `public static readonly PhysicalDimension ElectricCurrent = new(baseUnit: BootstrapUnits.Ampere, electricCurrent: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L27 | `public static readonly PhysicalDimension Temperature = new(baseUnit: BootstrapUnits.Kelvin, temperature: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L30 | `public static readonly PhysicalDimension AmountOfSubstance = new(baseUnit: BootstrapUnits.Mole, amountOfSubstance: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L33 | `public static readonly PhysicalDimension LuminousIntensity = new(baseUnit: BootstrapUnits.Candela, luminousIntensity: 1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L36 | `public static readonly PhysicalDimension Area = new(baseUnit: BootstrapUnits.SquareMeter, length: 2);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L39 | `public static readonly PhysicalDimension Volume = new(baseUnit: BootstrapUnits.CubicMeter, length: 3);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L42 | `public static readonly PhysicalDimension Velocity = new(baseUnit: BootstrapUnits.MetersPerSecond, length: 1, time: -1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L45 | `public static readonly PhysicalDimension Acceleration = new(baseUnit: BootstrapUnits.MetersPerSecondSquared, length: 1, time: -2);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L48 | `public static readonly PhysicalDimension Force = new(mass: 1, length: 1, time: -2, baseUnit: BootstrapUnits.Newton);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L51 | `public static readonly PhysicalDimension Pressure = new(mass: 1, length: -1, time: -2, baseUnit: BootstrapUnits.Pascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L54 | `public static readonly PhysicalDimension Energy = new(mass: 1, length: 2, time: -2, baseUnit: BootstrapUnits.Joule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L57 | `public static readonly PhysicalDimension Power = new(mass: 1, length: 2, time: -3, baseUnit: BootstrapUnits.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L60 | `public static readonly PhysicalDimension ElectricPotential = new(mass: 1, length: 2, time: -3, electricCurrent: -1, baseUnit: BootstrapUnits.Volt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L63 | `public static readonly PhysicalDimension ElectricResistance = new(mass: 1, length: 2, time: -3, electricCurrent: -2, baseUnit: BootstrapUnits.Ohm);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L66 | `public static readonly PhysicalDimension ElectricCharge = new(electricCurrent: 1, time: 1, baseUnit: BootstrapUnits.Coulomb);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L69 | `public static readonly PhysicalDimension ElectricCapacitance = new(mass: -1, length: -2, time: 4, electricCurrent: 2, baseUnit: BootstrapUnits.Farad);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L72 | `public static readonly PhysicalDimension Frequency = new(baseUnit: BootstrapUnits.Hertz, time: -1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L75 | `public static readonly PhysicalDimension Momentum = new(mass: 1, length: 1, time: -1, baseUnit: BootstrapUnits.Newton);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L78 | `public static readonly PhysicalDimension AngularVelocity = new(baseUnit: BootstrapUnits.Radian, time: -1);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L81 | `public static readonly PhysicalDimension AngularAcceleration = new(baseUnit: BootstrapUnits.Radian, time: -2);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L84 | `public static readonly PhysicalDimension Torque = new(mass: 1, length: 2, time: -2, baseUnit: BootstrapUnits.Newton);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L87 | `public static readonly PhysicalDimension MomentOfInertia = new(mass: 1, length: 2, baseUnit: BootstrapUnits.Kilogram);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L90 | `public static readonly PhysicalDimension Density = new(mass: 1, length: -3, baseUnit: BootstrapUnits.Kilogram);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L93 | `public static readonly PhysicalDimension Concentration = new(amountOfSubstance: 1, length: -3, baseUnit: BootstrapUnits.Molar);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L96 | `public static readonly PhysicalDimension ElectricField = new(mass: 1, length: 1, time: -3, electricCurrent: -1, baseUnit: BootstrapUnits.Volt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L99 | `public static readonly PhysicalDimension ElectricFlux = new(mass: 1, length: 3, time: -3, electricCurrent: -1, baseUnit: BootstrapUnits.Volt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L102 | `public static readonly PhysicalDimension Permittivity = new(mass: -1, length: -3, time: 4, electricCurrent: 2, baseUnit: BootstrapUnits.Farad);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L105 | `public static readonly PhysicalDimension ElectricConductivity = new(mass: -1, length: -3, time: 3, electricCurrent: 2, baseUnit: BootstrapUnits.Ohm);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L108 | `public static readonly PhysicalDimension ElectricPowerDensity = new(mass: 1, length: -1, time: -3, baseUnit: BootstrapUnits.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L111 | `public static readonly PhysicalDimension ImpedanceAC = new(mass: 1, length: 2, time: -3, electricCurrent: -2, baseUnit: BootstrapUnits.Ohm);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L114 | `public static readonly PhysicalDimension SoundPressure = new(mass: 1, length: -1, time: -2, baseUnit: BootstrapUnits.Pascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L117 | `public static readonly PhysicalDimension SoundIntensity = new(mass: 1, time: -3, baseUnit: BootstrapUnits.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L120 | `public static readonly PhysicalDimension SoundPower = new(mass: 1, length: 2, time: -3, baseUnit: BootstrapUnits.Watt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L123 | `public static readonly PhysicalDimension AcousticImpedance = new(mass: 1, length: -2, time: -1, baseUnit: BootstrapUnits.Pascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L126 | `public static readonly PhysicalDimension SoundSpeed = new(length: 1, time: -1, baseUnit: BootstrapUnits.MetersPerSecond);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L129 | `public static readonly PhysicalDimension SoundAbsorption = new(baseUnit: BootstrapUnits.Coefficient);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L132 | `public static readonly PhysicalDimension ReverberationTime = new(time: 1, baseUnit: BootstrapUnits.Second);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L135 | `public static readonly PhysicalDimension Wavelength = new(length: 1, baseUnit: BootstrapUnits.Meter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L138 | `public static readonly PhysicalDimension WaveNumber = new(length: -1, baseUnit: BootstrapUnits.Meter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L141 | `public static readonly PhysicalDimension SoundPressureLevel = new(baseUnit: BootstrapUnits.Decibel);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L144 | `public static readonly PhysicalDimension SoundIntensityLevel = new(baseUnit: BootstrapDecibel);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L147 | `public static readonly PhysicalDimension SoundPowerLevel = new(baseUnit: BootstrapDecibel);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L150 | `public static readonly PhysicalDimension ReflectionCoefficient = new(baseUnit: BootstrapCoefficient);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L153 | `public static readonly PhysicalDimension NoiseReductionCoefficient = new(baseUnit: BootstrapCoefficient);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L156 | `public static readonly PhysicalDimension SoundTransmissionClass = new(baseUnit: BootstrapDimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L159 | `public static readonly PhysicalDimension Loudness = new(baseUnit: BootstrapDimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L162 | `public static readonly PhysicalDimension Pitch = new(time: -1, baseUnit: BootstrapHertz);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L165 | `public static readonly PhysicalDimension Sharpness = new(baseUnit: BootstrapDimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L168 | `public static readonly PhysicalDimension Sensitivity = new(mass: -1, length: -1, time: 2, electricCurrent: 1, baseUnit: BootstrapVolt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L171 | `public static readonly PhysicalDimension DirectionalityIndex = new(baseUnit: BootstrapDecibel);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L174 | `public static readonly PhysicalDimension Heat = new(mass: 1, length: 2, time: -2, baseUnit: BootstrapJoule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L177 | `public static readonly PhysicalDimension Entropy = new(mass: 1, length: 2, time: -2, temperature: -1, baseUnit: BootstrapJoule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L180 | `public static readonly PhysicalDimension ThermalConductivity = new(mass: 1, length: 1, time: -3, temperature: -1, baseUnit: BootstrapWatt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L183 | `public static readonly PhysicalDimension HeatCapacity = new(mass: 1, length: 2, time: -2, temperature: -1, baseUnit: BootstrapJoule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L186 | `public static readonly PhysicalDimension SpecificHeat = new(length: 2, time: -2, temperature: -1, baseUnit: BootstrapJoule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L189 | `public static readonly PhysicalDimension HeatTransferCoefficient = new(mass: 1, time: -3, temperature: -1, baseUnit: BootstrapWatt);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L192 | `public static readonly PhysicalDimension ThermalExpansion = new(temperature: -1, baseUnit: BootstrapKelvin);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L195 | `public static readonly PhysicalDimension ThermalDiffusivity = new(length: 2, time: -1, baseUnit: BootstrapMeter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L198 | `public static readonly PhysicalDimension ThermalResistance = new(temperature: 1, time: 3, mass: -1, length: -2, baseUnit: BootstrapKelvin);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L201 | `public static readonly PhysicalDimension MolarMass = new(mass: 1, amountOfSubstance: -1, baseUnit: BootstrapGram);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L204 | `public static readonly PhysicalDimension pH = new(baseUnit: BootstrapPH);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L207 | `public static readonly PhysicalDimension ReactionRate = new(amountOfSubstance: 1, length: -3, time: -1, baseUnit: BootstrapMolar);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L210 | `public static readonly PhysicalDimension ActivationEnergy = new(mass: 1, length: 2, time: -2, amountOfSubstance: -1, baseUnit: BootstrapJoule);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L213 | `public static readonly PhysicalDimension RateConstant = new(baseUnit: BootstrapSecond); // First-order default` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L216 | `public static readonly PhysicalDimension EnzymeActivity = new(amountOfSubstance: 1, time: -1, baseUnit: BootstrapMole);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L219 | `public static readonly PhysicalDimension Solubility = new(amountOfSubstance: 1, length: -3, baseUnit: BootstrapMolar);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L222 | `public static readonly PhysicalDimension SurfaceTension = new(mass: 1, time: -2, baseUnit: BootstrapNewton);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L225 | `public static readonly PhysicalDimension VaporPressure = new(mass: 1, length: -1, time: -2, baseUnit: BootstrapPascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L228 | `public static readonly PhysicalDimension DynamicViscosity = new(mass: 1, length: -1, time: -1, baseUnit: BootstrapPascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L231 | `public static readonly PhysicalDimension LuminousFlux = new(luminousIntensity: 1, baseUnit: BootstrapLumen);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L234 | `public static readonly PhysicalDimension Illuminance = new(luminousIntensity: 1, length: -2, baseUnit: BootstrapLux);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L237 | `public static readonly PhysicalDimension Luminance = new(luminousIntensity: 1, length: -2, baseUnit: BootstrapCandela);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L240 | `public static readonly PhysicalDimension RefractiveIndex = new(baseUnit: BootstrapDimensionless);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L243 | `public static readonly PhysicalDimension OpticalPower = new(length: -1, baseUnit: BootstrapDiopter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L246 | `public static readonly PhysicalDimension RadioactiveActivity = new(time: -1, baseUnit: BootstrapBecquerel);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L249 | `public static readonly PhysicalDimension AbsorbedDose = new(length: 2, time: -2, baseUnit: BootstrapGray);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L252 | `public static readonly PhysicalDimension EquivalentDose = new(length: 2, time: -2, baseUnit: BootstrapSievert);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L255 | `public static readonly PhysicalDimension Exposure = new(mass: -1, time: 1, electricCurrent: 1, baseUnit: BootstrapCoulomb);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L258 | `public static readonly PhysicalDimension NuclearCrossSection = new(length: 2, baseUnit: BootstrapBarn);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L261 | `public static readonly PhysicalDimension KinematicViscosity = new(length: 2, time: -1, baseUnit: BootstrapMeter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L264 | `public static readonly PhysicalDimension BulkModulus = new(mass: 1, length: -1, time: -2, baseUnit: BootstrapPascal);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L267 | `public static readonly PhysicalDimension VolumetricFlowRate = new(length: 3, time: -1, baseUnit: BootstrapCubicMeter);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L270 | `public static readonly PhysicalDimension MassFlowRate = new(mass: 1, time: -1, baseUnit: BootstrapKilogram);` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L273 | `public static readonly PhysicalDimension ReynoldsNumber = new(baseUnit: BootstrapDimensionless);` |
+
+</details>
+
+---
+
+
+
+---
+
+I can see there are many more bootstrap unit references that need to be updated. Let me create a comprehensive search and replace to fix all the remaining ones:
+
+---
+
+
+
+---
+
+Let me use a more efficient approach to fix all the remaining references at once. I'll search and replace all the remaining "Bootstrap" references in one go:
+
+---
+
+```bash
+cd "Semantics/Quantities/Core" && sed -i 's/BootstrapJoule/BootstrapUnits.Joule/g; s/BootstrapWatt/BootstrapUnits.Watt/g; s/BootstrapKelvin/BootstrapUnits.Kelvin/g; s/BootstrapMeter/BootstrapUnits.Meter/g; s/BootstrapGram/BootstrapUnits.Gram/g; s/BootstrapPH/BootstrapUnits.PH/g; s/BootstrapMolar/BootstrapUnits.Molar/g; s/BootstrapSecond/BootstrapUnits.Second/g; s/BootstrapMole/BootstrapUnits.Mole/g; s/BootstrapNewton/BootstrapUnits.Newton/g; s/BootstrapPascal/BootstrapUnits.Pascal/g; s/BootstrapLumen/BootstrapUnits.Lumen/g; s/BootstrapLux/BootstrapUnits.Lux/g; s/BootstrapCandela/BootstrapUnits.Candela/g; s/BootstrapDimensionless/BootstrapUnits.Dimensionless/g; s/BootstrapDiopter/BootstrapUnits.Diopter/g; s/BootstrapBecquerel/BootstrapUnits.Becquerel/g; s/BootstrapGray/BootstrapUnits.Gray/g; s/BootstrapSievert/BootstrapUnits.Sievert/g; s/BootstrapCoulomb/BootstrapUnits.Coulomb/g; s/BootstrapBarn/BootstrapUnits.Barn/g; s/BootstrapCubicMeter/BootstrapUnits.CubicMeter/g; s/BootstrapKilogram/BootstrapUnits.Kilogram/g' PhysicalDimensions.cs
+```
+
+```
+C:\dev\ktsu-dev\Semantics>cd "Semantics/Quantities/Core" && sed -i 's/BootstrapJoule/BootstrapUnits.Joule/g; s/BootstrapWatt/BootstrapUnits.Watt/g; s/BootstrapKelvin/BootstrapUnits.Kelvin/g; s/Bootst
+rapMeter/BootstrapUnits.Meter/g; s/BootstrapGram/BootstrapUnits.Gram/g; s/BootstrapPH/BootstrapUnits.PH/g; s/BootstrapMolar/BootstrapUnits.Molar/g; s/BootstrapSecond/BootstrapUnits.Second/g; s/Bootst
+rapMole/BootstrapUnits.Molcd "Semantics/Quantities/Core" && sed -i 's/BootstrapJoule/BootstrapUnits.Joule/g; s/BootstrapWatt/BootstrapUnits.Watt/g; s/BootstrapKelvin/BootstrapUnits.Kelvin/g; s/Bootst
+rapMeter/BootstrapUnits.Meter/g; s/BootstrapGram/BootstrapUnits.Gram/g; s/BootstrapPH/BootstrapUnits.PH/g; s/BootstrapMolar/BootstrapUnits.Molar/g; s/BootstrapSecond/BootstrapUnits.Second/g; s/Bootst
+rapMole/BootstrapUnits.Mole/g; s/BootstrapNewton/BootstrapUnits.Newton/g; s/BootstrapPascal/BootstrapUnits.Pascal/g; s/BootstrapLumen/BootstrapUnits.Lumen/g; s/BootstrapLux/BootstrapUnits.Lux/g; s/Bo
+otstrapCandela/BootstrapUnits.Candela/g; s/BootstrapDimensionless/BootstrapUnits.Dimensionless/g; s/BootstrapDiopter/BootstrapUnits.Diopter/g; s/BootstrapBecquerel/BootstrapUnits.Becquerel/g; s/Boots
+trapGray/BootstrapUnits.Gray/g; s/BootstrapSievert/BootstrapUnits.Sievert/g; s/BootstrapCoulomb/BootstrapUnits.Coulomb/g; s/BootstrapBarn/BootstrapUnits.Barn/g; s/BootstrapCubicMeter/BootstrapUnits.C
+
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core>
+```
+
+---
+
+Let me try a simpler approach and check if the build is successful now:
+
+---
+
+```bash
+dotnet build Semantics --verbosity quiet
+```
+
+```
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core>dotnet build Semantics --verbosity quiet
+MSBUILD : error MSB1009: Project file does not exist.
+Switch: Semantics
+
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core>
+```
+
+---
+
+
+
+---
+
+```bash
+cd .. && cd .. && cd .. && dotnet build Semantics --verbosity quiet
+```
+
+```
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core>cd .. && cd .. && cd .. && dotnet build Semantics --verbosity quiet
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(1,26): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(2,24): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)     
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(3,35): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)     
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(7,33): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)     
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(11,2): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)     
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(13,103): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(16,99): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)    
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(19,98): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)    
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(22,96): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)    
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(25,118): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(28,110): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(31,120): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(34,123): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(37,103): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(40,104): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(43,121): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(46,132): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(49,118): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(52,122): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(55,118): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(58,116): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(61,149): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(64,149): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(67,127): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(70,152): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(73,101): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(76,121): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(79,108): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(82,112): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(85,119): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(88,120): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(91,113): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(94,129): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(97,145): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(100,144): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(103,145): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(106,151): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(109,132): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(112,142): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(115,127): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(118,114): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(121,121): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(124,131): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(127,123): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(130,103): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(133,109): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(136,103): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(139,104): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(142,102): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(145,103): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(148,99): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(151,109): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(154,113): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(157,112): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(160,98): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(163,97): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(166,99): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(169,143): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(172,103): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(175,116): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(178,136): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(181,147): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(184,141): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(187,132): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(190,140): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(193,116): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(196,121): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(199,147): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(202,122): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(205,81): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)   
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(208,138): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(211,151): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(214,118): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(217,127): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(220,126): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(223,116): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(226,127): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(229,130): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(232,116): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(235,125): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(238,127): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(241,105): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(244,108): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(247,115): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(250,114): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(253,119): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(256,131): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(259,111): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(262,121): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(265,125): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(268,126): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(271,116): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+C:\dev\ktsu-dev\Semantics\Semantics\Quantities\Core\PhysicalDimensions.cs(274,104): error IDE0055: Fix formatting (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0055)  
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+_**User**_
+
+update the tags, readme, and description documents
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+I'll help you update the tags, README, and description documents to reflect the current state of the Semantics library. Let me first explore what documentation files exist and then update them appropriately.
+
+---
+
+<details>
+            <summary>Searched codebase "README" • **10** results</summary>
+        
+| File |
+|------|
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+| `undefined` |
+
+</details>
+
+---
+
+<details>
+            <summary>Listed current directory • **35** results</summary>
+        
+| Name |
+|-------|
+| 📁 `.git` |
+| 📁 `Semantics` |
+| 📄 `CHANGELOG.md` |
+| 📁 `Semantics.Test` |
+| 📄 `VERSION.md` |
+| 📁 `docs` |
+| 📄 `README.md` |
+| 📁 `TestResults` |
+| 📄 `DESCRIPTION.md` |
+| 📄 `Directory.Packages.props` |
+| 📁 `obj` |
+| 📁 `bin` |
+| 📄 `COPYRIGHT.md` |
+| 📄 `AUTHORS.md` |
+| 📁 `.sonarlint` |
+| 📁 `.vscode` |
+| 📄 `TAGS.md` |
+| 📁 `.specstory` |
+| 📄 `.cursorignore` |
+| 📁 `.cursor` |
+| 📁 `.vs` |
+| 📄 `.gitignore` |
+| 📄 `LICENSE.md` |
+| 📄 `PROJECT_URL.url` |
+| 📄 `Semantics.sln` |
+| 📁 `scripts` |
+| 📁 `.github` |
+| 📄 `.cursorindexingignore` |
+| 📄 `.runsettings` |
+| 📄 `.editorconfig` |
+| 📄 `global.json` |
+| 📄 `.mailmap` |
+| 📄 `.gitattributes` |
+| 📄 `AUTHORS.url` |
+| 📄 `icon.png` |
+
+</details>
+
+---
+
+Now let me check the current content of the key documentation files to understand what needs to be updated:
+
+---
+
+Read file: README.md
+
+---
+
+
+
+---
+
+Read file: DESCRIPTION.md
 
 ---
 
