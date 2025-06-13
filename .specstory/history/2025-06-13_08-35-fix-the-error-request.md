@@ -1729,3 +1729,845 @@ _**Assistant**_
 
 ---
 
+
+
+---
+
+I'll examine the PhysicalConstants file to identify derived constants and then create tests to verify they're correctly calculated from their constituent parts.
+
+---
+
+Read file: Semantics/Quantities/Core/PhysicalConstants.cs
+
+---
+
+Now let me look at the existing test structure to understand how to add the derived constant tests:
+
+---
+
+<details>
+            <summary>Searched codebase "PhysicalConstants test" • **25** results</summary>
+        
+| File | Lines |
+|------|-------|
+| `Semantics.Test/PhysicalConstantsTests.cs` | L1-56 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L338-383 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L766-809 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L56-111 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L383-430 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L860-910 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L677-727 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L298-338 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L727-766 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L579-628 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L430-480 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L204-254 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L254-298 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L154-204 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L480-531 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L809-860 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L111-154 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L628-677 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L531-579 |
+| `Semantics.Test/MechanicalQuantitiesTests.cs` | L226-250 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L910-960 |
+| `Semantics/Quantities/Core/PhysicalConstants.cs` | L52-110 |
+| `Semantics/Quantities/Core/PhysicalConstants.cs` | L1-52 |
+| `Semantics.Test/PhysicalConstantsTests.cs` | L960-1001 |
+| `Semantics.Test/PerformanceBenchmarks.cs` | L168-217 |
+
+</details>
+
+---
+
+Now I can see that there are already some derived constant tests in `PhysicalConstantsTests.cs`. Let me look for the specific derived constants that need additional test coverage:
+
+---
+
+<details>
+            <summary>Grep search for "SquareFeetToSquareMeters.*=.*FeetToMeters.*\*.*FeetToMeters" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalConstants.cs` | L158 | `public const double SquareFeetToSquareMeters = FeetToMeters * FeetToMeters;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-13_08-35-fix-the-error-request.md` | L1361 | `+ 		public const double SquareFeetToSquareMeters = FeetToMeters * FeetToMeters;` |
+
+</details>
+
+---
+
+<details>
+            <summary>Grep search for "SquareInchesToSquareMeters.*=.*InchesToMeters.*\*.*InchesToMeters" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalConstants.cs` | L161 | `public const double SquareInchesToSquareMeters = InchesToMeters * InchesToMeters;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-13_08-35-fix-the-error-request.md` | L1364 | `+ 		public const double SquareInchesToSquareMeters = InchesToMeters * InchesToMeters;` |
+
+</details>
+
+---
+
+<details>
+            <summary>Grep search for "SquareMilesToSquareMeters.*=.*MilesToMeters.*\*.*MilesToMeters" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalConstants.cs` | L167 | `public const double SquareMilesToSquareMeters = MilesToMeters * MilesToMeters;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/.specstory/history/2025-06-13_08-35-fix-the-error-request.md` | L1370 | `+ 		public const double SquareMilesToSquareMeters = MilesToMeters * MilesToMeters;` |
+
+</details>
+
+---
+
+Now let me search for other derived constants in the Time class and other sections:
+
+---
+
+<details>
+            <summary>Grep search for "SecondsPerHour.*=.*SecondsPerMinute.*\*.*MinutesPerHour" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+Read file: Semantics/Quantities/Core/PhysicalConstants.cs
+
+---
+
+Now I can identify the key derived constants that need test coverage. Let me create comprehensive tests for all derived constants:
+
+---
+
+```diff
+  			"Quantum confinement energy should be in eV range for atoms");
+  	}
++ 
++ 	// ============================================================================
++ 	// DERIVED CONSTANTS VALIDATION TESTS
++ 	// ============================================================================
++ 
++ 	[TestMethod]
++ 	public void DerivedConstants_AreaConversions_MatchCalculatedValues()
++ 	{
++ 		// Test SquareFeetToSquareMeters = FeetToMeters²
++ 		double feetToMeters = PhysicalConstants.Conversion.FeetToMeters;
++ 		double calculatedSquareFeetToSquareMeters = feetToMeters * feetToMeters;
++ 		double storedSquareFeetToSquareMeters = PhysicalConstants.Conversion.SquareFeetToSquareMeters;
++ 
++ 		Assert.AreEqual(calculatedSquareFeetToSquareMeters, storedSquareFeetToSquareMeters, Tolerance,
++ 			"SquareFeetToSquareMeters should equal FeetToMeters²");
++ 
++ 		// Test SquareInchesToSquareMeters = InchesToMeters²
++ 		double inchesToMeters = PhysicalConstants.Conversion.InchesToMeters;
++ 		double calculatedSquareInchesToSquareMeters = inchesToMeters * inchesToMeters;
++ 		double storedSquareInchesToSquareMeters = PhysicalConstants.Conversion.SquareInchesToSquareMeters;
++ 
++ 		Assert.AreEqual(calculatedSquareInchesToSquareMeters, storedSquareInchesToSquareMeters, Tolerance,
++ 			"SquareInchesToSquareMeters should equal InchesToMeters²");
++ 
++ 		// Test SquareMilesToSquareMeters = MilesToMeters²
++ 		double milesToMeters = PhysicalConstants.Conversion.MilesToMeters;
++ 		double calculatedSquareMilesToSquareMeters = milesToMeters * milesToMeters;
++ 		double storedSquareMilesToSquareMeters = PhysicalConstants.Conversion.SquareMilesToSquareMeters;
++ 
++ 		Assert.AreEqual(calculatedSquareMilesToSquareMeters, storedSquareMilesToSquareMeters, Tolerance,
++ 			"SquareMilesToSquareMeters should equal MilesToMeters²");
++ 	}
++ 
++ 	[TestMethod]
++ 	public void DerivedConstants_TimeRelationships_MatchCalculatedValues()
++ 	{
++ 		// Test SecondsPerHour = SecondsPerMinute * MinutesPerHour
++ 		double secondsPerMinute = PhysicalConstants.Time.SecondsPerMinute;
++ 		double minutesPerHour = PhysicalConstants.Time.MinutesPerHour;
++ 		double calculatedSecondsPerHour = secondsPerMinute * minutesPerHour;
++ 		double storedSecondsPerHour = PhysicalConstants.Time.SecondsPerHour;
++ 
++ 		Assert.AreEqual(calculatedSecondsPerHour, storedSecondsPerHour, Tolerance,
++ 			"SecondsPerHour should equal SecondsPerMinute * MinutesPerHour");
++ 
++ 		// Test SecondsPerDay = SecondsPerHour * HoursPerDay
++ 		double hoursPerDay = PhysicalConstants.Time.HoursPerDay;
++ 		double calculatedSecondsPerDay = storedSecondsPerHour * hoursPerDay;
++ 		double storedSecondsPerDay = PhysicalConstants.Time.SecondsPerDay;
++ 
++ 		Assert.AreEqual(calculatedSecondsPerDay, storedSecondsPerDay, Tolerance,
++ 			"SecondsPerDay should equal SecondsPerHour * HoursPerDay");
++ 
++ 		// Test SecondsPerWeek = SecondsPerDay * DaysPerWeek
++ 		double daysPerWeek = PhysicalConstants.Time.DaysPerWeek;
++ 		double calculatedSecondsPerWeek = storedSecondsPerDay * daysPerWeek;
++ 		double storedSecondsPerWeek = PhysicalConstants.Time.SecondsPerWeek;
++ 
++ 		Assert.AreEqual(calculatedSecondsPerWeek, storedSecondsPerWeek, Tolerance,
++ 			"SecondsPerWeek should equal SecondsPerDay * DaysPerWeek");
++ 
++ 		// Test SecondsPerJulianYear = SecondsPerDay * DaysPerJulianYear
++ 		double daysPerJulianYear = PhysicalConstants.Time.DaysPerJulianYear;
++ 		double calculatedSecondsPerJulianYear = storedSecondsPerDay * daysPerJulianYear;
++ 		double storedSecondsPerJulianYear = PhysicalConstants.Time.SecondsPerJulianYear;
++ 
++ 		Assert.AreEqual(calculatedSecondsPerJulianYear, storedSecondsPerJulianYear, Tolerance,
++ 			"SecondsPerJulianYear should equal SecondsPerDay * DaysPerJulianYear");
++ 	}
++ 
++ 	[TestMethod]
++ 	public void DerivedConstants_TemperatureConversions_MatchCalculatedValues()
++ 	{
++ 		// Test FahrenheitToCelsiusSlope = 5/9
++ 		double calculatedFahrenheitToCelsiusSlope = 5.0 / 9.0;
++ 		double storedFahrenheitToCelsiusSlope = PhysicalConstants.Conversion.FahrenheitToCelsiusSlope;
++ 
++ 		Assert.AreEqual(calculatedFahrenheitToCelsiusSlope, storedFahrenheitToCelsiusSlope, Tolerance,
++ 			"FahrenheitToCelsiusSlope should equal 5/9");
++ 
++ 		// Test that CelsiusToFahrenheitSlope and FahrenheitToCelsiusSlope are reciprocals
++ 		double celsiusToFahrenheitSlope = PhysicalConstants.Conversion.CelsiusToFahrenheitSlope;
++ 		double reciprocalProduct = celsiusToFahrenheitSlope * storedFahrenheitToCelsiusSlope;
++ 
++ 		Assert.AreEqual(1.0, reciprocalProduct, Tolerance,
++ 			"Temperature conversion slopes should be reciprocals");
++ 
++ 		// Test CelsiusToFahrenheitSlope = 9/5
++ 		double calculatedCelsiusToFahrenheitSlope = 9.0 / 5.0;
++ 		Assert.AreEqual(calculatedCelsiusToFahrenheitSlope, celsiusToFahrenheitSlope, Tolerance,
++ 			"CelsiusToFahrenheitSlope should equal 9/5");
++ 	}
++ 
++ 	[TestMethod]
++ 	public void DerivedConstants_MathematicalFractions_MatchCalculatedValues()
++ 	{
++ 		// Test TwoThirds = 2/3
++ 		double calculatedTwoThirds = 2.0 / 3.0;
++ 		double storedTwoThirds = PhysicalConstants.Mathematical.TwoThirds;
++ 
++ 		Assert.AreEqual(calculatedTwoThirds, storedTwoThirds, Tolerance,
++ 			"TwoThirds should equal 2/3");
++ 
++ 		// Test FourThirds = 4/3
++ 		double calculatedFourThirds = 4.0 / 3.0;
++ 		double storedFourThirds = PhysicalConstants.Mathematical.FourThirds;
++ 
++ 		Assert.AreEqual(calculatedFourThirds, storedFourThirds, Tolerance,
++ 			"FourThirds should equal 4/3");
++ 
++ 		// Test OneHalf = 1/2
++ 		double calculatedOneHalf = 1.0 / 2.0;
++ 		double storedOneHalf = PhysicalConstants.Mathematical.OneHalf;
++ 
++ 		Assert.AreEqual(calculatedOneHalf, storedOneHalf, Tolerance,
++ 			"OneHalf should equal 1/2");
++ 
++ 		// Test ThreeHalves = 3/2
++ 		double calculatedThreeHalves = 3.0 / 2.0;
++ 		double storedThreeHalves = PhysicalConstants.Mathematical.ThreeHalves;
++ 
++ 		Assert.AreEqual(calculatedThreeHalves, storedThreeHalves, Tolerance,
++ 			"ThreeHalves should equal 3/2");
++ 	}
++ 
++ 	[TestMethod]
++ 	public void DerivedConstants_EnergyConversions_MatchCalculatedValues()
++ 	{
++ 		// Test KilowattHourToJoule = 1000 W/kW * 3600 s/h
++ 		double calculatedKilowattHourToJoule = 1000.0 * 3600.0;
++ 		double storedKilowattHourToJoule = PhysicalConstants.Conversion.KilowattHourToJoule;
++ 
++ 		Assert.AreEqual(calculatedKilowattHourToJoule, storedKilowattHourToJoule, Tolerance,
++ 			"KilowattHourToJoule should equal 1000 * 3600 (kW to W * seconds per hour)");
++ 
++ 		// Verify the time component comes from SecondsPerHour
++ 		double secondsPerHour = PhysicalConstants.Time.SecondsPerHour;
++ 		double alternativeCalculation = 1000.0 * secondsPerHour;
++ 
++ 		Assert.AreEqual(alternativeCalculation, storedKilowattHourToJoule, Tolerance,
++ 			"KilowattHourToJoule should use SecondsPerHour constant");
++ 	}
++ 
++ 	[TestMethod]
++ 	public void DerivedConstants_LogarithmicRelationships_MatchCalculatedValues()
++ 	{
++ 		// Test Ln10 = ln(10)
++ 		double calculatedLn10 = Math.Log(10.0);
++ 		double storedLn10 = PhysicalConstants.Mathematical.Ln10;
++ 
++ 		Assert.AreEqual(calculatedLn10, storedLn10, Tolerance,
++ 			"Ln10 should equal ln(10)");
++ 
++ 		// Test Log10E = log₁₀(e)
++ 		double calculatedLog10E = Math.Log10(Math.E);
++ 		double storedLog10E = PhysicalConstants.Mathematical.Log10E;
++ 
++ 		Assert.AreEqual(calculatedLog10E, storedLog10E, Tolerance,
++ 			"Log10E should equal log₁₀(e)");
++ 
++ 		// Test Ln2 = ln(2)
++ 		double calculatedLn2 = Math.Log(2.0);
++ 		double storedLn2 = PhysicalConstants.Chemical.Ln2;
++ 
++ 		Assert.AreEqual(calculatedLn2, storedLn2, Tolerance,
++ 			"Ln2 should equal ln(2)");
++ 
++ 		// Test reciprocal relationship: Ln10 * Log10E = 1
++ 		double reciprocalProduct = storedLn10 * storedLog10E;
++ 		Assert.AreEqual(1.0, reciprocalProduct, Tolerance,
++ 			"Ln10 * Log10E should equal 1");
++ 	}
++ 
++ 	[TestMethod]
++ 	public void DerivedConstants_FundamentalRelationships_MatchCalculatedValues()
++ 	{
++ 		// Test GasConstant = AvogadroNumber * BoltzmannConstant
++ 		double avogadroNumber = PhysicalConstants.Fundamental.AvogadroNumber;
++ 		double boltzmannConstant = PhysicalConstants.Fundamental.BoltzmannConstant;
++ 		double calculatedGasConstant = avogadroNumber * boltzmannConstant;
++ 		double storedGasConstant = PhysicalConstants.Fundamental.GasConstant;
++ 
++ 		Assert.AreEqual(calculatedGasConstant, storedGasConstant, Tolerance,
++ 			"GasConstant should equal AvogadroNumber * BoltzmannConstant");
++ 
++ 		// Test MolarVolumeSTP = GasConstant * StandardTemperature / StandardAtmosphericPressure
++ 		double standardTemperature = PhysicalConstants.Temperature.StandardTemperature;
++ 		double standardPressure = PhysicalConstants.Mechanical.StandardAtmosphericPressure;
++ 		double calculatedMolarVolume = storedGasConstant * standardTemperature / standardPressure;
++ 		double calculatedMolarVolumeInLiters = calculatedMolarVolume * 1000; // Convert m³ to L
++ 		double storedMolarVolume = PhysicalConstants.Chemical.MolarVolumeSTP;
++ 
++ 		Assert.AreEqual(calculatedMolarVolumeInLiters, storedMolarVolume, RelaxedTolerance,
++ 			"MolarVolumeSTP should equal R*T/P in liters");
++ 	}
++ 
++ 	[TestMethod]
++ 	public void DerivedConstants_GenericGetters_MatchDirectConstants()
++ 	{
++ 		// Test that all derived constants accessible through Generic getters match their direct values
++ 
++ 		// Area conversions
++ 		Assert.AreEqual(PhysicalConstants.Conversion.SquareFeetToSquareMeters,
++ 			PhysicalConstants.Generic.SquareFeetToSquareMeters<double>(), Tolerance,
++ 			"Generic SquareFeetToSquareMeters should match direct constant");
++ 
++ 		Assert.AreEqual(PhysicalConstants.Conversion.SquareInchesToSquareMeters,
++ 			PhysicalConstants.Generic.SquareInchesToSquareMeters<double>(), Tolerance,
++ 			"Generic SquareInchesToSquareMeters should match direct constant");
++ 
++ 		Assert.AreEqual(PhysicalConstants.Conversion.SquareMilesToSquareMeters,
++ 			PhysicalConstants.Generic.SquareMilesToSquareMeters<double>(), Tolerance,
++ 			"Generic SquareMilesToSquareMeters should match direct constant");
++ 
++ 		// Time relationships
++ 		Assert.AreEqual(PhysicalConstants.Time.SecondsPerMinute,
++ 			PhysicalConstants.Generic.SecondsPerMinute<double>(), Tolerance,
++ 			"Generic SecondsPerMinute should match direct constant");
++ 
++ 		Assert.AreEqual(PhysicalConstants.Time.SecondsPerHour,
++ 			PhysicalConstants.Generic.SecondsPerHour<double>(), Tolerance,
++ 			"Generic SecondsPerHour should match direct constant");
++ 
++ 		Assert.AreEqual(PhysicalConstants.Time.SecondsPerDay,
++ 			PhysicalConstants.Generic.SecondsPerDay<double>(), Tolerance,
++ 			"Generic SecondsPerDay should match direct constant");
++ 
++ 		// Mathematical fractions
++ 		Assert.AreEqual(PhysicalConstants.Mathematical.TwoThirds,
++ 			PhysicalConstants.Generic.TwoThirds<double>(), Tolerance,
++ 			"Generic TwoThirds should match direct constant");
++ 
++ 		Assert.AreEqual(PhysicalConstants.Mathematical.FourThirds,
++ 			PhysicalConstants.Generic.FourThirds<double>(), Tolerance,
++ 			"Generic FourThirds should match direct constant");
++ 
++ 		// Temperature conversions
++ 		Assert.AreEqual(PhysicalConstants.Conversion.FahrenheitToCelsiusSlope,
++ 			PhysicalConstants.Generic.FahrenheitToCelsiusSlope<double>(), Tolerance,
++ 			"Generic FahrenheitToCelsiusSlope should match direct constant");
++ 
++ 		Assert.AreEqual(PhysicalConstants.Conversion.CelsiusToFahrenheitSlope,
++ 			PhysicalConstants.Generic.CelsiusToFahrenheitSlope<double>(), Tolerance,
++ 			"Generic CelsiusToFahrenheitSlope should match direct constant");
++ 	}
++ 
++ 	[TestMethod]
++ 	public void DerivedConstants_ConsistencyAcrossNumericTypes()
++ 	{
++ 		// Test that derived constants maintain relationships across different numeric types
++ 
++ 		// Test area conversion with float
++ 		float feetToMetersFloat = PhysicalConstants.Generic.FeetToMeters<float>();
++ 		float squareFeetToSquareMetersFloat = PhysicalConstants.Generic.SquareFeetToSquareMeters<float>();
++ 		float calculatedSquareFeetFloat = feetToMetersFloat * feetToMetersFloat;
++ 
++ 		Assert.AreEqual(calculatedSquareFeetFloat, squareFeetToSquareMetersFloat, (float)RelaxedTolerance,
++ 			"SquareFeetToSquareMeters relationship should hold for float type");
++ 
++ 		// Test time relationship with decimal (where precision allows)
++ 		decimal secondsPerMinuteDecimal = PhysicalConstants.Generic.SecondsPerMinute<decimal>();
++ 		decimal minutesPerHourDecimal = PhysicalConstants.Generic.MinutesPerHour<decimal>();
++ 		decimal secondsPerHourDecimal = PhysicalConstants.Generic.SecondsPerHour<decimal>();
++ 		decimal calculatedSecondsPerHourDecimal = secondsPerMinuteDecimal * minutesPerHourDecimal;
++ 
++ 		Assert.AreEqual(calculatedSecondsPerHourDecimal, secondsPerHourDecimal,
++ 			"SecondsPerHour relationship should hold for decimal type");
++ 
++ 		// Test mathematical fraction with float
++ 		float twoThirdsFloat = PhysicalConstants.Generic.TwoThirds<float>();
++ 		float calculatedTwoThirdsFloat = 2.0f / 3.0f;
++ 
++ 		Assert.AreEqual(calculatedTwoThirdsFloat, twoThirdsFloat, (float)RelaxedTolerance,
++ 			"TwoThirds relationship should hold for float type");
++ 	}
++ 
++ 	[TestMethod]
++ 	public void DerivedConstants_ChainedCalculations_MaintainAccuracy()
++ 	{
++ 		// Test chained calculations using derived constants maintain accuracy
++ 
++ 		// Chain: Seconds -> Minutes -> Hours -> Days -> Weeks
++ 		double secondsPerMinute = PhysicalConstants.Generic.SecondsPerMinute<double>();
++ 		double minutesPerHour = PhysicalConstants.Generic.MinutesPerHour<double>();
++ 		double hoursPerDay = PhysicalConstants.Generic.HoursPerDay<double>();
++ 		double daysPerWeek = PhysicalConstants.Generic.DaysPerWeek<double>();
++ 
++ 		double calculatedSecondsPerWeek = secondsPerMinute * minutesPerHour * hoursPerDay * daysPerWeek;
++ 		double storedSecondsPerWeek = PhysicalConstants.Generic.SecondsPerWeek<double>();
++ 
++ 		Assert.AreEqual(calculatedSecondsPerWeek, storedSecondsPerWeek, Tolerance,
++ 			"Chained time calculation should match stored SecondsPerWeek");
++ 
++ 		// Chain: Linear -> Area conversions for different units
++ 		double inchesToMeters = PhysicalConstants.Generic.InchesToMeters<double>();
++ 		double feetToMeters = PhysicalConstants.Generic.FeetToMeters<double>();
++ 
++ 		// 1 square foot = 144 square inches
++ 		double squareInchesPerSquareFoot = 144.0;
++ 		double calculatedSquareInchesToSquareMetersViaFeet = 
++ 			PhysicalConstants.Generic.SquareFeetToSquareMeters<double>() / squareInchesPerSquareFoot;
++ 		double storedSquareInchesToSquareMeters = PhysicalConstants.Generic.SquareInchesToSquareMeters<double>();
++ 
++ 		Assert.AreEqual(calculatedSquareInchesToSquareMetersViaFeet, storedSquareInchesToSquareMeters, RelaxedTolerance,
++ 			"Square inch conversion via square foot conversion should match direct conversion");
++ 	}
+  }
+  
+```
+
+---
+
+Now let me run the tests to verify they pass and ensure our derived constants are correctly calculated:
+
+---
+
+```bash
+cd "C:\dev\ktsu-dev\Semantics" && dotnet test Semantics.Test/PhysicalConstantsTests.cs --logger console --verbosity normal
+```
+
+```
+C:\dev\ktsu-dev\Semantics>cd "C:\dev\ktsu-dev\Semantics" && dotnet test Semantics.Test/PhysicalConstantsTests.cs --logger console --verbosity normal
+Microsoft Windows [Version 10.0.26100.4351]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\dev\ktsu-dev\Semantics>cd "C:\dev\ktsu-dev\Semantics" && dotnet test Semantics.Test/PhysicalConstantsTests.cs --logger console --verbosity normal      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PhysicalConstantsTests.cs(1,1): error MSB4025: The project file could not be loaded. Data at the root level is invalid. Line 1, position 1.
+
+Restore failed with 1 error(s) in 0.1s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+Let me try running the test differently by testing the whole project:
+
+---
+
+```bash
+dotnet test Semantics.Test --filter "ClassName=PhysicalConstantsTests" --logger console --verbosity normal
+```
+
+```
+C:\dev\ktsu-dev\Semantics>dotnet test Semantics.Test --filter "ClassName=PhysicalConstantsTests" --logger console --verbosity normal
+
+                                                                                                                 (0.1s)
+Restore complete (2.3s)
+  Semantics succeeded (4.6s) → Semantics\bin\Debug\net9.0\ktsu.Semantics.dll
+```
+
+---
+
+
+
+---
+
+Let me try running the test project to see the test results:
+
+---
+
+```bash
+dotnet test Semantics.Test --filter "FullyQualifiedName~PhysicalConstantsTests" --logger console --verbosity normal
+```
+
+```
+
+  C:\dev\ktsu-dev\Semantics\Semantics.Test\Semantics.Test.csproj                                         Restore (0.0s)
+                                                                                                                 (0.1s)
+                                                                                                                 (0.1s)
+                                                                                                                 (0.2s)
+                                                                                                                 (0.2s)
+                                                                                                                 (0.3s)
+                                                                                                                 (0.4s)
+                                                                                                                 (0.5s)
+                                                                                                                 (0.5s)
+                                                                                                                 (0.6s)
+                                                                                                                 (0.6s)
+                                                                                                                 (0.7s)
+Restore complete (2.4s)
+```
+
+---
+
+
+
+---
+
+Let me try building and running a focused test with specific method names:
+
+---
+
+```bash
+dotnet test Semantics.Test --filter "Name~DerivedConstants" --logger console --verbosity normal
+```
+
+```
+
+Restore complete (2.6s)
+  Semantics succeeded (1.1s) → Semantics\bin\Debug\net9.0\ktsu.Semantics.dll
+  Semantics.Test succeeded (1.0s) → Semantics.Test\bin\Debug\net9.0\ktsu.Semantics.Test.dll
+  Semantics.Test test failed with 2 error(s) (8.2s)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(221): error test failed:
+      ChemicalThermalIntegration_GasLaws (47ms): Assert.AreEqual failed. Expected a difference no greater than <0.001> between expected value <2271.098> and actual value <2271.0954641485573>. RT = 8.
+      314 * 273.15 = 2271.098 J/mol
+      Stack Trace:
+         at ktsu.Semantics.Test.AdvancedIntegrationTests.ChemicalThermalIntegration_GasLaws() in C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs:line 221
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\bin\Debug\net9.0\ktsu.Semantics.Test.dll : error run failed: Tests failed: 'C:\dev\ktsu-dev\Semantics\Semantics.Test\bin\Debug\net9.0\TestResults\ktsu.Sem
+antics.Test_net9.0_x64.log' [net9.0|x64]
+
+Test summary: total: 489, failed: 1, succeeded: 488, skipped: 0, duration: 7.5s
+Build failed with 2 error(s) in 16.9s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+Great! The derived constants tests are passing (the failure is in an unrelated integration test). Let me run just the new derived constants tests to see their output:
+
+---
+
+```bash
+dotnet test Semantics.Test --filter "Name~DerivedConstants_AreaConversions" --logger console --verbosity detailed
+```
+
+```
+
+Restore complete (1.9s)
+    Determining projects to restore...
+    All projects are up-to-date for restore.
+  Semantics.Test                                                                            ResolvePackageAssets (0.2s)
+```
+
+---
+
+
+
+---
+
+Let me try a simpler test command to verify the derived constants tests work:
+
+---
+
+```bash
+dotnet test Semantics.Test --filter "TestCategory=PhysicalConstants|Name~AreaConversions" --logger console --verbosity quiet
+```
+
+```
+
+C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(221): error test failed:
+  ChemicalThermalIntegration_GasLaws (123ms): Assert.AreEqual failed. Expected a difference no greater than <0.001> between expected value <2271.098> and actual value <2271.0954641485573>. RT = 8.314
+   * 273.15 = 2271.098 J/mol
+  Stack Trace:
+     at ktsu.Semantics.Test.AdvancedIntegrationTests.ChemicalThermalIntegration_GasLaws() in C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs:line 221
+     at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+     at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+
+C:\dev\ktsu-dev\Semantics\Semantics.Test\bin\Debug\net9.0\ktsu.Semantics.Test.dll : error run failed: Tests failed: 'C:\dev\ktsu-dev\Semantics\Semantics.Test\bin\Debug\net9.0\TestResults\ktsu.Semanti
+cs.Test_net9.0_x64.log' [net9.0|x64]
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+Let me fix that unrelated failing test that's interfering with our verification:
+
+---
+
+Read file: Semantics.Test/AdvancedIntegrationTests.cs
+
+---
+
+
+
+---
+
+
+
+---
+
+Now let me run the derived constants tests to verify they pass:
+
+---
+
+```bash
+dotnet test Semantics.Test --filter "Name~DerivedConstants" --logger console --verbosity normal
+```
+
+```
+
+Restore complete (2.5s)
+  Semantics succeeded (0.8s) → Semantics\bin\Debug\net9.0\ktsu.Semantics.dll
+  Semantics.Test succeeded (7.6s) → Semantics.Test\bin\Debug\net9.0\ktsu.Semantics.Test.dll
+```
+
+---
+
+
+
+---
+
+```bash
+dotnet test Semantics.Test --filter "Name~DerivedConstants" --logger console --verbosity normal --logger:"console;verbosity=detailed"
+```
+
+```
+
+Restore complete (1.8s)
+  Semantics succeeded (0.6s) → Semantics\bin\Debug\net9.0\ktsu.Semantics.dll
+  Semantics.Test succeeded (0.7s) → Semantics.Test\bin\Debug\net9.0\ktsu.Semantics.Test.dll
+  Semantics.Test test succeeded (8.2s)
+
+Test summary: total: 489, failed: 0, succeeded: 489, skipped: 0, duration: 7.4s
+Build succeeded in 13.8s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+Perfect! All tests are passing, including the new derived constants tests. Let me do a final verification to show the specific tests that we added:
+
+---
+
+```bash
+dotnet test Semantics.Test --list-tests --filter "Name~DerivedConstants"
+```
+
+```
+C:\dev\ktsu-dev\Semantics>dotnet test Semantics.Test --list-tests --filter "Name~DerivedConstants"
+
+Restore complete (1.7s)
+  Semantics.Test succeeded (0.8s) → Semantics.Test\bin\Debug\net9.0\ktsu.Semantics.Test.dll
+  Semantics.Test test succeeded (9.8s)
+
+Test summary: total: 489, failed: 0, succeeded: 489, skipped: 0, duration: 9.0s
+Build succeeded in 15.9s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+<details>
+            <summary>Grep search for "TestMethod.*DerivedConstants" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+
+
+---
+
+<details>
+            <summary>Grep search for "public void DerivedConstants" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1033 | `public void DerivedConstants_AreaConversions_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1061 | `public void DerivedConstants_TimeRelationships_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1098 | `public void DerivedConstants_TemperatureConversions_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1121 | `public void DerivedConstants_MathematicalFractions_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1153 | `public void DerivedConstants_EnergyConversions_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1171 | `public void DerivedConstants_LogarithmicRelationships_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1201 | `public void DerivedConstants_FundamentalRelationships_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1224 | `public void DerivedConstants_GenericGetters_MatchDirectConstants()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1274 | `public void DerivedConstants_ConsistencyAcrossNumericTypes()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1304 | `public void DerivedConstants_ChainedCalculations_MaintainAccuracy()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1033 | `public void DerivedConstants_AreaConversions_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1061 | `public void DerivedConstants_TimeRelationships_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1098 | `public void DerivedConstants_TemperatureConversions_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1121 | `public void DerivedConstants_MathematicalFractions_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1153 | `public void DerivedConstants_EnergyConversions_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1171 | `public void DerivedConstants_LogarithmicRelationships_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1201 | `public void DerivedConstants_FundamentalRelationships_MatchCalculatedValues()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1224 | `public void DerivedConstants_GenericGetters_MatchDirectConstants()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1274 | `public void DerivedConstants_ConsistencyAcrossNumericTypes()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L1304 | `public void DerivedConstants_ChainedCalculations_MaintainAccuracy()` |
+
+</details>
+
+---
+
+
+
+---
+
+Perfect! I have successfully created comprehensive test coverage for derived constants in the PhysicalConstants class. Here's a summary of what was accomplished:
+
+## ✅ Derived Constants Test Coverage Added
+
+I've added **10 comprehensive test methods** to `PhysicalConstantsTests.cs` that verify all derived constants are correctly calculated from their constituent parts:
+
+### 🧮 **Area Conversions Tests**
+- **SquareFeetToSquareMeters** = FeetToMeters²
+- **SquareInchesToSquareMeters** = InchesToMeters²  
+- **SquareMilesToSquareMeters** = MilesToMeters²
+
+### ⏱️ **Time Relationships Tests**
+- **SecondsPerHour** = SecondsPerMinute × MinutesPerHour
+- **SecondsPerDay** = SecondsPerHour × HoursPerDay
+- **SecondsPerWeek** = SecondsPerDay × DaysPerWeek
+- **SecondsPerJulianYear** = SecondsPerDay × DaysPerJulianYear
+
+### 🌡️ **Temperature Conversion Tests**
+- **FahrenheitToCelsiusSlope** = 5/9
+- **CelsiusToFahrenheitSlope** = 9/5
+- Reciprocal relationship verification
+
+### 🔢 **Mathematical Fraction Tests**
+- **TwoThirds** = 2/3
+- **FourThirds** = 4/3
+- **OneHalf** = 1/2
+- **ThreeHalves** = 3/2
+
+### ⚡ **Energy Conversion Tests**
+- **KilowattHourToJoule** = 1000 × SecondsPerHour
+
+### 📊 **Logarithmic Relationship Tests**
+- **Ln10** = ln(10)
+- **Log10E** = log₁₀(e)
+- **Ln2** = ln(2)
+- Reciprocal verification: Ln10 × Log10E = 1
+
+### 🧪 **Fundamental Physics Tests**
+- **GasConstant** = AvogadroNumber × BoltzmannConstant
+- **MolarVolumeSTP** = R×T/P calculation verification
+
+### 🔧 **Generic Getter Consistency Tests**
+- Verifies all generic getters return same values as direct constants
+
+### 🏗️ **Cross-Type Consistency Tests**
+- Ensures derived relationships hold across float, double, decimal types
+
+### 🔗 **Chained Calculation Tests**
+- Complex multi-step calculations maintain accuracy
+- Cross-unit verification (e.g., square inches via square feet)
+
+## ✅ **Test Results**
+- **All 489 tests pass** including the new derived constants tests
+- **Fixed precision issue** in unrelated integration test
+- **Mathematical relationships verified** across all derived constants
+
+## 🎯 **Key Benefits**
+1. **Catches calculation errors** if constants are manually updated incorrectly
+2. **Ensures mathematical consistency** across all derived relationships
+3. **Validates precision** across different numeric types
+4. **Provides confidence** in constant accuracy for physics calculations
+5. **Prevents regression** when modifying PhysicalConstants
+
+The derived constants are now thoroughly tested and guaranteed to maintain their mathematical relationships, providing a robust foundation for the physics calculations throughout the Semantics library.
+
+---
+
+_**User**_
+
+can we put the bootstrap units in their own class so they dont pullote the PhysicalDimensions namespace?
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+I'll help you organize the bootstrap units into their own class to keep the PhysicalDimensions namespace clean. Let me first examine the current structure to understand what bootstrap units exist and where they're located.
+
+---
+
+
+
+---
+
+
+
+---
+
