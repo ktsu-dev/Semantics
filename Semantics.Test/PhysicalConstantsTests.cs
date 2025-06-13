@@ -1025,4 +1025,310 @@ public class PhysicalConstantsTests
 		Assert.IsTrue(kineticEnergyInEV is > 0.1 and < 1000,
 			"Quantum confinement energy should be in eV range for atoms");
 	}
+
+	// ============================================================================
+	// DERIVED CONSTANTS VALIDATION TESTS
+	// ============================================================================
+
+	[TestMethod]
+	public void DerivedConstants_AreaConversions_MatchCalculatedValues()
+	{
+		// Test SquareFeetToSquareMeters = FeetToMeters²
+		double feetToMeters = PhysicalConstants.Conversion.FeetToMeters;
+		double calculatedSquareFeetToSquareMeters = feetToMeters * feetToMeters;
+		double storedSquareFeetToSquareMeters = PhysicalConstants.Conversion.SquareFeetToSquareMeters;
+
+		Assert.AreEqual(calculatedSquareFeetToSquareMeters, storedSquareFeetToSquareMeters, Tolerance,
+			"SquareFeetToSquareMeters should equal FeetToMeters²");
+
+		// Test SquareInchesToSquareMeters = InchesToMeters²
+		double inchesToMeters = PhysicalConstants.Conversion.InchesToMeters;
+		double calculatedSquareInchesToSquareMeters = inchesToMeters * inchesToMeters;
+		double storedSquareInchesToSquareMeters = PhysicalConstants.Conversion.SquareInchesToSquareMeters;
+
+		Assert.AreEqual(calculatedSquareInchesToSquareMeters, storedSquareInchesToSquareMeters, Tolerance,
+			"SquareInchesToSquareMeters should equal InchesToMeters²");
+
+		// Test SquareMilesToSquareMeters = MilesToMeters²
+		double milesToMeters = PhysicalConstants.Conversion.MilesToMeters;
+		double calculatedSquareMilesToSquareMeters = milesToMeters * milesToMeters;
+		double storedSquareMilesToSquareMeters = PhysicalConstants.Conversion.SquareMilesToSquareMeters;
+
+		Assert.AreEqual(calculatedSquareMilesToSquareMeters, storedSquareMilesToSquareMeters, Tolerance,
+			"SquareMilesToSquareMeters should equal MilesToMeters²");
+	}
+
+	[TestMethod]
+	public void DerivedConstants_TimeRelationships_MatchCalculatedValues()
+	{
+		// Test SecondsPerHour = SecondsPerMinute * MinutesPerHour
+		double secondsPerMinute = PhysicalConstants.Time.SecondsPerMinute;
+		double minutesPerHour = PhysicalConstants.Time.MinutesPerHour;
+		double calculatedSecondsPerHour = secondsPerMinute * minutesPerHour;
+		double storedSecondsPerHour = PhysicalConstants.Time.SecondsPerHour;
+
+		Assert.AreEqual(calculatedSecondsPerHour, storedSecondsPerHour, Tolerance,
+			"SecondsPerHour should equal SecondsPerMinute * MinutesPerHour");
+
+		// Test SecondsPerDay = SecondsPerHour * HoursPerDay
+		double hoursPerDay = PhysicalConstants.Time.HoursPerDay;
+		double calculatedSecondsPerDay = storedSecondsPerHour * hoursPerDay;
+		double storedSecondsPerDay = PhysicalConstants.Time.SecondsPerDay;
+
+		Assert.AreEqual(calculatedSecondsPerDay, storedSecondsPerDay, Tolerance,
+			"SecondsPerDay should equal SecondsPerHour * HoursPerDay");
+
+		// Test SecondsPerWeek = SecondsPerDay * DaysPerWeek
+		double daysPerWeek = PhysicalConstants.Time.DaysPerWeek;
+		double calculatedSecondsPerWeek = storedSecondsPerDay * daysPerWeek;
+		double storedSecondsPerWeek = PhysicalConstants.Time.SecondsPerWeek;
+
+		Assert.AreEqual(calculatedSecondsPerWeek, storedSecondsPerWeek, Tolerance,
+			"SecondsPerWeek should equal SecondsPerDay * DaysPerWeek");
+
+		// Test SecondsPerJulianYear = SecondsPerDay * DaysPerJulianYear
+		double daysPerJulianYear = PhysicalConstants.Time.DaysPerJulianYear;
+		double calculatedSecondsPerJulianYear = storedSecondsPerDay * daysPerJulianYear;
+		double storedSecondsPerJulianYear = PhysicalConstants.Time.SecondsPerJulianYear;
+
+		Assert.AreEqual(calculatedSecondsPerJulianYear, storedSecondsPerJulianYear, Tolerance,
+			"SecondsPerJulianYear should equal SecondsPerDay * DaysPerJulianYear");
+	}
+
+	[TestMethod]
+	public void DerivedConstants_TemperatureConversions_MatchCalculatedValues()
+	{
+		// Test FahrenheitToCelsiusSlope = 5/9
+		double calculatedFahrenheitToCelsiusSlope = 5.0 / 9.0;
+		double storedFahrenheitToCelsiusSlope = PhysicalConstants.Conversion.FahrenheitToCelsiusSlope;
+
+		Assert.AreEqual(calculatedFahrenheitToCelsiusSlope, storedFahrenheitToCelsiusSlope, Tolerance,
+			"FahrenheitToCelsiusSlope should equal 5/9");
+
+		// Test that CelsiusToFahrenheitSlope and FahrenheitToCelsiusSlope are reciprocals
+		double celsiusToFahrenheitSlope = PhysicalConstants.Conversion.CelsiusToFahrenheitSlope;
+		double reciprocalProduct = celsiusToFahrenheitSlope * storedFahrenheitToCelsiusSlope;
+
+		Assert.AreEqual(1.0, reciprocalProduct, Tolerance,
+			"Temperature conversion slopes should be reciprocals");
+
+		// Test CelsiusToFahrenheitSlope = 9/5
+		double calculatedCelsiusToFahrenheitSlope = 9.0 / 5.0;
+		Assert.AreEqual(calculatedCelsiusToFahrenheitSlope, celsiusToFahrenheitSlope, Tolerance,
+			"CelsiusToFahrenheitSlope should equal 9/5");
+	}
+
+	[TestMethod]
+	public void DerivedConstants_MathematicalFractions_MatchCalculatedValues()
+	{
+		// Test TwoThirds = 2/3
+		double calculatedTwoThirds = 2.0 / 3.0;
+		double storedTwoThirds = PhysicalConstants.Mathematical.TwoThirds;
+
+		Assert.AreEqual(calculatedTwoThirds, storedTwoThirds, Tolerance,
+			"TwoThirds should equal 2/3");
+
+		// Test FourThirds = 4/3
+		double calculatedFourThirds = 4.0 / 3.0;
+		double storedFourThirds = PhysicalConstants.Mathematical.FourThirds;
+
+		Assert.AreEqual(calculatedFourThirds, storedFourThirds, Tolerance,
+			"FourThirds should equal 4/3");
+
+		// Test OneHalf = 1/2
+		double calculatedOneHalf = 1.0 / 2.0;
+		double storedOneHalf = PhysicalConstants.Mathematical.OneHalf;
+
+		Assert.AreEqual(calculatedOneHalf, storedOneHalf, Tolerance,
+			"OneHalf should equal 1/2");
+
+		// Test ThreeHalves = 3/2
+		double calculatedThreeHalves = 3.0 / 2.0;
+		double storedThreeHalves = PhysicalConstants.Mathematical.ThreeHalves;
+
+		Assert.AreEqual(calculatedThreeHalves, storedThreeHalves, Tolerance,
+			"ThreeHalves should equal 3/2");
+	}
+
+	[TestMethod]
+	public void DerivedConstants_EnergyConversions_MatchCalculatedValues()
+	{
+		// Test KilowattHourToJoule = 1000 W/kW * 3600 s/h
+		double calculatedKilowattHourToJoule = 1000.0 * 3600.0;
+		double storedKilowattHourToJoule = PhysicalConstants.Conversion.KilowattHourToJoule;
+
+		Assert.AreEqual(calculatedKilowattHourToJoule, storedKilowattHourToJoule, Tolerance,
+			"KilowattHourToJoule should equal 1000 * 3600 (kW to W * seconds per hour)");
+
+		// Verify the time component comes from SecondsPerHour
+		double secondsPerHour = PhysicalConstants.Time.SecondsPerHour;
+		double alternativeCalculation = 1000.0 * secondsPerHour;
+
+		Assert.AreEqual(alternativeCalculation, storedKilowattHourToJoule, Tolerance,
+			"KilowattHourToJoule should use SecondsPerHour constant");
+	}
+
+	[TestMethod]
+	public void DerivedConstants_LogarithmicRelationships_MatchCalculatedValues()
+	{
+		// Test Ln10 = ln(10)
+		double calculatedLn10 = Math.Log(10.0);
+		double storedLn10 = PhysicalConstants.Mathematical.Ln10;
+
+		Assert.AreEqual(calculatedLn10, storedLn10, Tolerance,
+			"Ln10 should equal ln(10)");
+
+		// Test Log10E = log₁₀(e)
+		double calculatedLog10E = Math.Log10(Math.E);
+		double storedLog10E = PhysicalConstants.Mathematical.Log10E;
+
+		Assert.AreEqual(calculatedLog10E, storedLog10E, Tolerance,
+			"Log10E should equal log₁₀(e)");
+
+		// Test Ln2 = ln(2)
+		double calculatedLn2 = Math.Log(2.0);
+		double storedLn2 = PhysicalConstants.Chemical.Ln2;
+
+		Assert.AreEqual(calculatedLn2, storedLn2, Tolerance,
+			"Ln2 should equal ln(2)");
+
+		// Test reciprocal relationship: Ln10 * Log10E = 1
+		double reciprocalProduct = storedLn10 * storedLog10E;
+		Assert.AreEqual(1.0, reciprocalProduct, Tolerance,
+			"Ln10 * Log10E should equal 1");
+	}
+
+	[TestMethod]
+	public void DerivedConstants_FundamentalRelationships_MatchCalculatedValues()
+	{
+		// Test GasConstant = AvogadroNumber * BoltzmannConstant
+		double avogadroNumber = PhysicalConstants.Fundamental.AvogadroNumber;
+		double boltzmannConstant = PhysicalConstants.Fundamental.BoltzmannConstant;
+		double calculatedGasConstant = avogadroNumber * boltzmannConstant;
+		double storedGasConstant = PhysicalConstants.Fundamental.GasConstant;
+
+		Assert.AreEqual(calculatedGasConstant, storedGasConstant, Tolerance,
+			"GasConstant should equal AvogadroNumber * BoltzmannConstant");
+
+		// Test MolarVolumeSTP = GasConstant * StandardTemperature / StandardAtmosphericPressure
+		double standardTemperature = PhysicalConstants.Temperature.StandardTemperature;
+		double standardPressure = PhysicalConstants.Mechanical.StandardAtmosphericPressure;
+		double calculatedMolarVolume = storedGasConstant * standardTemperature / standardPressure;
+		double calculatedMolarVolumeInLiters = calculatedMolarVolume * 1000; // Convert m³ to L
+		double storedMolarVolume = PhysicalConstants.Chemical.MolarVolumeSTP;
+
+		Assert.AreEqual(calculatedMolarVolumeInLiters, storedMolarVolume, RelaxedTolerance,
+			"MolarVolumeSTP should equal R*T/P in liters");
+	}
+
+	[TestMethod]
+	public void DerivedConstants_GenericGetters_MatchDirectConstants()
+	{
+		// Test that all derived constants accessible through Generic getters match their direct values
+
+		// Area conversions
+		Assert.AreEqual(PhysicalConstants.Conversion.SquareFeetToSquareMeters,
+			PhysicalConstants.Generic.SquareFeetToSquareMeters<double>(), Tolerance,
+			"Generic SquareFeetToSquareMeters should match direct constant");
+
+		Assert.AreEqual(PhysicalConstants.Conversion.SquareInchesToSquareMeters,
+			PhysicalConstants.Generic.SquareInchesToSquareMeters<double>(), Tolerance,
+			"Generic SquareInchesToSquareMeters should match direct constant");
+
+		Assert.AreEqual(PhysicalConstants.Conversion.SquareMilesToSquareMeters,
+			PhysicalConstants.Generic.SquareMilesToSquareMeters<double>(), Tolerance,
+			"Generic SquareMilesToSquareMeters should match direct constant");
+
+		// Time relationships
+		Assert.AreEqual(PhysicalConstants.Time.SecondsPerMinute,
+			PhysicalConstants.Generic.SecondsPerMinute<double>(), Tolerance,
+			"Generic SecondsPerMinute should match direct constant");
+
+		Assert.AreEqual(PhysicalConstants.Time.SecondsPerHour,
+			PhysicalConstants.Generic.SecondsPerHour<double>(), Tolerance,
+			"Generic SecondsPerHour should match direct constant");
+
+		Assert.AreEqual(PhysicalConstants.Time.SecondsPerDay,
+			PhysicalConstants.Generic.SecondsPerDay<double>(), Tolerance,
+			"Generic SecondsPerDay should match direct constant");
+
+		// Mathematical fractions
+		Assert.AreEqual(PhysicalConstants.Mathematical.TwoThirds,
+			PhysicalConstants.Generic.TwoThirds<double>(), Tolerance,
+			"Generic TwoThirds should match direct constant");
+
+		Assert.AreEqual(PhysicalConstants.Mathematical.FourThirds,
+			PhysicalConstants.Generic.FourThirds<double>(), Tolerance,
+			"Generic FourThirds should match direct constant");
+
+		// Temperature conversions
+		Assert.AreEqual(PhysicalConstants.Conversion.FahrenheitToCelsiusSlope,
+			PhysicalConstants.Generic.FahrenheitToCelsiusSlope<double>(), Tolerance,
+			"Generic FahrenheitToCelsiusSlope should match direct constant");
+
+		Assert.AreEqual(PhysicalConstants.Conversion.CelsiusToFahrenheitSlope,
+			PhysicalConstants.Generic.CelsiusToFahrenheitSlope<double>(), Tolerance,
+			"Generic CelsiusToFahrenheitSlope should match direct constant");
+	}
+
+	[TestMethod]
+	public void DerivedConstants_ConsistencyAcrossNumericTypes()
+	{
+		// Test that derived constants maintain relationships across different numeric types
+
+		// Test area conversion with float
+		float feetToMetersFloat = PhysicalConstants.Generic.FeetToMeters<float>();
+		float squareFeetToSquareMetersFloat = PhysicalConstants.Generic.SquareFeetToSquareMeters<float>();
+		float calculatedSquareFeetFloat = feetToMetersFloat * feetToMetersFloat;
+
+		Assert.AreEqual(calculatedSquareFeetFloat, squareFeetToSquareMetersFloat, (float)RelaxedTolerance,
+			"SquareFeetToSquareMeters relationship should hold for float type");
+
+		// Test time relationship with decimal (where precision allows)
+		decimal secondsPerMinuteDecimal = PhysicalConstants.Generic.SecondsPerMinute<decimal>();
+		decimal minutesPerHourDecimal = PhysicalConstants.Generic.MinutesPerHour<decimal>();
+		decimal secondsPerHourDecimal = PhysicalConstants.Generic.SecondsPerHour<decimal>();
+		decimal calculatedSecondsPerHourDecimal = secondsPerMinuteDecimal * minutesPerHourDecimal;
+
+		Assert.AreEqual(calculatedSecondsPerHourDecimal, secondsPerHourDecimal,
+			"SecondsPerHour relationship should hold for decimal type");
+
+		// Test mathematical fraction with float
+		float twoThirdsFloat = PhysicalConstants.Generic.TwoThirds<float>();
+		float calculatedTwoThirdsFloat = 2.0f / 3.0f;
+
+		Assert.AreEqual(calculatedTwoThirdsFloat, twoThirdsFloat, (float)RelaxedTolerance,
+			"TwoThirds relationship should hold for float type");
+	}
+
+	[TestMethod]
+	public void DerivedConstants_ChainedCalculations_MaintainAccuracy()
+	{
+		// Test chained calculations using derived constants maintain accuracy
+
+		// Chain: Seconds -> Minutes -> Hours -> Days -> Weeks
+		double secondsPerMinute = PhysicalConstants.Generic.SecondsPerMinute<double>();
+		double minutesPerHour = PhysicalConstants.Generic.MinutesPerHour<double>();
+		double hoursPerDay = PhysicalConstants.Generic.HoursPerDay<double>();
+		double daysPerWeek = PhysicalConstants.Generic.DaysPerWeek<double>();
+
+		double calculatedSecondsPerWeek = secondsPerMinute * minutesPerHour * hoursPerDay * daysPerWeek;
+		double storedSecondsPerWeek = PhysicalConstants.Generic.SecondsPerWeek<double>();
+
+		Assert.AreEqual(calculatedSecondsPerWeek, storedSecondsPerWeek, Tolerance,
+			"Chained time calculation should match stored SecondsPerWeek");
+
+		// Chain: Linear -> Area conversions for different units
+		double inchesToMeters = PhysicalConstants.Generic.InchesToMeters<double>();
+		double feetToMeters = PhysicalConstants.Generic.FeetToMeters<double>();
+
+		// 1 square foot = 144 square inches
+		double squareInchesPerSquareFoot = 144.0;
+		double calculatedSquareInchesToSquareMetersViaFeet =
+			PhysicalConstants.Generic.SquareFeetToSquareMeters<double>() / squareInchesPerSquareFoot;
+		double storedSquareInchesToSquareMeters = PhysicalConstants.Generic.SquareInchesToSquareMeters<double>();
+
+		Assert.AreEqual(calculatedSquareInchesToSquareMetersViaFeet, storedSquareInchesToSquareMeters, RelaxedTolerance,
+			"Square inch conversion via square foot conversion should match direct conversion");
+	}
 }
