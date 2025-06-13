@@ -144,3 +144,4 @@ When adding XML documentation comments:
 *   When working with dimensionless quantities:
     *   Reserve Radians for Angular Quantities Only
     *   Create Semantically Appropriate Dimensionless Units. For example, use BootstrapDimensionless, BootstrapDecibel and BootstrapPH for non-angular dimensionless quantities.
+*   **Testing Physical Constants:** Add additional tests for physical constants to validate stored values against calculated values from fundamental constants.
