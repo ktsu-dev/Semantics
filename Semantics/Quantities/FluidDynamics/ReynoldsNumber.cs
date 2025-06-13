@@ -148,10 +148,13 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 	/// <param name="laminarThreshold">The laminar threshold (default: 2300).</param>
 	/// <param name="turbulentThreshold">The turbulent threshold (default: 4000).</param>
 	/// <returns>A string describing the flow regime.</returns>
-	public string GetFlowRegime(T? laminarThreshold = null, T? turbulentThreshold = null)
-	{
-		return IsLaminarFlow(laminarThreshold) ? "Laminar" : IsTurbulentFlow(turbulentThreshold) ? "Turbulent" : "Transitional";
-	}
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "<Pending>")]
+	public string GetFlowRegime(T? laminarThreshold = null, T? turbulentThreshold = null) =>
+		IsLaminarFlow(laminarThreshold)
+		? "Laminar"
+		: IsTurbulentFlow(turbulentThreshold)
+		? "Turbulent"
+		: "Transitional";
 
 	/// <summary>Calculates the friction factor for pipe flow using appropriate correlations.</summary>
 	/// <param name="relativeRoughness">The relative roughness (ε/D) for the pipe (default: 0 for smooth pipes).</param>

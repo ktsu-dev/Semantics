@@ -161,8 +161,8 @@ public class MechanicalQuantitiesTests
 		Force<double> force = Force<double>.Create(1000.0); // 1000 N
 		Area<double> area = Area<double>.Create(2.0); // 2 m²
 
-		// Act
-		Pressure<double> pressure = Pressure<double>.FromForceAndArea(force, area);
+		// Act - Use the operator instead of the removed method
+		Pressure<double> pressure = force / area;
 		double pressureValue = pressure.In(Units.Pascal);
 
 		// Assert
