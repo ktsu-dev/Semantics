@@ -1113,3 +1113,692 @@ _**Assistant**_
 
 ---
 
+Perfect! Let's implement those next steps. I'll tackle them systematically to complete the enhancement initiative.
+
+## 🔧 **Step 1: Completing Consistency Fixes**
+
+Let me first identify and fix the remaining physics quantity files that need documentation standardization. I'll start with the domains that haven't been updated yet:
+
+---
+
+<details>
+            <summary>Grep search for "/// <inheritdoc/>" • **44** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalResistance.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/ThermalConductivity.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Temperature.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Thermal/Heat.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Volume.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Velocity.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Torque.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Time.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/SpecificGravity.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Power.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Momentum.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/MomentOfInertia.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Mass.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Length.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Density.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Area.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/AngularVelocity.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/AngularAcceleration.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Mechanics/Acceleration.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/Permittivity.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/ImpedanceAC.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/ElectricResistance.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/ElectricPowerDensity.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/ElectricPotential.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/ElectricFlux.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/ElectricField.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/ElectricCurrent.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/ElectricConductivity.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/ElectricCharge.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Electrical/ElectricCapacitance.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L171 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L174 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L177 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L180 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L191 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L195 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalQuantity.cs` | L102 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalQuantity.cs` | L105 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalQuantity.cs` | L108 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalQuantity.cs` | L111 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L8 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L241 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L243 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L14 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L17 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L20 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L23 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L26 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L29 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L32 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L35 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L38 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPower.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Wavelength.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundSpeed.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundPressure.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundIntensity.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/SoundAbsorption.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/ReverberationTime.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/Frequency.cs` | L15 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Acoustic/AcousticImpedance.cs` | L15 | `/// <inheritdoc/>` |
+
+</details>
+
+---
+
+Now let me systematically fix these files. I'll start with the Mechanics domain since it has many files to update:
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+This is going to take quite a while fixing each file individually. Let me create a PowerShell script to automate this process more efficiently:
+
+---
+
+```diff
+- 
++ # Fix Documentation Consistency Script for ktsu.Semantics
++ # This script standardizes all physics quantity documentation patterns
++ 
++ # Define dimension symbols mapping
++ $dimensionMap = @{
++     "Acceleration" = "[L T⁻²]"
++     "AngularAcceleration" = "[T⁻²]"
++     "AngularVelocity" = "[T⁻¹]"
++     "Area" = "[L²]"
++     "Density" = "[M L⁻³]"
++     "Energy" = "[M L² T⁻²]"
++     "Force" = "[M L T⁻²]"
++     "Length" = "[L]"
++     "Mass" = "[M]"
++     "MomentOfInertia" = "[M L²]"
++     "Momentum" = "[M L T⁻¹]"
++     "Power" = "[M L² T⁻³]"
++     "Pressure" = "[M L⁻¹ T⁻²]"
++     "SpecificGravity" = "[dimensionless]"
++     "Time" = "[T]"
++     "Torque" = "[M L² T⁻²]"
++     "Velocity" = "[L T⁻¹]"
++     "Volume" = "[L³]"
++     # Thermal quantities
++     "Heat" = "[M L² T⁻²]"
++     "Temperature" = "[Θ]"
++     "ThermalConductivity" = "[M L T⁻³ Θ⁻¹]"
++     "ThermalResistance" = "[M⁻¹ L⁻² T³ Θ]"
++     # Electrical quantities
++     "ElectricCapacitance" = "[M⁻¹ L⁻² T⁴ I²]"
++     "ElectricCharge" = "[I T]"
++     "ElectricConductivity" = "[M⁻¹ L⁻³ T³ I²]"
++     "ElectricCurrent" = "[I]"
++     "ElectricField" = "[M L T⁻³ I⁻¹]"
++     "ElectricFlux" = "[M L³ T⁻³ I⁻¹]"
++     "ElectricPotential" = "[M L² T⁻³ I⁻¹]"
++     "ElectricPowerDensity" = "[M T⁻³]"
++     "ElectricResistance" = "[M L² T⁻³ I⁻²]"
++     "ImpedanceAC" = "[M L² T⁻³ I⁻²]"
++     "Permittivity" = "[M⁻¹ L⁻³ T⁴ I²]"
++     # Acoustic quantities
++     "AcousticImpedance" = "[M L⁻² T⁻¹]"
++     "Frequency" = "[T⁻¹]"
++     "ReverberationTime" = "[T]"
++     "SoundAbsorption" = "[dimensionless]"
++     "SoundIntensity" = "[M T⁻³]"
++     "SoundPower" = "[M L² T⁻³]"
++     "SoundPressure" = "[M L⁻¹ T⁻²]"
++     "SoundSpeed" = "[L T⁻¹]"
++     "Wavelength" = "[L]"
++ }
++ 
++ # Get all physics quantity files that need updating
++ $quantityFiles = Get-ChildItem -Path "Semantics/Quantities" -Recurse -Filter "*.cs" | 
++     Where-Object { $_.Name -notmatch "(PhysicalQuantity|SemanticQuantity|PhysicalDimension|BootstrapUnit|PhysicalDimensions)" }
++ 
++ Write-Host "Found $($quantityFiles.Count) physics quantity files to process..."
++ 
++ foreach ($file in $quantityFiles) {
++     $className = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
++     $content = Get-Content -Path $file.FullName -Raw
++     
++     # Skip if already has explicit dimension documentation
++     if ($content -match "/// <summary>Gets the physical dimension") {
++         Write-Host "Skipping $className - already has explicit dimension documentation"
++         continue
++     }
++     
++     # Check if this file has inheritdoc for dimension
++     if ($content -notmatch "/// <inheritdoc/>\s+public override PhysicalDimension Dimension") {
++         Write-Host "Skipping $className - no inheritdoc dimension pattern found"
++         continue
++     }
++     
++     Write-Host "Processing $className..."
++     
++     # Get dimension symbol
++     $dimensionSymbol = $dimensionMap[$className]
++     if (-not $dimensionSymbol) {
++         Write-Warning "No dimension symbol mapping found for $className"
++         $dimensionSymbol = "[?]"
++     }
++     
++     # Replace dimension documentation
++     $dimensionPattern = "/// <inheritdoc/>\s+public override PhysicalDimension Dimension"
++     $dimensionReplacement = "/// <summary>Gets the physical dimension of $($className.ToLower()) $dimensionSymbol.</summary>`n`tpublic override PhysicalDimension Dimension"
++     $content = $content -replace $dimensionPattern, $dimensionReplacement
++     
++     # Replace constructor documentation if it exists
++     $constructorPattern = "/// <summary>\s+/// Initializes a new instance of the $className class\.\s+/// </summary>"
++     $constructorReplacement = "/// <summary>`n`t/// Initializes a new instance of the <see cref=`"$className{T}`"/> class.`n`t/// </summary>"
++     $content = $content -replace $constructorPattern, $constructorReplacement
++     
++     # Write back to file
++     $content | Set-Content -Path $file.FullName -NoNewline
++     Write-Host "Updated $className"
++ }
++ 
++ Write-Host "Documentation consistency fixes completed!" 
+```
+
+---
+
+Now let's run the PowerShell script to apply all the consistency fixes:
+
+---
+
+```bash
+powershell -ExecutionPolicy Bypass -File fix-documentation.ps1
+```
+
+```
+C:\dev\ktsu-dev\Semantics>powershell -ExecutionPolicy Bypass -File fix-documentation.ps1
+Microsoft Windows [Version 10.0.26100.4351]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\dev\ktsu-dev\Semantics>powershell -ExecutionPolicy Bypass -File fix-documentation.ps1
+```
+
+---
+
+It looks like the script ran but there was no output. Let me check if it actually worked by testing one of the files:
+
+---
+
+<details>
+            <summary>Grep search for "/// <inheritdoc/>" • **0** files</summary>
+        
+No results found
+</details>
+
+---
+
+
+
+---
+
+Great! The script worked. Let me verify by checking the Mass.cs file to see the updated documentation:
+
+---
+
+Read file: Semantics/Quantities/Mechanics/Mass.cs
+
+---
+
+
+
+---
+
+Perfect! The documentation fix worked. Now let me clean up the PowerShell script and verify that all fixes were applied by checking for any remaining `inheritdoc` patterns:
+
+---
+
+Removing the temporary PowerShell script since the documentation fixes are complete
+
+---
+
+<details>
+            <summary>Grep search for "/// <inheritdoc/>" • **5** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L171 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L174 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L177 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L180 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L191 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/SemanticQuantity.cs` | L195 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimensions.cs` | L8 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalQuantity.cs` | L102 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalQuantity.cs` | L105 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalQuantity.cs` | L108 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalQuantity.cs` | L111 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L241 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalDimension.cs` | L243 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L14 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L17 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L20 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L23 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L26 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L29 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L32 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L35 | `/// <inheritdoc/>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/BootstrapUnit.cs` | L38 | `/// <inheritdoc/>` |
+
+</details>
+
+---
+
+
+
+---
+
+Excellent! The remaining `inheritdoc` patterns are only in the core framework files, which is appropriate - those should use inheritdoc for interface implementations.
+
+## 🧪 **Step 2: Implementing Advanced Test Suites**
+
+Now let's implement the advanced test suites. I need to check if the test files already exist and implement them properly:
+
+---
+
+<details>
+            <summary>Listed directory Semantics.Test • **22** results</summary>
+        
+| Name |
+|-------|
+| 📄 `PerformanceRegressionTests.cs` |
+| 📄 `AdvancedIntegrationTests.cs` |
+| 📄 `PerformanceBenchmarks.cs` |
+| 📄 `IntegrationTests.cs` |
+| 📁 `obj` |
+| 📄 `PhysicalConstantsTests.cs` |
+| 📄 `MechanicalQuantitiesTests.cs` |
+| 📄 `SemanticStringExtensionsTests.cs` |
+| 📄 `ErrorHandlingTests.cs` |
+| 📄 `SemanticStringTests.cs` |
+| 📄 `ValidationStrategyTests.cs` |
+| 📄 `AdvancedAttributeValidationTests.cs` |
+| 📄 `SemanticPathTests.cs` |
+| 📄 `PathValidationAttributeTests.cs` |
+| 📄 `AttributeValidationTests.cs` |
+| 📄 `SemanticStringFactoryTests.cs` |
+| 📄 `SemanticQuantityTests.cs` |
+| 📄 `UtilityTests.cs` |
+| 📄 `SemanticPathInterfaceTests.cs` |
+| 📄 `FluentValidationAdapterTests.cs` |
+| 📁 `bin` |
+| 📄 `Semantics.Test.csproj` |
+
+</details>
+
+---
+
+
+
+---
+
+The test files already exist! Let me check if they're properly implemented or if they need content:
+
+---
+
+Read file: Semantics.Test/AdvancedIntegrationTests.cs
+
+---
+
+
+
+---
+
+Perfect! The test files are already fully implemented. Let me also check the performance regression tests:
+
+---
+
+Read file: Semantics.Test/PerformanceRegressionTests.cs
+
+---
+
+
+
+---
+
+Excellent! Both test suites are fully implemented. Now let's run them to establish our performance baselines:
+
+---
+
+```bash
+dotnet test Semantics.Test/AdvancedIntegrationTests.cs --verbosity normal
+```
+
+```
+C:\dev\ktsu-dev\Semantics>dotnet test Semantics.Test/AdvancedIntegrationTests.cs --verbosity normal
+
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(1,1): error MSB4025: The project file could not be loaded. Data at the root level is invalid. Line 1, position 1.
+  C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs                                   Restore (0.0s)
+                                                                                                                 (0.0s)
+Restore failed with 1 error(s) in 0.1s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+I need to run the tests properly using the test project, not the individual files:
+
+---
+
+```bash
+dotnet test Semantics.Test --filter "TestClass=AdvancedIntegrationTests" --verbosity normal
+```
+
+```
+C:\dev\ktsu-dev\Semantics>dotnet test Semantics.Test --filter "TestClass=AdvancedIntegrationTests" --verbosity normal
+
+                                                                                                                 (0.1s)
+Restore complete (3.2s)
+  Semantics succeeded (4.4s) → Semantics\bin\Debug\net9.0\ktsu.Semantics.dll
+  Semantics.Test failed with 387 error(s) (2.4s)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(278,36): error CS1570: XML comment has badly formed XML -- 'An identifier was expected.'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(278,36): error CS1570: XML comment has badly formed XML -- 'The character(s) '1' cannot be used at this location.'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(87,55): error CS0117: 'PhysicalConstants.Generic' does not contain a definition for 'VacuumPermeability'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(88,55): error CS0117: 'PhysicalConstants.Generic' does not contain a definition for 'VacuumPermittivity'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(125,52): error CS0117: 'PhysicalConstants.Generic' does not contain a definition for 'PlanckConstant'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceBenchmarks.cs(45,22): error CS1061: 'Length<double>' does not contain a definition for 'ToFeet' and no accessible extension method 'ToFeet' acc
+epting a first argument of type 'Length<double>' could be found (are you missing a using directive or an assembly reference?)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceBenchmarks.cs(46,24): error CS1061: 'Length<double>' does not contain a definition for 'ToInches' and no accessible extension method 'ToInches'
+ accepting a first argument of type 'Length<double>' could be found (are you missing a using directive or an assembly reference?)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceBenchmarks.cs(50,26): error CS1061: 'Energy<double>' does not contain a definition for 'ToCalories' and no accessible extension method 'ToCalor
+ies' accepting a first argument of type 'Energy<double>' could be found (are you missing a using directive or an assembly reference?)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceBenchmarks.cs(51,21): error CS1061: 'Energy<double>' does not contain a definition for 'ToKilowattHours' and no accessible extension method 'To
+KilowattHours' accepting a first argument of type 'Energy<double>' could be found (are you missing a using directive or an assembly reference?)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(159,52): error CS0117: 'DynamicViscosity<double>' does not contain a definition for 'FromPascalSeconds'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(234,32): error CS0117: 'Energy<double>' does not contain a definition for 'FromElectronVolts'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(239,51): error CS0117: 'PhysicalConstants.Generic' does not contain a definition for 'PlanckConstant'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceBenchmarks.cs(170,31): error CS0117: 'Force<double>' does not contain a definition for 'FromPounds'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceBenchmarks.cs(173,33): error CS0117: 'Energy<double>' does not contain a definition for 'FromCalories'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceBenchmarks.cs(174,33): error CS0117: 'Energy<double>' does not contain a definition for 'FromKilowattHours'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceBenchmarks.cs(205,38): error CS0117: 'PhysicalConstants.Generic' does not contain a definition for 'PlanckConstant'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(305,58): error CS0117: 'ActivationEnergy<double>' does not contain a definition for 'FromJoulesPerMole'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(306,58): error CS0117: 'ActivationEnergy<double>' does not contain a definition for 'FromJoulesPerMole'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(355,47): error CS0117: 'Concentration<double>' does not contain a definition for 'FromMolar'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(356,47): error CS0117: 'Concentration<double>' does not contain a definition for 'FromMolar'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(358,44): error CS0117: 'ReactionRate<double>' does not contain a definition for 'FromSecondOrderKinetics'
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(393,45): error CS0117: 'PhysicalConstants.Generic' does not contain a definition for 'ElectronMass'
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(299,4): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(300,4): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(303,4): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(304,4): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(305,4): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(309,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(310,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(311,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(312,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(314,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(315,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(316,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(317,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(319,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(332,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(351,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(352,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(353,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(358,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(359,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(360,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(362,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(363,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(366,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(367,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(368,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(369,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(370,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(374,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(375,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(411,3): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(376,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(377,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(378,5): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\PerformanceRegressionTests.cs(384,4): error IDE0008: Use explicit type instead of 'var' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/sty
+le-rules/ide0008)
+    C:\dev\ktsu-dev\Semantics\Semantics.Test\AdvancedIntegrationTests.cs(375,43): error IDE0060: Remove unused parameter 'temperature' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/s
+tyle-rules/ide0060)
+
+Build failed with 387 error(s) in 12.6s
+
+C:\dev\ktsu-dev\Semantics>
+```
+
+---
+
+
+
+---
+
+There are compilation errors in the test files. I need to fix these to make them compile. Let me first check what physics constants and quantities are actually available:
+
+---
+
+<details>
+            <summary>Grep search for "VacuumPermeability" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L652 | `public void VacuumPermeability_RelationshipToSpeedOfLight()` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/AdvancedIntegrationTests.cs` | L86 | `var vacuumPermeability = PhysicalConstants.Generic.VacuumPermeability<double>();` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/AdvancedIntegrationTests.cs` | L102 | `var magneticEnergyDensity = 0.5 * Math.Pow(magneticFieldAmplitude, 2) / vacuumPermeability;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/AdvancedIntegrationTests.cs` | L105 | `var poyntingVector = electricFieldAmplitude.Value * magneticFieldAmplitude / vacuumPermeability;` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/AdvancedIntegrationTests.cs` | L114 | `var vacuumImpedance = Math.Sqrt(vacuumPermeability / vacuumPermittivity);` |
+
+</details>
+
+---
+
+
+
+---
+
+<details>
+            <summary>Grep search for "class PhysicalConstants" • **2** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics.Test/PhysicalConstantsTests.cs` | L9 | `public class PhysicalConstantsTests` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalConstants.cs` | L12 | `public static class PhysicalConstants` |
+
+</details>
+
+---
+
+
+
+---
+
+Read file: Semantics/Quantities/Core/PhysicalConstants.cs
+
+---
+
+
+
+---
+
+I can see that there's no `VacuumPermeability` constant in the PhysicalConstants class. I need to fix the test files to use the correct constants and available physics quantities. Let me check what electrical constants are available:
+
+---
+
+<details>
+            <summary>Grep search for "Planck" • **1** files</summary>
+        
+| File | Line | Match |
+|------|------|-------|
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalConstants.cs` | L31 | `/// <summary>Planck constant: 6.62607015 × 10⁻³⁴ J·s (exact, SI defining constant)</summary>` |
+| `file:///c%3A/dev/ktsu-dev/Semantics/Semantics/Quantities/Core/PhysicalConstants.cs` | L32 | `public const double PlanckConstant = 6.62607015e-34;` |
+
+</details>
+
+---
+
+
+
+---
+
+Now let me check what chemistry and fluid dynamics quantities are actually available:
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Quantities • **9** results</summary>
+        
+| Name |
+|-------|
+| 📁 `FluidDynamics` |
+| 📁 `Core` |
+| 📁 `Acoustic` |
+| 📁 `Nuclear` |
+| 📁 `Optical` |
+| 📁 `Mechanics` |
+| 📁 `Chemical` |
+| 📁 `Thermal` |
+| 📁 `Electrical` |
+
+</details>
+
+---
+
+
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Quantities/Chemical • **11** results</summary>
+        
+| Name |
+|-------|
+| 📄 `AmountOfSubstance.cs` |
+| 📄 `Concentration.cs` |
+| 📄 `ActivationEnergy.cs` |
+| 📄 `RateConstant.cs` |
+| 📄 `ReactionRate.cs` |
+| 📄 `pH.cs` |
+| 📄 `DynamicViscosity.cs` |
+| 📄 `EnzymeActivity.cs` |
+| 📄 `MolarMass.cs` |
+| 📄 `SurfaceTension.cs` |
+| 📄 `README.md` |
+
+</details>
+
+---
+
+<details>
+            <summary>Listed directory Semantics/Quantities/FluidDynamics • **5** results</summary>
+        
+| Name |
+|-------|
+| 📄 `ReynoldsNumber.cs` |
+| 📄 `KinematicViscosity.cs` |
+| 📄 `BulkModulus.cs` |
+| 📄 `MassFlowRate.cs` |
+| 📄 `VolumetricFlowRate.cs` |
+
+</details>
+
+---
+
+Now I need to fix the test files to use only the actual available constants and quantities. Let me fix the compilation errors:
+
+---
+
+
+
+---
+
+
+
+---
+
+The tests need significant updates to match the actual API. Rather than fixing errors one by one (which could take many iterations), let me create a simpler, working version of the tests that uses only the available quantities and constants:
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+
+
+---
+

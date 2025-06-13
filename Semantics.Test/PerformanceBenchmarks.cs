@@ -26,33 +26,33 @@ public class PerformanceBenchmarks
 		// Warmup
 		for (int i = 0; i < WarmupIterations; i++)
 		{
-			var temp = Temperature<double>.FromCelsius(25.0);
-			var _ = temp.ToFahrenheit();
+			Temperature<double> temp = Temperature<double>.FromCelsius(25.0);
+			double _ = temp.ToFahrenheit();
 		}
 
-		var stopwatch = Stopwatch.StartNew();
+		Stopwatch stopwatch = Stopwatch.StartNew();
 
 		// Benchmark different unit conversions
 		for (int i = 0; i < IterationCount; i++)
 		{
 			// Temperature conversions
-			var temp = Temperature<double>.FromCelsius(25.0 + i * 0.001);
-			var fahrenheit = temp.ToFahrenheit();
-			var kelvin = temp.ToKelvin();
+			Temperature<double> temp = Temperature<double>.FromCelsius(25.0 + (i * 0.001));
+			double fahrenheit = temp.ToFahrenheit();
+			double kelvin = temp.ToKelvin();
 
 			// Length conversions
-			var length = Length<double>.FromMeters(1.0 + i * 0.0001);
+			Length<double> length = Length<double>.FromMeters(1.0 + (i * 0.0001));
 			var feet = length.ToFeet();
 			var inches = length.ToInches();
 
 			// Energy conversions
-			var energy = Energy<double>.FromJoules(1000.0 + i * 0.01);
+			Energy<double> energy = Energy<double>.FromJoules(1000.0 + (i * 0.01));
 			var calories = energy.ToCalories();
 			var kwh = energy.ToKilowattHours();
 		}
 
 		stopwatch.Stop();
-		double operationsPerSecond = (IterationCount * 6) / stopwatch.Elapsed.TotalSeconds; // 6 conversions per iteration
+		double operationsPerSecond = IterationCount * 6 / stopwatch.Elapsed.TotalSeconds; // 6 conversions per iteration
 
 		Console.WriteLine($"Unit conversions: {operationsPerSecond:F0} operations/second");
 		Assert.IsTrue(operationsPerSecond > 100000, "Unit conversions should be fast");
@@ -67,35 +67,35 @@ public class PerformanceBenchmarks
 		// Warmup
 		for (int i = 0; i < WarmupIterations; i++)
 		{
-			var force1 = Force<double>.FromNewtons(100.0);
-			var force2 = Force<double>.FromNewtons(50.0);
-			var _ = force1 + force2;
+			Force<double> force1 = Force<double>.FromNewtons(100.0);
+			Force<double> force2 = Force<double>.FromNewtons(50.0);
+			Force<double> _ = force1 + force2;
 		}
 
-		var stopwatch = Stopwatch.StartNew();
+		Stopwatch stopwatch = Stopwatch.StartNew();
 
 		for (int i = 0; i < IterationCount; i++)
 		{
 			// Force arithmetic
-			var force1 = Force<double>.FromNewtons(100.0 + i * 0.001);
-			var force2 = Force<double>.FromNewtons(50.0 + i * 0.0005);
-			var forceSum = force1 + force2;
-			var forceDiff = force1 - force2;
+			Force<double> force1 = Force<double>.FromNewtons(100.0 + (i * 0.001));
+			Force<double> force2 = Force<double>.FromNewtons(50.0 + (i * 0.0005));
+			Force<double> forceSum = force1 + force2;
+			Force<double> forceDiff = force1 - force2;
 
 			// Energy arithmetic
-			var energy1 = Energy<double>.FromJoules(1000.0 + i * 0.01);
-			var energy2 = Energy<double>.FromJoules(500.0 + i * 0.005);
-			var energySum = energy1 + energy2;
-			var energyDiff = energy1 - energy2;
+			Energy<double> energy1 = Energy<double>.FromJoules(1000.0 + (i * 0.01));
+			Energy<double> energy2 = Energy<double>.FromJoules(500.0 + (i * 0.005));
+			Energy<double> energySum = energy1 + energy2;
+			Energy<double> energyDiff = energy1 - energy2;
 
 			// Temperature arithmetic
-			var temp1 = Temperature<double>.FromKelvin(300.0 + i * 0.001);
-			var temp2 = Temperature<double>.FromKelvin(273.15);
-			var tempDiff = temp1 - temp2;
+			Temperature<double> temp1 = Temperature<double>.FromKelvin(300.0 + (i * 0.001));
+			Temperature<double> temp2 = Temperature<double>.FromKelvin(273.15);
+			Temperature<double> tempDiff = temp1 - temp2;
 		}
 
 		stopwatch.Stop();
-		double operationsPerSecond = (IterationCount * 7) / stopwatch.Elapsed.TotalSeconds;
+		double operationsPerSecond = IterationCount * 7 / stopwatch.Elapsed.TotalSeconds;
 
 		Console.WriteLine($"Arithmetic operations: {operationsPerSecond:F0} operations/second");
 		Assert.IsTrue(operationsPerSecond > 500000, "Arithmetic operations should be very fast");
@@ -110,36 +110,36 @@ public class PerformanceBenchmarks
 		// Warmup
 		for (int i = 0; i < WarmupIterations; i++)
 		{
-			var mass = Mass<double>.FromKilograms(10.0);
-			var acceleration = Acceleration<double>.FromMetersPerSecondSquared(9.8);
-			var _ = mass * acceleration;
+			Mass<double> mass = Mass<double>.FromKilograms(10.0);
+			Acceleration<double> acceleration = Acceleration<double>.FromMetersPerSecondSquared(9.8);
+			Force<double> _ = mass * acceleration;
 		}
 
-		var stopwatch = Stopwatch.StartNew();
+		Stopwatch stopwatch = Stopwatch.StartNew();
 
 		for (int i = 0; i < IterationCount; i++)
 		{
 			// F = ma
-			var mass = Mass<double>.FromKilograms(10.0 + i * 0.0001);
-			var acceleration = Acceleration<double>.FromMetersPerSecondSquared(9.8 + i * 0.00001);
-			var force = mass * acceleration;
+			Mass<double> mass = Mass<double>.FromKilograms(10.0 + (i * 0.0001));
+			Acceleration<double> acceleration = Acceleration<double>.FromMetersPerSecondSquared(9.8 + (i * 0.00001));
+			Force<double> force = mass * acceleration;
 
 			// P = VI
-			var voltage = ElectricPotential<double>.FromVolts(12.0 + i * 0.0001);
-			var current = ElectricCurrent<double>.FromAmperes(2.0 + i * 0.00001);
-			var power = voltage * current;
+			ElectricPotential<double> voltage = ElectricPotential<double>.FromVolts(12.0 + (i * 0.0001));
+			ElectricCurrent<double> current = ElectricCurrent<double>.FromAmperes(2.0 + (i * 0.00001));
+			Power<double> power = voltage * current;
 
 			// E = mc² (simplified)
-			var energy = Energy<double>.FromKineticEnergy(mass, Velocity<double>.FromMetersPerSecond(10.0));
+			Energy<double> energy = Energy<double>.FromKineticEnergy(mass, Velocity<double>.FromMetersPerSecond(10.0));
 
 			// λ = v/f
-			var soundSpeed = SoundSpeed<double>.FromMetersPerSecond(343.0);
-			var frequency = Frequency<double>.FromHertz(1000.0 + i * 0.1);
-			var wavelength = soundSpeed / frequency;
+			SoundSpeed<double> soundSpeed = SoundSpeed<double>.FromMetersPerSecond(343.0);
+			Frequency<double> frequency = Frequency<double>.FromHertz(1000.0 + (i * 0.1));
+			Wavelength<double> wavelength = soundSpeed / frequency;
 		}
 
 		stopwatch.Stop();
-		double operationsPerSecond = (IterationCount * 4) / stopwatch.Elapsed.TotalSeconds;
+		double operationsPerSecond = IterationCount * 4 / stopwatch.Elapsed.TotalSeconds;
 
 		Console.WriteLine($"Physics relationships: {operationsPerSecond:F0} operations/second");
 		Assert.IsTrue(operationsPerSecond > 200000, "Physics relationships should be efficient");
@@ -154,28 +154,28 @@ public class PerformanceBenchmarks
 		// Warmup
 		for (int i = 0; i < WarmupIterations; i++)
 		{
-			var _ = Temperature<double>.FromCelsius(25.0);
+			Temperature<double> _ = Temperature<double>.FromCelsius(25.0);
 		}
 
-		var stopwatch = Stopwatch.StartNew();
+		Stopwatch stopwatch = Stopwatch.StartNew();
 
 		for (int i = 0; i < IterationCount; i++)
 		{
 			// Different creation methods
-			var temp1 = Temperature<double>.FromCelsius(25.0 + i * 0.001);
-			var temp2 = Temperature<double>.FromKelvin(298.15 + i * 0.001);
-			var temp3 = Temperature<double>.FromFahrenheit(77.0 + i * 0.002);
+			Temperature<double> temp1 = Temperature<double>.FromCelsius(25.0 + (i * 0.001));
+			Temperature<double> temp2 = Temperature<double>.FromKelvin(298.15 + (i * 0.001));
+			Temperature<double> temp3 = Temperature<double>.FromFahrenheit(77.0 + (i * 0.002));
 
-			var force1 = Force<double>.FromNewtons(100.0 + i * 0.001);
-			var force2 = Force<double>.FromPounds(22.48 + i * 0.0002);
+			Force<double> force1 = Force<double>.FromNewtons(100.0 + (i * 0.001));
+			var force2 = Force<double>.FromPounds(22.48 + (i * 0.0002));
 
-			var energy1 = Energy<double>.FromJoules(1000.0 + i * 0.01);
-			var energy2 = Energy<double>.FromCalories(239.0 + i * 0.002);
-			var energy3 = Energy<double>.FromKilowattHours(0.000278 + i * 0.000001);
+			Energy<double> energy1 = Energy<double>.FromJoules(1000.0 + (i * 0.01));
+			var energy2 = Energy<double>.FromCalories(239.0 + (i * 0.002));
+			var energy3 = Energy<double>.FromKilowattHours(0.000278 + (i * 0.000001));
 		}
 
 		stopwatch.Stop();
-		double operationsPerSecond = (IterationCount * 8) / stopwatch.Elapsed.TotalSeconds;
+		double operationsPerSecond = IterationCount * 8 / stopwatch.Elapsed.TotalSeconds;
 
 		Console.WriteLine($"Quantity creation: {operationsPerSecond:F0} operations/second");
 		Assert.IsTrue(operationsPerSecond > 300000, "Quantity creation should be fast");
@@ -190,23 +190,23 @@ public class PerformanceBenchmarks
 		// Warmup
 		for (int i = 0; i < WarmupIterations; i++)
 		{
-			var _ = PhysicalConstants.Generic.SpeedOfLight<double>();
+			double _ = PhysicalConstants.Generic.SpeedOfLight<double>();
 		}
 
-		var stopwatch = Stopwatch.StartNew();
+		Stopwatch stopwatch = Stopwatch.StartNew();
 
 		for (int i = 0; i < IterationCount; i++)
 		{
 			// Access various constants
-			var c = PhysicalConstants.Generic.SpeedOfLight<double>();
-			var g = PhysicalConstants.Generic.StandardGravity<double>();
-			var R = PhysicalConstants.Generic.GasConstant<double>();
-			var Na = PhysicalConstants.Generic.AvogadroNumber<double>();
+			double c = PhysicalConstants.Generic.SpeedOfLight<double>();
+			double g = PhysicalConstants.Generic.StandardGravity<double>();
+			double R = PhysicalConstants.Generic.GasConstant<double>();
+			double Na = PhysicalConstants.Generic.AvogadroNumber<double>();
 			var h = PhysicalConstants.Generic.PlanckConstant<double>();
 		}
 
 		stopwatch.Stop();
-		double operationsPerSecond = (IterationCount * 5) / stopwatch.Elapsed.TotalSeconds;
+		double operationsPerSecond = IterationCount * 5 / stopwatch.Elapsed.TotalSeconds;
 
 		Console.WriteLine($"Constant access: {operationsPerSecond:F0} operations/second");
 		Assert.IsTrue(operationsPerSecond > 1000000, "Constant access should be very fast");
@@ -228,14 +228,14 @@ public class PerformanceBenchmarks
 		// Perform operations that might allocate memory
 		for (int i = 0; i < IterationCount; i++)
 		{
-			var temp = Temperature<double>.FromCelsius(25.0 + i * 0.001);
-			var force = Force<double>.FromNewtons(100.0 + i * 0.001);
-			var energy = force * Length<double>.FromMeters(1.0);
-			var power = energy / Time<double>.FromSeconds(1.0);
+			Temperature<double> temp = Temperature<double>.FromCelsius(25.0 + (i * 0.001));
+			Force<double> force = Force<double>.FromNewtons(100.0 + (i * 0.001));
+			Energy<double> energy = force * Length<double>.FromMeters(1.0);
+			Power<double> power = energy / Time<double>.FromSeconds(1.0);
 
 			// ToString operations which might allocate
-			var tempStr = temp.ToString();
-			var forceStr = force.ToString();
+			string tempStr = temp.ToString();
+			string forceStr = force.ToString();
 		}
 
 		long endMemory = GC.GetTotalMemory(false);
@@ -257,28 +257,28 @@ public class PerformanceBenchmarks
 		// Warmup
 		for (int i = 0; i < WarmupIterations; i++)
 		{
-			var p = Pressure<double>.FromPascals(101325.0);
-			var v = Volume<double>.FromCubicMeters(0.0224);
-			var t = Temperature<double>.FromKelvin(273.15);
-			var r = PhysicalConstants.Generic.GasConstant<double>();
-			var _ = (p.Value * v.Value) / (r * t.Value);
+			Pressure<double> p = Pressure<double>.FromPascals(101325.0);
+			Volume<double> v = Volume<double>.FromCubicMeters(0.0224);
+			Temperature<double> t = Temperature<double>.FromKelvin(273.15);
+			double r = PhysicalConstants.Generic.GasConstant<double>();
+			double _ = p.Value * v.Value / (r * t.Value);
 		}
 
-		var stopwatch = Stopwatch.StartNew();
+		Stopwatch stopwatch = Stopwatch.StartNew();
 
 		for (int i = 0; i < IterationCount; i++)
 		{
 			// Ideal gas law calculation combining multiple domains
-			var pressure = Pressure<double>.FromPascals(101325.0 + i * 0.1);     // Mechanical
-			var volume = Volume<double>.FromCubicMeters(0.0224 + i * 0.000001);  // Mechanical
-			var temperature = Temperature<double>.FromKelvin(273.15 + i * 0.001); // Thermal
-			var gasConstant = PhysicalConstants.Generic.GasConstant<double>();     // Chemical
+			Pressure<double> pressure = Pressure<double>.FromPascals(101325.0 + (i * 0.1));     // Mechanical
+			Volume<double> volume = Volume<double>.FromCubicMeters(0.0224 + (i * 0.000001));  // Mechanical
+			Temperature<double> temperature = Temperature<double>.FromKelvin(273.15 + (i * 0.001)); // Thermal
+			double gasConstant = PhysicalConstants.Generic.GasConstant<double>();     // Chemical
 
 			// PV = nRT calculation
-			var moles = (pressure.Value * volume.Value) / (gasConstant * temperature.Value);
+			double moles = pressure.Value * volume.Value / (gasConstant * temperature.Value);
 
 			// Convert to amount of substance
-			var amount = AmountOfSubstance<double>.FromMoles(moles);
+			AmountOfSubstance<double> amount = AmountOfSubstance<double>.FromMoles(moles);
 		}
 
 		stopwatch.Stop();
