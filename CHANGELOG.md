@@ -2,8 +2,10 @@
 
 Changes since v1.0.13:
 
+- Update TAGS.md to Use Spaces for Multi-Word Tags ([@matt-edmondson](https://github.com/matt-edmondson))
 - Standardize documentation styles for physics quantities and enhance integration tests. This update introduces explicit XML documentation formats for dimension properties and constructors, improving clarity and consistency. Additionally, it refines advanced integration tests to ensure accurate cross-domain calculations, further solidifying the library's robustness for scientific applications. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add derived constants validation tests for PhysicalConstants ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance DESCRIPTION and README for Improved Clarity and Detail ([@matt-edmondson](https://github.com/matt-edmondson))
 - Enhance the Semantics library by completing the implementation of the Physics Quantities System, which now includes 80+ quantities across 8 scientific domains. Update the README.md and documentation to reflect the comprehensive capabilities, including type-safe arithmetic, automatic unit conversions, and centralized physical constants. Introduce integration and performance benchmarks to validate cross-domain calculations and ensure efficient operations. This update significantly improves the library's usability and functionality for scientific computing and engineering applications. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Standardize documentation styles and enhance performance benchmarks in the Semantics library. This update includes the migration of hardcoded constants to the PhysicalConstants class, ensuring all constants are accessed through generic getters. Additionally, it refines the performance benchmarks to utilize these constants, improving code clarity and maintainability. The integration tests have also been updated to reflect these changes, ensuring accurate calculations across various domains. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor Bootstrap Units into Separate Class for Improved Organization ([@matt-edmondson](https://github.com/matt-edmondson))
