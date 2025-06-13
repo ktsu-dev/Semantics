@@ -2,7 +2,9 @@
 
 Changes since v1.0.13:
 
+- Standardize documentation styles for physics quantities and enhance integration tests. This update introduces explicit XML documentation formats for dimension properties and constructors, improving clarity and consistency. Additionally, it refines advanced integration tests to ensure accurate cross-domain calculations, further solidifying the library's robustness for scientific applications. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Enhance the Semantics library by completing the implementation of the Physics Quantities System, which now includes 80+ quantities across 8 scientific domains. Update the README.md and documentation to reflect the comprehensive capabilities, including type-safe arithmetic, automatic unit conversions, and centralized physical constants. Introduce integration and performance benchmarks to validate cross-domain calculations and ensure efficient operations. This update significantly improves the library's usability and functionality for scientific computing and engineering applications. ([@matt-edmondson](https://github.com/matt-edmondson))
+- Implement comprehensive enhancements to the ktsu.Semantics library, including standardized documentation for all physics quantities, improved testing strategies with advanced integration and performance regression tests, and the addition of real-world physics examples. This update significantly enhances code consistency, documentation clarity, and testing robustness, establishing a solid foundation for future development and ensuring a professional-grade solution for type-safe physics calculations in .NET applications. ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.13 (patch)
 
 Changes since v1.0.12:
