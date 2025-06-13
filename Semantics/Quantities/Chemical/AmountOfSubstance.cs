@@ -60,4 +60,38 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 		T volumeInLiters = moles * molarVolumeSTP;
 		return Volume<T>.Create(volumeInLiters);
 	}
+
+	/// <summary>
+	/// Calculates the concentration from amount of substance and volume (C = n/V).
+	/// </summary>
+	/// <param name="amount">The amount of substance.</param>
+	/// <param name="volume">The volume.</param>
+	/// <returns>The resulting concentration.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Concentration<T> operator /(AmountOfSubstance<T> amount, Volume<T> volume)
+	{
+		ArgumentNullException.ThrowIfNull(amount);
+		ArgumentNullException.ThrowIfNull(volume);
+
+		T concentrationValue = amount.Value / volume.Value;
+
+		return Concentration<T>.Create(concentrationValue);
+	}
+
+	/// <summary>
+	/// Calculates the mass from amount of substance and molar mass (m = n × M).
+	/// </summary>
+	/// <param name="amount">The amount of substance.</param>
+	/// <param name="molarMass">The molar mass.</param>
+	/// <returns>The resulting mass.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Mass<T> operator *(AmountOfSubstance<T> amount, MolarMass<T> molarMass)
+	{
+		ArgumentNullException.ThrowIfNull(amount);
+		ArgumentNullException.ThrowIfNull(molarMass);
+
+		T massValue = amount.Value * molarMass.Value;
+
+		return Mass<T>.Create(massValue);
+	}
 }

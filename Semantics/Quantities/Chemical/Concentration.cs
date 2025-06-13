@@ -78,4 +78,38 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 		T c2 = c1 * v1 / v2;
 		return Create(c2);
 	}
+
+	/// <summary>
+	/// Calculates the amount of substance from concentration and volume (n = C × V).
+	/// </summary>
+	/// <param name="concentration">The concentration.</param>
+	/// <param name="volume">The volume.</param>
+	/// <returns>The resulting amount of substance.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static AmountOfSubstance<T> operator *(Concentration<T> concentration, Volume<T> volume)
+	{
+		ArgumentNullException.ThrowIfNull(concentration);
+		ArgumentNullException.ThrowIfNull(volume);
+
+		T amountValue = concentration.Value * volume.Value;
+
+		return AmountOfSubstance<T>.Create(amountValue);
+	}
+
+	/// <summary>
+	/// Calculates the volume from concentration and amount of substance (V = n/C).
+	/// </summary>
+	/// <param name="amount">The amount of substance.</param>
+	/// <param name="concentration">The concentration.</param>
+	/// <returns>The resulting volume.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Volume<T> operator /(AmountOfSubstance<T> amount, Concentration<T> concentration)
+	{
+		ArgumentNullException.ThrowIfNull(amount);
+		ArgumentNullException.ThrowIfNull(concentration);
+
+		T volumeValue = amount.Value / concentration.Value;
+
+		return Volume<T>.Create(volumeValue);
+	}
 }

@@ -121,9 +121,14 @@ When adding XML documentation comments:
         5.  **Acoustic** (20/20 quantities)
         6.  **Nuclear** (5/5 quantities)
         7.  **Optical** (6/6 quantities)
-        8.  **Fluid Dynamics** (5+ quantities)
+        8.  **Fluid Dynamics** (5/5 quantities)
     *   **REMAINING DOMAINS:**
         *   None
+*   Missing friendly method alternates are not required for operators that define integral/derivative relationships, they can be suppressed with an attribute using:
+```csharp
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+```
+*   When performing integrations/derivations and both sides of the operation are physical quantities, they will both already be stored in the SI base unit for their physical dimension, so we dont need to convert them back to concrete numeric types before doing the operation, until the formula depends on a culculation thats not in an SI base unit. Even further than that, you can use the multiply and divide operators on the PhysicalQuantity derived types directly.
 
 ## CODING STANDARDS
 
@@ -371,22 +376,23 @@ When adding XML documentation comments:
         5.  **Acoustic** (20/20 quantities)
         6.  **Nuclear** (5/5 quantities)
         7.  **Optical** (6/6 quantities)
-        8.  **Fluid Dynamics** (5+ quantities)
+        8.  **Fluid Dynamics** (5/5 quantities)
     *   **REMAINING DOMAINS:**
         *   None
+*   Missing friendly method alternates are not required for operators that define integral/derivative relationships, they can be suppressed with an attribute using:
+```csharp
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+```
+*   When performing integrations/derivations and both sides of the operation are physical quantities, they will both already be stored in the SI base unit for their physical dimension, so we dont need to convert them back to concrete numeric types before doing the operation, until the formula depends on a culculation thats not in an SI base unit.
+*   When performing integrations/derivations and both sides of the operation are physical quantities, they will both already be stored in the SI base unit for their physical dimension, so we dont need to convert them back to concrete numeric types before doing the operation, until the formula depends on a culculation thats not in an SI base unit. Even further than that, you can use the multiply and divide operators on the PhysicalQuantity derived types directly.
+*   When implementing physics relationships:
+    *   Use the `.Value` property directly instead of performing unit conversions.
+    *   Suppress CA2225 warnings using `[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]`.
+    *   The dimensional analysis infrastructure exists in `PhysicalDimension` and base classes, but the specific physics relationships need systematic implementation across all quantity types.
+    *   The current implementation lacks the fundamental integration and derivative relationships that should be expressed through `*` and `/` operators.
 
 ## DEBUGGING
 
 (Rules and guidelines for debugging are listed here.)
 
-*   When encountering build errors, especially syntax errors reported by the compiler (e.g., CS1519, CS8124, CS1026, CS1002, CS1022), carefully examine the indicated line and surrounding code for typos, missing parentheses, semicolons, or other syntax violations.
-*   When encountering CS0101 errors (namespace already contains a definition) or CS0579 errors (duplicate attribute), carefully check the indicated file for duplicate class definitions or attribute declarations.
-*   If a test expects functionality that is not yet implemented, comment out or fix the test cases to align with the current implementation.
-*   When resolving CS0029 errors (cannot implicitly convert type), carefully check if the type conversion is intended and whether the target type provides an implicit conversion operator. If not, explicitly access the intended property (e.g., `.Quantity`) or modify the test case accordingly.
-*   When resolving CS7036 errors (no argument given that corresponds to the required parameter), ensure that all required parameters are provided in the method call. If the parameter is optional, consider providing a default value.
-*   When resolving CS0019 errors (operator cannot be applied to operands of type), ensure that the operands support the specified operator. If not, explicitly access the intended property or modify the test case accordingly.
-*   When debugging `IndexOfAny` or `LastIndexOfAny` methods in `SemanticStringTests`, verify that the expected index in the test case aligns with the actual index returned by the standard .NET string methods. Incorrect test expectations can lead to false positives. If the test expectation is incorrect, correct the test case to align with the actual index returned by the .NET string methods.
-*   When debugging `FormatException` errors within `SemanticString<TDest>.PerformValidation` during validation strategy testing (e.g., `LongString_WithValidations_HandledCorrectly`), ensure that the input string being converted to the target type `TDest` adheres to the expected format and constraints defined by the validation logic. Pay close attention to string length, prefixes, and suffixes as defined in the validation.
-    *   Specifically, when a `SemanticString<TDest>` is decorated with a `PrefixAndSuffixAttribute`, ensure that test cases use the correct prefix and suffix as defined in the attribute. A mismatch between the expected prefix/suffix in the attribute and the actual prefix/suffix in the test string will cause a `FormatException` during validation.
-*   When debugging `IsPathAttribute_PathWithInvalidChars_ShouldFail` tests, be aware that `.NET` versions after `.NET Framework` may return a reduced set of invalid characters from `Path.GetInvalidPathChars()`. If the test expects characters like `<` and `>` to be invalid, ensure that the `IsPathAttribute` validation logic
-*   When encountering analyzer warnings
+*   When encountering build errors, especially syntax errors reported by the compiler (e.g., CS1519, CS8124, CS1026, CS1002, CS1022), carefully examine the indicated line and surrounding code for typos, missing parentheses, semicolons, or other

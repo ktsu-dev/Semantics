@@ -89,4 +89,38 @@ public sealed record Heat<T> : PhysicalQuantity<Heat<T>, T>
 		ArgumentNullException.ThrowIfNull(energy);
 		return Create(energy.Value);
 	}
+
+	/// <summary>
+	/// Calculates power from heat and time (P = Q/t).
+	/// </summary>
+	/// <param name="heat">The heat energy.</param>
+	/// <param name="time">The time duration.</param>
+	/// <returns>The resulting power.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Power<T> operator /(Heat<T> heat, Time<T> time)
+	{
+		ArgumentNullException.ThrowIfNull(heat);
+		ArgumentNullException.ThrowIfNull(time);
+
+		T powerValue = heat.Value / time.Value;
+
+		return Power<T>.Create(powerValue);
+	}
+
+	/// <summary>
+	/// Calculates time from heat and power (t = Q/P).
+	/// </summary>
+	/// <param name="heat">The heat energy.</param>
+	/// <param name="power">The power.</param>
+	/// <returns>The resulting time duration.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Time<T> operator /(Heat<T> heat, Power<T> power)
+	{
+		ArgumentNullException.ThrowIfNull(heat);
+		ArgumentNullException.ThrowIfNull(power);
+
+		T timeValue = heat.Value / power.Value;
+
+		return Time<T>.Create(timeValue);
+	}
 }

@@ -78,4 +78,90 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 
 		return Acceleration<T>.Create(accelerationValue);
 	}
+
+	/// <summary>
+	/// Calculates power from force and velocity (P = F·v).
+	/// </summary>
+	/// <param name="force">The force.</param>
+	/// <param name="velocity">The velocity.</param>
+	/// <returns>The resulting power.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Power<T> operator *(Force<T> force, Velocity<T> velocity)
+	{
+		ArgumentNullException.ThrowIfNull(force);
+		ArgumentNullException.ThrowIfNull(velocity);
+
+		T powerValue = force.Value * velocity.Value;
+
+		return Power<T>.Create(powerValue);
+	}
+
+	/// <summary>
+	/// Calculates power from velocity and force (P = F·v).
+	/// </summary>
+	/// <param name="velocity">The velocity.</param>
+	/// <param name="force">The force.</param>
+	/// <returns>The resulting power.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Power<T> operator *(Velocity<T> velocity, Force<T> force) => force * velocity;
+
+	/// <summary>
+	/// Calculates work/energy from force and distance (W = F·d).
+	/// </summary>
+	/// <param name="force">The force.</param>
+	/// <param name="distance">The distance.</param>
+	/// <returns>The resulting work/energy.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Energy<T> operator *(Force<T> force, Length<T> distance)
+	{
+		ArgumentNullException.ThrowIfNull(force);
+		ArgumentNullException.ThrowIfNull(distance);
+
+		T energyValue = force.Value * distance.Value;
+
+		return Energy<T>.Create(energyValue);
+	}
+
+	/// <summary>
+	/// Calculates work/energy from distance and force (W = F·d).
+	/// </summary>
+	/// <param name="distance">The distance.</param>
+	/// <param name="force">The force.</param>
+	/// <returns>The resulting work/energy.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Energy<T> operator *(Length<T> distance, Force<T> force) => force * distance;
+
+	/// <summary>
+	/// Calculates acceleration from force and mass (a = F/m).
+	/// </summary>
+	/// <param name="force">The force.</param>
+	/// <param name="mass">The mass.</param>
+	/// <returns>The resulting acceleration.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Acceleration<T> operator /(Force<T> force, Mass<T> mass)
+	{
+		ArgumentNullException.ThrowIfNull(force);
+		ArgumentNullException.ThrowIfNull(mass);
+
+		T accelerationValue = force.Value / mass.Value;
+
+		return Acceleration<T>.Create(accelerationValue);
+	}
+
+	/// <summary>
+	/// Calculates mass from force and acceleration (m = F/a).
+	/// </summary>
+	/// <param name="force">The force.</param>
+	/// <param name="acceleration">The acceleration.</param>
+	/// <returns>The resulting mass.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Mass<T> operator /(Force<T> force, Acceleration<T> acceleration)
+	{
+		ArgumentNullException.ThrowIfNull(force);
+		ArgumentNullException.ThrowIfNull(acceleration);
+
+		T massValue = force.Value / acceleration.Value;
+
+		return Mass<T>.Create(massValue);
+	}
 }

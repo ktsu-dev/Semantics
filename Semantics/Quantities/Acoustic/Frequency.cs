@@ -66,4 +66,54 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 		ArgumentNullException.ThrowIfNull(wavelength);
 		return Velocity<T>.Create(frequency.Value * wavelength.Value);
 	}
+
+	/// <summary>
+	/// Calculates the wave speed from frequency and wavelength (v = f × λ).
+	/// </summary>
+	/// <param name="frequency">The frequency.</param>
+	/// <param name="wavelength">The wavelength.</param>
+	/// <returns>The resulting wave speed.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static SoundSpeed<T> operator *(Frequency<T> frequency, Wavelength<T> wavelength)
+	{
+		ArgumentNullException.ThrowIfNull(frequency);
+		ArgumentNullException.ThrowIfNull(wavelength);
+
+		T speedValue = frequency.Value * wavelength.Value;
+
+		return SoundSpeed<T>.Create(speedValue);
+	}
+
+	/// <summary>
+	/// Calculates the period from frequency (T = 1/f).
+	/// </summary>
+	/// <param name="one">The value 1 (dimensionless).</param>
+	/// <param name="frequency">The frequency.</param>
+	/// <returns>The resulting period (time).</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Time<T> operator /(T one, Frequency<T> frequency)
+	{
+		ArgumentNullException.ThrowIfNull(frequency);
+
+		T periodValue = one / frequency.Value;
+
+		return Time<T>.Create(periodValue);
+	}
+
+	/// <summary>
+	/// Calculates the wavelength from frequency and wave speed (λ = v/f).
+	/// </summary>
+	/// <param name="speed">The wave speed.</param>
+	/// <param name="frequency">The frequency.</param>
+	/// <returns>The resulting wavelength.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Wavelength<T> operator /(SoundSpeed<T> speed, Frequency<T> frequency)
+	{
+		ArgumentNullException.ThrowIfNull(speed);
+		ArgumentNullException.ThrowIfNull(frequency);
+
+		T wavelengthValue = speed.Value / frequency.Value;
+
+		return Wavelength<T>.Create(wavelengthValue);
+	}
 }

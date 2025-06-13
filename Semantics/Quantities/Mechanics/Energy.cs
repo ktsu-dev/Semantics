@@ -108,4 +108,72 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 
 		return Velocity<T>.Create(velocityValue);
 	}
+
+	/// <summary>
+	/// Calculates power from energy and time (P = E/t).
+	/// </summary>
+	/// <param name="energy">The energy.</param>
+	/// <param name="time">The time duration.</param>
+	/// <returns>The resulting power.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Power<T> operator /(Energy<T> energy, Time<T> time)
+	{
+		ArgumentNullException.ThrowIfNull(energy);
+		ArgumentNullException.ThrowIfNull(time);
+
+		T powerValue = energy.Value / time.Value;
+
+		return Power<T>.Create(powerValue);
+	}
+
+	/// <summary>
+	/// Calculates time from energy and power (t = E/P).
+	/// </summary>
+	/// <param name="energy">The energy.</param>
+	/// <param name="power">The power.</param>
+	/// <returns>The resulting time duration.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Time<T> operator /(Energy<T> energy, Power<T> power)
+	{
+		ArgumentNullException.ThrowIfNull(energy);
+		ArgumentNullException.ThrowIfNull(power);
+
+		T timeValue = energy.Value / power.Value;
+
+		return Time<T>.Create(timeValue);
+	}
+
+	/// <summary>
+	/// Calculates force from energy and distance (F = E/d).
+	/// </summary>
+	/// <param name="energy">The energy.</param>
+	/// <param name="distance">The distance.</param>
+	/// <returns>The resulting force.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Force<T> operator /(Energy<T> energy, Length<T> distance)
+	{
+		ArgumentNullException.ThrowIfNull(energy);
+		ArgumentNullException.ThrowIfNull(distance);
+
+		T forceValue = energy.Value / distance.Value;
+
+		return Force<T>.Create(forceValue);
+	}
+
+	/// <summary>
+	/// Calculates distance from energy and force (d = E/F).
+	/// </summary>
+	/// <param name="energy">The energy.</param>
+	/// <param name="force">The force.</param>
+	/// <returns>The resulting distance.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Length<T> operator /(Energy<T> energy, Force<T> force)
+	{
+		ArgumentNullException.ThrowIfNull(energy);
+		ArgumentNullException.ThrowIfNull(force);
+
+		T distanceValue = energy.Value / force.Value;
+
+		return Length<T>.Create(distanceValue);
+	}
 }

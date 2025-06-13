@@ -76,4 +76,21 @@ public sealed record LuminousFlux<T> : PhysicalQuantity<LuminousFlux<T>, T>
 		T power = radiantFlux.In(Units.Watt);
 		return flux / power;
 	}
+
+	/// <summary>
+	/// Calculates illuminance from luminous flux and area (E = Φ/A).
+	/// </summary>
+	/// <param name="flux">The luminous flux.</param>
+	/// <param name="area">The area.</param>
+	/// <returns>The resulting illuminance.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Illuminance<T> operator /(LuminousFlux<T> flux, Area<T> area)
+	{
+		ArgumentNullException.ThrowIfNull(flux);
+		ArgumentNullException.ThrowIfNull(area);
+
+		T illuminanceValue = flux.Value / area.Value;
+
+		return Illuminance<T>.Create(illuminanceValue);
+	}
 }

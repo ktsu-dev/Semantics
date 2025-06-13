@@ -38,7 +38,12 @@ public sealed record Velocity<T> : PhysicalQuantity<Velocity<T>, T>
 	{
 		ArgumentNullException.ThrowIfNull(left);
 		ArgumentNullException.ThrowIfNull(right);
-		return Acceleration<T>.Create(left.Value / right.Value);
+
+		T velocityValue = left.In(Units.MetersPerSecond);
+		T timeValue = right.In(Units.Second);
+		T accelerationValue = velocityValue / timeValue;
+
+		return Acceleration<T>.Create(accelerationValue);
 	}
 
 	/// <summary>
@@ -48,4 +53,64 @@ public sealed record Velocity<T> : PhysicalQuantity<Velocity<T>, T>
 	/// <param name="right">The time.</param>
 	/// <returns>The resulting acceleration.</returns>
 	public static Acceleration<T> Divide(Velocity<T> left, Time<T> right) => left / right;
+
+	/// <summary>
+	/// Calculates distance from velocity and time (d = v·t).
+	/// </summary>
+	/// <param name="velocity">The velocity.</param>
+	/// <param name="time">The time duration.</param>
+	/// <returns>The resulting distance.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Length<T> operator *(Velocity<T> velocity, Time<T> time)
+	{
+		ArgumentNullException.ThrowIfNull(velocity);
+		ArgumentNullException.ThrowIfNull(time);
+
+		T distanceValue = velocity.Value * time.Value;
+
+		return Length<T>.Create(distanceValue);
+	}
+
+	/// <summary>
+	/// Calculates distance from time and velocity (d = v·t).
+	/// </summary>
+	/// <param name="time">The time duration.</param>
+	/// <param name="velocity">The velocity.</param>
+	/// <returns>The resulting distance.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Length<T> operator *(Time<T> time, Velocity<T> velocity) => velocity * time;
+
+	/// <summary>
+	/// Calculates time from velocity and distance (t = d/v).
+	/// </summary>
+	/// <param name="distance">The distance.</param>
+	/// <param name="velocity">The velocity.</param>
+	/// <returns>The resulting time duration.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Time<T> operator /(Length<T> distance, Velocity<T> velocity)
+	{
+		ArgumentNullException.ThrowIfNull(distance);
+		ArgumentNullException.ThrowIfNull(velocity);
+
+		T timeValue = distance.Value / velocity.Value;
+
+		return Time<T>.Create(timeValue);
+	}
+
+	/// <summary>
+	/// Calculates time from velocity and acceleration (t = v/a).
+	/// </summary>
+	/// <param name="velocity">The velocity.</param>
+	/// <param name="acceleration">The acceleration.</param>
+	/// <returns>The resulting time duration.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Time<T> operator /(Velocity<T> velocity, Acceleration<T> acceleration)
+	{
+		ArgumentNullException.ThrowIfNull(velocity);
+		ArgumentNullException.ThrowIfNull(acceleration);
+
+		T timeValue = velocity.Value / acceleration.Value;
+
+		return Time<T>.Create(timeValue);
+	}
 }
