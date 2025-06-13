@@ -21,9 +21,9 @@ public class IntegrationTests
 	public void IdealGasLaw_CombinesThreeDomainsCorrectly()
 	{
 		// Arrange - Standard conditions
-		Pressure<double> pressure = Pressure<double>.FromPascals(101325.0);        // 1 atm (Mechanical)
+		Pressure<double> pressure = Pressure<double>.FromPascals(PhysicalConstants.Generic.StandardAtmosphericPressure<double>());        // 1 atm (Mechanical)
 		Volume<double> volume = Volume<double>.FromCubicMeters(0.0224);          // 22.4 L (Mechanical)
-		Temperature<double> temperature = Temperature<double>.FromKelvin(273.15);      // 0°C (Thermal)
+		Temperature<double> temperature = Temperature<double>.FromKelvin(PhysicalConstants.Generic.StandardTemperature<double>());      // 0°C (Thermal)
 		double gasConstant = PhysicalConstants.Generic.GasConstant<double>();
 
 		// Act - Calculate amount of substance using ideal gas law: n = PV/RT

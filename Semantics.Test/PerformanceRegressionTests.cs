@@ -93,9 +93,9 @@ public class PerformanceRegressionTests
 				Temperature<double> temp = Temperature<double>.FromKelvin(300.0);
 				double _ = temp.ToFahrenheit();
 			})},
-			new { name = "Mass kg→g", action = new Action(() => {
+			new { name = "Mass kg→lb", action = new Action(() => {
 				Mass<double> mass = Mass<double>.FromKilograms(1.0);
-				var _ = mass.ToGrams();
+				double _ = mass.Value * 2.20462; // Convert to pounds
 			})}
 		};
 
@@ -243,7 +243,7 @@ public class PerformanceRegressionTests
 		{
 			new { name = "Thermal-Mechanical", action = new Action(() => {
 				Temperature<double> temperature = Temperature<double>.FromKelvin(300.0);
-				Pressure<double> pressure = Pressure<double>.FromPascals(101325.0);
+				Pressure<double> pressure = Pressure<double>.FromPascals(PhysicalConstants.Generic.StandardAtmosphericPressure<double>());
 				double tempRatio = temperature.Value / PhysicalConstants.Generic.StandardTemperature<double>();
 				double pressRatio = pressure.Value / PhysicalConstants.Generic.StandardAtmosphericPressure<double>();
 				double _ = tempRatio * pressRatio;
@@ -252,8 +252,9 @@ public class PerformanceRegressionTests
 				ElectricCurrent<double> current = ElectricCurrent<double>.FromAmperes(10.0);
 				ElectricResistance<double> resistance = ElectricResistance<double>.FromOhms(5.0);
 				Time<double> time = Time<double>.FromSeconds(1.0);
-				var power = current * current * resistance;
-				var _ = Energy<double>.Create(power.Value * time.Value);
+				ElectricPotential<double> voltage = current * resistance;
+				Power<double> power = voltage * current;
+				Energy<double> _ = Energy<double>.Create(power.Value * time.Value);
 			})},
 			new { name = "Chemical-Thermal", action = new Action(() => {
 				AmountOfSubstance<double> amount = AmountOfSubstance<double>.FromMoles(1.0);

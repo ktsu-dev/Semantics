@@ -33,7 +33,7 @@ public sealed record SoundSpeed<T> : PhysicalQuantity<SoundSpeed<T>, T>
 	/// </summary>
 	/// <param name="feetPerSecond">The value in feet per second.</param>
 	/// <returns>A new SoundSpeed instance.</returns>
-	public static SoundSpeed<T> FromFeetPerSecond(T feetPerSecond) => Create(feetPerSecond * T.CreateChecked(0.3048));
+	public static SoundSpeed<T> FromFeetPerSecond(T feetPerSecond) => Create(feetPerSecond * PhysicalConstants.Generic.FeetToMeters<T>());
 
 	/// <summary>
 	/// Multiplies wavelength by frequency to create sound speed.

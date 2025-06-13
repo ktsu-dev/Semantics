@@ -46,7 +46,7 @@ public static class Units
 	public static readonly IUnit Nanometer = new Unit("nanometer", "nm", PhysicalDimensions.Length, UnitSystem.SIDerived, MetricMagnitudes.Nano);
 
 	/// <summary>Foot - Imperial unit of length.</summary>
-	public static readonly IUnit Foot = new Unit("foot", "ft", PhysicalDimensions.Length, UnitSystem.Imperial, 0.3048);
+	public static readonly IUnit Foot = new Unit("foot", "ft", PhysicalDimensions.Length, UnitSystem.Imperial, PhysicalConstants.Conversion.FeetToMeters);
 
 	/// <summary>Inch - Imperial unit of length.</summary>
 	public static readonly IUnit Inch = new Unit("inch", "in", PhysicalDimensions.Length, UnitSystem.Imperial, 0.0254);
@@ -193,7 +193,7 @@ public static class Units
 	public static readonly IUnit Knot = new Unit("knot", "kn", PhysicalDimensions.Velocity, UnitSystem.Other, 1852.0 / 3600.0);
 
 	/// <summary>Feet per second - Imperial velocity unit.</summary>
-	public static readonly IUnit FeetPerSecond = new Unit("feet per second", "ft/s", PhysicalDimensions.Velocity, UnitSystem.Imperial, 0.3048);
+	public static readonly IUnit FeetPerSecond = new Unit("feet per second", "ft/s", PhysicalDimensions.Velocity, UnitSystem.Imperial, PhysicalConstants.Conversion.FeetToMeters);
 
 	/// <summary>Meters per second squared - SI derived unit of acceleration.</summary>
 	public static readonly IUnit MetersPerSecondSquared = new Unit("meters per second squared", "m/s²", PhysicalDimensions.Acceleration, UnitSystem.SIDerived);

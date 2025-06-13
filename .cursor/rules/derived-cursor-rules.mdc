@@ -207,3 +207,10 @@ When adding XML documentation comments:
         *   Implementing the advanced test suites to establish performance baselines
 *   **Standardize dimension property documentation styles**. Use explicit documentation like `/// <summary>Gets the physical dimension of [quantity] [SYMBOL].</summary>` instead of `/// <inheritdoc/>`.
 *   **Standardize constructor documentation styles**. Use `/// <summary>Initializes a new instance of the <see cref="[ClassName]{T}"/> class.</summary>` instead of `/// Initializes a new instance of the [ClassName] class.`
+*   **Resolving Compiler Errors:** When addressing compiler errors such as CS0219 (unused variable), always analyze the context to determine if the variable should be used or removed.
+*   **Physical Constants Migration:** Always ensure hardcoded constants are migrated to the `PhysicalConstants.cs` class and covered with generic getters.
+*   **Missing Generic Getters in `PhysicalConstants.Generic`:**
+    1.  **ElementaryCharge**
+    2.  **PlanckConstant**
+    3.  **BoltzmannConstant**
+    4.  **FeetToMeters** (from Conversion class)

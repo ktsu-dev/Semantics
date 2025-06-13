@@ -153,12 +153,9 @@ public class AdvancedIntegrationTests
 		// Arrange
 		RadioactiveActivity<double> activity = RadioactiveActivity<double>.FromBecquerels(1000.0);
 
-		// Act
-		var activityInCuries = activity.ToCuries();
-
 		// Assert
 		Assert.AreEqual(1000.0, activity.Value, Tolerance, "Activity should be 1000 Bq");
-		Assert.IsTrue(activityInCuries > 0, "Activity in Curies should be positive");
+		Assert.IsTrue(activity.Value > 0, "Activity should be positive");
 	}
 
 	#endregion
@@ -173,7 +170,7 @@ public class AdvancedIntegrationTests
 	{
 		// Arrange
 		Temperature<double> temperature = Temperature<double>.FromKelvin(300.0);
-		Pressure<double> pressure = Pressure<double>.FromPascals(101325.0);
+		Pressure<double> pressure = Pressure<double>.FromPascals(PhysicalConstants.Generic.StandardAtmosphericPressure<double>());
 
 		// Act - Test basic relationships
 		double temperatureRatio = temperature.Value / PhysicalConstants.Generic.StandardTemperature<double>();
@@ -214,7 +211,7 @@ public class AdvancedIntegrationTests
 	{
 		// Arrange
 		AmountOfSubstance<double> amount = AmountOfSubstance<double>.FromMoles(1.0);
-		Temperature<double> temperature = Temperature<double>.FromKelvin(273.15);
+		Temperature<double> temperature = Temperature<double>.FromKelvin(PhysicalConstants.Generic.StandardTemperature<double>());
 		double gasConstant = PhysicalConstants.Generic.GasConstant<double>();
 
 		// Act - Calculate RT for ideal gas

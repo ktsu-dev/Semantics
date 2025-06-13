@@ -230,6 +230,15 @@ public static class PhysicalConstants
 		/// <summary>Gets gas constant as type T</summary>
 		public static T GasConstant<T>() where T : struct, INumber<T> => T.CreateChecked(Fundamental.GasConstant);
 
+		/// <summary>Gets elementary charge as type T</summary>
+		public static T ElementaryCharge<T>() where T : struct, INumber<T> => T.CreateChecked(Fundamental.ElementaryCharge);
+
+		/// <summary>Gets Planck constant as type T</summary>
+		public static T PlanckConstant<T>() where T : struct, INumber<T> => T.CreateChecked(Fundamental.PlanckConstant);
+
+		/// <summary>Gets Boltzmann constant as type T</summary>
+		public static T BoltzmannConstant<T>() where T : struct, INumber<T> => T.CreateChecked(Fundamental.BoltzmannConstant);
+
 		/// <summary>Gets absolute zero in Celsius as type T</summary>
 		public static T AbsoluteZeroInCelsius<T>() where T : struct, INumber<T> => T.CreateChecked(Temperature.AbsoluteZeroInCelsius);
 
@@ -268,6 +277,9 @@ public static class PhysicalConstants
 
 		/// <summary>Gets BTU to joule conversion as type T</summary>
 		public static T BtuToJoule<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.BtuToJoule);
+
+		/// <summary>Gets feet to meters conversion as type T</summary>
+		public static T FeetToMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.FeetToMeters);
 
 		/// <summary>Gets kilowatt-hour to joule conversion as type T</summary>
 		public static T KilowattHourToJoule<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.KilowattHourToJoule);

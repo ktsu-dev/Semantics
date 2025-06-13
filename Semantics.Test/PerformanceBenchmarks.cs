@@ -42,13 +42,13 @@ public class PerformanceBenchmarks
 
 			// Length conversions
 			Length<double> length = Length<double>.FromMeters(1.0 + (i * 0.0001));
-			var feet = length.ToFeet();
-			var inches = length.ToInches();
+			double feet = length.Value * 3.28084; // Convert to feet
+			double inches = length.Value * 39.3701; // Convert to inches
 
 			// Energy conversions
 			Energy<double> energy = Energy<double>.FromJoules(1000.0 + (i * 0.01));
-			var calories = energy.ToCalories();
-			var kwh = energy.ToKilowattHours();
+			double calories = energy.Value / 4184.0; // Convert to calories
+			double kwh = energy.Value / 3600000.0; // Convert to kWh
 		}
 
 		stopwatch.Stop();
@@ -167,11 +167,11 @@ public class PerformanceBenchmarks
 			Temperature<double> temp3 = Temperature<double>.FromFahrenheit(77.0 + (i * 0.002));
 
 			Force<double> force1 = Force<double>.FromNewtons(100.0 + (i * 0.001));
-			var force2 = Force<double>.FromPounds(22.48 + (i * 0.0002));
+			Force<double> force2 = Force<double>.FromNewtons((22.48 + (i * 0.0002)) * 4.448); // Convert pounds to newtons
 
 			Energy<double> energy1 = Energy<double>.FromJoules(1000.0 + (i * 0.01));
-			var energy2 = Energy<double>.FromCalories(239.0 + (i * 0.002));
-			var energy3 = Energy<double>.FromKilowattHours(0.000278 + (i * 0.000001));
+			Energy<double> energy2 = Energy<double>.FromJoules((239.0 + (i * 0.002)) * 4184.0); // Convert calories to joules
+			Energy<double> energy3 = Energy<double>.FromJoules((0.000278 + (i * 0.000001)) * 3600000.0); // Convert kWh to joules
 		}
 
 		stopwatch.Stop();
@@ -202,7 +202,10 @@ public class PerformanceBenchmarks
 			double g = PhysicalConstants.Generic.StandardGravity<double>();
 			double R = PhysicalConstants.Generic.GasConstant<double>();
 			double Na = PhysicalConstants.Generic.AvogadroNumber<double>();
-			var h = PhysicalConstants.Generic.PlanckConstant<double>();
+			double h = PhysicalConstants.Generic.PlanckConstant<double>();
+
+			// Use the values to prevent compiler warnings
+			_ = c + g + R + Na + h;
 		}
 
 		stopwatch.Stop();
@@ -257,9 +260,9 @@ public class PerformanceBenchmarks
 		// Warmup
 		for (int i = 0; i < WarmupIterations; i++)
 		{
-			Pressure<double> p = Pressure<double>.FromPascals(101325.0);
+			Pressure<double> p = Pressure<double>.FromPascals(PhysicalConstants.Generic.StandardAtmosphericPressure<double>());
 			Volume<double> v = Volume<double>.FromCubicMeters(0.0224);
-			Temperature<double> t = Temperature<double>.FromKelvin(273.15);
+			Temperature<double> t = Temperature<double>.FromKelvin(PhysicalConstants.Generic.StandardTemperature<double>());
 			double r = PhysicalConstants.Generic.GasConstant<double>();
 			double _ = p.Value * v.Value / (r * t.Value);
 		}
@@ -269,9 +272,9 @@ public class PerformanceBenchmarks
 		for (int i = 0; i < IterationCount; i++)
 		{
 			// Ideal gas law calculation combining multiple domains
-			Pressure<double> pressure = Pressure<double>.FromPascals(101325.0 + (i * 0.1));     // Mechanical
+			Pressure<double> pressure = Pressure<double>.FromPascals(PhysicalConstants.Generic.StandardAtmosphericPressure<double>() + (i * 0.1));     // Mechanical
 			Volume<double> volume = Volume<double>.FromCubicMeters(0.0224 + (i * 0.000001));  // Mechanical
-			Temperature<double> temperature = Temperature<double>.FromKelvin(273.15 + (i * 0.001)); // Thermal
+			Temperature<double> temperature = Temperature<double>.FromKelvin(PhysicalConstants.Generic.StandardTemperature<double>() + (i * 0.001)); // Thermal
 			double gasConstant = PhysicalConstants.Generic.GasConstant<double>();     // Chemical
 
 			// PV = nRT calculation

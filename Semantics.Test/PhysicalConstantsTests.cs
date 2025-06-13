@@ -18,7 +18,7 @@ public class PhysicalConstantsTests
 	{
 		double gasConstant = PhysicalConstants.Fundamental.GasConstant;
 		double temperature = PhysicalConstants.Temperature.StandardTemperature;
-		double pressure = 101325.0;
+		double pressure = PhysicalConstants.Mechanical.StandardAtmosphericPressure;
 
 		double calculatedMolarVolume = gasConstant * temperature / pressure;
 		double calculatedMolarVolumeInLiters = calculatedMolarVolume * 1000;
