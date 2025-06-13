@@ -1,3 +1,9 @@
+## v1.0.13 (patch)
+
+Changes since v1.0.12:
+
+- Add validation tests for derived physical constants in PhysicalConstantsTests.cs ([@matt-edmondson](https://github.com/matt-edmondson))
+- Add comprehensive tests for physical constants validation in PhysicalConstantsTests.cs ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.12 (patch)
 
 Changes since v1.0.11:
