@@ -128,7 +128,13 @@ When adding XML documentation comments:
 ```csharp
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 ```
+*   When performing integrations/derivations and both sides of the operation are physical quantities, they will both already be stored in the SI base unit for their physical dimension, so we dont need to convert them back to concrete numeric types before doing the operation, until the formula depends on a culculation thats not in an SI base unit.
 *   When performing integrations/derivations and both sides of the operation are physical quantities, they will both already be stored in the SI base unit for their physical dimension, so we dont need to convert them back to concrete numeric types before doing the operation, until the formula depends on a culculation thats not in an SI base unit. Even further than that, you can use the multiply and divide operators on the PhysicalQuantity derived types directly.
+*   When implementing physics relationships:
+    *   Use the `.Value` property directly instead of performing unit conversions.
+    *   Suppress CA2225 warnings using `[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]`.
+    *   The dimensional analysis infrastructure exists in `PhysicalDimension` and base classes, but the specific physics relationships need systematic implementation across all quantity types.
+    *   The current implementation lacks the fundamental integration and derivative relationships that should be expressed through `*` and `/` operators.
 
 ## CODING STANDARDS
 
@@ -386,13 +392,4 @@ When adding XML documentation comments:
 *   When performing integrations/derivations and both sides of the operation are physical quantities, they will both already be stored in the SI base unit for their physical dimension, so we dont need to convert them back to concrete numeric types before doing the operation, until the formula depends on a culculation thats not in an SI base unit.
 *   When performing integrations/derivations and both sides of the operation are physical quantities, they will both already be stored in the SI base unit for their physical dimension, so we dont need to convert them back to concrete numeric types before doing the operation, until the formula depends on a culculation thats not in an SI base unit. Even further than that, you can use the multiply and divide operators on the PhysicalQuantity derived types directly.
 *   When implementing physics relationships:
-    *   Use the `.Value` property directly instead of performing unit conversions.
-    *   Suppress CA2225 warnings using `[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]`.
-    *   The dimensional analysis infrastructure exists in `PhysicalDimension` and base classes, but the specific physics relationships need systematic implementation across all quantity types.
-    *   The current implementation lacks the fundamental integration and derivative relationships that should be expressed through `*` and `/` operators.
-
-## DEBUGGING
-
-(Rules and guidelines for debugging are listed here.)
-
-*   When encountering build errors, especially syntax errors reported by the compiler (e.g., CS1519, CS8124, CS1026, CS1002, CS1022), carefully examine the indicated line and surrounding code for typos, missing parentheses, semicolons, or other
+    *   Use the `.

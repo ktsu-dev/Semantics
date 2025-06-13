@@ -54,4 +54,35 @@ public sealed record SoundPower<T> : PhysicalQuantity<SoundPower<T>, T>
 		ArgumentNullException.ThrowIfNull(area);
 		return Create(soundIntensity.Value * area.Value);
 	}
+
+	/// <summary>
+	/// Calculates the sound power from sound intensity and area.
+	/// </summary>
+	/// <param name="soundIntensity">The sound intensity in watts per square meter.</param>
+	/// <param name="area">The area in square meters.</param>
+	/// <returns>The resulting sound power.</returns>
+	public static SoundPower<T> FromSoundIntensityAndArea(SoundIntensity<T> soundIntensity, Area<T> area)
+	{
+		ArgumentNullException.ThrowIfNull(soundIntensity);
+		ArgumentNullException.ThrowIfNull(area);
+
+		return Create(soundIntensity.Value * area.Value);
+	}
+
+	/// <summary>
+	/// Calculates sound intensity from sound power and area (I = P/A).
+	/// </summary>
+	/// <param name="power">The sound power.</param>
+	/// <param name="area">The area.</param>
+	/// <returns>The resulting sound intensity.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static SoundIntensity<T> operator /(SoundPower<T> power, Area<T> area)
+	{
+		ArgumentNullException.ThrowIfNull(power);
+		ArgumentNullException.ThrowIfNull(area);
+
+		T intensityValue = power.Value / area.Value;
+
+		return SoundIntensity<T>.Create(intensityValue);
+	}
 }

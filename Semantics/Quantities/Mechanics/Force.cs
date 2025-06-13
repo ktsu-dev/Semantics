@@ -164,4 +164,21 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 
 		return Mass<T>.Create(massValue);
 	}
+
+	/// <summary>
+	/// Calculates torque from force and distance (τ = F×r).
+	/// </summary>
+	/// <param name="force">The force.</param>
+	/// <param name="distance">The moment arm distance.</param>
+	/// <returns>The resulting torque.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Torque<T> operator *(Force<T> force, Length<T> distance)
+	{
+		ArgumentNullException.ThrowIfNull(force);
+		ArgumentNullException.ThrowIfNull(distance);
+
+		T torqueValue = force.Value * distance.Value;
+
+		return Torque<T>.Create(torqueValue);
+	}
 }

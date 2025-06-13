@@ -32,19 +32,52 @@ public sealed record Pressure<T> : PhysicalQuantity<Pressure<T>, T>
 	/// <summary>
 	/// Calculates pressure from force and area (P = F/A).
 	/// </summary>
-	/// <param name="force">The applied force.</param>
-	/// <param name="area">The area over which the force is applied.</param>
+	/// <param name="force">The force.</param>
+	/// <param name="area">The area.</param>
 	/// <returns>The resulting pressure.</returns>
-	public static Pressure<T> FromForceAndArea(Force<T> force, Area<T> area)
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Pressure<T> operator /(Force<T> force, Area<T> area)
 	{
 		ArgumentNullException.ThrowIfNull(force);
 		ArgumentNullException.ThrowIfNull(area);
 
-		T forceValue = force.In(Units.Newton);
-		T areaValue = area.In(Units.SquareMeter);
-		T pressureValue = forceValue / areaValue;
+		T pressureValue = force.Value / area.Value;
 
 		return Create(pressureValue);
+	}
+
+	/// <summary>
+	/// Calculates force from pressure and area (F = P×A).
+	/// </summary>
+	/// <param name="pressure">The pressure.</param>
+	/// <param name="area">The area.</param>
+	/// <returns>The resulting force.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Force<T> operator *(Pressure<T> pressure, Area<T> area)
+	{
+		ArgumentNullException.ThrowIfNull(pressure);
+		ArgumentNullException.ThrowIfNull(area);
+
+		T forceValue = pressure.Value * area.Value;
+
+		return Force<T>.Create(forceValue);
+	}
+
+	/// <summary>
+	/// Calculates area from pressure and force (A = F/P).
+	/// </summary>
+	/// <param name="force">The force.</param>
+	/// <param name="pressure">The pressure.</param>
+	/// <returns>The resulting area.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+	public static Area<T> operator /(Force<T> force, Pressure<T> pressure)
+	{
+		ArgumentNullException.ThrowIfNull(force);
+		ArgumentNullException.ThrowIfNull(pressure);
+
+		T areaValue = force.Value / pressure.Value;
+
+		return Area<T>.Create(areaValue);
 	}
 
 	/// <summary>
