@@ -178,6 +178,18 @@ public static class PhysicalConstants
 
 		/// <summary>Base-10 logarithm of e: 0.4342944819032518</summary>
 		public const double Log10E = 0.4342944819032518;
+
+		/// <summary>One half: 0.5 (commonly used in kinetic energy equations)</summary>
+		public const double OneHalf = 0.5;
+
+		/// <summary>Two thirds: 2/3 ≈ 0.6666666666666666 (used in various physics equations)</summary>
+		public const double TwoThirds = 2.0 / 3.0;
+
+		/// <summary>Three halves: 3/2 = 1.5 (used in kinetic theory)</summary>
+		public const double ThreeHalves = 1.5;
+
+		/// <summary>Four thirds: 4/3 ≈ 1.3333333333333333 (used in sphere volume)</summary>
+		public const double FourThirds = 4.0 / 3.0;
 	}
 
 	/// <summary>
@@ -292,5 +304,23 @@ public static class PhysicalConstants
 		/// <typeparam name="T">The numeric type.</typeparam>
 		/// <returns>The water surface tension (0.0728 N/m) as type T.</returns>
 		public static T WaterSurfaceTension<T>() where T : struct, INumber<T> => T.CreateChecked(FluidDynamics.WaterSurfaceTension);
+
+		/// <summary>Gets natural logarithm of 10 as type T</summary>
+		public static T Ln10<T>() where T : struct, INumber<T> => T.CreateChecked(Mathematical.Ln10);
+
+		/// <summary>Gets base-10 logarithm of e as type T</summary>
+		public static T Log10E<T>() where T : struct, INumber<T> => T.CreateChecked(Mathematical.Log10E);
+
+		/// <summary>Gets one half (0.5) as type T</summary>
+		public static T OneHalf<T>() where T : struct, INumber<T> => T.CreateChecked(Mathematical.OneHalf);
+
+		/// <summary>Gets two thirds (2/3) as type T</summary>
+		public static T TwoThirds<T>() where T : struct, INumber<T> => T.CreateChecked(Mathematical.TwoThirds);
+
+		/// <summary>Gets three halves (3/2) as type T</summary>
+		public static T ThreeHalves<T>() where T : struct, INumber<T> => T.CreateChecked(Mathematical.ThreeHalves);
+
+		/// <summary>Gets four thirds (4/3) as type T</summary>
+		public static T FourThirds<T>() where T : struct, INumber<T> => T.CreateChecked(Mathematical.FourThirds);
 	}
 }

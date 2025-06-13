@@ -43,6 +43,51 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	public static Frequency<T> FromMegahertz(T megahertz) => Create(megahertz * T.CreateChecked(1_000_000));
 
 	/// <summary>
+	/// Calculates electromagnetic wavelength from frequency using speed of light (λ = c/f).
+	/// </summary>
+	/// <param name="frequency">The electromagnetic frequency.</param>
+	/// <returns>The resulting wavelength in vacuum.</returns>
+	public static Wavelength<T> GetElectromagneticWavelength(Frequency<T> frequency)
+	{
+		ArgumentNullException.ThrowIfNull(frequency);
+
+		T speedOfLight = PhysicalConstants.Generic.SpeedOfLight<T>();
+		T wavelengthValue = speedOfLight / frequency.Value;
+
+		return Wavelength<T>.Create(wavelengthValue);
+	}
+
+	/// <summary>
+	/// Calculates photon energy from frequency using Planck's constant (E = hf).
+	/// </summary>
+	/// <param name="frequency">The photon frequency.</param>
+	/// <returns>The resulting photon energy.</returns>
+	public static Energy<T> GetPhotonEnergy(Frequency<T> frequency)
+	{
+		ArgumentNullException.ThrowIfNull(frequency);
+
+		T planckConstant = T.CreateChecked(PhysicalConstants.Fundamental.PlanckConstant);
+		T energyValue = planckConstant * frequency.Value;
+
+		return Energy<T>.Create(energyValue);
+	}
+
+	/// <summary>
+	/// Calculates frequency from photon energy using Planck's constant (f = E/h).
+	/// </summary>
+	/// <param name="photonEnergy">The photon energy.</param>
+	/// <returns>The resulting frequency.</returns>
+	public static Frequency<T> FromPhotonEnergy(Energy<T> photonEnergy)
+	{
+		ArgumentNullException.ThrowIfNull(photonEnergy);
+
+		T planckConstant = T.CreateChecked(PhysicalConstants.Fundamental.PlanckConstant);
+		T frequencyValue = photonEnergy.Value / planckConstant;
+
+		return Create(frequencyValue);
+	}
+
+	/// <summary>
 	/// Divides one by time to create frequency.
 	/// </summary>
 	/// <param name="one">The value one.</param>

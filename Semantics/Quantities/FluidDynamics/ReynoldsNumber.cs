@@ -237,4 +237,77 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 		T upperBound = T.CreateChecked(1000000);
 		return re >= lowerBound && re <= upperBound;
 	}
+
+	/// <summary>
+	/// Calculates Reynolds number from density, velocity, length, and dynamic viscosity (Re = ρvL/μ).
+	/// </summary>
+	/// <param name="density">The fluid density.</param>
+	/// <param name="velocity">The characteristic velocity.</param>
+	/// <param name="length">The characteristic length.</param>
+	/// <param name="dynamicViscosity">The dynamic viscosity.</param>
+	/// <returns>The resulting Reynolds number.</returns>
+	public static ReynoldsNumber<T> FromFluidProperties(Density<T> density, Velocity<T> velocity, Length<T> length, DynamicViscosity<T> dynamicViscosity)
+	{
+		ArgumentNullException.ThrowIfNull(density);
+		ArgumentNullException.ThrowIfNull(velocity);
+		ArgumentNullException.ThrowIfNull(length);
+		ArgumentNullException.ThrowIfNull(dynamicViscosity);
+
+		T reynoldsValue = (density.Value * velocity.Value * length.Value) / dynamicViscosity.Value;
+
+		return Create(reynoldsValue);
+	}
+
+	/// <summary>
+	/// Calculates Reynolds number from velocity, length, and kinematic viscosity (Re = vL/ν).
+	/// </summary>
+	/// <param name="velocity">The characteristic velocity.</param>
+	/// <param name="length">The characteristic length.</param>
+	/// <param name="kinematicViscosity">The kinematic viscosity.</param>
+	/// <returns>The resulting Reynolds number.</returns>
+	public static ReynoldsNumber<T> FromKinematicProperties(Velocity<T> velocity, Length<T> length, KinematicViscosity<T> kinematicViscosity)
+	{
+		ArgumentNullException.ThrowIfNull(velocity);
+		ArgumentNullException.ThrowIfNull(length);
+		ArgumentNullException.ThrowIfNull(kinematicViscosity);
+
+		T reynoldsValue = (velocity.Value * length.Value) / kinematicViscosity.Value;
+
+		return Create(reynoldsValue);
+	}
+
+	/// <summary>
+	/// Calculates Reynolds number for air flow at standard conditions.
+	/// </summary>
+	/// <param name="velocity">The air velocity.</param>
+	/// <param name="length">The characteristic length.</param>
+	/// <returns>The resulting Reynolds number for standard air.</returns>
+	public static ReynoldsNumber<T> ForStandardAir(Velocity<T> velocity, Length<T> length)
+	{
+		ArgumentNullException.ThrowIfNull(velocity);
+		ArgumentNullException.ThrowIfNull(length);
+
+		// Standard air properties at 20°C, 1 atm
+		T airDensity = PhysicalConstants.Generic.StandardAirDensity<T>();
+		T airViscosity = T.CreateChecked(1.825e-5); // Pa·s for air at 20°C
+
+		T reynoldsValue = (airDensity * velocity.Value * length.Value) / airViscosity;
+
+		return Create(reynoldsValue);
+	}
+
+	/// <summary>
+	/// Determines the flow regime based on Reynolds number for pipe flow.
+	/// </summary>
+	/// <returns>A description of the flow regime.</returns>
+	public string GetPipeFlowRegime()
+	{
+		var re = double.CreateChecked(Value);
+		return re switch
+		{
+			< 2300 => "Laminar",
+			< 4000 => "Transitional",
+			_ => "Turbulent"
+		};
+	}
 }

@@ -40,12 +40,10 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 		ArgumentNullException.ThrowIfNull(mass);
 		ArgumentNullException.ThrowIfNull(velocity);
 
-		T massValue = mass.In(Units.Kilogram);
-		T velocityValue = velocity.In(Units.MetersPerSecond);
-		T half = T.CreateChecked(0.5);
-		T energyValue = half * massValue * velocityValue * velocityValue;
+		T halfValue = PhysicalConstants.Generic.OneHalf<T>();
+		T kineticEnergyValue = halfValue * mass.Value * velocity.Value * velocity.Value;
 
-		return Create(energyValue);
+		return Create(kineticEnergyValue);
 	}
 
 	/// <summary>
@@ -175,5 +173,42 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 		T distanceValue = energy.Value / force.Value;
 
 		return Length<T>.Create(distanceValue);
+	}
+
+
+
+	/// <summary>
+	/// Calculates gravitational potential energy (PE = mgh).
+	/// </summary>
+	/// <param name="mass">The mass.</param>
+	/// <param name="height">The height.</param>
+	/// <returns>The resulting gravitational potential energy.</returns>
+	public static Energy<T> FromGravitationalPotential(Mass<T> mass, Length<T> height)
+	{
+		ArgumentNullException.ThrowIfNull(mass);
+		ArgumentNullException.ThrowIfNull(height);
+
+		T gravityValue = PhysicalConstants.Generic.StandardGravity<T>();
+		T potentialEnergyValue = mass.Value * gravityValue * height.Value;
+
+		return Create(potentialEnergyValue);
+	}
+
+	/// <summary>
+	/// Calculates velocity from kinetic energy and mass (v = √(2KE/m)).
+	/// </summary>
+	/// <param name="kineticEnergy">The kinetic energy.</param>
+	/// <param name="mass">The mass.</param>
+	/// <returns>The resulting velocity.</returns>
+	public static Velocity<T> GetVelocityFromKineticEnergy(Energy<T> kineticEnergy, Mass<T> mass)
+	{
+		ArgumentNullException.ThrowIfNull(kineticEnergy);
+		ArgumentNullException.ThrowIfNull(mass);
+
+		T twoValue = T.CreateChecked(2.0);
+		T velocitySquared = twoValue * kineticEnergy.Value / mass.Value;
+		T velocityValue = T.CreateChecked(Math.Sqrt(double.CreateChecked(velocitySquared)));
+
+		return Velocity<T>.Create(velocityValue);
 	}
 }

@@ -94,4 +94,87 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 
 		return Mass<T>.Create(massValue);
 	}
+
+	/// <summary>
+	/// Creates a new AmountOfSubstance from a value in moles.
+	/// </summary>
+	/// <param name="moles">The value in moles.</param>
+	/// <returns>A new AmountOfSubstance instance.</returns>
+	public static AmountOfSubstance<T> FromMoles(T moles) => Create(moles);
+
+	/// <summary>
+	/// Calculates amount of substance using ideal gas law (n = PV/RT).
+	/// </summary>
+	/// <param name="pressure">The pressure.</param>
+	/// <param name="volume">The volume of the gas.</param>
+	/// <param name="temperature">The absolute temperature.</param>
+	/// <returns>The resulting amount of substance in moles.</returns>
+	public static AmountOfSubstance<T> FromIdealGasLaw(Pressure<T> pressure, Volume<T> volume, Temperature<T> temperature)
+	{
+		ArgumentNullException.ThrowIfNull(pressure);
+		ArgumentNullException.ThrowIfNull(volume);
+		ArgumentNullException.ThrowIfNull(temperature);
+
+		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
+		T amountValue = (pressure.Value * volume.Value) / (gasConstant * temperature.Value);
+
+		return Create(amountValue);
+	}
+
+	/// <summary>
+	/// Calculates pressure using ideal gas law (P = nRT/V).
+	/// </summary>
+	/// <param name="amount">The amount of substance.</param>
+	/// <param name="temperature">The absolute temperature.</param>
+	/// <param name="volume">The volume of the gas.</param>
+	/// <returns>The resulting pressure.</returns>
+	public static Pressure<T> CalculatePressureFromIdealGas(AmountOfSubstance<T> amount, Temperature<T> temperature, Volume<T> volume)
+	{
+		ArgumentNullException.ThrowIfNull(amount);
+		ArgumentNullException.ThrowIfNull(temperature);
+		ArgumentNullException.ThrowIfNull(volume);
+
+		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
+		T pressureValue = (amount.Value * gasConstant * temperature.Value) / volume.Value;
+
+		return Pressure<T>.Create(pressureValue);
+	}
+
+	/// <summary>
+	/// Calculates volume using ideal gas law (V = nRT/P).
+	/// </summary>
+	/// <param name="amount">The amount of substance.</param>
+	/// <param name="temperature">The absolute temperature.</param>
+	/// <param name="pressure">The pressure.</param>
+	/// <returns>The resulting volume.</returns>
+	public static Volume<T> CalculateVolumeFromIdealGas(AmountOfSubstance<T> amount, Temperature<T> temperature, Pressure<T> pressure)
+	{
+		ArgumentNullException.ThrowIfNull(amount);
+		ArgumentNullException.ThrowIfNull(temperature);
+		ArgumentNullException.ThrowIfNull(pressure);
+
+		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
+		T volumeValue = (amount.Value * gasConstant * temperature.Value) / pressure.Value;
+
+		return Volume<T>.Create(volumeValue);
+	}
+
+	/// <summary>
+	/// Calculates temperature using ideal gas law (T = PV/nR).
+	/// </summary>
+	/// <param name="pressure">The pressure.</param>
+	/// <param name="volume">The volume of the gas.</param>
+	/// <param name="amount">The amount of substance.</param>
+	/// <returns>The resulting absolute temperature.</returns>
+	public static Temperature<T> CalculateTemperatureFromIdealGas(Pressure<T> pressure, Volume<T> volume, AmountOfSubstance<T> amount)
+	{
+		ArgumentNullException.ThrowIfNull(pressure);
+		ArgumentNullException.ThrowIfNull(volume);
+		ArgumentNullException.ThrowIfNull(amount);
+
+		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
+		T temperatureValue = (pressure.Value * volume.Value) / (amount.Value * gasConstant);
+
+		return Temperature<T>.Create(temperatureValue);
+	}
 }
