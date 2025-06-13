@@ -1,6 +1,9 @@
-## v1.0.11
+## v1.0.12 (patch)
 
-No significant changes detected since v1.0.11.
+Changes since v1.0.11:
+
+- Implement the Chemical Domain in the Semantics library, completing 10 quantities: ActivationEnergy, AmountOfSubstance, Concentration, DynamicViscosity, EnzymeActivity, MolarMass, PH, RateConstant, ReactionRate, and SurfaceTension. Introduce PhysicalConstants.cs for centralized management of physical constants, ensuring accuracy and maintainability. Update PhysicalDimensions and Units to incorporate new chemical dimensions and units. Achieve 376 passing tests, marking the Chemical domain as fully implemented in TODO_DOMAINS.md. ([@matt-edmondson](https://github.com/matt-edmondson))
+- Implement the Mechanical Domain in the Semantics library, introducing quantities such as Force, Energy, Pressure, and their associated calculations. Centralize physical constants management in PhysicalConstants.cs, ensuring type-safe access to constants like standard gravity and atmospheric pressure. Update PhysicalDimensions and Units to incorporate new mechanical dimensions and units. Achieve comprehensive testing with 100% passing tests, marking the Mechanical domain as fully implemented in the updated implementation plan and progress tracker. ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.11 (patch)
 
 Changes since v1.0.10:
