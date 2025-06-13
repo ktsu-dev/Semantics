@@ -143,6 +143,30 @@ public static class PhysicalConstants
 		/// <summary>Feet to meters: 0.3048 m/ft (exact)</summary>
 		public const double FeetToMeters = 0.3048;
 
+		/// <summary>Inches to meters: 0.0254 m/in (exact)</summary>
+		public const double InchesToMeters = 0.0254;
+
+		/// <summary>Yards to meters: 0.9144 m/yd (exact)</summary>
+		public const double YardsToMeters = 0.9144;
+
+		/// <summary>Miles to meters: 1609.344 m/mi (exact)</summary>
+		public const double MilesToMeters = 1609.344;
+
+		/// <summary>Nautical miles to meters: 1852 m/nmi (exact)</summary>
+		public const double NauticalMilesToMeters = 1852.0;
+
+		/// <summary>Square feet to square meters: 0.092903 m²/ft² (derived from feet conversion)</summary>
+		public const double SquareFeetToSquareMeters = FeetToMeters * FeetToMeters;
+
+		/// <summary>Square inches to square meters: 0.00064516 m²/in² (derived from inches conversion)</summary>
+		public const double SquareInchesToSquareMeters = InchesToMeters * InchesToMeters;
+
+		/// <summary>Acres to square meters: 4046.8564224 m²/ac (exact)</summary>
+		public const double AcresToSquareMeters = 4046.8564224;
+
+		/// <summary>Square miles to square meters: 2589988.110336 m²/mi² (derived from miles conversion)</summary>
+		public const double SquareMilesToSquareMeters = MilesToMeters * MilesToMeters;
+
 		/// <summary>Kilowatt-hour to Joule: 3,600,000 J/kWh (exact)</summary>
 		public const double KilowattHourToJoule = 3600000.0;
 
@@ -220,6 +244,39 @@ public static class PhysicalConstants
 	}
 
 	/// <summary>
+	/// Time conversion constants
+	/// </summary>
+	public static class Time
+	{
+		/// <summary>Seconds per minute: 60 s/min (exact)</summary>
+		public const double SecondsPerMinute = 60.0;
+
+		/// <summary>Seconds per hour: 3600 s/h (exact)</summary>
+		public const double SecondsPerHour = 3600.0;
+
+		/// <summary>Seconds per day: 86400 s/d (exact)</summary>
+		public const double SecondsPerDay = 86400.0;
+
+		/// <summary>Seconds per week: 604800 s/wk (exact)</summary>
+		public const double SecondsPerWeek = 604800.0;
+
+		/// <summary>Seconds per Julian year: 31557600 s/yr (365.25 days)</summary>
+		public const double SecondsPerJulianYear = 31557600.0;
+
+		/// <summary>Minutes per hour: 60 min/h (exact)</summary>
+		public const double MinutesPerHour = 60.0;
+
+		/// <summary>Hours per day: 24 h/d (exact)</summary>
+		public const double HoursPerDay = 24.0;
+
+		/// <summary>Days per week: 7 d/wk (exact)</summary>
+		public const double DaysPerWeek = 7.0;
+
+		/// <summary>Days per Julian year: 365.25 d/yr (exact)</summary>
+		public const double DaysPerJulianYear = 365.25;
+	}
+
+	/// <summary>
 	/// Helper methods to get constants as generic numeric types
 	/// </summary>
 	public static class Generic
@@ -280,6 +337,30 @@ public static class PhysicalConstants
 
 		/// <summary>Gets feet to meters conversion as type T</summary>
 		public static T FeetToMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.FeetToMeters);
+
+		/// <summary>Gets inches to meters conversion as type T</summary>
+		public static T InchesToMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.InchesToMeters);
+
+		/// <summary>Gets yards to meters conversion as type T</summary>
+		public static T YardsToMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.YardsToMeters);
+
+		/// <summary>Gets miles to meters conversion as type T</summary>
+		public static T MilesToMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.MilesToMeters);
+
+		/// <summary>Gets nautical miles to meters conversion as type T</summary>
+		public static T NauticalMilesToMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.NauticalMilesToMeters);
+
+		/// <summary>Gets square feet to square meters conversion as type T</summary>
+		public static T SquareFeetToSquareMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.SquareFeetToSquareMeters);
+
+		/// <summary>Gets square inches to square meters conversion as type T</summary>
+		public static T SquareInchesToSquareMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.SquareInchesToSquareMeters);
+
+		/// <summary>Gets acres to square meters conversion as type T</summary>
+		public static T AcresToSquareMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.AcresToSquareMeters);
+
+		/// <summary>Gets square miles to square meters conversion as type T</summary>
+		public static T SquareMilesToSquareMeters<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.SquareMilesToSquareMeters);
 
 		/// <summary>Gets kilowatt-hour to joule conversion as type T</summary>
 		public static T KilowattHourToJoule<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.KilowattHourToJoule);
@@ -390,5 +471,34 @@ public static class PhysicalConstants
 
 		/// <summary>Gets nuclear exposure conversion factor as type T</summary>
 		public static T RoentgensToGraysInAir<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.RoentgensToGraysInAir);
+
+		// === TIME CONVERSION CONSTANTS ===
+
+		/// <summary>Gets seconds per minute as type T</summary>
+		public static T SecondsPerMinute<T>() where T : struct, INumber<T> => T.CreateChecked(Time.SecondsPerMinute);
+
+		/// <summary>Gets seconds per hour as type T</summary>
+		public static T SecondsPerHour<T>() where T : struct, INumber<T> => T.CreateChecked(Time.SecondsPerHour);
+
+		/// <summary>Gets seconds per day as type T</summary>
+		public static T SecondsPerDay<T>() where T : struct, INumber<T> => T.CreateChecked(Time.SecondsPerDay);
+
+		/// <summary>Gets seconds per week as type T</summary>
+		public static T SecondsPerWeek<T>() where T : struct, INumber<T> => T.CreateChecked(Time.SecondsPerWeek);
+
+		/// <summary>Gets seconds per Julian year as type T</summary>
+		public static T SecondsPerJulianYear<T>() where T : struct, INumber<T> => T.CreateChecked(Time.SecondsPerJulianYear);
+
+		/// <summary>Gets minutes per hour as type T</summary>
+		public static T MinutesPerHour<T>() where T : struct, INumber<T> => T.CreateChecked(Time.MinutesPerHour);
+
+		/// <summary>Gets hours per day as type T</summary>
+		public static T HoursPerDay<T>() where T : struct, INumber<T> => T.CreateChecked(Time.HoursPerDay);
+
+		/// <summary>Gets days per week as type T</summary>
+		public static T DaysPerWeek<T>() where T : struct, INumber<T> => T.CreateChecked(Time.DaysPerWeek);
+
+		/// <summary>Gets days per Julian year as type T</summary>
+		public static T DaysPerJulianYear<T>() where T : struct, INumber<T> => T.CreateChecked(Time.DaysPerJulianYear);
 	}
 }

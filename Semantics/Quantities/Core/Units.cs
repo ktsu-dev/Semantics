@@ -49,16 +49,16 @@ public static class Units
 	public static readonly IUnit Foot = new Unit("foot", "ft", PhysicalDimensions.Length, UnitSystem.Imperial, PhysicalConstants.Conversion.FeetToMeters);
 
 	/// <summary>Inch - Imperial unit of length.</summary>
-	public static readonly IUnit Inch = new Unit("inch", "in", PhysicalDimensions.Length, UnitSystem.Imperial, 0.0254);
+	public static readonly IUnit Inch = new Unit("inch", "in", PhysicalDimensions.Length, UnitSystem.Imperial, PhysicalConstants.Conversion.InchesToMeters);
 
 	/// <summary>Yard - Imperial unit of length.</summary>
-	public static readonly IUnit Yard = new Unit("yard", "yd", PhysicalDimensions.Length, UnitSystem.Imperial, 0.9144);
+	public static readonly IUnit Yard = new Unit("yard", "yd", PhysicalDimensions.Length, UnitSystem.Imperial, PhysicalConstants.Conversion.YardsToMeters);
 
 	/// <summary>Mile - Imperial unit of length.</summary>
-	public static readonly IUnit Mile = new Unit("mile", "mi", PhysicalDimensions.Length, UnitSystem.Imperial, 1609.344);
+	public static readonly IUnit Mile = new Unit("mile", "mi", PhysicalDimensions.Length, UnitSystem.Imperial, PhysicalConstants.Conversion.MilesToMeters);
 
 	/// <summary>Nautical mile - International nautical mile.</summary>
-	public static readonly IUnit NauticalMile = new Unit("nautical mile", "nmi", PhysicalDimensions.Length, UnitSystem.Other, 1852.0);
+	public static readonly IUnit NauticalMile = new Unit("nautical mile", "nmi", PhysicalDimensions.Length, UnitSystem.Other, PhysicalConstants.Conversion.NauticalMilesToMeters);
 
 	/// <summary>Ängström - Common unit in atomic physics.</summary>
 	public static readonly IUnit Angstrom = new Unit("ångström", "Å", PhysicalDimensions.Length, UnitSystem.Other, 1e-10);
@@ -76,16 +76,16 @@ public static class Units
 	public static readonly IUnit Hectare = new Unit("hectare", "ha", PhysicalDimensions.Area, UnitSystem.Metric, 10000.0);
 
 	/// <summary>Square foot - Imperial unit of area.</summary>
-	public static readonly IUnit SquareFoot = new Unit("square foot", "ft²", PhysicalDimensions.Area, UnitSystem.Imperial, 0.092903);
+	public static readonly IUnit SquareFoot = new Unit("square foot", "ft²", PhysicalDimensions.Area, UnitSystem.Imperial, PhysicalConstants.Conversion.SquareFeetToSquareMeters);
 
 	/// <summary>Square inch - Imperial unit of area.</summary>
-	public static readonly IUnit SquareInch = new Unit("square inch", "in²", PhysicalDimensions.Area, UnitSystem.Imperial, 0.00064516);
+	public static readonly IUnit SquareInch = new Unit("square inch", "in²", PhysicalDimensions.Area, UnitSystem.Imperial, PhysicalConstants.Conversion.SquareInchesToSquareMeters);
 
 	/// <summary>Acre - Imperial unit of area.</summary>
-	public static readonly IUnit Acre = new Unit("acre", "ac", PhysicalDimensions.Area, UnitSystem.Imperial, 4046.86);
+	public static readonly IUnit Acre = new Unit("acre", "ac", PhysicalDimensions.Area, UnitSystem.Imperial, PhysicalConstants.Conversion.AcresToSquareMeters);
 
 	/// <summary>Square mile - Imperial unit of area.</summary>
-	public static readonly IUnit SquareMile = new Unit("square mile", "mi²", PhysicalDimensions.Area, UnitSystem.Imperial, 2589988.11);
+	public static readonly IUnit SquareMile = new Unit("square mile", "mi²", PhysicalDimensions.Area, UnitSystem.Imperial, PhysicalConstants.Conversion.SquareMilesToSquareMeters);
 
 	/// <summary>Cubic meter - SI derived unit of volume.</summary>
 	public static readonly IUnit CubicMeter = new Unit("cubic meter", "m³", PhysicalDimensions.Volume, UnitSystem.SIDerived);
@@ -127,7 +127,7 @@ public static class Units
 	public static readonly IUnit MetricTon = new Unit("metric ton", "t", PhysicalDimensions.Mass, UnitSystem.SIDerived, MetricMagnitudes.Kilo);
 
 	/// <summary>Pound - Imperial unit of mass.</summary>
-	public static readonly IUnit Pound = new Unit("pound", "lb", PhysicalDimensions.Mass, UnitSystem.Imperial, 0.453592);
+	public static readonly IUnit Pound = new Unit("pound", "lb", PhysicalDimensions.Mass, UnitSystem.Imperial, PhysicalConstants.Mechanical.PoundMassToKilogram);
 
 	/// <summary>Ounce - Imperial unit of mass.</summary>
 	public static readonly IUnit Ounce = new Unit("ounce", "oz", PhysicalDimensions.Mass, UnitSystem.Imperial, 0.0283495);
@@ -139,22 +139,22 @@ public static class Units
 	public static readonly IUnit ShortTon = new Unit("short ton", "ton", PhysicalDimensions.Mass, UnitSystem.USCustomary, 907.185);
 
 	/// <summary>Atomic mass unit - Used in atomic physics.</summary>
-	public static readonly IUnit AtomicMassUnit = new Unit("atomic mass unit", "u", PhysicalDimensions.Mass, UnitSystem.Atomic, 1.66054e-27);
+	public static readonly IUnit AtomicMassUnit = new Unit("atomic mass unit", "u", PhysicalDimensions.Mass, UnitSystem.Atomic, PhysicalConstants.Nuclear.AtomicMassUnit);
 
 	/// <summary>Minute - 60 seconds.</summary>
-	public static readonly IUnit Minute = new Unit("minute", "min", PhysicalDimensions.Time, UnitSystem.SIDerived, 60.0);
+	public static readonly IUnit Minute = new Unit("minute", "min", PhysicalDimensions.Time, UnitSystem.SIDerived, PhysicalConstants.Time.SecondsPerMinute);
 
 	/// <summary>Hour - 3600 seconds.</summary>
-	public static readonly IUnit Hour = new Unit("hour", "h", PhysicalDimensions.Time, UnitSystem.SIDerived, 3600.0);
+	public static readonly IUnit Hour = new Unit("hour", "h", PhysicalDimensions.Time, UnitSystem.SIDerived, PhysicalConstants.Time.SecondsPerHour);
 
 	/// <summary>Day - 86400 seconds.</summary>
-	public static readonly IUnit Day = new Unit("day", "d", PhysicalDimensions.Time, UnitSystem.SIDerived, 86400.0);
+	public static readonly IUnit Day = new Unit("day", "d", PhysicalDimensions.Time, UnitSystem.SIDerived, PhysicalConstants.Time.SecondsPerDay);
 
 	/// <summary>Week - 604800 seconds.</summary>
-	public static readonly IUnit Week = new Unit("week", "wk", PhysicalDimensions.Time, UnitSystem.SIDerived, 604800.0);
+	public static readonly IUnit Week = new Unit("week", "wk", PhysicalDimensions.Time, UnitSystem.SIDerived, PhysicalConstants.Time.SecondsPerWeek);
 
 	/// <summary>Year - 365.25 days (Julian year).</summary>
-	public static readonly IUnit Year = new Unit("year", "yr", PhysicalDimensions.Time, UnitSystem.SIDerived, 31557600.0);
+	public static readonly IUnit Year = new Unit("year", "yr", PhysicalDimensions.Time, UnitSystem.SIDerived, PhysicalConstants.Time.SecondsPerJulianYear);
 
 	/// <summary>Millisecond - 0.001 seconds.</summary>
 	public static readonly IUnit Millisecond = new Unit("millisecond", "ms", PhysicalDimensions.Time, UnitSystem.SIDerived, MetricMagnitudes.Milli);
@@ -184,13 +184,13 @@ public static class Units
 	public static readonly IUnit MetersPerSecond = new Unit("meters per second", "m/s", PhysicalDimensions.Velocity, UnitSystem.SIDerived);
 
 	/// <summary>Kilometers per hour - Common velocity unit.</summary>
-	public static readonly IUnit KilometersPerHour = new Unit("kilometers per hour", "km/h", PhysicalDimensions.Velocity, UnitSystem.SIDerived, 1000.0 / 3600.0);
+	public static readonly IUnit KilometersPerHour = new Unit("kilometers per hour", "km/h", PhysicalDimensions.Velocity, UnitSystem.SIDerived, 1000.0 / PhysicalConstants.Time.SecondsPerHour);
 
 	/// <summary>Miles per hour - Imperial velocity unit.</summary>
-	public static readonly IUnit MilesPerHour = new Unit("miles per hour", "mph", PhysicalDimensions.Velocity, UnitSystem.Imperial, 1609.344 / 3600.0);
+	public static readonly IUnit MilesPerHour = new Unit("miles per hour", "mph", PhysicalDimensions.Velocity, UnitSystem.Imperial, PhysicalConstants.Conversion.MilesToMeters / PhysicalConstants.Time.SecondsPerHour);
 
 	/// <summary>Knot - Nautical velocity unit.</summary>
-	public static readonly IUnit Knot = new Unit("knot", "kn", PhysicalDimensions.Velocity, UnitSystem.Other, 1852.0 / 3600.0);
+	public static readonly IUnit Knot = new Unit("knot", "kn", PhysicalDimensions.Velocity, UnitSystem.Other, PhysicalConstants.Conversion.NauticalMilesToMeters / PhysicalConstants.Time.SecondsPerHour);
 
 	/// <summary>Feet per second - Imperial velocity unit.</summary>
 	public static readonly IUnit FeetPerSecond = new Unit("feet per second", "ft/s", PhysicalDimensions.Velocity, UnitSystem.Imperial, PhysicalConstants.Conversion.FeetToMeters);
@@ -238,25 +238,25 @@ public static class Units
 	public static readonly IUnit Kilojoule = new Unit("kilojoule", "kJ", PhysicalDimensions.Energy, UnitSystem.SIDerived, MetricMagnitudes.Kilo);
 
 	/// <summary>Calorie - Common energy unit (thermochemical calorie).</summary>
-	public static readonly IUnit Calorie = new Unit("calorie", "cal", PhysicalDimensions.Energy, UnitSystem.Other, 4.184);
+	public static readonly IUnit Calorie = new Unit("calorie", "cal", PhysicalDimensions.Energy, UnitSystem.Other, PhysicalConstants.Conversion.CalorieToJoule);
 
 	/// <summary>Kilocalorie - 1000 calories (dietary calorie).</summary>
-	public static readonly IUnit Kilocalorie = new Unit("kilocalorie", "kcal", PhysicalDimensions.Energy, UnitSystem.Other, 4184.0);
+	public static readonly IUnit Kilocalorie = new Unit("kilocalorie", "kcal", PhysicalDimensions.Energy, UnitSystem.Other, PhysicalConstants.Conversion.CalorieToJoule * 1000.0);
 
 	/// <summary>Watt-hour - Energy unit.</summary>
-	public static readonly IUnit WattHour = new Unit("watt-hour", "Wh", PhysicalDimensions.Energy, UnitSystem.SIDerived, 3600.0);
+	public static readonly IUnit WattHour = new Unit("watt-hour", "Wh", PhysicalDimensions.Energy, UnitSystem.SIDerived, PhysicalConstants.Time.SecondsPerHour);
 
 	/// <summary>Kilowatt-hour - 1000 watt-hours.</summary>
-	public static readonly IUnit KilowattHour = new Unit("kilowatt-hour", "kWh", PhysicalDimensions.Energy, UnitSystem.SIDerived, 3_600_000.0);
+	public static readonly IUnit KilowattHour = new Unit("kilowatt-hour", "kWh", PhysicalDimensions.Energy, UnitSystem.SIDerived, PhysicalConstants.Conversion.KilowattHourToJoule);
 
 	/// <summary>Erg - CGS unit of energy.</summary>
 	public static readonly IUnit Erg = new Unit("erg", "erg", PhysicalDimensions.Energy, UnitSystem.CGS, 1e-7);
 
 	/// <summary>Electron volt - Atomic unit of energy.</summary>
-	public static readonly IUnit ElectronVolt = new Unit("electron volt", "eV", PhysicalDimensions.Energy, UnitSystem.Atomic, 1.602176634e-19);
+	public static readonly IUnit ElectronVolt = new Unit("electron volt", "eV", PhysicalDimensions.Energy, UnitSystem.Atomic, PhysicalConstants.Fundamental.ElementaryCharge);
 
 	/// <summary>British thermal unit - Imperial energy unit.</summary>
-	public static readonly IUnit BTU = new Unit("British thermal unit", "BTU", PhysicalDimensions.Energy, UnitSystem.Imperial, 1055.06);
+	public static readonly IUnit BTU = new Unit("British thermal unit", "BTU", PhysicalDimensions.Energy, UnitSystem.Imperial, PhysicalConstants.Conversion.BtuToJoule);
 
 	/// <summary>Watt - SI derived unit of power.</summary>
 	public static readonly IUnit Watt = new Unit("watt", "W", PhysicalDimensions.Power, UnitSystem.SIDerived);
@@ -271,13 +271,13 @@ public static class Units
 	public static readonly IUnit Horsepower = new Unit("horsepower", "hp", PhysicalDimensions.Power, UnitSystem.Imperial, 745.699872);
 
 	/// <summary>Celsius - Common temperature scale.</summary>
-	public static readonly IUnit Celsius = new Unit("celsius", "°C", PhysicalDimensions.Temperature, UnitSystem.SIDerived, 1.0, 273.15);
+	public static readonly IUnit Celsius = new Unit("celsius", "°C", PhysicalDimensions.Temperature, UnitSystem.SIDerived, 1.0, PhysicalConstants.Temperature.AbsoluteZeroInCelsius);
 
 	/// <summary>Fahrenheit - Imperial temperature scale.</summary>
-	public static readonly IUnit Fahrenheit = new Unit("fahrenheit", "°F", PhysicalDimensions.Temperature, UnitSystem.Imperial, 5.0 / 9.0, 273.15 - (32.0 * 5.0 / 9.0));
+	public static readonly IUnit Fahrenheit = new Unit("fahrenheit", "°F", PhysicalDimensions.Temperature, UnitSystem.Imperial, PhysicalConstants.Conversion.FahrenheitToCelsiusSlope, PhysicalConstants.Temperature.AbsoluteZeroInCelsius - (PhysicalConstants.Conversion.FahrenheitOffset * PhysicalConstants.Conversion.FahrenheitToCelsiusSlope));
 
 	/// <summary>Rankine - Absolute temperature scale based on Fahrenheit.</summary>
-	public static readonly IUnit Rankine = new Unit("rankine", "°R", PhysicalDimensions.Temperature, UnitSystem.Imperial, 5.0 / 9.0);
+	public static readonly IUnit Rankine = new Unit("rankine", "°R", PhysicalDimensions.Temperature, UnitSystem.Imperial, PhysicalConstants.Conversion.FahrenheitToCelsiusSlope);
 
 	/// <summary>Milliampere - 0.001 amperes.</summary>
 	public static readonly IUnit Milliampere = new Unit("milliampere", "mA", PhysicalDimensions.ElectricCurrent, UnitSystem.SIDerived, MetricMagnitudes.Milli);
@@ -289,7 +289,7 @@ public static class Units
 	public static readonly IUnit Coulomb = new Unit("coulomb", "C", PhysicalDimensions.ElectricCharge, UnitSystem.SIDerived);
 
 	/// <summary>Ampere-hour - Common unit for battery capacity.</summary>
-	public static readonly IUnit AmpereHour = new Unit("ampere-hour", "Ah", PhysicalDimensions.ElectricCharge, UnitSystem.SIDerived, 3600.0);
+	public static readonly IUnit AmpereHour = new Unit("ampere-hour", "Ah", PhysicalDimensions.ElectricCharge, UnitSystem.SIDerived, PhysicalConstants.Time.SecondsPerHour);
 
 	/// <summary>Volt - SI derived unit of electric potential.</summary>
 	public static readonly IUnit Volt = new Unit("volt", "V", PhysicalDimensions.ElectricPotential, UnitSystem.SIDerived);
@@ -340,7 +340,7 @@ public static class Units
 	public static readonly IUnit Lux = new Unit("lux", "lx", PhysicalDimensions.Illuminance, UnitSystem.SIDerived);
 
 	/// <summary>Foot-candle - Imperial unit of illuminance.</summary>
-	public static readonly IUnit FootCandle = new Unit("foot-candle", "fc", PhysicalDimensions.Illuminance, UnitSystem.Imperial, 10.764);
+	public static readonly IUnit FootCandle = new Unit("foot-candle", "fc", PhysicalDimensions.Illuminance, UnitSystem.Imperial, PhysicalConstants.Conversion.FootCandlesToLux);
 
 	/// <summary>Candela per square meter - SI unit of luminance.</summary>
 	public static readonly IUnit CandelaPerSquareMeter = new Unit("candela per square meter", "cd/m²", PhysicalDimensions.Luminance, UnitSystem.SIDerived);
@@ -349,7 +349,7 @@ public static class Units
 	public static readonly IUnit Nit = new Unit("nit", "nt", PhysicalDimensions.Luminance, UnitSystem.SIDerived);
 
 	/// <summary>Foot-lambert - Imperial unit of luminance.</summary>
-	public static readonly IUnit FootLambert = new Unit("foot-lambert", "fL", PhysicalDimensions.Luminance, UnitSystem.Imperial, 3.426);
+	public static readonly IUnit FootLambert = new Unit("foot-lambert", "fL", PhysicalDimensions.Luminance, UnitSystem.Imperial, PhysicalConstants.Conversion.FootLambertsToCandelasPerSquareMeter);
 
 	/// <summary>Diopter - SI unit of optical power.</summary>
 	public static readonly IUnit Diopter = new Unit("diopter", "D", PhysicalDimensions.OpticalPower, UnitSystem.SIDerived);
@@ -364,19 +364,19 @@ public static class Units
 	public static readonly IUnit Gray = new Unit("gray", "Gy", PhysicalDimensions.AbsorbedDose, UnitSystem.SIDerived);
 
 	/// <summary>Rad - Traditional unit of absorbed dose.</summary>
-	public static readonly IUnit Rad = new Unit("rad", "rad", PhysicalDimensions.AbsorbedDose, UnitSystem.Other, 0.01);
+	public static readonly IUnit Rad = new Unit("rad", "rad", PhysicalDimensions.AbsorbedDose, UnitSystem.Other, PhysicalConstants.Conversion.RadsToGrays);
 
 	/// <summary>Sievert - SI derived unit of equivalent dose.</summary>
 	public static readonly IUnit Sievert = new Unit("sievert", "Sv", PhysicalDimensions.EquivalentDose, UnitSystem.SIDerived);
 
 	/// <summary>Rem - Traditional unit of equivalent dose.</summary>
-	public static readonly IUnit Rem = new Unit("rem", "rem", PhysicalDimensions.EquivalentDose, UnitSystem.Other, 0.01);
+	public static readonly IUnit Rem = new Unit("rem", "rem", PhysicalDimensions.EquivalentDose, UnitSystem.Other, PhysicalConstants.Conversion.RemsToSieverts);
 
 	/// <summary>Coulomb per kilogram - SI unit of exposure.</summary>
 	public static readonly IUnit CoulombPerKilogram = new Unit("coulomb per kilogram", "C/kg", PhysicalDimensions.Exposure, UnitSystem.SIDerived);
 
 	/// <summary>Roentgen - Traditional unit of exposure.</summary>
-	public static readonly IUnit Roentgen = new Unit("roentgen", "R", PhysicalDimensions.Exposure, UnitSystem.Other, 2.58e-4);
+	public static readonly IUnit Roentgen = new Unit("roentgen", "R", PhysicalDimensions.Exposure, UnitSystem.Other, PhysicalConstants.Conversion.RoentgensToGraysInAir);
 
 	/// <summary>Barn - Unit of nuclear cross section.</summary>
 	public static readonly IUnit Barn = new Unit("barn", "b", PhysicalDimensions.NuclearCrossSection, UnitSystem.Other, 1e-28);
@@ -399,7 +399,7 @@ public static class Units
 	public static readonly IUnit KilogramPerMole = new Unit("kilogram per mole", "kg/mol", PhysicalDimensions.MolarMass, UnitSystem.SIDerived);
 
 	/// <summary>Dalton - Atomic mass unit for molecular masses.</summary>
-	public static readonly IUnit Dalton = new Unit("dalton", "Da", PhysicalDimensions.MolarMass, UnitSystem.Atomic, 1.66054e-27);
+	public static readonly IUnit Dalton = new Unit("dalton", "Da", PhysicalDimensions.MolarMass, UnitSystem.Atomic, PhysicalConstants.Nuclear.AtomicMassUnit);
 
 	/// <summary>Millimolar - 0.001 molar concentration.</summary>
 	public static readonly IUnit Millimolar = new Unit("millimolar", "mM", PhysicalDimensions.Concentration, UnitSystem.SIDerived, 1.0);

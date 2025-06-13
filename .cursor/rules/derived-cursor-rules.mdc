@@ -214,3 +214,10 @@ When adding XML documentation comments:
     2.  **PlanckConstant**
     3.  **BoltzmannConstant**
     4.  **FeetToMeters** (from Conversion class)
+*   **Units.cs Constants Migration:**
+    *   When defining units in `Units.cs`, use `PhysicalConstants.Generic` or `PhysicalConstants.Conversion` where applicable, instead of hardcoding numerical values.
+*   **Units.cs Hardcoded Constants Exceptions**:
+    *   Metric prefixes (handled by `MetricMagnitudes` class): `0.001`, `1000.0`, etc.
+    *   Mathematical constants (like `Math.PI`): Already using C# standard library
+    *   Derived unit relationships (like time conversions): `60.0` (seconds per minute), `3600.0` (seconds per hour)
+    *   Imperial unit conversions not in PhysicalConstants: Many specific imperial conversions that aren't fundamental physical constants
