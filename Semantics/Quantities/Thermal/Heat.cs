@@ -33,21 +33,21 @@ public sealed record Heat<T> : PhysicalQuantity<Heat<T>, T>
 	/// </summary>
 	/// <param name="calories">The value in calories.</param>
 	/// <returns>A new Heat instance.</returns>
-	public static Heat<T> FromCalories(T calories) => Create(calories * T.CreateChecked(4.184));
+	public static Heat<T> FromCalories(T calories) => Create(calories * PhysicalConstants.Generic.CalorieToJoule<T>());
 
 	/// <summary>
 	/// Creates a new Heat from a value in BTU (British Thermal Units).
 	/// </summary>
 	/// <param name="btu">The value in BTU.</param>
 	/// <returns>A new Heat instance.</returns>
-	public static Heat<T> FromBTU(T btu) => Create(btu * T.CreateChecked(1055.06));
+	public static Heat<T> FromBTU(T btu) => Create(btu * PhysicalConstants.Generic.BtuToJoule<T>());
 
 	/// <summary>
 	/// Creates a new Heat from a value in kilowatt-hours.
 	/// </summary>
 	/// <param name="kilowattHours">The value in kilowatt-hours.</param>
 	/// <returns>A new Heat instance.</returns>
-	public static Heat<T> FromKilowattHours(T kilowattHours) => Create(kilowattHours * T.CreateChecked(3600000));
+	public static Heat<T> FromKilowattHours(T kilowattHours) => Create(kilowattHours * PhysicalConstants.Generic.KilowattHourToJoule<T>());
 
 	/// <summary>
 	/// Converts to joules.
@@ -59,19 +59,19 @@ public sealed record Heat<T> : PhysicalQuantity<Heat<T>, T>
 	/// Converts to calories.
 	/// </summary>
 	/// <returns>The heat in calories.</returns>
-	public T ToCalories() => Value / T.CreateChecked(4.184);
+	public T ToCalories() => Value / PhysicalConstants.Generic.CalorieToJoule<T>();
 
 	/// <summary>
 	/// Converts to BTU.
 	/// </summary>
 	/// <returns>The heat in BTU.</returns>
-	public T ToBTU() => Value / T.CreateChecked(1055.06);
+	public T ToBTU() => Value / PhysicalConstants.Generic.BtuToJoule<T>();
 
 	/// <summary>
 	/// Converts to kilowatt-hours.
 	/// </summary>
 	/// <returns>The heat in kilowatt-hours.</returns>
-	public T ToKilowattHours() => Value / T.CreateChecked(3600000);
+	public T ToKilowattHours() => Value / PhysicalConstants.Generic.KilowattHourToJoule<T>();
 
 	/// <summary>
 	/// Converts Heat to Energy.

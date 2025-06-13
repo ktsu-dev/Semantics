@@ -33,21 +33,21 @@ public sealed record Temperature<T> : PhysicalQuantity<Temperature<T>, T>
 	/// </summary>
 	/// <param name="celsius">The value in Celsius.</param>
 	/// <returns>A new Temperature instance.</returns>
-	public static Temperature<T> FromCelsius(T celsius) => Create(celsius + T.CreateChecked(273.15));
+	public static Temperature<T> FromCelsius(T celsius) => Create(celsius + PhysicalConstants.Generic.AbsoluteZeroInCelsius<T>());
 
 	/// <summary>
 	/// Creates a new Temperature from a value in Fahrenheit.
 	/// </summary>
 	/// <param name="fahrenheit">The value in Fahrenheit.</param>
 	/// <returns>A new Temperature instance.</returns>
-	public static Temperature<T> FromFahrenheit(T fahrenheit) => Create(((fahrenheit - T.CreateChecked(32)) * T.CreateChecked(5.0 / 9.0)) + T.CreateChecked(273.15));
+	public static Temperature<T> FromFahrenheit(T fahrenheit) => Create(((fahrenheit - PhysicalConstants.Generic.FahrenheitOffset<T>()) * PhysicalConstants.Generic.FahrenheitToCelsiusSlope<T>()) + PhysicalConstants.Generic.AbsoluteZeroInCelsius<T>());
 
 	/// <summary>
 	/// Creates a new Temperature from a value in Rankine.
 	/// </summary>
 	/// <param name="rankine">The value in Rankine.</param>
 	/// <returns>A new Temperature instance.</returns>
-	public static Temperature<T> FromRankine(T rankine) => Create(rankine * T.CreateChecked(5.0 / 9.0));
+	public static Temperature<T> FromRankine(T rankine) => Create(rankine * PhysicalConstants.Generic.FahrenheitToCelsiusSlope<T>());
 
 	/// <summary>
 	/// Converts to Kelvin.
@@ -59,19 +59,19 @@ public sealed record Temperature<T> : PhysicalQuantity<Temperature<T>, T>
 	/// Converts to Celsius.
 	/// </summary>
 	/// <returns>The temperature in Celsius.</returns>
-	public T ToCelsius() => Value - T.CreateChecked(273.15);
+	public T ToCelsius() => Value - PhysicalConstants.Generic.AbsoluteZeroInCelsius<T>();
 
 	/// <summary>
 	/// Converts to Fahrenheit.
 	/// </summary>
 	/// <returns>The temperature in Fahrenheit.</returns>
-	public T ToFahrenheit() => ((Value - T.CreateChecked(273.15)) * T.CreateChecked(9.0 / 5.0)) + T.CreateChecked(32);
+	public T ToFahrenheit() => ((Value - PhysicalConstants.Generic.AbsoluteZeroInCelsius<T>()) * PhysicalConstants.Generic.CelsiusToFahrenheitSlope<T>()) + PhysicalConstants.Generic.FahrenheitOffset<T>();
 
 	/// <summary>
 	/// Converts to Rankine.
 	/// </summary>
 	/// <returns>The temperature in Rankine.</returns>
-	public T ToRankine() => Value * T.CreateChecked(9.0 / 5.0);
+	public T ToRankine() => Value * PhysicalConstants.Generic.CelsiusToFahrenheitSlope<T>();
 
 	/// <summary>
 	/// Calculates absolute zero in this temperature scale.
@@ -83,11 +83,11 @@ public sealed record Temperature<T> : PhysicalQuantity<Temperature<T>, T>
 	/// Calculates water freezing point (273.15 K, 0°C).
 	/// </summary>
 	/// <returns>Water freezing point.</returns>
-	public static Temperature<T> WaterFreezingPoint => Create(T.CreateChecked(273.15));
+	public static Temperature<T> WaterFreezingPoint => Create(PhysicalConstants.Generic.StandardTemperature<T>());
 
 	/// <summary>
 	/// Calculates water boiling point (373.15 K, 100°C).
 	/// </summary>
 	/// <returns>Water boiling point.</returns>
-	public static Temperature<T> WaterBoilingPoint => Create(T.CreateChecked(373.15));
+	public static Temperature<T> WaterBoilingPoint => Create(PhysicalConstants.Generic.WaterBoilingPoint<T>());
 }

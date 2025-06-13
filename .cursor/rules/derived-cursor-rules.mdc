@@ -91,6 +91,38 @@ When adding XML documentation comments:
     *   **Integration and Performance**: Create tests that use both chemical and mechanical quantities together (e.g., energy calculations involving moles and force). Add benchmarks for common operations (unit conversions, arithmetic, etc.).
     *   **Review and Refactor**: As you implement, refactor any hard-coded values found in other domains to use the new constants. Ensure all code follows the standards (headers, null safety, XML docs, etc.).
     *   **Next Domains**: After Mechanical, move to Electromagnetic, then Thermal, then Optical, Acoustic, Nuclear, and Fluid Dynamics, following the same process.
+*   When a file is missing the standard header, add the following to the top of the file:
+```csharp
+// Copyright (c) KTSU. All rights reserved.
+```
+*   `Semantics/TODO_DOMAINS.md` should now serve as the single, authoritative implementation plan and progress tracker, combining all domain status, next steps, code standards, and actionable checklists.
+*   `Semantics/IMPLEMENTATION_SUMMARY.md` should simply point to `TODO_DOMAINS.md` and state that all planning and status are now tracked there.
+*   **Implementation Process for All Domains:**
+    1.  For each quantity listed in the tracker:
+        *   Check if the file exists and review its implementation.
+        *   Ensure it follows the standards: generic, type-safe, XML docs, uses centralized constants, no hard-coded values, proper units/dimensions, and has tests.
+        *   If compliant, mark as implemented in the tracker.
+        *   If not, note what’s missing for future action.
+    2.  Update the tracker after each quantity/domain review.
+*   **Systematic Review and Update Process for All Domains:**
+    1.  **For Each Domain (Mechanical, Electrical, Thermal, etc.):**
+        *   For each quantity listed in the tracker:
+            *   Check if the file exists and review its implementation.
+            *   Ensure it follows the standards: generic, type-safe, XML docs, uses centralized constants, no hard-coded values, proper units/dimensions, and has tests.
+            *   If compliant, mark as implemented in the tracker.
+            *   If not, note what’s missing for future action.
+    2.  Update the tracker after each quantity/domain review.
+*   **Implementation Summary**
+    *   **COMPLETED DOMAINS:**
+        1.  **Chemical** (10/10 quantities)
+        2.  **Mechanical** (15/15 quantities)
+        3.  **Electrical** (11/11 quantities)
+        4.  **Thermal** (10/10 quantities)
+        5.  **Acoustic** (20/20 quantities)
+        6.  **Nuclear** (5/5 quantities)
+    *   **REMAINING DOMAINS:**
+        *   **Optical** (0/6+ quantities) - Not yet implemented
+        *   **Fluid Dynamics** (0/7+ quantities) - Not yet implemented
 
 ## CODING STANDARDS
 
@@ -119,7 +151,7 @@ When adding XML documentation comments:
     5.  Similar combinations for the base `DirectoryPath` types
 *   When the linter complains about missing `Divide` methods, don't add them. Instead, silence the error with a `SuppressMessage` attribute. The `SuppressMessage` attribute should use the following justification: `"Path combination is the semantic meaning, not mathematical division"`.
 *   Add methods to the semantic path types to get filename, file extension, directory etc from the appropriate types.
-*   For `AbsoluteFilePath` and `RelativeFilePath`, add a property that returns the directory portion of the path as the correctly typed directory path (`AbsoluteDirectoryPath` or `RelativeDirectoryPath`, respectively). This property should be named after the return type:
+*   For `AbsoluteFilePath` and `RelativeFilePath`, add a property that returns the directory portion of the path as the correctly typed directory path (`AbsoluteDirectoryPath` or `RelativeDirectoryDirectoryPath`, respectively). This property should be named after the return type:
     *   `AbsoluteFilePath.AbsoluteDirectoryPath`
     *   `RelativeFilePath.RelativeDirectoryPath`
 *   For `DirectoryPath`, `AbsoluteDirectoryPath`, and `RelativeDirectoryPath`, add the following properties:
@@ -251,7 +283,7 @@ When adding XML documentation comments:
 *   `PhysicalDimension` represents the dimensional analysis aspect:
     *   It's a mathematical concept that describes what type of measurement something is
     *   It stores the powers of the 7 fundamental SI base units (length, mass, time, etc.)
-    *   It enables dimensional analysis (e.g., Force = M L T⁻²)
+    *   It enables dimensional analysis (e.g., Force = M L² T⁻²)
     *   It's used for compile-time safety and unit conversion validation
     *   It's a struct that's immutable and lightweight
 *   The relationship between `PhysicalQuantity` and `PhysicalDimension` is compositional, not identical: `PhysicalQuantity` **HAS-A** `PhysicalDimension`, it **IS-NOT-A** `PhysicalDimension`. This is a classic composition relationship where the quantity uses the dimension for validation and type safety.
@@ -312,6 +344,34 @@ When adding XML documentation comments:
 ```csharp
 // Copyright (c) KTSU. All rights reserved.
 ```
+*   `Semantics/TODO_DOMAINS.md` should now serve as the single, authoritative implementation plan and progress tracker, combining all domain status, next steps, code standards, and actionable checklists.
+*   `Semantics/IMPLEMENTATION_SUMMARY.md` should simply point to `TODO_DOMAINS.md` and state that all planning and status are now tracked there.
+*   **Implementation Process for All Domains:**
+    1.  For each quantity listed in the tracker:
+        *   Check if the file exists and review its implementation.
+        *   Ensure it follows the standards: generic, type-safe, XML docs, uses centralized constants, no hard-coded values, proper units/dimensions, and has tests.
+        *   If compliant, mark as implemented in the tracker.
+        *   If not, note what’s missing for future action.
+    2.  Update the tracker after each quantity/domain review.
+*   **Systematic Review and Update Process for All Domains:**
+    1.  **For Each Domain (Mechanical, Electrical, Thermal, etc.):**
+        *   For each quantity listed in the tracker:
+            *   Check if the file exists and review its implementation.
+            *   Ensure it follows the standards: generic, type-safe, XML docs, uses centralized constants, no hard-coded values, proper units/dimensions, and has tests.
+            *   If compliant, mark as implemented in the tracker.
+            *   If not, note what’s missing for future action.
+    2.  Update the tracker after each quantity/domain review.
+*   **Implementation Summary**
+    *   **COMPLETED DOMAINS:**
+        1.  **Chemical** (10/10 quantities)
+        2.  **Mechanical** (15/15 quantities)
+        3.  **Electrical** (11/11 quantities)
+        4.  **Thermal** (10/10 quantities)
+        5.  **Acoustic** (20/20 quantities)
+        6.  **Nuclear** (5/5 quantities)
+    *   **REMAINING DOMAINS:**
+        *   **Optical** (0/6+ quantities) - Not yet implemented
+        *   **Fluid Dynamics** (0/7+ quantities) - Not yet implemented
 
 ## DEBUGGING
 
@@ -326,41 +386,5 @@ When adding XML documentation comments:
 *   When debugging `IndexOfAny` or `LastIndexOfAny` methods in `SemanticStringTests`, verify that the expected index in the test case aligns with the actual index returned by the standard .NET string methods. Incorrect test expectations can lead to false positives. If the test expectation is incorrect, correct the test case to align with the actual index returned by the .NET string methods.
 *   When debugging `FormatException` errors within `SemanticString<TDest>.PerformValidation` during validation strategy testing (e.g., `LongString_WithValidations_HandledCorrectly`), ensure that the input string being converted to the target type `TDest` adheres to the expected format and constraints defined by the validation logic. Pay close attention to string length, prefixes, and suffixes as defined in the validation.
     *   Specifically, when a `SemanticString<TDest>` is decorated with a `PrefixAndSuffixAttribute`, ensure that test cases use the correct prefix and suffix as defined in the attribute. A mismatch between the expected prefix/suffix in the attribute and the actual prefix/suffix in the test string will cause a `FormatException` during validation.
-*   When debugging `IsPathAttribute_PathWithInvalidChars_ShouldFail` tests, be aware that `.NET` versions after `.NET Framework` may return a reduced set of invalid characters from `Path.GetInvalidPathChars()`. If the test expects characters like `<` and `>` to be invalid, ensure that the `IsPathAttribute` validation logic explicitly checks for these characters in addition to those returned by `Path.GetInvalidPathChars()`.
-    *   The `IsPathAttribute` should explicitly check for characters like `<` and `>` in addition to those returned by `Path.GetInvalidPathChars()` because `.NET` versions after `.NET Framework` may return a reduced set of invalid characters from `Path.GetInvalidPathChars()`.
-*   When debugging `SemanticStringTests` involving `IndexOf` or `LastIndexOf` methods, and tests are failing due to incorrect expected values, always double-check the expected values against the actual return values of the corresponding .NET string methods. The tests might have incorrect expectations.
-*   When debugging `SemanticStringTests` and encountering failures in `IndexOf` and `LastIndexOf` methods, particularly in tests like `LastIndexOf_WithStringComparisonVariants_ReturnsCorrectResults`, `IndexOf_WithStartIndexVariants_ReturnsCorrectResults`, and `LastIndexOf_WithStartIndexVariants_ReturnsCorrectResults`, carefully examine the implementation of the `WeakString` class (if the `SemanticString` class delegates to it) and ensure the logic correctly handles different `StringComparison` options and `startIndex` values. If the `SemanticString` class delegates to the `WeakString` property, ensure the logic correctly handles different `StringComparison` options and `startIndex` values.
-*   When `SemanticStringTests` are failing, especially for `IndexOf` and `LastIndexOf` methods, it's a high priority to:
-    *   Debug and fix the `IndexOf`/`LastIndexOf` method implementations.
-    *   Verify that all method overloads work correctly with their underlying `WeakString` implementations.
-    *   Run the full test suite to ensure a 100% pass rate.
-    *   Consider a code review of the string operation forwarding logic.
-*   When debugging `IndexOf` and `LastIndexOf` methods in `SemanticStringTests`, and tests are failing, gather the following information:
-    *   **Exact Test Scenarios**: Run the failing test scenarios with regular .NET strings to understand their behavior.
-        ```csharp
-        // Test case 1 (e.g., line 740):
-        string test1 = "Hello World Hello";
-        var result1 = test1.LastIndexOf("HELLO", 10, StringComparison.OrdinalIgnoreCase);
-        // Record the result
-
-        // Test case 2 (e.g., line 755):  
-        string test2 = "hello world hello";
-        var result2 = test2.IndexOf("hello", 5);
-        // Record the result
-
-        // Test case 3 (e.g., line 769):
-        string test3 = "hello world hello"; 
-        var result3 = test3.LastIndexOf("hello", 10);
-        // Record the result
-        ```
-    *   **Test Expectations vs Reality**: Compare the expected values in the failing tests with the actual results obtained from the native string methods.
-    *   **SemanticString Delegation Issue**: If `SemanticString` delegates to a `WeakString` property:
-        *   Verify that the `WeakString` property is properly initialized with the correct string value.
-        *   Check for any issues with named parameter delegation.
-    *   **Quick Verification**: Run just the failing tests and examine the exact error output for precise method calls.
-*   When debugging `IndexOf` and `LastIndexOf` methods in `SemanticStringTests`, and tests are failing with the SemanticString returning `-1` while the expected result is `0` or `12`, it indicates a delegation issue in the SemanticString class.
-*   If the compiler reports CS0184 errors ("The given expression is never of the provided type") during unit testing, this indicates that the test logic is attempting to verify an impossible condition. Review the test case and adjust the assertions to align with the actual type relationships.
-*   When resolving CS1503 errors (Argument cannot convert from type X to type Y), carefully examine the method signature and the types of the arguments being passed. Ensure that the arguments are of the correct type or can be implicitly converted to the expected type. Review the relevant interfaces and classes to ensure they are being used correctly.
-*   When resolving CA1859 errors (Change type of variable 'variableName' from 'InterfaceName' to 'ClassName' for improved performance), consider changing the variable type as suggested by the analyzer to improve performance.
-*   If a `CS8600` error ("Converting null literal or possible null value to non-nullable type") persists despite null-checking and handling, review the project's nullable reference types configuration and ensure it aligns with the intended behavior. The error might be a false positive or require project-specific adjustments.
-*   When debugging `FormatException` errors originating from `SemanticString<TDest>.PerformValidation`, especially during `RelativeDirectoryPath_Contents_ReturnsRelativePathTypes`, `SemanticPath_PathTypes`, or `SemanticPath
+*   When debugging `IsPathAttribute_PathWithInvalidChars_ShouldFail` tests, be aware that `.NET` versions after `.NET Framework` may return a reduced set of invalid characters from `Path.GetInvalidPathChars()`. If the test expects characters like `<` and `>` to be invalid, ensure that the `IsPathAttribute` validation logic
+*   When encountering analyzer warnings

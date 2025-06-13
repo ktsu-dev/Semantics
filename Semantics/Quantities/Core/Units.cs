@@ -334,7 +334,52 @@ public static class Units
 	public static readonly IUnit Millicandela = new Unit("millicandela", "mcd", PhysicalDimensions.LuminousIntensity, UnitSystem.SIDerived, MetricMagnitudes.Milli);
 
 	/// <summary>Lumen - SI derived unit of luminous flux.</summary>
-	public static readonly IUnit Lumen = new Unit("lumen", "lm", PhysicalDimensions.LuminousIntensity, UnitSystem.SIDerived);
+	public static readonly IUnit Lumen = new Unit("lumen", "lm", PhysicalDimensions.LuminousFlux, UnitSystem.SIDerived);
+
+	/// <summary>Lux - SI derived unit of illuminance.</summary>
+	public static readonly IUnit Lux = new Unit("lux", "lx", PhysicalDimensions.Illuminance, UnitSystem.SIDerived);
+
+	/// <summary>Foot-candle - Imperial unit of illuminance.</summary>
+	public static readonly IUnit FootCandle = new Unit("foot-candle", "fc", PhysicalDimensions.Illuminance, UnitSystem.Imperial, 10.764);
+
+	/// <summary>Candela per square meter - SI unit of luminance.</summary>
+	public static readonly IUnit CandelaPerSquareMeter = new Unit("candela per square meter", "cd/m²", PhysicalDimensions.Luminance, UnitSystem.SIDerived);
+
+	/// <summary>Nit - Common unit of luminance (same as cd/m²).</summary>
+	public static readonly IUnit Nit = new Unit("nit", "nt", PhysicalDimensions.Luminance, UnitSystem.SIDerived);
+
+	/// <summary>Foot-lambert - Imperial unit of luminance.</summary>
+	public static readonly IUnit FootLambert = new Unit("foot-lambert", "fL", PhysicalDimensions.Luminance, UnitSystem.Imperial, 3.426);
+
+	/// <summary>Diopter - SI unit of optical power.</summary>
+	public static readonly IUnit Diopter = new Unit("diopter", "D", PhysicalDimensions.OpticalPower, UnitSystem.SIDerived);
+
+	/// <summary>Becquerel - SI derived unit of radioactive activity.</summary>
+	public static readonly IUnit Becquerel = new Unit("becquerel", "Bq", PhysicalDimensions.RadioactiveActivity, UnitSystem.SIDerived);
+
+	/// <summary>Curie - Traditional unit of radioactive activity.</summary>
+	public static readonly IUnit Curie = new Unit("curie", "Ci", PhysicalDimensions.RadioactiveActivity, UnitSystem.Other, 3.7e10);
+
+	/// <summary>Gray - SI derived unit of absorbed dose.</summary>
+	public static readonly IUnit Gray = new Unit("gray", "Gy", PhysicalDimensions.AbsorbedDose, UnitSystem.SIDerived);
+
+	/// <summary>Rad - Traditional unit of absorbed dose.</summary>
+	public static readonly IUnit Rad = new Unit("rad", "rad", PhysicalDimensions.AbsorbedDose, UnitSystem.Other, 0.01);
+
+	/// <summary>Sievert - SI derived unit of equivalent dose.</summary>
+	public static readonly IUnit Sievert = new Unit("sievert", "Sv", PhysicalDimensions.EquivalentDose, UnitSystem.SIDerived);
+
+	/// <summary>Rem - Traditional unit of equivalent dose.</summary>
+	public static readonly IUnit Rem = new Unit("rem", "rem", PhysicalDimensions.EquivalentDose, UnitSystem.Other, 0.01);
+
+	/// <summary>Coulomb per kilogram - SI unit of exposure.</summary>
+	public static readonly IUnit CoulombPerKilogram = new Unit("coulomb per kilogram", "C/kg", PhysicalDimensions.Exposure, UnitSystem.SIDerived);
+
+	/// <summary>Roentgen - Traditional unit of exposure.</summary>
+	public static readonly IUnit Roentgen = new Unit("roentgen", "R", PhysicalDimensions.Exposure, UnitSystem.Other, 2.58e-4);
+
+	/// <summary>Barn - Unit of nuclear cross section.</summary>
+	public static readonly IUnit Barn = new Unit("barn", "b", PhysicalDimensions.NuclearCrossSection, UnitSystem.Other, 1e-28);
 
 	/// <summary>Hertz - SI derived unit of frequency.</summary>
 	public static readonly IUnit Hertz = new Unit("hertz", "Hz", PhysicalDimensions.Frequency, UnitSystem.SIDerived);

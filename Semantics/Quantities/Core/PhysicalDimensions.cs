@@ -255,6 +255,51 @@ public static class PhysicalDimensions
 	/// <summary>Dynamic viscosity dimension [M L⁻¹ T⁻¹].</summary>
 	public static readonly PhysicalDimension DynamicViscosity = new(mass: 1, length: -1, time: -1, baseUnit: Units.Pascal);
 
+	/// <summary>Luminous flux dimension [J] (cd⋅sr).</summary>
+	public static readonly PhysicalDimension LuminousFlux = new(luminousIntensity: 1, baseUnit: Units.Lumen);
+
+	/// <summary>Illuminance dimension [J L⁻²] (lm/m²).</summary>
+	public static readonly PhysicalDimension Illuminance = new(luminousIntensity: 1, length: -2, baseUnit: Units.Lux);
+
+	/// <summary>Luminance dimension [J L⁻²] (cd/m²).</summary>
+	public static readonly PhysicalDimension Luminance = new(luminousIntensity: 1, length: -2, baseUnit: Units.Candela);
+
+	/// <summary>Refractive index dimension [1] (dimensionless).</summary>
+	public static readonly PhysicalDimension RefractiveIndex = new(baseUnit: Units.Radian);
+
+	/// <summary>Optical power dimension [L⁻¹] (diopters).</summary>
+	public static readonly PhysicalDimension OpticalPower = new(length: -1, baseUnit: Units.Diopter);
+
+	/// <summary>Radioactive activity dimension [T⁻¹] (becquerels).</summary>
+	public static readonly PhysicalDimension RadioactiveActivity = new(time: -1, baseUnit: Units.Becquerel);
+
+	/// <summary>Absorbed dose dimension [L² T⁻²] (grays).</summary>
+	public static readonly PhysicalDimension AbsorbedDose = new(length: 2, time: -2, baseUnit: Units.Gray);
+
+	/// <summary>Equivalent dose dimension [L² T⁻²] (sieverts).</summary>
+	public static readonly PhysicalDimension EquivalentDose = new(length: 2, time: -2, baseUnit: Units.Sievert);
+
+	/// <summary>Exposure dimension [M⁻¹ T I] (coulombs per kilogram).</summary>
+	public static readonly PhysicalDimension Exposure = new(mass: -1, time: 1, electricCurrent: 1, baseUnit: Units.Coulomb);
+
+	/// <summary>Nuclear cross section dimension [L²] (barns).</summary>
+	public static readonly PhysicalDimension NuclearCrossSection = new(length: 2, baseUnit: Units.Barn);
+
+	/// <summary>Kinematic viscosity dimension [L² T⁻¹] (m²/s).</summary>
+	public static readonly PhysicalDimension KinematicViscosity = new(length: 2, time: -1, baseUnit: Units.Meter);
+
+	/// <summary>Bulk modulus dimension [M L⁻¹ T⁻²] (Pa).</summary>
+	public static readonly PhysicalDimension BulkModulus = new(mass: 1, length: -1, time: -2, baseUnit: Units.Pascal);
+
+	/// <summary>Volumetric flow rate dimension [L³ T⁻¹] (m³/s).</summary>
+	public static readonly PhysicalDimension VolumetricFlowRate = new(length: 3, time: -1, baseUnit: Units.CubicMeter);
+
+	/// <summary>Mass flow rate dimension [M T⁻¹] (kg/s).</summary>
+	public static readonly PhysicalDimension MassFlowRate = new(mass: 1, time: -1, baseUnit: Units.Kilogram);
+
+	/// <summary>Reynolds number dimension [1] (dimensionless).</summary>
+	public static readonly PhysicalDimension ReynoldsNumber = new(baseUnit: Units.Radian);
+
 	/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>
 	public static FrozenSet<PhysicalDimension> All { get; } = new HashSet<PhysicalDimension>(
 		[
@@ -330,6 +375,21 @@ public static class PhysicalDimensions
 			Solubility,
 			SurfaceTension,
 			VaporPressure,
-			DynamicViscosity
+			DynamicViscosity,
+			LuminousFlux,
+			Illuminance,
+			Luminance,
+			RefractiveIndex,
+			OpticalPower,
+			RadioactiveActivity,
+			AbsorbedDose,
+			EquivalentDose,
+			Exposure,
+			NuclearCrossSection,
+			KinematicViscosity,
+			BulkModulus,
+			VolumetricFlowRate,
+			MassFlowRate,
+			ReynoldsNumber
 		]).ToFrozenSet();
 }

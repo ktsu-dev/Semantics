@@ -37,8 +37,7 @@ public sealed record SoundPressureLevel<T> : PhysicalQuantity<SoundPressureLevel
 	public static SoundPressureLevel<T> FromSoundPressure(SoundPressure<T> soundPressure)
 	{
 		ArgumentNullException.ThrowIfNull(soundPressure);
-		// Reference pressure: 20 μPa = 20e-6 Pa
-		T referencePressure = T.CreateChecked(20e-6);
+		T referencePressure = PhysicalConstants.Generic.ReferenceSoundPressure<T>();
 		T ratio = soundPressure.Value / referencePressure;
 		T decibels = T.CreateChecked(20.0 * Math.Log10(double.CreateChecked(ratio)));
 		return FromDecibels(decibels);
@@ -51,7 +50,7 @@ public sealed record SoundPressureLevel<T> : PhysicalQuantity<SoundPressureLevel
 	/// <returns>The corresponding sound pressure.</returns>
 	public SoundPressure<T> ToSoundPressure()
 	{
-		T referencePressure = T.CreateChecked(20e-6); // 20 μPa
+		T referencePressure = PhysicalConstants.Generic.ReferenceSoundPressure<T>();
 		T exponent = Value / T.CreateChecked(20.0);
 		T pressure = referencePressure * T.CreateChecked(Math.Pow(10.0, double.CreateChecked(exponent)));
 		return SoundPressure<T>.Create(pressure);

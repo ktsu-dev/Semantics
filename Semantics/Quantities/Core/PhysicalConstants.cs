@@ -88,6 +88,39 @@ public static class PhysicalConstants
 	}
 
 	/// <summary>
+	/// Optical constants
+	/// </summary>
+	public static class Optical
+	{
+		/// <summary>Luminous efficacy of monochromatic radiation at 540 THz: 683 lm/W (exact by definition)</summary>
+		public const double LuminousEfficacy = 683.0;
+	}
+
+	/// <summary>
+	/// Nuclear constants
+	/// </summary>
+	public static class Nuclear
+	{
+		/// <summary>Atomic mass unit: 1.66053906660×10⁻²⁷ kg (2018 CODATA)</summary>
+		public const double AtomicMassUnit = 1.66053906660e-27;
+
+		/// <summary>Nuclear magneton: 5.0507837461×10⁻²⁷ J/T (2018 CODATA)</summary>
+		public const double NuclearMagneton = 5.0507837461e-27;
+	}
+
+	/// <summary>
+	/// Fluid dynamics constants
+	/// </summary>
+	public static class FluidDynamics
+	{
+		/// <summary>Standard air density at 15°C and 1 atm: 1.225 kg/m³ (ISO 2533)</summary>
+		public const double StandardAirDensity = 1.225;
+
+		/// <summary>Water surface tension at 20°C: 0.0728 N/m (NIST)</summary>
+		public const double WaterSurfaceTension = 0.0728;
+	}
+
+	/// <summary>
 	/// Conversion factors for unit systems
 	/// </summary>
 	public static class Conversion
@@ -109,6 +142,12 @@ public static class PhysicalConstants
 
 		/// <summary>Feet to meters: 0.3048 m/ft (exact)</summary>
 		public const double FeetToMeters = 0.3048;
+
+		/// <summary>Kilowatt-hour to Joule: 3,600,000 J/kWh (exact)</summary>
+		public const double KilowattHourToJoule = 3600000.0;
+
+		/// <summary>BTU per hour-foot-Fahrenheit to Watts per meter-Kelvin: 1.7307 W/(m·K) per BTU/(h·ft·°F)</summary>
+		public const double BtuPerHourFootFahrenheitToWattsPerMeterKelvin = 1.7307;
 	}
 
 	/// <summary>
@@ -175,5 +214,83 @@ public static class PhysicalConstants
 
 		/// <summary>Gets pound mass to kilogram conversion as type T</summary>
 		public static T PoundMassToKilogram<T>() where T : struct, INumber<T> => T.CreateChecked(Mechanical.PoundMassToKilogram);
+
+		/// <summary>Gets Celsius to Fahrenheit slope as type T</summary>
+		public static T CelsiusToFahrenheitSlope<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.CelsiusToFahrenheitSlope);
+
+		/// <summary>Gets Fahrenheit to Celsius slope as type T</summary>
+		public static T FahrenheitToCelsiusSlope<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.FahrenheitToCelsiusSlope);
+
+		/// <summary>Gets Fahrenheit offset as type T</summary>
+		public static T FahrenheitOffset<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.FahrenheitOffset);
+
+		/// <summary>Gets calorie to joule conversion as type T</summary>
+		public static T CalorieToJoule<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.CalorieToJoule);
+
+		/// <summary>Gets BTU to joule conversion as type T</summary>
+		public static T BtuToJoule<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.BtuToJoule);
+
+		/// <summary>Gets kilowatt-hour to joule conversion as type T</summary>
+		public static T KilowattHourToJoule<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.KilowattHourToJoule);
+
+		/// <summary>Gets BTU per hour-foot-Fahrenheit to Watts per meter-Kelvin conversion as type T</summary>
+		public static T BtuPerHourFootFahrenheitToWattsPerMeterKelvin<T>() where T : struct, INumber<T> => T.CreateChecked(Conversion.BtuPerHourFootFahrenheitToWattsPerMeterKelvin);
+
+		/// <summary>Gets water triple point temperature as type T</summary>
+		public static T WaterTriplePoint<T>() where T : struct, INumber<T> => T.CreateChecked(Temperature.WaterTriplePoint);
+
+		/// <summary>Gets standard temperature as type T</summary>
+		public static T StandardTemperature<T>() where T : struct, INumber<T> => T.CreateChecked(Temperature.StandardTemperature);
+
+		/// <summary>Gets water boiling point as type T</summary>
+		public static T WaterBoilingPoint<T>() where T : struct, INumber<T> => T.CreateChecked(Temperature.WaterBoilingPoint);
+
+		/// <summary>Gets reference sound pressure as type T</summary>
+		public static T ReferenceSoundPressure<T>() where T : struct, INumber<T> => T.CreateChecked(Acoustic.ReferenceSoundPressure);
+
+		/// <summary>Gets reference sound intensity as type T</summary>
+		public static T ReferenceSoundIntensity<T>() where T : struct, INumber<T> => T.CreateChecked(Acoustic.ReferenceSoundIntensity);
+
+		/// <summary>Gets reference sound power as type T</summary>
+		public static T ReferenceSoundPower<T>() where T : struct, INumber<T> => T.CreateChecked(Acoustic.ReferenceSoundPower);
+
+		/// <summary>Gets Sabine reverberation constant as type T</summary>
+		public static T SabineConstant<T>() where T : struct, INumber<T> => T.CreateChecked(Acoustic.SabineConstant);
+
+		// === OPTICAL CONSTANTS ===
+
+		/// <summary>Gets the luminous efficacy of monochromatic radiation at 540 THz.</summary>
+		/// <typeparam name="T">The numeric type.</typeparam>
+		/// <returns>The luminous efficacy (683 lm/W) as type T.</returns>
+		public static T LuminousEfficacy<T>() where T : struct, INumber<T> => T.CreateChecked(Optical.LuminousEfficacy);
+
+		/// <summary>Gets the speed of light in vacuum.</summary>
+		/// <typeparam name="T">The numeric type.</typeparam>
+		/// <returns>The speed of light (299,792,458 m/s) as type T.</returns>
+		public static T SpeedOfLight<T>() where T : struct, INumber<T> => T.CreateChecked(Fundamental.SpeedOfLight);
+
+		// === NUCLEAR CONSTANTS ===
+
+		/// <summary>Gets the atomic mass unit.</summary>
+		/// <typeparam name="T">The numeric type.</typeparam>
+		/// <returns>The atomic mass unit (1.66053906660×10⁻²⁷ kg) as type T.</returns>
+		public static T AtomicMassUnit<T>() where T : struct, INumber<T> => T.CreateChecked(Nuclear.AtomicMassUnit);
+
+		/// <summary>Gets the nuclear magneton.</summary>
+		/// <typeparam name="T">The numeric type.</typeparam>
+		/// <returns>The nuclear magneton (5.0507837461×10⁻²⁷ J/T) as type T.</returns>
+		public static T NuclearMagneton<T>() where T : struct, INumber<T> => T.CreateChecked(Nuclear.NuclearMagneton);
+
+		// === FLUID DYNAMICS CONSTANTS ===
+
+		/// <summary>Gets the standard air density.</summary>
+		/// <typeparam name="T">The numeric type.</typeparam>
+		/// <returns>The standard air density (1.225 kg/m³) as type T.</returns>
+		public static T StandardAirDensity<T>() where T : struct, INumber<T> => T.CreateChecked(FluidDynamics.StandardAirDensity);
+
+		/// <summary>Gets the water surface tension at 20°C.</summary>
+		/// <typeparam name="T">The numeric type.</typeparam>
+		/// <returns>The water surface tension (0.0728 N/m) as type T.</returns>
+		public static T WaterSurfaceTension<T>() where T : struct, INumber<T> => T.CreateChecked(FluidDynamics.WaterSurfaceTension);
 	}
 }

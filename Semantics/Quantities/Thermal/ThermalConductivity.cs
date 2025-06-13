@@ -34,7 +34,7 @@ public sealed record ThermalConductivity<T> : PhysicalQuantity<ThermalConductivi
 	/// <param name="btuPerHourFootFahrenheit">The value in BTU/(h·ft·°F).</param>
 	/// <returns>A new ThermalConductivity instance.</returns>
 	public static ThermalConductivity<T> FromBtuPerHourFootFahrenheit(T btuPerHourFootFahrenheit) =>
-		Create(btuPerHourFootFahrenheit * T.CreateChecked(1.7307));
+		Create(btuPerHourFootFahrenheit * PhysicalConstants.Generic.BtuPerHourFootFahrenheitToWattsPerMeterKelvin<T>());
 
 	/// <summary>
 	/// Converts to watts per meter-kelvin.
@@ -46,7 +46,7 @@ public sealed record ThermalConductivity<T> : PhysicalQuantity<ThermalConductivi
 	/// Converts to BTU per hour-foot-Fahrenheit.
 	/// </summary>
 	/// <returns>The thermal conductivity in BTU/(h·ft·°F).</returns>
-	public T ToBtuPerHourFootFahrenheit() => Value / T.CreateChecked(1.7307);
+	public T ToBtuPerHourFootFahrenheit() => Value / PhysicalConstants.Generic.BtuPerHourFootFahrenheitToWattsPerMeterKelvin<T>();
 
 	/// <summary>
 	/// Calculates heat flow rate using Fourier's law: Q̇ = k·A·ΔT/L.
