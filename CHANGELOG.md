@@ -8,6 +8,7 @@ Changes since v1.0.13:
 - Standardize documentation styles and enhance performance benchmarks in the Semantics library. This update includes the migration of hardcoded constants to the PhysicalConstants class, ensuring all constants are accessed through generic getters. Additionally, it refines the performance benchmarks to utilize these constants, improving code clarity and maintainability. The integration tests have also been updated to reflect these changes, ensuring accurate calculations across various domains. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Implement comprehensive enhancements to the ktsu.Semantics library, including standardized documentation for all physics quantities, improved testing strategies with advanced integration and performance regression tests, and the addition of real-world physics examples. This update significantly enhances code consistency, documentation clarity, and testing robustness, establishing a solid foundation for future development and ensuring a professional-grade solution for type-safe physics calculations in .NET applications. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor Units and PhysicalConstants for Consistency and Maintainability ([@matt-edmondson](https://github.com/matt-edmondson))
+- Remove outdated TODO comments for various scientific domains in Units.cs to streamline the codebase and improve maintainability. ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.13 (patch)
 
 Changes since v1.0.12:
