@@ -2,6 +2,7 @@
 
 Changes since v1.0.13:
 
+- Enhance Derived Cursor Rules with Additional Validation Guidelines ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update TAGS.md to Use Spaces for Multi-Word Tags ([@matt-edmondson](https://github.com/matt-edmondson))
 - Standardize documentation styles for physics quantities and enhance integration tests. This update introduces explicit XML documentation formats for dimension properties and constructors, improving clarity and consistency. Additionally, it refines advanced integration tests to ensure accurate cross-domain calculations, further solidifying the library's robustness for scientific applications. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add derived constants validation tests for PhysicalConstants ([@matt-edmondson](https://github.com/matt-edmondson))
