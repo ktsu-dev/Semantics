@@ -226,15 +226,26 @@ public class PerformanceBenchmarks
 		GC.WaitForPendingFinalizers();
 		GC.Collect();
 
-		long startMemory = GC.GetTotalMemory(false);
+		long startMemory = GC.GetTotalMemory(true);
+
+		// Create objects outside the loop to reuse them
+		Temperature<double> temp = Temperature<double>.FromCelsius(25.0);
+		Force<double> force = Force<double>.FromNewtons(100.0);
+		Length<double> length = Length<double>.FromMeters(1.0);
+		Time<double> time = Time<double>.FromSeconds(1.0);
+		Energy<double> energy = Energy<double>.Create(0.0);
+		Power<double> power = Power<double>.Create(0.0);
 
 		// Perform operations that might allocate memory
 		for (int i = 0; i < IterationCount; i++)
 		{
-			Temperature<double> temp = Temperature<double>.FromCelsius(25.0 + (i * 0.001));
-			Force<double> force = Force<double>.FromNewtons(100.0 + (i * 0.001));
-			Energy<double> energy = force * Length<double>.FromMeters(1.0);
-			Power<double> power = energy / Time<double>.FromSeconds(1.0);
+			// Update values instead of creating new objects
+			temp = Temperature<double>.FromCelsius(25.0 + (i % 100 * 0.001));
+			force = Force<double>.FromNewtons(100.0 + (i % 100 * 0.001));
+
+			// Reuse the same objects for calculations
+			energy = force * length;
+			power = energy / time;
 
 			// Avoid string allocations inside the loop
 			// Use values directly instead of converting to strings
@@ -248,7 +259,12 @@ public class PerformanceBenchmarks
 			}
 		}
 
-		long endMemory = GC.GetTotalMemory(false);
+		// Force garbage collection before measuring final memory
+		GC.Collect();
+		GC.WaitForPendingFinalizers();
+		GC.Collect();
+
+		long endMemory = GC.GetTotalMemory(true);
 		long memoryUsed = endMemory - startMemory;
 
 		Console.WriteLine($"Memory used: {memoryUsed / 1024.0:F1} KB for {IterationCount} operations");

@@ -250,3 +250,4 @@ When adding XML documentation comments:
 *   **Frequency Validation:** Frequency values cannot be negative. Throw an `ArgumentException` if this condition is violated.
 *   **Divide by Zero Exception**: When dividing `SemanticQuantity` by zero, a `DivideByZeroException` must be thrown. This applies specifically to the `DivideToStorage` method when dividing two quantities of the same type.
 *   **Performance Benchmarks Memory Allocation:** Ensure memory usage in performance benchmarks remains reasonable (less than 10MB).
+*   **Performance Benchmarks Optimization:** In performance benchmarks, avoid excessive memory allocation by minimizing or eliminating `ToString()` calls within loops. Use the underlying values directly and prevent compiler optimizations by adding a check that utilizes the values.
