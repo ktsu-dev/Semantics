@@ -249,3 +249,4 @@ When adding XML documentation comments:
 *   **Temperature Validation:** Temperature values cannot be below absolute zero (0 K). Throw an `ArgumentException` if this condition is violated.
 *   **Frequency Validation:** Frequency values cannot be negative. Throw an `ArgumentException` if this condition is violated.
 *   **Divide by Zero Exception**: When dividing `SemanticQuantity` by zero, a `DivideByZeroException` must be thrown. This applies specifically to the `DivideToStorage` method when dividing two quantities of the same type.
+*   **Performance Benchmarks Memory Allocation:** Ensure memory usage in performance benchmarks remains reasonable (less than 10MB).

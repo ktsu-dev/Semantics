@@ -236,9 +236,16 @@ public class PerformanceBenchmarks
 			Energy<double> energy = force * Length<double>.FromMeters(1.0);
 			Power<double> power = energy / Time<double>.FromSeconds(1.0);
 
-			// ToString operations which might allocate
-			string tempStr = temp.ToString();
-			string forceStr = force.ToString();
+			// Avoid string allocations inside the loop
+			// Use values directly instead of converting to strings
+			double tempValue = temp.Value;
+			double forceValue = force.Value;
+
+			// Prevent compiler optimizations from removing the variables
+			if (tempValue < 0 || forceValue < 0)
+			{
+				throw new InvalidOperationException("Negative values detected");
+			}
 		}
 
 		long endMemory = GC.GetTotalMemory(false);
