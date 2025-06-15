@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Test;
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -20,10 +21,10 @@ public class AttributeValidationTests
 	}
 
 	[TestMethod]
-	public void StartsWith_InvalidString_ThrowsFormatException()
+	public void StartsWith_InvalidString_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithPrefix>.Create<TestStringWithPrefix>("NoPrefixString"));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestStringWithPrefix>.Create<TestStringWithPrefix>("NoPrefixString"));
 	}
 
 	[TestMethod]
@@ -37,10 +38,10 @@ public class AttributeValidationTests
 	}
 
 	[TestMethod]
-	public void EndsWith_InvalidString_ThrowsFormatException()
+	public void EndsWith_InvalidString_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithSuffix>.Create<TestStringWithSuffix>("NoSuffixString"));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestStringWithSuffix>.Create<TestStringWithSuffix>("NoSuffixString"));
 	}
 
 	[TestMethod]
@@ -54,10 +55,10 @@ public class AttributeValidationTests
 	}
 
 	[TestMethod]
-	public void Contains_InvalidString_ThrowsFormatException()
+	public void Contains_InvalidString_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithSubstring>.Create<TestStringWithSubstring>("TestString"));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestStringWithSubstring>.Create<TestStringWithSubstring>("TestString"));
 	}
 
 	[TestMethod]
@@ -71,17 +72,17 @@ public class AttributeValidationTests
 	}
 
 	[TestMethod]
-	public void PrefixAndSuffix_MissingPrefix_ThrowsFormatException()
+	public void PrefixAndSuffix_MissingPrefix_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithPrefixAndSuffix>.Create<TestStringWithPrefixAndSuffix>("TestSuffix"));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestStringWithPrefixAndSuffix>.Create<TestStringWithPrefixAndSuffix>("TestSuffix"));
 	}
 
 	[TestMethod]
-	public void PrefixAndSuffix_MissingSuffix_ThrowsFormatException()
+	public void PrefixAndSuffix_MissingSuffix_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithPrefixAndSuffix>.Create<TestStringWithPrefixAndSuffix>("PrefixTest"));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestStringWithPrefixAndSuffix>.Create<TestStringWithPrefixAndSuffix>("PrefixTest"));
 	}
 
 	[TestMethod]
@@ -95,10 +96,10 @@ public class AttributeValidationTests
 	}
 
 	[TestMethod]
-	public void RegexMatch_InvalidString_ThrowsFormatException()
+	public void RegexMatch_InvalidInput_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithRegex>.Create<TestStringWithRegex>("123abc"));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestStringWithRegex>.Create<TestStringWithRegex>("123abc"));
 	}
 
 	[TestMethod]
@@ -122,10 +123,10 @@ public class AttributeValidationTests
 	}
 
 	[TestMethod]
-	public void ValidateAny_NoValidAttributes_ThrowsFormatException()
+	public void ValidateAny_AllInvalid_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithAnyValidation>.Create<TestStringWithAnyValidation>("JustATest"));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestStringWithAnyValidation>.Create<TestStringWithAnyValidation>("JustATest"));
 	}
 
 	[TestMethod]
@@ -139,10 +140,10 @@ public class AttributeValidationTests
 	}
 
 	[TestMethod]
-	public void ValidateAll_OneInvalidAttribute_ThrowsFormatException()
+	public void ValidateAll_OneInvalid_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithAllValidation>.Create<TestStringWithAllValidation>("TestSuffix"));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestStringWithAllValidation>.Create<TestStringWithAllValidation>("TestSuffix"));
 	}
 }
 

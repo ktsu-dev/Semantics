@@ -22,6 +22,22 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	public Frequency() : base() { }
 
 	/// <summary>
+	/// Creates a new instance with the specified value.
+	/// </summary>
+	/// <param name="value">The value for the quantity.</param>
+	/// <returns>A new instance of the quantity.</returns>
+	/// <exception cref="ArgumentException">Thrown when the frequency is negative.</exception>
+	public static new Frequency<T> Create(T value)
+	{
+		if (T.IsNegative(value))
+		{
+			throw new ArgumentException("Frequency cannot be negative.", nameof(value));
+		}
+
+		return new Frequency<T>() with { Quantity = value };
+	}
+
+	/// <summary>
 	/// Creates a new Frequency from a value in hertz.
 	/// </summary>
 	/// <param name="hertz">The value in hertz.</param>

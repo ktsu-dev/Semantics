@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Test;
 
+using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -33,7 +34,7 @@ public class SemanticPathTests
 	public void SemanticAbsolutePath_WithRelativePath_ShouldThrowException()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			AbsolutePath.Create<AbsolutePath>("test\\path"));
 	}
 
@@ -51,7 +52,7 @@ public class SemanticPathTests
 	public void SemanticRelativePath_WithAbsolutePath_ShouldThrowException()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			RelativePath.Create<RelativePath>("C:\\test\\path"));
 	}
 
@@ -134,7 +135,7 @@ public class SemanticPathTests
 	public void SemanticFileName_WithInvalidChars_ShouldThrowException()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			FileName.Create<FileName>("test<>.txt"));
 	}
 
@@ -152,7 +153,7 @@ public class SemanticPathTests
 	public void SemanticFileExtension_WithoutDot_ShouldThrowException()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			FileExtension.Create<FileExtension>("txt"));
 	}
 
@@ -242,7 +243,7 @@ public class SemanticPathTests
 	{
 		// Test excessively long path (over typical OS limits)
 		string excessivelyLongPath = "C:\\" + string.Join("\\", Enumerable.Repeat("verylongfoldernamethatexceedstypicallimits", 50));
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			AbsolutePath.Create<AbsolutePath>(excessivelyLongPath));
 	}
 

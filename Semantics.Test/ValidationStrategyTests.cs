@@ -4,6 +4,9 @@
 
 namespace ktsu.Semantics.Test;
 
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 [TestClass]
 public class ValidationStrategyTests
 {
@@ -18,10 +21,10 @@ public class ValidationStrategyTests
 	}
 
 	[TestMethod]
-	public void RegexMatchAttribute_WithOptions_InvalidString_ThrowsFormatException()
+	public void RegexMatchAttribute_WithOptions_InvalidString_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithRegexOptions>.Create<TestStringWithRegexOptions>("abc123"));
 	}
 
@@ -46,10 +49,10 @@ public class ValidationStrategyTests
 	}
 
 	[TestMethod]
-	public void StringComparison_IgnoreCase_WrongPrefix_ThrowsFormatException()
+	public void StringComparison_IgnoreCase_WrongPrefix_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithCaseInsensitivePrefix>.Create<TestStringWithCaseInsensitivePrefix>("wrong_test"));
 	}
 
@@ -64,10 +67,10 @@ public class ValidationStrategyTests
 	}
 
 	[TestMethod]
-	public void MultipleAttributes_OneFails_ThrowsFormatException()
+	public void MultipleAttributes_OneFails_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithBasicMultipleValidations>.Create<TestStringWithBasicMultipleValidations>("PREFIX_no_suffix"));
 	}
 
@@ -115,7 +118,7 @@ public class ValidationStrategyTests
 	public void EmptyString_WithValidations_HandledCorrectly()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithPrefix>.Create<TestStringWithPrefix>(""));
 	}
 
@@ -123,7 +126,7 @@ public class ValidationStrategyTests
 	public void SingleCharString_WithValidations_HandledCorrectly()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithPrefix>.Create<TestStringWithPrefix>("P"));
 	}
 
@@ -161,10 +164,10 @@ public class ValidationStrategyTests
 	}
 
 	[TestMethod]
-	public void ValidateAny_AllAttributesFail_ThrowsFormatException()
+	public void ValidateAny_AllAttributesFail_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithStrictAnyValidation>.Create<TestStringWithStrictAnyValidation>("none"));
 	}
 

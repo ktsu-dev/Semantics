@@ -123,6 +123,10 @@ public record SemanticQuantity<TSelf, TStorage>
 	{
 		ArgumentNullException.ThrowIfNull(self);
 		ArgumentNullException.ThrowIfNull(other);
+		if (TStorage.IsZero(other.Quantity))
+		{
+			throw new DivideByZeroException("Cannot divide by zero.");
+		}
 		return self.Quantity / other.Quantity;
 	}
 

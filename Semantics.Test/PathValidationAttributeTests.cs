@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Test;
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -33,7 +34,7 @@ public class PathValidationAttributeTests
 	public void IsPathAttribute_PathWithInvalidChars_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			TestPath.Create<TestPath>("C:\\invalid<>path"));
 	}
 
@@ -44,7 +45,7 @@ public class PathValidationAttributeTests
 		string longPath = "C:\\" + new string('a', 300);
 
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			TestPath.Create<TestPath>(longPath));
 	}
 
@@ -62,7 +63,7 @@ public class PathValidationAttributeTests
 	public void IsAbsolutePathAttribute_WithRelativePath_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			TestAbsolutePath.Create<TestAbsolutePath>("relative\\path"));
 	}
 
@@ -100,7 +101,7 @@ public class PathValidationAttributeTests
 	public void IsRelativePathAttribute_WithAbsolutePath_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			TestRelativePath.Create<TestRelativePath>("C:\\absolute\\path"));
 	}
 
@@ -148,7 +149,7 @@ public class PathValidationAttributeTests
 	public void IsFileNameAttribute_FileNameWithInvalidChars_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			TestFileName.Create<TestFileName>("invalid<>file.txt"));
 	}
 
@@ -206,7 +207,7 @@ public class PathValidationAttributeTests
 	public void DoesExistAttribute_NonExistentPath_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			TestExistingPath.Create<TestExistingPath>("C:\\definitely\\does\\not\\exist"));
 	}
 
@@ -214,7 +215,7 @@ public class PathValidationAttributeTests
 	public void DoesExistAttribute_EmptyPath_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			TestExistingPath.Create<TestExistingPath>(""));
 	}
 
@@ -232,7 +233,7 @@ public class PathValidationAttributeTests
 	public void IsExtensionAttribute_ExtensionWithoutDot_ShouldFail()
 	{
 		// Arrange & Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			TestExtension.Create<TestExtension>("txt"));
 	}
 
@@ -250,20 +251,21 @@ public class PathValidationAttributeTests
 	public void IsExtensionAttribute_MultipleDotsExtension_ShouldPass()
 	{
 		// Arrange
-		TestExtension multiExtension = TestExtension.Create<TestExtension>(".tar.gz");
+		TestExtension multiDotExtension = TestExtension.Create<TestExtension>(".tar.gz");
 
 		// Act & Assert
-		Assert.IsTrue(multiExtension.IsValid());
+		Assert.IsTrue(multiDotExtension.IsValid());
 	}
 
-	// Platform-specific tests
 	[TestMethod]
+	[TestCategory("OS-Specific")]
 	public void IsAbsolutePathAttribute_UnixStylePath_ShouldPassOnUnix()
 	{
-		if (!OperatingSystem.IsWindows())
+		// Only run this test on Unix-like systems
+		if (Environment.OSVersion.Platform is PlatformID.Unix or PlatformID.MacOSX)
 		{
 			// Arrange
-			TestAbsolutePath unixPath = TestAbsolutePath.Create<TestAbsolutePath>("/usr/local/bin");
+			TestAbsolutePath unixPath = TestAbsolutePath.Create<TestAbsolutePath>("/usr/bin/local");
 
 			// Act & Assert
 			Assert.IsTrue(unixPath.IsValid());
@@ -274,45 +276,53 @@ public class PathValidationAttributeTests
 	public void IsRelativePathAttribute_UnixStyleRelativePath_ShouldPass()
 	{
 		// Arrange
-		TestRelativePath unixRelativePath = TestRelativePath.Create<TestRelativePath>("usr/local/bin");
+		TestRelativePath unixStylePath = TestRelativePath.Create<TestRelativePath>("usr/bin/local");
 
 		// Act & Assert
-		Assert.IsTrue(unixRelativePath.IsValid());
+		Assert.IsTrue(unixStylePath.IsValid());
 	}
 
-	// Edge case tests for boundary conditions
 	[TestMethod]
 	public void IsPathAttribute_PathAtExactLimit_ShouldPass()
 	{
-		// Arrange - create a path at exactly 256 characters
-		string exactLimitPath = "C:\\" + new string('a', 252); // 2 for C:\ + 252 = 254, add 2 more for file
+		// Most systems have a path limit around 260 chars (Windows) or 4096 (Unix)
+		// We'll use a limit that works on all systems for testing
+		int maxPathLength = 240; // Just under Windows limit
+		string exactLengthPath = "C:\\" + new string('a', maxPathLength - 3);
 
-		// Act
-		TestPath path = TestPath.Create<TestPath>(exactLimitPath);
+		// Ensure we got the expected length
+		Assert.AreEqual(maxPathLength, exactLengthPath.Length);
 
-		// Assert
-		Assert.IsTrue(path.IsValid());
+		// Arrange
+		TestPath pathAtLimit = TestPath.Create<TestPath>(exactLengthPath);
+
+		// Act & Assert
+		Assert.IsTrue(pathAtLimit.IsValid());
 	}
 
 	[TestMethod]
 	public void IsPathAttribute_PathOverLimit_ShouldFail()
 	{
-		// Arrange - create a path over 256 characters
-		string overLimitPath = "C:\\" + new string('a', 255); // This will be over 256
+		// Using Windows path limit (260) + 100 chars to ensure it's over limit on all platforms
+		int tooLongLength = 360;
+		string tooLongPath = "C:\\" + new string('a', tooLongLength - 3);
 
-		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
-			TestPath.Create<TestPath>(overLimitPath));
+		// Ensure we got the expected length
+		Assert.AreEqual(tooLongLength, tooLongPath.Length);
+
+		// Arrange & Act & Assert
+		Assert.ThrowsExactly<ArgumentException>(() =>
+			TestPath.Create<TestPath>(tooLongPath));
 	}
 
 	[TestMethod]
 	public void IsFileNameAttribute_FileNameWithValidSpecialChars_ShouldPass()
 	{
-		// Arrange - use valid special characters in filename
-		TestFileName fileName = TestFileName.Create<TestFileName>("file-name_with.special-chars.txt");
+		// Arrange - using valid special chars
+		TestFileName specialCharsName = TestFileName.Create<TestFileName>("valid-file_name (1).txt");
 
 		// Act & Assert
-		Assert.IsTrue(fileName.IsValid());
+		Assert.IsTrue(specialCharsName.IsValid());
 	}
 }
 

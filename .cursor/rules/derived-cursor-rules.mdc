@@ -225,3 +225,26 @@ When adding XML documentation comments:
 *   Can we put the bootstrap units in their own class so they dont pollote the PhysicalDimensions namespace?
     *   **Solution:** Create a dedicated `BootstrapUnits` class to house all bootstrap units. Refactor the `PhysicalDimensions` class to use the `BootstrapUnits` class.
 *   **Multi word Tags:** Use spaces for multi word tags not hyphens
+*   **Record Inheritance**: When inheriting from a record, the inheriting type must also be a record. Test classes inheriting from `SemanticString<TDerived>` must be records, not classes.
+*   **Semantic String Creation**: Use `SemanticString<TDerived>.Create<TDerived>` to create instances of semantic strings.
+*   **Explicit Types**: Use explicit types instead of `var`.
+*   **Suppressing CA1812 Warnings**: When a type is used via `SemanticString<T>.Create<T>`, suppress the CA1812 warning using the `[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used via SemanticString<T>.Create<T>")]` attribute.
+*   **Catching Exceptions**: Catch more specific exceptions instead of general exceptions to address CA1031 warnings.
+*   **Exception Types**: When validation fails in `SemanticString.cs`, throw `ArgumentException` instead of `FormatException`.
+*   **IDE0060 Warning**: Replace unused parameters with `_`.
+*   **Semantic Path Length**: Most systems have a path limit around 260 chars (Windows) or 4096 (Unix). Use a limit that works on all systems for testing. Use a limit that works on all systems for testing.
+*   **Formatting Errors**: Apply `dotnet format` to fix formatting errors (IDE0055).
+
+## DEBUGGING
+
+## WORKFLOW & RELEASE RULES
+
+*   **Increase Test Coverage:** Analyze the codebase to understand the current testing setup and identify areas that need more coverage.
+*   **Exception Handling in Tests:** When a test expects an exception to be thrown due to invalid input or state, ensure the test asserts that the correct exception type is thrown.
+*   **Validation Exception Type:** When validation fails in `SemanticString.cs` or related validation logic, throw `ArgumentException` instead of `FormatException`. This ensures consistency in how validation errors are reported.
+*   **OS-Specific Tests:** Mark OS-specific tests with the `[TestCategory("OS-Specific")]` attribute.
+*   **OS-Specific Test Execution:** Run OS-specific tests only on the relevant operating systems. Use `if (Environment.OSVersion.Platform is PlatformID.Unix or PlatformID.MacOSX)` to conditionally execute Unix/macOS tests.
+*   **Path Length Limits:** When testing path lengths, use a limit that works on all systems. A length of 259 characters is safe for Windows and other systems.
+*   **SemanticQuantity Null Handling:** SemanticQuantity operations must throw `ArgumentNullException` when null arguments are passed into static methods.
+*   **Temperature Validation:** Temperature values cannot be below absolute zero (0 K). Throw an `ArgumentException` if this condition is violated.
+*   **Frequency Validation:** Frequency values cannot be negative. Throw an `ArgumentException` if this condition is violated.

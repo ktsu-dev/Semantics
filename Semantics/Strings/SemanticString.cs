@@ -24,7 +24,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </summary>
 	/// <typeparam name="TDest">The target semantic string type to convert to.</typeparam>
 	/// <returns>A new instance of the target semantic string type containing the same string value.</returns>
-	/// <exception cref="FormatException">
+	/// <exception cref="ArgumentException">
 	/// The current string value does not meet the validation criteria defined by the target semantic string type.
 	/// </exception>
 	/// <remarks>
@@ -333,7 +333,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <param name="value">The character array to convert.</param>
 	/// <returns>A semantic string instance of type <typeparamref name="TDerived"/>.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="FormatException">The character array does not meet the validation criteria for the target type.</exception>
+	/// <exception cref="ArgumentException">The character array does not meet the validation criteria for the target type.</exception>
 	public static explicit operator SemanticString<TDerived>(char[]? value) => Create<TDerived>(value: value);
 
 	/// <summary>
@@ -342,7 +342,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <param name="value">The string to convert.</param>
 	/// <returns>A semantic string instance of type <typeparamref name="TDerived"/>.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="FormatException">The string does not meet the validation criteria for the target type.</exception>
+	/// <exception cref="ArgumentException">The string does not meet the validation criteria for the target type.</exception>
 	public static explicit operator SemanticString<TDerived>(string? value) => Create<TDerived>(value: value);
 
 	// Type-safe operations returning TDerived
@@ -351,7 +351,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </summary>
 	/// <param name="prefix">The prefix to prepend to the current string value.</param>
 	/// <returns>A new semantic string instance with the prefix prepended.</returns>
-	/// <exception cref="FormatException">The resulting string does not meet the validation criteria for this semantic string type.</exception>
+	/// <exception cref="ArgumentException">The resulting string does not meet the validation criteria for this semantic string type.</exception>
 	public TDerived WithPrefix(string prefix) => (TDerived)$"{prefix}{this}";
 
 	/// <summary>
@@ -359,7 +359,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </summary>
 	/// <param name="suffix">The suffix to append to the current string value.</param>
 	/// <returns>A new semantic string instance with the suffix appended.</returns>
-	/// <exception cref="FormatException">The resulting string does not meet the validation criteria for this semantic string type.</exception>
+	/// <exception cref="ArgumentException">The resulting string does not meet the validation criteria for this semantic string type.</exception>
 	public TDerived WithSuffix(string suffix) => (TDerived)$"{this}{suffix}";
 
 	// IComparable implementation with proper generic constraints
@@ -425,7 +425,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <param name="value">The string value to convert.</param>
 	/// <returns>A new instance of the specified semantic string type.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="FormatException">
+	/// <exception cref="ArgumentException">
 	/// The <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
 	/// </exception>
 	/// <remarks>
@@ -434,7 +434,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <item><description>Creates an instance of the target type</description></item>
 	/// <item><description>Applies canonicalization through the type's <see cref="MakeCanonical"/> method</description></item>
 	/// <item><description>Validates the result using <see cref="IsValid()"/> method</description></item>
-	/// <item><description>Throws <see cref="FormatException"/> if validation fails</description></item>
+	/// <item><description>Throws <see cref="ArgumentException"/> if validation fails</description></item>
 	/// </list>
 	/// </remarks>
 	public static TDest Create<TDest>(string? value)
@@ -451,7 +451,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <param name="value">The character array to convert.</param>
 	/// <returns>A new instance of the specified semantic string type.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="FormatException">
+	/// <exception cref="ArgumentException">
 	/// The string representation of <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
 	/// </exception>
 	/// <remarks>
@@ -471,7 +471,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <typeparam name="TDest">The semantic string type to create.</typeparam>
 	/// <param name="value">The read-only character span to convert.</param>
 	/// <returns>A new instance of the specified semantic string type.</returns>
-	/// <exception cref="FormatException">
+	/// <exception cref="ArgumentException">
 	/// The string representation of <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
 	/// </exception>
 	/// <remarks>
@@ -490,7 +490,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <param name="value">The string value to convert.</param>
 	/// <returns>A new instance of the specified semantic string type.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="FormatException">
+	/// <exception cref="ArgumentException">
 	/// The <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
 	/// </exception>
 	/// <remarks>
@@ -499,7 +499,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <item><description>Creates an instance of the target type</description></item>
 	/// <item><description>Applies canonicalization through the type's <see cref="MakeCanonical"/> method</description></item>
 	/// <item><description>Validates the result using <see cref="IsValid()"/> method</description></item>
-	/// <item><description>Throws <see cref="FormatException"/> if validation fails</description></item>
+	/// <item><description>Throws <see cref="ArgumentException"/> if validation fails</description></item>
 	/// </list>
 	/// </remarks>
 	private static TDest FromString<TDest>(string? value)
@@ -516,7 +516,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <param name="value">The character array to convert.</param>
 	/// <returns>A new instance of the specified semantic string type.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="FormatException">
+	/// <exception cref="ArgumentException">
 	/// The string representation of <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
 	/// </exception>
 	/// <remarks>
@@ -536,7 +536,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <typeparam name="TDest">The semantic string type to create.</typeparam>
 	/// <param name="value">The read-only character span to convert.</param>
 	/// <returns>A new instance of the specified semantic string type.</returns>
-	/// <exception cref="FormatException">
+	/// <exception cref="ArgumentException">
 	/// The string representation of <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
 	/// </exception>
 	/// <remarks>
@@ -576,13 +576,15 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <typeparam name="TDest">The semantic string type being validated.</typeparam>
 	/// <param name="value">The semantic string instance to validate.</param>
 	/// <returns>The validated semantic string instance.</returns>
-	/// <exception cref="FormatException">The semantic string instance is null or fails validation.</exception>
+	/// <exception cref="ArgumentException">The semantic string instance is null or fails validation.</exception>
 	private static TDest PerformValidation<TDest>(TDest? value)
 		where TDest : SemanticString<TDest>
 	{
-		return value != null && value.IsValid()
-			? value
-			: throw new FormatException(message: $"Cannot convert \"{value}\" to {typeof(TDest).Name}");
+		if (value == null || !value.IsValid())
+		{
+			throw new ArgumentException(message: $"Cannot convert \"{value}\" to {typeof(TDest).Name}");
+		}
+		return value;
 	}
 
 	/// <summary>
@@ -591,7 +593,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <param name="value">The string value to convert.</param>
 	/// <returns>A new instance of this semantic string type.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="FormatException">The string does not meet the validation criteria for this type.</exception>
+	/// <exception cref="ArgumentException">The string does not meet the validation criteria for this type.</exception>
 	/// <remarks>
 	/// This method provides type inference when called on concrete semantic string types,
 	/// eliminating the need for explicit generic type parameters.
@@ -604,7 +606,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <param name="value">The character array to convert.</param>
 	/// <returns>A new instance of this semantic string type.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="FormatException">The string does not meet the validation criteria for this type.</exception>
+	/// <exception cref="ArgumentException">The string does not meet the validation criteria for this type.</exception>
 	/// <remarks>
 	/// This method provides type inference when called on concrete semantic string types,
 	/// eliminating the need for explicit generic type parameters.
@@ -616,7 +618,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </summary>
 	/// <param name="value">The read-only character span to convert.</param>
 	/// <returns>A new instance of this semantic string type.</returns>
-	/// <exception cref="FormatException">The string does not meet the validation criteria for this type.</exception>
+	/// <exception cref="ArgumentException">The string does not meet the validation criteria for this type.</exception>
 	/// <remarks>
 	/// This method provides type inference when called on concrete semantic string types,
 	/// eliminating the need for explicit generic type parameters.
@@ -760,11 +762,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 			result = FromString<TDest>(value);
 			return true;
 		}
-		catch (FormatException)
-		{
-			return false;
-		}
-		catch (ArgumentNullException)
+		catch (ArgumentException)
 		{
 			return false;
 		}
@@ -795,11 +793,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 			result = FromCharArray<TDest>(value);
 			return true;
 		}
-		catch (FormatException)
-		{
-			return false;
-		}
-		catch (ArgumentNullException)
+		catch (ArgumentException)
 		{
 			return false;
 		}
@@ -826,7 +820,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 			result = FromReadOnlySpan<TDest>(value);
 			return true;
 		}
-		catch (FormatException)
+		catch (ArgumentException)
 		{
 			return false;
 		}

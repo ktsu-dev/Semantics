@@ -4,6 +4,8 @@
 
 namespace ktsu.Semantics.Test;
 
+using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -214,15 +216,15 @@ public class ErrorHandlingTests
 	}
 
 	[TestMethod]
-	public void SemanticString_PerformValidation_WithInvalidString_ThrowsFormatException()
+	public void SemanticString_PerformValidation_WithInvalidString_ThrowsArgumentException()
 	{
-		// This test verifies that FormatException is thrown for invalid semantic strings
-		Assert.ThrowsExactly<FormatException>(() =>
+		// This test verifies that ArgumentException is thrown for invalid semantic strings
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<StartsWithValidSemanticString>.Create<StartsWithValidSemanticString>("invalid"));
 	}
 
 	[TestMethod]
-	public void SemanticString_PerformValidation_WithNullAfterCreation_ThrowsFormatException()
+	public void SemanticString_PerformValidation_WithNullAfterCreation_ThrowsArgumentException()
 	{
 		// This would be an edge case where validation returns null somehow
 		// We can't easily test this directly, but we can test the validation logic
@@ -243,7 +245,7 @@ public class ErrorHandlingTests
 	public void ValidationAttributes_WithWhitespaceString_HandledCorrectly()
 	{
 		// Test validation with whitespace-only strings
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			StartsWithValidSemanticString.Create<StartsWithValidSemanticString>("   "));
 	}
 
@@ -251,7 +253,7 @@ public class ErrorHandlingTests
 	public void ValidationAttributes_CaseSensitivity_HandledCorrectly()
 	{
 		// Test case sensitivity in validation
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			StartsWithValidSemanticString.Create<StartsWithValidSemanticString>("valid_test")); // lowercase 'v'
 	}
 
@@ -299,27 +301,27 @@ public class ErrorHandlingTests
 	}
 
 	[TestMethod]
-	public void SemanticPath_InvalidPathCharacters_ThrowsFormatException()
+	public void SemanticPath_InvalidPathCharacters_ThrowsArgumentException()
 	{
 		// Test path validation with invalid characters
 		char[] invalidChars = Path.GetInvalidPathChars();
 		if (invalidChars.Length > 0)
 		{
 			string invalidPath = "C:\\test" + invalidChars[0] + "path";
-			Assert.ThrowsExactly<FormatException>(() =>
+			Assert.ThrowsExactly<ArgumentException>(() =>
 				AbsolutePath.Create<AbsolutePath>(invalidPath));
 		}
 	}
 
 	[TestMethod]
-	public void SemanticFileName_InvalidFileNameCharacters_ThrowsFormatException()
+	public void SemanticFileName_InvalidFileNameCharacters_ThrowsArgumentException()
 	{
 		// Test filename validation with invalid characters
 		char[] invalidChars = Path.GetInvalidFileNameChars();
 		if (invalidChars.Length > 0)
 		{
 			string invalidFileName = "test" + invalidChars[0] + "file.txt";
-			Assert.ThrowsExactly<FormatException>(() =>
+			Assert.ThrowsExactly<ArgumentException>(() =>
 				FileName.Create<FileName>(invalidFileName));
 		}
 	}

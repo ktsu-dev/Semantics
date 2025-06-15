@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Test;
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -20,10 +21,10 @@ public class AdvancedAttributeValidationTests
 	}
 
 	[TestMethod]
-	public void MultipleValidationAttributes_OneInvalid_ThrowsFormatException()
+	public void MultipleValidationAttributes_OneInvalid_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithMultipleValidations>.Create<TestStringWithMultipleValidations>("prefix-123abc-suffix"));
 	}
 
@@ -38,10 +39,10 @@ public class AdvancedAttributeValidationTests
 	}
 
 	[TestMethod]
-	public void ComplexRegexPattern_InvalidInput_ThrowsFormatException()
+	public void ComplexRegexPattern_InvalidInput_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithComplexRegex>.Create<TestStringWithComplexRegex>("invalid-email"));
 	}
 
@@ -60,18 +61,18 @@ public class AdvancedAttributeValidationTests
 	}
 
 	[TestMethod]
-	public void CombinedValidateAnyWithMultipleAttributes_NoneValid_ThrowsFormatException()
+	public void CombinedValidateAnyWithMultipleAttributes_NoneValid_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithAnyOfThreeValidations>.Create<TestStringWithAnyOfThreeValidations>("regular-content"));
 	}
 
 	[TestMethod]
-	public void EmptyString_WithValidationAttributes_ThrowsFormatException()
+	public void EmptyString_WithValidationAttributes_ThrowsArgumentException()
 	{
 		// Act & Assert - Empty string shouldn't match prefix/suffix requirements
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithPrefix>.Create<TestStringWithPrefix>(""));
 	}
 
@@ -86,10 +87,10 @@ public class AdvancedAttributeValidationTests
 	}
 
 	[TestMethod]
-	public void RegexMatch_NumberPattern_InvalidString_ThrowsFormatException()
+	public void RegexMatch_NumberPattern_InvalidString_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithNumberPattern>.Create<TestStringWithNumberPattern>("abc123"));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestStringWithNumberPattern>.Create<TestStringWithNumberPattern>("abc123"));
 	}
 
 	[TestMethod]
@@ -103,10 +104,10 @@ public class AdvancedAttributeValidationTests
 	}
 
 	[TestMethod]
-	public void MultipleContains_OneMissing_ThrowsFormatException()
+	public void MultipleContains_OneMissing_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() => SemanticString<TestStringWithMultipleContains>.Create<TestStringWithMultipleContains>("abc123xyz"));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestStringWithMultipleContains>.Create<TestStringWithMultipleContains>("abc123xyz"));
 	}
 
 	[TestMethod]
@@ -130,10 +131,10 @@ public class AdvancedAttributeValidationTests
 	}
 
 	[TestMethod]
-	public void ComplexRegex_UrlPattern_InvalidFormat_ThrowsFormatException()
+	public void ComplexRegex_UrlPattern_InvalidFormat_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestUrlString>.Create<TestUrlString>("not-a-url"));
 	}
 
@@ -220,11 +221,11 @@ public class AdvancedAttributeValidationTests
 	}
 
 	[TestMethod]
-	public void ComplexRegex_Email_InvalidFormat_ThrowsFormatException()
+	public void ComplexRegex_Email_InvalidFormat_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
-			SemanticString<TestEmailString>.Create<TestEmailString>("invalid-email"));
+		Assert.ThrowsExactly<ArgumentException>(() =>
+			SemanticString<TestEmailString>.Create<TestEmailString>("not-an-email"));
 	}
 
 	[TestMethod]
@@ -238,11 +239,11 @@ public class AdvancedAttributeValidationTests
 	}
 
 	[TestMethod]
-	public void ValidateAll_WithManyAttributes_OneFails_ThrowsFormatException()
+	public void ValidateAll_WithManyAttributes_OneFails_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
-			SemanticString<TestStringWithManyValidations>.Create<TestStringWithManyValidations>("PREFIX_content_SUFFIX"));
+		Assert.ThrowsExactly<ArgumentException>(() =>
+			SemanticString<TestStringWithManyValidations>.Create<TestStringWithManyValidations>("missing-middle-content-SUFFIX"));
 	}
 
 	[TestMethod]
@@ -256,10 +257,10 @@ public class AdvancedAttributeValidationTests
 	}
 
 	[TestMethod]
-	public void ValidateAny_WithManyAttributes_AllFail_ThrowsFormatException()
+	public void ValidateAny_WithManyAttributes_AllFail_ThrowsArgumentException()
 	{
 		// Act & Assert
-		Assert.ThrowsExactly<FormatException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<TestStringWithManyAnyValidations>.Create<TestStringWithManyAnyValidations>("none_match"));
 	}
 }

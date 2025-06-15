@@ -22,6 +22,22 @@ public sealed record Temperature<T> : PhysicalQuantity<Temperature<T>, T>
 	public Temperature() : base() { }
 
 	/// <summary>
+	/// Creates a new instance with the specified value.
+	/// </summary>
+	/// <param name="value">The value for the quantity.</param>
+	/// <returns>A new instance of the quantity.</returns>
+	/// <exception cref="ArgumentException">Thrown when the temperature is below absolute zero (0 K).</exception>
+	public static new Temperature<T> Create(T value)
+	{
+		if (T.IsNegative(value))
+		{
+			throw new ArgumentException("Temperature cannot be below absolute zero (0 K).", nameof(value));
+		}
+
+		return new Temperature<T>() with { Quantity = value };
+	}
+
+	/// <summary>
 	/// Creates a new Temperature from a value in Kelvin.
 	/// </summary>
 	/// <param name="kelvin">The value in Kelvin.</param>

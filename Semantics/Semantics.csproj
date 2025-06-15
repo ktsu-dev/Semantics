@@ -1,5 +1,7 @@
 ﻿<Project Sdk="ktsu.Sdk.Lib">
   <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="FluentValidation" />
   </ItemGroup>
 </Project>
