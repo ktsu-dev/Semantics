@@ -1,3 +1,8 @@
+## v1.0.16 (patch)
+
+Changes since v1.0.15:
+
+- Enhance performance regression tests with updated targets and optimizations ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.15 (patch)
 
 Changes since v1.0.14:
