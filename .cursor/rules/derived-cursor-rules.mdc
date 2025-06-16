@@ -258,12 +258,20 @@ When adding XML documentation comments:
     var userName = emailAddress.As<UserName>(); // Will infer the source type
 ```
     *   Leverages the existing `SemanticString<T>.Create<T>()` factory method.
-*   **Path Interfaces - AsAbsolute Method**:
-    *   The `IFilePath` and `IDirectoryPath` interfaces include the `AsAbsolute()` method.
-    *   `AsAbsolute()` converts the path to an absolute path representation.
-    *   For relative paths, `AsAbsolute()` resolves against the current working directory.
-    *   For absolute paths, `AsAbsolute()` returns the path itself.
-*   **Path Conversion API**:
+*   **Path Interfaces**
+
+    *   **Interface-Level AsAbsolute() Methods**:
+        *   `IAbsolutePath.AsAbsolute()` → returns `AbsolutePath`
+        *   `IRelativePath.AsAbsolute()` → returns `AbsolutePath`
+        *   `IAbsoluteFilePath.AsAbsolute()` → returns `AbsoluteFilePath`
+        *   `IRelativeFilePath.AsAbsolute()` → returns `AbsoluteFilePath`
+        *   `IAbsoluteDirectoryPath.AsAbsolute()` → returns `AbsoluteDirectoryPath`
+        *   `IRelativeDirectoryPath.AsAbsolute()` → returns `AbsoluteDirectoryPath`
+    *   **Consolidated Path Conversion API**:
+        *   `AsAbsolute()` - convert to absolute using current working directory
+        *   `AsAbsolute(baseDirectory)` - convert to absolute using specific base directory
+        *   `AsRelative(baseDirectory)` - convert to relative using specific base directory
+
     *   **API Design Principles**
         1. Consistent Naming: All conversion methods use the `As*()` prefix
         2. Clear Purpose: Different method signatures for different conversion scenarios
@@ -272,14 +280,7 @@ When adding XML documentation comments:
 
     *   **Complete API Reference**
 
-        #### **Interface-to-Concrete Conversions** (Type Casting)
-
-        *   `AsAbsoluteFilePath()` - Cast interface to concrete absolute file path (REDUNDANT - REMOVE)
-        *   `AsRelativeFilePath()` - Cast interface to concrete relative file path (REDUNDANT - REMOVE)
-        *   `AsAbsoluteDirectoryPath()` - Cast interface to concrete absolute directory path (REDUNDANT - REMOVE)
-        *   `AsRelativeDirectoryPath()` - Cast interface to concrete relative directory path (REDUNDANT - REMOVE)
-
-        #### **Path Category Conversions** (Path Transformations)
+        #### Path Category Conversions (Path Transformations)
 
         *   `AsAbsolute()` - Convert to absolute using current working directory
         *   `AsAbsolute(baseDirectory)` - Convert to absolute using specific base directory
@@ -312,13 +313,11 @@ When adding XML documentation comments:
 
         // Convert absolute to relative using base
         RelativeFilePath backToRelative = absoluteFile.AsRelative(baseDir);
-
-        // Interface conversions
-        IAbsoluteFilePath iAbsFile = absoluteFile;
-        AbsoluteFilePath concrete = iAbsFile.AsAbsoluteFilePath();
         ```
-
-*   **Redundant Interface Conversions**: The interface conversion methods like `AsAbsoluteDirectoryPath()` are redundant given the consolidated `As*()` API and direct casting, and should be removed.
+*   **Path Combination Operators:**
+     *   `AbsoluteDirectoryPath` now has an operator for combining with `FileName`.
+     *   `RelativeDirectoryPath` also has an operator for `FileName`.
+     *   The generic `DirectoryPath` type has an operator for `FileName` as well for consistency.
 
 ## DEBUGGING
 
@@ -367,3 +366,4 @@ When adding XML documentation comments:
     | **Cross-Domain Calculations** | 50K ops/sec | **1M ops/sec** | ✅ |
 *   **Winget Manifest Generation:** Ensure the winget manifest generation script gracefully exits and reports errors clearly. Check that artifact name patterns in the script match the release files.
 *   **Winget Manifest Generation - Library Project Handling:** The winget manifest generation script should correctly identify library-only projects and exit gracefully, avoiding attempts to download artifacts. The script should recognize projects using custom SDK files that contain `.Lib` or `Library` in their name (like `ktsu.Sdk.Lib`) as library projects. The script should also exclude projects using custom SDK files that contain `.Test`, `.Lib`, `Test`, or `Library` from being considered as applications.
+*   Investigate whether test coverage can be increased in the string or path files.

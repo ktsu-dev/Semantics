@@ -112,6 +112,22 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	}
 
 	/// <summary>
+	/// Combines a relative directory path with a file name using the '/' operator.
+	/// </summary>
+	/// <param name="left">The base relative directory path.</param>
+	/// <param name="right">The file name to append.</param>
+	/// <returns>A new <see cref="RelativeFilePath"/> representing the combined path.</returns>
+	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
+	public static RelativeFilePath operator /(RelativeDirectoryPath left, FileName right)
+	{
+		ArgumentNullException.ThrowIfNull(left);
+		ArgumentNullException.ThrowIfNull(right);
+
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
+		return RelativeFilePath.Create<RelativeFilePath>(combinedPath);
+	}
+
+	/// <summary>
 	/// Converts this relative directory path to an absolute directory path representation.
 	/// This resolves the relative path against the current working directory.
 	/// </summary>

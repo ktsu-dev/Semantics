@@ -131,6 +131,22 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	}
 
 	/// <summary>
+	/// Combines an absolute directory path with a file name using the '/' operator.
+	/// </summary>
+	/// <param name="left">The base absolute directory path.</param>
+	/// <param name="right">The file name to append.</param>
+	/// <returns>A new <see cref="AbsoluteFilePath"/> representing the combined path.</returns>
+	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
+	public static AbsoluteFilePath operator /(AbsoluteDirectoryPath left, FileName right)
+	{
+		ArgumentNullException.ThrowIfNull(left);
+		ArgumentNullException.ThrowIfNull(right);
+
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
+		return AbsoluteFilePath.Create<AbsoluteFilePath>(combinedPath);
+	}
+
+	/// <summary>
 	/// Determines whether this directory is a child of the specified parent path using efficient span comparison.
 	/// </summary>
 	/// <param name="parentPath">The potential parent path to check against.</param>
