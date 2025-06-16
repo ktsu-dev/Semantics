@@ -234,6 +234,91 @@ When adding XML documentation comments:
 *   **IDE0060 Warning**: Replace unused parameters with `_`.
 *   **Semantic Path Length**: Most systems have a path limit around 260 chars (Windows) or 4096 (Unix). Use a limit that works on all systems for testing. Use a limit that works on all systems for testing.
 *   **Formatting Errors**: Apply `dotnet format` to fix formatting errors (IDE0055).
+*   **Semantic String Conversion**: For converting **one semantic string type to another**, you can use the pattern of converting to string first and then to the target type:
+    ```csharp
+    // Example: Converting from one semantic string type to another
+    var sourceSemanticString = "example".As<SourceType>();
+    var targetSemanticString = sourceSemanticString.ToString().As<TargetType>();
+
+    // Or using implicit conversion to string:
+    var targetSemanticString = ((string)sourceSemanticString).As<TargetType>();
+    ```
+*   **SemanticStringExtensions Class**: The `SemanticStringExtensions` class provides three main extension methods:
+    1.  **`As<TDerived>(this string? value)`** - Converts a string to any semantic string type
+    2.  **`As<TDerived>(this char[]? value)`** - Converts a character array to any semantic string type
+    3.  **`As<TDerived>(this ReadOnlySpan<char> value)`** - Converts a read-only character span to any semantic string type
+*   **SemanticStringExtensions.As\<TSource, TTarget\> Method**:
+    *   Converts one semantic string type to another semantic string type.
+    *   Provides a fluent syntax for converting between semantic string types.
+```csharp
+    // Example:
+    var emailAddress = "user@example.com".As<EmailAddress>();
+    var userName = emailAddress.As<EmailAddress, UserName>(); // Explicit type parameters
+    // or with type inference in many cases:
+    var userName = emailAddress.As<UserName>(); // Will infer the source type
+```
+    *   Leverages the existing `SemanticString<T>.Create<T>()` factory method.
+*   **Path Interfaces - AsAbsolute Method**:
+    *   The `IFilePath` and `IDirectoryPath` interfaces include the `AsAbsolute()` method.
+    *   `AsAbsolute()` converts the path to an absolute path representation.
+    *   For relative paths, `AsAbsolute()` resolves against the current working directory.
+    *   For absolute paths, `AsAbsolute()` returns the path itself.
+*   **Path Conversion API**:
+    *   **API Design Principles**
+        1. Consistent Naming: All conversion methods use the `As*()` prefix
+        2. Clear Purpose: Different method signatures for different conversion scenarios
+        3. Type Safety: Return concrete types for predictable behavior
+        4. Polymorphism: Works seamlessly through interfaces
+
+    *   **Complete API Reference**
+
+        #### **Interface-to-Concrete Conversions** (Type Casting)
+
+        *   `AsAbsoluteFilePath()` - Cast interface to concrete absolute file path (REDUNDANT - REMOVE)
+        *   `AsRelativeFilePath()` - Cast interface to concrete relative file path (REDUNDANT - REMOVE)
+        *   `AsAbsoluteDirectoryPath()` - Cast interface to concrete absolute directory path (REDUNDANT - REMOVE)
+        *   `AsRelativeDirectoryPath()` - Cast interface to concrete relative directory path (REDUNDANT - REMOVE)
+
+        #### **Path Category Conversions** (Path Transformations)
+
+        *   `AsAbsolute()` - Convert to absolute using current working directory
+        *   `AsAbsolute(baseDirectory)` - Convert to absolute using specific base directory
+        *   `AsRelative(baseDirectory)` - Convert to relative using specific base directory
+
+    *   **Conversion Matrix**
+
+        | **From Type**           | **AsAbsolute()**           | **AsAbsolute(base)**           | **AsRelative(base)**           |
+        | :---------------------- | :------------------------- | :----------------------------- | :----------------------------- |
+        | `AbsoluteFilePath`      | Returns self               | Returns self                   | Creates `RelativeFilePath`     |
+        | `RelativeFilePath`      | Uses CWD                   | Uses base directory            | Returns self                   |
+        | `FilePath`              | Uses CWD                   | Uses CWD + base logic          | Uses CWD + base logic          |
+        | `AbsoluteDirectoryPath` | Returns self               | Returns self                   | Creates `RelativeDirectoryPath` |
+        | `RelativeDirectoryPath` | Uses CWD                   | Uses base directory            | Returns self                   |
+        | `DirectoryPath`         | Uses CWD                   | Uses CWD + base logic          | Uses CWD + base logic          |
+
+    *   **Usage Examples**
+
+        ```csharp
+        // Interface-based polymorphic usage
+        IFilePath somePath = GetSomeFilePath();
+        AbsoluteFilePath absolutePath = somePath.AsAbsolute();
+
+        // Converting between absolute and relative
+        AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>("C:\\base");
+        RelativeFilePath relativeFile = RelativeFilePath.Create<RelativeFilePath>("sub\\file.txt");
+
+        // Convert relative to absolute with specific base
+        AbsoluteFilePath absoluteFile = relativeFile.AsAbsolute(baseDir);
+
+        // Convert absolute to relative using base
+        RelativeFilePath backToRelative = absoluteFile.AsRelative(baseDir);
+
+        // Interface conversions
+        IAbsoluteFilePath iAbsFile = absoluteFile;
+        AbsoluteFilePath concrete = iAbsFile.AsAbsoluteFilePath();
+        ```
+
+*   **Redundant Interface Conversions**: The interface conversion methods like `AsAbsoluteDirectoryPath()` are redundant given the consolidated `As*()` API and direct casting, and should be removed.
 
 ## DEBUGGING
 

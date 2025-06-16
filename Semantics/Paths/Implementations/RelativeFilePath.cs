@@ -65,20 +65,49 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	}
 
 	/// <summary>
-	/// Converts this relative file path to an absolute file path using the specified base directory.
+	/// Converts this relative file path to an absolute file path representation.
+	/// This resolves the relative path against the current working directory.
 	/// </summary>
-	/// <param name="baseDirectory">The base directory to resolve this relative path against.</param>
-	/// <returns>An <see cref="AbsoluteFilePath"/> representing the absolute path.</returns>
-	public AbsoluteFilePath ToAbsolute(AbsoluteDirectoryPath baseDirectory)
+	/// <returns>An <see cref="AbsoluteFilePath"/> representing the absolute path to this file.</returns>
+	public AbsoluteFilePath AsAbsolute()
 	{
-		ArgumentNullException.ThrowIfNull(baseDirectory);
-		string absolutePath = Path.GetFullPath(Path.Combine(baseDirectory.WeakString, WeakString));
+		string absolutePath = Path.GetFullPath(WeakString);
 		return AbsoluteFilePath.Create<AbsoluteFilePath>(absolutePath);
 	}
 
 	/// <summary>
-	/// Converts this interface to its concrete <see cref="RelativeFilePath"/> implementation.
+	/// Explicitly implements IRelativePath.AsAbsolute() to return the base AbsolutePath type.
 	/// </summary>
-	/// <returns>A <see cref="RelativeFilePath"/> instance with the same path value.</returns>
-	public RelativeFilePath AsRelativeFilePath() => this;
+	/// <returns>An <see cref="AbsolutePath"/> representing this absolute path.</returns>
+	AbsolutePath IRelativePath.AsAbsolute()
+	{
+		string absolutePath = Path.GetFullPath(WeakString);
+		return AbsolutePath.Create<AbsolutePath>(absolutePath);
+	}
+
+	/// <summary>
+	/// Converts this relative file path to an absolute file path using the specified base directory.
+	/// </summary>
+	/// <param name="baseDirectory">The base directory to resolve this relative path against.</param>
+	/// <returns>An <see cref="AbsoluteFilePath"/> representing the absolute path to this file.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
+	public AbsoluteFilePath AsAbsolute(AbsoluteDirectoryPath baseDirectory)
+	{
+		ArgumentNullException.ThrowIfNull(baseDirectory);
+		string absolutePath = Path.GetFullPath(WeakString, baseDirectory.WeakString);
+		return AbsoluteFilePath.Create<AbsoluteFilePath>(absolutePath);
+	}
+
+	/// <summary>
+	/// Converts this relative file path to a relative file path using the specified base directory.
+	/// Since this is already a relative path, returns itself.
+	/// </summary>
+	/// <param name="baseDirectory">The base directory (ignored since this is already relative).</param>
+	/// <returns>This <see cref="RelativeFilePath"/> instance.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
+	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
+	{
+		ArgumentNullException.ThrowIfNull(baseDirectory);
+		return this;
+	}
 }

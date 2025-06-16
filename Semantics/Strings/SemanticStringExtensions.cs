@@ -82,4 +82,30 @@ public static class SemanticStringExtensions
 	public static TDerived As<TDerived>(this ReadOnlySpan<char> value)
 		where TDerived : SemanticString<TDerived>
 		=> SemanticString<TDerived>.Create<TDerived>(value: value);
+
+	/// <summary>
+	/// Converts one semantic string type to another semantic string type.
+	/// </summary>
+	/// <typeparam name="TSource">The source semantic string type to convert from.</typeparam>
+	/// <typeparam name="TTarget">The target semantic string type to convert to.</typeparam>
+	/// <param name="value">The semantic string value to convert. Can be <see langword="null"/>.</param>
+	/// <returns>A new instance of the target semantic string type.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+	/// <exception cref="FormatException">
+	/// The underlying string value does not meet the validation criteria defined by the target semantic string type.
+	/// </exception>
+	/// <remarks>
+	/// This extension method provides a fluent syntax for converting between semantic string types:
+	/// <code>
+	/// var emailAddress = "user@example.com".As&lt;EmailAddress&gt;();
+	/// var userName = emailAddress.As&lt;UserName&gt;();
+	/// var filePath = "/path/to/file.txt".As&lt;FilePath&gt;();
+	/// var directoryPath = filePath.As&lt;DirectoryPath&gt;();
+	/// </code>
+	/// The conversion uses the underlying string value and validates it according to the target type's requirements.
+	/// </remarks>
+	public static TTarget As<TSource, TTarget>(this SemanticString<TSource>? value)
+		where TSource : SemanticString<TSource>
+		where TTarget : SemanticString<TTarget>
+		=> SemanticString<TTarget>.Create<TTarget>(value: value?.WeakString);
 }

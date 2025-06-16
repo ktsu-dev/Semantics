@@ -345,6 +345,90 @@ public class SemanticPathInterfaceTests
 	}
 
 	[TestMethod]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1859:Use concrete types when possible for improved performance", Justification = "Test specifically validates interface behavior")]
+	public void AsAbsolute_Method_WorksCorrectly()
+	{
+		// Arrange - Create different path types
+		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>("C:\\test\\file.txt");
+		RelativeFilePath relativeFile = RelativeFilePath.Create<RelativeFilePath>("test\\file.txt");
+		FilePath genericFile = FilePath.Create<FilePath>("file.txt");
+
+		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>("C:\\test\\dir");
+		RelativeDirectoryPath relativeDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>("test\\dir");
+		DirectoryPath genericDir = DirectoryPath.Create<DirectoryPath>("dir");
+
+		// Act & Assert - Test file paths
+		IFilePath iAbsoluteFile = absoluteFile;
+		IFilePath iRelativeFile = relativeFile;
+		IFilePath iGenericFile = genericFile;
+
+		Assert.IsInstanceOfType<AbsoluteFilePath>(iAbsoluteFile.AsAbsolute());
+		Assert.IsInstanceOfType<AbsoluteFilePath>(iRelativeFile.AsAbsolute());
+		Assert.IsInstanceOfType<AbsoluteFilePath>(iGenericFile.AsAbsolute());
+
+		// For absolute paths, AsAbsolute should return the same instance
+		Assert.AreSame(absoluteFile, iAbsoluteFile.AsAbsolute());
+
+		// For relative and generic paths, AsAbsolute should create new absolute instances
+		Assert.IsNotNull(iRelativeFile.AsAbsolute());
+		Assert.IsNotNull(iGenericFile.AsAbsolute());
+
+		// Act & Assert - Test directory paths
+		IDirectoryPath iAbsoluteDir = absoluteDir;
+		IDirectoryPath iRelativeDir = relativeDir;
+		IDirectoryPath iGenericDir = genericDir;
+
+		Assert.IsInstanceOfType<AbsoluteDirectoryPath>(iAbsoluteDir.AsAbsolute());
+		Assert.IsInstanceOfType<AbsoluteDirectoryPath>(iRelativeDir.AsAbsolute());
+		Assert.IsInstanceOfType<AbsoluteDirectoryPath>(iGenericDir.AsAbsolute());
+
+		// For absolute paths, AsAbsolute should return the same instance
+		Assert.AreSame(absoluteDir, iAbsoluteDir.AsAbsolute());
+
+		// For relative and generic paths, AsAbsolute should create new absolute instances
+		Assert.IsNotNull(iRelativeDir.AsAbsolute());
+		Assert.IsNotNull(iGenericDir.AsAbsolute());
+	}
+
+	[TestMethod]
+	public void ConsolidatedPathConversions_API_WorksCorrectly()
+	{
+		// Arrange
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>("C:\\base");
+		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>("C:\\base\\sub\\file.txt");
+		RelativeFilePath relativeFile = RelativeFilePath.Create<RelativeFilePath>("sub\\file.txt");
+
+		// Test the consolidated API
+		// 1. AsAbsolute() - convert to absolute using current working directory
+		AbsoluteFilePath absFromRelative = relativeFile.AsAbsolute();
+		Assert.IsInstanceOfType<AbsoluteFilePath>(absFromRelative);
+
+		// 2. AsAbsolute(baseDirectory) - convert to absolute using specific base
+		AbsoluteFilePath absFromRelativeWithBase = relativeFile.AsAbsolute(baseDir);
+		Assert.IsInstanceOfType<AbsoluteFilePath>(absFromRelativeWithBase);
+		Assert.IsTrue(absFromRelativeWithBase.WeakString.Contains("C:\\base"));
+
+		// 3. AsRelative(baseDirectory) - convert to relative using base
+		RelativeFilePath relFromAbsolute = absoluteFile.AsRelative(baseDir);
+		Assert.IsInstanceOfType<RelativeFilePath>(relFromAbsolute);
+		Assert.AreEqual("sub\\file.txt", relFromAbsolute.WeakString);
+
+		// 4. AsRelative(baseDirectory) on already relative path returns itself
+		RelativeFilePath relFromRelative = relativeFile.AsRelative(baseDir);
+		Assert.AreSame(relativeFile, relFromRelative);
+
+		// Test with directory paths too
+		AbsoluteDirectoryPath absoluteSubDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>("C:\\base\\sub");
+		RelativeDirectoryPath relativeSubDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>("sub");
+
+		RelativeDirectoryPath relDirFromAbsolute = absoluteSubDir.AsRelative(baseDir);
+		Assert.AreEqual("sub", relDirFromAbsolute.WeakString);
+
+		AbsoluteDirectoryPath absDirFromRelative = relativeSubDir.AsAbsolute(baseDir);
+		Assert.IsTrue(absDirFromRelative.WeakString.Contains("C:\\base\\sub"));
+	}
+
+	[TestMethod]
 	public void DirectoryPath_Contents_ReturnsCorrectPathTypes()
 	{
 		// Create a test directory with some files

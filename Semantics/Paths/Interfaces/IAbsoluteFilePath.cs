@@ -10,8 +10,9 @@ namespace ktsu.Semantics;
 public interface IAbsoluteFilePath : IFilePath, IAbsolutePath
 {
 	/// <summary>
-	/// Converts this interface to its concrete <see cref="AbsoluteFilePath"/> implementation.
+	/// Converts this absolute file path to its concrete absolute representation.
+	/// Since this is already an absolute file path, returns itself as an <see cref="AbsoluteFilePath"/>.
 	/// </summary>
-	/// <returns>An <see cref="AbsoluteFilePath"/> instance with the same path value.</returns>
-	public AbsoluteFilePath AsAbsoluteFilePath();
+	/// <returns>An <see cref="AbsoluteFilePath"/> representing this absolute file path.</returns>
+	public new AbsoluteFilePath AsAbsolute();
 }

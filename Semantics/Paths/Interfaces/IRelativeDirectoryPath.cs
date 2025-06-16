@@ -10,8 +10,8 @@ namespace ktsu.Semantics;
 public interface IRelativeDirectoryPath : IDirectoryPath, IRelativePath
 {
 	/// <summary>
-	/// Converts this interface to its concrete <see cref="RelativeDirectoryPath"/> implementation.
+	/// Converts this relative directory path to its absolute representation using the current working directory.
 	/// </summary>
-	/// <returns>A <see cref="RelativeDirectoryPath"/> instance with the same path value.</returns>
-	public RelativeDirectoryPath AsRelativeDirectoryPath();
+	/// <returns>An <see cref="AbsoluteDirectoryPath"/> representing the absolute form of this relative directory path.</returns>
+	public new AbsoluteDirectoryPath AsAbsolute();
 }

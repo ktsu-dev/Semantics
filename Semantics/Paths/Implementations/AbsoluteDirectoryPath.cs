@@ -214,10 +214,30 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	}
 
 	/// <summary>
-	/// Converts this interface to its concrete <see cref="AbsoluteDirectoryPath"/> implementation.
+	/// Converts this directory path to an absolute directory path representation.
+	/// Since this is already an absolute path, returns itself.
 	/// </summary>
-	/// <returns>An <see cref="AbsoluteDirectoryPath"/> instance with the same path value.</returns>
-	public AbsoluteDirectoryPath AsAbsoluteDirectoryPath() => this;
+	/// <returns>An <see cref="AbsoluteDirectoryPath"/> representing the absolute path to this directory.</returns>
+	public AbsoluteDirectoryPath AsAbsolute() => this;
+
+	/// <summary>
+	/// Explicitly implements IAbsolutePath.AsAbsolute() to return the base AbsolutePath type.
+	/// </summary>
+	/// <returns>An <see cref="AbsolutePath"/> representing this absolute path.</returns>
+	AbsolutePath IAbsolutePath.AsAbsolute() => AbsolutePath.Create<AbsolutePath>(WeakString);
+
+	/// <summary>
+	/// Converts this absolute directory path to a relative directory path using the specified base directory.
+	/// </summary>
+	/// <param name="baseDirectory">The base directory to make this path relative to.</param>
+	/// <returns>A <see cref="RelativeDirectoryPath"/> representing the relative path from the base directory.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
+	public RelativeDirectoryPath AsRelative(AbsoluteDirectoryPath baseDirectory)
+	{
+		ArgumentNullException.ThrowIfNull(baseDirectory);
+		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, WeakString);
+		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
+	}
 
 	/// <summary>
 	/// Asynchronously enumerates the files and directories contained in this directory as semantic path types.
