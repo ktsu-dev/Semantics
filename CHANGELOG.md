@@ -1,3 +1,8 @@
+## v1.0.17-pre.1 (prerelease)
+
+Changes since v1.0.16:
+
+- Update copyright notice, package versions, and enhance winget manifest generation script ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.16 (patch)
 
 Changes since v1.0.15:
