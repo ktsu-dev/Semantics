@@ -7,6 +7,7 @@ namespace ktsu.Semantics.Test;
 using System.Collections;
 using System.Globalization;
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 public record MySemanticString : SemanticString<MySemanticString> { }
 

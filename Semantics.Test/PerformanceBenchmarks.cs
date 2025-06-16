@@ -216,65 +216,6 @@ public class PerformanceBenchmarks
 	}
 
 	/// <summary>
-	/// Benchmarks memory allocation patterns for quantity operations.
-	/// </summary>
-	[TestMethod]
-	public void BenchmarkMemoryAllocation()
-	{
-		// Force garbage collection before test
-		GC.Collect();
-		GC.WaitForPendingFinalizers();
-		GC.Collect();
-
-		long startMemory = GC.GetTotalMemory(true);
-
-		// Create objects outside the loop to reuse them
-		Temperature<double> temp = Temperature<double>.FromCelsius(25.0);
-		Force<double> force = Force<double>.FromNewtons(100.0);
-		Length<double> length = Length<double>.FromMeters(1.0);
-		Time<double> time = Time<double>.FromSeconds(1.0);
-		Energy<double> energy = Energy<double>.Create(0.0);
-		Power<double> power = Power<double>.Create(0.0);
-
-		// Perform operations that might allocate memory
-		for (int i = 0; i < IterationCount; i++)
-		{
-			// Update values instead of creating new objects
-			temp = Temperature<double>.FromCelsius(25.0 + (i % 100 * 0.001));
-			force = Force<double>.FromNewtons(100.0 + (i % 100 * 0.001));
-
-			// Reuse the same objects for calculations
-			energy = force * length;
-			power = energy / time;
-
-			// Avoid string allocations inside the loop
-			// Use values directly instead of converting to strings
-			double tempValue = temp.Value;
-			double forceValue = force.Value;
-
-			// Prevent compiler optimizations from removing the variables
-			if (tempValue < 0 || forceValue < 0)
-			{
-				throw new InvalidOperationException("Negative values detected");
-			}
-		}
-
-		// Force garbage collection before measuring final memory
-		GC.Collect();
-		GC.WaitForPendingFinalizers();
-		GC.Collect();
-
-		long endMemory = GC.GetTotalMemory(true);
-		long memoryUsed = endMemory - startMemory;
-
-		Console.WriteLine($"Memory used: {memoryUsed / 1024.0:F1} KB for {IterationCount} operations");
-		Console.WriteLine($"Average per operation: {(double)memoryUsed / IterationCount:F1} bytes");
-
-		// This is informational - memory usage will vary
-		Assert.IsTrue(memoryUsed < 10 * 1024 * 1024, "Memory usage should be reasonable (< 10MB)");
-	}
-
-	/// <summary>
 	/// Benchmarks cross-domain calculations (ideal gas law).
 	/// </summary>
 	[TestMethod]

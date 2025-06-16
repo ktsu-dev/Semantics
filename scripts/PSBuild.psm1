@@ -131,7 +131,10 @@ function Get-BuildConfiguration {
     $APPLICATION_PATTERN = Join-Path $STAGING_PATH "*.zip"
 
     # Set build arguments
-    $BUILD_ARGS = $USE_DOTNET_SCRIPT ? "-maxCpuCount:1" : ""
+    $BUILD_ARGS = ""
+    if ($USE_DOTNET_SCRIPT) {
+        $BUILD_ARGS = "-maxCpuCount:1"
+    }
 
     # Create configuration object with standard format
     $config = [PSCustomObject]@{
@@ -1271,8 +1274,10 @@ function Update-ProjectMetadata {
         "git add $filesToAdd" | Invoke-ExpressionWithLogging | Write-InformationStream -Tags "Update-ProjectMetadata"
 
         Write-Information "Checking for changes to commit..." -Tags "Update-ProjectMetadata"
-        $postStatus = "git status --porcelain" | Invoke-ExpressionWithLogging
-        Write-Information "Git status: $($postStatus ? 'Changes detected' : 'No changes')" -Tags "Update-ProjectMetadata"
+        $postStatus = "git status --porcelain" | Invoke-ExpressionWithLogging -Tags "Update-ProjectMetadata" | Out-String
+        $hasChanges = -not [string]::IsNullOrWhiteSpace($postStatus)
+        $statusMessage = if ($hasChanges) { 'Changes detected' } else { 'No changes' }
+        Write-Information "Git status: $statusMessage" -Tags "Update-ProjectMetadata"
 
         # Get the current commit hash regardless of whether we make changes
         $currentHash = "git rev-parse HEAD" | Invoke-ExpressionWithLogging
@@ -1413,11 +1418,11 @@ function Invoke-DotNetBuild {
 function Invoke-DotNetTest {
     <#
     .SYNOPSIS
-        Runs unit tests.
+        Runs dotnet test with code coverage collection.
     .DESCRIPTION
         Runs dotnet test with code coverage collection.
     .PARAMETER Configuration
-        The build configuration (Debug/Release).
+        The build configuration to use.
     .PARAMETER CoverageOutputPath
         The path to output code coverage results.
     #>
@@ -1427,11 +1432,26 @@ function Invoke-DotNetTest {
         [string]$CoverageOutputPath = "coverage"
     )
 
-    Write-StepHeader "Running Tests" -Tags "Invoke-DotNetTest"
+    Write-StepHeader "Running Tests with Coverage" -Tags "Invoke-DotNetTest"
 
-    # Execute command and stream output directly to console
-    "dotnet test -m:1 --configuration $Configuration -logger:`"Microsoft.Build.Logging.ConsoleLogger,Microsoft.Build;Summary;ForceNoAlign;ShowTimestamp;ShowCommandLine;Verbosity=quiet`" --no-build --collect:`"XPlat Code Coverage`" --results-directory $CoverageOutputPath" | Invoke-ExpressionWithLogging | Write-InformationStream -Tags "Invoke-DotNetTest"
+    # Ensure the TestResults directory exists
+    $testResultsPath = Join-Path $CoverageOutputPath "TestResults"
+    New-Item -Path $testResultsPath -ItemType Directory -Force | Out-Null
+
+    # Run tests with both coverage collection and TRX logging for SonarQube
+    "dotnet test --configuration $Configuration /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=`"coverage.opencover.xml`" --results-directory `"$testResultsPath`" --logger `"trx;LogFileName=TestResults.trx`"" | Invoke-ExpressionWithLogging | Write-InformationStream -Tags "Invoke-DotNetTest"
     Assert-LastExitCode "Tests failed"
+
+    # Find and copy coverage file to expected location for SonarQube
+    $coverageFiles = @(Get-ChildItem -Path . -Recurse -Filter "coverage.opencover.xml" -ErrorAction SilentlyContinue)
+    if ($coverageFiles.Count -gt 0) {
+        $latestCoverageFile = $coverageFiles | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        $targetCoverageFile = Join-Path $CoverageOutputPath "coverage.opencover.xml"
+        Copy-Item -Path $latestCoverageFile.FullName -Destination $targetCoverageFile -Force
+        Write-Information "Coverage file copied to: $targetCoverageFile" -Tags "Invoke-DotNetTest"
+    } else {
+        Write-Information "Warning: No coverage file found" -Tags "Invoke-DotNetTest"
+    }
 }
 
 function Invoke-DotNetPack {

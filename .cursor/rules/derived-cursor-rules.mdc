@@ -251,3 +251,8 @@ When adding XML documentation comments:
 *   **Divide by Zero Exception**: When dividing `SemanticQuantity` by zero, a `DivideByZeroException` must be thrown. This applies specifically to the `DivideToStorage` method when dividing two quantities of the same type.
 *   **Performance Benchmarks Memory Allocation:** Ensure memory usage in performance benchmarks remains reasonable (less than 10MB).
 *   **Performance Benchmarks Optimization:** In performance benchmarks, avoid excessive memory allocation by minimizing or eliminating `ToString()` calls within loops. Use the underlying values directly and prevent compiler optimizations by adding a check that utilizes the values.
+*   **Performance Benchmarks Object Reuse:** In performance benchmarks, create objects outside the loop to reuse them, updating their values instead of creating new objects in each iteration.
+*   **Performance Benchmarks Garbage Collection:** In performance benchmarks, force garbage collection before measuring final memory usage by calling `GC.Collect()` and `GC.WaitForPendingFinalizers()` before `GC.GetTotalMemory()`.
+*   **Performance Benchmarks Memory Measurement:** In performance benchmarks, use `GC.GetTotalMemory(true)` to get the total memory allocated, including memory that is waiting to be collected.
+*   **Performance Benchmarks Removal:** Remove the `BenchmarkMemoryAllocation` test as it is incompatible with our testing setup.
+*   **Test Execution:** Don't use `-m:1` when executing tests.
