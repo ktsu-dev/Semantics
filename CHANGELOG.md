@@ -1,3 +1,8 @@
+## v1.0.18 (patch)
+
+Changes since v1.0.17:
+
+- Enhance path handling and testing for directory and file combinations ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.17 (patch)
 
 Changes since v1.0.16:
@@ -5,7 +10,7 @@ Changes since v1.0.16:
 - Enhance semantic string type conversions and path handling ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.17-pre.1 (prerelease)
 
-Changes since v1.0.16:
+Incremental prerelease update.
 ## v1.0.16 (patch)
 
 Changes since v1.0.15:
