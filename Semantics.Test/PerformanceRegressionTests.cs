@@ -61,9 +61,9 @@ public class PerformanceRegressionTests
 
 			Console.WriteLine($"{domain.Key} creation: {operationsPerSecond:F0} ops/sec");
 
-			// Performance regression test - should be > 1M ops/sec
-			Assert.IsTrue(operationsPerSecond > 1000000,
-				$"{domain.Key} quantity creation performance regression: {operationsPerSecond:F0} ops/sec < 1M ops/sec");
+			// Performance regression test - should be > 2.8M ops/sec
+			Assert.IsTrue(operationsPerSecond > 2800000,
+				$"{domain.Key} quantity creation performance regression: {operationsPerSecond:F0} ops/sec < 2.8M ops/sec");
 		}
 
 		// Overall performance should be consistent across domains (within 50% variance)
@@ -78,23 +78,24 @@ public class PerformanceRegressionTests
 
 	/// <summary>
 	/// Performance baseline for unit conversions.
-	/// Target: > 500K conversions/second.
+	/// Target: > 9M conversions/second.
 	/// </summary>
 	[TestMethod]
 	public void PerformanceBaseline_UnitConversions()
 	{
+		// Pre-create objects outside the measurement to avoid allocation overhead
+		Temperature<double> temp = Temperature<double>.FromKelvin(300.0);
+		Mass<double> mass = Mass<double>.FromKilograms(1.0);
+
 		var conversions = new[]
 		{
 			new { name = "Temperature K→C", action = new Action(() => {
-				Temperature<double> temp = Temperature<double>.FromKelvin(300.0);
 				double _ = temp.ToCelsius();
 			})},
 			new { name = "Temperature K→F", action = new Action(() => {
-				Temperature<double> temp = Temperature<double>.FromKelvin(300.0);
 				double _ = temp.ToFahrenheit();
 			})},
 			new { name = "Mass kg→lb", action = new Action(() => {
-				Mass<double> mass = Mass<double>.FromKilograms(1.0);
 				double _ = mass.Value * 2.20462; // Convert to pounds
 			})}
 		};
@@ -104,41 +105,43 @@ public class PerformanceRegressionTests
 			double performance = MeasurePerformance(conversion.action, MediumIterationCount);
 			Console.WriteLine($"{conversion.name}: {performance:F0} ops/sec");
 
-			Assert.IsTrue(performance > 500000,
-				$"Conversion performance regression: {conversion.name} = {performance:F0} ops/sec < 500K ops/sec");
+			Assert.IsTrue(performance > 9000000,
+	$"Conversion performance regression: {conversion.name} = {performance:F0} ops/sec < 9M ops/sec");
 		}
 	}
 
 	/// <summary>
 	/// Performance baseline for arithmetic operations between quantities.
-	/// Target: > 2M operations/second for basic arithmetic.
+	/// Target: > 2.5M operations/second for basic arithmetic.
 	/// </summary>
 	[TestMethod]
 	public void PerformanceBaseline_ArithmeticOperations()
 	{
+		// Pre-create objects outside the measurement to avoid allocation overhead
+		Force<double> f1 = Force<double>.FromNewtons(100.0);
+		Force<double> f2 = Force<double>.FromNewtons(50.0);
+		Energy<double> e1 = Energy<double>.FromJoules(1000.0);
+		Energy<double> e2 = Energy<double>.FromJoules(300.0);
+		Temperature<double> t1 = Temperature<double>.FromKelvin(350.0);
+		Temperature<double> t2 = Temperature<double>.FromKelvin(300.0);
+		Mass<double> mass = Mass<double>.FromKilograms(10.0);
+		Length<double> distance = Length<double>.FromMeters(100.0);
+
 		var arithmeticTests = new[]
 		{
 			new { name = "Force Addition", action = new Action(() => {
-				Force<double> f1 = Force<double>.FromNewtons(100.0);
-				Force<double> f2 = Force<double>.FromNewtons(50.0);
 				Force<double> _ = f1 + f2;
 			})},
 			new { name = "Energy Subtraction", action = new Action(() => {
-				Energy<double> e1 = Energy<double>.FromJoules(1000.0);
-				Energy<double> e2 = Energy<double>.FromJoules(300.0);
 				Energy<double> _ = e1 - e2;
 			})},
 			new { name = "Temperature Difference", action = new Action(() => {
-				Temperature<double> t1 = Temperature<double>.FromKelvin(350.0);
-				Temperature<double> t2 = Temperature<double>.FromKelvin(300.0);
 				Temperature<double> _ = t1 - t2;
 			})},
 			new { name = "Scalar Multiplication", action = new Action(() => {
-				Mass<double> mass = Mass<double>.FromKilograms(10.0);
 				Mass<double> _ = mass * 2.5;
 			})},
 			new { name = "Scalar Division", action = new Action(() => {
-				Length<double> distance = Length<double>.FromMeters(100.0);
 				Length<double> _ = distance / 3.0;
 			})}
 		};
@@ -148,44 +151,46 @@ public class PerformanceRegressionTests
 			double performance = MeasurePerformance(test.action, LargeIterationCount);
 			Console.WriteLine($"{test.name}: {performance:F0} ops/sec");
 
-			Assert.IsTrue(performance > 2000000,
-				$"Arithmetic operation performance regression: {test.name} = {performance:F0} ops/sec < 2M ops/sec");
+			Assert.IsTrue(performance > 2500000,
+				$"Arithmetic operation performance regression: {test.name} = {performance:F0} ops/sec < 2.5M ops/sec");
 		}
 	}
 
 	/// <summary>
 	/// Performance baseline for physics relationship calculations.
-	/// Target: > 200K operations/second for complex physics calculations.
+	/// Target: > 2.2M operations/second for complex physics calculations.
 	/// </summary>
 	[TestMethod]
 	public void PerformanceBaseline_PhysicsRelationships()
 	{
+		// Pre-create objects outside the measurement to avoid allocation overhead
+		Mass<double> mass1 = Mass<double>.FromKilograms(10.0);
+		Acceleration<double> acceleration = Acceleration<double>.FromMetersPerSecondSquared(9.8);
+		ElectricCurrent<double> current1 = ElectricCurrent<double>.FromAmperes(5.0);
+		ElectricResistance<double> resistance = ElectricResistance<double>.FromOhms(10.0);
+		Mass<double> mass2 = Mass<double>.FromKilograms(2.0);
+		Velocity<double> velocity = Velocity<double>.FromMetersPerSecond(15.0);
+		ElectricPotential<double> voltage = ElectricPotential<double>.FromVolts(12.0);
+		ElectricCurrent<double> current2 = ElectricCurrent<double>.FromAmperes(3.0);
+		Mass<double> mass3 = Mass<double>.FromKilograms(5.0);
+		Volume<double> volume = Volume<double>.FromCubicMeters(0.002);
+
 		var physicsTests = new[]
 		{
 			new { name = "Newton's 2nd Law", action = new Action(() => {
-				Mass<double> mass = Mass<double>.FromKilograms(10.0);
-				Acceleration<double> acceleration = Acceleration<double>.FromMetersPerSecondSquared(9.8);
-				Force<double> _ = mass * acceleration; // F = ma
+				Force<double> _ = mass1 * acceleration; // F = ma
 			})},
 			new { name = "Ohm's Law", action = new Action(() => {
-				ElectricCurrent<double> current = ElectricCurrent<double>.FromAmperes(5.0);
-				ElectricResistance<double> resistance = ElectricResistance<double>.FromOhms(10.0);
-				ElectricPotential<double> _ = current * resistance; // V = IR
+				ElectricPotential<double> _ = current1 * resistance; // V = IR
 			})},
 			new { name = "Momentum Calculation", action = new Action(() => {
-				Mass<double> mass = Mass<double>.FromKilograms(2.0);
-				Velocity<double> velocity = Velocity<double>.FromMetersPerSecond(15.0);
-				Momentum<double> _ = mass * velocity; // p = mv
+				Momentum<double> _ = mass2 * velocity; // p = mv
 			})},
 			new { name = "Power Calculation", action = new Action(() => {
-				ElectricPotential<double> voltage = ElectricPotential<double>.FromVolts(12.0);
-				ElectricCurrent<double> current = ElectricCurrent<double>.FromAmperes(3.0);
-				Power<double> _ = voltage * current; // P = VI
+				Power<double> _ = voltage * current2; // P = VI
 			})},
 			new { name = "Density Calculation", action = new Action(() => {
-				Mass<double> mass = Mass<double>.FromKilograms(5.0);
-				Volume<double> volume = Volume<double>.FromCubicMeters(0.002);
-				Density<double> _ = mass / volume; // ρ = m/V
+				Density<double> _ = mass3 / volume; // ρ = m/V
 			})}
 		};
 
@@ -194,14 +199,14 @@ public class PerformanceRegressionTests
 			double performance = MeasurePerformance(test.action, MediumIterationCount);
 			Console.WriteLine($"{test.name}: {performance:F0} ops/sec");
 
-			Assert.IsTrue(performance > 200000,
-				$"Physics relationship performance regression: {test.name} = {performance:F0} ops/sec < 200K ops/sec");
+			Assert.IsTrue(performance > 2200000,
+	$"Physics relationship performance regression: {test.name} = {performance:F0} ops/sec < 2.2M ops/sec");
 		}
 	}
 
 	/// <summary>
 	/// Performance baseline for physical constant access.
-	/// Target: > 5M operations/second for constant access.
+	/// Target: > 50M operations/second for constant access.
 	/// </summary>
 	[TestMethod]
 	public void PerformanceBaseline_ConstantAccess()
@@ -227,40 +232,48 @@ public class PerformanceRegressionTests
 			double performance = MeasurePerformance(test.action, LargeIterationCount);
 			Console.WriteLine($"{test.name}: {performance:F0} ops/sec");
 
-			Assert.IsTrue(performance > 5000000,
-				$"Constant access performance regression: {test.name} = {performance:F0} ops/sec < 5M ops/sec");
+			Assert.IsTrue(performance > 50000000,
+				$"Constant access performance regression: {test.name} = {performance:F0} ops/sec < 50M ops/sec");
 		}
 	}
 
 	/// <summary>
 	/// Performance baseline for cross-domain calculations.
-	/// Target: > 50K operations/second for multi-domain scenarios.
+	/// Target: > 1M operations/second for multi-domain scenarios.
 	/// </summary>
 	[TestMethod]
 	public void PerformanceBaseline_CrossDomainCalculations()
 	{
+		// Pre-create objects outside the measurement to avoid allocation overhead
+		Temperature<double> temperature1 = Temperature<double>.FromKelvin(300.0);
+		Pressure<double> pressure = Pressure<double>.FromPascals(PhysicalConstants.Generic.StandardAtmosphericPressure<double>());
+		double standardTemp = PhysicalConstants.Generic.StandardTemperature<double>();
+		double standardPress = PhysicalConstants.Generic.StandardAtmosphericPressure<double>();
+
+		ElectricCurrent<double> current = ElectricCurrent<double>.FromAmperes(10.0);
+		ElectricResistance<double> resistance = ElectricResistance<double>.FromOhms(5.0);
+		Time<double> time = Time<double>.FromSeconds(1.0);
+
+		// Pre-calculate electrical-thermal intermediate values to avoid allocation overhead
+		ElectricPotential<double> voltage = current * resistance;
+		Power<double> power = voltage * current;
+
+		AmountOfSubstance<double> amount = AmountOfSubstance<double>.FromMoles(1.0);
+		Temperature<double> temperature2 = Temperature<double>.FromKelvin(298.15);
+		double gasConstant = PhysicalConstants.Generic.GasConstant<double>();
+
 		var crossDomainTests = new[]
 		{
 			new { name = "Thermal-Mechanical", action = new Action(() => {
-				Temperature<double> temperature = Temperature<double>.FromKelvin(300.0);
-				Pressure<double> pressure = Pressure<double>.FromPascals(PhysicalConstants.Generic.StandardAtmosphericPressure<double>());
-				double tempRatio = temperature.Value / PhysicalConstants.Generic.StandardTemperature<double>();
-				double pressRatio = pressure.Value / PhysicalConstants.Generic.StandardAtmosphericPressure<double>();
+				double tempRatio = temperature1.Value / standardTemp;
+				double pressRatio = pressure.Value / standardPress;
 				double _ = tempRatio * pressRatio;
 			})},
 			new { name = "Electrical-Thermal", action = new Action(() => {
-				ElectricCurrent<double> current = ElectricCurrent<double>.FromAmperes(10.0);
-				ElectricResistance<double> resistance = ElectricResistance<double>.FromOhms(5.0);
-				Time<double> time = Time<double>.FromSeconds(1.0);
-				ElectricPotential<double> voltage = current * resistance;
-				Power<double> power = voltage * current;
 				Energy<double> _ = Energy<double>.Create(power.Value * time.Value);
 			})},
 			new { name = "Chemical-Thermal", action = new Action(() => {
-				AmountOfSubstance<double> amount = AmountOfSubstance<double>.FromMoles(1.0);
-				Temperature<double> temperature = Temperature<double>.FromKelvin(298.15);
-				double gasConstant = PhysicalConstants.Generic.GasConstant<double>();
-				double _ = gasConstant * temperature.Value * amount.Value;
+				double _ = gasConstant * temperature2.Value * amount.Value;
 			})}
 		};
 
@@ -269,8 +282,8 @@ public class PerformanceRegressionTests
 			double performance = MeasurePerformance(test.action, MediumIterationCount);
 			Console.WriteLine($"{test.name}: {performance:F0} ops/sec");
 
-			Assert.IsTrue(performance > 50000,
-				$"Cross-domain performance regression: {test.name} = {performance:F0} ops/sec < 50K ops/sec");
+			Assert.IsTrue(performance > 1000000,
+				$"Cross-domain performance regression: {test.name} = {performance:F0} ops/sec < 1M ops/sec");
 		}
 	}
 

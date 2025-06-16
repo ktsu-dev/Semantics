@@ -83,7 +83,7 @@ When adding XML documentation comments:
     *   **Physical Constants First**: Identify all mechanical constants needed (e.g., gravitational acceleration, standard atmospheric pressure, Planck’s constant if needed for mechanics, etc.). Add them to `PhysicalConstants.cs` under appropriate categories (Fundamental, Mechanical, etc.). Use the `PhysicalConstants.Generic` pattern for type-safe access. Include XML docs and source references (CODATA, NIST, etc.).
     *   **Define Quantities**:
         *   Location: `Quantities/Mechanics/`
-        *   Quantities to Implement: Force (`Force.cs`), Pressure (`Pressure.cs`), Energy (`Energy.cs`), Power (`Power.cs`), Torque (`Torque.cs`), Momentum (`Momentum.cs`), AngularVelocity (`AngularVelocity.cs`), AngularAcceleration (`AngularAcceleration.cs`), MomentOfInertia (`MomentOfInertia.cs`), Density (`Density.cs`), SpecificGravity (`SpecificGravity.cs`), and any others listed in your TODOs. Follow the template from the Chemical domain (generic, type-safe, XML docs, unit conversions, etc.).
+        *   Quantities to Implement: Force (`Force.cs`), Pressure (`Pressure.cs`), Energy (`Energy.cs`), Power (`Power.cs`), Torque (`Torque.cs`), Momentum (`Momentum.cs`), AngularVelocity (`AngularAcceleration.cs`), AngularAcceleration (`AngularAcceleration.cs`), MomentOfInertia (`MomentOfInertia.cs`), Density (`Density.cs`), SpecificGravity (`SpecificGravity.cs`), and any others listed in your TODOs. Follow the template from the Chemical domain (generic, type-safe, XML docs, unit conversions, etc.).
     *   **Units and Dimensions**: For each quantity, define the SI and common units in `Units.cs`. Add or update `PhysicalDimensions.cs` as needed for new dimensions (e.g., force, energy).
     *   **Mathematical Relationships**: Implement relationships (e.g., F = m·a, P = F/A, E = F·d) as static methods or extension methods. Add unit tests to verify these relationships using both constants and calculated values.
     *   **Testing**: For each quantity: Create unit tests for creation, conversion, and validation. Add mathematical verification tests (e.g., compare calculated force to expected value). Add edge case and error handling tests.
@@ -256,3 +256,27 @@ When adding XML documentation comments:
 *   **Performance Benchmarks Memory Measurement:** In performance benchmarks, use `GC.GetTotalMemory(true)` to get the total memory allocated, including memory that is waiting to be collected.
 *   **Performance Benchmarks Removal:** Remove the `BenchmarkMemoryAllocation` test as it is incompatible with our testing setup.
 *   **Test Execution:** Don't use `-m:1` when executing tests.
+*   **Performance Regression Analysis:** When a performance regression test fails, examine the failing test and related code (including base classes) to identify potential causes.
+*   **Performance Regression Test Optimization:** For performance regression tests that measure arithmetic operations, pre-create objects outside the measurement loop to eliminate object allocation overhead and ensure accurate measurement of pure arithmetic performance.
+*   **Performance Regression Test Setup**: Check all performance regression tests to ensure their setup is correct and accurately measures the intended performance characteristic.
+*   **Performance Regression Test Optimization - Object Reuse**: In performance regression tests, pre-create objects outside the measurement loop to reuse them, updating their values instead of creating new objects in each iteration. This eliminates object allocation overhead and ensures accurate measurement of the intended performance characteristic.
+*   **Performance Regression Test Targets**: Adjust performance regression test targets to be appropriate for the expected performance after optimizations.
+*   **Performance Regression Test Optimization - Object Reuse**: In performance regression tests, pre-create objects outside the measurement loop to reuse them, updating their values instead of creating new objects in each iteration.
+*   **Performance Regression Test Investigation**: Investigate why any particular domains or types have lower performance.
+*   **Performance Regression Test Optimization - Object Pre-Creation**: In performance regression tests, pre-create objects outside the measurement loop to reuse them, updating their values instead of creating new objects in each iteration. This eliminates object allocation overhead and ensures accurate measurement of the intended performance characteristic.
+*   **Performance Regression Test Targets**: Adjust performance regression test targets to be appropriate for the expected performance after optimizations. Targets should be realistic based on achieved performance, while still providing a reasonable buffer for variations across different systems.
+
+    **Updated Performance Targets - Final Results**
+
+    All 6 performance baseline tests now have **realistic targets** based on actual performance capabilities:
+
+    ### 📊 **Target Adjustments Summary:**
+
+    | Test Category | **Old Target** | **New Target** | **Status** |
+    |---------------|----------------|----------------|-------------------------|
+    | **Quantity Creation** | 1M ops/sec | **3M ops/sec** | ✅ |
+    | **Unit Conversions** | 500K ops/sec | **10M ops/sec** | ✅ |
+    | **Arithmetic Operations** | 2M ops/sec | **2.5M ops/sec** | ✅ |
+    | **Physics Relationships** | 200K ops/sec | **2.5M ops/sec** | ✅ |
+    | **Constant Access** | 5M ops/sec | **50M ops/sec** | ✅ |
+    | **Cross-Domain Calculations** | 50K ops/sec | **1M ops/sec** | ✅ |

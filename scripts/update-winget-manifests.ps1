@@ -63,6 +63,75 @@ $ErrorActionPreference = "Stop"
 
 # ----- Helper Functions -----
 
+function Test-IsLibraryOnlyProject {
+    param (
+        [string]$RootDir,
+        [hashtable]$ProjectInfo
+    )
+
+    $hasApplications = $false
+    $hasLibraries = $false
+
+    # Check for C# projects
+    if ($ProjectInfo.type -eq "csharp") {
+        $csprojFiles = Get-ChildItem -Path $RootDir -Filter "*.csproj" -Recurse -File -Depth 3
+
+        foreach ($csprojFile in $csprojFiles) {
+            $csprojContent = Get-Content -Path $csprojFile.FullName -Raw
+
+            # Check if this specific project is a library
+            if ($csprojContent -match "<OutputType>\s*Library\s*</OutputType>" -or
+                $csprojContent -match "<PackageId>" -or
+                $csprojContent -match "<GeneratePackageOnBuild>\s*true\s*</GeneratePackageOnBuild>" -or
+                $csprojContent -match "<IsPackable>\s*true\s*</IsPackable>") {
+                $hasLibraries = $true
+            }
+            # Check if this specific project is an application
+            elseif ($csprojContent -match "<OutputType>\s*Exe\s*</OutputType>" -or
+                    $csprojContent -match "<OutputType>\s*WinExe\s*</OutputType>" -or
+                    (-not ($csprojContent -match "<OutputType>")) -and
+                    (-not ($csprojContent -match "<PackageId>")) -and
+                    (-not ($csprojContent -match "<GeneratePackageOnBuild>\s*true\s*</GeneratePackageOnBuild>"))) {
+                $hasApplications = $true
+            }
+        }
+    }
+
+    # Check for Node.js library patterns
+    if ($ProjectInfo.type -eq "node") {
+        $packageJsonPath = Join-Path -Path $RootDir -ChildPath "package.json"
+        if (Test-Path $packageJsonPath) {
+            $packageJson = Get-Content -Path $packageJsonPath -Raw | ConvertFrom-Json
+            # Check if it's a library (no bin field, or private: true)
+            if (-not $packageJson.bin -or $packageJson.private -eq $true) {
+                $hasLibraries = $true
+            } else {
+                $hasApplications = $true
+            }
+        }
+    }
+
+    # Check for standalone NuGet package indicators (separate from project files)
+    $nuspecFiles = Get-ChildItem -Path $RootDir -Filter "*.nuspec" -Recurse -File -Depth 2
+    if ($nuspecFiles.Count -gt 0) {
+        $hasLibraries = $true
+    }
+
+    # Only return true if we have libraries AND no applications
+    return $hasLibraries -and -not $hasApplications
+}
+
+function Exit-GracefullyForLibrary {
+    param (
+        [string]$Message = "Detected library project - no executable artifacts expected."
+    )
+
+    Write-Host $Message -ForegroundColor Yellow
+    Write-Host "Skipping winget manifest generation as this appears to be a library/NuGet package." -ForegroundColor Yellow
+    Write-Host "Winget manifests are intended for executable applications, not libraries." -ForegroundColor Cyan
+    exit 0
+}
+
 function Get-MSBuildProperties {
     param (
         [string]$ProjectPath
@@ -649,6 +718,11 @@ $repo = $ownerRepo[1]
 $projectInfo = Find-ProjectInfo -RootDir $rootDir
 Write-Host "Detected project: $($projectInfo.name) (Type: $($projectInfo.type))" -ForegroundColor Green
 
+# Early check for library-only projects to avoid unnecessary processing
+if (Test-IsLibraryOnlyProject -RootDir $rootDir -ProjectInfo $projectInfo) {
+    Exit-GracefullyForLibrary -Message "Detected library-only solution with no applications."
+}
+
 # Check for explicit version provided
 if ($projectInfo.version -and -not $Version) {
     $Version = $projectInfo.version
@@ -698,6 +772,11 @@ try {
     Write-Host "Found release: $($release.name)" -ForegroundColor Green
     $releaseDate = [DateTime]::Parse($release.published_at).ToString("yyyy-MM-dd")
 } catch {
+    # Check if this might be a library-only project before failing
+    if (Test-IsLibraryOnlyProject -RootDir $rootDir -ProjectInfo $projectInfo) {
+        Exit-GracefullyForLibrary -Message "Failed to fetch release information, but detected library-only solution."
+    }
+
     Write-Error "Failed to fetch release information: $_"
     exit 1
 }
@@ -753,8 +832,13 @@ foreach ($arch in $architectures) {
 
 # Check if we have at least one hash
 if ($sha256Hashes.Count -eq 0) {
-    Write-Error "Could not obtain any SHA256 hashes. Please check that the artifact name pattern matches your release files."
-    exit 1
+    # Check if this appears to be a library-only project (no executable artifacts)
+    if (Test-IsLibraryOnlyProject -RootDir $rootDir -ProjectInfo $projectInfo) {
+        Exit-GracefullyForLibrary
+    } else {
+        Write-Error "Could not obtain any SHA256 hashes. Please check that the artifact name pattern matches your release files."
+        exit 1
+    }
 }
 
 # Update version manifest
@@ -897,6 +981,11 @@ try {
         Write-Host "Manifest files uploaded to release." -ForegroundColor Green
     }
 } catch {
+    # Check if upload failure might be due to missing release artifacts for library-only projects
+    if ($_.Exception.Message -match "not found|404" -and (Test-IsLibraryOnlyProject -RootDir $rootDir -ProjectInfo $projectInfo)) {
+        Exit-GracefullyForLibrary -Message "Release upload failed, likely due to library-only solution having no executable artifacts."
+    }
+
     Write-Host "GitHub CLI not available or error uploading files: $_" -ForegroundColor Yellow
     Write-Host "Manifest files were created but not uploaded to the release." -ForegroundColor Yellow
 }
