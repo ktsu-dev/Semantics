@@ -1,6 +1,8 @@
-## v1.0.14
+## v1.0.15 (patch)
 
-No significant changes detected since v1.0.14.
+Changes since v1.0.14:
+
+- Remove BenchmarkMemoryAllocation Test Due to Incompatibility ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.14 (patch)
 
 Changes since v1.0.13:
