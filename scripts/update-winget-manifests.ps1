@@ -83,15 +83,21 @@ function Test-IsLibraryOnlyProject {
             if ($csprojContent -match "<OutputType>\s*Library\s*</OutputType>" -or
                 $csprojContent -match "<PackageId>" -or
                 $csprojContent -match "<GeneratePackageOnBuild>\s*true\s*</GeneratePackageOnBuild>" -or
-                $csprojContent -match "<IsPackable>\s*true\s*</IsPackable>") {
+                $csprojContent -match "<IsPackable>\s*true\s*</IsPackable>" -or
+                $csprojContent -match 'Sdk="[^"]*\.Lib"' -or
+                $csprojContent -match 'Sdk="[^"]*Library[^"]*"') {
                 $hasLibraries = $true
             }
             # Check if this specific project is an application
-            elseif ($csprojContent -match "<OutputType>\s*Exe\s*</OutputType>" -or
+            elseif (($csprojContent -match "<OutputType>\s*Exe\s*</OutputType>" -or
                     $csprojContent -match "<OutputType>\s*WinExe\s*</OutputType>" -or
-                    (-not ($csprojContent -match "<OutputType>")) -and
+                    ((-not ($csprojContent -match "<OutputType>")) -and
                     (-not ($csprojContent -match "<PackageId>")) -and
-                    (-not ($csprojContent -match "<GeneratePackageOnBuild>\s*true\s*</GeneratePackageOnBuild>"))) {
+                    (-not ($csprojContent -match "<GeneratePackageOnBuild>\s*true\s*</GeneratePackageOnBuild>")))) -and
+                    (-not ($csprojContent -match 'Sdk="[^"]*\.Lib"')) -and
+                    (-not ($csprojContent -match 'Sdk="[^"]*\.Test"')) -and
+                    (-not ($csprojContent -match 'Sdk="[^"]*Library[^"]*"')) -and
+                    (-not ($csprojContent -match 'Sdk="[^"]*Test[^"]*"'))) {
                 $hasApplications = $true
             }
         }
