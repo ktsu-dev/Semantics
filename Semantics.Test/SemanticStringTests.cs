@@ -1058,7 +1058,7 @@ public class SemanticStringAdditionalTests
 	{
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello");
 
-		Assert.ThrowsException<ArgumentNullException>(() => semantic.Count(null!));
+		Assert.ThrowsExactly<ArgumentNullException>(() => semantic.Count(null!));
 	}
 	private static readonly string[] expectedSplitParts = ["a", "b", "c"];
 
@@ -1157,7 +1157,7 @@ public class SemanticStringAdditionalTests
 	public void MakeCanonical_WithNullInput_HandlesGracefully()
 	{
 		// This tests the null handling in MakeCanonical override
-		Assert.ThrowsException<ArgumentNullException>(() =>
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			SemanticString<CanonicalTestSemanticString>.Create<CanonicalTestSemanticString>((string?)null));
 	}
 
@@ -1168,7 +1168,7 @@ public class SemanticStringAdditionalTests
 		Assert.IsTrue(validSemantic.IsValid());
 
 		// Testing that invalid values throw during creation
-		Assert.ThrowsException<ArgumentException>(() =>
+		Assert.ThrowsExactly<ArgumentException>(() =>
 			SemanticString<ValidationTestSemanticString>.Create<ValidationTestSemanticString>("INVALID test"));
 	}
 
@@ -1191,7 +1191,7 @@ public class SemanticStringAdditionalTests
 		ValidationTestSemanticString semantic = SemanticString<ValidationTestSemanticString>.Create<ValidationTestSemanticString>("VALID test");
 
 		// Adding a prefix that makes the result invalid should throw
-		Assert.ThrowsException<ArgumentException>(() => semantic.WithPrefix("INVALID "));
+		Assert.ThrowsExactly<ArgumentException>(() => semantic.WithPrefix("INVALID "));
 	}
 
 	[TestMethod]

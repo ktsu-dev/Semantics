@@ -156,7 +156,7 @@ public static class AdvancedErrorScenarioTests
 			Assert.AreEqual("Test", testString.WeakString);
 
 			// Should fail with different case
-			Assert.ThrowsException<ArgumentException>(() =>
+			Assert.ThrowsExactly<ArgumentException>(() =>
 				SemanticString<CaseTestString>.Create<CaseTestString>("test"));
 		}
 
