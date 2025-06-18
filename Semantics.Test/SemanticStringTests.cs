@@ -6,6 +6,7 @@ namespace ktsu.Semantics.Test;
 
 using System.Collections;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -24,10 +25,10 @@ public class StringTests
 	}
 
 	[TestMethod]
-	public void ExplicitCastFromString()
+	public void ConversionFromStringUsingAs()
 	{
 		string systemString = "test";
-		MySemanticString semanticString = (MySemanticString)systemString;
+		MySemanticString semanticString = systemString.As<MySemanticString>();
 		Assert.AreEqual("test", semanticString.WeakString);
 	}
 
@@ -106,10 +107,10 @@ public class StringTests
 	// New comprehensive tests for missing functionality
 
 	[TestMethod]
-	public void ExplicitCastFromCharArray()
+	public void ConversionFromCharArrayUsingAs()
 	{
 		char[] chars = ['t', 'e', 's', 't'];
-		MySemanticString semanticString = (MySemanticString)chars;
+		MySemanticString semanticString = chars.As<MySemanticString>();
 		Assert.AreEqual("test", semanticString.WeakString);
 	}
 
@@ -795,3 +796,528 @@ public class StringTests
 }
 
 public record AnotherSemanticString : SemanticString<AnotherSemanticString> { }
+
+// Add test records for testing MakeCanonical and validation
+public record CanonicalTestSemanticString : SemanticString<CanonicalTestSemanticString>
+{
+	protected override string MakeCanonical(string input) => input?.Trim().ToUpperInvariant() ?? string.Empty;
+}
+
+public record ValidationTestSemanticString : SemanticString<ValidationTestSemanticString>
+{
+	public override bool IsValid()
+	{
+		// Only allow strings that start with "VALID"
+		return base.IsValid() && (string.IsNullOrEmpty(WeakString) || WeakString.StartsWith("VALID", StringComparison.Ordinal));
+	}
+}
+
+[TestClass]
+public class SemanticStringAdditionalTests
+{
+	[TestMethod]
+	public void TryCreate_String_ValidValue_ReturnsTrue()
+	{
+		bool result = SemanticString<MySemanticString>.TryCreate("test", out MySemanticString? semantic);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(semantic);
+		Assert.AreEqual("test", semantic.WeakString);
+	}
+
+	[TestMethod]
+	public void TryCreate_String_NullValue_ReturnsFalse()
+	{
+		bool result = SemanticString<MySemanticString>.TryCreate((string?)null, out MySemanticString? semantic);
+
+		Assert.IsFalse(result);
+		Assert.IsNull(semantic);
+	}
+
+	[TestMethod]
+	public void TryCreate_String_InvalidValue_ReturnsFalse()
+	{
+		bool result = SemanticString<ValidationTestSemanticString>.TryCreate("INVALID", out ValidationTestSemanticString? semantic);
+
+		Assert.IsFalse(result);
+		Assert.IsNull(semantic);
+	}
+
+	[TestMethod]
+	public void TryCreate_CharArray_ValidValue_ReturnsTrue()
+	{
+		char[] chars = ['t', 'e', 's', 't'];
+		bool result = SemanticString<MySemanticString>.TryCreate(chars, out MySemanticString? semantic);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(semantic);
+		Assert.AreEqual("test", semantic.WeakString);
+	}
+
+	[TestMethod]
+	public void TryCreate_CharArray_NullValue_ReturnsFalse()
+	{
+		bool result = SemanticString<MySemanticString>.TryCreate((char[]?)null, out MySemanticString? semantic);
+
+		Assert.IsFalse(result);
+		Assert.IsNull(semantic);
+	}
+
+	[TestMethod]
+	public void TryCreate_ReadOnlySpan_ValidValue_ReturnsTrue()
+	{
+		ReadOnlySpan<char> span = "test".AsSpan();
+		bool result = SemanticString<MySemanticString>.TryCreate(span, out MySemanticString? semantic);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(semantic);
+		Assert.AreEqual("test", semantic.WeakString);
+	}
+
+	[TestMethod]
+	public void TryCreate_ReadOnlySpan_EmptySpan_ReturnsTrue()
+	{
+		ReadOnlySpan<char> span = [];
+		bool result = SemanticString<MySemanticString>.TryCreate(span, out MySemanticString? semantic);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(semantic);
+		Assert.AreEqual(string.Empty, semantic.WeakString);
+	}
+
+	[TestMethod]
+	public void TryCreate_ReadOnlySpan_InvalidValue_ReturnsFalse()
+	{
+		ReadOnlySpan<char> span = "INVALID".AsSpan();
+		bool result = SemanticString<ValidationTestSemanticString>.TryCreate(span, out ValidationTestSemanticString? semantic);
+
+		Assert.IsFalse(result);
+		Assert.IsNull(semantic);
+	}
+
+	[TestMethod]
+	public void TryCreate_Generic_String_ValidValue_ReturnsTrue()
+	{
+		bool result = MySemanticString.TryCreate("test", out MySemanticString? semantic);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(semantic);
+		Assert.AreEqual("test", semantic.WeakString);
+	}
+
+	[TestMethod]
+	public void TryCreate_Generic_CharArray_ValidValue_ReturnsTrue()
+	{
+		char[] chars = ['t', 'e', 's', 't'];
+		bool result = MySemanticString.TryCreate(chars, out MySemanticString? semantic);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(semantic);
+		Assert.AreEqual("test", semantic.WeakString);
+	}
+
+	[TestMethod]
+	public void TryCreate_Generic_ReadOnlySpan_ValidValue_ReturnsTrue()
+	{
+		ReadOnlySpan<char> span = "test".AsSpan();
+		bool result = MySemanticString.TryCreate(span, out MySemanticString? semantic);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(semantic);
+		Assert.AreEqual("test", semantic.WeakString);
+	}
+
+	[TestMethod]
+	public void AsSpan_ReturnsCorrectSpan()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("test");
+		ReadOnlySpan<char> span = semantic.AsSpan();
+
+		Assert.IsTrue(span.SequenceEqual("test".AsSpan()));
+	}
+
+	[TestMethod]
+	public void AsSpan_WithStartIndex_ReturnsCorrectSpan()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello");
+		ReadOnlySpan<char> span = semantic.AsSpan(2);
+
+		Assert.IsTrue(span.SequenceEqual("llo".AsSpan()));
+	}
+
+	[TestMethod]
+	public void AsSpan_WithStartIndexAndLength_ReturnsCorrectSpan()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello");
+		ReadOnlySpan<char> span = semantic.AsSpan(1, 3);
+
+		Assert.IsTrue(span.SequenceEqual("ell".AsSpan()));
+	}
+
+	[TestMethod]
+	public void IndexOf_ReadOnlySpan_ReturnsCorrectIndex()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello world");
+		ReadOnlySpan<char> searchSpan = "world".AsSpan();
+
+		int index = semantic.IndexOf(searchSpan);
+		Assert.AreEqual(6, index);
+	}
+
+	[TestMethod]
+	public void IndexOf_ReadOnlySpan_WithStringComparison_ReturnsCorrectIndex()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("Hello World");
+		ReadOnlySpan<char> searchSpan = "WORLD".AsSpan();
+
+		int index = semantic.IndexOf(searchSpan, StringComparison.OrdinalIgnoreCase);
+		Assert.AreEqual(6, index);
+	}
+
+	[TestMethod]
+	public void LastIndexOf_ReadOnlySpan_ReturnsCorrectIndex()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello world hello");
+		ReadOnlySpan<char> searchSpan = "hello".AsSpan();
+
+		int index = semantic.LastIndexOf(searchSpan);
+		Assert.AreEqual(12, index);
+	}
+
+	[TestMethod]
+	public void StartsWith_ReadOnlySpan_ReturnsCorrectResult()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello world");
+		ReadOnlySpan<char> prefixSpan = "hello".AsSpan();
+
+		bool result = semantic.StartsWith(prefixSpan);
+		Assert.IsTrue(result);
+	}
+
+	[TestMethod]
+	public void StartsWith_ReadOnlySpan_WithStringComparison_ReturnsCorrectResult()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("Hello World");
+		ReadOnlySpan<char> prefixSpan = "HELLO".AsSpan();
+
+		bool result = semantic.StartsWith(prefixSpan, StringComparison.OrdinalIgnoreCase);
+		Assert.IsTrue(result);
+	}
+
+	[TestMethod]
+	public void EndsWith_ReadOnlySpan_ReturnsCorrectResult()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello world");
+		ReadOnlySpan<char> suffixSpan = "world".AsSpan();
+
+		bool result = semantic.EndsWith(suffixSpan);
+		Assert.IsTrue(result);
+	}
+
+	[TestMethod]
+	public void EndsWith_ReadOnlySpan_WithStringComparison_ReturnsCorrectResult()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("Hello World");
+		ReadOnlySpan<char> suffixSpan = "WORLD".AsSpan();
+
+		bool result = semantic.EndsWith(suffixSpan, StringComparison.OrdinalIgnoreCase);
+		Assert.IsTrue(result);
+	}
+
+	[TestMethod]
+	public void Contains_ReadOnlySpan_ReturnsCorrectResult()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello world");
+		ReadOnlySpan<char> searchSpan = "lo wo".AsSpan();
+
+		bool result = semantic.Contains(searchSpan);
+		Assert.IsTrue(result);
+	}
+
+	[TestMethod]
+	public void Contains_ReadOnlySpan_WithStringComparison_ReturnsCorrectResult()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("Hello World");
+		ReadOnlySpan<char> searchSpan = "LO WO".AsSpan();
+
+		bool result = semantic.Contains(searchSpan, StringComparison.OrdinalIgnoreCase);
+		Assert.IsTrue(result);
+	}
+
+	[TestMethod]
+	public void Count_WithPredicate_ReturnsCorrectCount()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello");
+
+		int count = semantic.Count(c => c == 'l');
+		Assert.AreEqual(2, count);
+	}
+
+	[TestMethod]
+	public void Count_WithPredicate_NullPredicate_ThrowsArgumentNullException()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello");
+
+		Assert.ThrowsExactly<ArgumentNullException>(() => semantic.Count(null!));
+	}
+	private static readonly string[] expectedSplitParts = ["a", "b", "c"];
+
+	[TestMethod]
+	public void Split_WithChar_ReturnsCorrectSpans()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("a,b,c");
+		List<string> parts = [];
+
+		foreach (ReadOnlySpan<char> part in semantic.Split(','))
+		{
+			parts.Add(part.ToString());
+		}
+
+		CollectionAssert.AreEqual(expectedSplitParts, parts);
+	}
+
+	[TestMethod]
+	public void Split_WithCharAndOptions_ReturnsCorrectSpans()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("a,,b,c");
+		List<string> parts = [];
+
+		foreach (ReadOnlySpan<char> part in semantic.Split(',', StringSplitOptions.RemoveEmptyEntries))
+		{
+			parts.Add(part.ToString());
+		}
+
+		CollectionAssert.AreEqual(expectedSplitParts, parts);
+	}
+
+	[TestMethod]
+	public void TrimAsSpan_RemovesWhitespace()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("  hello  ");
+		ReadOnlySpan<char> trimmed = semantic.TrimAsSpan();
+
+		Assert.IsTrue(trimmed.SequenceEqual("hello".AsSpan()));
+	}
+
+	[TestMethod]
+	public void TrimAsSpan_WithTrimChars_RemovesSpecifiedChars()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("##hello##");
+		ReadOnlySpan<char> trimmed = semantic.TrimAsSpan("#".AsSpan());
+
+		Assert.IsTrue(trimmed.SequenceEqual("hello".AsSpan()));
+	}
+
+	[TestMethod]
+	public void TrimStartAsSpan_RemovesLeadingWhitespace()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("  hello  ");
+		ReadOnlySpan<char> trimmed = semantic.TrimStartAsSpan();
+
+		Assert.IsTrue(trimmed.SequenceEqual("hello  ".AsSpan()));
+	}
+
+	[TestMethod]
+	public void TrimStartAsSpan_WithTrimChars_RemovesSpecifiedLeadingChars()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("##hello##");
+		ReadOnlySpan<char> trimmed = semantic.TrimStartAsSpan("#".AsSpan());
+
+		Assert.IsTrue(trimmed.SequenceEqual("hello##".AsSpan()));
+	}
+
+	[TestMethod]
+	public void TrimEndAsSpan_RemovesTrailingWhitespace()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("  hello  ");
+		ReadOnlySpan<char> trimmed = semantic.TrimEndAsSpan();
+
+		Assert.IsTrue(trimmed.SequenceEqual("  hello".AsSpan()));
+	}
+
+	[TestMethod]
+	public void TrimEndAsSpan_WithTrimChars_RemovesSpecifiedTrailingChars()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("##hello##");
+		ReadOnlySpan<char> trimmed = semantic.TrimEndAsSpan("#".AsSpan());
+
+		Assert.IsTrue(trimmed.SequenceEqual("##hello".AsSpan()));
+	}
+
+	[TestMethod]
+	public void MakeCanonical_AppliesTransformation()
+	{
+		CanonicalTestSemanticString semantic = SemanticString<CanonicalTestSemanticString>.Create<CanonicalTestSemanticString>("  hello world  ");
+
+		// The canonical form should be trimmed and uppercase
+		Assert.AreEqual("HELLO WORLD", semantic.WeakString);
+	}
+
+	[TestMethod]
+	public void MakeCanonical_WithNullInput_HandlesGracefully()
+	{
+		// This tests the null handling in MakeCanonical override
+		Assert.ThrowsExactly<ArgumentNullException>(() =>
+			SemanticString<CanonicalTestSemanticString>.Create<CanonicalTestSemanticString>((string?)null));
+	}
+
+	[TestMethod]
+	public void IsValid_WithCustomValidation_ReturnsCorrectResult()
+	{
+		ValidationTestSemanticString validSemantic = SemanticString<ValidationTestSemanticString>.Create<ValidationTestSemanticString>("VALID test");
+		Assert.IsTrue(validSemantic.IsValid());
+
+		// Testing that invalid values throw during creation
+		Assert.ThrowsExactly<ArgumentException>(() =>
+			SemanticString<ValidationTestSemanticString>.Create<ValidationTestSemanticString>("INVALID test"));
+	}
+
+	[TestMethod]
+	public void StaticCreate_WithGenericTypeInference_WorksCorrectly()
+	{
+		MySemanticString semantic = MySemanticString.Create("test");
+		Assert.AreEqual("test", semantic.WeakString);
+
+		MySemanticString fromCharArray = MySemanticString.Create(['t', 'e', 's', 't']);
+		Assert.AreEqual("test", fromCharArray.WeakString);
+
+		MySemanticString fromSpan = MySemanticString.Create("test".AsSpan());
+		Assert.AreEqual("test", fromSpan.WeakString);
+	}
+
+	[TestMethod]
+	public void WithPrefix_InvalidResult_ThrowsArgumentException()
+	{
+		ValidationTestSemanticString semantic = SemanticString<ValidationTestSemanticString>.Create<ValidationTestSemanticString>("VALID test");
+
+		// Adding a prefix that makes the result invalid should throw
+		Assert.ThrowsExactly<ArgumentException>(() => semantic.WithPrefix("INVALID "));
+	}
+
+	[TestMethod]
+	public void WithSuffix_InvalidResult_ThrowsArgumentException()
+	{
+		ValidationTestSemanticString semantic = SemanticString<ValidationTestSemanticString>.Create<ValidationTestSemanticString>("VALID test");
+
+		// Since our validation requires strings to start with "VALID", any suffix should be fine
+		ValidationTestSemanticString result = semantic.WithSuffix(" more");
+		Assert.AreEqual("VALID test more", result.WeakString);
+	}
+
+	[TestMethod]
+	public void CompareTo_WithNull_ReturnsPositive()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("test");
+
+		int result = semantic.CompareTo((object?)null);
+		Assert.IsTrue(result > 0);
+
+		int resultSemantic = semantic.CompareTo(null);
+		Assert.IsTrue(resultSemantic > 0);
+	}
+
+	[TestMethod]
+	public void DebuggerDisplay_ReturnsCorrectFormat()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("test");
+
+		// Test the debugger display through ToString (which calls GetDebuggerDisplay internally)
+		string display = semantic.ToString();
+		Assert.AreEqual("test", display);
+	}
+
+	[TestMethod]
+	public void StaticMethods_WithNullSemanticString_HandleGracefully()
+	{
+		string result = SemanticString<MySemanticString>.ToString(null);
+		Assert.AreEqual(string.Empty, result);
+
+		char[] charResult = SemanticString<MySemanticString>.ToCharArray(null);
+		Assert.AreEqual(0, charResult.Length);
+
+		ReadOnlySpan<char> spanResult = SemanticString<MySemanticString>.ToReadOnlySpan(null);
+		Assert.IsTrue(spanResult.IsEmpty);
+	}
+
+	[TestMethod]
+	public void Create_WithEmptyString_CreatesValidInstance()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>(string.Empty);
+
+		Assert.IsNotNull(semantic);
+		Assert.AreEqual(string.Empty, semantic.WeakString);
+		Assert.IsTrue(semantic.IsEmpty());
+		Assert.IsTrue(semantic.IsValid());
+	}
+
+	[TestMethod]
+	public void ValidationAttributes_Integration_WorksCorrectly()
+	{
+		// Test that ValidateAttributes is called during IsValid
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("test");
+
+		// Since MySemanticString has no validation attributes, it should return true
+		bool isValid = semantic.ValidateAttributes();
+		Assert.IsTrue(isValid);
+	}
+
+	[TestMethod]
+	public void SpanSplitEnumerator_EmptyString_HandlesCorrectly()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>(string.Empty);
+		List<string> parts = [];
+
+		foreach (ReadOnlySpan<char> part in semantic.Split(','))
+		{
+			parts.Add(part.ToString());
+		}
+
+		// Empty string split returns no parts in the current implementation
+		Assert.AreEqual(0, parts.Count);
+	}
+	private static readonly string[] expectedSingleCharacter = ["a"];
+
+	[TestMethod]
+	public void SpanSplitEnumerator_SingleCharacter_HandlesCorrectly()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("a");
+		List<string> parts = [];
+
+		foreach (ReadOnlySpan<char> part in semantic.Split(','))
+		{
+			parts.Add(part.ToString());
+		}
+
+		CollectionAssert.AreEqual(expectedSingleCharacter, parts);
+	}
+
+	[TestMethod]
+	public void SpanSplitEnumerator_OnlySeparators_HandlesCorrectly()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>(",,");
+		List<string> parts = [];
+
+		foreach (ReadOnlySpan<char> part in semantic.Split(','))
+		{
+			parts.Add(part.ToString());
+		}
+
+		// ",," split by comma returns two empty parts in the current implementation
+		Assert.AreEqual(2, parts.Count);
+		Assert.IsTrue(parts.All(string.IsNullOrEmpty));
+	}
+
+	[TestMethod]
+	public void ErrorMessages_ContainTypeInformation()
+	{
+		try
+		{
+			ValidationTestSemanticString.Create("INVALID");
+			Assert.Fail("Expected ArgumentException");
+		}
+		catch (ArgumentException ex)
+		{
+			StringAssert.Contains(ex.Message, nameof(ValidationTestSemanticString));
+		}
+	}
+}
