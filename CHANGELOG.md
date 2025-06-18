@@ -1,6 +1,9 @@
-## v1.0.18
+## v1.0.19 (patch)
 
 Changes since v1.0.18:
+
+- Refactor exception assertions in unit tests for consistency ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor performance regression tests to set CI-friendly targets ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.18 (patch)
 
 Changes since v1.0.17:
