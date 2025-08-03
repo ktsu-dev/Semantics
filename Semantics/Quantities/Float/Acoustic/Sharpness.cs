@@ -9,23 +9,17 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a sharpness quantity with float precision.
 /// </summary>
-public sealed record Sharpness
+public sealed record Sharpness : Generic.Sharpness<float>
 {
-	/// <summary>Gets the underlying generic sharpness instance.</summary>
-	public Generic.Sharpness<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Sharpness"/> class.
 	/// </summary>
-	public Sharpness() { }
+	public Sharpness() : base() { }
 
 	/// <summary>
 	/// Creates a new Sharpness from a value in acums.
 	/// </summary>
 	/// <param name="acums">The sharpness in acums.</param>
 	/// <returns>A new Sharpness instance.</returns>
-	public static Sharpness FromAcums(float acums) => new() { Value = Generic.Sharpness<float>.FromAcums(acums) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new Sharpness FromAcums(float acums) => new() { Value = acums };
 }

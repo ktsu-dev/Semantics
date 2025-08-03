@@ -9,30 +9,24 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a loudness quantity with float precision.
 /// </summary>
-public sealed record Loudness
+public sealed record Loudness : Generic.Loudness<float>
 {
-	/// <summary>Gets the underlying generic loudness instance.</summary>
-	public Generic.Loudness<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Loudness"/> class.
 	/// </summary>
-	public Loudness() { }
+	public Loudness() : base() { }
 
 	/// <summary>
 	/// Creates a new Loudness from a value in sones.
 	/// </summary>
 	/// <param name="sones">The loudness in sones.</param>
 	/// <returns>A new Loudness instance.</returns>
-	public static Loudness FromSones(float sones) => new() { Value = Generic.Loudness<float>.FromSones(sones) };
+	public static new Loudness FromSones(float sones) => new() { Value = sones };
 
 	/// <summary>
 	/// Creates a new Loudness from a value in phons (loudness level).
 	/// </summary>
 	/// <param name="phons">The loudness level in phons.</param>
 	/// <returns>A new Loudness instance.</returns>
-	public static Loudness FromPhons(float phons) => new() { Value = Generic.Loudness<float>.FromPhons(phons) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new Loudness FromPhons(float phons) => new() { Value = phons };
 }

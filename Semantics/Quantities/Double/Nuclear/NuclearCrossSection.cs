@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a nuclear cross section quantity with double precision.
 /// </summary>
-public sealed record NuclearCrossSection
+public sealed record NuclearCrossSection : Generic.NuclearCrossSection<double>
 {
-	/// <summary>Gets the underlying generic nuclear cross section instance.</summary>
-	public Generic.NuclearCrossSection<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NuclearCrossSection"/> class.
 	/// </summary>
-	public NuclearCrossSection() { }
+	public NuclearCrossSection() : base() { }
 
 	/// <summary>
 	/// Creates a new NuclearCrossSection from a value in barns.
 	/// </summary>
 	/// <param name="barns">The value in barns.</param>
 	/// <returns>A new NuclearCrossSection instance.</returns>
-	public static NuclearCrossSection FromBarns(double barns) => new() { Value = Generic.NuclearCrossSection<double>.FromBarns(barns) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new NuclearCrossSection FromBarns(double barns) => new() { Value = barns };
 }

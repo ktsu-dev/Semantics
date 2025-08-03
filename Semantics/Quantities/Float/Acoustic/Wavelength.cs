@@ -9,37 +9,31 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a wavelength quantity with float precision.
 /// </summary>
-public sealed record Wavelength
+public sealed record Wavelength : Generic.Wavelength<float>
 {
-	/// <summary>Gets the underlying generic wavelength instance.</summary>
-	public Generic.Wavelength<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Wavelength"/> class.
 	/// </summary>
-	public Wavelength() { }
+	public Wavelength() : base() { }
 
 	/// <summary>
 	/// Creates a new Wavelength from a value in meters.
 	/// </summary>
 	/// <param name="meters">The value in meters.</param>
 	/// <returns>A new Wavelength instance.</returns>
-	public static Wavelength FromMeters(float meters) => new() { Value = Generic.Wavelength<float>.FromMeters(meters) };
+	public static new Wavelength FromMeters(float meters) => new() { Value = meters };
 
 	/// <summary>
 	/// Creates a new Wavelength from a value in millimeters.
 	/// </summary>
 	/// <param name="millimeters">The value in millimeters.</param>
 	/// <returns>A new Wavelength instance.</returns>
-	public static Wavelength FromMillimeters(float millimeters) => new() { Value = Generic.Wavelength<float>.FromMillimeters(millimeters) };
+	public static new Wavelength FromMillimeters(float millimeters) => new() { Value = millimeters };
 
 	/// <summary>
 	/// Creates a new Wavelength from a value in micrometers.
 	/// </summary>
 	/// <param name="micrometers">The value in micrometers.</param>
 	/// <returns>A new Wavelength instance.</returns>
-	public static Wavelength FromMicrometers(float micrometers) => new() { Value = Generic.Wavelength<float>.FromMicrometers(micrometers) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new Wavelength FromMicrometers(float micrometers) => new() { Value = micrometers };
 }

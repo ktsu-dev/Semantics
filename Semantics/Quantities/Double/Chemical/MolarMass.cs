@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a molar mass quantity with double precision.
 /// </summary>
-public sealed record MolarMass
+public sealed record MolarMass : Generic.MolarMass<double>
 {
-	/// <summary>Gets the underlying generic molar mass instance.</summary>
-	public Generic.MolarMass<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MolarMass"/> class.
 	/// </summary>
-	public MolarMass() { }
+	public MolarMass() : base() { }
 
 	/// <summary>
 	/// Creates a new MolarMass from a value in grams per mole.
 	/// </summary>
 	/// <param name="gramsPerMole">The value in grams per mole.</param>
 	/// <returns>A new MolarMass instance.</returns>
-	public static MolarMass FromGramsPerMole(double gramsPerMole) => new() { Value = Generic.MolarMass<double>.Create(gramsPerMole) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new MolarMass FromGramsPerMole(double gramsPerMole) => new() { Value = gramsPerMole };
 }

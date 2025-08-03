@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a sharpness quantity with double precision.
 /// </summary>
-public sealed record Sharpness
+public sealed record Sharpness : Generic.Sharpness<double>
 {
-	/// <summary>Gets the underlying generic sharpness instance.</summary>
-	public Generic.Sharpness<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Sharpness"/> class.
 	/// </summary>
-	public Sharpness() { }
+	public Sharpness() : base() { }
 
 	/// <summary>
 	/// Creates a new Sharpness from a value in acums.
 	/// </summary>
 	/// <param name="acums">The sharpness in acums.</param>
 	/// <returns>A new Sharpness instance.</returns>
-	public static Sharpness FromAcums(double acums) => new() { Value = Generic.Sharpness<double>.FromAcums(acums) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new Sharpness FromAcums(double acums) => new() { Value = acums };
 }

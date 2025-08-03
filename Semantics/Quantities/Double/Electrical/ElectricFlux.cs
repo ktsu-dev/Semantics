@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents an electric flux quantity with double precision.
 /// </summary>
-public sealed record ElectricFlux
+public sealed record ElectricFlux : Generic.ElectricFlux<double>
 {
-	/// <summary>Gets the underlying generic electric flux instance.</summary>
-	public Generic.ElectricFlux<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ElectricFlux"/> class.
 	/// </summary>
-	public ElectricFlux() { }
+	public ElectricFlux() : base() { }
 
 	/// <summary>
 	/// Creates a new ElectricFlux from a value in volt-meters.
 	/// </summary>
 	/// <param name="voltMeters">The value in volt-meters.</param>
 	/// <returns>A new ElectricFlux instance.</returns>
-	public static ElectricFlux FromVoltMeters(double voltMeters) => new() { Value = Generic.ElectricFlux<double>.FromVoltMeters(voltMeters) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new ElectricFlux FromVoltMeters(double voltMeters) => new() { Value = voltMeters };
 }

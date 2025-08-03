@@ -9,23 +9,17 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a moment of inertia quantity with float precision.
 /// </summary>
-public sealed record MomentOfInertia
+public sealed record MomentOfInertia : Generic.MomentOfInertia<float>
 {
-	/// <summary>Gets the underlying generic moment of inertia instance.</summary>
-	public Generic.MomentOfInertia<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MomentOfInertia"/> class.
 	/// </summary>
-	public MomentOfInertia() { }
+	public MomentOfInertia() : base() { }
 
 	/// <summary>
 	/// Creates a new MomentOfInertia from a value in kilogram-square meters.
 	/// </summary>
 	/// <param name="kilogramSquareMeters">The value in kilogram-square meters.</param>
 	/// <returns>A new MomentOfInertia instance.</returns>
-	public static MomentOfInertia FromKilogramSquareMeters(float kilogramSquareMeters) => new() { Value = Generic.MomentOfInertia<float>.FromKilogramSquareMeters(kilogramSquareMeters) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new MomentOfInertia FromKilogramSquareMeters(float kilogramSquareMeters) => new() { Value = kilogramSquareMeters };
 }

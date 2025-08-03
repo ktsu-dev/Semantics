@@ -9,23 +9,17 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a Reynolds number quantity with float precision.
 /// </summary>
-public sealed record ReynoldsNumber
+public sealed record ReynoldsNumber : Generic.ReynoldsNumber<float>
 {
-	/// <summary>Gets the underlying generic Reynolds number instance.</summary>
-	public Generic.ReynoldsNumber<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ReynoldsNumber"/> class.
 	/// </summary>
-	public ReynoldsNumber() { }
+	public ReynoldsNumber() : base() { }
 
 	/// <summary>
 	/// Creates a new ReynoldsNumber from a dimensionless value.
 	/// </summary>
 	/// <param name="value">The dimensionless Reynolds number value.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
-	public static ReynoldsNumber FromValue(float value) => new() { Value = Generic.ReynoldsNumber<float>.FromValue(value) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new ReynoldsNumber FromValue(float value) => new() { Value = value };
 }

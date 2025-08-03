@@ -10,37 +10,31 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a thermal expansion coefficient quantity with double precision.
 /// </summary>
-public sealed record ThermalExpansion
+public sealed record ThermalExpansion : Generic.ThermalExpansion<double>
 {
-	/// <summary>Gets the underlying generic thermal expansion instance.</summary>
-	public Generic.ThermalExpansion<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ThermalExpansion"/> class.
 	/// </summary>
-	public ThermalExpansion() { }
+	public ThermalExpansion() : base() { }
 
 	/// <summary>
 	/// Creates a new ThermalExpansion from a value in per kelvin.
 	/// </summary>
 	/// <param name="perKelvin">The thermal expansion coefficient value in K⁻¹.</param>
 	/// <returns>A new ThermalExpansion instance.</returns>
-	public static ThermalExpansion FromPerKelvin(double perKelvin) => new() { Value = Generic.ThermalExpansion<double>.FromPerKelvin(perKelvin) };
+	public static new ThermalExpansion FromPerKelvin(double perKelvin) => new() { Value = perKelvin };
 
 	/// <summary>
 	/// Creates a new ThermalExpansion from a value in per Celsius.
 	/// </summary>
 	/// <param name="perCelsius">The thermal expansion coefficient value in °C⁻¹.</param>
 	/// <returns>A new ThermalExpansion instance.</returns>
-	public static ThermalExpansion FromPerCelsius(double perCelsius) => new() { Value = Generic.ThermalExpansion<double>.FromPerCelsius(perCelsius) };
+	public static new ThermalExpansion FromPerCelsius(double perCelsius) => new() { Value = perCelsius };
 
 	/// <summary>
 	/// Creates a new ThermalExpansion from a value in per Fahrenheit.
 	/// </summary>
 	/// <param name="perFahrenheit">The thermal expansion coefficient value in °F⁻¹.</param>
 	/// <returns>A new ThermalExpansion instance.</returns>
-	public static ThermalExpansion FromPerFahrenheit(double perFahrenheit) => new() { Value = Generic.ThermalExpansion<double>.FromPerFahrenheit(perFahrenheit) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new ThermalExpansion FromPerFahrenheit(double perFahrenheit) => new() { Value = perFahrenheit };
 }

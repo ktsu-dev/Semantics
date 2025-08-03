@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a specific heat quantity with double precision.
 /// </summary>
-public sealed record SpecificHeat
+public sealed record SpecificHeat : Generic.SpecificHeat<double>
 {
-	/// <summary>Gets the underlying generic specific heat instance.</summary>
-	public Generic.SpecificHeat<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SpecificHeat"/> class.
 	/// </summary>
-	public SpecificHeat() { }
+	public SpecificHeat() : base() { }
 
 	/// <summary>
 	/// Creates a new SpecificHeat from a value in joules per kilogram-kelvin.
 	/// </summary>
 	/// <param name="joulesPerKilogramKelvin">The value in joules per kilogram-kelvin.</param>
 	/// <returns>A new SpecificHeat instance.</returns>
-	public static SpecificHeat FromJoulesPerKilogramKelvin(double joulesPerKilogramKelvin) => new() { Value = Generic.SpecificHeat<double>.FromJoulesPerKilogramKelvin(joulesPerKilogramKelvin) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new SpecificHeat FromJoulesPerKilogramKelvin(double joulesPerKilogramKelvin) => new() { Value = joulesPerKilogramKelvin };
 }

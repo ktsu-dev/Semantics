@@ -10,37 +10,31 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a reverberation time quantity with double precision.
 /// </summary>
-public sealed record ReverberationTime
+public sealed record ReverberationTime : Generic.ReverberationTime<double>
 {
-	/// <summary>Gets the underlying generic reverberation time instance.</summary>
-	public Generic.ReverberationTime<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ReverberationTime"/> class.
 	/// </summary>
-	public ReverberationTime() { }
+	public ReverberationTime() : base() { }
 
 	/// <summary>
 	/// Creates a new ReverberationTime from a value in seconds.
 	/// </summary>
 	/// <param name="seconds">The value in seconds.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
-	public static ReverberationTime FromSeconds(double seconds) => new() { Value = Generic.ReverberationTime<double>.FromSeconds(seconds) };
+	public static new ReverberationTime FromSeconds(double seconds) => new() { Value = seconds };
 
 	/// <summary>
 	/// Creates a new ReverberationTime from T60 measurement.
 	/// </summary>
 	/// <param name="t60">The T60 time in seconds.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
-	public static ReverberationTime FromT60(double t60) => new() { Value = Generic.ReverberationTime<double>.FromT60(t60) };
+	public static new ReverberationTime FromT60(double t60) => new() { Value = t60 };
 
 	/// <summary>
 	/// Creates a new ReverberationTime from T30 measurement (extrapolated to T60).
 	/// </summary>
 	/// <param name="t30">The T30 time in seconds.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
-	public static ReverberationTime FromT30(double t30) => new() { Value = Generic.ReverberationTime<double>.FromT30(t30) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new ReverberationTime FromT30(double t30) => new() { Value = t30 };
 }

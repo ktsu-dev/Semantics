@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents an equivalent dose quantity with double precision.
 /// </summary>
-public sealed record EquivalentDose
+public sealed record EquivalentDose : Generic.EquivalentDose<double>
 {
-	/// <summary>Gets the underlying generic equivalent dose instance.</summary>
-	public Generic.EquivalentDose<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="EquivalentDose"/> class.
 	/// </summary>
-	public EquivalentDose() { }
+	public EquivalentDose() : base() { }
 
 	/// <summary>
 	/// Creates a new EquivalentDose from a value in sieverts.
 	/// </summary>
 	/// <param name="sieverts">The value in sieverts.</param>
 	/// <returns>A new EquivalentDose instance.</returns>
-	public static EquivalentDose FromSieverts(double sieverts) => new() { Value = Generic.EquivalentDose<double>.FromSieverts(sieverts) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new EquivalentDose FromSieverts(double sieverts) => new() { Value = sieverts };
 }

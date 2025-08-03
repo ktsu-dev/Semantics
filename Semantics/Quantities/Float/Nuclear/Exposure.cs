@@ -9,23 +9,17 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents an exposure quantity with float precision.
 /// </summary>
-public sealed record Exposure
+public sealed record Exposure : Generic.Exposure<float>
 {
-	/// <summary>Gets the underlying generic exposure instance.</summary>
-	public Generic.Exposure<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Exposure"/> class.
 	/// </summary>
-	public Exposure() { }
+	public Exposure() : base() { }
 
 	/// <summary>
 	/// Creates a new Exposure from a value in coulombs per kilogram.
 	/// </summary>
 	/// <param name="coulombsPerKilogram">The value in coulombs per kilogram.</param>
 	/// <returns>A new Exposure instance.</returns>
-	public static Exposure FromCoulombsPerKilogram(float coulombsPerKilogram) => new() { Value = Generic.Exposure<float>.FromCoulombsPerKilogram(coulombsPerKilogram) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new Exposure FromCoulombsPerKilogram(float coulombsPerKilogram) => new() { Value = coulombsPerKilogram };
 }

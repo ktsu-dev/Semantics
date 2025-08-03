@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents an AC impedance quantity with double precision.
 /// </summary>
-public sealed record ImpedanceAC
+public sealed record ImpedanceAC : Generic.ImpedanceAC<double>
 {
-	/// <summary>Gets the underlying generic AC impedance instance.</summary>
-	public Generic.ImpedanceAC<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ImpedanceAC"/> class.
 	/// </summary>
-	public ImpedanceAC() { }
+	public ImpedanceAC() : base() { }
 
 	/// <summary>
 	/// Creates a new ImpedanceAC from a value in ohms.
 	/// </summary>
 	/// <param name="ohms">The value in ohms.</param>
 	/// <returns>A new ImpedanceAC instance.</returns>
-	public static ImpedanceAC FromOhms(double ohms) => new() { Value = Generic.ImpedanceAC<double>.FromOhms(ohms) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new ImpedanceAC FromOhms(double ohms) => new() { Value = ohms };
 }

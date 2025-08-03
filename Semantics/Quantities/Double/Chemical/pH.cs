@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a pH quantity with double precision.
 /// </summary>
-public sealed record PH
+public sealed record PH : Generic.PH<double>
 {
-	/// <summary>Gets the underlying generic pH instance.</summary>
-	public Generic.PH<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="PH"/> class.
 	/// </summary>
-	public PH() { }
+	public PH() : base() { }
 
 	/// <summary>
 	/// Creates a new pH from a dimensionless value.
 	/// </summary>
 	/// <param name="value">The pH value.</param>
 	/// <returns>A new PH instance.</returns>
-	public static PH FromValue(double value) => new() { Value = Generic.PH<double>.Create(value) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new PH FromValue(double value) => new() { Value = value };
 }

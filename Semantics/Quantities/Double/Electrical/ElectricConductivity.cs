@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents an electric conductivity quantity with double precision.
 /// </summary>
-public sealed record ElectricConductivity
+public sealed record ElectricConductivity : Generic.ElectricConductivity<double>
 {
-	/// <summary>Gets the underlying generic electric conductivity instance.</summary>
-	public Generic.ElectricConductivity<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ElectricConductivity"/> class.
 	/// </summary>
-	public ElectricConductivity() { }
+	public ElectricConductivity() : base() { }
 
 	/// <summary>
 	/// Creates a new ElectricConductivity from a value in siemens per meter.
 	/// </summary>
 	/// <param name="siemensPerMeter">The value in siemens per meter.</param>
 	/// <returns>A new ElectricConductivity instance.</returns>
-	public static ElectricConductivity FromSiemensPerMeter(double siemensPerMeter) => new() { Value = Generic.ElectricConductivity<double>.FromSiemensPerMeter(siemensPerMeter) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new ElectricConductivity FromSiemensPerMeter(double siemensPerMeter) => new() { Value = siemensPerMeter };
 }

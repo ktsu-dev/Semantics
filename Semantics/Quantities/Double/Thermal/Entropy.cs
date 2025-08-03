@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents an entropy quantity with double precision.
 /// </summary>
-public sealed record Entropy
+public sealed record Entropy : Generic.Entropy<double>
 {
-	/// <summary>Gets the underlying generic entropy instance.</summary>
-	public Generic.Entropy<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Entropy"/> class.
 	/// </summary>
-	public Entropy() { }
+	public Entropy() : base() { }
 
 	/// <summary>
 	/// Creates a new Entropy from a value in joules per kelvin.
 	/// </summary>
 	/// <param name="joulesPerKelvin">The value in joules per kelvin.</param>
 	/// <returns>A new Entropy instance.</returns>
-	public static Entropy FromJoulesPerKelvin(double joulesPerKelvin) => new() { Value = Generic.Entropy<double>.FromJoulesPerKelvin(joulesPerKelvin) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new Entropy FromJoulesPerKelvin(double joulesPerKelvin) => new() { Value = joulesPerKelvin };
 }

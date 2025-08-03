@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a force quantity with double precision.
 /// </summary>
-public sealed record Force
+public sealed record Force : Generic.Force<double>
 {
-	/// <summary>Gets the underlying generic force instance.</summary>
-	public Generic.Force<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Force"/> class.
 	/// </summary>
-	public Force() { }
+	public Force() : base() { }
 
 	/// <summary>
 	/// Creates a new Force from a value in newtons.
 	/// </summary>
 	/// <param name="newtons">The value in newtons.</param>
 	/// <returns>A new Force instance.</returns>
-	public static Force FromNewtons(double newtons) => new() { Value = Generic.Force<double>.FromNewtons(newtons) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new Force FromNewtons(double newtons) => new() { Value = newtons };
 }

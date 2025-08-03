@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a radioactive activity quantity with double precision.
 /// </summary>
-public sealed record RadioactiveActivity
+public sealed record RadioactiveActivity : Generic.RadioactiveActivity<double>
 {
-	/// <summary>Gets the underlying generic radioactive activity instance.</summary>
-	public Generic.RadioactiveActivity<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="RadioactiveActivity"/> class.
 	/// </summary>
-	public RadioactiveActivity() { }
+	public RadioactiveActivity() : base() { }
 
 	/// <summary>
 	/// Creates a new RadioactiveActivity from a value in becquerels.
 	/// </summary>
 	/// <param name="becquerels">The value in becquerels.</param>
 	/// <returns>A new RadioactiveActivity instance.</returns>
-	public static RadioactiveActivity FromBecquerels(double becquerels) => new() { Value = Generic.RadioactiveActivity<double>.FromBecquerels(becquerels) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new RadioactiveActivity FromBecquerels(double becquerels) => new() { Value = becquerels };
 }

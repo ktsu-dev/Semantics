@@ -9,23 +9,17 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents an equivalent dose quantity with float precision.
 /// </summary>
-public sealed record EquivalentDose
+public sealed record EquivalentDose : Generic.EquivalentDose<float>
 {
-	/// <summary>Gets the underlying generic equivalent dose instance.</summary>
-	public Generic.EquivalentDose<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="EquivalentDose"/> class.
 	/// </summary>
-	public EquivalentDose() { }
+	public EquivalentDose() : base() { }
 
 	/// <summary>
 	/// Creates a new EquivalentDose from a value in sieverts.
 	/// </summary>
 	/// <param name="sieverts">The value in sieverts.</param>
 	/// <returns>A new EquivalentDose instance.</returns>
-	public static EquivalentDose FromSieverts(float sieverts) => new() { Value = Generic.EquivalentDose<float>.FromSieverts(sieverts) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new EquivalentDose FromSieverts(float sieverts) => new() { Value = sieverts };
 }

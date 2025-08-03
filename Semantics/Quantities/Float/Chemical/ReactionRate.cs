@@ -9,23 +9,17 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a reaction rate quantity with float precision.
 /// </summary>
-public sealed record ReactionRate
+public sealed record ReactionRate : Generic.ReactionRate<float>
 {
-	/// <summary>Gets the underlying generic reaction rate instance.</summary>
-	public Generic.ReactionRate<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ReactionRate"/> class.
 	/// </summary>
-	public ReactionRate() { }
+	public ReactionRate() : base() { }
 
 	/// <summary>
 	/// Creates a new ReactionRate from a value in molar per second.
 	/// </summary>
 	/// <param name="molarPerSecond">The value in molar per second.</param>
 	/// <returns>A new ReactionRate instance.</returns>
-	public static ReactionRate FromMolarPerSecond(float molarPerSecond) => new() { Value = Generic.ReactionRate<float>.Create(molarPerSecond) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new ReactionRate FromMolarPerSecond(float molarPerSecond) => new() { Value = molarPerSecond };
 }

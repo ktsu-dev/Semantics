@@ -9,30 +9,24 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a sound absorption coefficient quantity with float precision.
 /// </summary>
-public sealed record SoundAbsorption
+public sealed record SoundAbsorption : Generic.SoundAbsorption<float>
 {
-	/// <summary>Gets the underlying generic sound absorption instance.</summary>
-	public Generic.SoundAbsorption<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SoundAbsorption"/> class.
 	/// </summary>
-	public SoundAbsorption() { }
+	public SoundAbsorption() : base() { }
 
 	/// <summary>
 	/// Creates a new SoundAbsorption from a dimensionless coefficient (0-1).
 	/// </summary>
 	/// <param name="coefficient">The absorption coefficient (0-1).</param>
 	/// <returns>A new SoundAbsorption instance.</returns>
-	public static SoundAbsorption FromCoefficient(float coefficient) => new() { Value = Generic.SoundAbsorption<float>.FromCoefficient(coefficient) };
+	public static new SoundAbsorption FromCoefficient(float coefficient) => new() { Value = coefficient };
 
 	/// <summary>
 	/// Creates a new SoundAbsorption from a percentage value.
 	/// </summary>
 	/// <param name="percentage">The absorption percentage (0-100).</param>
 	/// <returns>A new SoundAbsorption instance.</returns>
-	public static SoundAbsorption FromPercentage(float percentage) => new() { Value = Generic.SoundAbsorption<float>.FromPercentage(percentage) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new SoundAbsorption FromPercentage(float percentage) => new() { Value = percentage };
 }

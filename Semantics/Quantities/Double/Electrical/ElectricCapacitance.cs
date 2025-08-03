@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents an electric capacitance quantity with double precision.
 /// </summary>
-public sealed record ElectricCapacitance
+public sealed record ElectricCapacitance : Generic.ElectricCapacitance<double>
 {
-	/// <summary>Gets the underlying generic electric capacitance instance.</summary>
-	public Generic.ElectricCapacitance<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ElectricCapacitance"/> class.
 	/// </summary>
-	public ElectricCapacitance() { }
+	public ElectricCapacitance() : base() { }
 
 	/// <summary>
 	/// Creates a new ElectricCapacitance from a value in farads.
 	/// </summary>
 	/// <param name="farads">The value in farads.</param>
 	/// <returns>A new ElectricCapacitance instance.</returns>
-	public static ElectricCapacitance FromFarads(double farads) => new() { Value = Generic.ElectricCapacitance<double>.FromFarads(farads) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new ElectricCapacitance FromFarads(double farads) => new() { Value = farads };
 }

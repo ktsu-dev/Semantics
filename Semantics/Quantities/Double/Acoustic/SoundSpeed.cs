@@ -10,30 +10,24 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a sound speed quantity with double precision.
 /// </summary>
-public sealed record SoundSpeed
+public sealed record SoundSpeed : Generic.SoundSpeed<double>
 {
-	/// <summary>Gets the underlying generic sound speed instance.</summary>
-	public Generic.SoundSpeed<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SoundSpeed"/> class.
 	/// </summary>
-	public SoundSpeed() { }
+	public SoundSpeed() : base() { }
 
 	/// <summary>
 	/// Creates a new SoundSpeed from a value in meters per second.
 	/// </summary>
 	/// <param name="metersPerSecond">The value in meters per second.</param>
 	/// <returns>A new SoundSpeed instance.</returns>
-	public static SoundSpeed FromMetersPerSecond(double metersPerSecond) => new() { Value = Generic.SoundSpeed<double>.FromMetersPerSecond(metersPerSecond) };
+	public static new SoundSpeed FromMetersPerSecond(double metersPerSecond) => new() { Value = metersPerSecond };
 
 	/// <summary>
 	/// Creates a new SoundSpeed from a value in feet per second.
 	/// </summary>
 	/// <param name="feetPerSecond">The value in feet per second.</param>
 	/// <returns>A new SoundSpeed instance.</returns>
-	public static SoundSpeed FromFeetPerSecond(double feetPerSecond) => new() { Value = Generic.SoundSpeed<double>.FromFeetPerSecond(feetPerSecond) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new SoundSpeed FromFeetPerSecond(double feetPerSecond) => new() { Value = feetPerSecond };
 }

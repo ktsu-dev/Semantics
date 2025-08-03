@@ -9,37 +9,31 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a pitch quantity with float precision.
 /// </summary>
-public sealed record Pitch
+public sealed record Pitch : Generic.Pitch<float>
 {
-	/// <summary>Gets the underlying generic pitch instance.</summary>
-	public Generic.Pitch<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Pitch"/> class.
 	/// </summary>
-	public Pitch() { }
+	public Pitch() : base() { }
 
 	/// <summary>
 	/// Creates a new Pitch from a frequency value in Hz.
 	/// </summary>
 	/// <param name="hertz">The frequency in Hz.</param>
 	/// <returns>A new Pitch instance.</returns>
-	public static Pitch FromHertz(float hertz) => new() { Value = Generic.Pitch<float>.FromHertz(hertz) };
+	public static new Pitch FromHertz(float hertz) => new() { Value = hertz };
 
 	/// <summary>
 	/// Creates a new Pitch from a value in mels (perceptual pitch scale).
 	/// </summary>
 	/// <param name="mels">The pitch in mels.</param>
 	/// <returns>A new Pitch instance.</returns>
-	public static Pitch FromMels(float mels) => new() { Value = Generic.Pitch<float>.FromMels(mels) };
+	public static new Pitch FromMels(float mels) => new() { Value = mels };
 
 	/// <summary>
 	/// Creates a new Pitch from a value in barks (critical band scale).
 	/// </summary>
 	/// <param name="barks">The pitch in barks.</param>
 	/// <returns>A new Pitch instance.</returns>
-	public static Pitch FromBarks(float barks) => new() { Value = Generic.Pitch<float>.FromBarks(barks) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new Pitch FromBarks(float barks) => new() { Value = barks };
 }

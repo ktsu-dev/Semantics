@@ -9,23 +9,17 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a sound power level quantity with float precision.
 /// </summary>
-public sealed record SoundPowerLevel
+public sealed record SoundPowerLevel : Generic.SoundPowerLevel<float>
 {
-	/// <summary>Gets the underlying generic sound power level instance.</summary>
-	public Generic.SoundPowerLevel<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SoundPowerLevel"/> class.
 	/// </summary>
-	public SoundPowerLevel() { }
+	public SoundPowerLevel() : base() { }
 
 	/// <summary>
 	/// Creates a new SoundPowerLevel from a value in decibels PWL.
 	/// </summary>
 	/// <param name="decibels">The sound power level in dB PWL.</param>
 	/// <returns>A new SoundPowerLevel instance.</returns>
-	public static SoundPowerLevel FromDecibels(float decibels) => new() { Value = Generic.SoundPowerLevel<float>.FromDecibels(decibels) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new SoundPowerLevel FromDecibels(float decibels) => new() { Value = decibels };
 }

@@ -9,23 +9,17 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a specific gravity quantity with float precision.
 /// </summary>
-public sealed record SpecificGravity
+public sealed record SpecificGravity : Generic.SpecificGravity<float>
 {
-	/// <summary>Gets the underlying generic specific gravity instance.</summary>
-	public Generic.SpecificGravity<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SpecificGravity"/> class.
 	/// </summary>
-	public SpecificGravity() { }
+	public SpecificGravity() : base() { }
 
 	/// <summary>
 	/// Creates a new SpecificGravity from a dimensionless ratio.
 	/// </summary>
 	/// <param name="ratio">The dimensionless ratio value.</param>
 	/// <returns>A new SpecificGravity instance.</returns>
-	public static SpecificGravity FromRatio(float ratio) => new() { Value = Generic.SpecificGravity<float>.FromRatio(ratio) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new SpecificGravity FromRatio(float ratio) => new() { Value = ratio };
 }

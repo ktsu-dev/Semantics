@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a surface tension quantity with double precision.
 /// </summary>
-public sealed record SurfaceTension
+public sealed record SurfaceTension : Generic.SurfaceTension<double>
 {
-	/// <summary>Gets the underlying generic surface tension instance.</summary>
-	public Generic.SurfaceTension<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SurfaceTension"/> class.
 	/// </summary>
-	public SurfaceTension() { }
+	public SurfaceTension() : base() { }
 
 	/// <summary>
 	/// Creates a new SurfaceTension from a value in newtons per meter.
 	/// </summary>
 	/// <param name="newtonsPerMeter">The value in newtons per meter.</param>
 	/// <returns>A new SurfaceTension instance.</returns>
-	public static SurfaceTension FromNewtonsPerMeter(double newtonsPerMeter) => new() { Value = Generic.SurfaceTension<double>.Create(newtonsPerMeter) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new SurfaceTension FromNewtonsPerMeter(double newtonsPerMeter) => new() { Value = newtonsPerMeter };
 }

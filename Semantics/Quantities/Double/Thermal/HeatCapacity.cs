@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a heat capacity quantity with double precision.
 /// </summary>
-public sealed record HeatCapacity
+public sealed record HeatCapacity : Generic.HeatCapacity<double>
 {
-	/// <summary>Gets the underlying generic heat capacity instance.</summary>
-	public Generic.HeatCapacity<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="HeatCapacity"/> class.
 	/// </summary>
-	public HeatCapacity() { }
+	public HeatCapacity() : base() { }
 
 	/// <summary>
 	/// Creates a new HeatCapacity from a value in joules per kelvin.
 	/// </summary>
 	/// <param name="joulesPerKelvin">The value in joules per kelvin.</param>
 	/// <returns>A new HeatCapacity instance.</returns>
-	public static HeatCapacity FromJoulesPerKelvin(double joulesPerKelvin) => new() { Value = Generic.HeatCapacity<double>.FromJoulesPerKelvin(joulesPerKelvin) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new HeatCapacity FromJoulesPerKelvin(double joulesPerKelvin) => new() { Value = joulesPerKelvin };
 }

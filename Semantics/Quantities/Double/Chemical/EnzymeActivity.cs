@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents an enzyme activity quantity with double precision.
 /// </summary>
-public sealed record EnzymeActivity
+public sealed record EnzymeActivity : Generic.EnzymeActivity<double>
 {
-	/// <summary>Gets the underlying generic enzyme activity instance.</summary>
-	public Generic.EnzymeActivity<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="EnzymeActivity"/> class.
 	/// </summary>
-	public EnzymeActivity() { }
+	public EnzymeActivity() : base() { }
 
 	/// <summary>
 	/// Creates a new EnzymeActivity from a value in katal.
 	/// </summary>
 	/// <param name="katal">The value in katal.</param>
 	/// <returns>A new EnzymeActivity instance.</returns>
-	public static EnzymeActivity FromKatal(double katal) => new() { Value = Generic.EnzymeActivity<double>.Create(katal) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new EnzymeActivity FromKatal(double katal) => new() { Value = katal };
 }

@@ -10,30 +10,24 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a directionality index quantity with double precision.
 /// </summary>
-public sealed record DirectionalityIndex
+public sealed record DirectionalityIndex : Generic.DirectionalityIndex<double>
 {
-	/// <summary>Gets the underlying generic directionality index instance.</summary>
-	public Generic.DirectionalityIndex<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DirectionalityIndex"/> class.
 	/// </summary>
-	public DirectionalityIndex() { }
+	public DirectionalityIndex() : base() { }
 
 	/// <summary>
 	/// Creates a new DirectionalityIndex from a value in decibels.
 	/// </summary>
 	/// <param name="decibels">The directionality index in dB.</param>
 	/// <returns>A new DirectionalityIndex instance.</returns>
-	public static DirectionalityIndex FromDecibels(double decibels) => new() { Value = Generic.DirectionalityIndex<double>.FromDecibels(decibels) };
+	public static new DirectionalityIndex FromDecibels(double decibels) => new() { Value = decibels };
 
 	/// <summary>
 	/// Creates a DirectionalityIndex from directivity factor Q.
 	/// </summary>
 	/// <param name="directivityFactor">The directivity factor Q.</param>
 	/// <returns>The corresponding directionality index.</returns>
-	public static DirectionalityIndex FromDirectivityFactor(double directivityFactor) => new() { Value = Generic.DirectionalityIndex<double>.FromDirectivityFactor(directivityFactor) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new DirectionalityIndex FromDirectivityFactor(double directivityFactor) => new() { Value = directivityFactor };
 }

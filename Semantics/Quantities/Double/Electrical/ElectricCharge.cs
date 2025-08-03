@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents an electric charge quantity with double precision.
 /// </summary>
-public sealed record ElectricCharge
+public sealed record ElectricCharge : Generic.ElectricCharge<double>
 {
-	/// <summary>Gets the underlying generic electric charge instance.</summary>
-	public Generic.ElectricCharge<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ElectricCharge"/> class.
 	/// </summary>
-	public ElectricCharge() { }
+	public ElectricCharge() : base() { }
 
 	/// <summary>
 	/// Creates a new ElectricCharge from a value in coulombs.
 	/// </summary>
 	/// <param name="coulombs">The value in coulombs.</param>
 	/// <returns>A new ElectricCharge instance.</returns>
-	public static ElectricCharge FromCoulombs(double coulombs) => new() { Value = Generic.ElectricCharge<double>.FromCoulombs(coulombs) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new ElectricCharge FromCoulombs(double coulombs) => new() { Value = coulombs };
 }

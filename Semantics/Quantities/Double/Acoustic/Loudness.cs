@@ -10,30 +10,24 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a loudness quantity with double precision.
 /// </summary>
-public sealed record Loudness
+public sealed record Loudness : Generic.Loudness<double>
 {
-	/// <summary>Gets the underlying generic loudness instance.</summary>
-	public Generic.Loudness<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Loudness"/> class.
 	/// </summary>
-	public Loudness() { }
+	public Loudness() : base() { }
 
 	/// <summary>
 	/// Creates a new Loudness from a value in sones.
 	/// </summary>
 	/// <param name="sones">The loudness in sones.</param>
 	/// <returns>A new Loudness instance.</returns>
-	public static Loudness FromSones(double sones) => new() { Value = Generic.Loudness<double>.FromSones(sones) };
+	public static new Loudness FromSones(double sones) => new() { Value = sones };
 
 	/// <summary>
 	/// Creates a new Loudness from a value in phons (loudness level).
 	/// </summary>
 	/// <param name="phons">The loudness level in phons.</param>
 	/// <returns>A new Loudness instance.</returns>
-	public static Loudness FromPhons(double phons) => new() { Value = Generic.Loudness<double>.FromPhons(phons) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new Loudness FromPhons(double phons) => new() { Value = phons };
 }

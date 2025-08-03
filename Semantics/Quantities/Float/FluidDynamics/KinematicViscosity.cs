@@ -9,23 +9,17 @@ namespace ktsu.Semantics.Float;
 /// <summary>
 /// Represents a kinematic viscosity quantity with float precision.
 /// </summary>
-public sealed record KinematicViscosity
+public sealed record KinematicViscosity : Generic.KinematicViscosity<float>
 {
-	/// <summary>Gets the underlying generic kinematic viscosity instance.</summary>
-	public Generic.KinematicViscosity<float> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="KinematicViscosity"/> class.
 	/// </summary>
-	public KinematicViscosity() { }
+	public KinematicViscosity() : base() { }
 
 	/// <summary>
 	/// Creates a new KinematicViscosity from a value in square meters per second.
 	/// </summary>
 	/// <param name="squareMetersPerSecond">The value in square meters per second.</param>
 	/// <returns>A new KinematicViscosity instance.</returns>
-	public static KinematicViscosity FromSquareMetersPerSecond(float squareMetersPerSecond) => new() { Value = Generic.KinematicViscosity<float>.FromSquareMetersPerSecond(squareMetersPerSecond) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new KinematicViscosity FromSquareMetersPerSecond(float squareMetersPerSecond) => new() { Value = squareMetersPerSecond };
 }

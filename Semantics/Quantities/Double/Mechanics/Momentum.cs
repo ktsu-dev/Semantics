@@ -10,23 +10,17 @@ namespace ktsu.Semantics.Double;
 /// <summary>
 /// Represents a momentum quantity with double precision.
 /// </summary>
-public sealed record Momentum
+public sealed record Momentum : Generic.Momentum<double>
 {
-	/// <summary>Gets the underlying generic momentum instance.</summary>
-	public Generic.Momentum<double> Value { get; init; } = new();
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Momentum"/> class.
 	/// </summary>
-	public Momentum() { }
+	public Momentum() : base() { }
 
 	/// <summary>
 	/// Creates a new Momentum from a value in kilogram-meters per second.
 	/// </summary>
 	/// <param name="kilogramMetersPerSecond">The value in kilogram-meters per second.</param>
 	/// <returns>A new Momentum instance.</returns>
-	public static Momentum FromKilogramMetersPerSecond(double kilogramMetersPerSecond) => new() { Value = Generic.Momentum<double>.FromKilogramMetersPerSecond(kilogramMetersPerSecond) };
-
-	/// <summary>Returns a string representation of this quantity.</summary>
-	public override string ToString() => Value.ToString();
+	public static new Momentum FromKilogramMetersPerSecond(double kilogramMetersPerSecond) => new() { Value = kilogramMetersPerSecond };
 }
