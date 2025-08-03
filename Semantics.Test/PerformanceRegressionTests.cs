@@ -5,6 +5,7 @@
 namespace ktsu.Semantics.Test;
 
 using System.Diagnostics;
+using ktsu.Semantics.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 /// <summary>

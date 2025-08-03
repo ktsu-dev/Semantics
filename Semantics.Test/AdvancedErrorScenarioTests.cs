@@ -6,6 +6,7 @@ namespace ktsu.Semantics.Test;
 
 using System.Collections.Concurrent;
 using System.Text;
+using ktsu.Semantics.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]

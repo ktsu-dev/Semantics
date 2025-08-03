@@ -1,0 +1,174 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
+#pragma warning disable CA2225 // Operator overloads have named alternates
+
+namespace ktsu.Semantics.Float;
+
+using System.Numerics;
+
+/// <summary>
+/// Represents a 3D position vector with float precision.
+/// </summary>
+public sealed record Position3D : Generic.Position3D<float>
+{
+
+	/// <summary>Gets the 3D vector value stored in this quantity.</summary>
+	public Vector3f Value { get; init; } = Vector3f.Zero;
+
+	/// <summary>Gets whether this quantity satisfies physical constraints.</summary>
+	public bool IsPhysicallyValid => !float.IsNaN(Value.X) && !float.IsNaN(Value.Y) && !float.IsNaN(Value.Z) &&
+									 float.IsFinite(Value.X) && float.IsFinite(Value.Y) && float.IsFinite(Value.Z);
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="Position3D"/> class.
+	/// </summary>
+	public Position3D() : base() { }
+
+	/// <summary>
+	/// Creates a new instance with the specified vector value.
+	/// </summary>
+	/// <param name="value">The vector value for the quantity.</param>
+	/// <returns>A new instance of the quantity.</returns>
+	public static Position3D Create(Vector3f value) => new() { Value = value };
+
+	/// <summary>
+	/// Creates a new instance with the specified X, Y, and Z components.
+	/// </summary>
+	/// <param name="x">The X component.</param>
+	/// <param name="y">The Y component.</param>
+	/// <param name="z">The Z component.</param>
+	/// <returns>A new instance of the quantity.</returns>
+	public static Position3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));
+
+	/// <summary>
+	/// Creates a new Position3D from X, Y, and Z coordinates in meters.
+	/// </summary>
+	/// <param name="x">The X coordinate in meters.</param>
+	/// <param name="y">The Y coordinate in meters.</param>
+	/// <param name="z">The Z coordinate in meters.</param>
+	/// <returns>A new Position3D instance.</returns>
+	public static Position3D FromMeters(float x, float y, float z) => Create(x, y, z);
+
+	/// <summary>
+	/// Creates a new Position3D from a Vector3 in meters.
+	/// </summary>
+	/// <param name="meters">The position vector in meters.</param>
+	/// <returns>A new Position3D instance.</returns>
+	public static Position3D FromMeters(Vector3 meters) => Create(new Vector3f(meters));
+
+	/// <summary>Gets the magnitude (length) of this vector quantity.</summary>
+	public float Magnitude => Value.Length();
+
+	/// <summary>Gets the X component of this vector quantity.</summary>
+	public float X => Value.X;
+
+	/// <summary>Gets the Y component of this vector quantity.</summary>
+	public float Y => Value.Y;
+
+	/// <summary>Gets the Z component of this vector quantity.</summary>
+	public float Z => Value.Z;
+
+	/// <summary>
+	/// Gets the unit vector (normalized) form of this quantity.
+	/// </summary>
+	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
+	public Position3D Unit()
+	{
+		float magnitude = Magnitude;
+		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector3f.Zero);
+	}
+
+	/// <summary>
+	/// Gets the position as a Vector3f in meters (the base unit).
+	/// </summary>
+	/// <returns>The position vector in meters.</returns>
+	public Vector3f InMeters() => Value;
+
+	/// <summary>
+	/// Calculates displacement from this position to another position.
+	/// </summary>
+	/// <param name="other">The target position.</param>
+	/// <returns>The displacement vector from this position to the other.</returns>
+	public Displacement3D DisplacementTo(Position3D other)
+	{
+		ArgumentNullException.ThrowIfNull(other);
+		return Displacement3D.Create(other.Value - Value);
+	}
+
+	/// <summary>
+	/// Moves this position by the specified displacement.
+	/// </summary>
+	/// <param name="displacement">The displacement to apply.</param>
+	/// <returns>A new position after applying the displacement.</returns>
+	public Position3D Move(Displacement3D displacement)
+	{
+		ArgumentNullException.ThrowIfNull(displacement);
+		return Create(Value + displacement.Value);
+	}
+
+	// Vector arithmetic operations
+	/// <summary>Adds a displacement to a position.</summary>
+	public static Position3D operator +(Position3D position, Displacement3D displacement)
+	{
+		ArgumentNullException.ThrowIfNull(position);
+		ArgumentNullException.ThrowIfNull(displacement);
+		return Create(position.Value + displacement.Value);
+	}
+
+	/// <summary>Subtracts a displacement from a position.</summary>
+	public static Position3D operator -(Position3D position, Displacement3D displacement)
+	{
+		ArgumentNullException.ThrowIfNull(position);
+		ArgumentNullException.ThrowIfNull(displacement);
+		return Create(position.Value - displacement.Value);
+	}
+
+	/// <summary>Calculates displacement between two positions.</summary>
+	public static Displacement3D operator -(Position3D position1, Position3D position2)
+	{
+		ArgumentNullException.ThrowIfNull(position1);
+		ArgumentNullException.ThrowIfNull(position2);
+		return Displacement3D.Create(position1.Value - position2.Value);
+	}
+
+	/// <summary>Gets the origin position (0, 0, 0).</summary>
+	public static Position3D Origin => Create(0, 0, 0);
+
+	/// <summary>
+	/// Calculates the dot product of two vector quantities.
+	/// </summary>
+	/// <param name="other">The other vector quantity.</param>
+	/// <returns>The dot product as an area quantity.</returns>
+	public Area Dot(Position3D other)
+	{
+		ArgumentNullException.ThrowIfNull(other);
+		return Area.FromSquareMeters(Value.Dot(other.Value));
+	}
+
+	/// <summary>
+	/// Calculates the cross product of two vector quantities.
+	/// </summary>
+	/// <param name="other">The other vector quantity.</param>
+	/// <returns>The cross product.</returns>
+	public Position3D Cross(Position3D other)
+	{
+		ArgumentNullException.ThrowIfNull(other);
+		return Create(Value.Cross(other.Value));
+	}
+
+	/// <summary>
+	/// Calculates the distance between two vector quantities.
+	/// </summary>
+	/// <param name="other">The other vector quantity.</param>
+	/// <returns>The distance as a length quantity.</returns>
+	public Length Distance(Position3D other)
+	{
+		ArgumentNullException.ThrowIfNull(other);
+		return Length.FromMeters(Value.Distance(other.Value));
+	}
+
+	/// <summary>Returns a string representation of this quantity.</summary>
+	public override string ToString() => $"{Value} {Dimension.BaseUnit.Symbol}";
+}
