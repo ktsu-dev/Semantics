@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// Tests the three-tier architecture: Generic → Double concrete types.
 /// </summary>
 [TestClass]
-public class DoubleQuantitiesTests
+public static class DoubleQuantitiesTests
 {
 	private const double Tolerance = 1e-10;
 
@@ -24,9 +24,9 @@ public class DoubleQuantitiesTests
 		public void Length_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var length = Length.FromMeters(10.123456789);
-			var genericLength = (Generic.Length<double>)length;
-			var backToDouble = (Length)genericLength;
+			Length length = Length.FromMeters(10.123456789);
+			Length<double> genericLength = length;
+			Length backToDouble = (Length)genericLength;
 
 			// Assert
 			Assert.AreEqual(10.123456789, length.Value, Tolerance);
@@ -38,9 +38,9 @@ public class DoubleQuantitiesTests
 		public void Mass_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var mass = Mass.FromKilograms(25.987654321);
-			var genericMass = (Generic.Mass<double>)mass;
-			var backToDouble = (Mass)genericMass;
+			Mass mass = Mass.FromKilograms(25.987654321);
+			Mass<double> genericMass = mass;
+			Mass backToDouble = (Mass)genericMass;
 
 			// Assert
 			Assert.AreEqual(25.987654321, mass.Value, Tolerance);
@@ -52,9 +52,9 @@ public class DoubleQuantitiesTests
 		public void Pressure_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var pressure = Pressure.FromPascals(101325.123456789);
-			var genericPressure = (Generic.Pressure<double>)pressure;
-			var backToDouble = (Pressure)genericPressure;
+			Pressure pressure = Pressure.FromPascals(101325.123456789);
+			Pressure<double> genericPressure = (Pressure<double>)pressure;
+			Pressure backToDouble = (Pressure)genericPressure;
 
 			// Assert
 			Assert.AreEqual(101325.123456789, pressure.Value, Tolerance);
@@ -66,9 +66,9 @@ public class DoubleQuantitiesTests
 		public void Area_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var area = Area.FromSquareMeters(42.195780490812);
-			var genericArea = (Generic.Area<double>)area;
-			var backToDouble = (Area)genericArea;
+			Area area = Area.FromSquareMeters(42.195780490812);
+			Area<double> genericArea = area;
+			Area backToDouble = (Area)genericArea;
 
 			// Assert
 			Assert.AreEqual(42.195780490812, area.Value, Tolerance);
@@ -84,9 +84,9 @@ public class DoubleQuantitiesTests
 		public void AmountOfSubstance_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var amount = AmountOfSubstance.FromMoles(2.5e-6);
-			var genericAmount = (Generic.AmountOfSubstance<double>)amount;
-			var backToDouble = (AmountOfSubstance)genericAmount;
+			AmountOfSubstance amount = AmountOfSubstance.FromMoles(2.5e-6);
+			AmountOfSubstance<double> genericAmount = amount;
+			AmountOfSubstance backToDouble = (AmountOfSubstance)genericAmount;
 
 			// Assert
 			Assert.AreEqual(2.5e-6, amount.Value, Tolerance);
@@ -99,8 +99,8 @@ public class DoubleQuantitiesTests
 		{
 			// Arrange & Act
 			var concentration = Concentration.FromMolarConcentration(0.123456789);
-			var genericConcentration = (Generic.Concentration<double>)concentration;
-			var backToDouble = (Concentration)genericConcentration;
+			Concentration<double> genericConcentration = (Concentration<double>)concentration;
+			Concentration backToDouble = (Concentration)genericConcentration;
 
 			// Assert
 			Assert.AreEqual(0.123456789, concentration.Value, Tolerance);
@@ -130,9 +130,9 @@ public class DoubleQuantitiesTests
 		public void RadioactiveActivity_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var activity = RadioactiveActivity.FromBecquerels(1e12);
-			var genericActivity = (Generic.RadioactiveActivity<double>)activity;
-			var backToDouble = (RadioactiveActivity)genericActivity;
+			RadioactiveActivity activity = RadioactiveActivity.FromBecquerels(1e12);
+			RadioactiveActivity<double> genericActivity = (RadioactiveActivity<double>)activity;
+			RadioactiveActivity backToDouble = (RadioactiveActivity)genericActivity;
 
 			// Assert
 			Assert.AreEqual(1e12, activity.Value, Tolerance);
@@ -144,9 +144,9 @@ public class DoubleQuantitiesTests
 		public void AbsorbedDose_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var dose = AbsorbedDose.FromGrays(0.001);
-			var genericDose = (Generic.AbsorbedDose<double>)dose;
-			var backToDouble = (AbsorbedDose)genericDose;
+			AbsorbedDose dose = AbsorbedDose.FromGrays(0.001);
+			AbsorbedDose<double> genericDose = dose;
+			AbsorbedDose backToDouble = (AbsorbedDose)genericDose;
 
 			// Assert
 			Assert.AreEqual(0.001, dose.Value, Tolerance);
@@ -163,8 +163,8 @@ public class DoubleQuantitiesTests
 		{
 			// Arrange & Act
 			var wavelength = Wavelength.FromNanometers(532.1);
-			var genericWavelength = (Generic.Wavelength<double>)wavelength;
-			var backToDouble = (Wavelength)genericWavelength;
+			Wavelength<double> genericWavelength = (Wavelength<double>)wavelength;
+			Wavelength backToDouble = (Wavelength)genericWavelength;
 
 			// Assert
 			Assert.AreEqual(532.1e-9, wavelength.Value, Tolerance);
@@ -177,8 +177,8 @@ public class DoubleQuantitiesTests
 		{
 			// Arrange & Act
 			var refractiveIndex = RefractiveIndex.Create(1.333);
-			var genericRefractiveIndex = (Generic.RefractiveIndex<double>)refractiveIndex;
-			var backToDouble = (RefractiveIndex)genericRefractiveIndex;
+			RefractiveIndex<double> genericRefractiveIndex = (RefractiveIndex<double>)refractiveIndex;
+			RefractiveIndex backToDouble = (RefractiveIndex)genericRefractiveIndex;
 
 			// Assert
 			Assert.AreEqual(1.333, refractiveIndex.Value, Tolerance);
@@ -195,11 +195,11 @@ public class DoubleQuantitiesTests
 		{
 			// Arrange - Use a value that would lose precision in float
 			double highPrecisionValue = Math.PI * 1e10;
-			
+
 			// Act
-			var length = Length.FromMeters(highPrecisionValue);
-			var genericLength = (Generic.Length<double>)length;
-			var backToDouble = (Length)genericLength;
+			Length length = Length.FromMeters(highPrecisionValue);
+			Length<double> genericLength = length;
+			Length backToDouble = (Length)genericLength;
 
 			// Assert - Should maintain full double precision
 			Assert.AreEqual(highPrecisionValue, length.Value, Tolerance);
@@ -215,8 +215,8 @@ public class DoubleQuantitiesTests
 		public void DoubleQuantities_ToString_ShouldMatchGenericToString()
 		{
 			// Arrange
-			var doubleLength = Length.FromMeters(10.123456789);
-			var genericLength = Generic.Length<double>.FromMeters(10.123456789);
+			Length doubleLength = Length.FromMeters(10.123456789);
+			Length<double> genericLength = Length<double>.FromMeters(10.123456789);
 
 			// Act & Assert
 			Assert.AreEqual(genericLength.ToString(), doubleLength.ToString());
@@ -233,9 +233,9 @@ public class DoubleQuantitiesTests
 			Length? nullLength = null;
 
 			// Act & Assert
-			Assert.ThrowsException<ArgumentNullException>(() => 
+			Assert.ThrowsException<ArgumentNullException>(() =>
 			{
-				Generic.Length<double> generic = nullLength!;
+				Length<double> generic = nullLength!;
 			});
 		}
 	}

@@ -61,7 +61,7 @@ public class DisplayConfigurationTests
 		public void CurrentDPI_SetNegativeValue_ShouldThrowArgumentException()
 		{
 			// Act & Assert
-			Assert.ThrowsException<ArgumentException>(() => 
+			Assert.ThrowsException<ArgumentException>(() =>
 			{
 				DisplayConfiguration.CurrentDPI = -96.0f;
 			});
@@ -71,7 +71,7 @@ public class DisplayConfigurationTests
 		public void CurrentDPI_SetZeroValue_ShouldThrowArgumentException()
 		{
 			// Act & Assert
-			Assert.ThrowsException<ArgumentException>(() => 
+			Assert.ThrowsException<ArgumentException>(() =>
 			{
 				DisplayConfiguration.CurrentDPI = 0.0f;
 			});
@@ -156,7 +156,7 @@ public class DisplayConfigurationTests
 		public void ConversionFactors_ShouldBeConsistent()
 		{
 			// Arrange
-			float[] dpiValues = { 72.0f, 96.0f, 120.0f, 144.0f, 192.0f, 300.0f };
+			float[] dpiValues = [72.0f, 96.0f, 120.0f, 144.0f, 192.0f, 300.0f];
 
 			foreach (float dpi in dpiValues)
 			{
@@ -183,8 +183,8 @@ public class DisplayConfigurationTests
 			// Arrange
 			const int numThreads = 10;
 			const int numIterations = 100;
-			var tasks = new Task[numThreads];
-			var exceptions = new List<Exception>();
+			Task[] tasks = new Task[numThreads];
+			List<Exception> exceptions = [];
 
 			// Act
 			for (int i = 0; i < numThreads; i++)
@@ -199,7 +199,7 @@ public class DisplayConfigurationTests
 							// Alternate between different DPI values
 							float dpi = threadId % 2 == 0 ? 96.0f : 300.0f;
 							DisplayConfiguration.CurrentDPI = dpi;
-							
+
 							// Verify we can read the value
 							float currentDpi = DisplayConfiguration.CurrentDPI;
 							Assert.IsTrue(currentDpi > 0);
@@ -250,9 +250,9 @@ public class DisplayConfigurationTests
 				float heightInches = heightMeters / 0.0254f;
 
 				// Assert - Screen sizes should be reasonable (between 10 and 50 inches)
-				Assert.IsTrue(widthInches > 10 && widthInches < 50, 
+				Assert.IsTrue(widthInches is > 10 and < 50,
 					$"{testCase.Name}: Width {widthInches:F1} inches seems unreasonable");
-				Assert.IsTrue(heightInches > 5 && heightInches < 30, 
+				Assert.IsTrue(heightInches is > 5 and < 30,
 					$"{testCase.Name}: Height {heightInches:F1} inches seems unreasonable");
 			}
 		}

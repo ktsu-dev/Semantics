@@ -3,17 +3,14 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Test;
-
-using ktsu.Semantics.Double;
 using ktsu.Semantics.Float;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Numerics;
 
 /// <summary>
 /// Tests for the 3D vector quantities.
 /// </summary>
 [TestClass]
-public class Vector3DTests
+public static class Vector3DTests
 {
 	private const float FloatTolerance = 1e-6f;
 	private const double DoubleTolerance = 1e-10;
@@ -25,7 +22,7 @@ public class Vector3DTests
 		public void Position3D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			var position = ktsu.Semantics.Float.Position3D.FromMeters(10.5f, 20.3f, 5.7f);
+			Float.Position3D position = Float.Position3D.FromMeters(10.5f, 20.3f, 5.7f);
 
 			// Assert
 			Assert.AreEqual(10.5f, position.X, FloatTolerance);
@@ -38,7 +35,7 @@ public class Vector3DTests
 		public void Displacement3D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			var displacement = ktsu.Semantics.Float.Displacement3D.FromMeters(5.0f, -3.0f, 2.0f);
+			Float.Displacement3D displacement = Float.Displacement3D.FromMeters(5.0f, -3.0f, 2.0f);
 
 			// Assert
 			Assert.AreEqual(5.0f, displacement.X, FloatTolerance);
@@ -51,7 +48,7 @@ public class Vector3DTests
 		public void Velocity3D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			var velocity = ktsu.Semantics.Float.Velocity3D.FromMetersPerSecond(15.0f, 8.0f, 6.0f);
+			Float.Velocity3D velocity = Float.Velocity3D.FromMetersPerSecond(15.0f, 8.0f, 6.0f);
 
 			// Assert
 			Assert.AreEqual(15.0f, velocity.X, FloatTolerance);
@@ -64,7 +61,7 @@ public class Vector3DTests
 		public void Acceleration3D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			var acceleration = ktsu.Semantics.Float.Acceleration3D.FromMetersPerSecondSquared(9.8f, 0.0f, -2.5f);
+			Float.Acceleration3D acceleration = Float.Acceleration3D.FromMetersPerSecondSquared(9.8f, 0.0f, -2.5f);
 
 			// Assert
 			Assert.AreEqual(9.8f, acceleration.X, FloatTolerance);
@@ -77,7 +74,7 @@ public class Vector3DTests
 		public void Force3D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			var force = ktsu.Semantics.Float.Force3D.FromNewtons(100.0f, 50.0f, 25.0f);
+			Float.Force3D force = Float.Force3D.FromNewtons(100.0f, 50.0f, 25.0f);
 
 			// Assert
 			Assert.AreEqual(100.0f, force.X, FloatTolerance);
@@ -90,11 +87,11 @@ public class Vector3DTests
 		public void Vector3D_Float_ArithmeticOperations_ShouldWork()
 		{
 			// Arrange
-			var position1 = ktsu.Semantics.Float.Position3D.FromMeters(10.0f, 20.0f, 30.0f);
-			var displacement = ktsu.Semantics.Float.Displacement3D.FromMeters(5.0f, -3.0f, 2.0f);
+			Float.Position3D position1 = Float.Position3D.FromMeters(10.0f, 20.0f, 30.0f);
+			Float.Displacement3D displacement = Float.Displacement3D.FromMeters(5.0f, -3.0f, 2.0f);
 
 			// Act
-			var position2 = position1 + displacement;
+			Float.Position3D position2 = position1 + displacement;
 
 			// Assert
 			Assert.AreEqual(15.0f, position2.X, FloatTolerance);
@@ -106,11 +103,11 @@ public class Vector3DTests
 		public void Vector3D_Float_CrossProduct_ShouldWork()
 		{
 			// Arrange
-			var vector1 = ktsu.Semantics.Float.Force3D.FromNewtons(1.0f, 0.0f, 0.0f);
-			var vector2 = ktsu.Semantics.Float.Force3D.FromNewtons(0.0f, 1.0f, 0.0f);
+			Float.Force3D vector1 = Float.Force3D.FromNewtons(1.0f, 0.0f, 0.0f);
+			Float.Force3D vector2 = Float.Force3D.FromNewtons(0.0f, 1.0f, 0.0f);
 
 			// Act
-			var crossProduct = vector1.Cross(vector2);
+			Float.Force3D crossProduct = vector1.Cross(vector2);
 
 			// Assert
 			Assert.AreEqual(0.0f, crossProduct.X, FloatTolerance);
@@ -122,8 +119,8 @@ public class Vector3DTests
 		public void Vector3D_Float_DotProduct_ShouldWork()
 		{
 			// Arrange
-			var velocity1 = ktsu.Semantics.Float.Velocity3D.FromMetersPerSecond(2.0f, 3.0f, 4.0f);
-			var velocity2 = ktsu.Semantics.Float.Velocity3D.FromMetersPerSecond(5.0f, 6.0f, 7.0f);
+			Float.Velocity3D velocity1 = Float.Velocity3D.FromMetersPerSecond(2.0f, 3.0f, 4.0f);
+			Float.Velocity3D velocity2 = Float.Velocity3D.FromMetersPerSecond(5.0f, 6.0f, 7.0f);
 
 			// Act
 			float dotProduct = velocity1.Dot(velocity2);
@@ -140,7 +137,7 @@ public class Vector3DTests
 		public void Position3D_Double_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			var position = ktsu.Semantics.Double.Position3D.FromMeters(10.123456789, 20.987654321, 5.555555555);
+			Double.Position3D position = Double.Position3D.FromMeters(10.123456789, 20.987654321, 5.555555555);
 
 			// Assert
 			Assert.AreEqual(10.123456789, position.X, DoubleTolerance);
@@ -153,24 +150,24 @@ public class Vector3DTests
 		public void Vector3D_Double_HighPrecision_ShouldMaintainAccuracy()
 		{
 			// Arrange - Use high precision values that would lose accuracy in float
-			var position1 = ktsu.Semantics.Double.Position3D.FromMeters(Math.PI * 1e10, Math.E * 1e10, Math.Sqrt(2) * 1e10);
-			var displacement = ktsu.Semantics.Double.Displacement3D.FromMeters(Math.Sqrt(3), Math.Sqrt(5), Math.Sqrt(7));
+			Double.Position3D position1 = Double.Position3D.FromMeters(Math.PI * 1e10, Math.E * 1e10, Math.Sqrt(2) * 1e10);
+			Double.Displacement3D displacement = Double.Displacement3D.FromMeters(Math.Sqrt(3), Math.Sqrt(5), Math.Sqrt(7));
 
 			// Act
-			var position2 = position1 + displacement;
+			Double.Position3D position2 = position1 + displacement;
 
 			// Assert
-			Assert.AreEqual(Math.PI * 1e10 + Math.Sqrt(3), position2.X, DoubleTolerance);
-			Assert.AreEqual(Math.E * 1e10 + Math.Sqrt(5), position2.Y, DoubleTolerance);
-			Assert.AreEqual(Math.Sqrt(2) * 1e10 + Math.Sqrt(7), position2.Z, DoubleTolerance);
+			Assert.AreEqual((Math.PI * 1e10) + Math.Sqrt(3), position2.X, DoubleTolerance);
+			Assert.AreEqual((Math.E * 1e10) + Math.Sqrt(5), position2.Y, DoubleTolerance);
+			Assert.AreEqual((Math.Sqrt(2) * 1e10) + Math.Sqrt(7), position2.Z, DoubleTolerance);
 		}
 
 		[TestMethod]
 		public void Vector3D_Double_Distance_ShouldCalculateCorrectly()
 		{
 			// Arrange
-			var position1 = ktsu.Semantics.Double.Position3D.FromMeters(0.0, 0.0, 0.0);
-			var position2 = ktsu.Semantics.Double.Position3D.FromMeters(3.0, 4.0, 12.0);
+			Double.Position3D position1 = Double.Position3D.FromMeters(0.0, 0.0, 0.0);
+			Double.Position3D position2 = Double.Position3D.FromMeters(3.0, 4.0, 12.0);
 
 			// Act
 			double distance = position1.Distance(position2);
@@ -183,8 +180,8 @@ public class Vector3DTests
 		public void Vector3D_Double_DotProduct_ShouldCalculateCorrectly()
 		{
 			// Arrange
-			var velocity1 = ktsu.Semantics.Double.Velocity3D.FromMetersPerSecond(2.0, 3.0, 4.0);
-			var velocity2 = ktsu.Semantics.Double.Velocity3D.FromMetersPerSecond(5.0, 6.0, 7.0);
+			Double.Velocity3D velocity1 = Double.Velocity3D.FromMetersPerSecond(2.0, 3.0, 4.0);
+			Double.Velocity3D velocity2 = Double.Velocity3D.FromMetersPerSecond(5.0, 6.0, 7.0);
 
 			// Act
 			double dotProduct = velocity1.Dot(velocity2);
@@ -197,11 +194,11 @@ public class Vector3DTests
 		public void Vector3D_Double_CrossProduct_ShouldCalculateCorrectly()
 		{
 			// Arrange
-			var force1 = ktsu.Semantics.Double.Force3D.FromNewtons(1.0, 2.0, 3.0);
-			var force2 = ktsu.Semantics.Double.Force3D.FromNewtons(4.0, 5.0, 6.0);
+			Double.Force3D force1 = Double.Force3D.FromNewtons(1.0, 2.0, 3.0);
+			Double.Force3D force2 = Double.Force3D.FromNewtons(4.0, 5.0, 6.0);
 
 			// Act
-			var crossProduct = force1.Cross(force2);
+			Double.Force3D crossProduct = force1.Cross(force2);
 
 			// Assert
 			// Cross product of (1,2,3) x (4,5,6) = (2*6-3*5, 3*4-1*6, 1*5-2*4) = (-3, 6, -3)
@@ -218,7 +215,7 @@ public class Vector3DTests
 		public void Vector3D_NaNValues_ShouldBeInvalid()
 		{
 			// Arrange
-			var position = ktsu.Semantics.Float.Position3D.Create(new Vector3f(float.NaN, 5.0f, 3.0f));
+			Float.Position3D position = Float.Position3D.Create(new Vector3f(float.NaN, 5.0f, 3.0f));
 
 			// Assert
 			Assert.IsFalse(position.IsPhysicallyValid);
@@ -228,7 +225,7 @@ public class Vector3DTests
 		public void Vector3D_InfiniteValues_ShouldBeInvalid()
 		{
 			// Arrange
-			var position = ktsu.Semantics.Float.Position3D.Create(new Vector3f(float.PositiveInfinity, 5.0f, 3.0f));
+			Float.Position3D position = Float.Position3D.Create(new Vector3f(float.PositiveInfinity, 5.0f, 3.0f));
 
 			// Assert
 			Assert.IsFalse(position.IsPhysicallyValid);
@@ -238,7 +235,7 @@ public class Vector3DTests
 		public void Vector3D_ValidValues_ShouldBeValid()
 		{
 			// Arrange
-			var position = ktsu.Semantics.Float.Position3D.Create(new Vector3f(10.0f, 20.0f, 30.0f));
+			Float.Position3D position = Float.Position3D.Create(new Vector3f(10.0f, 20.0f, 30.0f));
 
 			// Assert
 			Assert.IsTrue(position.IsPhysicallyValid);
@@ -252,10 +249,10 @@ public class Vector3DTests
 		public void Vector3D_Unit_ShouldReturnNormalizedVector()
 		{
 			// Arrange
-			var velocity = ktsu.Semantics.Float.Velocity3D.FromMetersPerSecond(3.0f, 4.0f, 12.0f);
+			Float.Velocity3D velocity = Float.Velocity3D.FromMetersPerSecond(3.0f, 4.0f, 12.0f);
 
 			// Act
-			var unitVelocity = velocity.Unit();
+			Float.Velocity3D unitVelocity = velocity.Unit();
 
 			// Assert
 			Assert.AreEqual(1.0f, unitVelocity.Magnitude, FloatTolerance);
@@ -268,10 +265,10 @@ public class Vector3DTests
 		public void Vector3D_ZeroMagnitude_Unit_ShouldReturnZero()
 		{
 			// Arrange
-			var zeroVelocity = ktsu.Semantics.Float.Velocity3D.FromMetersPerSecond(0.0f, 0.0f, 0.0f);
+			Float.Velocity3D zeroVelocity = Float.Velocity3D.FromMetersPerSecond(0.0f, 0.0f, 0.0f);
 
 			// Act
-			var unitVelocity = zeroVelocity.Unit();
+			Float.Velocity3D unitVelocity = zeroVelocity.Unit();
 
 			// Assert
 			Assert.AreEqual(0.0f, unitVelocity.Magnitude, FloatTolerance);
@@ -288,7 +285,7 @@ public class Vector3DTests
 		public void Acceleration3D_StandardGravity_ShouldHaveCorrectValue()
 		{
 			// Arrange & Act
-			var gravity = ktsu.Semantics.Float.Acceleration3D.StandardGravity;
+			Float.Acceleration3D gravity = Float.Acceleration3D.StandardGravity;
 
 			// Assert
 			Assert.AreEqual(0.0f, gravity.X, FloatTolerance);
@@ -300,7 +297,7 @@ public class Vector3DTests
 		public void Position3D_Origin_ShouldHaveZeroValues()
 		{
 			// Arrange & Act
-			var origin = ktsu.Semantics.Float.Position3D.Origin;
+			Float.Position3D origin = Float.Position3D.Origin;
 
 			// Assert
 			Assert.AreEqual(0.0f, origin.X, FloatTolerance);

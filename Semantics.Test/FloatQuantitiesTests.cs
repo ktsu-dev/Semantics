@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// Tests the three-tier architecture: Generic → Float concrete types.
 /// </summary>
 [TestClass]
-public class FloatQuantitiesTests
+public static class FloatQuantitiesTests
 {
 	private const float Tolerance = 1e-6f;
 
@@ -24,9 +24,9 @@ public class FloatQuantitiesTests
 		public void Length_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var length = Length.FromMeters(10.5f);
-			var genericLength = (Generic.Length<float>)length;
-			var backToFloat = (Length)genericLength;
+			Length length = Length.FromMeters(10.5f);
+			Length<float> genericLength = length;
+			Length backToFloat = (Length)genericLength;
 
 			// Assert
 			Assert.AreEqual(10.5f, length.Value, Tolerance);
@@ -38,9 +38,9 @@ public class FloatQuantitiesTests
 		public void Mass_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var mass = Mass.FromKilograms(25.7f);
-			var genericMass = (Generic.Mass<float>)mass;
-			var backToFloat = (Mass)genericMass;
+			Mass mass = Mass.FromKilograms(25.7f);
+			Mass<float> genericMass = mass;
+			Mass backToFloat = (Mass)genericMass;
 
 			// Assert
 			Assert.AreEqual(25.7f, mass.Value, Tolerance);
@@ -52,9 +52,9 @@ public class FloatQuantitiesTests
 		public void Force_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var force = Force.FromNewtons(100.3f);
-			var genericForce = (Generic.Force<float>)force;
-			var backToFloat = (Force)genericForce;
+			Force force = Force.FromNewtons(100.3f);
+			Force<float> genericForce = force;
+			Force backToFloat = (Force)genericForce;
 
 			// Assert
 			Assert.AreEqual(100.3f, force.Value, Tolerance);
@@ -66,9 +66,9 @@ public class FloatQuantitiesTests
 		public void Energy_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var energy = Energy.FromJoules(500.8f);
-			var genericEnergy = (Generic.Energy<float>)energy;
-			var backToFloat = (Energy)genericEnergy;
+			Energy energy = Energy.FromJoules(500.8f);
+			Energy<float> genericEnergy = energy;
+			Energy backToFloat = (Energy)genericEnergy;
 
 			// Assert
 			Assert.AreEqual(500.8f, energy.Value, Tolerance);
@@ -80,9 +80,9 @@ public class FloatQuantitiesTests
 		public void Velocity_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var velocity = Velocity.FromMetersPerSecond(15.2f);
-			var genericVelocity = (Generic.Velocity<float>)velocity;
-			var backToFloat = (Velocity)genericVelocity;
+			Velocity velocity = Velocity.FromMetersPerSecond(15.2f);
+			Velocity<float> genericVelocity = velocity;
+			Velocity backToFloat = (Velocity)genericVelocity;
 
 			// Assert
 			Assert.AreEqual(15.2f, velocity.Value, Tolerance);
@@ -98,9 +98,9 @@ public class FloatQuantitiesTests
 		public void ElectricCurrent_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var current = ElectricCurrent.FromAmperes(2.5f);
-			var genericCurrent = (Generic.ElectricCurrent<float>)current;
-			var backToFloat = (ElectricCurrent)genericCurrent;
+			ElectricCurrent current = ElectricCurrent.FromAmperes(2.5f);
+			ElectricCurrent<float> genericCurrent = current;
+			ElectricCurrent backToFloat = (ElectricCurrent)genericCurrent;
 
 			// Assert
 			Assert.AreEqual(2.5f, current.Value, Tolerance);
@@ -112,9 +112,9 @@ public class FloatQuantitiesTests
 		public void ElectricPotential_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var voltage = ElectricPotential.FromVolts(12.0f);
-			var genericVoltage = (Generic.ElectricPotential<float>)voltage;
-			var backToFloat = (ElectricPotential)genericVoltage;
+			ElectricPotential voltage = ElectricPotential.FromVolts(12.0f);
+			ElectricPotential<float> genericVoltage = voltage;
+			ElectricPotential backToFloat = (ElectricPotential)genericVoltage;
 
 			// Assert
 			Assert.AreEqual(12.0f, voltage.Value, Tolerance);
@@ -126,9 +126,9 @@ public class FloatQuantitiesTests
 		public void ElectricResistance_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var resistance = ElectricResistance.FromOhms(47.5f);
-			var genericResistance = (Generic.ElectricResistance<float>)resistance;
-			var backToFloat = (ElectricResistance)genericResistance;
+			ElectricResistance resistance = ElectricResistance.FromOhms(47.5f);
+			ElectricResistance<float> genericResistance = resistance;
+			ElectricResistance backToFloat = (ElectricResistance)genericResistance;
 
 			// Assert
 			Assert.AreEqual(47.5f, resistance.Value, Tolerance);
@@ -144,9 +144,9 @@ public class FloatQuantitiesTests
 		public void Temperature_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var temperature = Temperature.FromKelvin(298.15f);
-			var genericTemperature = (Generic.Temperature<float>)temperature;
-			var backToFloat = (Temperature)genericTemperature;
+			Temperature temperature = Temperature.FromKelvin(298.15f);
+			Temperature<float> genericTemperature = temperature;
+			Temperature backToFloat = (Temperature)genericTemperature;
 
 			// Assert
 			Assert.AreEqual(298.15f, temperature.Value, Tolerance);
@@ -158,9 +158,9 @@ public class FloatQuantitiesTests
 		public void Heat_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var heat = Heat.FromJoules(1000.0f);
-			var genericHeat = (Generic.Heat<float>)heat;
-			var backToFloat = (Heat)genericHeat;
+			Heat heat = Heat.FromJoules(1000.0f);
+			Heat<float> genericHeat = heat;
+			Heat backToFloat = (Heat)genericHeat;
 
 			// Assert
 			Assert.AreEqual(1000.0f, heat.Value, Tolerance);
@@ -176,9 +176,9 @@ public class FloatQuantitiesTests
 		public void Frequency_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var frequency = Frequency.FromHertz(440.0f);
-			var genericFrequency = (Generic.Frequency<float>)frequency;
-			var backToFloat = (Frequency)genericFrequency;
+			Frequency frequency = Frequency.FromHertz(440.0f);
+			Frequency<float> genericFrequency = frequency;
+			Frequency backToFloat = (Frequency)genericFrequency;
 
 			// Assert
 			Assert.AreEqual(440.0f, frequency.Value, Tolerance);
@@ -190,9 +190,9 @@ public class FloatQuantitiesTests
 		public void SoundPressure_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var soundPressure = SoundPressure.FromPascals(0.02f);
-			var genericSoundPressure = (Generic.SoundPressure<float>)soundPressure;
-			var backToFloat = (SoundPressure)genericSoundPressure;
+			SoundPressure soundPressure = SoundPressure.FromPascals(0.02f);
+			SoundPressure<float> genericSoundPressure = (SoundPressure<float>)soundPressure;
+			SoundPressure backToFloat = (SoundPressure)genericSoundPressure;
 
 			// Assert
 			Assert.AreEqual(0.02f, soundPressure.Value, Tolerance);
@@ -208,8 +208,8 @@ public class FloatQuantitiesTests
 		public void FloatQuantities_ToString_ShouldMatchGenericToString()
 		{
 			// Arrange
-			var floatLength = Length.FromMeters(10.5f);
-			var genericLength = Generic.Length<float>.FromMeters(10.5f);
+			Length floatLength = Length.FromMeters(10.5f);
+			Length<float> genericLength = Length<float>.FromMeters(10.5f);
 
 			// Act & Assert
 			Assert.AreEqual(genericLength.ToString(), floatLength.ToString());
@@ -226,9 +226,9 @@ public class FloatQuantitiesTests
 			Length? nullLength = null;
 
 			// Act & Assert
-			Assert.ThrowsException<ArgumentNullException>(() => 
+			Assert.ThrowsException<ArgumentNullException>(() =>
 			{
-				Generic.Length<float> generic = nullLength!;
+				Length<float> generic = nullLength!;
 			});
 		}
 	}
