@@ -109,12 +109,12 @@ public static class DoubleQuantitiesTests
 		}
 
 		[TestMethod]
-		public void pH_CreateAndConvert_ShouldWork()
+		public void PH_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var ph = pH.FromPHValue(7.35);
-			var genericPh = (Generic.pH<double>)ph;
-			var backToDouble = (pH)genericPh;
+			var ph = PH.FromPHValue(7.35);
+			var genericPh = (Generic.PH<double>)ph;
+			var backToDouble = (PH)genericPh;
 
 			// Assert
 			Assert.AreEqual(7.35, ph.Value, Tolerance);

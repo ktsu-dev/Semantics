@@ -40,47 +40,7 @@ public sealed record Velocity3D : Generic.Velocity3D<double>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Velocity3D Create(double x, double y, double z) => Create(new Vector3d(x, y, z));
-
-	/// <summary>
-	/// Creates a new Velocity3D from X, Y, and Z components in meters per second.
-	/// </summary>
-	/// <param name="x">The X component in m/s.</param>
-	/// <param name="y">The Y component in m/s.</param>
-	/// <param name="z">The Z component in m/s.</param>
-	/// <returns>A new Velocity3D instance.</returns>
-	public static Velocity3D FromMetersPerSecond(double x, double y, double z) => Create(x, y, z);
-
-	/// <summary>
-	/// Creates a new Velocity3D from a Vector3 in meters per second.
-	/// </summary>
-	/// <param name="metersPerSecond">The velocity vector in m/s.</param>
-	/// <returns>A new Velocity3D instance.</returns>
-	public static Velocity3D FromMetersPerSecond(Vector3 metersPerSecond) => Create(new Vector3d(metersPerSecond.X, metersPerSecond.Y, metersPerSecond.Z));
-
-	/// <summary>Gets the magnitude (speed) of this velocity vector.</summary>
-	public double Magnitude => Value.Length();
-
-	/// <summary>Gets the X component of this vector quantity.</summary>
-	public double X => Value.X;
-
-	/// <summary>Gets the Y component of this vector quantity.</summary>
-	public double Y => Value.Y;
-
-	/// <summary>Gets the Z component of this vector quantity.</summary>
-	public double Z => Value.Z;
-
-	/// <summary>
-	/// Gets the unit vector (normalized) form of this quantity.
-	/// </summary>
-	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
-	public Velocity3D Unit()
-	{
-		double magnitude = Magnitude;
-		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector3d.Zero);
-	}
-
-	/// <summary>
+	public static Velocity3D Create(double x, double y, double z) => Create(new Vector3d(x, y, z));	/// <summary>
 	/// Gets the velocity as a Vector3d in meters per second (the base unit).
 	/// </summary>
 	/// <returns>The velocity vector in m/s.</returns>

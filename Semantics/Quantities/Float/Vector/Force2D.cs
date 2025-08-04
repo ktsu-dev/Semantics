@@ -39,43 +39,7 @@ public sealed record Force2D : Generic.Force2D<float>
 	/// <param name="x">The X component.</param>
 	/// <param name="y">The Y component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Force2D Create(float x, float y) => Create(new Vector2f(x, y));
-
-	/// <summary>
-	/// Creates a new Force2D from X and Y components in newtons.
-	/// </summary>
-	/// <param name="x">The X component in newtons.</param>
-	/// <param name="y">The Y component in newtons.</param>
-	/// <returns>A new Force2D instance.</returns>
-	public static Force2D FromNewtons(float x, float y) => Create(x, y);
-
-	/// <summary>
-	/// Creates a new Force2D from a Vector2 in newtons.
-	/// </summary>
-	/// <param name="newtons">The force vector in newtons.</param>
-	/// <returns>A new Force2D instance.</returns>
-	public static Force2D FromNewtons(Vector2 newtons) => Create(new Vector2f(newtons));
-
-	/// <summary>Gets the magnitude of this force vector.</summary>
-	public float Magnitude => Value.Length();
-
-	/// <summary>Gets the X component of this vector quantity.</summary>
-	public float X => Value.X;
-
-	/// <summary>Gets the Y component of this vector quantity.</summary>
-	public float Y => Value.Y;
-
-	/// <summary>
-	/// Gets the unit vector (normalized) form of this quantity.
-	/// </summary>
-	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
-	public Force2D Unit()
-	{
-		float magnitude = Magnitude;
-		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector2f.Zero);
-	}
-
-	/// <summary>
+	public static Force2D Create(float x, float y) => Create(new Vector2f(x, y));	/// <summary>
 	/// Gets the force as a Vector2f in newtons (the base unit).
 	/// </summary>
 	/// <returns>The force vector in newtons.</returns>

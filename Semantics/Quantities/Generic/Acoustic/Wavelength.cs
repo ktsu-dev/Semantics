@@ -43,6 +43,13 @@ public record Wavelength<T> : PhysicalQuantity<Wavelength<T>, T>
 	public static Wavelength<T> FromMicrometers(T micrometers) => Create(micrometers / T.CreateChecked(1_000_000));
 
 	/// <summary>
+	/// Creates a new Wavelength from a value in nanometers.
+	/// </summary>
+	/// <param name="nanometers">The value in nanometers.</param>
+	/// <returns>A new Wavelength instance.</returns>
+	public static Wavelength<T> FromNanometers(T nanometers) => Create(nanometers / T.CreateChecked(1_000_000_000));
+
+	/// <summary>
 	/// Divides speed by frequency to create wavelength.
 	/// </summary>
 	/// <param name="speed">The wave speed.</param>

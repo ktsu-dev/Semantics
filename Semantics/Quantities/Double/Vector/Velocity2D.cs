@@ -40,46 +40,7 @@ public sealed record Velocity2D : Generic.Velocity2D<double>
 	/// <param name="x">The X component.</param>
 	/// <param name="y">The Y component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Velocity2D Create(double x, double y) => Create(new Vector2d(x, y));
-
-	/// <summary>
-	/// Creates a new Velocity2D from X and Y components in meters per second.
-	/// </summary>
-	/// <param name="x">The X component in meters per second.</param>
-	/// <param name="y">The Y component in meters per second.</param>
-	/// <returns>A new Velocity2D instance.</returns>
-	public static Velocity2D FromMetersPerSecond(double x, double y) => Create(x, y);
-
-	/// <summary>
-	/// Creates a new Velocity2D from a Vector2 in meters per second.
-	/// </summary>
-	/// <param name="metersPerSecond">The velocity vector in meters per second.</param>
-	/// <returns>A new Velocity2D instance.</returns>
-	public static Velocity2D FromMetersPerSecond(Vector2 metersPerSecond) => Create(new Vector2d(metersPerSecond.X, metersPerSecond.Y));
-
-	/// <summary>Gets the magnitude of this velocity vector (speed).</summary>
-	public double Magnitude => Value.Length();
-
-	/// <summary>Gets the speed (magnitude of velocity vector).</summary>
-	public double Speed => Magnitude;
-
-	/// <summary>Gets the X component of this vector quantity.</summary>
-	public double X => Value.X;
-
-	/// <summary>Gets the Y component of this vector quantity.</summary>
-	public double Y => Value.Y;
-
-	/// <summary>
-	/// Gets the unit vector (normalized) form of this quantity.
-	/// </summary>
-	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
-	public Velocity2D Unit()
-	{
-		double magnitude = Magnitude;
-		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector2d.Zero);
-	}
-
-	/// <summary>
+	public static Velocity2D Create(double x, double y) => Create(new Vector2d(x, y));	/// <summary>
 	/// Gets the velocity as a Vector2d in meters per second (the base unit).
 	/// </summary>
 	/// <returns>The velocity vector in meters per second.</returns>

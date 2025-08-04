@@ -40,47 +40,7 @@ public sealed record Position3D : Generic.Position3D<float>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Position3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));
-
-	/// <summary>
-	/// Creates a new Position3D from X, Y, and Z coordinates in meters.
-	/// </summary>
-	/// <param name="x">The X coordinate in meters.</param>
-	/// <param name="y">The Y coordinate in meters.</param>
-	/// <param name="z">The Z coordinate in meters.</param>
-	/// <returns>A new Position3D instance.</returns>
-	public static Position3D FromMeters(float x, float y, float z) => Create(x, y, z);
-
-	/// <summary>
-	/// Creates a new Position3D from a Vector3 in meters.
-	/// </summary>
-	/// <param name="meters">The position vector in meters.</param>
-	/// <returns>A new Position3D instance.</returns>
-	public static Position3D FromMeters(Vector3 meters) => Create(new Vector3f(meters));
-
-	/// <summary>Gets the magnitude (length) of this vector quantity.</summary>
-	public float Magnitude => Value.Length();
-
-	/// <summary>Gets the X component of this vector quantity.</summary>
-	public float X => Value.X;
-
-	/// <summary>Gets the Y component of this vector quantity.</summary>
-	public float Y => Value.Y;
-
-	/// <summary>Gets the Z component of this vector quantity.</summary>
-	public float Z => Value.Z;
-
-	/// <summary>
-	/// Gets the unit vector (normalized) form of this quantity.
-	/// </summary>
-	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
-	public Position3D Unit()
-	{
-		float magnitude = Magnitude;
-		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector3f.Zero);
-	}
-
-	/// <summary>
+	public static Position3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));	/// <summary>
 	/// Gets the position as a Vector3f in meters (the base unit).
 	/// </summary>
 	/// <returns>The position vector in meters.</returns>

@@ -40,47 +40,7 @@ public sealed record Displacement3D : Generic.Displacement3D<double>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Displacement3D Create(double x, double y, double z) => Create(new Vector3d(x, y, z));
-
-	/// <summary>
-	/// Creates a new Displacement3D from X, Y, and Z components in meters.
-	/// </summary>
-	/// <param name="x">The X component in meters.</param>
-	/// <param name="y">The Y component in meters.</param>
-	/// <param name="z">The Z component in meters.</param>
-	/// <returns>A new Displacement3D instance.</returns>
-	public static Displacement3D FromMeters(double x, double y, double z) => Create(x, y, z);
-
-	/// <summary>
-	/// Creates a new Displacement3D from a Vector3 in meters.
-	/// </summary>
-	/// <param name="meters">The displacement vector in meters.</param>
-	/// <returns>A new Displacement3D instance.</returns>
-	public static Displacement3D FromMeters(Vector3 meters) => Create(new Vector3d(meters.X, meters.Y, meters.Z));
-
-	/// <summary>Gets the magnitude (length) of this vector quantity.</summary>
-	public double Magnitude => Value.Length();
-
-	/// <summary>Gets the X component of this vector quantity.</summary>
-	public double X => Value.X;
-
-	/// <summary>Gets the Y component of this vector quantity.</summary>
-	public double Y => Value.Y;
-
-	/// <summary>Gets the Z component of this vector quantity.</summary>
-	public double Z => Value.Z;
-
-	/// <summary>
-	/// Gets the unit vector (normalized) form of this quantity.
-	/// </summary>
-	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
-	public Displacement3D Unit()
-	{
-		double magnitude = Magnitude;
-		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector3d.Zero);
-	}
-
-	/// <summary>
+	public static Displacement3D Create(double x, double y, double z) => Create(new Vector3d(x, y, z));	/// <summary>
 	/// Gets the displacement as a Vector3d in meters (the base unit).
 	/// </summary>
 	/// <returns>The displacement vector in meters.</returns>

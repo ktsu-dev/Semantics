@@ -40,43 +40,7 @@ public sealed record Acceleration2D : Generic.Acceleration2D<double>
 	/// <param name="x">The X component.</param>
 	/// <param name="y">The Y component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Acceleration2D Create(double x, double y) => Create(new Vector2d(x, y));
-
-	/// <summary>
-	/// Creates a new Acceleration2D from X and Y components in meters per second squared.
-	/// </summary>
-	/// <param name="x">The X component in meters per second squared.</param>
-	/// <param name="y">The Y component in meters per second squared.</param>
-	/// <returns>A new Acceleration2D instance.</returns>
-	public static Acceleration2D FromMetersPerSecondSquared(double x, double y) => Create(x, y);
-
-	/// <summary>
-	/// Creates a new Acceleration2D from a Vector2 in meters per second squared.
-	/// </summary>
-	/// <param name="metersPerSecondSquared">The acceleration vector in meters per second squared.</param>
-	/// <returns>A new Acceleration2D instance.</returns>
-	public static Acceleration2D FromMetersPerSecondSquared(Vector2 metersPerSecondSquared) => Create(new Vector2d(metersPerSecondSquared.X, metersPerSecondSquared.Y));
-
-	/// <summary>Gets the magnitude of this acceleration vector.</summary>
-	public double Magnitude => Value.Length();
-
-	/// <summary>Gets the X component of this vector quantity.</summary>
-	public double X => Value.X;
-
-	/// <summary>Gets the Y component of this vector quantity.</summary>
-	public double Y => Value.Y;
-
-	/// <summary>
-	/// Gets the unit vector (normalized) form of this quantity.
-	/// </summary>
-	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
-	public Acceleration2D Unit()
-	{
-		double magnitude = Magnitude;
-		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector2d.Zero);
-	}
-
-	/// <summary>
+	public static Acceleration2D Create(double x, double y) => Create(new Vector2d(x, y));	/// <summary>
 	/// Gets the acceleration as a Vector2d in meters per second squared (the base unit).
 	/// </summary>
 	/// <returns>The acceleration vector in meters per second squared.</returns>

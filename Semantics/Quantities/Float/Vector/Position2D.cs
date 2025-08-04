@@ -40,20 +40,7 @@ public sealed record Position2D : Generic.Position2D<float>
 	/// <returns>A new instance of the quantity.</returns>
 	public static Position2D Create(float x, float y) => Create(new Vector2f(x, y));
 
-	/// <summary>
-	/// Creates a new Position2D from X and Y coordinates in meters.
-	/// </summary>
-	/// <param name="x">The X coordinate in meters.</param>
-	/// <param name="y">The Y coordinate in meters.</param>
-	/// <returns>A new Position2D instance.</returns>
-	public static Position2D FromMeters(float x, float y) => Create(x, y);
 
-	/// <summary>
-	/// Creates a new Position2D from a Vector2 in meters.
-	/// </summary>
-	/// <param name="meters">The position vector in meters.</param>
-	/// <returns>A new Position2D instance.</returns>
-	public static Position2D FromMeters(Vector2 meters) => Create(new Vector2f(meters));
 
 	/// <summary>Gets the magnitude (length) of this vector quantity.</summary>
 	public float Magnitude => Value.Length();

@@ -40,47 +40,7 @@ public sealed record Displacement3D : Generic.Displacement3D<float>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Displacement3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));
-
-	/// <summary>
-	/// Creates a new Displacement3D from X, Y, and Z components in meters.
-	/// </summary>
-	/// <param name="x">The X component in meters.</param>
-	/// <param name="y">The Y component in meters.</param>
-	/// <param name="z">The Z component in meters.</param>
-	/// <returns>A new Displacement3D instance.</returns>
-	public static Displacement3D FromMeters(float x, float y, float z) => Create(x, y, z);
-
-	/// <summary>
-	/// Creates a new Displacement3D from a Vector3 in meters.
-	/// </summary>
-	/// <param name="meters">The displacement vector in meters.</param>
-	/// <returns>A new Displacement3D instance.</returns>
-	public static Displacement3D FromMeters(Vector3 meters) => Create(new Vector3f(meters));
-
-	/// <summary>Gets the magnitude (length) of this vector quantity.</summary>
-	public float Magnitude => Value.Length();
-
-	/// <summary>Gets the X component of this vector quantity.</summary>
-	public float X => Value.X;
-
-	/// <summary>Gets the Y component of this vector quantity.</summary>
-	public float Y => Value.Y;
-
-	/// <summary>Gets the Z component of this vector quantity.</summary>
-	public float Z => Value.Z;
-
-	/// <summary>
-	/// Gets the unit vector (normalized) form of this quantity.
-	/// </summary>
-	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
-	public Displacement3D Unit()
-	{
-		float magnitude = Magnitude;
-		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector3f.Zero);
-	}
-
-	/// <summary>
+	public static Displacement3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));	/// <summary>
 	/// Gets the displacement as a Vector3f in meters (the base unit).
 	/// </summary>
 	/// <returns>The displacement vector in meters.</returns>

@@ -194,7 +194,7 @@ public static class VectorSystemTests
 		public void Position2D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Float.Position2D position = Float.Position2D.FromMeters(10.5f, 20.3f);
+			Float.Position2D position = (10.5f, 20.3f).MetersPosition2D();
 
 			// Assert
 			Assert.AreEqual(10.5f, position.X, FloatTolerance);
@@ -206,7 +206,7 @@ public static class VectorSystemTests
 		public void Displacement2D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Float.Displacement2D displacement = Float.Displacement2D.FromMeters(5.0f, -3.0f);
+			Float.Displacement2D displacement = (5.0f, -3.0f).MetersDisplacement2D();
 
 			// Assert
 			Assert.AreEqual(5.0f, displacement.X, FloatTolerance);
@@ -218,7 +218,7 @@ public static class VectorSystemTests
 		public void Velocity2D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Float.Velocity2D velocity = Float.Velocity2D.FromMetersPerSecond(15.0f, 8.0f);
+			Float.Velocity2D velocity = (15.0f, 8.0f).MetersPerSecondVelocity2D();
 
 			// Assert
 			Assert.AreEqual(15.0f, velocity.X, FloatTolerance);
@@ -230,7 +230,7 @@ public static class VectorSystemTests
 		public void Acceleration2D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Float.Acceleration2D acceleration = Float.Acceleration2D.FromMetersPerSecondSquared(9.8f, 0.0f);
+			Float.Acceleration2D acceleration = (9.8f, 0.0f).MetersPerSecondSquaredAcceleration2D();
 
 			// Assert
 			Assert.AreEqual(9.8f, acceleration.X, FloatTolerance);
@@ -242,7 +242,7 @@ public static class VectorSystemTests
 		public void Force2D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Float.Force2D force = Float.Force2D.FromNewtons(100.0f, 50.0f);
+			Float.Force2D force = (100.0f, 50.0f).NewtonsForce2D();
 
 			// Assert
 			Assert.AreEqual(100.0f, force.X, FloatTolerance);
@@ -254,8 +254,8 @@ public static class VectorSystemTests
 		public void Vector2D_Float_ArithmeticOperations_ShouldWork()
 		{
 			// Arrange
-			Float.Position2D position1 = Float.Position2D.FromMeters(10.0f, 20.0f);
-			Float.Displacement2D displacement = Float.Displacement2D.FromMeters(5.0f, -3.0f);
+			Float.Position2D position1 = (10.0f, 20.0f).MetersPosition2D();
+			Float.Displacement2D displacement = (5.0f, -3.0f).MetersDisplacement2D();
 
 			// Act
 			Float.Position2D position2 = position1 + displacement;
@@ -273,7 +273,7 @@ public static class VectorSystemTests
 		public void Position2D_Double_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Double.Position2D position = Double.Position2D.FromMeters(10.123456789, 20.987654321);
+			Double.Position2D position = (10.123456789, 20.987654321).MetersPosition2D();
 
 			// Assert
 			Assert.AreEqual(10.123456789, position.X, DoubleTolerance);
@@ -285,8 +285,8 @@ public static class VectorSystemTests
 		public void Vector2D_Double_HighPrecision_ShouldMaintainAccuracy()
 		{
 			// Arrange - Use high precision values that would lose accuracy in float
-			Double.Position2D position1 = Double.Position2D.FromMeters(Math.PI * 1e10, Math.E * 1e10);
-			Double.Displacement2D displacement = Double.Displacement2D.FromMeters(Math.Sqrt(2), Math.Sqrt(3));
+			Double.Position2D position1 = (Math.PI * 1e10, Math.E * 1e10).MetersPosition2D();
+			Double.Displacement2D displacement = (Math.Sqrt(2), Math.Sqrt(3)).MetersDisplacement2D();
 
 			// Act
 			Double.Position2D position2 = position1 + displacement;
@@ -300,28 +300,28 @@ public static class VectorSystemTests
 		public void Vector2D_Double_Distance_ShouldCalculateCorrectly()
 		{
 			// Arrange
-			Double.Position2D position1 = Double.Position2D.FromMeters(0.0, 0.0);
-			Double.Position2D position2 = Double.Position2D.FromMeters(3.0, 4.0);
+			Double.Position2D position1 = (0.0, 0.0).MetersPosition2D();
+			Double.Position2D position2 = (3.0, 4.0).MetersPosition2D();
 
 			// Act
-			double distance = position1.Distance(position2);
+			Double.Length distance = position1.Distance(position2);
 
 			// Assert
-			Assert.AreEqual(5.0, distance, DoubleTolerance);
+			Assert.AreEqual(5.0, distance.Value, DoubleTolerance);
 		}
 
 		[TestMethod]
 		public void Vector2D_Double_DotProduct_ShouldCalculateCorrectly()
 		{
 			// Arrange
-			Double.Velocity2D velocity1 = Double.Velocity2D.FromMetersPerSecond(2.0, 3.0);
-			Double.Velocity2D velocity2 = Double.Velocity2D.FromMetersPerSecond(4.0, 5.0);
+			Double.Velocity2D velocity1 = (2.0, 3.0).MetersPerSecondVelocity2D();
+			Double.Velocity2D velocity2 = (4.0, 5.0).MetersPerSecondVelocity2D();
 
 			// Act
-			double dotProduct = velocity1.Dot(velocity2);
+			Double.Energy dotProduct = velocity1.Dot(velocity2);
 
 			// Assert
-			Assert.AreEqual(23.0, dotProduct, DoubleTolerance); // 2*4 + 3*5 = 23
+			Assert.AreEqual(23.0, dotProduct.Value, DoubleTolerance); // 2*4 + 3*5 = 23
 		}
 	}
 
@@ -369,7 +369,7 @@ public static class VectorSystemTests
 		public void Vector2D_Unit_ShouldReturnNormalizedVector()
 		{
 			// Arrange
-			Float.Velocity2D velocity = Float.Velocity2D.FromMetersPerSecond(3.0f, 4.0f);
+			Float.Velocity2D velocity = (3.0f, 4.0f).MetersPerSecondVelocity2D();
 
 			// Act
 			Float.Velocity2D unitVelocity = velocity.Unit();
@@ -384,7 +384,7 @@ public static class VectorSystemTests
 		public void Vector2D_ZeroMagnitude_Unit_ShouldReturnZero()
 		{
 			// Arrange
-			Float.Velocity2D zeroVelocity = Float.Velocity2D.FromMetersPerSecond(0.0f, 0.0f);
+			Float.Velocity2D zeroVelocity = (0.0f, 0.0f).MetersPerSecondVelocity2D();
 
 			// Act
 			Float.Velocity2D unitVelocity = zeroVelocity.Unit();

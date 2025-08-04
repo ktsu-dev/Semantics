@@ -40,47 +40,7 @@ public sealed record Force3D : Generic.Force3D<float>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Force3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));
-
-	/// <summary>
-	/// Creates a new Force3D from X, Y, and Z components in newtons.
-	/// </summary>
-	/// <param name="x">The X component in N.</param>
-	/// <param name="y">The Y component in N.</param>
-	/// <param name="z">The Z component in N.</param>
-	/// <returns>A new Force3D instance.</returns>
-	public static Force3D FromNewtons(float x, float y, float z) => Create(x, y, z);
-
-	/// <summary>
-	/// Creates a new Force3D from a Vector3 in newtons.
-	/// </summary>
-	/// <param name="newtons">The force vector in N.</param>
-	/// <returns>A new Force3D instance.</returns>
-	public static Force3D FromNewtons(Vector3 newtons) => Create(new Vector3f(newtons));
-
-	/// <summary>Gets the magnitude of this force vector.</summary>
-	public float Magnitude => Value.Length();
-
-	/// <summary>Gets the X component of this vector quantity.</summary>
-	public float X => Value.X;
-
-	/// <summary>Gets the Y component of this vector quantity.</summary>
-	public float Y => Value.Y;
-
-	/// <summary>Gets the Z component of this vector quantity.</summary>
-	public float Z => Value.Z;
-
-	/// <summary>
-	/// Gets the unit vector (normalized) form of this quantity.
-	/// </summary>
-	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
-	public Force3D Unit()
-	{
-		float magnitude = Magnitude;
-		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector3f.Zero);
-	}
-
-	/// <summary>
+	public static Force3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));	/// <summary>
 	/// Gets the force as a Vector3f in newtons (the base unit).
 	/// </summary>
 	/// <returns>The force vector in N.</returns>

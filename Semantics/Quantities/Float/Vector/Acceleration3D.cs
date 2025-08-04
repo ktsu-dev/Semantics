@@ -40,47 +40,7 @@ public sealed record Acceleration3D : Generic.Acceleration3D<float>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Acceleration3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));
-
-	/// <summary>
-	/// Creates a new Acceleration3D from X, Y, and Z components in meters per second squared.
-	/// </summary>
-	/// <param name="x">The X component in m/s².</param>
-	/// <param name="y">The Y component in m/s².</param>
-	/// <param name="z">The Z component in m/s².</param>
-	/// <returns>A new Acceleration3D instance.</returns>
-	public static Acceleration3D FromMetersPerSecondSquared(float x, float y, float z) => Create(x, y, z);
-
-	/// <summary>
-	/// Creates a new Acceleration3D from a Vector3 in meters per second squared.
-	/// </summary>
-	/// <param name="metersPerSecondSquared">The acceleration vector in m/s².</param>
-	/// <returns>A new Acceleration3D instance.</returns>
-	public static Acceleration3D FromMetersPerSecondSquared(Vector3 metersPerSecondSquared) => Create(new Vector3f(metersPerSecondSquared));
-
-	/// <summary>Gets the magnitude of this acceleration vector.</summary>
-	public float Magnitude => Value.Length();
-
-	/// <summary>Gets the X component of this vector quantity.</summary>
-	public float X => Value.X;
-
-	/// <summary>Gets the Y component of this vector quantity.</summary>
-	public float Y => Value.Y;
-
-	/// <summary>Gets the Z component of this vector quantity.</summary>
-	public float Z => Value.Z;
-
-	/// <summary>
-	/// Gets the unit vector (normalized) form of this quantity.
-	/// </summary>
-	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
-	public Acceleration3D Unit()
-	{
-		float magnitude = Magnitude;
-		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector3f.Zero);
-	}
-
-	/// <summary>
+	public static Acceleration3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));	/// <summary>
 	/// Gets the acceleration as a Vector3f in meters per second squared (the base unit).
 	/// </summary>
 	/// <returns>The acceleration vector in m/s².</returns>

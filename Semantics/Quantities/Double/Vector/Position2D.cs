@@ -40,46 +40,7 @@ public sealed record Position2D : Generic.Position2D<double>
 	/// <param name="x">The X component.</param>
 	/// <param name="y">The Y component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Position2D Create(double x, double y) => Create(new Vector2d(x, y));
-
-	/// <summary>
-	/// Creates a new Position2D from X and Y components in meters.
-	/// </summary>
-	/// <param name="x">The X component in meters.</param>
-	/// <param name="y">The Y component in meters.</param>
-	/// <returns>A new Position2D instance.</returns>
-	public static Position2D FromMeters(double x, double y) => Create(x, y);
-
-	/// <summary>
-	/// Creates a new Position2D from a Vector2 in meters.
-	/// </summary>
-	/// <param name="meters">The position vector in meters.</param>
-	/// <returns>A new Position2D instance.</returns>
-	public static Position2D FromMeters(Vector2 meters) => Create(new Vector2d(meters.X, meters.Y));
-
-	/// <summary>Gets the magnitude of this position vector (distance from origin).</summary>
-	public double Magnitude => Value.Length();
-
-	/// <summary>Gets the distance from the origin.</summary>
-	public double DistanceFromOrigin => Magnitude;
-
-	/// <summary>Gets the X component of this vector quantity.</summary>
-	public double X => Value.X;
-
-	/// <summary>Gets the Y component of this vector quantity.</summary>
-	public double Y => Value.Y;
-
-	/// <summary>
-	/// Gets the unit vector (normalized) form of this quantity.
-	/// </summary>
-	/// <returns>A new instance representing the unit vector, or zero if magnitude is zero.</returns>
-	public Position2D Unit()
-	{
-		double magnitude = Magnitude;
-		return magnitude > 0 ? Create(Value.Normalize()) : Create(Vector2d.Zero);
-	}
-
-	/// <summary>
+	public static Position2D Create(double x, double y) => Create(new Vector2d(x, y));	/// <summary>
 	/// Gets the position as a Vector2d in meters (the base unit).
 	/// </summary>
 	/// <returns>The position vector in meters.</returns>

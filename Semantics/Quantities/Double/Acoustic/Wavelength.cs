@@ -29,12 +29,19 @@ public sealed record Wavelength : Generic.Wavelength<double>
 	/// </summary>
 	/// <param name="millimeters">The value in millimeters.</param>
 	/// <returns>A new Wavelength instance.</returns>
-	public static new Wavelength FromMillimeters(double millimeters) => new() { Quantity = millimeters };
+	public static new Wavelength FromMillimeters(double millimeters) => new() { Quantity = millimeters / 1000.0 };
 
 	/// <summary>
 	/// Creates a new Wavelength from a value in micrometers.
 	/// </summary>
 	/// <param name="micrometers">The value in micrometers.</param>
 	/// <returns>A new Wavelength instance.</returns>
-	public static new Wavelength FromMicrometers(double micrometers) => new() { Quantity = micrometers };
+	public static new Wavelength FromMicrometers(double micrometers) => new() { Quantity = micrometers / 1_000_000.0 };
+
+	/// <summary>
+	/// Creates a new Wavelength from a value in nanometers.
+	/// </summary>
+	/// <param name="nanometers">The value in nanometers.</param>
+	/// <returns>A new Wavelength instance.</returns>
+	public static new Wavelength FromNanometers(double nanometers) => new() { Quantity = nanometers / 1_000_000_000.0 };
 }

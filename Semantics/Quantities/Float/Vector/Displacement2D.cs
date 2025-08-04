@@ -41,20 +41,7 @@ public sealed record Displacement2D : Generic.Displacement2D<float>
 	/// <returns>A new instance of the quantity.</returns>
 	public static Displacement2D Create(float x, float y) => Create(new Vector2f(x, y));
 
-	/// <summary>
-	/// Creates a new Displacement2D from X and Y coordinates in meters.
-	/// </summary>
-	/// <param name="x">The X coordinate in meters.</param>
-	/// <param name="y">The Y coordinate in meters.</param>
-	/// <returns>A new Displacement2D instance.</returns>
-	public static Displacement2D FromMeters(float x, float y) => Create(x, y);
 
-	/// <summary>
-	/// Creates a new Displacement2D from a Vector2 in meters.
-	/// </summary>
-	/// <param name="meters">The displacement vector in meters.</param>
-	/// <returns>A new Displacement2D instance.</returns>
-	public static Displacement2D FromMeters(Vector2 meters) => Create(new Vector2f(meters));
 
 	/// <summary>Gets the magnitude (length) of this vector quantity.</summary>
 	public float Magnitude => Value.Length();
