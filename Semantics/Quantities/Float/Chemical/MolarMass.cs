@@ -21,5 +21,5 @@ public sealed record MolarMass : Generic.MolarMass<float>
 	/// </summary>
 	/// <param name="gramsPerMole">The value in grams per mole.</param>
 	/// <returns>A new MolarMass instance.</returns>
-	public static new MolarMass FromGramsPerMole(float gramsPerMole) => new() { Value = gramsPerMole };
+	public static MolarMass FromGramsPerMole(float gramsPerMole) => new() { Value = gramsPerMole };
 }

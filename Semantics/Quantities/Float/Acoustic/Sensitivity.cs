@@ -21,19 +21,19 @@ public sealed record Sensitivity : Generic.Sensitivity<float>
 	/// </summary>
 	/// <param name="dbSplPerWatt">The sensitivity in dB SPL/W.</param>
 	/// <returns>A new Sensitivity instance.</returns>
-	public static new Sensitivity FromDbSplPerWatt(float dbSplPerWatt) => new() { Value = dbSplPerWatt };
+	public static new Sensitivity FromDbSplPerWatt(float dbSplPerWatt) => Create(dbSplPerWatt);
 
 	/// <summary>
 	/// Creates a new Sensitivity from a value in dB (SPL/V).
 	/// </summary>
 	/// <param name="dbSplPerVolt">The sensitivity in dB SPL/V.</param>
 	/// <returns>A new Sensitivity instance.</returns>
-	public static new Sensitivity FromDbSplPerVolt(float dbSplPerVolt) => new() { Value = dbSplPerVolt };
+	public static new Sensitivity FromDbSplPerVolt(float dbSplPerVolt) => Create(dbSplPerVolt);
 
 	/// <summary>
 	/// Creates a new Sensitivity from a value in mV/Pa (microphone sensitivity).
 	/// </summary>
 	/// <param name="mvPerPa">The sensitivity in mV/Pa.</param>
 	/// <returns>A new Sensitivity instance.</returns>
-	public static new Sensitivity FromMvPerPa(float mvPerPa) => new() { Value = mvPerPa };
+	public static new Sensitivity FromMvPerPa(float mvPerPa) => Create(mvPerPa);
 }

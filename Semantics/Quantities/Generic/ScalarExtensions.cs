@@ -417,7 +417,7 @@ public static class ScalarExtensions
 	/// <param name="value">The value in meters per second.</param>
 	/// <returns>A new Velocity instance.</returns>
 	public static Velocity<T> MetersPerSecond<T>(this T value) where T : struct, INumber<T>
-		=> Velocity<T>.Create(ConvertToBaseUnit(value, Units.MeterPerSecond));
+		=> Velocity<T>.Create(ConvertToBaseUnit(value, Units.MetersPerSecond));
 
 	/// <summary>
 	/// Creates a Velocity from a value in kilometers per hour.
@@ -426,7 +426,7 @@ public static class ScalarExtensions
 	/// <param name="value">The value in kilometers per hour.</param>
 	/// <returns>A new Velocity instance.</returns>
 	public static Velocity<T> KilometersPerHour<T>(this T value) where T : struct, INumber<T>
-		=> Velocity<T>.Create(ConvertToBaseUnit(value, Units.KilometerPerHour));
+		=> Velocity<T>.Create(ConvertToBaseUnit(value, Units.KilometersPerHour));
 
 	/// <summary>
 	/// Creates a Velocity from a value in miles per hour.
@@ -435,7 +435,7 @@ public static class ScalarExtensions
 	/// <param name="value">The value in miles per hour.</param>
 	/// <returns>A new Velocity instance.</returns>
 	public static Velocity<T> MilesPerHour<T>(this T value) where T : struct, INumber<T>
-		=> Velocity<T>.Create(ConvertToBaseUnit(value, Units.MilePerHour));
+		=> Velocity<T>.Create(ConvertToBaseUnit(value, Units.MilesPerHour));
 	#endregion
 
 	#region Frequency Extensions
@@ -492,76 +492,4 @@ public static class ScalarExtensions
 		return value * conversionFactor;
 	}
 	#endregion
-
-	//TODO: #region Thermal Extensions
-	// Temperature: .Celsius(), .Fahrenheit(), .Rankine()
-	// Heat: .Joules(), .Calories(), .BTU()
-	// Thermal Conductivity: .WattsPerMeterKelvin()
-	// Heat Capacity: .JoulesPerKelvin()
-	// Specific Heat: .JoulesPerKilogramKelvin()
-	// #endregion
-
-	//TODO: #region Fluid Dynamics Extensions
-	// Flow Rate: .CubicMetersPerSecond(), .LitersPerMinute(), .GallonsPerMinute()
-	// Viscosity: .PascalSeconds(), .Poise(), .Centipoise()
-	// Density: .KilogramsPerCubicMeter(), .GramsPerCubicCentimeter()
-	// Surface Tension: .NewtonsPerMeter()
-	// #endregion
-
-	//TODO: #region Electromagnetic Extensions
-	// Magnetic Field: .Tesla(), .Gauss(), .Webers()
-	// Inductance: .Henries(), .Millihenries(), .Microhenries()
-	// Electric Field: .VoltsPerMeter(), .NewtonsPerCoulomb()
-	// Magnetic Flux: .Webers(), .Maxwells()
-	// #endregion
-
-	//TODO: #region Materials Science Extensions
-	// Stress/Pressure: .Pascals(), .Megapascals(), .Gigapascals(), .PSI()
-	// Strain: .Percent(), .Dimensionless()
-	// Elastic Modulus: .Gigapascals(), .MegapascalsPerStrain()
-	// Hardness: .Brinell(), .Rockwell(), .Vickers()
-	// #endregion
-
-	//TODO: #region Nuclear & Radiation Extensions
-	// Radioactivity: .Becquerels(), .Curies()
-	// Absorbed Dose: .Grays(), .Rads()
-	// Dose Equivalent: .Sieverts(), .Rems()
-	// Cross Section: .Barns(), .SquareMeters()
-	// #endregion
-
-	//TODO: #region Optics Extensions
-	// Wavelength: .Nanometers(), .Angstroms(), .Micrometers()
-	// Frequency: .Terahertz(), .PetaHertz()
-	// Illuminance: .Lux(), .FootCandles()
-	// Luminance: .CandelasPerSquareMeter(), .Nits()
-	// Optical Power: .Diopters()
-	// #endregion
-
-	//TODO: #region Astronomy Extensions
-	// Distance: .AstronomicalUnits(), .LightYears(), .Parsecs()
-	// Mass: .SolarMasses(), .EarthMasses(), .JupiterMasses()
-	// Angular Resolution: .Arcseconds(), .Milliarcseconds()
-	// Flux Density: .Janskys()
-	// #endregion
-
-	//TODO: #region Geophysics Extensions
-	// Seismic Velocity: .KilometersPerSecond()
-	// Gravity: .Gals(), .MilliGals()
-	// Atmospheric Pressure: .Millibars(), .InchesOfMercury()
-	// Magnetic Field: .Nanoteslas(), .Gammas()
-	// #endregion
-
-	//TODO: #region Acoustics Extensions
-	// Sound Pressure: .Micropascals(), .Decibels()
-	// Sound Intensity: .WattsPerSquareMeter()
-	// Frequency: .Hertz(), .Kilohertz(), .Megahertz()
-	// Acoustic Power: .AcousticWatts()
-	// #endregion
-
-	//TODO: #region Biochemistry Extensions
-	// Concentration: .Molar(), .Millimolar(), .Micromolar()
-	// Enzyme Activity: .Katals(), .EnzymeUnits()
-	// pH: .pHUnits()
-	// Molecular Weight: .Daltons(), .KiloDaltons()
-	// #endregion
 }

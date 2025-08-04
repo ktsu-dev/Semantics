@@ -22,7 +22,7 @@ public static class Vector3DTests
 		public void Position3D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Float.Position3D position = Float.Position3D.FromMeters(10.5f, 20.3f, 5.7f);
+			Position3D position = Position3D.FromMeters(10.5f, 20.3f, 5.7f);
 
 			// Assert
 			Assert.AreEqual(10.5f, position.X, FloatTolerance);
@@ -35,7 +35,7 @@ public static class Vector3DTests
 		public void Displacement3D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Float.Displacement3D displacement = Float.Displacement3D.FromMeters(5.0f, -3.0f, 2.0f);
+			Displacement3D displacement = Displacement3D.FromMeters(5.0f, -3.0f, 2.0f);
 
 			// Assert
 			Assert.AreEqual(5.0f, displacement.X, FloatTolerance);
@@ -48,7 +48,7 @@ public static class Vector3DTests
 		public void Velocity3D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Float.Velocity3D velocity = Float.Velocity3D.FromMetersPerSecond(15.0f, 8.0f, 6.0f);
+			Velocity3D velocity = Velocity3D.FromMetersPerSecond(15.0f, 8.0f, 6.0f);
 
 			// Assert
 			Assert.AreEqual(15.0f, velocity.X, FloatTolerance);
@@ -61,7 +61,7 @@ public static class Vector3DTests
 		public void Acceleration3D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Float.Acceleration3D acceleration = Float.Acceleration3D.FromMetersPerSecondSquared(9.8f, 0.0f, -2.5f);
+			Acceleration3D acceleration = Acceleration3D.FromMetersPerSecondSquared(9.8f, 0.0f, -2.5f);
 
 			// Assert
 			Assert.AreEqual(9.8f, acceleration.X, FloatTolerance);
@@ -74,7 +74,7 @@ public static class Vector3DTests
 		public void Force3D_Float_CreateAndManipulate_ShouldWork()
 		{
 			// Arrange & Act
-			Float.Force3D force = Float.Force3D.FromNewtons(100.0f, 50.0f, 25.0f);
+			Force3D force = Force3D.FromNewtons(100.0f, 50.0f, 25.0f);
 
 			// Assert
 			Assert.AreEqual(100.0f, force.X, FloatTolerance);
@@ -87,11 +87,11 @@ public static class Vector3DTests
 		public void Vector3D_Float_ArithmeticOperations_ShouldWork()
 		{
 			// Arrange
-			Float.Position3D position1 = Float.Position3D.FromMeters(10.0f, 20.0f, 30.0f);
-			Float.Displacement3D displacement = Float.Displacement3D.FromMeters(5.0f, -3.0f, 2.0f);
+			Position3D position1 = Position3D.FromMeters(10.0f, 20.0f, 30.0f);
+			Displacement3D displacement = Displacement3D.FromMeters(5.0f, -3.0f, 2.0f);
 
 			// Act
-			Float.Position3D position2 = position1 + displacement;
+			Position3D position2 = position1 + displacement;
 
 			// Assert
 			Assert.AreEqual(15.0f, position2.X, FloatTolerance);
@@ -103,11 +103,11 @@ public static class Vector3DTests
 		public void Vector3D_Float_CrossProduct_ShouldWork()
 		{
 			// Arrange
-			Float.Force3D vector1 = Float.Force3D.FromNewtons(1.0f, 0.0f, 0.0f);
-			Float.Force3D vector2 = Float.Force3D.FromNewtons(0.0f, 1.0f, 0.0f);
+			Force3D vector1 = Force3D.FromNewtons(1.0f, 0.0f, 0.0f);
+			Force3D vector2 = Force3D.FromNewtons(0.0f, 1.0f, 0.0f);
 
 			// Act
-			Float.Force3D crossProduct = vector1.Cross(vector2);
+			Force3D crossProduct = vector1.Cross(vector2);
 
 			// Assert
 			Assert.AreEqual(0.0f, crossProduct.X, FloatTolerance);
@@ -119,8 +119,8 @@ public static class Vector3DTests
 		public void Vector3D_Float_DotProduct_ShouldWork()
 		{
 			// Arrange
-			Float.Velocity3D velocity1 = Float.Velocity3D.FromMetersPerSecond(2.0f, 3.0f, 4.0f);
-			Float.Velocity3D velocity2 = Float.Velocity3D.FromMetersPerSecond(5.0f, 6.0f, 7.0f);
+			Velocity3D velocity1 = Velocity3D.FromMetersPerSecond(2.0f, 3.0f, 4.0f);
+			Velocity3D velocity2 = Velocity3D.FromMetersPerSecond(5.0f, 6.0f, 7.0f);
 
 			// Act
 			float dotProduct = velocity1.Dot(velocity2);
@@ -215,7 +215,7 @@ public static class Vector3DTests
 		public void Vector3D_NaNValues_ShouldBeInvalid()
 		{
 			// Arrange
-			Float.Position3D position = Float.Position3D.Create(new Vector3f(float.NaN, 5.0f, 3.0f));
+			Position3D position = Position3D.Create(new Vector3f(float.NaN, 5.0f, 3.0f));
 
 			// Assert
 			Assert.IsFalse(position.IsPhysicallyValid);
@@ -225,7 +225,7 @@ public static class Vector3DTests
 		public void Vector3D_InfiniteValues_ShouldBeInvalid()
 		{
 			// Arrange
-			Float.Position3D position = Float.Position3D.Create(new Vector3f(float.PositiveInfinity, 5.0f, 3.0f));
+			Position3D position = Position3D.Create(new Vector3f(float.PositiveInfinity, 5.0f, 3.0f));
 
 			// Assert
 			Assert.IsFalse(position.IsPhysicallyValid);
@@ -235,7 +235,7 @@ public static class Vector3DTests
 		public void Vector3D_ValidValues_ShouldBeValid()
 		{
 			// Arrange
-			Float.Position3D position = Float.Position3D.Create(new Vector3f(10.0f, 20.0f, 30.0f));
+			Position3D position = Position3D.Create(new Vector3f(10.0f, 20.0f, 30.0f));
 
 			// Assert
 			Assert.IsTrue(position.IsPhysicallyValid);
@@ -249,10 +249,10 @@ public static class Vector3DTests
 		public void Vector3D_Unit_ShouldReturnNormalizedVector()
 		{
 			// Arrange
-			Float.Velocity3D velocity = Float.Velocity3D.FromMetersPerSecond(3.0f, 4.0f, 12.0f);
+			Velocity3D velocity = Velocity3D.FromMetersPerSecond(3.0f, 4.0f, 12.0f);
 
 			// Act
-			Float.Velocity3D unitVelocity = velocity.Unit();
+			Velocity3D unitVelocity = velocity.Unit();
 
 			// Assert
 			Assert.AreEqual(1.0f, unitVelocity.Magnitude, FloatTolerance);
@@ -265,10 +265,10 @@ public static class Vector3DTests
 		public void Vector3D_ZeroMagnitude_Unit_ShouldReturnZero()
 		{
 			// Arrange
-			Float.Velocity3D zeroVelocity = Float.Velocity3D.FromMetersPerSecond(0.0f, 0.0f, 0.0f);
+			Velocity3D zeroVelocity = Velocity3D.FromMetersPerSecond(0.0f, 0.0f, 0.0f);
 
 			// Act
-			Float.Velocity3D unitVelocity = zeroVelocity.Unit();
+			Velocity3D unitVelocity = zeroVelocity.Unit();
 
 			// Assert
 			Assert.AreEqual(0.0f, unitVelocity.Magnitude, FloatTolerance);
@@ -285,7 +285,7 @@ public static class Vector3DTests
 		public void Acceleration3D_StandardGravity_ShouldHaveCorrectValue()
 		{
 			// Arrange & Act
-			Float.Acceleration3D gravity = Float.Acceleration3D.StandardGravity;
+			Acceleration3D gravity = Acceleration3D.StandardGravity;
 
 			// Assert
 			Assert.AreEqual(0.0f, gravity.X, FloatTolerance);
@@ -297,7 +297,7 @@ public static class Vector3DTests
 		public void Position3D_Origin_ShouldHaveZeroValues()
 		{
 			// Arrange & Act
-			Float.Position3D origin = Float.Position3D.Origin;
+			Position3D origin = Position3D.Origin;
 
 			// Assert
 			Assert.AreEqual(0.0f, origin.X, FloatTolerance);

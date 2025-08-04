@@ -191,7 +191,7 @@ public static class FloatQuantitiesTests
 		{
 			// Arrange & Act
 			SoundPressure soundPressure = SoundPressure.FromPascals(0.02f);
-			SoundPressure<float> genericSoundPressure = (SoundPressure<float>)soundPressure;
+			SoundPressure<float> genericSoundPressure = soundPressure;
 			SoundPressure backToFloat = (SoundPressure)genericSoundPressure;
 
 			// Assert

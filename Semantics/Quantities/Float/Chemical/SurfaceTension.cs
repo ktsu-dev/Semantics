@@ -21,5 +21,5 @@ public sealed record SurfaceTension : Generic.SurfaceTension<float>
 	/// </summary>
 	/// <param name="newtonsPerMeter">The value in newtons per meter.</param>
 	/// <returns>A new SurfaceTension instance.</returns>
-	public static new SurfaceTension FromNewtonsPerMeter(float newtonsPerMeter) => new() { Value = newtonsPerMeter };
+	public static SurfaceTension FromNewtonsPerMeter(float newtonsPerMeter) => new() { Value = newtonsPerMeter };
 }

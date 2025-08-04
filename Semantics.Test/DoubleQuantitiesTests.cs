@@ -53,7 +53,7 @@ public static class DoubleQuantitiesTests
 		{
 			// Arrange & Act
 			Pressure pressure = Pressure.FromPascals(101325.123456789);
-			Pressure<double> genericPressure = (Pressure<double>)pressure;
+			Pressure<double> genericPressure = pressure;
 			Pressure backToDouble = (Pressure)genericPressure;
 
 			// Assert
@@ -131,7 +131,7 @@ public static class DoubleQuantitiesTests
 		{
 			// Arrange & Act
 			RadioactiveActivity activity = RadioactiveActivity.FromBecquerels(1e12);
-			RadioactiveActivity<double> genericActivity = (RadioactiveActivity<double>)activity;
+			RadioactiveActivity<double> genericActivity = activity;
 			RadioactiveActivity backToDouble = (RadioactiveActivity)genericActivity;
 
 			// Assert
@@ -176,8 +176,8 @@ public static class DoubleQuantitiesTests
 		public void RefractiveIndex_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var refractiveIndex = RefractiveIndex.Create(1.333);
-			RefractiveIndex<double> genericRefractiveIndex = (RefractiveIndex<double>)refractiveIndex;
+			RefractiveIndex<double> refractiveIndex = RefractiveIndex.Create(1.333);
+			RefractiveIndex<double> genericRefractiveIndex = refractiveIndex;
 			RefractiveIndex backToDouble = (RefractiveIndex)genericRefractiveIndex;
 
 			// Assert

@@ -22,5 +22,5 @@ public sealed record PH : Generic.PH<double>
 	/// </summary>
 	/// <param name="value">The pH value.</param>
 	/// <returns>A new PH instance.</returns>
-	public static new PH FromValue(double value) => new() { Value = value };
+	public static PH FromValue(double value) => new() { Value = value };
 }

@@ -21,5 +21,5 @@ public sealed record RateConstant : Generic.RateConstant<float>
 	/// </summary>
 	/// <param name="perSecond">The value in per second.</param>
 	/// <returns>A new RateConstant instance.</returns>
-	public static new RateConstant FromPerSecond(float perSecond) => new() { Value = perSecond };
+	public static RateConstant FromPerSecond(float perSecond) => new() { Value = perSecond };
 }

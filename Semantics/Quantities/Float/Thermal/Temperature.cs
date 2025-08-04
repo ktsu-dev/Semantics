@@ -21,6 +21,6 @@ public sealed record Temperature : Generic.Temperature<float>
 	/// </summary>
 	/// <param name="kelvin">The value in Kelvin.</param>
 	/// <returns>A new Temperature instance.</returns>
-	public static new Temperature FromKelvin(float kelvin) => new() { Value = kelvin };
+	public static new Temperature FromKelvin(float kelvin) => Create(kelvin);
 
 }
