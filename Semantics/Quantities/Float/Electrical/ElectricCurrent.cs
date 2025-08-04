@@ -21,6 +21,6 @@ public sealed record ElectricCurrent : Generic.ElectricCurrent<float>
 	/// </summary>
 	/// <param name="amperes">The value in amperes.</param>
 	/// <returns>A new ElectricCurrent instance.</returns>
-	public static new ElectricCurrent FromAmperes(float amperes) => new() { Value = amperes };
+	public static new ElectricCurrent FromAmperes(float amperes) => new() { Quantity = amperes };
 
 }

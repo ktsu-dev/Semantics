@@ -21,5 +21,5 @@ public sealed record SpecificGravity : Generic.SpecificGravity<float>
 	/// </summary>
 	/// <param name="ratio">The dimensionless ratio value.</param>
 	/// <returns>A new SpecificGravity instance.</returns>
-	public static new SpecificGravity FromRatio(float ratio) => new() { Value = ratio };
+	public static new SpecificGravity FromRatio(float ratio) => new() { Quantity = ratio };
 }

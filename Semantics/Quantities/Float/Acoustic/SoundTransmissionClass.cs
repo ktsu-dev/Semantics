@@ -21,5 +21,5 @@ public sealed record SoundTransmissionClass : Generic.SoundTransmissionClass<flo
 	/// </summary>
 	/// <param name="rating">The STC rating (typically 15-65).</param>
 	/// <returns>A new SoundTransmissionClass instance.</returns>
-	public static new SoundTransmissionClass FromRating(float rating) => new() { Value = rating };
+	public static new SoundTransmissionClass FromRating(float rating) => new() { Quantity = rating };
 }

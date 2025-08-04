@@ -22,5 +22,5 @@ public sealed record Time : Generic.Time<double>
 	/// </summary>
 	/// <param name="seconds">The value in seconds.</param>
 	/// <returns>A new Time instance.</returns>
-	public static new Time FromSeconds(double seconds) => new() { Value = seconds };
+	public static new Time FromSeconds(double seconds) => new() { Quantity = seconds };
 }

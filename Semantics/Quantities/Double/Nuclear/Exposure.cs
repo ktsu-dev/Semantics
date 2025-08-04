@@ -22,5 +22,5 @@ public sealed record Exposure : Generic.Exposure<double>
 	/// </summary>
 	/// <param name="coulombsPerKilogram">The value in coulombs per kilogram.</param>
 	/// <returns>A new Exposure instance.</returns>
-	public static new Exposure FromCoulombsPerKilogram(double coulombsPerKilogram) => new() { Value = coulombsPerKilogram };
+	public static new Exposure FromCoulombsPerKilogram(double coulombsPerKilogram) => new() { Quantity = coulombsPerKilogram };
 }

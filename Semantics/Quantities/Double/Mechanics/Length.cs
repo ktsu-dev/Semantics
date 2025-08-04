@@ -22,5 +22,5 @@ public sealed record Length : Generic.Length<double>
 	/// </summary>
 	/// <param name="meters">The value in meters.</param>
 	/// <returns>A new Length instance.</returns>
-	public static new Length FromMeters(double meters) => new() { Value = meters };
+	public static new Length FromMeters(double meters) => new() { Quantity = meters };
 }

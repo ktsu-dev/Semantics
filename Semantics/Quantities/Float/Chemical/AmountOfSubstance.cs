@@ -21,5 +21,5 @@ public sealed record AmountOfSubstance : Generic.AmountOfSubstance<float>
 	/// </summary>
 	/// <param name="moles">The value in moles.</param>
 	/// <returns>A new AmountOfSubstance instance.</returns>
-	public static new AmountOfSubstance FromMoles(float moles) => new() { Value = moles };
+	public static new AmountOfSubstance FromMoles(float moles) => new() { Quantity = moles };
 }

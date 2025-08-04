@@ -22,12 +22,12 @@ public sealed record Loudness : Generic.Loudness<double>
 	/// </summary>
 	/// <param name="sones">The loudness in sones.</param>
 	/// <returns>A new Loudness instance.</returns>
-	public static new Loudness FromSones(double sones) => new() { Value = sones };
+	public static new Loudness FromSones(double sones) => new() { Quantity = sones };
 
 	/// <summary>
 	/// Creates a new Loudness from a value in phons (loudness level).
 	/// </summary>
 	/// <param name="phons">The loudness level in phons.</param>
 	/// <returns>A new Loudness instance.</returns>
-	public static new Loudness FromPhons(double phons) => new() { Value = phons };
+	public static new Loudness FromPhons(double phons) => new() { Quantity = phons };
 }

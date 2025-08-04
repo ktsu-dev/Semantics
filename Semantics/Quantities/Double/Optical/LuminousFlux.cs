@@ -22,5 +22,5 @@ public sealed record LuminousFlux : Generic.LuminousFlux<double>
 	/// </summary>
 	/// <param name="lumens">The value in lumens.</param>
 	/// <returns>A new LuminousFlux instance.</returns>
-	public static new LuminousFlux FromLumens(double lumens) => new() { Value = lumens };
+	public static new LuminousFlux FromLumens(double lumens) => new() { Quantity = lumens };
 }

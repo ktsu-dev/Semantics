@@ -22,12 +22,12 @@ public sealed record SoundIntensity : Generic.SoundIntensity<double>
 	/// </summary>
 	/// <param name="wattsPerSquareMeter">The value in watts per square meter.</param>
 	/// <returns>A new SoundIntensity instance.</returns>
-	public static new SoundIntensity FromWattsPerSquareMeter(double wattsPerSquareMeter) => new() { Value = wattsPerSquareMeter };
+	public static new SoundIntensity FromWattsPerSquareMeter(double wattsPerSquareMeter) => new() { Quantity = wattsPerSquareMeter };
 
 	/// <summary>
 	/// Creates a new SoundIntensity from a value in microwatts per square centimeter.
 	/// </summary>
 	/// <param name="microwattsPerSquareCentimeter">The value in microwatts per square centimeter.</param>
 	/// <returns>A new SoundIntensity instance.</returns>
-	public static new SoundIntensity FromMicrowattsPerSquareCentimeter(double microwattsPerSquareCentimeter) => new() { Value = microwattsPerSquareCentimeter };
+	public static new SoundIntensity FromMicrowattsPerSquareCentimeter(double microwattsPerSquareCentimeter) => new() { Quantity = microwattsPerSquareCentimeter };
 }

@@ -21,5 +21,5 @@ public sealed record ActivationEnergy : Generic.ActivationEnergy<float>
 	/// </summary>
 	/// <param name="joulesPerMole">The value in joules per mole.</param>
 	/// <returns>A new ActivationEnergy instance.</returns>
-	public static ActivationEnergy FromJoulesPerMole(float joulesPerMole) => new() { Value = joulesPerMole };
+	public static ActivationEnergy FromJoulesPerMole(float joulesPerMole) => new() { Quantity = joulesPerMole };
 }

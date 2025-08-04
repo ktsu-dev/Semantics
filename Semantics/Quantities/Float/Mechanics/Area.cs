@@ -21,6 +21,6 @@ public sealed record Area : Generic.Area<float>
 	/// </summary>
 	/// <param name="squareMeters">The value in square meters.</param>
 	/// <returns>A new Area instance.</returns>
-	public static new Area FromSquareMeters(float squareMeters) => new() { Value = squareMeters };
+	public static new Area FromSquareMeters(float squareMeters) => new() { Quantity = squareMeters };
 
 }

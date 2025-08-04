@@ -21,6 +21,6 @@ public sealed record Time : Generic.Time<float>
 	/// </summary>
 	/// <param name="seconds">The value in seconds.</param>
 	/// <returns>A new Time instance.</returns>
-	public static new Time FromSeconds(float seconds) => new() { Value = seconds };
+	public static new Time FromSeconds(float seconds) => new() { Quantity = seconds };
 
 }

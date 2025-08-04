@@ -21,19 +21,19 @@ public sealed record Pitch : Generic.Pitch<float>
 	/// </summary>
 	/// <param name="hertz">The frequency in Hz.</param>
 	/// <returns>A new Pitch instance.</returns>
-	public static new Pitch FromHertz(float hertz) => new() { Value = hertz };
+	public static new Pitch FromHertz(float hertz) => new() { Quantity = hertz };
 
 	/// <summary>
 	/// Creates a new Pitch from a value in mels (perceptual pitch scale).
 	/// </summary>
 	/// <param name="mels">The pitch in mels.</param>
 	/// <returns>A new Pitch instance.</returns>
-	public static new Pitch FromMels(float mels) => new() { Value = mels };
+	public static new Pitch FromMels(float mels) => new() { Quantity = mels };
 
 	/// <summary>
 	/// Creates a new Pitch from a value in barks (critical band scale).
 	/// </summary>
 	/// <param name="barks">The pitch in barks.</param>
 	/// <returns>A new Pitch instance.</returns>
-	public static new Pitch FromBarks(float barks) => new() { Value = barks };
+	public static new Pitch FromBarks(float barks) => new() { Quantity = barks };
 }

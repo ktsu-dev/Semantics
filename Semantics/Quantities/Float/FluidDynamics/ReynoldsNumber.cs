@@ -21,5 +21,5 @@ public sealed record ReynoldsNumber : Generic.ReynoldsNumber<float>
 	/// </summary>
 	/// <param name="value">The dimensionless Reynolds number value.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
-	public static new ReynoldsNumber FromValue(float value) => new() { Value = value };
+	public static new ReynoldsNumber FromValue(float value) => new() { Quantity = value };
 }

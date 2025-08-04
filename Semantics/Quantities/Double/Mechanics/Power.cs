@@ -22,5 +22,5 @@ public sealed record Power : Generic.Power<double>
 	/// </summary>
 	/// <param name="watts">The value in watts.</param>
 	/// <returns>A new Power instance.</returns>
-	public static new Power FromWatts(double watts) => new() { Value = watts };
+	public static new Power FromWatts(double watts) => new() { Quantity = watts };
 }

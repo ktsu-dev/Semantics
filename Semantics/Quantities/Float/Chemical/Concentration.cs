@@ -21,5 +21,5 @@ public sealed record Concentration : Generic.Concentration<float>
 	/// </summary>
 	/// <param name="molar">The value in molar.</param>
 	/// <returns>A new Concentration instance.</returns>
-	public static Concentration FromMolar(float molar) => new() { Value = molar };
+	public static Concentration FromMolar(float molar) => new() { Quantity = molar };
 }

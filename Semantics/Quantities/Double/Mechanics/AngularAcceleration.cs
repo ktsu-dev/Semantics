@@ -22,5 +22,5 @@ public sealed record AngularAcceleration : Generic.AngularAcceleration<double>
 	/// </summary>
 	/// <param name="radiansPerSecondSquared">The value in radians per second squared.</param>
 	/// <returns>A new AngularAcceleration instance.</returns>
-	public static new AngularAcceleration FromRadiansPerSecondSquared(double radiansPerSecondSquared) => new() { Value = radiansPerSecondSquared };
+	public static new AngularAcceleration FromRadiansPerSecondSquared(double radiansPerSecondSquared) => new() { Quantity = radiansPerSecondSquared };
 }

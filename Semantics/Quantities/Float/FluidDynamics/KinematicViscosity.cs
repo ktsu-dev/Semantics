@@ -21,5 +21,5 @@ public sealed record KinematicViscosity : Generic.KinematicViscosity<float>
 	/// </summary>
 	/// <param name="squareMetersPerSecond">The value in square meters per second.</param>
 	/// <returns>A new KinematicViscosity instance.</returns>
-	public static new KinematicViscosity FromSquareMetersPerSecond(float squareMetersPerSecond) => new() { Value = squareMetersPerSecond };
+	public static new KinematicViscosity FromSquareMetersPerSecond(float squareMetersPerSecond) => new() { Quantity = squareMetersPerSecond };
 }

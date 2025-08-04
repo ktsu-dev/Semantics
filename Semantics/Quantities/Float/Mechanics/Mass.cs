@@ -21,6 +21,6 @@ public sealed record Mass : Generic.Mass<float>
 	/// </summary>
 	/// <param name="kilograms">The value in kilograms.</param>
 	/// <returns>A new Mass instance.</returns>
-	public static new Mass FromKilograms(float kilograms) => new() { Value = kilograms };
+	public static new Mass FromKilograms(float kilograms) => new() { Quantity = kilograms };
 
 }

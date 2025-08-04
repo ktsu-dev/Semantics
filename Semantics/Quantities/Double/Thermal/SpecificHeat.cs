@@ -22,5 +22,5 @@ public sealed record SpecificHeat : Generic.SpecificHeat<double>
 	/// </summary>
 	/// <param name="joulesPerKilogramKelvin">The value in joules per kilogram-kelvin.</param>
 	/// <returns>A new SpecificHeat instance.</returns>
-	public static new SpecificHeat FromJoulesPerKilogramKelvin(double joulesPerKilogramKelvin) => new() { Value = joulesPerKilogramKelvin };
+	public static new SpecificHeat FromJoulesPerKilogramKelvin(double joulesPerKilogramKelvin) => new() { Quantity = joulesPerKilogramKelvin };
 }

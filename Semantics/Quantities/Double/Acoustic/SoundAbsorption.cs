@@ -22,12 +22,12 @@ public sealed record SoundAbsorption : Generic.SoundAbsorption<double>
 	/// </summary>
 	/// <param name="coefficient">The absorption coefficient (0-1).</param>
 	/// <returns>A new SoundAbsorption instance.</returns>
-	public static new SoundAbsorption FromCoefficient(double coefficient) => new() { Value = coefficient };
+	public static new SoundAbsorption FromCoefficient(double coefficient) => new() { Quantity = coefficient };
 
 	/// <summary>
 	/// Creates a new SoundAbsorption from a percentage value.
 	/// </summary>
 	/// <param name="percentage">The absorption percentage (0-100).</param>
 	/// <returns>A new SoundAbsorption instance.</returns>
-	public static new SoundAbsorption FromPercentage(double percentage) => new() { Value = percentage };
+	public static new SoundAbsorption FromPercentage(double percentage) => new() { Quantity = percentage };
 }

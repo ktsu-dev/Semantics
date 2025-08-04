@@ -22,5 +22,5 @@ public sealed record ElectricPotential : Generic.ElectricPotential<double>
 	/// </summary>
 	/// <param name="volts">The value in volts.</param>
 	/// <returns>A new ElectricPotential instance.</returns>
-	public static new ElectricPotential FromVolts(double volts) => new() { Value = volts };
+	public static new ElectricPotential FromVolts(double volts) => new() { Quantity = volts };
 }

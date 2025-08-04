@@ -22,19 +22,19 @@ public sealed record ReverberationTime : Generic.ReverberationTime<double>
 	/// </summary>
 	/// <param name="seconds">The value in seconds.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
-	public static new ReverberationTime FromSeconds(double seconds) => new() { Value = seconds };
+	public static new ReverberationTime FromSeconds(double seconds) => new() { Quantity = seconds };
 
 	/// <summary>
 	/// Creates a new ReverberationTime from T60 measurement.
 	/// </summary>
 	/// <param name="t60">The T60 time in seconds.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
-	public static new ReverberationTime FromT60(double t60) => new() { Value = t60 };
+	public static new ReverberationTime FromT60(double t60) => new() { Quantity = t60 };
 
 	/// <summary>
 	/// Creates a new ReverberationTime from T30 measurement (extrapolated to T60).
 	/// </summary>
 	/// <param name="t30">The T30 time in seconds.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
-	public static new ReverberationTime FromT30(double t30) => new() { Value = t30 };
+	public static new ReverberationTime FromT30(double t30) => new() { Quantity = t30 };
 }

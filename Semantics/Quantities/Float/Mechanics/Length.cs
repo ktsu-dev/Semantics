@@ -21,5 +21,5 @@ public sealed record Length : Generic.Length<float>
 	/// </summary>
 	/// <param name="meters">The value in meters.</param>
 	/// <returns>A new Length instance.</returns>
-	public static new Length FromMeters(float meters) => Create(meters);
+	public static new Length FromMeters(float meters) => (Length)Create(meters);
 }

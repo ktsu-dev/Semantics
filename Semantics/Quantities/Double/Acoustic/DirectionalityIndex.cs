@@ -22,12 +22,12 @@ public sealed record DirectionalityIndex : Generic.DirectionalityIndex<double>
 	/// </summary>
 	/// <param name="decibels">The directionality index in dB.</param>
 	/// <returns>A new DirectionalityIndex instance.</returns>
-	public static new DirectionalityIndex FromDecibels(double decibels) => new() { Value = decibels };
+	public static new DirectionalityIndex FromDecibels(double decibels) => new() { Quantity = decibels };
 
 	/// <summary>
 	/// Creates a DirectionalityIndex from directivity factor Q.
 	/// </summary>
 	/// <param name="directivityFactor">The directivity factor Q.</param>
 	/// <returns>The corresponding directionality index.</returns>
-	public static new DirectionalityIndex FromDirectivityFactor(double directivityFactor) => new() { Value = directivityFactor };
+	public static new DirectionalityIndex FromDirectivityFactor(double directivityFactor) => new() { Quantity = directivityFactor };
 }

@@ -21,5 +21,5 @@ public sealed record RefractiveIndex : Generic.RefractiveIndex<float>
 	/// </summary>
 	/// <param name="value">The refractive index value.</param>
 	/// <returns>A new RefractiveIndex instance.</returns>
-	public static new RefractiveIndex FromValue(float value) => new() { Value = value };
+	public static new RefractiveIndex FromValue(float value) => new() { Quantity = value };
 }

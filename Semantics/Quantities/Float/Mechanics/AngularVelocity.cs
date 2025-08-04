@@ -21,5 +21,5 @@ public sealed record AngularVelocity : Generic.AngularVelocity<float>
 	/// </summary>
 	/// <param name="radiansPerSecond">The value in radians per second.</param>
 	/// <returns>A new AngularVelocity instance.</returns>
-	public static new AngularVelocity FromRadiansPerSecond(float radiansPerSecond) => new() { Value = radiansPerSecond };
+	public static new AngularVelocity FromRadiansPerSecond(float radiansPerSecond) => new() { Quantity = radiansPerSecond };
 }

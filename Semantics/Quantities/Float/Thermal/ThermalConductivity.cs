@@ -21,12 +21,12 @@ public sealed record ThermalConductivity : Generic.ThermalConductivity<float>
 	/// </summary>
 	/// <param name="wattsPerMeterKelvin">The value in W/(m·K).</param>
 	/// <returns>A new ThermalConductivity instance.</returns>
-	public static new ThermalConductivity FromWattsPerMeterKelvin(float wattsPerMeterKelvin) => new() { Value = wattsPerMeterKelvin };
+	public static new ThermalConductivity FromWattsPerMeterKelvin(float wattsPerMeterKelvin) => new() { Quantity = wattsPerMeterKelvin };
 
 	/// <summary>
 	/// Creates a new ThermalConductivity from a value in BTU per hour-foot-Fahrenheit.
 	/// </summary>
 	/// <param name="btuPerHourFootFahrenheit">The value in BTU/(h·ft·°F).</param>
 	/// <returns>A new ThermalConductivity instance.</returns>
-	public static new ThermalConductivity FromBtuPerHourFootFahrenheit(float btuPerHourFootFahrenheit) => new() { Value = btuPerHourFootFahrenheit };
+	public static new ThermalConductivity FromBtuPerHourFootFahrenheit(float btuPerHourFootFahrenheit) => new() { Quantity = btuPerHourFootFahrenheit };
 }

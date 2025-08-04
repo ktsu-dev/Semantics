@@ -21,6 +21,6 @@ public sealed record Density : Generic.Density<float>
 	/// </summary>
 	/// <param name="kilogramsPerCubicMeter">The value in kilograms per cubic meter.</param>
 	/// <returns>A new Density instance.</returns>
-	public static new Density FromKilogramsPerCubicMeter(float kilogramsPerCubicMeter) => new() { Value = kilogramsPerCubicMeter };
+	public static new Density FromKilogramsPerCubicMeter(float kilogramsPerCubicMeter) => new() { Quantity = kilogramsPerCubicMeter };
 
 }

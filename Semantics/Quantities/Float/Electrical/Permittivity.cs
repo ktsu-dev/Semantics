@@ -21,5 +21,5 @@ public sealed record Permittivity : Generic.Permittivity<float>
 	/// </summary>
 	/// <param name="faradsPerMeter">The value in farads per meter.</param>
 	/// <returns>A new Permittivity instance.</returns>
-	public static new Permittivity FromFaradsPerMeter(float faradsPerMeter) => new() { Value = faradsPerMeter };
+	public static new Permittivity FromFaradsPerMeter(float faradsPerMeter) => new() { Quantity = faradsPerMeter };
 }

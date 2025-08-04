@@ -21,5 +21,5 @@ public sealed record AngularAcceleration : Generic.AngularAcceleration<float>
 	/// </summary>
 	/// <param name="radiansPerSecondSquared">The value in radians per second squared.</param>
 	/// <returns>A new AngularAcceleration instance.</returns>
-	public static new AngularAcceleration FromRadiansPerSecondSquared(float radiansPerSecondSquared) => new() { Value = radiansPerSecondSquared };
+	public static new AngularAcceleration FromRadiansPerSecondSquared(float radiansPerSecondSquared) => new() { Quantity = radiansPerSecondSquared };
 }

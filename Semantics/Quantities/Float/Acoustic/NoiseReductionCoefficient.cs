@@ -21,5 +21,5 @@ public sealed record NoiseReductionCoefficient : Generic.NoiseReductionCoefficie
 	/// </summary>
 	/// <param name="coefficient">The NRC value (0-1.25, typically 0-1).</param>
 	/// <returns>A new NoiseReductionCoefficient instance.</returns>
-	public static new NoiseReductionCoefficient FromCoefficient(float coefficient) => new() { Value = coefficient };
+	public static new NoiseReductionCoefficient FromCoefficient(float coefficient) => new() { Quantity = coefficient };
 }

@@ -21,5 +21,5 @@ public sealed record EquivalentDose : Generic.EquivalentDose<float>
 	/// </summary>
 	/// <param name="sieverts">The value in sieverts.</param>
 	/// <returns>A new EquivalentDose instance.</returns>
-	public static new EquivalentDose FromSieverts(float sieverts) => new() { Value = sieverts };
+	public static new EquivalentDose FromSieverts(float sieverts) => new() { Quantity = sieverts };
 }

@@ -21,5 +21,5 @@ public sealed record ElectricConductivity : Generic.ElectricConductivity<float>
 	/// </summary>
 	/// <param name="siemensPerMeter">The value in siemens per meter.</param>
 	/// <returns>A new ElectricConductivity instance.</returns>
-	public static new ElectricConductivity FromSiemensPerMeter(float siemensPerMeter) => new() { Value = siemensPerMeter };
+	public static new ElectricConductivity FromSiemensPerMeter(float siemensPerMeter) => new() { Quantity = siemensPerMeter };
 }

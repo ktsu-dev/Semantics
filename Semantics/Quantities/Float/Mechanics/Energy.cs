@@ -21,6 +21,6 @@ public sealed record Energy : Generic.Energy<float>
 	/// </summary>
 	/// <param name="joules">The value in joules.</param>
 	/// <returns>A new Energy instance.</returns>
-	public static new Energy FromJoules(float joules) => new() { Value = joules };
+	public static new Energy FromJoules(float joules) => new() { Quantity = joules };
 
 }

@@ -21,5 +21,5 @@ public sealed record ImpedanceAC : Generic.ImpedanceAC<float>
 	/// </summary>
 	/// <param name="ohms">The value in ohms.</param>
 	/// <returns>A new ImpedanceAC instance.</returns>
-	public static new ImpedanceAC FromOhms(float ohms) => new() { Value = ohms };
+	public static new ImpedanceAC FromOhms(float ohms) => new() { Quantity = ohms };
 }

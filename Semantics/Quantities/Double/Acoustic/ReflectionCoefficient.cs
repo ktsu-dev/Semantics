@@ -22,5 +22,5 @@ public sealed record ReflectionCoefficient : Generic.ReflectionCoefficient<doubl
 	/// </summary>
 	/// <param name="coefficient">The reflection coefficient (0 = perfect absorption, 1 = perfect reflection).</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static new ReflectionCoefficient FromCoefficient(double coefficient) => new() { Value = coefficient };
+	public static new ReflectionCoefficient FromCoefficient(double coefficient) => new() { Quantity = coefficient };
 }

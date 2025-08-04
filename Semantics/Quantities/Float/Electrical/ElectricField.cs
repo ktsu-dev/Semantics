@@ -21,5 +21,5 @@ public sealed record ElectricField : Generic.ElectricField<float>
 	/// </summary>
 	/// <param name="voltsPerMeter">The value in volts per meter.</param>
 	/// <returns>A new ElectricField instance.</returns>
-	public static new ElectricField FromVoltsPerMeter(float voltsPerMeter) => new() { Value = voltsPerMeter };
+	public static new ElectricField FromVoltsPerMeter(float voltsPerMeter) => new() { Quantity = voltsPerMeter };
 }

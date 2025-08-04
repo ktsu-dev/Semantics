@@ -22,5 +22,5 @@ public sealed record Velocity : Generic.Velocity<double>
 	/// </summary>
 	/// <param name="metersPerSecond">The value in meters per second.</param>
 	/// <returns>A new Velocity instance.</returns>
-	public static new Velocity FromMetersPerSecond(double metersPerSecond) => new() { Value = metersPerSecond };
+	public static new Velocity FromMetersPerSecond(double metersPerSecond) => new() { Quantity = metersPerSecond };
 }

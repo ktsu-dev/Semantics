@@ -21,12 +21,12 @@ public sealed record SoundSpeed : Generic.SoundSpeed<float>
 	/// </summary>
 	/// <param name="metersPerSecond">The value in meters per second.</param>
 	/// <returns>A new SoundSpeed instance.</returns>
-	public static new SoundSpeed FromMetersPerSecond(float metersPerSecond) => new() { Value = metersPerSecond };
+	public static new SoundSpeed FromMetersPerSecond(float metersPerSecond) => new() { Quantity = metersPerSecond };
 
 	/// <summary>
 	/// Creates a new SoundSpeed from a value in feet per second.
 	/// </summary>
 	/// <param name="feetPerSecond">The value in feet per second.</param>
 	/// <returns>A new SoundSpeed instance.</returns>
-	public static new SoundSpeed FromFeetPerSecond(float feetPerSecond) => new() { Value = feetPerSecond };
+	public static new SoundSpeed FromFeetPerSecond(float feetPerSecond) => new() { Quantity = feetPerSecond };
 }

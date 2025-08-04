@@ -21,5 +21,5 @@ public sealed record DynamicViscosity : Generic.DynamicViscosity<float>
 	/// </summary>
 	/// <param name="pascalSeconds">The value in pascal seconds.</param>
 	/// <returns>A new DynamicViscosity instance.</returns>
-	public static DynamicViscosity FromPascalSeconds(float pascalSeconds) => new() { Value = pascalSeconds };
+	public static DynamicViscosity FromPascalSeconds(float pascalSeconds) => new() { Quantity = pascalSeconds };
 }

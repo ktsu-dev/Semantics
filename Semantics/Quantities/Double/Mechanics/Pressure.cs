@@ -22,5 +22,5 @@ public sealed record Pressure : Generic.Pressure<double>
 	/// </summary>
 	/// <param name="pascals">The value in pascals.</param>
 	/// <returns>A new Pressure instance.</returns>
-	public static new Pressure FromPascals(double pascals) => new() { Value = pascals };
+	public static new Pressure FromPascals(double pascals) => new() { Quantity = pascals };
 }

@@ -21,5 +21,5 @@ public sealed record ElectricResistance : Generic.ElectricResistance<float>
 	/// </summary>
 	/// <param name="ohms">The value in ohms.</param>
 	/// <returns>A new ElectricResistance instance.</returns>
-	public static new ElectricResistance FromOhms(float ohms) => new() { Value = ohms };
+	public static new ElectricResistance FromOhms(float ohms) => new() { Quantity = ohms };
 }

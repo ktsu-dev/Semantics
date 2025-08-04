@@ -21,12 +21,12 @@ public sealed record AcousticImpedance : Generic.AcousticImpedance<float>
 	/// </summary>
 	/// <param name="pascalSecondsPerMeter">The value in pascal-seconds per meter.</param>
 	/// <returns>A new AcousticImpedance instance.</returns>
-	public static new AcousticImpedance FromPascalSecondsPerMeter(float pascalSecondsPerMeter) => new() { Value = pascalSecondsPerMeter };
+	public static new AcousticImpedance FromPascalSecondsPerMeter(float pascalSecondsPerMeter) => new() { Quantity = pascalSecondsPerMeter };
 
 	/// <summary>
 	/// Creates a new AcousticImpedance from a value in rayls.
 	/// </summary>
 	/// <param name="rayls">The value in rayls (Pa·s/m).</param>
 	/// <returns>A new AcousticImpedance instance.</returns>
-	public static new AcousticImpedance FromRayls(float rayls) => new() { Value = rayls };
+	public static new AcousticImpedance FromRayls(float rayls) => new() { Quantity = rayls };
 }

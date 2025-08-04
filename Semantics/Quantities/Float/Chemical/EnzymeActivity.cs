@@ -21,5 +21,5 @@ public sealed record EnzymeActivity : Generic.EnzymeActivity<float>
 	/// </summary>
 	/// <param name="katal">The value in katal.</param>
 	/// <returns>A new EnzymeActivity instance.</returns>
-	public static EnzymeActivity FromKatal(float katal) => new() { Value = katal };
+	public static EnzymeActivity FromKatal(float katal) => new() { Quantity = katal };
 }

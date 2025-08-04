@@ -22,5 +22,5 @@ public sealed record SoundPowerLevel : Generic.SoundPowerLevel<double>
 	/// </summary>
 	/// <param name="decibels">The sound power level in dB PWL.</param>
 	/// <returns>A new SoundPowerLevel instance.</returns>
-	public static new SoundPowerLevel FromDecibels(double decibels) => new() { Value = decibels };
+	public static new SoundPowerLevel FromDecibels(double decibels) => new() { Quantity = decibels };
 }

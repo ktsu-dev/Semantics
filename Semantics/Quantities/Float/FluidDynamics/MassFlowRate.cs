@@ -21,5 +21,5 @@ public sealed record MassFlowRate : Generic.MassFlowRate<float>
 	/// </summary>
 	/// <param name="kilogramsPerSecond">The value in kilograms per second.</param>
 	/// <returns>A new MassFlowRate instance.</returns>
-	public static new MassFlowRate FromKilogramsPerSecond(float kilogramsPerSecond) => new() { Value = kilogramsPerSecond };
+	public static new MassFlowRate FromKilogramsPerSecond(float kilogramsPerSecond) => new() { Quantity = kilogramsPerSecond };
 }

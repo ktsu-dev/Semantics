@@ -22,5 +22,5 @@ public sealed record Concentration : Generic.Concentration<double>
 	/// </summary>
 	/// <param name="molar">The value in molar.</param>
 	/// <returns>A new Concentration instance.</returns>
-	public static Concentration FromMolar(double molar) => new() { Value = molar };
+	public static Concentration FromMolar(double molar) => new() { Quantity = molar };
 }

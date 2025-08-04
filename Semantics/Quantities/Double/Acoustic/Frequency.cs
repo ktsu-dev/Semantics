@@ -22,19 +22,19 @@ public sealed record Frequency : Generic.Frequency<double>
 	/// </summary>
 	/// <param name="hertz">The value in hertz.</param>
 	/// <returns>A new Frequency instance.</returns>
-	public static new Frequency FromHertz(double hertz) => new() { Value = hertz };
+	public static new Frequency FromHertz(double hertz) => new() { Quantity = hertz };
 
 	/// <summary>
 	/// Creates a new Frequency from a value in kilohertz.
 	/// </summary>
 	/// <param name="kilohertz">The value in kilohertz.</param>
 	/// <returns>A new Frequency instance.</returns>
-	public static new Frequency FromKilohertz(double kilohertz) => new() { Value = kilohertz };
+	public static new Frequency FromKilohertz(double kilohertz) => new() { Quantity = kilohertz };
 
 	/// <summary>
 	/// Creates a new Frequency from a value in megahertz.
 	/// </summary>
 	/// <param name="megahertz">The value in megahertz.</param>
 	/// <returns>A new Frequency instance.</returns>
-	public static new Frequency FromMegahertz(double megahertz) => new() { Value = megahertz };
+	public static new Frequency FromMegahertz(double megahertz) => new() { Quantity = megahertz };
 }

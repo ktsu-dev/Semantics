@@ -22,5 +22,5 @@ public sealed record Illuminance : Generic.Illuminance<double>
 	/// </summary>
 	/// <param name="lux">The value in lux.</param>
 	/// <returns>A new Illuminance instance.</returns>
-	public static new Illuminance FromLux(double lux) => new() { Value = lux };
+	public static new Illuminance FromLux(double lux) => new() { Quantity = lux };
 }

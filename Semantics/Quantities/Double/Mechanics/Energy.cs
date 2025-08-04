@@ -22,5 +22,5 @@ public sealed record Energy : Generic.Energy<double>
 	/// </summary>
 	/// <param name="joules">The value in joules.</param>
 	/// <returns>A new Energy instance.</returns>
-	public static new Energy FromJoules(double joules) => new() { Value = joules };
+	public static new Energy FromJoules(double joules) => new() { Quantity = joules };
 }

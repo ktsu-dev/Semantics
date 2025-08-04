@@ -22,5 +22,5 @@ public sealed record Heat : Generic.Heat<double>
 	/// </summary>
 	/// <param name="joules">The value in joules.</param>
 	/// <returns>A new Heat instance.</returns>
-	public static new Heat FromJoules(double joules) => new() { Value = joules };
+	public static new Heat FromJoules(double joules) => new() { Quantity = joules };
 }

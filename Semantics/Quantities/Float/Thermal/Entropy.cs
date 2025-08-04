@@ -21,5 +21,5 @@ public sealed record Entropy : Generic.Entropy<float>
 	/// </summary>
 	/// <param name="joulesPerKelvin">The value in joules per kelvin.</param>
 	/// <returns>A new Entropy instance.</returns>
-	public static new Entropy FromJoulesPerKelvin(float joulesPerKelvin) => new() { Value = joulesPerKelvin };
+	public static new Entropy FromJoulesPerKelvin(float joulesPerKelvin) => new() { Quantity = joulesPerKelvin };
 }

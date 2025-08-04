@@ -22,5 +22,5 @@ public sealed record MomentOfInertia : Generic.MomentOfInertia<double>
 	/// </summary>
 	/// <param name="kilogramSquareMeters">The value in kilogram-square meters.</param>
 	/// <returns>A new MomentOfInertia instance.</returns>
-	public static new MomentOfInertia FromKilogramSquareMeters(double kilogramSquareMeters) => new() { Value = kilogramSquareMeters };
+	public static new MomentOfInertia FromKilogramSquareMeters(double kilogramSquareMeters) => new() { Quantity = kilogramSquareMeters };
 }

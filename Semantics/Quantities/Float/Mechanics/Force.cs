@@ -21,6 +21,6 @@ public sealed record Force : Generic.Force<float>
 	/// </summary>
 	/// <param name="newtons">The value in newtons.</param>
 	/// <returns>A new Force instance.</returns>
-	public static new Force FromNewtons(float newtons) => new() { Value = newtons };
+	public static new Force FromNewtons(float newtons) => new() { Quantity = newtons };
 
 }

@@ -21,6 +21,6 @@ public sealed record AbsorbedDose : Generic.AbsorbedDose<float>
 	/// </summary>
 	/// <param name="grays">The value in grays.</param>
 	/// <returns>A new AbsorbedDose instance.</returns>
-	public static new AbsorbedDose FromGrays(float grays) => new() { Value = grays };
+	public static new AbsorbedDose FromGrays(float grays) => new() { Quantity = grays };
 
 }

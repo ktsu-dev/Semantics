@@ -22,5 +22,5 @@ public sealed record ElectricFlux : Generic.ElectricFlux<double>
 	/// </summary>
 	/// <param name="voltMeters">The value in volt-meters.</param>
 	/// <returns>A new ElectricFlux instance.</returns>
-	public static new ElectricFlux FromVoltMeters(double voltMeters) => new() { Value = voltMeters };
+	public static new ElectricFlux FromVoltMeters(double voltMeters) => new() { Quantity = voltMeters };
 }

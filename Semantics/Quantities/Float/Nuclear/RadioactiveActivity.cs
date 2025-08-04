@@ -21,5 +21,5 @@ public sealed record RadioactiveActivity : Generic.RadioactiveActivity<float>
 	/// </summary>
 	/// <param name="becquerels">The value in becquerels.</param>
 	/// <returns>A new RadioactiveActivity instance.</returns>
-	public static new RadioactiveActivity FromBecquerels(float becquerels) => new() { Value = becquerels };
+	public static new RadioactiveActivity FromBecquerels(float becquerels) => new() { Quantity = becquerels };
 }

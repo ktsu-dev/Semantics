@@ -22,5 +22,5 @@ public sealed record Volume : Generic.Volume<double>
 	/// </summary>
 	/// <param name="cubicMeters">The value in cubic meters.</param>
 	/// <returns>A new Volume instance.</returns>
-	public static new Volume FromCubicMeters(double cubicMeters) => new() { Value = cubicMeters };
+	public static new Volume FromCubicMeters(double cubicMeters) => new() { Quantity = cubicMeters };
 }

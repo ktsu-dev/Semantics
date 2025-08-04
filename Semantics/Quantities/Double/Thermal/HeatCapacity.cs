@@ -22,5 +22,5 @@ public sealed record HeatCapacity : Generic.HeatCapacity<double>
 	/// </summary>
 	/// <param name="joulesPerKelvin">The value in joules per kelvin.</param>
 	/// <returns>A new HeatCapacity instance.</returns>
-	public static new HeatCapacity FromJoulesPerKelvin(double joulesPerKelvin) => new() { Value = joulesPerKelvin };
+	public static new HeatCapacity FromJoulesPerKelvin(double joulesPerKelvin) => new() { Quantity = joulesPerKelvin };
 }

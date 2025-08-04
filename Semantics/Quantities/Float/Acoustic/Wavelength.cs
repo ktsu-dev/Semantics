@@ -21,19 +21,19 @@ public sealed record Wavelength : Generic.Wavelength<float>
 	/// </summary>
 	/// <param name="meters">The value in meters.</param>
 	/// <returns>A new Wavelength instance.</returns>
-	public static new Wavelength FromMeters(float meters) => new() { Value = meters };
+	public static new Wavelength FromMeters(float meters) => new() { Quantity = meters };
 
 	/// <summary>
 	/// Creates a new Wavelength from a value in millimeters.
 	/// </summary>
 	/// <param name="millimeters">The value in millimeters.</param>
 	/// <returns>A new Wavelength instance.</returns>
-	public static new Wavelength FromMillimeters(float millimeters) => new() { Value = millimeters };
+	public static new Wavelength FromMillimeters(float millimeters) => new() { Quantity = millimeters };
 
 	/// <summary>
 	/// Creates a new Wavelength from a value in micrometers.
 	/// </summary>
 	/// <param name="micrometers">The value in micrometers.</param>
 	/// <returns>A new Wavelength instance.</returns>
-	public static new Wavelength FromMicrometers(float micrometers) => new() { Value = micrometers };
+	public static new Wavelength FromMicrometers(float micrometers) => new() { Quantity = micrometers };
 }

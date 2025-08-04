@@ -21,5 +21,5 @@ public sealed record NuclearCrossSection : Generic.NuclearCrossSection<float>
 	/// </summary>
 	/// <param name="barns">The value in barns.</param>
 	/// <returns>A new NuclearCrossSection instance.</returns>
-	public static new NuclearCrossSection FromBarns(float barns) => new() { Value = barns };
+	public static new NuclearCrossSection FromBarns(float barns) => new() { Quantity = barns };
 }

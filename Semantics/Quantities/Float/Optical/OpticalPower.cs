@@ -21,5 +21,5 @@ public sealed record OpticalPower : Generic.OpticalPower<float>
 	/// </summary>
 	/// <param name="diopters">The value in diopters.</param>
 	/// <returns>A new OpticalPower instance.</returns>
-	public static new OpticalPower FromDiopters(float diopters) => new() { Value = diopters };
+	public static new OpticalPower FromDiopters(float diopters) => new() { Quantity = diopters };
 }

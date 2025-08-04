@@ -21,5 +21,5 @@ public sealed record Torque : Generic.Torque<float>
 	/// </summary>
 	/// <param name="newtonMeters">The value in newton-meters.</param>
 	/// <returns>A new Torque instance.</returns>
-	public static new Torque FromNewtonMeters(float newtonMeters) => new() { Value = newtonMeters };
+	public static new Torque FromNewtonMeters(float newtonMeters) => new() { Quantity = newtonMeters };
 }

@@ -22,5 +22,5 @@ public sealed record RadioactiveActivity : Generic.RadioactiveActivity<double>
 	/// </summary>
 	/// <param name="becquerels">The value in becquerels.</param>
 	/// <returns>A new RadioactiveActivity instance.</returns>
-	public static new RadioactiveActivity FromBecquerels(double becquerels) => new() { Value = becquerels };
+	public static new RadioactiveActivity FromBecquerels(double becquerels) => new() { Quantity = becquerels };
 }

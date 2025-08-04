@@ -22,19 +22,19 @@ public sealed record SoundPressure : Generic.SoundPressure<double>
 	/// </summary>
 	/// <param name="pascals">The value in pascals.</param>
 	/// <returns>A new SoundPressure instance.</returns>
-	public static new SoundPressure FromPascals(double pascals) => new() { Value = pascals };
+	public static new SoundPressure FromPascals(double pascals) => new() { Quantity = pascals };
 
 	/// <summary>
 	/// Creates a new SoundPressure from a value in micropascals.
 	/// </summary>
 	/// <param name="micropascals">The value in micropascals.</param>
 	/// <returns>A new SoundPressure instance.</returns>
-	public static new SoundPressure FromMicropascals(double micropascals) => new() { Value = micropascals };
+	public static new SoundPressure FromMicropascals(double micropascals) => new() { Quantity = micropascals };
 
 	/// <summary>
 	/// Creates a new SoundPressure from a value in bars.
 	/// </summary>
 	/// <param name="bars">The value in bars.</param>
 	/// <returns>A new SoundPressure instance.</returns>
-	public static new SoundPressure FromBars(double bars) => new() { Value = bars };
+	public static new SoundPressure FromBars(double bars) => new() { Quantity = bars };
 }

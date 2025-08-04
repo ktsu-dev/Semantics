@@ -21,5 +21,5 @@ public sealed record Luminance : Generic.Luminance<float>
 	/// </summary>
 	/// <param name="candelaPerSquareMeter">The value in candela per square meter.</param>
 	/// <returns>A new Luminance instance.</returns>
-	public static new Luminance FromCandelaPerSquareMeter(float candelaPerSquareMeter) => new() { Value = candelaPerSquareMeter };
+	public static new Luminance FromCandelaPerSquareMeter(float candelaPerSquareMeter) => new() { Quantity = candelaPerSquareMeter };
 }

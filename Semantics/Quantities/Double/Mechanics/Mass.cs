@@ -22,5 +22,5 @@ public sealed record Mass : Generic.Mass<double>
 	/// </summary>
 	/// <param name="kilograms">The value in kilograms.</param>
 	/// <returns>A new Mass instance.</returns>
-	public static new Mass FromKilograms(double kilograms) => new() { Value = kilograms };
+	public static new Mass FromKilograms(double kilograms) => new() { Quantity = kilograms };
 }

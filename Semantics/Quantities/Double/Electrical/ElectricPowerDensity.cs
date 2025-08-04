@@ -22,5 +22,5 @@ public sealed record ElectricPowerDensity : Generic.ElectricPowerDensity<double>
 	/// </summary>
 	/// <param name="wattsPerCubicMeter">The value in watts per cubic meter.</param>
 	/// <returns>A new ElectricPowerDensity instance.</returns>
-	public static new ElectricPowerDensity FromWattsPerCubicMeter(double wattsPerCubicMeter) => new() { Value = wattsPerCubicMeter };
+	public static new ElectricPowerDensity FromWattsPerCubicMeter(double wattsPerCubicMeter) => new() { Quantity = wattsPerCubicMeter };
 }

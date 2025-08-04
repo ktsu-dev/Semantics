@@ -22,5 +22,5 @@ public sealed record Sharpness : Generic.Sharpness<double>
 	/// </summary>
 	/// <param name="acums">The sharpness in acums.</param>
 	/// <returns>A new Sharpness instance.</returns>
-	public static new Sharpness FromAcums(double acums) => new() { Value = acums };
+	public static new Sharpness FromAcums(double acums) => new() { Quantity = acums };
 }

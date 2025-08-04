@@ -21,5 +21,5 @@ public sealed record BulkModulus : Generic.BulkModulus<float>
 	/// </summary>
 	/// <param name="pascals">The value in pascals.</param>
 	/// <returns>A new BulkModulus instance.</returns>
-	public static new BulkModulus FromPascals(float pascals) => new() { Value = pascals };
+	public static new BulkModulus FromPascals(float pascals) => new() { Quantity = pascals };
 }

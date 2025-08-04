@@ -22,5 +22,5 @@ public sealed record EquivalentDose : Generic.EquivalentDose<double>
 	/// </summary>
 	/// <param name="sieverts">The value in sieverts.</param>
 	/// <returns>A new EquivalentDose instance.</returns>
-	public static new EquivalentDose FromSieverts(double sieverts) => new() { Value = sieverts };
+	public static new EquivalentDose FromSieverts(double sieverts) => new() { Quantity = sieverts };
 }

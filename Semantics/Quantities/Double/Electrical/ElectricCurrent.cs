@@ -22,5 +22,5 @@ public sealed record ElectricCurrent : Generic.ElectricCurrent<double>
 	/// </summary>
 	/// <param name="amperes">The value in amperes.</param>
 	/// <returns>A new ElectricCurrent instance.</returns>
-	public static new ElectricCurrent FromAmperes(double amperes) => new() { Value = amperes };
+	public static new ElectricCurrent FromAmperes(double amperes) => new() { Quantity = amperes };
 }

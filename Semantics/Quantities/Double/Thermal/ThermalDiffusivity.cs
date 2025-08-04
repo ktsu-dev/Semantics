@@ -22,19 +22,19 @@ public sealed record ThermalDiffusivity : Generic.ThermalDiffusivity<double>
 	/// </summary>
 	/// <param name="squareMetersPerSecond">The thermal diffusivity value in m²/s.</param>
 	/// <returns>A new ThermalDiffusivity instance.</returns>
-	public static new ThermalDiffusivity FromSquareMetersPerSecond(double squareMetersPerSecond) => new() { Value = squareMetersPerSecond };
+	public static new ThermalDiffusivity FromSquareMetersPerSecond(double squareMetersPerSecond) => new() { Quantity = squareMetersPerSecond };
 
 	/// <summary>
 	/// Creates a new ThermalDiffusivity from a value in square feet per hour.
 	/// </summary>
 	/// <param name="squareFeetPerHour">The thermal diffusivity value in ft²/h.</param>
 	/// <returns>A new ThermalDiffusivity instance.</returns>
-	public static new ThermalDiffusivity FromSquareFeetPerHour(double squareFeetPerHour) => new() { Value = squareFeetPerHour };
+	public static new ThermalDiffusivity FromSquareFeetPerHour(double squareFeetPerHour) => new() { Quantity = squareFeetPerHour };
 
 	/// <summary>
 	/// Creates a new ThermalDiffusivity from a value in square centimeters per second.
 	/// </summary>
 	/// <param name="squareCentimetersPerSecond">The thermal diffusivity value in cm²/s.</param>
 	/// <returns>A new ThermalDiffusivity instance.</returns>
-	public static new ThermalDiffusivity FromSquareCentimetersPerSecond(double squareCentimetersPerSecond) => new() { Value = squareCentimetersPerSecond };
+	public static new ThermalDiffusivity FromSquareCentimetersPerSecond(double squareCentimetersPerSecond) => new() { Quantity = squareCentimetersPerSecond };
 }

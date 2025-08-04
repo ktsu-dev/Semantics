@@ -22,12 +22,12 @@ public sealed record ThermalResistance : Generic.ThermalResistance<double>
 	/// </summary>
 	/// <param name="kelvinPerWatt">The value in K/W.</param>
 	/// <returns>A new ThermalResistance instance.</returns>
-	public static new ThermalResistance FromKelvinPerWatt(double kelvinPerWatt) => new() { Value = kelvinPerWatt };
+	public static new ThermalResistance FromKelvinPerWatt(double kelvinPerWatt) => new() { Quantity = kelvinPerWatt };
 
 	/// <summary>
 	/// Creates a new ThermalResistance from a value in Fahrenheit-hour per BTU.
 	/// </summary>
 	/// <param name="fahrenheitHourPerBtu">The value in °F·h/BTU.</param>
 	/// <returns>A new ThermalResistance instance.</returns>
-	public static new ThermalResistance FromFahrenheitHourPerBtu(double fahrenheitHourPerBtu) => new() { Value = fahrenheitHourPerBtu };
+	public static new ThermalResistance FromFahrenheitHourPerBtu(double fahrenheitHourPerBtu) => new() { Quantity = fahrenheitHourPerBtu };
 }

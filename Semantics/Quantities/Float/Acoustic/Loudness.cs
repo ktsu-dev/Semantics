@@ -21,12 +21,12 @@ public sealed record Loudness : Generic.Loudness<float>
 	/// </summary>
 	/// <param name="sones">The loudness in sones.</param>
 	/// <returns>A new Loudness instance.</returns>
-	public static new Loudness FromSones(float sones) => new() { Value = sones };
+	public static new Loudness FromSones(float sones) => new() { Quantity = sones };
 
 	/// <summary>
 	/// Creates a new Loudness from a value in phons (loudness level).
 	/// </summary>
 	/// <param name="phons">The loudness level in phons.</param>
 	/// <returns>A new Loudness instance.</returns>
-	public static new Loudness FromPhons(float phons) => new() { Value = phons };
+	public static new Loudness FromPhons(float phons) => new() { Quantity = phons };
 }

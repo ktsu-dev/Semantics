@@ -21,6 +21,6 @@ public sealed record Velocity : Generic.Velocity<float>
 	/// </summary>
 	/// <param name="metersPerSecond">The value in meters per second.</param>
 	/// <returns>A new Velocity instance.</returns>
-	public static new Velocity FromMetersPerSecond(float metersPerSecond) => new() { Value = metersPerSecond };
+	public static new Velocity FromMetersPerSecond(float metersPerSecond) => new() { Quantity = metersPerSecond };
 
 }

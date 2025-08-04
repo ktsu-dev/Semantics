@@ -22,5 +22,5 @@ public sealed record SoundPressureLevel : Generic.SoundPressureLevel<double>
 	/// </summary>
 	/// <param name="decibels">The sound pressure level in dB SPL.</param>
 	/// <returns>A new SoundPressureLevel instance.</returns>
-	public static new SoundPressureLevel FromDecibels(double decibels) => new() { Value = decibels };
+	public static new SoundPressureLevel FromDecibels(double decibels) => new() { Quantity = decibels };
 }

@@ -22,5 +22,5 @@ public sealed record LuminousIntensity : Generic.LuminousIntensity<double>
 	/// </summary>
 	/// <param name="candelas">The value in candelas.</param>
 	/// <returns>A new LuminousIntensity instance.</returns>
-	public static new LuminousIntensity FromCandelas(double candelas) => new() { Value = candelas };
+	public static new LuminousIntensity FromCandelas(double candelas) => new() { Quantity = candelas };
 }

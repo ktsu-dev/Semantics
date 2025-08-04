@@ -21,5 +21,5 @@ public sealed record ElectricCharge : Generic.ElectricCharge<float>
 	/// </summary>
 	/// <param name="coulombs">The value in coulombs.</param>
 	/// <returns>A new ElectricCharge instance.</returns>
-	public static new ElectricCharge FromCoulombs(float coulombs) => new() { Value = coulombs };
+	public static new ElectricCharge FromCoulombs(float coulombs) => new() { Quantity = coulombs };
 }

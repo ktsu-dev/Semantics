@@ -22,5 +22,5 @@ public sealed record ElectricCapacitance : Generic.ElectricCapacitance<double>
 	/// </summary>
 	/// <param name="farads">The value in farads.</param>
 	/// <returns>A new ElectricCapacitance instance.</returns>
-	public static new ElectricCapacitance FromFarads(double farads) => new() { Value = farads };
+	public static new ElectricCapacitance FromFarads(double farads) => new() { Quantity = farads };
 }

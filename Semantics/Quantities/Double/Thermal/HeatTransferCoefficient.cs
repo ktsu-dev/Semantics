@@ -22,5 +22,5 @@ public sealed record HeatTransferCoefficient : Generic.HeatTransferCoefficient<d
 	/// </summary>
 	/// <param name="wattsPerSquareMeterKelvin">The value in watts per square meter-kelvin.</param>
 	/// <returns>A new HeatTransferCoefficient instance.</returns>
-	public static new HeatTransferCoefficient FromWattsPerSquareMeterKelvin(double wattsPerSquareMeterKelvin) => new() { Value = wattsPerSquareMeterKelvin };
+	public static new HeatTransferCoefficient FromWattsPerSquareMeterKelvin(double wattsPerSquareMeterKelvin) => new() { Quantity = wattsPerSquareMeterKelvin };
 }

@@ -22,5 +22,5 @@ public sealed record Momentum : Generic.Momentum<double>
 	/// </summary>
 	/// <param name="kilogramMetersPerSecond">The value in kilogram-meters per second.</param>
 	/// <returns>A new Momentum instance.</returns>
-	public static new Momentum FromKilogramMetersPerSecond(double kilogramMetersPerSecond) => new() { Value = kilogramMetersPerSecond };
+	public static new Momentum FromKilogramMetersPerSecond(double kilogramMetersPerSecond) => new() { Quantity = kilogramMetersPerSecond };
 }

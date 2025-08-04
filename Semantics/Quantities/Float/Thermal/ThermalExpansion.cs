@@ -21,19 +21,19 @@ public sealed record ThermalExpansion : Generic.ThermalExpansion<float>
 	/// </summary>
 	/// <param name="perKelvin">The thermal expansion coefficient value in K⁻¹.</param>
 	/// <returns>A new ThermalExpansion instance.</returns>
-	public static new ThermalExpansion FromPerKelvin(float perKelvin) => new() { Value = perKelvin };
+	public static new ThermalExpansion FromPerKelvin(float perKelvin) => new() { Quantity = perKelvin };
 
 	/// <summary>
 	/// Creates a new ThermalExpansion from a value in per Celsius.
 	/// </summary>
 	/// <param name="perCelsius">The thermal expansion coefficient value in °C⁻¹.</param>
 	/// <returns>A new ThermalExpansion instance.</returns>
-	public static new ThermalExpansion FromPerCelsius(float perCelsius) => new() { Value = perCelsius };
+	public static new ThermalExpansion FromPerCelsius(float perCelsius) => new() { Quantity = perCelsius };
 
 	/// <summary>
 	/// Creates a new ThermalExpansion from a value in per Fahrenheit.
 	/// </summary>
 	/// <param name="perFahrenheit">The thermal expansion coefficient value in °F⁻¹.</param>
 	/// <returns>A new ThermalExpansion instance.</returns>
-	public static new ThermalExpansion FromPerFahrenheit(float perFahrenheit) => new() { Value = perFahrenheit };
+	public static new ThermalExpansion FromPerFahrenheit(float perFahrenheit) => new() { Quantity = perFahrenheit };
 }

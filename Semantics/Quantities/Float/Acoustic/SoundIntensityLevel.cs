@@ -21,5 +21,5 @@ public sealed record SoundIntensityLevel : Generic.SoundIntensityLevel<float>
 	/// </summary>
 	/// <param name="decibels">The sound intensity level in dB IL.</param>
 	/// <returns>A new SoundIntensityLevel instance.</returns>
-	public static new SoundIntensityLevel FromDecibels(float decibels) => new() { Value = decibels };
+	public static new SoundIntensityLevel FromDecibels(float decibels) => new() { Quantity = decibels };
 }

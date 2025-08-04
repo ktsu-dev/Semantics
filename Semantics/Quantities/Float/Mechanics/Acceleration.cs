@@ -21,6 +21,6 @@ public sealed record Acceleration : Generic.Acceleration<float>
 	/// </summary>
 	/// <param name="metersPerSecondSquared">The value in meters per second squared.</param>
 	/// <returns>A new Acceleration instance.</returns>
-	public static new Acceleration FromMetersPerSecondSquared(float metersPerSecondSquared) => new() { Value = metersPerSecondSquared };
+	public static new Acceleration FromMetersPerSecondSquared(float metersPerSecondSquared) => new() { Quantity = metersPerSecondSquared };
 
 }

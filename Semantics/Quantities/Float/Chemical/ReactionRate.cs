@@ -21,5 +21,5 @@ public sealed record ReactionRate : Generic.ReactionRate<float>
 	/// </summary>
 	/// <param name="molarPerSecond">The value in molar per second.</param>
 	/// <returns>A new ReactionRate instance.</returns>
-	public static ReactionRate FromMolarPerSecond(float molarPerSecond) => new() { Value = molarPerSecond };
+	public static ReactionRate FromMolarPerSecond(float molarPerSecond) => new() { Quantity = molarPerSecond };
 }

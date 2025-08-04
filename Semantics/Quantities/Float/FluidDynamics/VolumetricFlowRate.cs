@@ -21,5 +21,5 @@ public sealed record VolumetricFlowRate : Generic.VolumetricFlowRate<float>
 	/// </summary>
 	/// <param name="cubicMetersPerSecond">The value in cubic meters per second.</param>
 	/// <returns>A new VolumetricFlowRate instance.</returns>
-	public static new VolumetricFlowRate FromCubicMetersPerSecond(float cubicMetersPerSecond) => new() { Value = cubicMetersPerSecond };
+	public static new VolumetricFlowRate FromCubicMetersPerSecond(float cubicMetersPerSecond) => new() { Quantity = cubicMetersPerSecond };
 }

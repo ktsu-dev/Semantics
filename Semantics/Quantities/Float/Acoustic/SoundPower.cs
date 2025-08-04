@@ -21,19 +21,19 @@ public sealed record SoundPower : Generic.SoundPower<float>
 	/// </summary>
 	/// <param name="watts">The value in watts.</param>
 	/// <returns>A new SoundPower instance.</returns>
-	public static new SoundPower FromWatts(float watts) => new() { Value = watts };
+	public static new SoundPower FromWatts(float watts) => new() { Quantity = watts };
 
 	/// <summary>
 	/// Creates a new SoundPower from a value in milliwatts.
 	/// </summary>
 	/// <param name="milliwatts">The value in milliwatts.</param>
 	/// <returns>A new SoundPower instance.</returns>
-	public static new SoundPower FromMilliwatts(float milliwatts) => new() { Value = milliwatts };
+	public static new SoundPower FromMilliwatts(float milliwatts) => new() { Quantity = milliwatts };
 
 	/// <summary>
 	/// Creates a new SoundPower from a value in acoustic watts.
 	/// </summary>
 	/// <param name="acousticWatts">The value in acoustic watts.</param>
 	/// <returns>A new SoundPower instance.</returns>
-	public static new SoundPower FromAcousticWatts(float acousticWatts) => new() { Value = acousticWatts };
+	public static new SoundPower FromAcousticWatts(float acousticWatts) => new() { Quantity = acousticWatts };
 }
