@@ -5,9 +5,6 @@
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
 namespace ktsu.Semantics.Float;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 3D velocity vector with float precision.
 /// </summary>
@@ -40,10 +37,10 @@ public sealed record Velocity3D : Generic.Velocity3D<float>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Velocity3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));	/// <summary>
-	/// Gets the velocity as a Vector3f in meters per second (the base unit).
-	/// </summary>
-	/// <returns>The velocity vector in m/s.</returns>
+	public static Velocity3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));    /// <summary>
+																									/// Gets the velocity as a Vector3f in meters per second (the base unit).
+																									/// </summary>
+																									/// <returns>The velocity vector in m/s.</returns>
 	public Vector3f InMetersPerSecond() => Value;
 
 	// Vector arithmetic operations

@@ -98,8 +98,8 @@ public static class DoubleQuantitiesTests
 		public void Concentration_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var concentration = Concentration.FromMolarConcentration(0.123456789);
-			Concentration<double> genericConcentration = (Concentration<double>)concentration;
+			Concentration concentration = Concentration.FromMolarConcentration(0.123456789);
+			Concentration<double> genericConcentration = concentration;
 			Concentration backToDouble = (Concentration)genericConcentration;
 
 			// Assert
@@ -112,9 +112,9 @@ public static class DoubleQuantitiesTests
 		public void PH_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var ph = PH.FromPHValue(7.35);
-			var genericPh = (Generic.PH<double>)ph;
-			var backToDouble = (PH)genericPh;
+			PH ph = PH.FromPHValue(7.35);
+			PH<double> genericPh = ph;
+			PH backToDouble = (PH)genericPh;
 
 			// Assert
 			Assert.AreEqual(7.35, ph.Value, Tolerance);
@@ -162,8 +162,8 @@ public static class DoubleQuantitiesTests
 		public void Wavelength_CreateAndConvert_ShouldWork()
 		{
 			// Arrange & Act
-			var wavelength = Wavelength.FromNanometers(532.1);
-			Wavelength<double> genericWavelength = (Wavelength<double>)wavelength;
+			Wavelength wavelength = Wavelength.FromNanometers(532.1);
+			Wavelength<double> genericWavelength = wavelength;
 			Wavelength backToDouble = (Wavelength)genericWavelength;
 
 			// Assert

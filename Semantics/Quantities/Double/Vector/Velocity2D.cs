@@ -6,9 +6,6 @@
 #pragma warning disable CA1716 // Identifiers should not match keywords
 
 namespace ktsu.Semantics.Double;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 2D velocity vector with double precision.
 /// </summary>
@@ -40,10 +37,10 @@ public sealed record Velocity2D : Generic.Velocity2D<double>
 	/// <param name="x">The X component.</param>
 	/// <param name="y">The Y component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Velocity2D Create(double x, double y) => Create(new Vector2d(x, y));	/// <summary>
-	/// Gets the velocity as a Vector2d in meters per second (the base unit).
-	/// </summary>
-	/// <returns>The velocity vector in meters per second.</returns>
+	public static Velocity2D Create(double x, double y) => Create(new Vector2d(x, y));  /// <summary>
+																						/// Gets the velocity as a Vector2d in meters per second (the base unit).
+																						/// </summary>
+																						/// <returns>The velocity vector in meters per second.</returns>
 	public Vector2d InMetersPerSecond() => Value;
 
 	// Vector arithmetic operations

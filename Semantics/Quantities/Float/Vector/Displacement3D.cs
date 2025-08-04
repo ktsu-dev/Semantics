@@ -5,9 +5,6 @@
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
 namespace ktsu.Semantics.Float;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 3D displacement vector with float precision.
 /// </summary>
@@ -40,10 +37,10 @@ public sealed record Displacement3D : Generic.Displacement3D<float>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Displacement3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));	/// <summary>
-	/// Gets the displacement as a Vector3f in meters (the base unit).
-	/// </summary>
-	/// <returns>The displacement vector in meters.</returns>
+	public static Displacement3D Create(float x, float y, float z) => Create(new Vector3f(x, y, z));    /// <summary>
+																										/// Gets the displacement as a Vector3f in meters (the base unit).
+																										/// </summary>
+																										/// <returns>The displacement vector in meters.</returns>
 	public Vector3f InMeters() => Value;
 
 	// Vector arithmetic operations

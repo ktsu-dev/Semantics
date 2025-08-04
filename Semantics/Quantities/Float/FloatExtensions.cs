@@ -52,6 +52,12 @@ public static class FloatExtensions
 	/// <summary>Creates a Length from a value in millimeters.</summary>
 	public static Length Millimeters(this float value) => Length.FromMeters(ConvertToBaseUnit(value, Units.Millimeter));
 
+	/// <summary>Creates a Length from a value in micrometers.</summary>
+	public static Length Micrometers(this float value) => Length.FromMeters(ConvertToBaseUnit(value, Units.Micrometer));
+
+	/// <summary>Creates a Length from a value in nanometers.</summary>
+	public static Length Nanometers(this float value) => Length.FromMeters(ConvertToBaseUnit(value, Units.Nanometer));
+
 	/// <summary>Creates a Length from a value in inches.</summary>
 	public static Length Inches(this float value) => Length.FromMeters(ConvertToBaseUnit(value, Units.Inch));
 
@@ -229,41 +235,112 @@ public static class FloatExtensions
 
 	#region System.Numerics Integration
 
+	// Vector2 Extensions for 2D Quantities
 	/// <summary>Creates a Position2D from a System.Numerics.Vector2 in meters.</summary>
-	public static Position2D MetersPosition2D(this Vector2 vector)
+	public static Position2D Meters2D(this Vector2 vector)
 		=> Position2D.FromMeters(vector);
 
-	/// <summary>Creates a Velocity2D from a System.Numerics.Vector2 in meters per second.</summary>
-	public static Velocity2D MetersPerSecondVelocity2D(this Vector2 vector)
-		=> Velocity2D.FromMetersPerSecond(vector);
+	/// <summary>Creates a Position2D from a System.Numerics.Vector2 in kilometers.</summary>
+	public static Position2D Kilometers2D(this Vector2 vector)
+		=> Position2D.FromMeters(vector.X * (float)Units.Kilometer.ToBaseFactor, vector.Y * (float)Units.Kilometer.ToBaseFactor);
 
-	/// <summary>Creates a Position3D from a System.Numerics.Vector3 in meters.</summary>
-	public static Position3D MetersPosition3D(this Vector3 vector)
-		=> Position3D.FromMeters(vector);
-
-	/// <summary>Creates a Velocity3D from a System.Numerics.Vector3 in meters per second.</summary>
-	public static Velocity3D MetersPerSecondVelocity3D(this Vector3 vector)
-		=> Velocity3D.FromMetersPerSecond(vector);
-
-	/// <summary>Creates a Force3D from a System.Numerics.Vector3 in newtons.</summary>
-	public static Force3D NewtonsForce3D(this Vector3 vector)
-		=> Force3D.FromNewtons(vector);
-
-	/// <summary>Creates an Acceleration2D from a System.Numerics.Vector2 in meters per second squared.</summary>
-	public static Acceleration2D MetersPerSecondSquaredAcceleration2D(this Vector2 vector)
-		=> Acceleration2D.FromMetersPerSecondSquared(vector);
-
-	/// <summary>Creates an Acceleration3D from a System.Numerics.Vector3 in meters per second squared.</summary>
-	public static Acceleration3D MetersPerSecondSquaredAcceleration3D(this Vector3 vector)
-		=> Acceleration3D.FromMetersPerSecondSquared(vector);
+	/// <summary>Creates a Position2D from a System.Numerics.Vector2 in feet.</summary>
+	public static Position2D Feet2D(this Vector2 vector)
+		=> Position2D.FromMeters(vector.X * (float)Units.Foot.ToBaseFactor, vector.Y * (float)Units.Foot.ToBaseFactor);
 
 	/// <summary>Creates a Displacement2D from a System.Numerics.Vector2 in meters.</summary>
 	public static Displacement2D MetersDisplacement2D(this Vector2 vector)
 		=> Displacement2D.FromMeters(vector);
 
+	/// <summary>Creates a Displacement2D from a System.Numerics.Vector2 in kilometers.</summary>
+	public static Displacement2D KilometersDisplacement2D(this Vector2 vector)
+		=> Displacement2D.FromMeters(vector.X * (float)Units.Kilometer.ToBaseFactor, vector.Y * (float)Units.Kilometer.ToBaseFactor);
+
+	/// <summary>Creates a Displacement2D from a System.Numerics.Vector2 in feet.</summary>
+	public static Displacement2D FeetDisplacement2D(this Vector2 vector)
+		=> Displacement2D.FromMeters(vector.X * (float)Units.Foot.ToBaseFactor, vector.Y * (float)Units.Foot.ToBaseFactor);
+
+	/// <summary>Creates a Velocity2D from a System.Numerics.Vector2 in meters per second.</summary>
+	public static Velocity2D MetersPerSecond2D(this Vector2 vector)
+		=> Velocity2D.FromMetersPerSecond(vector);
+
+	/// <summary>Creates a Velocity2D from a System.Numerics.Vector2 in kilometers per hour.</summary>
+	public static Velocity2D KilometersPerHour2D(this Vector2 vector)
+		=> Velocity2D.FromMetersPerSecond(vector.X * (float)Units.KilometersPerHour.ToBaseFactor, vector.Y * (float)Units.KilometersPerHour.ToBaseFactor);
+
+	/// <summary>Creates a Velocity2D from a System.Numerics.Vector2 in miles per hour.</summary>
+	public static Velocity2D MilesPerHour2D(this Vector2 vector)
+		=> Velocity2D.FromMetersPerSecond(vector.X * (float)Units.MilesPerHour.ToBaseFactor, vector.Y * (float)Units.MilesPerHour.ToBaseFactor);
+
+	/// <summary>Creates an Acceleration2D from a System.Numerics.Vector2 in meters per second squared.</summary>
+	public static Acceleration2D MetersPerSecondSquared2D(this Vector2 vector)
+		=> Acceleration2D.FromMetersPerSecondSquared(vector);
+
+	/// <summary>Creates a Force2D from a System.Numerics.Vector2 in newtons.</summary>
+	public static Force2D Newtons2D(this Vector2 vector)
+		=> Force2D.FromNewtons(vector);
+
+	/// <summary>Creates a Force2D from a System.Numerics.Vector2 in pounds-force.</summary>
+	public static Force2D PoundsForce2D(this Vector2 vector)
+		=> Force2D.FromNewtons(vector.X * (float)Units.PoundForce.ToBaseFactor, vector.Y * (float)Units.PoundForce.ToBaseFactor);
+
+	// Vector3 Extensions for 3D Quantities
+	/// <summary>Creates a Position3D from a System.Numerics.Vector3 in meters.</summary>
+	public static Position3D Meters3D(this Vector3 vector)
+		=> Position3D.FromMeters(vector);
+
+	/// <summary>Creates a Position3D from a System.Numerics.Vector3 in kilometers.</summary>
+	public static Position3D Kilometers3D(this Vector3 vector)
+		=> Position3D.FromMeters(vector.X * (float)Units.Kilometer.ToBaseFactor, vector.Y * (float)Units.Kilometer.ToBaseFactor, vector.Z * (float)Units.Kilometer.ToBaseFactor);
+
+	/// <summary>Creates a Position3D from a System.Numerics.Vector3 in feet.</summary>
+	public static Position3D Feet3D(this Vector3 vector)
+		=> Position3D.FromMeters(vector.X * (float)Units.Foot.ToBaseFactor, vector.Y * (float)Units.Foot.ToBaseFactor, vector.Z * (float)Units.Foot.ToBaseFactor);
+
 	/// <summary>Creates a Displacement3D from a System.Numerics.Vector3 in meters.</summary>
 	public static Displacement3D MetersDisplacement3D(this Vector3 vector)
 		=> Displacement3D.FromMeters(vector);
+
+	/// <summary>Creates a Displacement3D from a System.Numerics.Vector3 in kilometers.</summary>
+	public static Displacement3D KilometersDisplacement3D(this Vector3 vector)
+		=> Displacement3D.FromMeters(vector.X * (float)Units.Kilometer.ToBaseFactor, vector.Y * (float)Units.Kilometer.ToBaseFactor, vector.Z * (float)Units.Kilometer.ToBaseFactor);
+
+	/// <summary>Creates a Displacement3D from a System.Numerics.Vector3 in feet.</summary>
+	public static Displacement3D FeetDisplacement3D(this Vector3 vector)
+		=> Displacement3D.FromMeters(vector.X * (float)Units.Foot.ToBaseFactor, vector.Y * (float)Units.Foot.ToBaseFactor, vector.Z * (float)Units.Foot.ToBaseFactor);
+
+	/// <summary>Creates a Velocity3D from a System.Numerics.Vector3 in meters per second.</summary>
+	public static Velocity3D MetersPerSecond3D(this Vector3 vector)
+		=> Velocity3D.FromMetersPerSecond(vector);
+
+	/// <summary>Creates a Velocity3D from a System.Numerics.Vector3 in kilometers per hour.</summary>
+	public static Velocity3D KilometersPerHour3D(this Vector3 vector)
+		=> Velocity3D.FromMetersPerSecond(vector.X * (float)Units.KilometersPerHour.ToBaseFactor, vector.Y * (float)Units.KilometersPerHour.ToBaseFactor, vector.Z * (float)Units.KilometersPerHour.ToBaseFactor);
+
+	/// <summary>Creates a Velocity3D from a System.Numerics.Vector3 in miles per hour.</summary>
+	public static Velocity3D MilesPerHour3D(this Vector3 vector)
+		=> Velocity3D.FromMetersPerSecond(vector.X * (float)Units.MilesPerHour.ToBaseFactor, vector.Y * (float)Units.MilesPerHour.ToBaseFactor, vector.Z * (float)Units.MilesPerHour.ToBaseFactor);
+
+	/// <summary>Creates an Acceleration3D from a System.Numerics.Vector3 in meters per second squared.</summary>
+	public static Acceleration3D MetersPerSecondSquared3D(this Vector3 vector)
+		=> Acceleration3D.FromMetersPerSecondSquared(vector);
+
+	/// <summary>Creates a Force3D from a System.Numerics.Vector3 in newtons.</summary>
+	public static Force3D Newtons3D(this Vector3 vector)
+		=> Force3D.FromNewtons(vector);
+
+	/// <summary>Creates a Force3D from a System.Numerics.Vector3 in pounds-force.</summary>
+	public static Force3D PoundsForce3D(this Vector3 vector)
+		=> Force3D.FromNewtons(vector.X * (float)Units.PoundForce.ToBaseFactor, vector.Y * (float)Units.PoundForce.ToBaseFactor, vector.Z * (float)Units.PoundForce.ToBaseFactor);
+
+	// Vector4 Extensions for 4D Quantities
+	/// <summary>Creates a Position4D from a System.Numerics.Vector4 in meters.</summary>
+	public static Position4D Meters4D(this Vector4 vector)
+		=> Position4D.FromMeters(vector.X, vector.Y, vector.Z, vector.W);
+
+	/// <summary>Creates a Displacement4D from a System.Numerics.Vector4 in meters.</summary>
+	public static Displacement4D MetersDisplacement4D(this Vector4 vector)
+		=> Displacement4D.FromMeters(vector.X, vector.Y, vector.Z, vector.W);
 
 	#endregion
 }

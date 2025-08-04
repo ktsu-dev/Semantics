@@ -5,9 +5,6 @@
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
 namespace ktsu.Semantics.Double;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 3D displacement vector with double precision.
 /// </summary>
@@ -40,10 +37,10 @@ public sealed record Displacement3D : Generic.Displacement3D<double>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Displacement3D Create(double x, double y, double z) => Create(new Vector3d(x, y, z));	/// <summary>
-	/// Gets the displacement as a Vector3d in meters (the base unit).
-	/// </summary>
-	/// <returns>The displacement vector in meters.</returns>
+	public static Displacement3D Create(double x, double y, double z) => Create(new Vector3d(x, y, z)); /// <summary>
+																										/// Gets the displacement as a Vector3d in meters (the base unit).
+																										/// </summary>
+																										/// <returns>The displacement vector in meters.</returns>
 	public Vector3d InMeters() => Value;
 
 	// Vector arithmetic operations

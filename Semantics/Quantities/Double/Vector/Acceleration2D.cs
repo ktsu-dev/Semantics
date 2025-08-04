@@ -6,9 +6,6 @@
 #pragma warning disable CA1716 // Identifiers should not match keywords
 
 namespace ktsu.Semantics.Double;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 2D acceleration vector with double precision.
 /// </summary>
@@ -40,10 +37,10 @@ public sealed record Acceleration2D : Generic.Acceleration2D<double>
 	/// <param name="x">The X component.</param>
 	/// <param name="y">The Y component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Acceleration2D Create(double x, double y) => Create(new Vector2d(x, y));	/// <summary>
-	/// Gets the acceleration as a Vector2d in meters per second squared (the base unit).
-	/// </summary>
-	/// <returns>The acceleration vector in meters per second squared.</returns>
+	public static Acceleration2D Create(double x, double y) => Create(new Vector2d(x, y));  /// <summary>
+																							/// Gets the acceleration as a Vector2d in meters per second squared (the base unit).
+																							/// </summary>
+																							/// <returns>The acceleration vector in meters per second squared.</returns>
 	public Vector2d InMetersPerSecondSquared() => Value;
 
 	// Vector arithmetic operations

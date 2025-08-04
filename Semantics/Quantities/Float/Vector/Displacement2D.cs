@@ -5,9 +5,6 @@
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
 namespace ktsu.Semantics.Float;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 2D displacement vector with float precision.
 /// </summary>
@@ -40,8 +37,6 @@ public sealed record Displacement2D : Generic.Displacement2D<float>
 	/// <param name="y">The Y component.</param>
 	/// <returns>A new instance of the quantity.</returns>
 	public static Displacement2D Create(float x, float y) => Create(new Vector2f(x, y));
-
-
 
 	/// <summary>Gets the magnitude (length) of this vector quantity.</summary>
 	public float Magnitude => Value.Length();

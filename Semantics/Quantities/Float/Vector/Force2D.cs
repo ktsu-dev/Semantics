@@ -5,9 +5,6 @@
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
 namespace ktsu.Semantics.Float;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 2D force vector with float precision.
 /// </summary>
@@ -39,10 +36,10 @@ public sealed record Force2D : Generic.Force2D<float>
 	/// <param name="x">The X component.</param>
 	/// <param name="y">The Y component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Force2D Create(float x, float y) => Create(new Vector2f(x, y));	/// <summary>
-	/// Gets the force as a Vector2f in newtons (the base unit).
-	/// </summary>
-	/// <returns>The force vector in newtons.</returns>
+	public static Force2D Create(float x, float y) => Create(new Vector2f(x, y));   /// <summary>
+																					/// Gets the force as a Vector2f in newtons (the base unit).
+																					/// </summary>
+																					/// <returns>The force vector in newtons.</returns>
 	public Vector2f InNewtons() => Value;
 
 	// Vector arithmetic operations

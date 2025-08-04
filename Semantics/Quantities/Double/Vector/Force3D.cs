@@ -5,9 +5,6 @@
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
 namespace ktsu.Semantics.Double;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 3D force vector with double precision.
 /// </summary>
@@ -40,10 +37,10 @@ public sealed record Force3D : Generic.Force3D<double>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Force3D Create(double x, double y, double z) => Create(new Vector3d(x, y, z));	/// <summary>
-	/// Gets the force as a Vector3d in newtons (the base unit).
-	/// </summary>
-	/// <returns>The force vector in N.</returns>
+	public static Force3D Create(double x, double y, double z) => Create(new Vector3d(x, y, z));    /// <summary>
+																									/// Gets the force as a Vector3d in newtons (the base unit).
+																									/// </summary>
+																									/// <returns>The force vector in N.</returns>
 	public Vector3d InNewtons() => Value;
 
 	// Vector arithmetic operations

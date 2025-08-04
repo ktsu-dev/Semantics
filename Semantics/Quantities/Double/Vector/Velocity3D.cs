@@ -5,9 +5,6 @@
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
 namespace ktsu.Semantics.Double;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 3D velocity vector with double precision.
 /// </summary>
@@ -40,10 +37,10 @@ public sealed record Velocity3D : Generic.Velocity3D<double>
 	/// <param name="y">The Y component.</param>
 	/// <param name="z">The Z component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Velocity3D Create(double x, double y, double z) => Create(new Vector3d(x, y, z));	/// <summary>
-	/// Gets the velocity as a Vector3d in meters per second (the base unit).
-	/// </summary>
-	/// <returns>The velocity vector in m/s.</returns>
+	public static Velocity3D Create(double x, double y, double z) => Create(new Vector3d(x, y, z)); /// <summary>
+																									/// Gets the velocity as a Vector3d in meters per second (the base unit).
+																									/// </summary>
+																									/// <returns>The velocity vector in m/s.</returns>
 	public Vector3d InMetersPerSecond() => Value;
 
 	// Vector arithmetic operations

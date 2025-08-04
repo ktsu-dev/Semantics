@@ -6,9 +6,6 @@
 #pragma warning disable CA1716 // Identifiers should not match keywords
 
 namespace ktsu.Semantics.Double;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 2D force vector with double precision.
 /// </summary>
@@ -40,10 +37,10 @@ public sealed record Force2D : Generic.Force2D<double>
 	/// <param name="x">The X component.</param>
 	/// <param name="y">The Y component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Force2D Create(double x, double y) => Create(new Vector2d(x, y));	/// <summary>
-	/// Gets the force as a Vector2d in newtons (the base unit).
-	/// </summary>
-	/// <returns>The force vector in newtons.</returns>
+	public static Force2D Create(double x, double y) => Create(new Vector2d(x, y)); /// <summary>
+																					/// Gets the force as a Vector2d in newtons (the base unit).
+																					/// </summary>
+																					/// <returns>The force vector in newtons.</returns>
 	public Vector2d InNewtons() => Value;
 
 	// Vector arithmetic operations

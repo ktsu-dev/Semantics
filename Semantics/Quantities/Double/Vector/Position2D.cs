@@ -6,9 +6,6 @@
 #pragma warning disable CA1716 // Identifiers should not match keywords
 
 namespace ktsu.Semantics.Double;
-
-using System.Numerics;
-
 /// <summary>
 /// Represents a 2D position vector with double precision.
 /// </summary>
@@ -40,10 +37,10 @@ public sealed record Position2D : Generic.Position2D<double>
 	/// <param name="x">The X component.</param>
 	/// <param name="y">The Y component.</param>
 	/// <returns>A new instance of the quantity.</returns>
-	public static Position2D Create(double x, double y) => Create(new Vector2d(x, y));	/// <summary>
-	/// Gets the position as a Vector2d in meters (the base unit).
-	/// </summary>
-	/// <returns>The position vector in meters.</returns>
+	public static Position2D Create(double x, double y) => Create(new Vector2d(x, y));  /// <summary>
+																						/// Gets the position as a Vector2d in meters (the base unit).
+																						/// </summary>
+																						/// <returns>The position vector in meters.</returns>
 	public Vector2d InMeters() => Value;
 
 	// Vector arithmetic operations
