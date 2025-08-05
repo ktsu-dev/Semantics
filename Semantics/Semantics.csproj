@@ -1,7 +1,18 @@
 ﻿<Project Sdk="ktsu.Sdk.Lib">
-  <ItemGroup>
-  </ItemGroup>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CA1716;CA2225</NoWarn>
+    <!-- Source Generator Debugging -->
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Semantics.SourceGenerators/Semantics.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <PackageReference Include="ktsu.PreciseNumber" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="../Semantics.SourceGenerators/Metadata/*.json" />
   </ItemGroup>
 </Project>

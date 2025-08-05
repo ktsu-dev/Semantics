@@ -1,2 +1,5 @@
 ﻿<Project Sdk="ktsu.Sdk.Test">
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
 </Project>

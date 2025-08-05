@@ -1,0 +1,568 @@
+{
+  "unitCategories": [
+    {
+      "name": "Fundamental",
+      "description": "Fundamental SI units and basic derived units",
+      "units": [
+        {
+          "name": "Meter",
+          "symbol": "m",
+          "description": "Meter - SI base unit of length.",
+          "system": "SIBase"
+        },
+        {
+          "name": "Kilometer",
+          "symbol": "km",
+          "description": "Kilometer - 1000 meters.",
+          "system": "SIDerived",
+          "magnitude": "Kilo"
+        },
+        {
+          "name": "Centimeter",
+          "symbol": "cm",
+          "description": "Centimeter - 0.01 meters.",
+          "system": "SIDerived",
+          "magnitude": "Centi"
+        },
+        {
+          "name": "Millimeter",
+          "symbol": "mm",
+          "description": "Millimeter - 0.001 meters.",
+          "system": "SIDerived",
+          "magnitude": "Milli"
+        },
+        {
+          "name": "Foot",
+          "symbol": "ft",
+          "description": "Foot - Imperial unit of length.",
+          "system": "Imperial",
+          "conversionFactor": "FeetToMeters"
+        },
+        {
+          "name": "Inch",
+          "symbol": "in",
+          "description": "Inch - Imperial unit of length.",
+          "system": "Imperial",
+          "conversionFactor": "InchesToMeters"
+        },
+        {
+          "name": "Micrometer",
+          "symbol": "μm",
+          "description": "Micrometer - 0.000001 meters.",
+          "system": "SIDerived",
+          "magnitude": "Micro"
+        },
+        {
+          "name": "Nanometer",
+          "symbol": "nm",
+          "description": "Nanometer - 0.000000001 meters.",
+          "system": "SIDerived",
+          "magnitude": "Nano"
+        },
+        {
+          "name": "Angstrom",
+          "symbol": "Å",
+          "description": "Angstrom - 10⁻¹⁰ meters, used for atomic scales.",
+          "system": "Other",
+          "conversionFactor": "AngstromToMeters"
+        },
+        {
+          "name": "Yard",
+          "symbol": "yd",
+          "description": "Yard - Imperial unit of length.",
+          "system": "Imperial",
+          "conversionFactor": "YardToMeters"
+        },
+        {
+          "name": "Mile",
+          "symbol": "mi",
+          "description": "Mile - Imperial unit of length.",
+          "system": "Imperial",
+          "conversionFactor": "MileToMeters"
+        },
+        {
+          "name": "Kilogram",
+          "symbol": "kg",
+          "description": "Kilogram - SI base unit of mass.",
+          "system": "SIBase"
+        },
+        {
+          "name": "Gram",
+          "symbol": "g",
+          "description": "Gram - 0.001 kilograms.",
+          "system": "SIDerived",
+          "magnitude": "Milli"
+        },
+        {
+          "name": "Ton",
+          "symbol": "t",
+          "description": "Metric ton - 1000 kilograms.",
+          "system": "SIDerived",
+          "conversionFactor": "TonToKilograms"
+        },
+        {
+          "name": "Pound",
+          "symbol": "lb",
+          "description": "Pound - Imperial unit of mass.",
+          "system": "Imperial",
+          "conversionFactor": "PoundToKilograms"
+        },
+        {
+          "name": "Ounce",
+          "symbol": "oz",
+          "description": "Ounce - Imperial unit of mass.",
+          "system": "Imperial",
+          "conversionFactor": "OunceToKilograms"
+        },
+        {
+          "name": "Second",
+          "symbol": "s",
+          "description": "Second - SI base unit of time.",
+          "system": "SIBase"
+        },
+        {
+          "name": "Minute",
+          "symbol": "min",
+          "description": "Minute - 60 seconds.",
+          "system": "Other",
+          "conversionFactor": "MinuteToSeconds"
+        },
+        {
+          "name": "Hour",
+          "symbol": "h",
+          "description": "Hour - 3600 seconds.",
+          "system": "Other",
+          "conversionFactor": "HourToSeconds"
+        },
+        {
+          "name": "Day",
+          "symbol": "d",
+          "description": "Day - 86400 seconds.",
+          "system": "Other",
+          "conversionFactor": "DayToSeconds"
+        },
+        {
+          "name": "Year",
+          "symbol": "yr",
+          "description": "Year - 365.25 days (31557600 seconds).",
+          "system": "Other",
+          "conversionFactor": "YearToSeconds"
+        },
+        {
+          "name": "Millisecond",
+          "symbol": "ms",
+          "description": "Millisecond - 0.001 seconds.",
+          "system": "SIDerived",
+          "magnitude": "Milli"
+        },
+        {
+          "name": "Microsecond",
+          "symbol": "μs",
+          "description": "Microsecond - 0.000001 seconds.",
+          "system": "SIDerived",
+          "magnitude": "Micro"
+        },
+        {
+          "name": "SquareMeter",
+          "symbol": "m²",
+          "description": "Square meter - SI derived unit of area.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "SquareFoot",
+          "symbol": "ft²",
+          "description": "Square foot - Imperial unit of area.",
+          "system": "Imperial",
+          "conversionFactor": "SquareFootToSquareMeters"
+        },
+        {
+          "name": "SquareInch",
+          "symbol": "in²",
+          "description": "Square inch - Imperial unit of area.",
+          "system": "Imperial",
+          "conversionFactor": "SquareInchToSquareMeters"
+        },
+        {
+          "name": "CubicMeter",
+          "symbol": "m³",
+          "description": "Cubic meter - SI derived unit of volume.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Liter",
+          "symbol": "L",
+          "description": "Liter - 0.001 cubic meters.",
+          "system": "SIDerived",
+          "conversionFactor": "LiterToCubicMeters"
+        },
+        {
+          "name": "Milliliter",
+          "symbol": "mL",
+          "description": "Milliliter - 0.001 liters.",
+          "system": "SIDerived",
+          "magnitude": "Milli"
+        },
+        {
+          "name": "Gallon",
+          "symbol": "gal",
+          "description": "US gallon - Imperial unit of volume.",
+          "system": "Imperial",
+          "conversionFactor": "GallonToCubicMeters"
+        },
+        {
+          "name": "Dimensionless",
+          "symbol": "1",
+          "description": "Dimensionless - Pure number or ratio with no physical units.",
+          "system": "SIBase"
+        },
+        {
+          "name": "Radian",
+          "symbol": "rad",
+          "description": "Radian - SI derived unit of plane angle.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Degree",
+          "symbol": "°",
+          "description": "Degree - Common unit of plane angle.",
+          "system": "Other",
+          "conversionFactor": "DegreeToRadians"
+        }
+      ]
+    },
+    {
+      "name": "ClassicalMechanics",
+      "description": "Units of mechanical quantities (force, pressure, motion)",
+      "units": [
+        {
+          "name": "Newton",
+          "symbol": "N",
+          "description": "Newton - SI derived unit of force.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Pascal",
+          "symbol": "Pa",
+          "description": "Pascal - SI derived unit of pressure.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "MetersPerSecond",
+          "symbol": "m/s",
+          "description": "Meters per second - SI derived unit of velocity.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "MetersPerSecondSquared",
+          "symbol": "m/s²",
+          "description": "Meters per second squared - SI derived unit of acceleration.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Bar",
+          "symbol": "bar",
+          "description": "Bar - Metric unit of pressure.",
+          "system": "SIDerived",
+          "conversionFactor": "BarToPascals"
+        },
+        {
+          "name": "Atmosphere",
+          "symbol": "atm",
+          "description": "Standard atmosphere - Unit of pressure.",
+          "system": "Other",
+          "conversionFactor": "AtmosphereToPascals"
+        },
+        {
+          "name": "Psi",
+          "symbol": "psi",
+          "description": "Pounds per square inch - Imperial unit of pressure.",
+          "system": "Imperial",
+          "conversionFactor": "PsiToPascals"
+        },
+        {
+          "name": "KilometersPerHour",
+          "symbol": "km/h",
+          "description": "Kilometers per hour - Common unit of velocity.",
+          "system": "SIDerived",
+          "conversionFactor": "KilometersPerHourToMetersPerSecond"
+        },
+        {
+          "name": "MilesPerHour",
+          "symbol": "mph",
+          "description": "Miles per hour - Imperial unit of velocity.",
+          "system": "Imperial",
+          "conversionFactor": "MilesPerHourToMetersPerSecond"
+        },
+        {
+          "name": "Joule",
+          "symbol": "J",
+          "description": "Joule - SI derived unit of energy.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Watt",
+          "symbol": "W",
+          "description": "Watt - SI derived unit of power.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Calorie",
+          "symbol": "cal",
+          "description": "Calorie - Thermochemical calorie, energy unit.",
+          "system": "Other",
+          "conversionFactor": "CalorieToJoules"
+        },
+        {
+          "name": "KilowattHour",
+          "symbol": "kWh",
+          "description": "Kilowatt-hour - Common unit of electrical energy.",
+          "system": "SIDerived",
+          "conversionFactor": "KilowattHourToJoules"
+        },
+        {
+          "name": "Horsepower",
+          "symbol": "hp",
+          "description": "Mechanical horsepower - Imperial unit of power.",
+          "system": "Imperial",
+          "conversionFactor": "HorsepowerToWatts"
+        },
+        {
+          "name": "NewtonSecond",
+          "symbol": "N⋅s",
+          "description": "Newton-second - SI derived unit of momentum.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "ElectronVolt",
+          "symbol": "eV",
+          "description": "Electron volt - Energy unit equal to electron charge times one volt.",
+          "system": "Other",
+          "conversionFactor": "ElectronVoltToJoules"
+        },
+        {
+          "name": "NewtonMeter",
+          "symbol": "N⋅m",
+          "description": "Newton-meter - SI derived unit of torque.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "PoundFoot",
+          "symbol": "lb⋅ft",
+          "description": "Pound-foot - Imperial unit of torque.",
+          "system": "Imperial",
+          "conversionFactor": "PoundFootToNewtonMeters"
+        },
+        {
+          "name": "KilogramMeterSquared",
+          "symbol": "kg⋅m²",
+          "description": "Kilogram-meter squared - SI derived unit of moment of inertia.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "KilogramMeterSquaredPerSecond",
+          "symbol": "kg⋅m²/s",
+          "description": "Kilogram-meter squared per second - SI derived unit of angular momentum.",
+          "system": "SIDerived"
+        }
+      ]
+    },
+    {
+      "name": "Thermodynamics",
+      "description": "Units of temperature measurement",
+      "units": [
+        {
+          "name": "Kelvin",
+          "symbol": "K",
+          "description": "Kelvin - SI base unit of thermodynamic temperature.",
+          "system": "SIBase"
+        },
+        {
+          "name": "Celsius",
+          "symbol": "°C",
+          "description": "Celsius - Common temperature scale.",
+          "system": "SIDerived",
+          "offset": "CelsiusToKelvinOffset"
+        },
+        {
+          "name": "Fahrenheit",
+          "symbol": "°F",
+          "description": "Fahrenheit - Imperial temperature scale.",
+          "system": "Imperial",
+          "conversionFactor": "FahrenheitScale",
+          "offset": "FahrenheitToKelvinOffset"
+        }
+      ]
+    },
+    {
+      "name": "Electromagnetism",
+      "description": "Units of electrical and electromagnetic quantities",
+      "units": [
+        {
+          "name": "Ampere",
+          "symbol": "A",
+          "description": "Ampere - SI base unit of electric current.",
+          "system": "SIBase"
+        },
+        {
+          "name": "Volt",
+          "symbol": "V",
+          "description": "Volt - SI derived unit of electric potential.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "VoltPerMeter",
+          "symbol": "V/m",
+          "description": "Volt per meter - SI derived unit of electric field strength.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Ohm",
+          "symbol": "Ω",
+          "description": "Ohm - SI derived unit of electric resistance.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Coulomb",
+          "symbol": "C",
+          "description": "Coulomb - SI derived unit of electric charge.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Farad",
+          "symbol": "F",
+          "description": "Farad - SI derived unit of electric capacitance.",
+          "system": "SIDerived"
+        }
+      ]
+    },
+    {
+      "name": "AngularMechanics",
+      "description": "Units of rotational motion and angular quantities",
+      "units": [
+        {
+          "name": "RadiansPerSecond",
+          "symbol": "rad/s",
+          "description": "Radians per second - SI derived unit of angular velocity.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "RevolutionsPerMinute",
+          "symbol": "rpm",
+          "description": "Revolutions per minute - Common unit of angular velocity.",
+          "system": "Other",
+          "conversionFactor": "RevolutionsPerMinuteToRadiansPerSecond"
+        },
+        {
+          "name": "RadiansPerSecondSquared",
+          "symbol": "rad/s²",
+          "description": "Radians per second squared - SI derived unit of angular acceleration.",
+          "system": "SIDerived"
+        }
+      ]
+    },
+    {
+      "name": "Acoustics",
+      "description": "Units of wave and oscillation phenomena",
+      "units": [
+        {
+          "name": "Hertz",
+          "symbol": "Hz",
+          "description": "Hertz - SI derived unit of frequency.",
+          "system": "SIDerived"
+        }
+      ]
+    },
+    {
+      "name": "Optics",
+      "description": "Units of optical and photometric quantities",
+      "units": [
+        {
+          "name": "Candela",
+          "symbol": "cd",
+          "description": "Candela - SI base unit of luminous intensity.",
+          "system": "SIBase"
+        },
+        {
+          "name": "Lumen",
+          "symbol": "lm",
+          "description": "Lumen - SI derived unit of luminous flux.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Lux",
+          "symbol": "lx",
+          "description": "Lux - SI derived unit of illuminance.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Diopter",
+          "symbol": "D",
+          "description": "Diopter - SI unit of optical power.",
+          "system": "SIDerived"
+        }
+      ]
+    },
+    {
+      "name": "NuclearPhysics",
+      "description": "Units of nuclear and radiation quantities",
+      "units": [
+        {
+          "name": "Becquerel",
+          "symbol": "Bq",
+          "description": "Becquerel - SI derived unit of radioactive activity.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Gray",
+          "symbol": "Gy",
+          "description": "Gray - SI derived unit of absorbed dose.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Sievert",
+          "symbol": "Sv",
+          "description": "Sievert - SI derived unit of equivalent dose.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Barn",
+          "symbol": "b",
+          "description": "Barn - Unit of nuclear cross section.",
+          "system": "Other",
+          "conversionFactor": "BarnToSquareMeters"
+        }
+      ]
+    },
+    {
+      "name": "FluidMechanics",
+      "description": "Units of fluid mechanics quantities",
+      "units": [
+        {
+          "name": "KilogramPerCubicMeter",
+          "symbol": "kg/m³",
+          "description": "Kilogram per cubic meter - SI derived unit of density.",
+          "system": "SIDerived"
+        }
+      ]
+    },
+    {
+      "name": "Chemistry",
+      "description": "Units of chemical quantities",
+      "units": [
+        {
+          "name": "Mole",
+          "symbol": "mol",
+          "description": "Mole - SI base unit of amount of substance.",
+          "system": "SIBase"
+        },
+        {
+          "name": "Molar",
+          "symbol": "M",
+          "description": "Molar - Moles per liter concentration.",
+          "system": "SIDerived",
+          "conversionFactor": "MolarToCubicMeter"
+        }
+      ]
+    }
+  ]
+}

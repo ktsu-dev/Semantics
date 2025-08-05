@@ -24,4 +24,27 @@ public interface IPhysicalQuantity<T> : ISemanticQuantity<T>, IEquatable<IPhysic
 
 	/// <summary>Gets whether this quantity satisfies physical constraints (e.g., positive temperature above absolute zero).</summary>
 	public bool IsPhysicallyValid { get; }
+
+	/// <summary>
+	/// Converts a value from a specific unit to the base unit of that dimension.
+	/// </summary>
+	/// <param name="value">The value in the source unit.</param>
+	/// <param name="sourceUnit">The source unit to convert from.</param>
+	/// <returns>The value converted to the base unit.</returns>
+	public static T ConvertToBaseUnit(T value, IUnit sourceUnit)
+	{
+		ArgumentNullException.ThrowIfNull(sourceUnit);
+
+		// Handle offset units (like temperature conversions)
+		if (Math.Abs(sourceUnit.ToBaseOffset) > 1e-10)
+		{
+			T factor = T.CreateChecked(sourceUnit.ToBaseFactor);
+			T offset = T.CreateChecked(sourceUnit.ToBaseOffset);
+			return (value * factor) + offset;
+		}
+
+		// Handle linear units (most common case)
+		T conversionFactor = T.CreateChecked(sourceUnit.ToBaseFactor);
+		return value * conversionFactor;
+	}
 }

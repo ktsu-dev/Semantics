@@ -1,0 +1,109 @@
+{
+  "magnitudes": [
+    {
+      "name": "Yotta",
+      "symbol": "Y",
+      "exponent": 24
+    },
+    {
+      "name": "Zetta",
+      "symbol": "Z",
+      "exponent": 21
+    },
+    {
+      "name": "Exa",
+      "symbol": "E",
+      "exponent": 18
+    },
+    {
+      "name": "Peta",
+      "symbol": "P",
+      "exponent": 15
+    },
+    {
+      "name": "Tera",
+      "symbol": "T",
+      "exponent": 12
+    },
+    {
+      "name": "Giga",
+      "symbol": "G",
+      "exponent": 9
+    },
+    {
+      "name": "Mega",
+      "symbol": "M",
+      "exponent": 6
+    },
+    {
+      "name": "Kilo",
+      "symbol": "k",
+      "exponent": 3
+    },
+    {
+      "name": "Hecto",
+      "symbol": "h",
+      "exponent": 2
+    },
+    {
+      "name": "Deka",
+      "symbol": "da",
+      "exponent": 1
+    },
+    {
+      "name": "Unity",
+      "symbol": "",
+      "exponent": 0
+    },
+    {
+      "name": "Deci",
+      "symbol": "d",
+      "exponent": -1
+    },
+    {
+      "name": "Centi",
+      "symbol": "c",
+      "exponent": -2
+    },
+    {
+      "name": "Milli",
+      "symbol": "m",
+      "exponent": -3
+    },
+    {
+      "name": "Micro",
+      "symbol": "μ",
+      "exponent": -6
+    },
+    {
+      "name": "Nano",
+      "symbol": "n",
+      "exponent": -9
+    },
+    {
+      "name": "Pico",
+      "symbol": "p",
+      "exponent": -12
+    },
+    {
+      "name": "Femto",
+      "symbol": "f",
+      "exponent": -15
+    },
+    {
+      "name": "Atto",
+      "symbol": "a",
+      "exponent": -18
+    },
+    {
+      "name": "Zepto",
+      "symbol": "z",
+      "exponent": -21
+    },
+    {
+      "name": "Yocto",
+      "symbol": "y",
+      "exponent": -24
+    }
+  ]
+}

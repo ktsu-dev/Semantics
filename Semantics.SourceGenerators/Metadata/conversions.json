@@ -1,0 +1,252 @@
+{
+  "conversions": [
+    {
+      "category": "Length",
+      "description": "Length unit conversion factors",
+      "factors": [
+        {
+          "name": "FeetToMeters",
+          "description": "Foot to meter conversion: 0.3048 m/ft (exact by definition)",
+          "value": "0.3048"
+        },
+        {
+          "name": "InchesToMeters",
+          "description": "Inch to meter conversion: 0.0254 m/in (exact by definition)",
+          "value": "0.0254"
+        },
+        {
+          "name": "YardToMeters",
+          "description": "Yard to meter conversion: 0.9144 m/yd (exact by definition)",
+          "value": "0.9144"
+        },
+        {
+          "name": "MileToMeters",
+          "description": "Mile to meter conversion: 1609.344 m/mi (exact by definition)",
+          "value": "1609.344"
+        },
+        {
+          "name": "AngstromToMeters",
+          "description": "Angstrom to meter conversion: 1e-10 m/Å (exact by definition)",
+          "value": "1e-10"
+        }
+      ]
+    },
+    {
+      "category": "Mass",
+      "description": "Mass unit conversion factors",
+      "factors": [
+        {
+          "name": "PoundMassToKilogram",
+          "description": "Pound mass to kilogram: 0.453592 kg/lb (exact)",
+          "value": "0.453592"
+        },
+        {
+          "name": "PoundToKilograms",
+          "description": "Pound to kilogram conversion: 0.45359237 kg/lb (exact by definition)",
+          "value": "0.45359237"
+        },
+        {
+          "name": "OunceToKilograms",
+          "description": "Ounce to kilogram conversion: 0.028349523125 kg/oz (exact)",
+          "value": "0.028349523125"
+        },
+        {
+          "name": "TonToKilograms",
+          "description": "Metric ton to kilogram conversion: 1000 kg/t (exact by definition)",
+          "value": "1000"
+        }
+      ]
+    },
+    {
+      "category": "Volume",
+      "description": "Volume unit conversion factors",
+      "factors": [
+        {
+          "name": "LiterToCubicMeters",
+          "description": "Liter to cubic meter conversion: 0.001 m³/L (exact by definition)",
+          "value": "0.001"
+        },
+        {
+          "name": "GallonToCubicMeters",
+          "description": "US gallon to cubic meter conversion: 0.003785411784 m³/gal (exact)",
+          "value": "0.003785411784"
+        }
+      ]
+    },
+    {
+      "category": "Time",
+      "description": "Time unit conversion factors",
+      "factors": [
+        {
+          "name": "MinuteToSeconds",
+          "description": "Minute to second conversion: 60 s/min (exact)",
+          "value": "60"
+        },
+        {
+          "name": "HourToSeconds",
+          "description": "Hour to second conversion: 3600 s/h (exact)",
+          "value": "3600"
+        },
+        {
+          "name": "DayToSeconds",
+          "description": "Day to second conversion: 86400 s/day (exact)",
+          "value": "86400"
+        },
+        {
+          "name": "YearToSeconds",
+          "description": "Year to second conversion: 31557600 s/year (365.25 days, exact)",
+          "value": "31557600"
+        }
+      ]
+    },
+    {
+      "category": "Temperature",
+      "description": "Temperature conversion factors and offsets",
+      "factors": [
+        {
+          "name": "CelsiusToKelvinOffset",
+          "description": "Celsius to Kelvin temperature offset: 273.15 K (exact by definition)",
+          "value": "273.15"
+        },
+        {
+          "name": "FahrenheitScale",
+          "description": "Fahrenheit degree scale factor: 9/5 = 1.8 (exact)",
+          "value": "1.8"
+        },
+        {
+          "name": "FahrenheitToKelvinOffset",
+          "description": "Fahrenheit to Kelvin absolute offset: -459.67 K (exact)",
+          "value": "-459.67"
+        }
+      ]
+    },
+    {
+      "category": "Angular",
+      "description": "Angular unit conversion factors",
+      "factors": [
+        {
+          "name": "DegreeToRadians",
+          "description": "Degree to radian conversion: π/180 rad/° (exact)",
+          "value": "0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983"
+        }
+      ]
+    },
+    {
+      "category": "Energy",
+      "description": "Energy unit conversion factors",
+      "factors": [
+        {
+          "name": "CalorieToJoules",
+          "description": "Calorie to joule conversion: 4.184 J/cal (exact, thermochemical calorie)",
+          "value": "4.184"
+        },
+        {
+          "name": "KilowattHourToJoules",
+          "description": "Kilowatt-hour to joule conversion: 3600000 J/kWh (exact)",
+          "value": "3600000"
+        },
+        {
+          "name": "HorsepowerToWatts",
+          "description": "Mechanical horsepower to watt conversion: 745.6998715822702 W/hp (exact)",
+          "value": "745.6998715822702"
+        },
+        {
+          "name": "ElectronVoltToJoules",
+          "description": "Electron volt to joule conversion: 1.602176634e-19 J/eV (exact, based on elementary charge)",
+          "value": "1.602176634e-19"
+        }
+      ]
+    },
+    {
+      "category": "Pressure",
+      "description": "Pressure unit conversion factors",
+      "factors": [
+        {
+          "name": "BarToPascals",
+          "description": "Bar to pascal conversion: 100000 Pa/bar (exact by definition)",
+          "value": "100000"
+        },
+        {
+          "name": "AtmosphereToPascals",
+          "description": "Atmosphere to pascal conversion: 101325 Pa/atm (exact by definition)",
+          "value": "101325"
+        },
+        {
+          "name": "PsiToPascals",
+          "description": "PSI to pascal conversion: 6894.757293168361 Pa/psi (exact)",
+          "value": "6894.757293168361"
+        }
+      ]
+    },
+    {
+      "category": "Area",
+      "description": "Area unit conversion factors",
+      "factors": [
+        {
+          "name": "SquareFootToSquareMeters",
+          "description": "Square foot to square meter conversion: 0.09290304 m²/ft² (exact)",
+          "value": "0.09290304"
+        },
+        {
+          "name": "SquareInchToSquareMeters",
+          "description": "Square inch to square meter conversion: 0.00064516 m²/in² (exact)",
+          "value": "0.00064516"
+        },
+        {
+          "name": "BarnToSquareMeters",
+          "description": "Barn to square meter conversion: 1e-28 m² (exact by definition)",
+          "value": "1e-28"
+        }
+      ]
+    },
+    {
+      "category": "Velocity",
+      "description": "Velocity unit conversion factors",
+      "factors": [
+        {
+          "name": "KilometersPerHourToMetersPerSecond",
+          "description": "Kilometers per hour to meters per second conversion: 0.2777777777777778 m/s per km/h (exact)",
+          "value": "0.2777777777777778"
+        },
+        {
+          "name": "MilesPerHourToMetersPerSecond",
+          "description": "Miles per hour to meters per second conversion: 0.44704 m/s per mph (exact)",
+          "value": "0.44704"
+        }
+      ]
+    },
+    {
+      "category": "AngularVelocity",
+      "description": "Angular velocity unit conversion factors",
+      "factors": [
+        {
+          "name": "RevolutionsPerMinuteToRadiansPerSecond",
+          "description": "RPM to rad/s conversion: π/30 rad/s per rpm (exact)",
+          "value": "0.10471975511965977"
+        }
+      ]
+    },
+    {
+      "category": "Torque",
+      "description": "Torque unit conversion factors",
+      "factors": [
+        {
+          "name": "PoundFootToNewtonMeters",
+          "description": "Pound-foot to Newton-meter conversion: 1.3558179483314004 N⋅m per lb⋅ft (exact)",
+          "value": "1.3558179483314004"
+        }
+      ]
+    },
+    {
+      "category": "Concentration",
+      "description": "Concentration unit conversion factors",
+      "factors": [
+        {
+          "name": "MolarToCubicMeter",
+          "description": "Molar to cubic meter concentration conversion: 1000.0 mol/m³ per mol/L (exact)",
+          "value": "1000.0"
+        }
+      ]
+    }
+  ]
+}

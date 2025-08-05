@@ -1,0 +1,193 @@
+{
+  "domains": [
+    {
+      "name": "Fundamental",
+      "description": "Basic physical quantities and constants that form the foundation of all other physics domains, including fundamental units like length, mass, time, and universal constants",
+      "constants": [
+        {
+          "name": "AvogadroNumber",
+          "description": "Avogadro's number: 6.02214076 × 10²³ entities/mol (exact, SI defining constant)",
+          "value": "6.02214076e23"
+        },
+        {
+          "name": "ElementaryCharge",
+          "description": "Elementary charge: 1.602176634 × 10⁻¹⁹ C (exact, SI defining constant)",
+          "value": "1.602176634e-19"
+        },
+        {
+          "name": "SpeedOfLight",
+          "description": "Speed of light in vacuum: 299,792,458 m/s (exact, SI defining constant)",
+          "value": "299792458"
+        },
+        {
+          "name": "PlanckConstant",
+          "description": "Planck constant: 6.62607015 × 10⁻³⁴ J·s (exact, SI defining constant)",
+          "value": "6.62607015e-34"
+        },
+        {
+          "name": "BoltzmannConstant",
+          "description": "Boltzmann constant: 1.380649 × 10⁻²³ J/K (exact, SI defining constant)",
+          "value": "1.380649e-23"
+        },
+        {
+          "name": "GravitationalConstant",
+          "description": "Gravitational constant: 6.67430 × 10⁻¹¹ m³/(kg⋅s²) (2018 CODATA)",
+          "value": "6.67430e-11"
+        },
+        {
+          "name": "PermittivityOfFreeSpace",
+          "description": "Electric permittivity of free space: 8.8541878128 × 10⁻¹² F/m (exact, derived)",
+          "value": "8.8541878128e-12"
+        },
+        {
+          "name": "PermeabilityOfFreeSpace",
+          "description": "Magnetic permeability of free space: 4π × 10⁻⁷ H/m (exact by definition)",
+          "value": "1.25663706212e-6"
+        },
+        {
+          "name": "FineStructureConstant",
+          "description": "Fine structure constant: 7.2973525693 × 10⁻³ (dimensionless, 2018 CODATA)",
+          "value": "7.2973525693e-3"
+        }
+      ]
+    },
+    {
+      "name": "ClassicalMechanics",
+      "description": "The physics of motion for macroscopic objects, covering forces, momentum, energy, rotational dynamics, and the motion of particles and rigid bodies",
+      "constants": [
+        {
+          "name": "StandardGravity",
+          "description": "Standard gravitational acceleration: 9.80665 m/s² (exact by definition)",
+          "value": "9.80665"
+        },
+        {
+          "name": "StandardAtmosphericPressure",
+          "description": "Standard atmospheric pressure: 101,325 Pa (exact by definition)",
+          "value": "101325"
+        }
+      ]
+    },
+    {
+      "name": "FluidMechanics",
+      "description": "The study of fluids (liquids and gases) in motion and at rest, including fluid properties, flow dynamics, viscosity, pressure, and fluid-structure interactions"
+    },
+    {
+      "name": "StructuralMechanics",
+      "description": "The analysis of structural behavior under various loads, including stress, strain, deformation, material properties, and the mechanical response of engineering structures"
+    },
+    {
+      "name": "NuclearPhysics",
+      "description": "The study of atomic nuclei, radioactivity, nuclear reactions, decay processes, and radiation interactions with matter"
+    },
+    {
+      "name": "ParticlePhysics",
+      "description": "The physics of fundamental particles and their interactions, including elementary particles, high-energy phenomena, and quantum field theory applications"
+    },
+    {
+      "name": "ComputationalPhysics",
+      "description": "Numerical methods and computational techniques for solving complex physical problems, including simulation parameters, algorithmic constants, and numerical precision requirements"
+    },
+    {
+      "name": "AtmosphericPhysics",
+      "description": "The physics of atmospheric phenomena, including weather systems, atmospheric dynamics, meteorological quantities, and climate-related physical processes"
+    },
+    {
+      "name": "Geophysics",
+      "description": "The physics of Earth systems, including seismic waves, gravitational fields, magnetic fields, geological processes, and Earth's internal structure"
+    },
+    {
+      "name": "Astrophysics",
+      "description": "The physics of celestial objects and cosmic phenomena, including stellar physics, planetary motion, cosmological quantities, and space-based measurements"
+    },
+    {
+      "name": "Electromagnetism",
+      "description": "Electric and magnetic phenomena and their interactions, including electric fields, magnetic fields, electromagnetic radiation, and electrical circuit properties"
+    },
+    {
+      "name": "Thermodynamics",
+      "description": "The physics of heat, temperature, and energy transfer, including thermal properties, heat capacity, entropy, and thermodynamic processes",
+      "constants": [
+        {
+          "name": "AbsoluteZeroInCelsius",
+          "description": "Absolute zero in Celsius: 273.15 K (exact by definition)",
+          "value": "273.15"
+        },
+        {
+          "name": "WaterTriplePoint",
+          "description": "Water triple point: 273.16 K (exact by definition)",
+          "value": "273.16"
+        },
+        {
+          "name": "StandardTemperature",
+          "description": "Standard temperature (STP): 273.15 K (0°C)",
+          "value": "273.15"
+        },
+        {
+          "name": "WaterBoilingPoint",
+          "description": "Water boiling point at 1 atm: 373.15 K (100°C)",
+          "value": "373.15"
+        }
+      ]
+    },
+    {
+      "name": "Optics",
+      "description": "The physics of light and optical phenomena, including electromagnetic radiation, photometry, illumination, optical properties, and light-matter interactions"
+    },
+    {
+      "name": "AngularMechanics",
+      "description": "Rotational motion and angular quantities, including angular velocity, angular acceleration, torque, and moment of inertia",
+      "constants": [
+        {
+          "name": "TwoPi",
+          "description": "2π - Full rotation in radians: 6.283185307179586",
+          "value": "6.283185307179586476925286766559005768394338798750211641949889184615632812572417997256069650684234135964735462226659258240820374631042607435096896808248"
+        },
+        {
+          "name": "DegreesPerRadian",
+          "description": "Degrees per radian: 180/π ≈ 57.29577951308232",
+          "value": "57.29577951308232087679815481410517033240547246656432154916024386120284714832155263244096899585111094418897585567892854596978524038074810298080734906"
+        },
+        {
+          "name": "RadiansPerDegree",
+          "description": "Radians per degree: π/180 ≈ 0.017453292519943295",
+          "value": "0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983"
+        }
+      ]
+    },
+    {
+      "name": "Acoustics",
+      "description": "The physics of sound and vibration, including wave propagation, acoustic properties, sound intensity, frequency analysis, and audio-related measurements"
+    },
+    {
+      "name": "Chemistry",
+      "description": "Chemical quantities and processes, including molecular properties, reaction kinetics, chemical concentrations, and the physical aspects of chemical systems",
+      "constants": [
+        {
+          "name": "GasConstant",
+          "description": "Gas constant: 8.31446261815324 J/(mol·K) (exact, derived from Avogadro and Boltzmann constants)",
+          "value": "8.31446261815324"
+        },
+        {
+          "name": "WaterIonProduct",
+          "description": "Water ion product (Kw) at 25°C: 1.0 × 10⁻¹⁴ (pKw = 14.0)",
+          "value": "14.0"
+        },
+        {
+          "name": "MolarVolumeSTP",
+          "description": "Molar volume of ideal gas at STP: 22.413969545014137 L/mol (calculated from R*T/P at 273.15K, 101325Pa)",
+          "value": "22.413969545014137"
+        },
+        {
+          "name": "Ln2",
+          "description": "Natural logarithm of 2: 0.6931471805599453",
+          "value": "0.6931471805599453094172321214581765680755001343602552541206800094933936219696947156058633269964186875420014810205706857336855202357581305570326707"
+        },
+        {
+          "name": "NeutralPH",
+          "description": "Neutral pH value at 25°C: 7.0",
+          "value": "7.0"
+        }
+      ]
+    }
+  ]
+}

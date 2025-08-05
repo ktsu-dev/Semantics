@@ -1,0 +1,959 @@
+{
+  "physicalDimensions": [
+    {
+      "name": "Dimensionless",
+      "symbol": "1",
+      "dimensionalFormula": {},
+      "quantities": [
+        {
+          "name": "Dimensionless",
+          "availableUnits": ["Dimensionless", "Radian", "Degree"],
+          "description": "Pure number or ratio without physical units, including angles, ratios, and counts.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Length",
+      "symbol": "L",
+      "dimensionalFormula": { "length": 1 },
+      "quantities": [
+        {
+          "name": "Length",
+          "availableUnits": [
+            "Meter",
+            "Kilometer",
+            "Centimeter",
+            "Millimeter",
+            "Micrometer",
+            "Nanometer",
+            "Angstrom",
+            "Foot",
+            "Inch",
+            "Yard",
+            "Mile"
+          ],
+          "description": "Length is the distance between two points.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "Length",
+              "result": "Area"
+            }
+          ],
+          "derivatives": []
+        },
+        {
+          "name": "Position",
+          "availableUnits": [
+            "Meter",
+            "Kilometer",
+            "Centimeter",
+            "Millimeter",
+            "Foot",
+            "Inch"
+          ],
+          "description": "Position vector representing location in coordinate system.",
+          "scalar": false,
+          "vectors": true,
+          "integrals": [],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "Velocity"
+            }
+          ]
+        },
+        {
+          "name": "Displacement",
+          "availableUnits": [
+            "Meter",
+            "Kilometer",
+            "Centimeter",
+            "Millimeter",
+            "Foot",
+            "Inch"
+          ],
+          "description": "Displacement vector representing change in position.",
+          "scalar": false,
+          "vectors": true,
+          "integrals": [],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "Velocity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mass",
+      "symbol": "M",
+      "dimensionalFormula": { "mass": 1 },
+      "quantities": [
+        {
+          "name": "Mass",
+          "availableUnits": ["Kilogram", "Gram", "Ton", "Pound", "Ounce"],
+          "description": "Mass is the quantity of matter in an object.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Time",
+      "symbol": "T",
+      "dimensionalFormula": { "time": 1 },
+      "quantities": [
+        {
+          "name": "Time",
+          "availableUnits": [
+            "Second",
+            "Millisecond",
+            "Microsecond",
+            "Minute",
+            "Hour",
+            "Day",
+            "Year"
+          ],
+          "description": "Time is the duration of an event.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "ElectricCurrent",
+      "symbol": "I",
+      "dimensionalFormula": { "electricCurrent": 1 },
+      "quantities": [
+        {
+          "name": "ElectricCurrent",
+          "availableUnits": ["Ampere"],
+          "description": "Rate of flow of electric charge through a conductor or medium.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "Time",
+              "result": "ElectricCharge"
+            },
+            {
+              "other": "ElectricResistance",
+              "result": "ElectricPotential"
+            },
+            {
+              "other": "ElectricPotential",
+              "result": "Power"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Temperature",
+      "symbol": "Θ",
+      "dimensionalFormula": { "temperature": 1 },
+      "quantities": [
+        {
+          "name": "Temperature",
+          "availableUnits": ["Kelvin", "Celsius", "Fahrenheit"],
+          "description": "Measure of the average kinetic energy of particles in a substance.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "AmountOfSubstance",
+      "symbol": "N",
+      "dimensionalFormula": { "amountOfSubstance": 1 },
+      "quantities": [
+        {
+          "name": "AmountOfSubstance",
+          "availableUnits": ["Mole"],
+          "description": "Number of elementary entities (atoms, molecules, ions) in a sample.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "LuminousIntensity",
+      "symbol": "J",
+      "dimensionalFormula": { "luminousIntensity": 1 },
+      "quantities": [
+        {
+          "name": "LuminousIntensity",
+          "availableUnits": ["Candela"],
+          "description": "Luminous power emitted by a light source in a particular direction per unit solid angle.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Area",
+      "symbol": "L²",
+      "dimensionalFormula": { "length": 2 },
+      "quantities": [
+        {
+          "name": "Area",
+          "availableUnits": ["SquareMeter", "SquareFoot", "SquareInch"],
+          "description": "Extent of a surface or region in two-dimensional space.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "Length",
+              "result": "Volume"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "NuclearCrossSection",
+      "symbol": "L²",
+      "dimensionalFormula": { "length": 2 },
+      "quantities": [
+        {
+          "name": "NuclearCrossSection",
+          "availableUnits": ["Barn"],
+          "description": "Nuclear cross section - effective area for nuclear interactions.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Volume",
+      "symbol": "L³",
+      "dimensionalFormula": { "length": 3 },
+      "quantities": [
+        {
+          "name": "Volume",
+          "availableUnits": ["CubicMeter", "Liter", "Milliliter", "Gallon"],
+          "description": "Amount of three-dimensional space enclosed within a boundary.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": [
+            {
+              "other": "Length",
+              "result": "Area"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Velocity",
+      "symbol": "L T⁻¹",
+      "dimensionalFormula": { "length": 1, "time": -1 },
+      "quantities": [
+        {
+          "name": "Velocity",
+          "availableUnits": [
+            "MetersPerSecond",
+            "KilometersPerHour",
+            "MilesPerHour"
+          ],
+          "description": "Velocity is the rate of change of position with respect to time.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [
+            {
+              "other": "Time",
+              "result": "Displacement"
+            }
+          ],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "Acceleration"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Acceleration",
+      "symbol": "L T⁻²",
+      "dimensionalFormula": { "length": 1, "time": -2 },
+      "quantities": [
+        {
+          "name": "Acceleration",
+          "availableUnits": ["MetersPerSecondSquared"],
+          "description": "Acceleration is the rate of change of velocity with respect to time.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [
+            {
+              "other": "Time",
+              "result": "Velocity"
+            }
+          ],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "Jerk"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Jerk",
+      "symbol": "L T⁻³",
+      "dimensionalFormula": { "length": 1, "time": -3 },
+      "quantities": [
+        {
+          "name": "Jerk",
+          "availableUnits": ["MetersPerSecondCubed"],
+          "description": "Jerk is the rate of change of acceleration with respect to time.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [
+            {
+              "other": "Time",
+              "result": "Acceleration"
+            }
+          ],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "Snap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Snap",
+      "symbol": "L T⁻⁴",
+      "dimensionalFormula": { "length": 1, "time": -4 },
+      "quantities": [
+        {
+          "name": "Snap",
+          "availableUnits": ["MetersPerSecondQuartic"],
+          "description": "Snap (or jounce) is the rate of change of jerk with respect to time.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [
+            {
+              "other": "Time",
+              "result": "Jerk"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Frequency",
+      "symbol": "T⁻¹",
+      "dimensionalFormula": { "time": -1 },
+      "quantities": [
+        {
+          "name": "Frequency",
+          "availableUnits": ["Hertz"],
+          "description": "Frequency is the rate of oscillation.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "Time",
+              "result": "Dimensionless"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "RadioactiveActivity",
+      "symbol": "T⁻¹",
+      "dimensionalFormula": { "time": -1 },
+      "quantities": [
+        {
+          "name": "RadioactiveActivity",
+          "availableUnits": ["Becquerel"],
+          "description": "Radioactive activity is the rate of radioactive decay.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "AngularVelocity",
+      "symbol": "T⁻¹",
+      "dimensionalFormula": { "time": -1 },
+      "quantities": [
+        {
+          "name": "AngularVelocity",
+          "availableUnits": ["RadiansPerSecond", "RevolutionsPerMinute"],
+          "description": "Angular velocity magnitude - absolute rate of rotation.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [
+            {
+              "other": "Time",
+              "result": "AngularDisplacement"
+            }
+          ],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "AngularAcceleration"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AngularAcceleration",
+      "symbol": "T⁻²",
+      "dimensionalFormula": { "time": -2 },
+      "quantities": [
+        {
+          "name": "AngularAcceleration",
+          "availableUnits": ["RadiansPerSecondSquared"],
+          "description": "Angular acceleration magnitude - absolute rate of change of angular velocity.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [
+            {
+              "other": "Time",
+              "result": "AngularVelocity"
+            }
+          ],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "AngularJerk"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AngularJerk",
+      "symbol": "T⁻³",
+      "dimensionalFormula": { "time": -3 },
+      "quantities": [
+        {
+          "name": "AngularJerk",
+          "availableUnits": ["RadiansPerSecondCubed"],
+          "description": "Angular jerk is the rate of change of angular acceleration with respect to time.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [
+            {
+              "other": "Time",
+              "result": "AngularAcceleration"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Torque",
+      "symbol": "M L² T⁻²",
+      "dimensionalFormula": { "mass": 1, "length": 2, "time": -2 },
+      "quantities": [
+        {
+          "name": "Torque",
+          "availableUnits": ["NewtonMeter", "PoundFoot"],
+          "description": "Torque magnitude - absolute rotational force.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [
+            {
+              "other": "AngularDisplacement",
+              "result": "Energy"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "AngularMomentum",
+      "symbol": "M L² T⁻¹",
+      "dimensionalFormula": { "mass": 1, "length": 2, "time": -1 },
+      "quantities": [
+        {
+          "name": "AngularMomentum",
+          "availableUnits": ["KilogramMeterSquaredPerSecond"],
+          "description": "Angular momentum magnitude - absolute rotational momentum.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "Torque"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AngularDisplacement",
+      "symbol": "1",
+      "dimensionalFormula": {},
+      "quantities": [
+        {
+          "name": "AngularDisplacement",
+          "availableUnits": ["Radian", "Degree"],
+          "description": "Angular displacement magnitude - absolute angle rotated.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "AngularVelocity"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MomentOfInertia",
+      "symbol": "M L²",
+      "dimensionalFormula": { "mass": 1, "length": 2 },
+      "quantities": [
+        {
+          "name": "MomentOfInertia",
+          "availableUnits": ["KilogramMeterSquared"],
+          "description": "Measure of an object's resistance to changes in its rotation rate.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Force",
+      "symbol": "M L T⁻²",
+      "dimensionalFormula": { "mass": 1, "length": 1, "time": -2 },
+      "quantities": [
+        {
+          "name": "Force",
+          "availableUnits": ["Newton"],
+          "description": "Interaction that changes the motion of an object, causing acceleration.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [
+            {
+              "other": "Length",
+              "result": "Energy"
+            },
+            {
+              "other": "Time",
+              "result": "Momentum"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Momentum",
+      "symbol": "M L T⁻¹",
+      "dimensionalFormula": { "mass": 1, "length": 1, "time": -1 },
+      "quantities": [
+        {
+          "name": "Momentum",
+          "availableUnits": ["NewtonSecond"],
+          "description": "Momentum is the product of mass and velocity.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "Force"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pressure",
+      "symbol": "M L⁻¹ T⁻²",
+      "dimensionalFormula": { "mass": 1, "length": -1, "time": -2 },
+      "quantities": [
+        {
+          "name": "Pressure",
+          "availableUnits": ["Pascal", "Bar", "Atmosphere", "Psi"],
+          "description": "Pressure is the force per unit area.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "Volume",
+              "result": "Energy"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Energy",
+      "symbol": "M L² T⁻²",
+      "dimensionalFormula": { "mass": 1, "length": 2, "time": -2 },
+      "quantities": [
+        {
+          "name": "Energy",
+          "availableUnits": [
+            "Joule",
+            "ElectronVolt",
+            "Calorie",
+            "KilowattHour"
+          ],
+          "description": "Capacity of a system to perform work or produce change.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "Power"
+            },
+            {
+              "other": "Length",
+              "result": "Force"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Power",
+      "symbol": "M L² T⁻³",
+      "dimensionalFormula": { "mass": 1, "length": 2, "time": -3 },
+      "quantities": [
+        {
+          "name": "Power",
+          "availableUnits": ["Watt", "Horsepower"],
+          "description": "Rate of energy transfer or work performed per unit time.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "Time",
+              "result": "Energy"
+            }
+          ],
+          "derivatives": [
+            {
+              "other": "ElectricPotential",
+              "result": "ElectricCurrent"
+            },
+            {
+              "other": "ElectricCurrent",
+              "result": "ElectricPotential"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AbsorbedDose",
+      "symbol": "L² T⁻²",
+      "dimensionalFormula": { "length": 2, "time": -2 },
+      "quantities": [
+        {
+          "name": "AbsorbedDose",
+          "availableUnits": ["Gray"],
+          "description": "Absorbed dose of ionizing radiation.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "EquivalentDose",
+      "symbol": "L² T⁻²",
+      "dimensionalFormula": { "length": 2, "time": -2 },
+      "quantities": [
+        {
+          "name": "EquivalentDose",
+          "availableUnits": ["Sievert"],
+          "description": "Equivalent dose accounting for biological effectiveness.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Density",
+      "symbol": "M L⁻³",
+      "dimensionalFormula": { "mass": 1, "length": -3 },
+      "quantities": [
+        {
+          "name": "Density",
+          "availableUnits": ["KilogramPerCubicMeter"],
+          "description": "Density is mass per unit volume.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "Volume",
+              "result": "Mass"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "ElectricCharge",
+      "symbol": "I T",
+      "dimensionalFormula": { "electricCurrent": 1, "time": 1 },
+      "quantities": [
+        {
+          "name": "ElectricCharge",
+          "availableUnits": ["Coulomb"],
+          "description": "Fundamental property of matter that causes electromagnetic interactions.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": [
+            {
+              "other": "Time",
+              "result": "ElectricCurrent"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ElectricPotential",
+      "symbol": "M L² T⁻³ I⁻¹",
+      "dimensionalFormula": {
+        "mass": 1,
+        "length": 2,
+        "time": -3,
+        "electricCurrent": -1
+      },
+      "quantities": [
+        {
+          "name": "ElectricPotential",
+          "availableUnits": ["Volt"],
+          "description": "Work done per unit charge in moving a charge between two points.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "ElectricCurrent",
+              "result": "Power"
+            }
+          ],
+          "derivatives": [
+            {
+              "other": "Length",
+              "result": "ElectricField"
+            },
+            {
+              "other": "ElectricResistance",
+              "result": "ElectricCurrent"
+            },
+            {
+              "other": "ElectricCurrent",
+              "result": "ElectricResistance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ElectricField",
+      "symbol": "M L T⁻³ I⁻¹",
+      "dimensionalFormula": {
+        "mass": 1,
+        "length": 1,
+        "time": -3,
+        "electricCurrent": -1
+      },
+      "quantities": [
+        {
+          "name": "ElectricField",
+          "availableUnits": ["VoltPerMeter"],
+          "description": "Electric field strength - force per unit charge.",
+          "scalar": true,
+          "vectors": true,
+          "integrals": [
+            {
+              "other": "Length",
+              "result": "ElectricPotential"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "ElectricResistance",
+      "symbol": "M L² T⁻³ I⁻²",
+      "dimensionalFormula": {
+        "mass": 1,
+        "length": 2,
+        "time": -3,
+        "electricCurrent": -2
+      },
+      "quantities": [
+        {
+          "name": "ElectricResistance",
+          "availableUnits": ["Ohm"],
+          "description": "Opposition to the flow of electric current in a material.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "ElectricCurrent",
+              "result": "ElectricPotential"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "ElectricCapacitance",
+      "symbol": "M⁻¹ L⁻² T⁴ I²",
+      "dimensionalFormula": {
+        "mass": -1,
+        "length": -2,
+        "time": 4,
+        "electricCurrent": 2
+      },
+      "quantities": [
+        {
+          "name": "ElectricCapacitance",
+          "availableUnits": ["Farad"],
+          "description": "Ability of a system to store electric charge per unit voltage.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "ElectricPotential",
+              "result": "ElectricCharge"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "LuminousFlux",
+      "symbol": "J",
+      "dimensionalFormula": { "luminousIntensity": 1 },
+      "quantities": [
+        {
+          "name": "LuminousFlux",
+          "availableUnits": ["Lumen"],
+          "description": "Total quantity of visible light emitted by a source per unit time.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": [
+            {
+              "other": "Area",
+              "result": "Illuminance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Illuminance",
+      "symbol": "J L⁻²",
+      "dimensionalFormula": { "luminousIntensity": 1, "length": -2 },
+      "quantities": [
+        {
+          "name": "Illuminance",
+          "availableUnits": ["Lux"],
+          "description": "Luminous flux incident on a surface per unit area.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "Area",
+              "result": "LuminousFlux"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "OpticalPower",
+      "symbol": "L⁻¹",
+      "dimensionalFormula": { "length": -1 },
+      "quantities": [
+        {
+          "name": "OpticalPower",
+          "availableUnits": ["Diopter"],
+          "description": "Reciprocal of focal length, measuring the convergence or divergence of light.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [],
+          "derivatives": []
+        }
+      ]
+    },
+    {
+      "name": "Concentration",
+      "symbol": "N L⁻³",
+      "dimensionalFormula": { "amountOfSubstance": 1, "length": -3 },
+      "quantities": [
+        {
+          "name": "Concentration",
+          "availableUnits": ["Molar"],
+          "description": "Amount of a substance present in a given volume of solution.",
+          "scalar": true,
+          "vectors": false,
+          "integrals": [
+            {
+              "other": "Volume",
+              "result": "AmountOfSubstance"
+            }
+          ],
+          "derivatives": []
+        }
+      ]
+    }
+  ]
+}
