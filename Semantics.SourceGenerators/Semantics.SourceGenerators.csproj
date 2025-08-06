@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -9,12 +10,22 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <Nullable>enable</Nullable>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Generators\ConversionsGenerator.cs" />
+    <None Include="Generators\DimensionsGenerator.cs.bak" />
+    <None Include="Generators\MagnitudesGenerator.cs.bak" />
+    <None Include="Generators\PhysicalConstantsGenerator.cs.bak" />
+    <None Include="Generators\PrecisionGenerator.cs.bak" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ktsu.CodeBlocker" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
-    <PackageReference Include="System.Text.Json" Version="6.0.10" PrivateAssets="all" VersionOverride="6.0.10" />
+    <PackageReference Include="System.Text.Json" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
 </Project>

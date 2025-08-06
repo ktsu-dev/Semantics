@@ -1,4 +1,5 @@
-﻿<Project Sdk="ktsu.Sdk.Lib">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="ktsu.Sdk.Lib">
   <PropertyGroup>
     <NoWarn>$(NoWarn);CA1716;CA2225</NoWarn>
     <!-- Source Generator Debugging -->
@@ -15,4 +16,30 @@
   <ItemGroup>
     <AdditionalFiles Include="../Semantics.SourceGenerators/Metadata/*.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Generated\" />
+  </ItemGroup>
+
+  <!-- Target to clear Generated directory before source generators run -->
+  <Target Name="ClearGeneratedDirectory" BeforeTargets="CoreGenerateSources">
+    <RemoveDir Directories="$(CompilerGeneratedFilesOutputPath)" Condition="Exists('$(CompilerGeneratedFilesOutputPath)')" />
+    <MakeDir Directories="$(CompilerGeneratedFilesOutputPath)" />
+  </Target>
+
+  <!-- Target to flatten generated files after source generation but before compilation -->
+  <Target Name="FlattenGeneratedFiles" AfterTargets="CoreGenerateSources" BeforeTargets="CoreCompile">
+    <!-- Find all generated .cs files in subdirectories -->
+    <ItemGroup>
+      <GeneratedFiles Include="$(CompilerGeneratedFilesOutputPath)\**\*.cs" Exclude="$(CompilerGeneratedFilesOutputPath)\*.cs" />
+    </ItemGroup>
+
+    <!-- Move files to root of Generated directory -->
+    <Move SourceFiles="@(GeneratedFiles)" DestinationFolder="$(CompilerGeneratedFilesOutputPath)" Condition="@(GeneratedFiles-&gt;Count()) &gt; 0" />
+
+    <!-- Remove empty nested directories -->
+    <ItemGroup>
+      <NestedDirs Include="$([System.IO.Directory]::GetDirectories('$(CompilerGeneratedFilesOutputPath)'))" Condition="Exists('$(CompilerGeneratedFilesOutputPath)')" />
+    </ItemGroup>
+    <RemoveDir Directories="@(NestedDirs)" Condition="@(NestedDirs-&gt;Count()) &gt; 0" />
+  </Target>
 </Project>

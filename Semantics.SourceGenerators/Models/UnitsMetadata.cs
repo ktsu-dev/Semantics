@@ -24,7 +24,7 @@ public class UnitDefinition
 	public string Symbol { get; set; } = string.Empty;
 	public string Description { get; set; } = string.Empty;
 	public string System { get; set; } = string.Empty;
-	public string Magnitude { get; set; } = string.Empty;
-	public string ConversionFactor { get; set; } = string.Empty;
-	public string Offset { get; set; } = string.Empty;
+	public string Magnitude { get; set; } = "1";
+	public string ConversionFactor { get; set; } = "1";
+	public string Offset { get; set; } = "0";
 }

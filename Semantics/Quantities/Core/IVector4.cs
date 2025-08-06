@@ -5,17 +5,17 @@
 #pragma warning disable IDE0040 // Accessibility modifiers required
 #pragma warning disable CA2225 // Operator overloads have named alternates
 
-namespace ktsu.Semantics.Generic;
+namespace ktsu.Semantics.Quantities.Core;
 
 using System.Numerics;
 
 /// <summary>
-/// Interface for 3D vector types with generic numeric component support.
+/// Interface for 4D vector types with generic numeric component support.
 /// </summary>
 /// <typeparam name="TVector">The implementing vector type.</typeparam>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public interface IVector3<TVector, T>
-	where TVector : IVector3<TVector, T>
+public interface IVector4<TVector, T>
+	where TVector : IVector4<TVector, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>
@@ -26,6 +26,9 @@ public interface IVector3<TVector, T>
 
 	/// <summary>Gets the Z component.</summary>
 	T Z { get; }
+
+	/// <summary>Gets the W component.</summary>
+	T W { get; }
 
 	/// <summary>Gets a vector with all components set to zero.</summary>
 	public static abstract TVector Zero { get; }
@@ -41,6 +44,9 @@ public interface IVector3<TVector, T>
 
 	/// <summary>Gets the unit vector for the Z-axis.</summary>
 	public static abstract TVector UnitZ { get; }
+
+	/// <summary>Gets the unit vector for the W-axis.</summary>
+	public static abstract TVector UnitW { get; }
 
 	/// <summary>
 	/// Calculates the length of the vector.
@@ -60,13 +66,6 @@ public interface IVector3<TVector, T>
 	/// <param name="other">The other vector.</param>
 	/// <returns>The dot product.</returns>
 	public T Dot(TVector other);
-
-	/// <summary>
-	/// Calculates the cross product of two vectors.
-	/// </summary>
-	/// <param name="other">The other vector.</param>
-	/// <returns>The cross product.</returns>
-	public TVector Cross(TVector other);
 
 	/// <summary>
 	/// Calculates the distance between two vectors.
