@@ -4,6 +4,7 @@
 
 namespace Semantics.SourceGenerators.Templates;
 using System.Collections.Generic;
+using System.Linq;
 using ktsu.CodeBlocker;
 
 internal abstract class TemplateBase
@@ -15,35 +16,42 @@ internal abstract class TemplateBase
 	public List<string> Attributes { get; set; } = [];
 	public List<string> Keywords { get; set; } = [];
 	public List<string> Comments { get; set; } = [];
+}
 
-	public virtual void WriteTo(CodeBlocker codeBlocker)
+internal static class TemplateBaseExtensions
+{
+	public static CodeBlocker AddTemplate(this CodeBlocker codeBlocker, TemplateBase template)
 	{
-		WriteCommentsTo(codeBlocker);
-		WriteAttributesTo(codeBlocker);
-		WriteKeywordsTo(codeBlocker);
+		codeBlocker.AddComments(template.Comments);
+		codeBlocker.AddAttributes(template.Attributes);
+		codeBlocker.AddKeywords(template.Keywords);
+		return codeBlocker;
 	}
 
-	private void WriteCommentsTo(CodeBlocker codeBlocker)
+	public static CodeBlocker AddComments(this CodeBlocker codeBlocker, IEnumerable<string> comments)
 	{
-		foreach (string comment in Comments)
+		foreach (string comment in comments)
 		{
 			codeBlocker.WriteLine(comment);
 		}
+		return codeBlocker;
 	}
 
-	private void WriteAttributesTo(CodeBlocker codeBlocker)
+	public static CodeBlocker AddAttributes(this CodeBlocker codeBlocker, IEnumerable<string> attributes)
 	{
-		foreach (string attribute in Attributes)
+		foreach (string attribute in attributes)
 		{
 			codeBlocker.Write($"[{attribute}] ");
 		}
+		return codeBlocker;
 	}
 
-	private void WriteKeywordsTo(CodeBlocker codeBlocker)
+	public static CodeBlocker AddKeywords(this CodeBlocker codeBlocker, IEnumerable<string> keywords)
 	{
-		if (Keywords.Count > 0)
+		if (keywords.Any())
 		{
-			codeBlocker.Write(string.Join(" ", Keywords) + " ");
+			codeBlocker.Write(string.Join(" ", keywords) + " ");
 		}
+		return codeBlocker;
 	}
 }

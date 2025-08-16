@@ -4,11 +4,8 @@
 
 namespace Semantics.SourceGenerators;
 
-using System.Linq;
-using System.Text;
-using System.Text.Json;
+using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
 using Semantics.SourceGenerators.Models;
 
 [Generator]
@@ -16,50 +13,26 @@ public sealed class ConversionsGenerator : GeneratorBase<ConversionsMetadata>
 {
 	public ConversionsGenerator() : base("conversions.json") { }
 
-	protected override string Generate(SourceProductionContext context, ConversionsMetadata metadata)
+	protected override void Generate(SourceProductionContext context, ConversionsMetadata metadata, CodeBlocker codeBlocker)
 	{
-		StringBuilder builder = new();
-
-		AddHeader(builder);
-		
-		builder.AppendLine("namespace ktsu.Semantics;");
-		builder.AppendLine();
-		builder.AppendLine("using System.Globalization;");
-		builder.AppendLine("using ktsu.PreciseNumber;");
-		builder.AppendLine();
-		builder.AppendLine("/// <summary>");
-		builder.AppendLine("/// Static registry of conversion factors used by the units system.");
-		builder.AppendLine("/// </summary>");
-		builder.AppendLine("public static class ConversionFactors");
-		builder.AppendLine("{");
-
-		// Generate each category
-		foreach (ConversionCategory category in metadata.Conversions.OrderBy(c => c.Category))
-		{
-			if (category.Factors.Count != 0)
-			{
-				builder.AppendLine();
-				builder.AppendLine($"\t// === {category.Category.ToUpperInvariant()} ===");
-				builder.AppendLine();
-
-				foreach (ConversionFactor factor in category.Factors.OrderBy(f => f.Name))
-				{
-					GenerateConversionFactor(builder, factor);
-				}
-			}
-		}
-
-		builder.AppendLine("}");
-		return builder.ToString();
-	}
-
-	private static void GenerateConversionFactor(StringBuilder builder, ConversionFactor factor)
-	{
-		// Generate XML documentation
-		builder.AppendLine($"\t/// <summary>{factor.Description}</summary>");
-
-		// Parse the high-precision value and generate the property declaration
-		builder.AppendLine($"\tpublic static readonly PreciseNumber {factor.Name} = PreciseNumber.Parse(\"{factor.Value}\", CultureInfo.InvariantCulture);");
-		builder.AppendLine();
-	}
+        if (metadata.Conversions.Count == 0)
+        {
+            return;
+        }
+        var code = codeBlocker
+            .AddNamespace("Semantics.Conversions")
+            .AddUsing("System")
+            .AddUsing("System.Diagnostics.CodeAnalysis")
+            .AddUsing("Semantics.Conversions")
+            .AddClass("Conversions", "public static partial class Conversions")
+            .BeginClass()
+            .AddSummary("Provides conversion methods for various types.")
+            ;
+        foreach (var conversion in metadata.Conversions)
+        {
+            code.AddMethod(conversion);
+        }
+        code.EndClass();
+        context.AddSource("Conversions.g.cs", code.ToString());
+    }
 }

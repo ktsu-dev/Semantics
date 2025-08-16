@@ -7,6 +7,7 @@ namespace Semantics.SourceGenerators.Templates;
 using System.Collections.Generic;
 using System.Linq;
 using ktsu.CodeBlocker;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 internal class ClassTemplate : TemplateBase
 {
@@ -79,5 +80,67 @@ internal class ClassTemplate : TemplateBase
 				member.WriteTo(codeBlocker);
 			}
 		}
+	}
+}
+
+internal static class ClassTemplateExtensions
+{
+	public static CodeBlocker AddClass(this CodeBlocker codeBlocker, ClassTemplate classTemplate)
+	{
+		codeBlocker.AddTemplate(classTemplate);
+
+		return codeBlocker;
+	}
+
+	public static CodeBlocker AddClassName(this CodeBlocker codeBlocker, ClassTemplate classTemplate)
+	{
+		codeBlocker.Write(classTemplate.Name);
+		return codeBlocker;
+	}
+
+	public static CodeBlocker AddInheritance(this CodeBlocker codeBlocker, ClassTemplate classTemplate)
+	{
+		bool hasBaseClass = !string.IsNullOrEmpty(classTemplate.BaseClass);
+		bool hasInterfaces = classTemplate.Interfaces.Count > 0;
+		bool hasBaseClassOrInterfaces = hasBaseClass || hasInterfaces;
+
+		if (hasBaseClassOrInterfaces)
+		{
+			codeBlocker.Write($" : ");
+		}
+
+		List<string> baseAndInterfaces = [];
+		if (hasBaseClass)
+		{
+			baseAndInterfaces.Add(classTemplate.BaseClass);
+		}
+
+		baseAndInterfaces.AddRange(classTemplate.Interfaces);
+
+		codeBlocker.Write(string.Join(", ", baseAndInterfaces));
+
+		if (hasBaseClassOrInterfaces)
+		{
+			codeBlocker.NewLine();
+		}
+
+		if (string.IsNullOrEmpty(classTemplate.BaseClass) && classTemplate.Interfaces.Count == 0)
+		{
+			return codeBlocker;
+		}
+		codeBlocker.Write(" : ");
+		if (!string.IsNullOrEmpty(classTemplate.BaseClass))
+		{
+			codeBlocker.Write(classTemplate.BaseClass);
+		}
+		if (classTemplate.Interfaces.Count > 0)
+		{
+			if (!string.IsNullOrEmpty(classTemplate.BaseClass))
+			{
+				codeBlocker.Write(", ");
+			}
+			codeBlocker.Write(string.Join(", ", classTemplate.Interfaces));
+		}
+		return codeBlocker;
 	}
 }
