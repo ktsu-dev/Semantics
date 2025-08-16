@@ -1,6 +1,11 @@
-﻿<Project Sdk="ktsu.Sdk.Lib">
-  <ItemGroup>
-  </ItemGroup>
+﻿<Project>
+  <Sdk Name="Microsoft.NET.Sdk" />
+  <Sdk Name="ktsu.Sdk" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net8.0;</TargetFrameworks>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
   </ItemGroup>

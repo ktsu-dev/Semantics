@@ -15,21 +15,19 @@ public static class AdvancedErrorScenarioTests
 	public class SemanticQuantityErrorTests
 	{
 		[TestMethod]
-		[ExpectedException(typeof(DivideByZeroException))]
 		public void SemanticQuantity_DivideByZero_ShouldThrow()
 		{
 			Length<double> length = Length<double>.FromMeters(10.0);
 			Length<double> zeroLength = Length<double>.FromMeters(0.0);
-			_ = length / zeroLength;
+			Assert.ThrowsExactly<DivideByZeroException>(() => _ = length / zeroLength);
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void SemanticQuantity_NullArgument_ShouldThrow()
 		{
 			Length<double> length = Length<double>.FromMeters(10.0);
 			Length<double>? nullLength = null;
-			_ = length * nullLength!;
+			Assert.ThrowsExactly<ArgumentNullException>(() => _ = length * nullLength!);
 		}
 
 		[TestMethod]
@@ -95,24 +93,21 @@ public static class AdvancedErrorScenarioTests
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentException))]
 		public void PasswordString_TooShort_ShouldThrow()
 		{
-			SemanticString<PasswordString>.Create<PasswordString>("Short1!");
+			Assert.ThrowsExactly<ArgumentException>(() => SemanticString<PasswordString>.Create<PasswordString>("Short1!"));
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentException))]
 		public void PasswordString_NoUppercase_ShouldThrow()
 		{
-			SemanticString<PasswordString>.Create<PasswordString>("lowercase1!");
+			Assert.ThrowsExactly<ArgumentException>(() => SemanticString<PasswordString>.Create<PasswordString>("lowercase1!"));
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentException))]
 		public void PasswordString_NoSpecialChar_ShouldThrow()
 		{
-			SemanticString<PasswordString>.Create<PasswordString>("NoSpecial1");
+			Assert.ThrowsExactly<ArgumentException>(() => SemanticString<PasswordString>.Create<PasswordString>("NoSpecial1"));
 		}
 
 		[TestMethod]
@@ -193,11 +188,10 @@ public static class AdvancedErrorScenarioTests
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(InvalidOperationException))]
 		public void ValidationStrategy_ThrowingValidator_ShouldPropagate()
 		{
 			FailingValidationStrategy strategy = new();
-			FailingValidationStrategy.Validate("test");
+			Assert.ThrowsExactly<InvalidOperationException>(() => FailingValidationStrategy.Validate("test"));
 		}
 
 		[TestMethod]
@@ -224,20 +218,22 @@ public static class AdvancedErrorScenarioTests
 		private sealed partial record TestDirectoryPath : SemanticDirectoryPath<TestDirectoryPath> { }
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentException))]
 		public void SemanticPath_InvalidCharacters_ShouldThrow()
 		{
 			char[] invalidChars = Path.GetInvalidPathChars();
-			if (invalidChars.Length > 0)
+			Assert.ThrowsExactly<ArgumentException>(() =>
 			{
-				string invalidPath = $"test{invalidChars[0]}path";
-				SemanticString<TestDirectoryPath>.Create<TestDirectoryPath>(invalidPath);
-			}
-			else
-			{
-				// If no invalid characters, throw manually for test
-				throw new ArgumentException("No invalid characters to test");
-			}
+				if (invalidChars.Length > 0)
+				{
+					string invalidPath = $"test{invalidChars[0]}path";
+					SemanticString<TestDirectoryPath>.Create<TestDirectoryPath>(invalidPath);
+				}
+				else
+				{
+					// If no invalid characters, throw manually for test
+					throw new ArgumentException("No invalid characters to test");
+				}
+			});
 		}
 
 		[TestMethod]

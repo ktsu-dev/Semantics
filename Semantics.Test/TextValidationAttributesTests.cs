@@ -34,10 +34,9 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void StartsWithAttribute_InvalidString_ShouldThrow()
 	{
-		SemanticString<TestValidatedString>.Create<TestValidatedString>("invalidmiddleend");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestValidatedString>.Create<TestValidatedString>("invalidmiddleend"));
 	}
 
 	[TestMethod]
@@ -49,10 +48,9 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void EndsWithAttribute_InvalidString_ShouldThrow()
 	{
-		SemanticString<TestValidatedString>.Create<TestValidatedString>("testmiddleinvalid");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestValidatedString>.Create<TestValidatedString>("testmiddleinvalid"));
 	}
 
 	[TestMethod]
@@ -64,10 +62,9 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void ContainsAttribute_InvalidString_ShouldThrow()
 	{
-		SemanticString<TestValidatedString>.Create<TestValidatedString>("testinvalidend");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestValidatedString>.Create<TestValidatedString>("testinvalidend"));
 	}
 
 	[TestMethod]
@@ -79,10 +76,9 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void RegexMatchAttribute_InvalidString_ShouldThrow()
 	{
-		SemanticString<TestValidatedString>.Create<TestValidatedString>("invalid");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestValidatedString>.Create<TestValidatedString>("invalid"));
 	}
 
 	[TestMethod]
@@ -105,24 +101,21 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void IsEmailAddressAttribute_InvalidEmail_ShouldThrow()
 	{
-		SemanticString<EmailString>.Create<EmailString>("invalid-email");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<EmailString>.Create<EmailString>("invalid-email"));
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void IsEmailAddressAttribute_EmailWithoutAt_ShouldThrow()
 	{
-		SemanticString<EmailString>.Create<EmailString>("test.example.com");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<EmailString>.Create<EmailString>("test.example.com"));
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void IsEmailAddressAttribute_EmailWithoutDomain_ShouldThrow()
 	{
-		SemanticString<EmailString>.Create<EmailString>("test@");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<EmailString>.Create<EmailString>("test@"));
 	}
 
 	[TestMethod]
@@ -146,24 +139,21 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void IsBase64Attribute_InvalidBase64_ShouldThrow()
 	{
-		SemanticString<Base64String>.Create<Base64String>("InvalidBase64!");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<Base64String>.Create<Base64String>("InvalidBase64!"));
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void IsBase64Attribute_Base64WithSpaces_ShouldThrow()
 	{
-		SemanticString<Base64String>.Create<Base64String>("SGVs bG8g V29y bGQ=");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<Base64String>.Create<Base64String>("SGVs bG8g V29y bGQ="));
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void IsBase64Attribute_IncorrectPadding_ShouldThrow()
 	{
-		SemanticString<Base64String>.Create<Base64String>("SGVsbG8gV29ybGQ");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<Base64String>.Create<Base64String>("SGVsbG8gV29ybGQ"));
 	}
 
 	[TestMethod]
@@ -186,24 +176,21 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void PrefixAndSuffixAttribute_MissingPrefix_ShouldThrow()
 	{
-		SemanticString<PrefixSuffixTestString>.Create<PrefixSuffixTestString>("middlesuf");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<PrefixSuffixTestString>.Create<PrefixSuffixTestString>("middlesuf"));
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void PrefixAndSuffixAttribute_MissingSuffix_ShouldThrow()
 	{
-		SemanticString<PrefixSuffixTestString>.Create<PrefixSuffixTestString>("premiddle");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<PrefixSuffixTestString>.Create<PrefixSuffixTestString>("premiddle"));
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void PrefixAndSuffixAttribute_MissingBoth_ShouldThrow()
 	{
-		SemanticString<PrefixSuffixTestString>.Create<PrefixSuffixTestString>("middle");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<PrefixSuffixTestString>.Create<PrefixSuffixTestString>("middle"));
 	}
 
 	// Test multiple validation attributes on empty strings
@@ -223,11 +210,10 @@ public class TextValidationAttributesTests
 
 	// Test null input handling
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentNullException))]
 	public void ValidationAttributes_NullString_ShouldThrow()
 	{
 		string? nullString = null;
-		SemanticString<TestValidatedString>.Create<TestValidatedString>(nullString!);
+		Assert.ThrowsExactly<ArgumentNullException>(() => SemanticString<TestValidatedString>.Create<TestValidatedString>(nullString!));
 	}
 
 	// Test case sensitivity
@@ -236,10 +222,9 @@ public class TextValidationAttributesTests
 	private sealed partial record CaseSensitiveString : SemanticString<CaseSensitiveString> { }
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void StartsWithAttribute_CaseSensitive_ShouldThrow()
 	{
-		SemanticString<CaseSensitiveString>.Create<CaseSensitiveString>("test");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<CaseSensitiveString>.Create<CaseSensitiveString>("test"));
 	}
 
 	[TestMethod]
@@ -263,10 +248,9 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void RegexMatchAttribute_InvalidSSNFormat_ShouldThrow()
 	{
-		SemanticString<SSNString>.Create<SSNString>("12345-6789");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<SSNString>.Create<SSNString>("12345-6789"));
 	}
 
 	// Test very long strings
@@ -295,9 +279,8 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void ContainsAttribute_MissingSpecialCharacters_ShouldThrow()
 	{
-		SemanticString<SpecialCharString>.Create<SpecialCharString>("testtest");
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<SpecialCharString>.Create<SpecialCharString>("testtest"));
 	}
 }

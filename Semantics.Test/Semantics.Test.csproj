@@ -1,2 +1,9 @@
-﻿<Project Sdk="ktsu.Sdk.Test">
+﻿<Project>
+  <Sdk Name="MStest.Sdk" />
+  <Sdk Name="ktsu.Sdk" />
+
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
 </Project>

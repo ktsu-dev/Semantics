@@ -260,10 +260,9 @@ public static class ThermalAcousticQuantitiesTests
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentException))]
 		public void Temperature_BelowAbsoluteZero_ShouldThrow()
 		{
-			Temperature<double>.Create(-1.0);
+			Assert.ThrowsExactly<ArgumentException>(() => Temperature<double>.Create(-1.0));
 		}
 
 		[TestMethod]
@@ -274,10 +273,9 @@ public static class ThermalAcousticQuantitiesTests
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentException))]
 		public void Frequency_Negative_ShouldThrow()
 		{
-			Frequency<double>.Create(-1.0);
+			Assert.ThrowsExactly<ArgumentException>(() => Frequency<double>.Create(-1.0));
 		}
 
 		[TestMethod]
