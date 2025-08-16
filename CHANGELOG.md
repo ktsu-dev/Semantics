@@ -1,3 +1,6 @@
+## v1.0.20
+
+No significant changes detected since v1.0.20.
 ## v1.0.20 (patch)
 
 Changes since v1.0.19:
@@ -5,7 +8,7 @@ Changes since v1.0.19:
 - Refactor project structure and update SDK versions ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.20-pre.1 (prerelease)
 
-Changes since v1.0.19:
+Incremental prerelease update.
 ## v1.0.19 (patch)
 
 Changes since v1.0.18:
