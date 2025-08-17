@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string has at most the specified maximum number of lines
@@ -21,7 +20,7 @@ using FluentValidation;
 /// </remarks>
 /// <param name="maximumLines">The maximum number of lines allowed.</param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class HasMaximumLinesAttribute(int maximumLines) : FluentSemanticStringValidationAttribute
+public sealed class HasMaximumLinesAttribute(int maximumLines) : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
 	/// Gets the maximum number of lines allowed.
@@ -29,15 +28,15 @@ public sealed class HasMaximumLinesAttribute(int maximumLines) : FluentSemanticS
 	public int MaximumLines { get; } = maximumLines;
 
 	/// <summary>
-	/// Creates the FluentValidation validator for maximum lines validation.
+	/// Creates the validation adapter for maximum lines validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for maximum lines</returns>
-	protected override FluentValidationAdapter CreateValidator() => new MaximumLinesValidator(MaximumLines);
+	/// <returns>A validation adapter for maximum lines</returns>
+	protected override ValidationAdapter CreateValidator() => new MaximumLinesValidator(MaximumLines);
 
 	/// <summary>
-	/// FluentValidation validator for maximum lines.
+	/// validation adapter for maximum lines.
 	/// </summary>
-	private sealed class MaximumLinesValidator : FluentValidationAdapter
+	private sealed class MaximumLinesValidator : ValidationAdapter
 	{
 		private readonly int maximumLines;
 
@@ -48,22 +47,18 @@ public sealed class HasMaximumLinesAttribute(int maximumLines) : FluentSemanticS
 		public MaximumLinesValidator(int maximumLines)
 		{
 			this.maximumLines = maximumLines;
-
-			RuleFor(value => value)
-				.Must(HaveMaximumLines)
-				.WithMessage($"The text must have at most {maximumLines} line(s).");
 		}
 
 		/// <summary>
 		/// Validates that a string has at most the maximum number of lines.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string has at most the maximum lines, false otherwise</returns>
-		private bool HaveMaximumLines(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return true; // Empty strings have 0 lines, which is <= any positive maximum
+				return ValidationResult.Success(); // Empty strings have 0 lines, which is <= any positive maximum
 			}
 
 			// Count line breaks and add 1
@@ -77,7 +72,10 @@ public sealed class HasMaximumLinesAttribute(int maximumLines) : FluentSemanticS
 				lineCount = crlfCount + lfOnlyCount + 1;
 			}
 
-			return lineCount <= maximumLines;
+			bool hasValidLineCount = lineCount <= maximumLines;
+			return hasValidLineCount
+				? ValidationResult.Success()
+				: ValidationResult.Failure($"The text must have at most {maximumLines} line(s).");
 		}
 	}
 }

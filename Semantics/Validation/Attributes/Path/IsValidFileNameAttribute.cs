@@ -6,24 +6,23 @@ namespace ktsu.Semantics;
 
 using System;
 using System.IO;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a path string contains valid filename characters using span semantics.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsValidFileNameAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsValidFileNameAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for valid filename validation.
+	/// Creates the validation adapter for valid filename validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for valid filename strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new ValidFileNameValidator();
+	/// <returns>A validation adapter for valid filename strings</returns>
+	protected override ValidationAdapter CreateValidator() => new ValidFileNameValidator();
 
 	/// <summary>
-	/// FluentValidation validator for valid filename strings.
+	/// validation adapter for valid filename strings.
 	/// </summary>
-	private sealed class ValidFileNameValidator : FluentValidationAdapter
+	private sealed class ValidFileNameValidator : ValidationAdapter
 	{
 		private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
 

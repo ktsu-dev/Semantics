@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.IO;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a path is relative (not fully qualified), meaning it does not start from a root directory.
@@ -24,18 +23,18 @@ using FluentValidation;
 /// Empty or null strings are considered valid relative paths.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsRelativePathAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsRelativePathAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for relative path validation.
+	/// Creates the validation adapter for relative path validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for relative paths</returns>
-	protected override FluentValidationAdapter CreateValidator() => new RelativePathValidator();
+	/// <returns>A validation adapter for relative paths</returns>
+	protected override ValidationAdapter CreateValidator() => new RelativePathValidator();
 
 	/// <summary>
-	/// FluentValidation validator for relative paths.
+	/// validation adapter for relative paths.
 	/// </summary>
-	private sealed class RelativePathValidator : FluentValidationAdapter
+	private sealed class RelativePathValidator : ValidationAdapter
 	{
 		/// <summary>
 		/// Initializes a new instance of the RelativePathValidator class.

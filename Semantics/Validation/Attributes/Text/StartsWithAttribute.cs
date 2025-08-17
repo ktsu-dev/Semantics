@@ -5,13 +5,12 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string starts with the specified prefix
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-public sealed class StartsWithAttribute(string prefix, StringComparison comparison = StringComparison.Ordinal) : FluentSemanticStringValidationAttribute
+public sealed class StartsWithAttribute(string prefix, StringComparison comparison = StringComparison.Ordinal) : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
 	/// Gets the prefix that the string must start with.
@@ -24,15 +23,15 @@ public sealed class StartsWithAttribute(string prefix, StringComparison comparis
 	public StringComparison Comparison => comparison;
 
 	/// <summary>
-	/// Creates the FluentValidation validator for prefix validation.
+	/// Creates the validation adapter for prefix validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for prefix validation</returns>
-	protected override FluentValidationAdapter CreateValidator() => new StartsWithValidator(prefix, comparison);
+	/// <returns>A validation adapter for prefix validation</returns>
+	protected override ValidationAdapter CreateValidator() => new StartsWithValidator(prefix, comparison);
 
 	/// <summary>
-	/// FluentValidation validator for prefix validation.
+	/// validation adapter for prefix validation.
 	/// </summary>
-	private sealed class StartsWithValidator : FluentValidationAdapter
+	private sealed class StartsWithValidator : ValidationAdapter
 	{
 		private readonly string _prefix;
 		private readonly StringComparison _comparison;

@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string contains no line breaks (single line)
@@ -17,44 +16,37 @@ using FluentValidation;
 /// Examples of invalid strings: "Line 1\nLine 2", "Text with\r\nline breaks"
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsSingleLineAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsSingleLineAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for single line validation.
+	/// Creates the validation adapter for single line validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for single line strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new SingleLineValidator();
+	/// <returns>A validation adapter for single line strings</returns>
+	protected override ValidationAdapter CreateValidator() => new SingleLineValidator();
 
 	/// <summary>
-	/// FluentValidation validator for single line strings.
+	/// Validation adapter for single line strings.
 	/// </summary>
-	private sealed class SingleLineValidator : FluentValidationAdapter
+	private sealed class SingleLineValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the SingleLineValidator class.
-		/// </summary>
-		public SingleLineValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidSingleLine)
-				.WithMessage("The value must not contain line breaks.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string contains no line breaks.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string contains no line breaks, false otherwise</returns>
-		private static bool BeValidSingleLine(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return true;
+				return ValidationResult.Success();
 			}
 
 			// Check for any line break characters
-			return !value.Any(c => c == '\n' || c == '\r' || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.LineSeparator);
+			bool isValid = !value.Any(c => c == '\n' || c == '\r' || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.LineSeparator);
+
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The value must not contain line breaks.");
 		}
 	}
 }

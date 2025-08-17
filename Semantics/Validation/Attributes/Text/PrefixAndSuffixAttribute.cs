@@ -5,13 +5,12 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string has both the specified prefix and suffix
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-public sealed class PrefixAndSuffixAttribute(string prefix, string suffix, StringComparison comparison = StringComparison.Ordinal) : FluentSemanticStringValidationAttribute
+public sealed class PrefixAndSuffixAttribute(string prefix, string suffix, StringComparison comparison = StringComparison.Ordinal) : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
 	/// Gets the prefix that the string must start with.
@@ -29,15 +28,15 @@ public sealed class PrefixAndSuffixAttribute(string prefix, string suffix, Strin
 	public StringComparison Comparison => comparison;
 
 	/// <summary>
-	/// Creates the FluentValidation validator for prefix and suffix validation.
+	/// Creates the validation adapter for prefix and suffix validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for prefix and suffix validation</returns>
-	protected override FluentValidationAdapter CreateValidator() => new PrefixAndSuffixValidator(prefix, suffix, comparison);
+	/// <returns>A validation adapter for prefix and suffix validation</returns>
+	protected override ValidationAdapter CreateValidator() => new PrefixAndSuffixValidator(prefix, suffix, comparison);
 
 	/// <summary>
-	/// FluentValidation validator for prefix and suffix validation.
+	/// validation adapter for prefix and suffix validation.
 	/// </summary>
-	private sealed class PrefixAndSuffixValidator : FluentValidationAdapter
+	private sealed class PrefixAndSuffixValidator : ValidationAdapter
 	{
 		private readonly string _prefix;
 		private readonly string _suffix;

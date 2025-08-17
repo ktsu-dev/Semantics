@@ -5,13 +5,12 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string contains the specified substring
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-public sealed class ContainsAttribute(string substring, StringComparison comparison = StringComparison.Ordinal) : FluentSemanticStringValidationAttribute
+public sealed class ContainsAttribute(string substring, StringComparison comparison = StringComparison.Ordinal) : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
 	/// Gets the substring that the string must contain.
@@ -24,15 +23,15 @@ public sealed class ContainsAttribute(string substring, StringComparison compari
 	public StringComparison Comparison => comparison;
 
 	/// <summary>
-	/// Creates the FluentValidation validator for substring validation.
+	/// Creates the validation adapter for substring validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for substring validation</returns>
-	protected override FluentValidationAdapter CreateValidator() => new ContainsValidator(substring, comparison);
+	/// <returns>A validation adapter for substring validation</returns>
+	protected override ValidationAdapter CreateValidator() => new ContainsValidator(substring, comparison);
 
 	/// <summary>
-	/// FluentValidation validator for substring validation.
+	/// validation adapter for substring validation.
 	/// </summary>
-	private sealed class ContainsValidator : FluentValidationAdapter
+	private sealed class ContainsValidator : ValidationAdapter
 	{
 		private readonly string _substring;
 		private readonly StringComparison _comparison;
@@ -46,10 +45,24 @@ public sealed class ContainsAttribute(string substring, StringComparison compari
 		{
 			_substring = substring;
 			_comparison = comparison;
+		}
 
-			RuleFor(value => value)
-				.Must(value => value?.Contains(_substring, _comparison) == true)
-				.WithMessage($"The value must contain '{_substring}'.");
+		/// <summary>
+		/// Validates that a string contains the specified substring.
+		/// </summary>
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isValid = value.Contains(_substring, _comparison);
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure($"The value must contain '{_substring}'.");
 		}
 	}
 }

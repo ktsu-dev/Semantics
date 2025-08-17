@@ -6,47 +6,45 @@ namespace ktsu.Semantics;
 
 using System;
 using System.IO;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a path exists on the filesystem
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class DoesExistAttribute : FluentSemanticStringValidationAttribute
+public sealed class DoesExistAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for path existence validation.
+	/// Creates the validation adapter for path existence validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for path existence</returns>
-	protected override FluentValidationAdapter CreateValidator() => new ExistenceValidator();
+	/// <returns>A validation adapter for path existence</returns>
+	protected override ValidationAdapter CreateValidator() => new ExistenceValidator();
 
 	/// <summary>
-	/// FluentValidation validator for path existence.
+	/// validation adapter for path existence.
 	/// </summary>
-	private sealed class ExistenceValidator : FluentValidationAdapter
+	private sealed class ExistenceValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the ExistenceValidator class.
-		/// </summary>
-		public ExistenceValidator()
-		{
-			RuleFor(value => value)
-				.NotEmpty()
-				.WithMessage("Path cannot be empty or null.")
-				.Must(PathExists)
-				.WithMessage("The specified path does not exist.");
-		}
-
 		/// <summary>
 		/// Validates that a path exists on the filesystem.
 		/// </summary>
-		/// <param name="value">The path to validate</param>
-		/// <returns>True if the path exists as either a file or directory, false otherwise</returns>
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
 		/// <remarks>
 		/// This validation requires the path to actually exist on the filesystem as either a file or directory.
 		/// The validation uses both <see cref="File.Exists(string)"/> and <see cref="Directory.Exists(string)"/>
 		/// to check for existence.
 		/// </remarks>
-		private static bool PathExists(string value) => !string.IsNullOrEmpty(value) && (File.Exists(value) || Directory.Exists(value));
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Failure("Path cannot be empty or null.");
+			}
+
+			bool pathExists = File.Exists(value) || Directory.Exists(value);
+			return pathExists
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The specified path does not exist.");
+		}
 	}
 }

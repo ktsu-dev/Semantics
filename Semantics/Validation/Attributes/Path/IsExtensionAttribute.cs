@@ -5,41 +5,40 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string represents a valid file extension (starts with a period)
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsExtensionAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsExtensionAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for file extension validation.
+	/// Creates the validation adapter for file extension validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for file extensions</returns>
-	protected override FluentValidationAdapter CreateValidator() => new ExtensionValidator();
+	/// <returns>A validation adapter for file extensions</returns>
+	protected override ValidationAdapter CreateValidator() => new ExtensionValidator();
 
 	/// <summary>
-	/// FluentValidation validator for file extensions.
+	/// validation adapter for file extensions.
 	/// </summary>
-	private sealed class ExtensionValidator : FluentValidationAdapter
+	private sealed class ExtensionValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the ExtensionValidator class.
-		/// </summary>
-		public ExtensionValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidExtension)
-				.WithMessage("File extension must start with a period (.).")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string represents a valid file extension.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is a valid file extension, false otherwise</returns>
-		private static bool BeValidExtension(string value) => string.IsNullOrEmpty(value) || value.StartsWith('.');
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isValidExtension = value.StartsWith('.');
+			return isValidExtension
+				? ValidationResult.Success()
+				: ValidationResult.Failure("File extension must start with a period (.).");
+		}
 	}
 }

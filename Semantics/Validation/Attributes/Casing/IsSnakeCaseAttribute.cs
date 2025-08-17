@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in snake_case (lowercase words separated by underscores)
@@ -17,62 +16,56 @@ using FluentValidation;
 /// No spaces, hyphens, or uppercase letters are allowed.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsSnakeCaseAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsSnakeCaseAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for snake_case validation.
+	/// Creates the validation adapter for snake_case validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for snake_case strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new SnakeCaseValidator();
+	/// <returns>A validation adapter for snake_case strings</returns>
+	protected override ValidationAdapter CreateValidator() => new SnakeCaseValidator();
 
 	/// <summary>
-	/// FluentValidation validator for snake_case strings.
+	/// validation adapter for snake_case strings.
 	/// </summary>
-	private sealed class SnakeCaseValidator : FluentValidationAdapter
+	private sealed class SnakeCaseValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the SnakeCaseValidator class.
-		/// </summary>
-		public SnakeCaseValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidSnakeCase)
-				.WithMessage("The value must be in snake_case format.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is in snake_case.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is in snake_case, false otherwise</returns>
-		private static bool BeValidSnakeCase(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return true;
+				return ValidationResult.Success();
 			}
 
 			// Cannot start or end with underscore
 			if (value.StartsWith('_') || value.EndsWith('_'))
 			{
-				return false;
+				return ValidationResult.Failure("The value must be in snake_case format.");
 			}
 
 			// Cannot have consecutive underscores
 			if (value.Contains("__"))
 			{
-				return false;
+				return ValidationResult.Failure("The value must be in snake_case format.");
 			}
 
 			// No spaces, hyphens, or other separators allowed (except underscores)
 			if (value.Any(c => char.IsWhiteSpace(c) || c == '-'))
 			{
-				return false;
+				return ValidationResult.Failure("The value must be in snake_case format.");
 			}
 
 			// All characters must be lowercase letters, digits, or underscores
-			return value.All(c => char.IsLower(c) || char.IsDigit(c) || c == '_');
+			if (!value.All(c => char.IsLower(c) || char.IsDigit(c) || c == '_'))
+			{
+				return ValidationResult.Failure("The value must be in snake_case format.");
+			}
+
+			return ValidationResult.Success();
 		}
 	}
 }

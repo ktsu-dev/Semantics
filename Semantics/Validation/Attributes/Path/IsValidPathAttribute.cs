@@ -6,24 +6,23 @@ namespace ktsu.Semantics;
 
 using System;
 using System.IO;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a path string contains valid path characters using span semantics.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsValidPathAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsValidPathAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for valid path validation.
+	/// Creates the validation adapter for valid path validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for valid path strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new ValidPathValidator();
+	/// <returns>A validation adapter for valid path strings</returns>
+	protected override ValidationAdapter CreateValidator() => new ValidPathValidator();
 
 	/// <summary>
-	/// FluentValidation validator for valid path strings.
+	/// validation adapter for valid path strings.
 	/// </summary>
-	private sealed class ValidPathValidator : FluentValidationAdapter
+	private sealed class ValidPathValidator : ValidationAdapter
 	{
 		private static readonly char[] InvalidPathChars = Path.GetInvalidPathChars();
 

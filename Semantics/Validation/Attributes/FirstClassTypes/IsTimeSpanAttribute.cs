@@ -5,7 +5,6 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted TimeSpan.
@@ -21,35 +20,35 @@ using FluentValidation;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.TimeSpan directly instead of semantic string types. TimeSpan provides better type safety, performance, built-in comparison operations, and rich API for time operations.")]
-public sealed class IsTimeSpanAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsTimeSpanAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for TimeSpan validation.
+	/// Creates the validation adapter for TimeSpan validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for TimeSpan strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new TimeSpanValidator();
+	/// <returns>A validation adapter for TimeSpan strings</returns>
+	protected override ValidationAdapter CreateValidator() => new TimeSpanValidator();
 
 	/// <summary>
-	/// FluentValidation validator for TimeSpan strings.
+	/// validation adapter for TimeSpan strings.
 	/// </summary>
-	private sealed class TimeSpanValidator : FluentValidationAdapter
+	private sealed class TimeSpanValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the TimeSpanValidator class.
-		/// </summary>
-		public TimeSpanValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidTimeSpan)
-				.WithMessage("The value must be a valid TimeSpan.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is a valid TimeSpan.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is a valid TimeSpan, false otherwise</returns>
-		private static bool BeValidTimeSpan(string value) => TimeSpan.TryParse(value, out _);
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isValid = TimeSpan.TryParse(value, out _);
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The value must be a valid TimeSpan.");
+		}
 	}
 }

@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.IO;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a path is absolute (fully qualified), meaning it specifies a complete path from the root of the file system.
@@ -24,36 +23,35 @@ using FluentValidation;
 /// Empty or null strings are considered valid for flexibility in initialization scenarios.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsAbsolutePathAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsAbsolutePathAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for absolute path validation.
+	/// Creates the validation adapter for absolute path validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for absolute paths</returns>
-	protected override FluentValidationAdapter CreateValidator() => new AbsolutePathValidator();
+	/// <returns>A validation adapter for absolute paths</returns>
+	protected override ValidationAdapter CreateValidator() => new AbsolutePathValidator();
 
 	/// <summary>
-	/// FluentValidation validator for absolute paths.
+	/// validation adapter for absolute paths.
 	/// </summary>
-	private sealed class AbsolutePathValidator : FluentValidationAdapter
+	private sealed class AbsolutePathValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the AbsolutePathValidator class.
-		/// </summary>
-		public AbsolutePathValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidAbsolutePath)
-				.WithMessage("The path must be absolute (fully qualified).")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a path is absolute.
 		/// </summary>
-		/// <param name="value">The path to validate</param>
-		/// <returns>True if the path is absolute, false otherwise</returns>
-		private static bool BeValidAbsolutePath(string value) =>
-			string.IsNullOrEmpty(value) || Path.IsPathFullyQualified(value + Path.DirectorySeparatorChar);
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isAbsolute = Path.IsPathFullyQualified(value + Path.DirectorySeparatorChar);
+			return isAbsolute
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The path must be absolute (fully qualified).");
+		}
 	}
 }

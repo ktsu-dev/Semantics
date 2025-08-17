@@ -5,25 +5,24 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string has basic email address format (contains @ with valid characters).
 /// For full RFC compliance, use MailAddress.TryCreate() in your application code.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsEmailAddressAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsEmailAddressAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for email address validation.
+	/// Creates the validation adapter for email address validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for email addresses</returns>
-	protected override FluentValidationAdapter CreateValidator() => new EmailValidator();
+	/// <returns>A validation adapter for email addresses</returns>
+	protected override ValidationAdapter CreateValidator() => new EmailValidator();
 
 	/// <summary>
-	/// FluentValidation validator for email addresses.
+	/// validation adapter for email addresses.
 	/// </summary>
-	private sealed class EmailValidator : FluentValidationAdapter
+	private sealed class EmailValidator : ValidationAdapter
 	{
 		/// <summary>
 		/// Initializes a new instance of the EmailValidator class.

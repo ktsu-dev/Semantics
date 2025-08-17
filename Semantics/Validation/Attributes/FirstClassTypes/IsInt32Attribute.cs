@@ -5,7 +5,6 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted 32-bit integer.
@@ -21,35 +20,35 @@ using FluentValidation;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.Int32 directly instead of semantic string types. Int32 provides better type safety, performance, built-in mathematical operations, and efficient numerical computations.")]
-public sealed class IsInt32Attribute : FluentSemanticStringValidationAttribute
+public sealed class IsInt32Attribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for Int32 validation.
+	/// Creates the validation adapter for Int32 validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for Int32 strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new Int32Validator();
+	/// <returns>A validation adapter for Int32 strings</returns>
+	protected override ValidationAdapter CreateValidator() => new Int32Validator();
 
 	/// <summary>
-	/// FluentValidation validator for Int32 strings.
+	/// validation adapter for Int32 strings.
 	/// </summary>
-	private sealed class Int32Validator : FluentValidationAdapter
+	private sealed class Int32Validator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the Int32Validator class.
-		/// </summary>
-		public Int32Validator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidInt32)
-				.WithMessage("The value must be a valid 32-bit integer.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is a valid 32-bit integer.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is a valid Int32, false otherwise</returns>
-		private static bool BeValidInt32(string value) => int.TryParse(value, out _);
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isValid = int.TryParse(value, out _);
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The value must be a valid 32-bit integer.");
+		}
 	}
 }

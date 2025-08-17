@@ -5,13 +5,12 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string ends with the specified suffix
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-public sealed class EndsWithAttribute(string suffix, StringComparison comparison = StringComparison.Ordinal) : FluentSemanticStringValidationAttribute
+public sealed class EndsWithAttribute(string suffix, StringComparison comparison = StringComparison.Ordinal) : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
 	/// Gets the suffix that the string must end with.
@@ -24,15 +23,15 @@ public sealed class EndsWithAttribute(string suffix, StringComparison comparison
 	public StringComparison Comparison => comparison;
 
 	/// <summary>
-	/// Creates the FluentValidation validator for suffix validation.
+	/// Creates the validation adapter for suffix validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for suffix validation</returns>
-	protected override FluentValidationAdapter CreateValidator() => new EndsWithValidator(suffix, comparison);
+	/// <returns>A validation adapter for suffix validation</returns>
+	protected override ValidationAdapter CreateValidator() => new EndsWithValidator(suffix, comparison);
 
 	/// <summary>
-	/// FluentValidation validator for suffix validation.
+	/// validation adapter for suffix validation.
 	/// </summary>
-	private sealed class EndsWithValidator : FluentValidationAdapter
+	private sealed class EndsWithValidator : ValidationAdapter
 	{
 		private readonly string _suffix;
 		private readonly StringComparison _comparison;
@@ -46,10 +45,24 @@ public sealed class EndsWithAttribute(string suffix, StringComparison comparison
 		{
 			_suffix = suffix;
 			_comparison = comparison;
+		}
 
-			RuleFor(value => value)
-				.Must(value => value?.EndsWith(_suffix, _comparison) == true)
-				.WithMessage($"The value must end with '{_suffix}'.");
+		/// <summary>
+		/// Validates that a string ends with the specified suffix.
+		/// </summary>
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isValid = value.EndsWith(_suffix, _comparison);
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure($"The value must end with '{_suffix}'.");
 		}
 	}
 }

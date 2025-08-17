@@ -5,7 +5,6 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted boolean value (true/false).
@@ -21,35 +20,35 @@ using FluentValidation;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.Boolean directly instead of semantic string types. Boolean provides better type safety, performance, built-in logical operations, and direct conditional evaluation.")]
-public sealed class IsBooleanAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsBooleanAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for Boolean validation.
+	/// Creates the validation adapter for Boolean validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for Boolean strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new BooleanValidator();
+	/// <returns>A validation adapter for Boolean strings</returns>
+	protected override ValidationAdapter CreateValidator() => new BooleanValidator();
 
 	/// <summary>
-	/// FluentValidation validator for Boolean strings.
+	/// validation adapter for Boolean strings.
 	/// </summary>
-	private sealed class BooleanValidator : FluentValidationAdapter
+	private sealed class BooleanValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the BooleanValidator class.
-		/// </summary>
-		public BooleanValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidBoolean)
-				.WithMessage("The value must be a valid boolean (true/false).")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is a valid boolean value.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is a valid boolean, false otherwise</returns>
-		private static bool BeValidBoolean(string value) => bool.TryParse(value, out _);
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isValid = bool.TryParse(value, out _);
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The value must be a valid boolean (true/false).");
+		}
 	}
 }

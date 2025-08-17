@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in UPPER CASE (all uppercase letters)
@@ -17,44 +16,36 @@ using FluentValidation;
 /// All alphabetic characters must be uppercase. Spaces, digits, and punctuation are allowed.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsUpperCaseAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsUpperCaseAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for uppercase validation.
+	/// Creates the validation adapter for uppercase validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for uppercase strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new UpperCaseValidator();
+	/// <returns>A validation adapter for uppercase strings</returns>
+	protected override ValidationAdapter CreateValidator() => new UpperCaseValidator();
 
 	/// <summary>
-	/// FluentValidation validator for uppercase strings.
+	/// validation adapter for uppercase strings.
 	/// </summary>
-	private sealed class UpperCaseValidator : FluentValidationAdapter
+	private sealed class UpperCaseValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the UpperCaseValidator class.
-		/// </summary>
-		public UpperCaseValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidUpperCase)
-				.WithMessage("All alphabetic characters must be uppercase.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is in upper case.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if all alphabetic characters are uppercase, false otherwise</returns>
-		private static bool BeValidUpperCase(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return true;
+				return ValidationResult.Success();
 			}
 
 			// All letters must be uppercase
-			return value.All(c => !char.IsLetter(c) || char.IsUpper(c));
+			bool isValid = value.All(c => !char.IsLetter(c) || char.IsUpper(c));
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure("All alphabetic characters must be uppercase.");
 		}
 	}
 }

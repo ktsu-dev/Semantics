@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in MACRO_CASE (uppercase words separated by underscores)
@@ -18,62 +17,56 @@ using FluentValidation;
 /// Also known as SCREAMING_SNAKE_CASE or CONSTANT_CASE.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsMacroCaseAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsMacroCaseAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for MACRO_CASE validation.
+	/// Creates the validation adapter for MACRO_CASE validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for MACRO_CASE strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new MacroCaseValidator();
+	/// <returns>A validation adapter for MACRO_CASE strings</returns>
+	protected override ValidationAdapter CreateValidator() => new MacroCaseValidator();
 
 	/// <summary>
-	/// FluentValidation validator for MACRO_CASE strings.
+	/// validation adapter for MACRO_CASE strings.
 	/// </summary>
-	private sealed class MacroCaseValidator : FluentValidationAdapter
+	private sealed class MacroCaseValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the MacroCaseValidator class.
-		/// </summary>
-		public MacroCaseValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidMacroCase)
-				.WithMessage("The value must be in MACRO_CASE format.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is in MACRO_CASE.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is in MACRO_CASE, false otherwise</returns>
-		private static bool BeValidMacroCase(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return true;
+				return ValidationResult.Success();
 			}
 
 			// Cannot start or end with underscore
 			if (value.StartsWith('_') || value.EndsWith('_'))
 			{
-				return false;
+				return ValidationResult.Failure("The value must be in MACRO_CASE format.");
 			}
 
 			// Cannot have consecutive underscores
 			if (value.Contains("__"))
 			{
-				return false;
+				return ValidationResult.Failure("The value must be in MACRO_CASE format.");
 			}
 
 			// No spaces, hyphens, or other separators allowed (except underscores)
 			if (value.Any(c => char.IsWhiteSpace(c) || c == '-'))
 			{
-				return false;
+				return ValidationResult.Failure("The value must be in MACRO_CASE format.");
 			}
 
 			// All characters must be uppercase letters, digits, or underscores
-			return value.All(c => char.IsUpper(c) || char.IsDigit(c) || c == '_');
+			if (!value.All(c => char.IsUpper(c) || char.IsDigit(c) || c == '_'))
+			{
+				return ValidationResult.Failure("The value must be in MACRO_CASE format.");
+			}
+
+			return ValidationResult.Success();
 		}
 	}
 }

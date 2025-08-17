@@ -5,7 +5,6 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted URI.
@@ -21,35 +20,35 @@ using FluentValidation;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.Uri directly instead of semantic string types. Uri provides better type safety, performance, built-in component access, and rich API for URI operations.")]
-public sealed class IsUriAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsUriAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for URI validation.
+	/// Creates the validation adapter for URI validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for URI strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new UriValidator();
+	/// <returns>A validation adapter for URI strings</returns>
+	protected override ValidationAdapter CreateValidator() => new UriValidator();
 
 	/// <summary>
-	/// FluentValidation validator for URI strings.
+	/// validation adapter for URI strings.
 	/// </summary>
-	private sealed class UriValidator : FluentValidationAdapter
+	private sealed class UriValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the UriValidator class.
-		/// </summary>
-		public UriValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidUri)
-				.WithMessage("The value must be a valid absolute URI.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is a valid URI.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is a valid URI, false otherwise</returns>
-		private static bool BeValidUri(string value) => Uri.TryCreate(value, UriKind.Absolute, out _);
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isValid = Uri.TryCreate(value, UriKind.Absolute, out _);
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The value must be a valid absolute URI.");
+		}
 	}
 }

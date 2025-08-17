@@ -7,7 +7,6 @@ namespace ktsu.Semantics;
 using System;
 using System.IO;
 using System.Linq;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string represents a valid path with no invalid path characters and a reasonable length.
@@ -23,18 +22,18 @@ using FluentValidation;
 /// while being more restrictive than the maximum path lengths supported by most file systems.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsPathAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsPathAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for path validation.
+	/// Creates the validation adapter for path validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for path strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new PathValidator();
+	/// <returns>A validation adapter for path strings</returns>
+	protected override ValidationAdapter CreateValidator() => new PathValidator();
 
 	/// <summary>
-	/// FluentValidation validator for path strings.
+	/// validation adapter for path strings.
 	/// </summary>
-	private sealed class PathValidator : FluentValidationAdapter
+	private sealed class PathValidator : ValidationAdapter
 	{
 		/// <summary>
 		/// Initializes a new instance of the PathValidator class.

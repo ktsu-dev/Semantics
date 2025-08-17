@@ -5,7 +5,6 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted GUID/UUID.
@@ -21,35 +20,35 @@ using FluentValidation;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.Guid directly instead of semantic string types. Guid provides better type safety, performance, built-in GUID operations, and efficient memory usage.")]
-public sealed class IsGuidAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsGuidAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for GUID validation.
+	/// Creates the validation adapter for GUID validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for GUID strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new GuidValidator();
+	/// <returns>A validation adapter for GUID strings</returns>
+	protected override ValidationAdapter CreateValidator() => new GuidValidator();
 
 	/// <summary>
-	/// FluentValidation validator for GUID strings.
+	/// validation adapter for GUID strings.
 	/// </summary>
-	private sealed class GuidValidator : FluentValidationAdapter
+	private sealed class GuidValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the GuidValidator class.
-		/// </summary>
-		public GuidValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidGuid)
-				.WithMessage("The value must be a valid GUID/UUID.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is a valid GUID.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is a valid GUID, false otherwise</returns>
-		private static bool BeValidGuid(string value) => Guid.TryParse(value, out _);
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isValid = Guid.TryParse(value, out _);
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The value must be a valid GUID/UUID.");
+		}
 	}
 }

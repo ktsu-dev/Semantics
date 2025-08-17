@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string has exactly the specified number of lines
@@ -21,7 +20,7 @@ using FluentValidation;
 /// </remarks>
 /// <param name="exactLines">The exact number of lines required.</param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class HasExactLinesAttribute(int exactLines) : FluentSemanticStringValidationAttribute
+public sealed class HasExactLinesAttribute(int exactLines) : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
 	/// Gets the exact number of lines required.
@@ -29,15 +28,15 @@ public sealed class HasExactLinesAttribute(int exactLines) : FluentSemanticStrin
 	public int ExactLines { get; } = exactLines;
 
 	/// <summary>
-	/// Creates the FluentValidation validator for exact lines validation.
+	/// Creates the validation adapter for exact lines validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for exact lines</returns>
-	protected override FluentValidationAdapter CreateValidator() => new ExactLinesValidator(ExactLines);
+	/// <returns>A validation adapter for exact lines</returns>
+	protected override ValidationAdapter CreateValidator() => new ExactLinesValidator(ExactLines);
 
 	/// <summary>
-	/// FluentValidation validator for exact lines.
+	/// validation adapter for exact lines.
 	/// </summary>
-	private sealed class ExactLinesValidator : FluentValidationAdapter
+	private sealed class ExactLinesValidator : ValidationAdapter
 	{
 		private readonly int exactLines;
 
@@ -48,22 +47,21 @@ public sealed class HasExactLinesAttribute(int exactLines) : FluentSemanticStrin
 		public ExactLinesValidator(int exactLines)
 		{
 			this.exactLines = exactLines;
-
-			RuleFor(value => value)
-				.Must(HaveExactLines)
-				.WithMessage($"The text must have exactly {exactLines} line(s).");
 		}
 
 		/// <summary>
 		/// Validates that a string has exactly the specified number of lines.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string has exactly the specified lines, false otherwise</returns>
-		private bool HaveExactLines(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return exactLines == 0;
+				bool isValid = exactLines == 0;
+				return isValid
+					? ValidationResult.Success()
+					: ValidationResult.Failure($"The text must have exactly {exactLines} line(s).");
 			}
 
 			// Count line breaks and add 1
@@ -77,7 +75,10 @@ public sealed class HasExactLinesAttribute(int exactLines) : FluentSemanticStrin
 				lineCount = crlfCount + lfOnlyCount + 1;
 			}
 
-			return lineCount == exactLines;
+			bool hasExactLines = lineCount == exactLines;
+			return hasExactLines
+				? ValidationResult.Success()
+				: ValidationResult.Failure($"The text must have exactly {exactLines} line(s).");
 		}
 	}
 }

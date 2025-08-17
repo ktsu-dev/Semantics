@@ -5,7 +5,6 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string contains at least some non-whitespace content
@@ -16,35 +15,30 @@ using FluentValidation;
 /// Examples of invalid strings: "", "   ", "\t\n\r", null
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class HasNonWhitespaceContentAttribute : FluentSemanticStringValidationAttribute
+public sealed class HasNonWhitespaceContentAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for non-whitespace content validation.
+	/// Creates the validation adapter for non-whitespace content validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for non-whitespace content</returns>
-	protected override FluentValidationAdapter CreateValidator() => new NonWhitespaceContentValidator();
+	/// <returns>A validation adapter for non-whitespace content</returns>
+	protected override ValidationAdapter CreateValidator() => new NonWhitespaceContentValidator();
 
 	/// <summary>
-	/// FluentValidation validator for non-whitespace content.
+	/// validation adapter for non-whitespace content.
 	/// </summary>
-	private sealed class NonWhitespaceContentValidator : FluentValidationAdapter
+	private sealed class NonWhitespaceContentValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the NonWhitespaceContentValidator class.
-		/// </summary>
-		public NonWhitespaceContentValidator()
-		{
-			RuleFor(value => value)
-				.Must(HaveNonWhitespaceContent)
-				.WithMessage("The text must contain at least some non-whitespace content.");
-		}
-
 		/// <summary>
 		/// Validates that a string contains non-whitespace content.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string contains non-whitespace content, false otherwise</returns>
-		private static bool HaveNonWhitespaceContent(string value) =>
-			!string.IsNullOrWhiteSpace(value);
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			bool hasNonWhitespaceContent = !string.IsNullOrWhiteSpace(value);
+			return hasNonWhitespaceContent
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The text must contain at least some non-whitespace content.");
+		}
 	}
 }

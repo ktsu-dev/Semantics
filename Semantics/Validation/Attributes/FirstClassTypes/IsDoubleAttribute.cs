@@ -5,7 +5,6 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted double-precision floating-point number.
@@ -21,35 +20,35 @@ using FluentValidation;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.Double directly instead of semantic string types. Double provides better type safety, performance, built-in mathematical operations, and support for special floating-point values.")]
-public sealed class IsDoubleAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsDoubleAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for Double validation.
+	/// Creates the validation adapter for Double validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for Double strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new DoubleValidator();
+	/// <returns>A validation adapter for Double strings</returns>
+	protected override ValidationAdapter CreateValidator() => new DoubleValidator();
 
 	/// <summary>
-	/// FluentValidation validator for Double strings.
+	/// validation adapter for Double strings.
 	/// </summary>
-	private sealed class DoubleValidator : FluentValidationAdapter
+	private sealed class DoubleValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the DoubleValidator class.
-		/// </summary>
-		public DoubleValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidDouble)
-				.WithMessage("The value must be a valid double-precision floating-point number.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is a valid double-precision floating-point number.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is a valid double, false otherwise</returns>
-		private static bool BeValidDouble(string value) => double.TryParse(value, out _);
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isValid = double.TryParse(value, out _);
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The value must be a valid double-precision floating-point number.");
+		}
 	}
 }

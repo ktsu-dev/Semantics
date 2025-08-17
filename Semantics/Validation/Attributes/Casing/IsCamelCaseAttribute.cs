@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in camelCase (first word lowercase, subsequent words start with uppercase)
@@ -17,56 +16,50 @@ using FluentValidation;
 /// No spaces, underscores, or hyphens are allowed.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsCamelCaseAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsCamelCaseAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for camelCase validation.
+	/// Creates the validation adapter for camelCase validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for camelCase strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new CamelCaseValidator();
+	/// <returns>A validation adapter for camelCase strings</returns>
+	protected override ValidationAdapter CreateValidator() => new CamelCaseValidator();
 
 	/// <summary>
-	/// FluentValidation validator for camelCase strings.
+	/// validation adapter for camelCase strings.
 	/// </summary>
-	private sealed class CamelCaseValidator : FluentValidationAdapter
+	private sealed class CamelCaseValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the CamelCaseValidator class.
-		/// </summary>
-		public CamelCaseValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidCamelCase)
-				.WithMessage("The value must be in camelCase format.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is in camelCase.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is in camelCase, false otherwise</returns>
-		private static bool BeValidCamelCase(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return true;
+				return ValidationResult.Success();
 			}
 
 			// Must start with lowercase letter
 			if (!char.IsLower(value[0]))
 			{
-				return false;
+				return ValidationResult.Failure("The value must be in camelCase format.");
 			}
 
 			// No spaces, underscores, hyphens, or other separators allowed
 			if (value.Any(c => char.IsWhiteSpace(c) || c == '_' || c == '-'))
 			{
-				return false;
+				return ValidationResult.Failure("The value must be in camelCase format.");
 			}
 
 			// All characters must be letters or digits
-			return value.All(char.IsLetterOrDigit);
+			if (!value.All(char.IsLetterOrDigit))
+			{
+				return ValidationResult.Failure("The value must be in camelCase format.");
+			}
+
+			return ValidationResult.Success();
 		}
 	}
 }

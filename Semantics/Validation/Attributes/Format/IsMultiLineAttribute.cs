@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string contains line breaks (multiple lines)
@@ -17,45 +16,36 @@ using FluentValidation;
 /// Examples of invalid strings: "Hello World", "This is a single line", "No line breaks here"
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsMultiLineAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsMultiLineAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for multi-line validation.
+	/// Creates the validation adapter for multi-line validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for multi-line strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new MultiLineValidator();
+	/// <returns>A validation adapter for multi-line strings</returns>
+	protected override ValidationAdapter CreateValidator() => new MultiLineValidator();
 
 	/// <summary>
-	/// FluentValidation validator for multi-line strings.
+	/// validation adapter for multi-line strings.
 	/// </summary>
-	private sealed class MultiLineValidator : FluentValidationAdapter
+	private sealed class MultiLineValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the MultiLineValidator class.
-		/// </summary>
-		public MultiLineValidator()
-		{
-			RuleFor(value => value)
-				.NotEmpty()
-				.WithMessage("Multi-line strings cannot be empty.")
-				.Must(BeValidMultiLine)
-				.WithMessage("The value must contain line breaks.");
-		}
-
 		/// <summary>
 		/// Validates that a string contains line breaks.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string contains line breaks, false otherwise</returns>
-		private static bool BeValidMultiLine(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return false; // Empty strings are not multi-line
+				return ValidationResult.Failure("Multi-line strings cannot be empty.");
 			}
 
 			// Check for any line break characters
-			return value.Any(c => c == '\n' || c == '\r' || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.LineSeparator);
+			bool hasLineBreaks = value.Any(c => c == '\n' || c == '\r' || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.LineSeparator);
+			return hasLineBreaks
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The value must contain line breaks.");
 		}
 	}
 }

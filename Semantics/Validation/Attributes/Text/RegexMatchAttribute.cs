@@ -6,13 +6,12 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Text.RegularExpressions;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string matches the specified regex pattern
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-public sealed class RegexMatchAttribute(string pattern, RegexOptions options = RegexOptions.None) : FluentSemanticStringValidationAttribute
+public sealed class RegexMatchAttribute(string pattern, RegexOptions options = RegexOptions.None) : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
 	/// Gets the regex pattern that the string must match.
@@ -25,15 +24,15 @@ public sealed class RegexMatchAttribute(string pattern, RegexOptions options = R
 	public RegexOptions Options => options;
 
 	/// <summary>
-	/// Creates the FluentValidation validator for regex pattern matching.
+	/// Creates the validation adapter for regex pattern matching.
 	/// </summary>
-	/// <returns>A FluentValidation validator for regex pattern matching</returns>
-	protected override FluentValidationAdapter CreateValidator() => new RegexValidator(pattern, options);
+	/// <returns>A validation adapter for regex pattern matching</returns>
+	protected override ValidationAdapter CreateValidator() => new RegexValidator(pattern, options);
 
 	/// <summary>
-	/// FluentValidation validator for regex pattern matching.
+	/// validation adapter for regex pattern matching.
 	/// </summary>
-	private sealed class RegexValidator : FluentValidationAdapter
+	private sealed class RegexValidator : ValidationAdapter
 	{
 		private readonly string _pattern;
 		private readonly RegexOptions _options;

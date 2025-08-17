@@ -6,7 +6,6 @@ namespace ktsu.Semantics;
 
 using System;
 using System.Linq;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string is in lower case (all lowercase letters)
@@ -17,44 +16,37 @@ using FluentValidation;
 /// All alphabetic characters must be lowercase. Spaces, digits, and punctuation are allowed.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsLowerCaseAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsLowerCaseAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for lowercase validation.
+	/// Creates the validation adapter for lowercase validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for lowercase strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new LowerCaseValidator();
+	/// <returns>A validation adapter for lowercase strings</returns>
+	protected override ValidationAdapter CreateValidator() => new LowerCaseValidator();
 
 	/// <summary>
-	/// FluentValidation validator for lowercase strings.
+	/// Validation adapter for lowercase strings.
 	/// </summary>
-	private sealed class LowerCaseValidator : FluentValidationAdapter
+	private sealed class LowerCaseValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the LowerCaseValidator class.
-		/// </summary>
-		public LowerCaseValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidLowerCase)
-				.WithMessage("All alphabetic characters must be lowercase.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is in lower case.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if all alphabetic characters are lowercase, false otherwise</returns>
-		private static bool BeValidLowerCase(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return true;
+				return ValidationResult.Success();
 			}
 
 			// All letters must be lowercase
-			return value.All(c => !char.IsLetter(c) || char.IsLower(c));
+			bool isValid = value.All(c => !char.IsLetter(c) || char.IsLower(c));
+
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure("All alphabetic characters must be lowercase.");
 		}
 	}
 }

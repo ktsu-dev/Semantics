@@ -5,7 +5,6 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that the string is a properly formatted DateTime.
@@ -21,35 +20,35 @@ using FluentValidation;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 [Obsolete("Consider using System.DateTime directly instead of semantic string types. DateTime provides better type safety, performance, built-in comparison operations, and rich API for date/time operations.")]
-public sealed class IsDateTimeAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsDateTimeAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for DateTime validation.
+	/// Creates the validation adapter for DateTime validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for DateTime strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new DateTimeValidator();
+	/// <returns>A validation adapter for DateTime strings</returns>
+	protected override ValidationAdapter CreateValidator() => new DateTimeValidator();
 
 	/// <summary>
-	/// FluentValidation validator for DateTime strings.
+	/// validation adapter for DateTime strings.
 	/// </summary>
-	private sealed class DateTimeValidator : FluentValidationAdapter
+	private sealed class DateTimeValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// Initializes a new instance of the DateTimeValidator class.
-		/// </summary>
-		public DateTimeValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidDateTime)
-				.WithMessage("The value must be a valid DateTime.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
 		/// <summary>
 		/// Validates that a string is a valid DateTime.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is a valid DateTime, false otherwise</returns>
-		private static bool BeValidDateTime(string value) => DateTime.TryParse(value, out _);
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isValid = DateTime.TryParse(value, out _);
+			return isValid
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The value must be a valid DateTime.");
+		}
 	}
 }

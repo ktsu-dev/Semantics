@@ -5,7 +5,6 @@
 namespace ktsu.Semantics;
 
 using System;
-using FluentValidation;
 
 /// <summary>
 /// Validates that a string is either empty, null, or contains only whitespace characters
@@ -16,27 +15,30 @@ using FluentValidation;
 /// Examples of invalid strings: "Hello", " a ", "text"
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsEmptyOrWhitespaceAttribute : FluentSemanticStringValidationAttribute
+public sealed class IsEmptyOrWhitespaceAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the FluentValidation validator for empty or whitespace validation.
+	/// Creates the validation adapter for empty or whitespace validation.
 	/// </summary>
-	/// <returns>A FluentValidation validator for empty or whitespace strings</returns>
-	protected override FluentValidationAdapter CreateValidator() => new EmptyOrWhitespaceValidator();
+	/// <returns>A validation adapter for empty or whitespace strings</returns>
+	protected override ValidationAdapter CreateValidator() => new EmptyOrWhitespaceValidator();
 
 	/// <summary>
-	/// FluentValidation validator for empty or whitespace strings.
+	/// validation adapter for empty or whitespace strings.
 	/// </summary>
-	private sealed class EmptyOrWhitespaceValidator : FluentValidationAdapter
+	private sealed class EmptyOrWhitespaceValidator : ValidationAdapter
 	{
 		/// <summary>
-		/// Initializes a new instance of the EmptyOrWhitespaceValidator class.
+		/// Validates that a string is empty or contains only whitespace characters.
 		/// </summary>
-		public EmptyOrWhitespaceValidator()
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
-			RuleFor(value => value)
-				.Must(string.IsNullOrWhiteSpace)
-				.WithMessage("The value must be empty or contain only whitespace characters.");
+			bool isEmptyOrWhitespace = string.IsNullOrWhiteSpace(value);
+			return isEmptyOrWhitespace
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The value must be empty or contain only whitespace characters.");
 		}
 	}
 }
