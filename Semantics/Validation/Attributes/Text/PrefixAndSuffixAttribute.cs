@@ -36,31 +36,43 @@ public sealed class PrefixAndSuffixAttribute(string prefix, string suffix, Strin
 	/// <summary>
 	/// validation adapter for prefix and suffix validation.
 	/// </summary>
-	private sealed class PrefixAndSuffixValidator : ValidationAdapter
+	/// <remarks>
+	/// Initializes a new instance of the PrefixAndSuffixValidator class.
+	/// </remarks>
+	/// <param name="prefix">The prefix that the string must start with</param>
+	/// <param name="suffix">The suffix that the string must end with</param>
+	/// <param name="comparison">The comparison type</param>
+	private sealed class PrefixAndSuffixValidator(string prefix, string suffix, StringComparison comparison) : ValidationAdapter
 	{
-		private readonly string _prefix;
-		private readonly string _suffix;
-		private readonly StringComparison _comparison;
+		private readonly string _prefix = prefix;
+		private readonly string _suffix = suffix;
+		private readonly StringComparison _comparison = comparison;
 
 		/// <summary>
-		/// Initializes a new instance of the PrefixAndSuffixValidator class.
+		/// Validates that a string has both the specified prefix and suffix.
 		/// </summary>
-		/// <param name="prefix">The prefix that the string must start with</param>
-		/// <param name="suffix">The suffix that the string must end with</param>
-		/// <param name="comparison">The comparison type</param>
-		public PrefixAndSuffixValidator(string prefix, string suffix, StringComparison comparison)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
-			_prefix = prefix;
-			_suffix = suffix;
-			_comparison = comparison;
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
 
-			RuleFor(value => value)
-				.Must(value => value?.StartsWith(_prefix, _comparison) == true)
-				.WithMessage($"The value must start with '{_prefix}'.");
+			// Check prefix
+			if (!value.StartsWith(_prefix, _comparison))
+			{
+				return ValidationResult.Failure($"The value must start with '{_prefix}'.");
+			}
 
-			RuleFor(value => value)
-				.Must(value => value?.EndsWith(_suffix, _comparison) == true)
-				.WithMessage($"The value must end with '{_suffix}'.");
+			// Check suffix
+			if (!value.EndsWith(_suffix, _comparison))
+			{
+				return ValidationResult.Failure($"The value must end with '{_suffix}'.");
+			}
+
+			return ValidationResult.Success();
 		}
 	}
 }

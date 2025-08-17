@@ -37,22 +37,21 @@ public sealed class IsRelativePathAttribute : NativeSemanticStringValidationAttr
 	private sealed class RelativePathValidator : ValidationAdapter
 	{
 		/// <summary>
-		/// Initializes a new instance of the RelativePathValidator class.
-		/// </summary>
-		public RelativePathValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidRelativePath)
-				.WithMessage("The path must be relative (not fully qualified).")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
-		/// <summary>
 		/// Validates that a path is relative.
 		/// </summary>
-		/// <param name="value">The path to validate</param>
-		/// <returns>True if the path is relative, false otherwise</returns>
-		private static bool BeValidRelativePath(string value) =>
-			string.IsNullOrEmpty(value) || !Path.IsPathFullyQualified(value);
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			bool isRelative = !Path.IsPathFullyQualified(value);
+			return isRelative
+				? ValidationResult.Success()
+				: ValidationResult.Failure("The path must be relative (not fully qualified).");
+		}
 	}
 }

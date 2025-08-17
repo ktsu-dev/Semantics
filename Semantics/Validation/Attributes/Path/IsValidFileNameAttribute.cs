@@ -27,31 +27,23 @@ public sealed class IsValidFileNameAttribute : NativeSemanticStringValidationAtt
 		private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
 
 		/// <summary>
-		/// Initializes a new instance of the ValidFileNameValidator class.
-		/// </summary>
-		public ValidFileNameValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidFileName)
-				.WithMessage("The filename contains invalid characters.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
-		/// <summary>
 		/// Validates that a filename string contains only valid filename characters.
 		/// </summary>
-		/// <param name="value">The filename string to validate</param>
-		/// <returns>True if the filename contains only valid characters, false otherwise</returns>
-		private static bool BeValidFileName(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return true;
+				return ValidationResult.Success();
 			}
 
 			// Use span-based search for invalid characters
 			ReadOnlySpan<char> valueSpan = value.AsSpan();
-			return valueSpan.IndexOfAny(InvalidFileNameChars) == -1;
+			bool hasInvalidChars = valueSpan.IndexOfAny(InvalidFileNameChars) != -1;
+			return hasInvalidChars
+				? ValidationResult.Failure("The filename contains invalid characters.")
+				: ValidationResult.Success();
 		}
 	}
 }

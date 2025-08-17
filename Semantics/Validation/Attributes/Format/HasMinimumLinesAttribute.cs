@@ -36,18 +36,12 @@ public sealed class HasMinimumLinesAttribute(int minimumLines) : NativeSemanticS
 	/// <summary>
 	/// validation adapter for minimum lines.
 	/// </summary>
-	private sealed class MinimumLinesValidator : ValidationAdapter
+	/// <remarks>
+	/// Initializes a new instance of the MinimumLinesValidator class.
+	/// </remarks>
+	/// <param name="minimumLines">The minimum number of lines required</param>
+	private sealed class MinimumLinesValidator(int minimumLines) : ValidationAdapter
 	{
-		private readonly int minimumLines;
-
-		/// <summary>
-		/// Initializes a new instance of the MinimumLinesValidator class.
-		/// </summary>
-		/// <param name="minimumLines">The minimum number of lines required</param>
-		public MinimumLinesValidator(int minimumLines)
-		{
-			this.minimumLines = minimumLines;
-		}
 
 		/// <summary>
 		/// Validates that a string has at least the minimum number of lines.

@@ -36,18 +36,12 @@ public sealed class HasMaximumLinesAttribute(int maximumLines) : NativeSemanticS
 	/// <summary>
 	/// validation adapter for maximum lines.
 	/// </summary>
-	private sealed class MaximumLinesValidator : ValidationAdapter
+	/// <remarks>
+	/// Initializes a new instance of the MaximumLinesValidator class.
+	/// </remarks>
+	/// <param name="maximumLines">The maximum number of lines allowed</param>
+	private sealed class MaximumLinesValidator(int maximumLines) : ValidationAdapter
 	{
-		private readonly int maximumLines;
-
-		/// <summary>
-		/// Initializes a new instance of the MaximumLinesValidator class.
-		/// </summary>
-		/// <param name="maximumLines">The maximum number of lines allowed</param>
-		public MaximumLinesValidator(int maximumLines)
-		{
-			this.maximumLines = maximumLines;
-		}
 
 		/// <summary>
 		/// Validates that a string has at most the maximum number of lines.

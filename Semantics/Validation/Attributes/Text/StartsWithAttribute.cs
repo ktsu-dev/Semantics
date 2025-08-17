@@ -31,24 +31,32 @@ public sealed class StartsWithAttribute(string prefix, StringComparison comparis
 	/// <summary>
 	/// validation adapter for prefix validation.
 	/// </summary>
-	private sealed class StartsWithValidator : ValidationAdapter
+	/// <remarks>
+	/// Initializes a new instance of the StartsWithValidator class.
+	/// </remarks>
+	/// <param name="prefix">The prefix that the string must start with</param>
+	/// <param name="comparison">The comparison type</param>
+	private sealed class StartsWithValidator(string prefix, StringComparison comparison) : ValidationAdapter
 	{
-		private readonly string _prefix;
-		private readonly StringComparison _comparison;
+		private readonly string _prefix = prefix;
+		private readonly StringComparison _comparison = comparison;
 
 		/// <summary>
-		/// Initializes a new instance of the StartsWithValidator class.
+		/// Validates that a string starts with the specified prefix.
 		/// </summary>
-		/// <param name="prefix">The prefix that the string must start with</param>
-		/// <param name="comparison">The comparison type</param>
-		public StartsWithValidator(string prefix, StringComparison comparison)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
-			_prefix = prefix;
-			_comparison = comparison;
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
 
-			RuleFor(value => value)
-				.Must(value => value?.StartsWith(_prefix, _comparison) == true)
-				.WithMessage($"The value must start with '{_prefix}'.");
+			bool startsWithPrefix = value.StartsWith(_prefix, _comparison);
+			return startsWithPrefix
+				? ValidationResult.Success()
+				: ValidationResult.Failure($"The value must start with '{_prefix}'.");
 		}
 	}
 }

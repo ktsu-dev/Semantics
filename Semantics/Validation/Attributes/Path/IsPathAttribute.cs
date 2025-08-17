@@ -36,37 +36,31 @@ public sealed class IsPathAttribute : NativeSemanticStringValidationAttribute
 	private sealed class PathValidator : ValidationAdapter
 	{
 		/// <summary>
-		/// Initializes a new instance of the PathValidator class.
-		/// </summary>
-		public PathValidator()
-		{
-			RuleFor(value => value)
-				.MaximumLength(256)
-				.WithMessage("Path length cannot exceed 256 characters.")
-				.When(value => !string.IsNullOrEmpty(value));
-
-			RuleFor(value => value)
-				.Must(BeValidPath)
-				.WithMessage("Path contains invalid characters.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
-		/// <summary>
 		/// Validates that a string represents a valid path.
 		/// </summary>
-		/// <param name="value">The string to validate</param>
-		/// <returns>True if the string is a valid path, false otherwise</returns>
-		private static bool BeValidPath(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return true;
+				return ValidationResult.Success();
 			}
 
-			// Check for characters from GetInvalidPathChars() and additional problematic characters
-			// In .NET Core+, GetInvalidPathChars() doesn't include all characters that can cause issues in paths
+			// Check path length
+			if (value.Length > 256)
+			{
+				return ValidationResult.Failure("Path length cannot exceed 256 characters.");
+			}
+
+			// Check for invalid characters
 			char[] invalidChars = [.. Path.GetInvalidPathChars(), '<', '>', '|'];
-			return !value.Intersect(invalidChars).Any();
+			if (value.Intersect(invalidChars).Any())
+			{
+				return ValidationResult.Failure("Path contains invalid characters.");
+			}
+
+			return ValidationResult.Success();
 		}
 	}
 }

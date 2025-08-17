@@ -5,6 +5,7 @@
 namespace ktsu.Semantics;
 
 using System;
+using System.Linq;
 
 /// <summary>
 /// Validates that the string has basic email address format (contains @ with valid characters).
@@ -25,19 +26,43 @@ public sealed class IsEmailAddressAttribute : NativeSemanticStringValidationAttr
 	private sealed class EmailValidator : ValidationAdapter
 	{
 		/// <summary>
-		/// Initializes a new instance of the EmailValidator class.
+		/// Validates that a string is a basic email address format.
 		/// </summary>
-		public EmailValidator()
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
-			RuleFor(value => value)
-				.EmailAddress()
-				.WithMessage("The value must be a valid email address.")
-				.When(value => !string.IsNullOrEmpty(value));
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
 
-			RuleFor(value => value)
-				.MaximumLength(254)
-				.WithMessage("Email address cannot exceed 254 characters.")
-				.When(value => !string.IsNullOrEmpty(value));
+			// Check length
+			if (value.Length > 254)
+			{
+				return ValidationResult.Failure("Email address cannot exceed 254 characters.");
+			}
+
+			// Basic email validation: must contain @ with characters before and after
+			int atIndex = value.IndexOf('@');
+			if (atIndex <= 0 || atIndex >= value.Length - 1)
+			{
+				return ValidationResult.Failure("The value must be a valid email address.");
+			}
+
+			// Check for multiple @ symbols
+			if (value.IndexOf('@', atIndex + 1) != -1)
+			{
+				return ValidationResult.Failure("The value must be a valid email address.");
+			}
+
+			// Basic character validation - no spaces or control characters
+			if (value.Any(c => char.IsWhiteSpace(c) || char.IsControl(c)))
+			{
+				return ValidationResult.Failure("The value must be a valid email address.");
+			}
+
+			return ValidationResult.Success();
 		}
 	}
 }

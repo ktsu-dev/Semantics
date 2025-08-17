@@ -31,21 +31,15 @@ public sealed class EndsWithAttribute(string suffix, StringComparison comparison
 	/// <summary>
 	/// validation adapter for suffix validation.
 	/// </summary>
-	private sealed class EndsWithValidator : ValidationAdapter
+	/// <remarks>
+	/// Initializes a new instance of the EndsWithValidator class.
+	/// </remarks>
+	/// <param name="suffix">The suffix that the string must end with</param>
+	/// <param name="comparison">The comparison type</param>
+	private sealed class EndsWithValidator(string suffix, StringComparison comparison) : ValidationAdapter
 	{
-		private readonly string _suffix;
-		private readonly StringComparison _comparison;
-
-		/// <summary>
-		/// Initializes a new instance of the EndsWithValidator class.
-		/// </summary>
-		/// <param name="suffix">The suffix that the string must end with</param>
-		/// <param name="comparison">The comparison type</param>
-		public EndsWithValidator(string suffix, StringComparison comparison)
-		{
-			_suffix = suffix;
-			_comparison = comparison;
-		}
+		private readonly string _suffix = suffix;
+		private readonly StringComparison _comparison = comparison;
 
 		/// <summary>
 		/// Validates that a string ends with the specified suffix.

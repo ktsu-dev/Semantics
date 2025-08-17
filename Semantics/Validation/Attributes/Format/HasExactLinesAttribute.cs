@@ -36,18 +36,12 @@ public sealed class HasExactLinesAttribute(int exactLines) : NativeSemanticStrin
 	/// <summary>
 	/// validation adapter for exact lines.
 	/// </summary>
-	private sealed class ExactLinesValidator : ValidationAdapter
+	/// <remarks>
+	/// Initializes a new instance of the ExactLinesValidator class.
+	/// </remarks>
+	/// <param name="exactLines">The exact number of lines required</param>
+	private sealed class ExactLinesValidator(int exactLines) : ValidationAdapter
 	{
-		private readonly int exactLines;
-
-		/// <summary>
-		/// Initializes a new instance of the ExactLinesValidator class.
-		/// </summary>
-		/// <param name="exactLines">The exact number of lines required</param>
-		public ExactLinesValidator(int exactLines)
-		{
-			this.exactLines = exactLines;
-		}
 
 		/// <summary>
 		/// Validates that a string has exactly the specified number of lines.

@@ -27,31 +27,23 @@ public sealed class IsValidPathAttribute : NativeSemanticStringValidationAttribu
 		private static readonly char[] InvalidPathChars = Path.GetInvalidPathChars();
 
 		/// <summary>
-		/// Initializes a new instance of the ValidPathValidator class.
-		/// </summary>
-		public ValidPathValidator()
-		{
-			RuleFor(value => value)
-				.Must(BeValidPath)
-				.WithMessage("The path contains invalid characters.")
-				.When(value => !string.IsNullOrEmpty(value));
-		}
-
-		/// <summary>
 		/// Validates that a path string contains only valid path characters.
 		/// </summary>
-		/// <param name="value">The path string to validate</param>
-		/// <returns>True if the path contains only valid characters, false otherwise</returns>
-		private static bool BeValidPath(string value)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return true;
+				return ValidationResult.Success();
 			}
 
 			// Use span-based search for invalid characters
 			ReadOnlySpan<char> valueSpan = value.AsSpan();
-			return valueSpan.IndexOfAny(InvalidPathChars) == -1;
+			bool hasInvalidChars = valueSpan.IndexOfAny(InvalidPathChars) != -1;
+			return hasInvalidChars
+				? ValidationResult.Failure("The path contains invalid characters.")
+				: ValidationResult.Success();
 		}
 	}
 }

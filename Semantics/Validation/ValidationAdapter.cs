@@ -12,12 +12,12 @@ public class ValidationResult
 	/// <summary>
 	/// Gets a value indicating whether the validation passed.
 	/// </summary>
-	public bool IsValid { get; init; }
+	public bool IsValid { get; set; }
 
 	/// <summary>
 	/// Gets the collection of validation error messages.
 	/// </summary>
-	public IReadOnlyList<string> Errors { get; init; } = Array.Empty<string>();
+	public IReadOnlyList<string> Errors { get; set; } = [];
 
 	/// <summary>
 	/// Creates a successful validation result.
@@ -30,10 +30,10 @@ public class ValidationResult
 	/// </summary>
 	/// <param name="errorMessage">The error message</param>
 	/// <returns>A failed validation result</returns>
-	public static ValidationResult Failure(string errorMessage) => new() 
-	{ 
-		IsValid = false, 
-		Errors = new[] { errorMessage } 
+	public static ValidationResult Failure(string errorMessage) => new()
+	{
+		IsValid = false,
+		Errors = [errorMessage]
 	};
 
 	/// <summary>
@@ -41,10 +41,10 @@ public class ValidationResult
 	/// </summary>
 	/// <param name="errorMessages">The error messages</param>
 	/// <returns>A failed validation result</returns>
-	public static ValidationResult Failure(IEnumerable<string> errorMessages) => new() 
-	{ 
-		IsValid = false, 
-		Errors = errorMessages.ToList() 
+	public static ValidationResult Failure(IEnumerable<string> errorMessages) => new()
+	{
+		IsValid = false,
+		Errors = [.. errorMessages]
 	};
 }
 
@@ -78,7 +78,7 @@ public abstract class ValidationAdapter
 	/// <returns>Collection of validation error messages</returns>
 	public IEnumerable<string> GetValidationErrors(ISemanticString semanticString)
 	{
-		var result = ValidateSemanticString(semanticString);
+		ValidationResult result = ValidateSemanticString(semanticString);
 		return result.Errors;
 	}
 }

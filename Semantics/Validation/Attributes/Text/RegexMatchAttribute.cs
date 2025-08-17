@@ -32,24 +32,39 @@ public sealed class RegexMatchAttribute(string pattern, RegexOptions options = R
 	/// <summary>
 	/// validation adapter for regex pattern matching.
 	/// </summary>
-	private sealed class RegexValidator : ValidationAdapter
+	/// <remarks>
+	/// Initializes a new instance of the RegexValidator class.
+	/// </remarks>
+	/// <param name="pattern">The regex pattern to match</param>
+	/// <param name="options">The regex options</param>
+	private sealed class RegexValidator(string pattern, RegexOptions options) : ValidationAdapter
 	{
-		private readonly string _pattern;
-		private readonly RegexOptions _options;
+		private readonly string _pattern = pattern;
+		private readonly RegexOptions _options = options;
 
 		/// <summary>
-		/// Initializes a new instance of the RegexValidator class.
+		/// Validates that a string matches the regex pattern.
 		/// </summary>
-		/// <param name="pattern">The regex pattern to match</param>
-		/// <param name="options">The regex options</param>
-		public RegexValidator(string pattern, RegexOptions options)
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
 		{
-			_pattern = pattern;
-			_options = options;
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
 
-			RuleFor(value => value)
-				.Matches(_pattern, _options)
-				.WithMessage($"The value must match the pattern: {_pattern}");
+			try
+			{
+				bool matches = Regex.IsMatch(value, _pattern, _options);
+				return matches
+					? ValidationResult.Success()
+					: ValidationResult.Failure($"The value must match the pattern: {_pattern}");
+			}
+			catch (ArgumentException)
+			{
+				return ValidationResult.Failure($"Invalid regex pattern: {_pattern}");
+			}
 		}
 	}
 }
