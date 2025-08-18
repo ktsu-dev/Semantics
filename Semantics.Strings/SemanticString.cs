@@ -906,6 +906,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	public ReadOnlySpan<char> AsSpan(int start, int length) => WeakString.AsSpan(start, length);
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Finds the first occurrence of a character sequence in the semantic string using span semantics.
 	/// </summary>
@@ -915,7 +916,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <remarks>
 	/// This overload uses span-based search which can be more efficient than string-based IndexOf for certain scenarios.
 	/// </remarks>
-	public int IndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().IndexOf(value, comparisonType);
+	public int IndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.IndexOf(value.ToString(), comparisonType);
 
 	/// <summary>
 	/// Finds the last occurrence of a character sequence in the semantic string using span semantics.
@@ -926,8 +927,10 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <remarks>
 	/// This overload uses span-based search which can be more efficient than string-based LastIndexOf for certain scenarios.
 	/// </remarks>
-	public int LastIndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().LastIndexOf(value, comparisonType);
+	public int LastIndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.LastIndexOf(value.ToString(), comparisonType);
+#endif
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Determines whether the semantic string starts with the specified span using efficient span comparison.
 	/// </summary>
@@ -937,7 +940,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <remarks>
 	/// This overload uses span-based comparison which avoids string allocations when working with substrings or spans.
 	/// </remarks>
-	public bool StartsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().StartsWith(value, comparisonType);
+	public bool StartsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.StartsWith(value.ToString(), comparisonType);
 
 	/// <summary>
 	/// Determines whether the semantic string ends with the specified span using efficient span comparison.
@@ -948,7 +951,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <remarks>
 	/// This overload uses span-based comparison which avoids string allocations when working with substrings or spans.
 	/// </remarks>
-	public bool EndsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().EndsWith(value, comparisonType);
+	public bool EndsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.EndsWith(value.ToString(), comparisonType);
 
 	/// <summary>
 	/// Determines whether the semantic string contains the specified span using efficient span comparison.
@@ -959,7 +962,8 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <remarks>
 	/// This overload uses span-based search which can be more efficient than string-based Contains for certain scenarios.
 	/// </remarks>
-	public bool Contains(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().Contains(value, comparisonType);
+	public bool Contains(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.Contains(value.ToString(), comparisonType);
+#endif
 
 	/// <summary>
 	/// Counts the number of characters that match the specified predicate using span semantics.
