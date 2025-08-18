@@ -43,7 +43,7 @@ public sealed class IsMacroCaseAttribute : NativeSemanticStringValidationAttribu
 			}
 
 			// Cannot start or end with underscore
-			if (value.StartsWith('_') || value.EndsWith('_'))
+			if (value.StartsWith("_") || value.EndsWith("_"))
 			{
 				return ValidationResult.Failure("The value must be in MACRO_CASE format.");
 			}

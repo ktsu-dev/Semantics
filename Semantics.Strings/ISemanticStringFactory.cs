@@ -27,13 +27,13 @@ public interface ISemanticStringFactory<T> where T : SemanticString<T>
 	/// <exception cref="FormatException">The value doesn't meet validation criteria</exception>
 	public T FromCharArray(char[]? value);
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Creates a new semantic string instance from a read-only span.
 	/// </summary>
 	/// <param name="value">The read-only span to convert</param>
 	/// <returns>A validated semantic string instance</returns>
 	/// <exception cref="FormatException">The value doesn't meet validation criteria</exception>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public T FromReadOnlySpan(ReadOnlySpan<char> value);
 #endif
 

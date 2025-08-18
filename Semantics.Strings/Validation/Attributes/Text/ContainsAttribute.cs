@@ -53,7 +53,7 @@ public sealed class ContainsAttribute(string substring, StringComparison compari
 				return ValidationResult.Success();
 			}
 
-			bool isValid = value.Contains(_substring, _comparison);
+			bool isValid = value.IndexOf(_substring, _comparison) >= 0;
 			return isValid
 				? ValidationResult.Success()
 				: ValidationResult.Failure($"The value must contain '{_substring}'.");

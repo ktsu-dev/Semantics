@@ -7,7 +7,9 @@ namespace ktsu.Semantics.Strings;
 using System;
 using System.Collections;
 using System.Diagnostics;
+#if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Globalization;
 using System.Text;
 
@@ -92,7 +94,11 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <inheritdoc/>
 	public bool Contains(string value) => WeakString.Contains(value: value);
 	/// <inheritdoc/>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public bool Contains(string value, StringComparison comparisonType) => WeakString.Contains(value: value, comparisonType: comparisonType);
+#else
+	public bool Contains(string value, StringComparison comparisonType) => WeakString.IndexOf(value, comparisonType) >= 0;
+#endif
 
 	/// <inheritdoc/>
 	public void CopyTo(int sourceIndex, char[] destination, int destinationIndex, int count) => WeakString.CopyTo(sourceIndex: sourceIndex, destination: destination, destinationIndex: destinationIndex, count: count);
@@ -228,7 +234,11 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public bool StartsWith(string value, StringComparison comparisonType) => WeakString.StartsWith(value: value, comparisonType: comparisonType);
 
 	/// <inheritdoc/>
+#if NET6_0_OR_GREATER
 	public string Substring(int startIndex) => WeakString[startIndex..];
+#else
+	public string Substring(int startIndex) => WeakString.Substring(startIndex);
+#endif
 	/// <inheritdoc/>
 	public string Substring(int startIndex, int length) => WeakString.Substring(startIndex: startIndex, length: length);
 
@@ -290,8 +300,8 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public static string ToString(ISemanticString? semanticString) => semanticString?.WeakString ?? string.Empty;
 	/// <inheritdoc/>
 	public static char[] ToCharArray(ISemanticString? semanticString) => semanticString?.WeakString.ToCharArray() ?? [];
-	/// <inheritdoc/>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
+	/// <inheritdoc/>
 	public static ReadOnlySpan<char> ToReadOnlySpan(ISemanticString? semanticString) => semanticString is null ? [] : semanticString.WeakString.AsSpan();
 #endif
 
@@ -402,12 +412,12 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <returns>A character array containing the characters of the semantic string, or an empty array if the value is <see langword="null"/>.</returns>
 	public static implicit operator char[](SemanticString<TDerived>? value) => value?.ToCharArray() ?? [];
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Implicitly converts a semantic string to a read-only character span.
 	/// </summary>
 	/// <param name="value">The semantic string to convert.</param>
 	/// <returns>A read-only span containing the characters of the semantic string, or an empty span if the value is <see langword="null"/>.</returns>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public static implicit operator ReadOnlySpan<char>(SemanticString<TDerived>? value) => value is null ? default : value.AsSpan();
 #endif
 
@@ -473,6 +483,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		return Create<TDest>(value: new string(value: value));
 	}
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Creates a new instance of the specified semantic string type from a read-only character span.
 	/// </summary>
@@ -487,7 +498,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// avoiding unnecessary allocations until the final string creation.
 	/// The span is converted to a string and then processed through canonicalization and validation.
 	/// </remarks>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public static TDest Create<TDest>(ReadOnlySpan<char> value)
 		where TDest : SemanticString<TDest>
 		=> Create<TDest>(value: value.ToString());
@@ -547,6 +557,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		return FromString<TDest>(value: new string(value: value));
 	}
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Creates a new instance of the specified semantic string type from a read-only character span.
 	/// </summary>
@@ -561,7 +572,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// avoiding unnecessary allocations until the final string creation.
 	/// The span is converted to a string and then processed through canonicalization and validation.
 	/// </remarks>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	private static TDest FromReadOnlySpan<TDest>(ReadOnlySpan<char> value)
 		where TDest : SemanticString<TDest>
 		=> FromString<TDest>(value: value.ToString());
@@ -639,6 +649,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	public static TDerived Create(char[]? value) => Create<TDerived>(value);
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Creates a new instance of this semantic string type from a read-only character span.
 	/// </summary>
@@ -649,7 +660,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// This method provides type inference when called on concrete semantic string types,
 	/// eliminating the need for explicit generic type parameters.
 	/// </remarks>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public static TDerived Create(ReadOnlySpan<char> value) => Create<TDerived>(value);
 #endif
 
@@ -687,6 +697,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	public static bool TryCreate(char[]? value, out TDerived? result) => TryFromCharArray(value, out result);
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Attempts to create a new instance of this semantic string type from a read-only character span without throwing exceptions.
 	/// </summary>
@@ -702,7 +713,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// This method provides exception-free creation of semantic string instances with type inference.
 	/// It eliminates the need for explicit generic type parameters when called on concrete types.
 	/// </remarks>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public static bool TryCreate(ReadOnlySpan<char> value, out TDerived? result) => TryFromReadOnlySpan(value, out result);
 #endif
 
@@ -746,6 +756,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		where TDest : SemanticString<TDest>
 		=> TryFromCharArray(value, out result);
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Attempts to create a new instance of the specified semantic string type from a read-only character span without throwing exceptions.
 	/// </summary>
@@ -762,7 +773,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// This method provides exception-free creation of semantic string instances.
 	/// It performs the same validation as <see cref="FromReadOnlySpan{TDest}(ReadOnlySpan{char})"/> but returns false instead of throwing exceptions when validation fails.
 	/// </remarks>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public static bool TryCreate<TDest>(ReadOnlySpan<char> value, out TDest? result)
 		where TDest : SemanticString<TDest>
 		=> TryFromReadOnlySpan(value, out result);
@@ -831,6 +841,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		}
 	}
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Attempts to create a new instance of the specified semantic string type from a read-only character span without throwing exceptions.
 	/// </summary>
@@ -843,7 +854,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// It performs the same validation as <see cref="FromReadOnlySpan{TDest}(ReadOnlySpan{char})"/> but returns false instead of throwing exceptions when validation fails.
 	/// This is particularly useful for performance-critical scenarios where you want to avoid both exceptions and unnecessary string allocations.
 	/// </remarks>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	private static bool TryFromReadOnlySpan<TDest>(ReadOnlySpan<char> value, out TDest? result)
 		where TDest : SemanticString<TDest>
 	{
@@ -860,6 +870,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	}
 #endif
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Gets this semantic string as a read-only span without allocation.
 	/// </summary>
@@ -868,7 +879,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// This property provides zero-allocation access to the underlying string characters
 	/// and is more efficient than ToCharArray() or implicit char[] conversion.
 	/// </remarks>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public ReadOnlySpan<char> AsSpan() => WeakString.AsSpan();
 #endif
 
@@ -1119,7 +1129,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 				return MoveNext(); // Recursively skip empty entries
 			}
 
-					return true;
+		return true;
 	}
 }
 #endif

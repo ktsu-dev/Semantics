@@ -42,7 +42,7 @@ public sealed class IsKebabCaseAttribute : NativeSemanticStringValidationAttribu
 			}
 
 			// Cannot start or end with hyphen
-			if (value.StartsWith('-') || value.EndsWith('-'))
+			if (value.StartsWith("-") || value.EndsWith("-"))
 			{
 				return ValidationResult.Failure("The value must be in kebab-case format.");
 			}

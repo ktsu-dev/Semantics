@@ -23,8 +23,8 @@ public sealed class SemanticStringFactory<T> : ISemanticStringFactory<T>
 	/// <inheritdoc/>
 	public T FromCharArray(char[]? value) => SemanticString<T>.Create<T>(value);
 
-	/// <inheritdoc/>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
+	/// <inheritdoc/>
 	public T FromReadOnlySpan(ReadOnlySpan<char> value) => SemanticString<T>.Create<T>(value);
 #endif
 
@@ -49,13 +49,13 @@ public sealed class SemanticStringFactory<T> : ISemanticStringFactory<T>
 	/// <exception cref="FormatException">The character array does not meet the validation criteria for the target type.</exception>
 	public T Create(char[]? value) => SemanticString<T>.Create(value);
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Creates a new instance of the target semantic string type from a read-only character span.
 	/// </summary>
 	/// <param name="value">The read-only character span to convert.</param>
 	/// <returns>A new instance of the target semantic string type.</returns>
 	/// <exception cref="FormatException">The span does not meet the validation criteria for the target type.</exception>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public T Create(ReadOnlySpan<char> value) => SemanticString<T>.Create(value);
 #endif
 
@@ -85,6 +85,7 @@ public sealed class SemanticStringFactory<T> : ISemanticStringFactory<T>
 	/// </returns>
 	public bool TryCreate(char[]? value, out T? result) => SemanticString<T>.TryCreate(value, out result);
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Attempts to create a new instance of the target semantic string type from a read-only character span without throwing exceptions.
 	/// </summary>
@@ -96,7 +97,6 @@ public sealed class SemanticStringFactory<T> : ISemanticStringFactory<T>
 	/// <returns>
 	/// <see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.
 	/// </returns>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public bool TryCreate(ReadOnlySpan<char> value, out T? result) => SemanticString<T>.TryCreate(value, out result);
 #endif
 }
