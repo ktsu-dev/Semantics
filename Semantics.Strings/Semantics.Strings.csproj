@@ -4,6 +4,10 @@
 
   <PropertyGroup>
     <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;net5.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
+    <NoWarn>$(NoWarn);CA1866;CA2249;IDE0057;</NoWarn>
+    <!-- CA1866: Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char -->
+    <!-- CA2249: Consider using String.Contains instead of String.IndexOf -->
+    <!-- IDE0057: Substring can be simplified -->
   </PropertyGroup>
 
 </Project>

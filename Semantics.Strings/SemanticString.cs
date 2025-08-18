@@ -204,7 +204,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	[SuppressMessage("Style", "IDE0057:Use range operator")]
 #endif
 #endif
-	public string Remove(int startIndex) => WeakString.Remove(startIndex: startIndex);
+	public string Remove(int startIndex) => WeakString.Remove(startIndex);
 	/// <inheritdoc/>
 	public string Remove(int startIndex, int count) => WeakString.Remove(startIndex: startIndex, count: count);
 
@@ -1129,8 +1129,8 @@ public abstract record SemanticString<TDerived> : ISemanticString
 				return MoveNext(); // Recursively skip empty entries
 			}
 
-		return true;
+			return true;
+		}
 	}
-}
 #endif
 }
