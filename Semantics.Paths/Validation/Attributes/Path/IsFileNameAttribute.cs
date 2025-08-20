@@ -2,11 +2,12 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Paths;
 
 using System;
 using System.IO;
 using System.Linq;
+using ktsu.Semantics.Strings;
 
 /// <summary>
 /// Validates that a string represents a valid filename (no invalid filename characters, not a directory)

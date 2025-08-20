@@ -2,10 +2,11 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Paths;
 
 using System;
 using System.IO;
+using ktsu.Semantics.Strings;
 
 /// <summary>
 /// Validates that a path string contains valid path characters using span semantics.

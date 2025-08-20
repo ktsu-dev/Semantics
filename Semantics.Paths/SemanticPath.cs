@@ -2,7 +2,9 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Paths;
+
+using ktsu.Semantics.Strings;
 
 /// <summary>
 /// Base semantic path class that provides path-specific functionality and validation.

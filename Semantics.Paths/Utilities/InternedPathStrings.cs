@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Paths;
 
 /// <summary>
 /// Provides interned common strings for path operations to reduce memory allocations.

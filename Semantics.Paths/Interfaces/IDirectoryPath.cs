@@ -2,7 +2,10 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Paths;
+
+using System.Collections.Generic;
+using System.Threading;
 
 /// <summary>
 /// Interface for directory paths (paths to directories)
@@ -41,5 +44,7 @@ public interface IDirectoryPath : IPath
 	/// An async enumerable of <see cref="IPath"/> objects representing the contents of the directory.
 	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
 	/// </returns>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public IAsyncEnumerable<IPath> GetContentsAsync(CancellationToken cancellationToken = default);
+#endif
 }

@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Paths;
 
 using System.Diagnostics.CodeAnalysis;
 
@@ -156,7 +156,11 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public AbsoluteDirectoryPath AsAbsolute(AbsoluteDirectoryPath baseDirectory)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(baseDirectory);
+#else
+		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
+#endif
 		string absolutePath = Path.GetFullPath(WeakString, baseDirectory.WeakString);
 		return AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(absolutePath);
 	}
@@ -170,7 +174,18 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public RelativeDirectoryPath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
+#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(baseDirectory);
+#else
+		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
+#endif
+#else
+		if (baseDirectory is null)
+		{
+			throw new ArgumentNullException(nameof(baseDirectory));
+		}
+#endif
 		return this;
 	}
 
@@ -203,7 +218,11 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// An async enumerable of <see cref="IPath"/> objects representing the contents of the directory.
 	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
 	/// </returns>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public async IAsyncEnumerable<IPath> GetContentsAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
+#else
+	public IEnumerable<IPath> GetContents()
+#endif
 	{
 		string directoryPath = WeakString;
 		if (!Directory.Exists(directoryPath))

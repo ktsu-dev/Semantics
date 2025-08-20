@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Paths;
 
 using System.Text;
 
@@ -48,7 +48,11 @@ internal static class PooledStringBuilder
 	/// </summary>
 	/// <param name="components">The path components to combine.</param>
 	/// <returns>The combined path string.</returns>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public static string CombinePaths(params ReadOnlySpan<string> components)
+#else
+	public static string CombinePaths(params string[] components)
+#endif
 	{
 		if (components.Length == 0)
 		{

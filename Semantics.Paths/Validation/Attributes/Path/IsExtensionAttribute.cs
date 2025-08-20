@@ -2,9 +2,10 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Paths;
 
 using System;
+using ktsu.Semantics.Strings;
 
 /// <summary>
 /// Validates that a string represents a valid file extension (starts with a period)

@@ -2,10 +2,11 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Paths;
 
 using System;
 using System.IO;
+using ktsu.Semantics.Strings;
 
 /// <summary>
 /// Validates that a path is absolute (fully qualified), meaning it specifies a complete path from the root of the file system.
