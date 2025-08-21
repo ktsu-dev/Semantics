@@ -69,7 +69,11 @@ internal static class PooledStringBuilder
 			sb.Append(components[0]);
 			for (int i = 1; i < components.Length; i++)
 			{
-				if (!SpanPathUtilities.EndsWithDirectorySeparator(sb.ToString().AsSpan()))
+	#if NETSTANDARD2_0
+			if (!SpanPathUtilities.EndsWithDirectorySeparator(sb.ToString()))
+#else
+			if (!SpanPathUtilities.EndsWithDirectorySeparator(sb.ToString().AsSpan()))
+#endif
 				{
 					sb.Append(Path.DirectorySeparatorChar);
 				}

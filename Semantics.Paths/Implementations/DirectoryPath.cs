@@ -86,6 +86,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 			yield break;
 		}
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 		// Use Task.Run to avoid blocking the caller while enumerating
 		IEnumerable<string> entries = await Task.Run(() => Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.TopDirectoryOnly), cancellationToken).ConfigureAwait(false);
 
@@ -102,6 +103,22 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 				yield return FilePath.Create<FilePath>(item);
 			}
 		}
+#else
+		// Use synchronous enumeration for older target frameworks
+		IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.TopDirectoryOnly);
+
+		foreach (string item in entries)
+		{
+			if (Directory.Exists(item))
+			{
+				yield return Create<DirectoryPath>(item);
+			}
+			else if (File.Exists(item))
+			{
+				yield return FilePath.Create<FilePath>(item);
+			}
+		}
+#endif
 	}
 
 	/// <summary>

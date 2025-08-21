@@ -305,9 +305,6 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// </returns>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public async IAsyncEnumerable<IPath> GetContentsAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
-#else
-	public IEnumerable<IPath> GetContents()
-#endif
 	{
 		string directoryPath = WeakString;
 		if (!Directory.Exists(directoryPath))
@@ -332,4 +329,29 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 			}
 		}
 	}
+#else
+	public IEnumerable<IPath> GetContents()
+	{
+		string directoryPath = WeakString;
+		if (!Directory.Exists(directoryPath))
+		{
+			yield break;
+		}
+
+		// Use synchronous enumeration for older target frameworks
+		IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.TopDirectoryOnly);
+
+		foreach (string item in entries)
+		{
+			if (Directory.Exists(item))
+			{
+				yield return CreateDirectoryPath(item);
+			}
+			else if (File.Exists(item))
+			{
+				yield return CreateFilePath(item);
+			}
+		}
+	}
+#endif
 }
