@@ -50,7 +50,7 @@ public sealed class EndsWithAttribute(string suffix, StringComparison comparison
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return ValidationResult.Success();
+				return ValidationResult.Failure($"The value must end with '{_suffix}'.");
 			}
 
 			bool isValid = value.EndsWith(_suffix, _comparison);

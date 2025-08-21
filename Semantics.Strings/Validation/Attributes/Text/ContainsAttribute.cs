@@ -50,7 +50,7 @@ public sealed class ContainsAttribute(string substring, StringComparison compari
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return ValidationResult.Success();
+				return ValidationResult.Failure($"The value must contain '{_substring}'.");
 			}
 
 			bool isValid = value.IndexOf(_substring, _comparison) >= 0;

@@ -50,7 +50,7 @@ public sealed class StartsWithAttribute(string prefix, StringComparison comparis
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return ValidationResult.Success();
+				return ValidationResult.Failure($"The value must start with '{_prefix}'.");
 			}
 
 			bool startsWithPrefix = value.StartsWith(_prefix, _comparison);
