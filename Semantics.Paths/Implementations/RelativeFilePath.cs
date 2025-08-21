@@ -49,7 +49,12 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	/// <returns>A new <see cref="RelativeFilePath"/> with the changed extension.</returns>
 	public RelativeFilePath ChangeExtension(FileExtension newExtension)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(newExtension);
+#else
+		ArgumentNullExceptionPolyfill.ThrowIfNull(newExtension);
+#endif
+
 		string newPath = Path.ChangeExtension(WeakString, newExtension.WeakString);
 		return Create<RelativeFilePath>(newPath);
 	}
@@ -93,7 +98,11 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public AbsoluteFilePath AsAbsolute(AbsoluteDirectoryPath baseDirectory)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(baseDirectory);
+#else
+		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
+#endif
 		string absolutePath = Path.GetFullPath(WeakString, baseDirectory.WeakString);
 		return AbsoluteFilePath.Create<AbsoluteFilePath>(absolutePath);
 	}

@@ -49,7 +49,12 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	/// <returns>A new <see cref="AbsoluteFilePath"/> with the changed extension.</returns>
 	public AbsoluteFilePath ChangeExtension(FileExtension newExtension)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(newExtension);
+#else
+		ArgumentNullExceptionPolyfill.ThrowIfNull(newExtension);
+#endif
+
 		string newPath = Path.ChangeExtension(WeakString, newExtension.WeakString);
 		return Create<AbsoluteFilePath>(newPath);
 	}
@@ -75,7 +80,11 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	/// </remarks>
 	public bool IsChildOf(AbsoluteDirectoryPath parentPath)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(parentPath);
+#else
+		ArgumentNullExceptionPolyfill.ThrowIfNull(parentPath);
+#endif
 
 		// Get normalized paths using span semantics for comparison
 		ReadOnlySpan<char> thisPathSpan = Path.GetFullPath(WeakString).AsSpan();
@@ -121,7 +130,11 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(baseDirectory);
+#else
+		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
+#endif
 		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, WeakString);
 		return RelativeFilePath.Create<RelativeFilePath>(relativePath);
 	}

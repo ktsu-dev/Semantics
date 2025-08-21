@@ -29,7 +29,12 @@ public sealed record FilePath : SemanticFilePath<FilePath>, IFilePath
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(baseDirectory);
+#else
+		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
+#endif
+
 		string absolutePath = Path.GetFullPath(WeakString);
 		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, absolutePath);
 		return RelativeFilePath.Create<RelativeFilePath>(relativePath);
