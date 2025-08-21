@@ -103,7 +103,11 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
 #endif
+#if NETSTANDARD2_0
+		string absolutePath = PathPolyfill.GetFullPath(WeakString, baseDirectory.WeakString);
+#else
 		string absolutePath = Path.GetFullPath(WeakString, baseDirectory.WeakString);
+#endif
 		return AbsoluteFilePath.Create<AbsoluteFilePath>(absolutePath);
 	}
 

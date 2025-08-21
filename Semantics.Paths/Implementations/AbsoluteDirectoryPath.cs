@@ -252,7 +252,11 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 		ArgumentNullExceptionPolyfill.ThrowIfNull(targetDirectory);
 #endif
 		// Use Path.GetRelativePath to compute the relative path
+#if NETSTANDARD2_0
+		string relativePath = PathPolyfill.GetRelativePath(WeakString, targetDirectory.WeakString);
+#else
 		string relativePath = Path.GetRelativePath(WeakString, targetDirectory.WeakString);
+#endif
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
 	}
 
@@ -282,7 +286,11 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory, nameof(baseDirectory));
 #endif
+#if NETSTANDARD2_0
+		string relativePath = PathPolyfill.GetRelativePath(baseDirectory.WeakString, WeakString);
+#else
 		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, WeakString);
+#endif
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
 	}
 

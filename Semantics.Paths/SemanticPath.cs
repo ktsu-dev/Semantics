@@ -4,6 +4,8 @@
 
 namespace ktsu.Semantics.Paths;
 
+using System.IO;
+using System.Runtime.InteropServices;
 using ktsu.Semantics.Strings;
 
 /// <summary>
@@ -93,19 +95,31 @@ public abstract record SemanticPath<TDerived> : SemanticString<TDerived>
 		if (canonical.EndsWith(separator) && canonical.Length > separator.Length)
 		{
 			// Check if this is a Windows root path (e.g., "C:\")
+#if NET5_0_OR_GREATER
 			bool isWindowsRoot = OperatingSystem.IsWindows()
+#else
+			bool isWindowsRoot = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+#endif
 				&& canonical.Length == 3
 				&& char.IsLetter(canonical[0])
 				&& canonical[1] == ':'
 				&& canonical[2] == Path.DirectorySeparatorChar;
 
 			// Check if this is a Unix root path (e.g., "/")
+#if NET5_0_OR_GREATER
 			bool isUnixRoot = !OperatingSystem.IsWindows() && canonical == separator;
+#else
+			bool isUnixRoot = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && canonical == separator;
+#endif
 
 			// Only remove trailing separator if it's not a root path
 			if (!isWindowsRoot && !isUnixRoot)
 			{
+#if NETSTANDARD2_0
+				canonical = canonical.Substring(0, canonical.Length - separator.Length);
+#else
 				canonical = canonical[..^separator.Length];
+#endif
 			}
 		}
 

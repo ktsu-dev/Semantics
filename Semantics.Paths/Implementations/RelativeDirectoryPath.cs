@@ -5,6 +5,8 @@
 namespace ktsu.Semantics.Paths;
 
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// Represents a relative directory path
@@ -176,7 +178,11 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
 #endif
+#if NETSTANDARD2_0
+		string absolutePath = PathPolyfill.GetFullPath(WeakString, baseDirectory.WeakString);
+#else
 		string absolutePath = Path.GetFullPath(WeakString, baseDirectory.WeakString);
+#endif
 		return AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(absolutePath);
 	}
 
@@ -211,9 +217,17 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 		}
 
 		// Use Path.GetFullPath with a dummy base to normalize relative paths
+#if NET5_0_OR_GREATER
 		string dummyBase = OperatingSystem.IsWindows() ? "C:\\" : "/";
+#else
+		string dummyBase = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "C:\\" : "/";
+#endif
 		string fullPath = Path.GetFullPath(Path.Combine(dummyBase, path));
+#if NETSTANDARD2_0
+		string normalized = PathPolyfill.GetRelativePath(dummyBase, fullPath);
+#else
 		string normalized = Path.GetRelativePath(dummyBase, fullPath);
+#endif
 
 		return Create<RelativeDirectoryPath>(normalized);
 	}

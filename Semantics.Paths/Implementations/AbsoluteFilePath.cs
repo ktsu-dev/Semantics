@@ -87,6 +87,28 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 #endif
 
 		// Get normalized paths using span semantics for comparison
+#if NETSTANDARD2_0
+		string thisPathSpan = Path.GetFullPath(WeakString);
+		string parentPathSpan = Path.GetFullPath(parentPath.WeakString);
+
+		// A path cannot be a child of itself
+		if (string.Equals(thisPathSpan, parentPathSpan, StringComparison.OrdinalIgnoreCase))
+		{
+			return false;
+		}
+
+		// Check if this path starts with the parent path followed by a separator
+		if (!thisPathSpan.StartsWith(parentPathSpan, StringComparison.OrdinalIgnoreCase))
+		{
+			return false;
+		}
+
+		// Ensure there's a separator after the parent path (not just a prefix match)
+		int nextIndex = parentPathSpan.Length;
+		return nextIndex < thisPathSpan.Length &&
+			   (thisPathSpan[nextIndex] == Path.DirectorySeparatorChar ||
+				thisPathSpan[nextIndex] == Path.AltDirectorySeparatorChar);
+#else
 		ReadOnlySpan<char> thisPathSpan = Path.GetFullPath(WeakString).AsSpan();
 		ReadOnlySpan<char> parentPathSpan = Path.GetFullPath(parentPath.WeakString).AsSpan();
 
@@ -107,6 +129,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 		return nextIndex < thisPathSpan.Length &&
 			   (thisPathSpan[nextIndex] == Path.DirectorySeparatorChar ||
 				thisPathSpan[nextIndex] == Path.AltDirectorySeparatorChar);
+#endif
 	}
 
 	/// <summary>
@@ -135,7 +158,11 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
 #endif
+#if NETSTANDARD2_0
+		string relativePath = PathPolyfill.GetRelativePath(baseDirectory.WeakString, WeakString);
+#else
 		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, WeakString);
+#endif
 		return RelativeFilePath.Create<RelativeFilePath>(relativePath);
 	}
 }

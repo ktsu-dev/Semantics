@@ -57,7 +57,11 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 #endif
 
 		string absolutePath = Path.GetFullPath(WeakString);
+#if NETSTANDARD2_0
+		string relativePath = PathPolyfill.GetRelativePath(baseDirectory.WeakString, absolutePath);
+#else
 		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, absolutePath);
+#endif
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
 	}
 

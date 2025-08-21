@@ -40,8 +40,12 @@ public sealed class IsValidFileNameAttribute : NativeSemanticStringValidationAtt
 			}
 
 			// Use span-based search for invalid characters
+#if NETSTANDARD2_0
+			bool hasInvalidChars = value.IndexOfAny(InvalidFileNameChars) != -1;
+#else
 			ReadOnlySpan<char> valueSpan = value.AsSpan();
 			bool hasInvalidChars = valueSpan.IndexOfAny(InvalidFileNameChars) != -1;
+#endif
 			return hasInvalidChars
 				? ValidationResult.Failure("The filename contains invalid characters.")
 				: ValidationResult.Success();

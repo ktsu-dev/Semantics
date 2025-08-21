@@ -34,10 +34,18 @@ public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 		const string separator = "/";
 		const string altSeparator = "\\";
 
-		string fromPath = Path.GetFullPath(fromInfo.FullName)
-			.Replace(altSeparator, separator, StringComparison.Ordinal);
-		string toPath = Path.GetFullPath(toInfo.FullName)
-			.Replace(altSeparator, separator, StringComparison.Ordinal);
+		string fromPath = Path.GetFullPath(fromInfo.FullName);
+#if NETSTANDARD2_0
+		fromPath = StringPolyfill.Replace(fromPath, altSeparator, separator, StringComparison.Ordinal);
+#else
+		fromPath = fromPath.Replace(altSeparator, separator, StringComparison.Ordinal);
+#endif
+		string toPath = Path.GetFullPath(toInfo.FullName);
+#if NETSTANDARD2_0
+		toPath = StringPolyfill.Replace(toPath, altSeparator, separator, StringComparison.Ordinal);
+#else
+		toPath = toPath.Replace(altSeparator, separator, StringComparison.Ordinal);
+#endif
 
 		// Handle directory paths - ensure they end with separator
 		bool fromIsDirectory = IsDirectoryPath(from);
@@ -58,7 +66,11 @@ public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 
 		Uri relativeUri = fromUri.MakeRelativeUri(toUri);
 		string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+#if NETSTANDARD2_0
+		relativePath = StringPolyfill.Replace(relativePath, altSeparator, separator, StringComparison.Ordinal);
+#else
 		relativePath = relativePath.Replace(altSeparator, separator, StringComparison.Ordinal);
+#endif
 
 		return Create<TRelativePath>(relativePath);
 	}

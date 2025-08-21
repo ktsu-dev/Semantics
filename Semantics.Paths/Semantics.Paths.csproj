@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Semantics.Strings\Semantics.Strings.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Memory" />
+  </ItemGroup>
+
 </Project>

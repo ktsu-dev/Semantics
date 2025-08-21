@@ -49,8 +49,12 @@ public sealed class IsAbsolutePathAttribute : NativeSemanticStringValidationAttr
 				return ValidationResult.Success();
 			}
 
-			bool isAbsolute = Path.IsPathFullyQualified(value + Path.DirectorySeparatorChar);
-			return isAbsolute
+#if NETSTANDARD2_0
+		bool isAbsolute = PathPolyfill.IsPathFullyQualified(value + Path.DirectorySeparatorChar);
+#else
+		bool isAbsolute = Path.IsPathFullyQualified(value + Path.DirectorySeparatorChar);
+#endif
+		return isAbsolute
 				? ValidationResult.Success()
 				: ValidationResult.Failure("The path must be absolute (fully qualified).");
 		}
