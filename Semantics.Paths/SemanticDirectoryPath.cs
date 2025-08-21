@@ -27,49 +27,46 @@ public abstract record SemanticDirectoryPath<TDerived> : SemanticPath<TDerived>
 	/// <item><description><see cref="DirectoryPath"/> returns <see cref="FilePath"/> and <see cref="DirectoryPath"/> objects</description></item>
 	/// </list>
 	/// </remarks>
-	public virtual IEnumerable<IPath> Contents
+	public virtual IEnumerable<IPath> GetContents()
 	{
-		get
+		string directoryPath = WeakString;
+		if (!Directory.Exists(directoryPath))
 		{
-			string directoryPath = WeakString;
-			if (!Directory.Exists(directoryPath))
+			return [];
+		}
+
+		try
+		{
+			List<IPath> contents = [];
+
+			// Get all files and directories
+			string[] entries = Directory.GetFileSystemEntries(directoryPath);
+
+			foreach (string entry in entries)
 			{
-				return [];
-			}
-
-			try
-			{
-				List<IPath> contents = [];
-
-				// Get all files and directories
-				string[] entries = Directory.GetFileSystemEntries(directoryPath);
-
-				foreach (string entry in entries)
+				if (File.Exists(entry))
 				{
-					if (File.Exists(entry))
-					{
-						// It's a file - create appropriate file path type
-						contents.Add(CreateFilePath(entry));
-					}
-					else if (Directory.Exists(entry))
-					{
-						// It's a directory - create appropriate directory path type
-						contents.Add(CreateDirectoryPath(entry));
-					}
+					// It's a file - create appropriate file path type
+					contents.Add(CreateFilePath(entry));
 				}
+				else if (Directory.Exists(entry))
+				{
+					// It's a directory - create appropriate directory path type
+					contents.Add(CreateDirectoryPath(entry));
+				}
+			}
 
-				return contents;
-			}
-			catch (UnauthorizedAccessException)
-			{
-				// Return empty collection if access denied
-				return [];
-			}
-			catch (DirectoryNotFoundException)
-			{
-				// Return empty collection if directory not found
-				return [];
-			}
+			return contents;
+		}
+		catch (UnauthorizedAccessException)
+		{
+			// Return empty collection if access denied
+			return [];
+		}
+		catch (DirectoryNotFoundException)
+		{
+			// Return empty collection if directory not found
+			return [];
 		}
 	}
 

@@ -65,69 +65,6 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
 	}
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
-	/// <summary>
-	/// Asynchronously enumerates the files and directories contained in this directory as semantic path types.
-	/// This is more efficient for large directories as it streams results instead of loading everything into memory.
-	/// </summary>
-	/// <param name="cancellationToken">A cancellation token to cancel the enumeration.</param>
-	/// <returns>
-	/// An async enumerable of <see cref="IPath"/> objects representing the contents of the directory.
-	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
-	/// </returns>
-	public async IAsyncEnumerable<IPath> GetContentsAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
-#else
-	/// <summary>
-	/// Enumerates the files and directories contained in this directory as semantic path types.
-	/// </summary>
-	/// <returns>
-	/// An enumerable of <see cref="IPath"/> objects representing the contents of the directory.
-	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
-	/// </returns>
-	public IEnumerable<IPath> GetContents()
-#endif
-	{
-		string directoryPath = WeakString;
-		if (!Directory.Exists(directoryPath))
-		{
-			yield break;
-		}
-
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
-		// Use Task.Run to avoid blocking the caller while enumerating
-		IEnumerable<string> entries = await Task.Run(() => Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.TopDirectoryOnly), cancellationToken).ConfigureAwait(false);
-
-		foreach (string item in entries)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-
-			if (Directory.Exists(item))
-			{
-				yield return Create<DirectoryPath>(item);
-			}
-			else if (File.Exists(item))
-			{
-				yield return FilePath.Create<FilePath>(item);
-			}
-		}
-#else
-		// Use synchronous enumeration for older target frameworks
-		IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.TopDirectoryOnly);
-
-		foreach (string item in entries)
-		{
-			if (Directory.Exists(item))
-			{
-				yield return Create<DirectoryPath>(item);
-			}
-			else if (File.Exists(item))
-			{
-				yield return FilePath.Create<FilePath>(item);
-			}
-		}
-#endif
-	}
-
 	/// <summary>
 	/// Combines a directory path with a relative directory path using the '/' operator.
 	/// </summary>

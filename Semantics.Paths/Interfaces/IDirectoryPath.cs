@@ -5,9 +5,6 @@
 namespace ktsu.Semantics.Paths;
 
 using System.Collections.Generic;
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
-using System.Threading;
-#endif
 
 /// <summary>
 /// Interface for directory paths (paths to directories)
@@ -35,18 +32,5 @@ public interface IDirectoryPath : IPath
 	/// A collection of <see cref="IPath"/> objects representing the contents of the directory.
 	/// Returns an empty collection if the directory doesn't exist or cannot be accessed.
 	/// </value>
-	public IEnumerable<IPath> Contents { get; }
-
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
-	/// <summary>
-	/// Asynchronously enumerates the files and directories contained in this directory as semantic path types.
-	/// This is more efficient for large directories as it streams results instead of loading everything into memory.
-	/// </summary>
-	/// <param name="cancellationToken">A cancellation token to cancel the enumeration.</param>
-	/// <returns>
-	/// An async enumerable of <see cref="IPath"/> objects representing the contents of the directory.
-	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
-	/// </returns>
-	public IAsyncEnumerable<IPath> GetContentsAsync(CancellationToken cancellationToken = default);
-#endif
+	public IEnumerable<IPath> GetContents();
 }

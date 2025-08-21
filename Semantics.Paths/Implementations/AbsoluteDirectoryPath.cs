@@ -5,10 +5,6 @@
 namespace ktsu.Semantics.Paths;
 
 using System.Diagnostics.CodeAnalysis;
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
-using System.Threading;
-using System.Threading.Tasks;
-#endif
 
 /// <summary>
 /// Represents an absolute directory path
@@ -295,75 +291,4 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 #endif
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
 	}
-
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
-	/// <summary>
-	/// Asynchronously enumerates the files and directories contained in this directory as semantic path types.
-	/// This is more efficient for large directories as it streams results instead of loading everything into memory.
-	/// </summary>
-	/// <param name="cancellationToken">A cancellation token to cancel the enumeration.</param>
-	/// <returns>
-	/// An async enumerable of <see cref="IPath"/> objects representing the contents of the directory.
-	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
-	/// </returns>
-#else
-	/// <summary>
-	/// Enumerates the files and directories contained in this directory as semantic path types.
-	/// </summary>
-	/// <returns>
-	/// An enumerable of <see cref="IPath"/> objects representing the contents of the directory.
-	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
-	/// </returns>
-#endif
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
-	public async IAsyncEnumerable<IPath> GetContentsAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
-	{
-		string directoryPath = WeakString;
-		if (!Directory.Exists(directoryPath))
-		{
-			yield break;
-		}
-
-		// Use Task.Run to avoid blocking the caller while enumerating
-		IEnumerable<string> entries = await Task.Run(() => Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.TopDirectoryOnly), cancellationToken).ConfigureAwait(false);
-
-		foreach (string item in entries)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-
-			if (Directory.Exists(item))
-			{
-				yield return CreateDirectoryPath(item);
-			}
-			else if (File.Exists(item))
-			{
-				yield return CreateFilePath(item);
-			}
-		}
-	}
-#else
-	public IEnumerable<IPath> GetContents()
-	{
-		string directoryPath = WeakString;
-		if (!Directory.Exists(directoryPath))
-		{
-			yield break;
-		}
-
-		// Use synchronous enumeration for older target frameworks
-		IEnumerable<string> entries = Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.TopDirectoryOnly);
-
-		foreach (string item in entries)
-		{
-			if (Directory.Exists(item))
-			{
-				yield return CreateDirectoryPath(item);
-			}
-			else if (File.Exists(item))
-			{
-				yield return CreateFilePath(item);
-			}
-		}
-	}
-#endif
 }
