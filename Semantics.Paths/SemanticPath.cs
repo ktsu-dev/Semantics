@@ -5,7 +5,9 @@
 namespace ktsu.Semantics.Paths;
 
 using System.IO;
+#if !NET5_0_OR_GREATER
 using System.Runtime.InteropServices;
+#endif
 using ktsu.Semantics.Strings;
 
 /// <summary>

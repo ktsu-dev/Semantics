@@ -376,8 +376,8 @@ public class SemanticQuantityTests
 		Distance equal = Distance.Create(5.0);
 
 		// Act & Assert
-		Assert.IsTrue(smaller.Quantity.CompareTo(larger.Quantity) < 0);
-		Assert.IsTrue(larger.Quantity.CompareTo(smaller.Quantity) > 0);
+		Assert.IsLessThan(0, smaller.Quantity.CompareTo(larger.Quantity));
+		Assert.IsGreaterThan(0, larger.Quantity.CompareTo(smaller.Quantity));
 		Assert.AreEqual(0, smaller.Quantity.CompareTo(equal.Quantity));
 	}
 
@@ -390,12 +390,12 @@ public class SemanticQuantityTests
 		Distance distance3 = Distance.Create(5.0);
 
 		// Act & Assert
-		Assert.IsTrue(distance1.Quantity < distance2.Quantity);
-		Assert.IsTrue(distance1.Quantity <= distance2.Quantity);
-		Assert.IsTrue(distance1.Quantity <= distance3.Quantity);
-		Assert.IsTrue(distance2.Quantity > distance1.Quantity);
-		Assert.IsTrue(distance2.Quantity >= distance1.Quantity);
-		Assert.IsTrue(distance1.Quantity >= distance3.Quantity);
+		Assert.IsLessThan(distance2.Quantity, distance1.Quantity);
+		Assert.IsLessThanOrEqualTo(distance2.Quantity, distance1.Quantity);
+		Assert.IsLessThanOrEqualTo(distance3.Quantity, distance1.Quantity);
+		Assert.IsGreaterThan(distance1.Quantity, distance2.Quantity);
+		Assert.IsGreaterThanOrEqualTo(distance1.Quantity, distance2.Quantity);
+		Assert.IsGreaterThanOrEqualTo(distance3.Quantity, distance1.Quantity);
 		Assert.IsTrue(distance1 == distance3); // Record equality works
 		Assert.IsTrue(distance1 != distance2); // Record inequality works
 	}

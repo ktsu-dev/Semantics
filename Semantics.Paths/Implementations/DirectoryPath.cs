@@ -65,6 +65,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
 	}
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Asynchronously enumerates the files and directories contained in this directory as semantic path types.
 	/// This is more efficient for large directories as it streams results instead of loading everything into memory.
@@ -74,9 +75,15 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	/// An async enumerable of <see cref="IPath"/> objects representing the contents of the directory.
 	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
 	/// </returns>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public async IAsyncEnumerable<IPath> GetContentsAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
 #else
+	/// <summary>
+	/// Enumerates the files and directories contained in this directory as semantic path types.
+	/// </summary>
+	/// <returns>
+	/// An enumerable of <see cref="IPath"/> objects representing the contents of the directory.
+	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
+	/// </returns>
 	public IEnumerable<IPath> GetContents()
 #endif
 	{

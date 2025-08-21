@@ -4,8 +4,6 @@
 
 namespace ktsu.Semantics.Paths;
 
-using System;
-using System.IO;
 using ktsu.Semantics.Strings;
 
 /// <summary>
@@ -20,7 +18,7 @@ using ktsu.Semantics.Strings;
 /// <item><description><c>../file.txt</c> - file in parent directory</description></item>
 /// <item><description><c>./folder/file.txt</c> - file in subdirectory (explicit current directory)</description></item>
 /// </list>
-/// This validation uses <see cref="Path.IsPathFullyQualified(string)"/> to determine if a path is absolute.
+/// This validation uses the system's path qualification logic to determine if a path is absolute.
 /// Empty or null strings are considered valid relative paths.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]

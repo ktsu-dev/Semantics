@@ -4,9 +4,12 @@
 
 namespace ktsu.Semantics.Paths;
 
+#if !NET6_0_OR_GREATER
 using System;
-using System.IO;
+#endif
+#if !NET5_0_OR_GREATER || NETSTANDARD2_0
 using System.Runtime.InteropServices;
+#endif
 
 #if !NET6_0_OR_GREATER
 /// <summary>
@@ -39,10 +42,7 @@ internal static class OperatingSystem
 	/// Indicates whether the current application is running on Windows.
 	/// </summary>
 	/// <returns>true if the current application is running on Windows; otherwise, false.</returns>
-	public static bool IsWindows()
-	{
-		return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-	}
+	public static bool IsWindows() => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 }
 #endif
 
@@ -61,15 +61,15 @@ internal static class PathPolyfill
 	public static string GetRelativePath(string relativeTo, string path)
 	{
 		// Simplified implementation - in a real scenario you'd want more robust logic
-		var relativeUri = new Uri(Path.GetFullPath(relativeTo + Path.DirectorySeparatorChar));
-		var pathUri = new Uri(Path.GetFullPath(path));
+		Uri relativeUri = new(Path.GetFullPath(relativeTo + Path.DirectorySeparatorChar));
+		Uri pathUri = new(Path.GetFullPath(path));
 
 		if (relativeUri.Scheme != pathUri.Scheme)
 		{
 			return path; // Different schemes, can't make relative
 		}
 
-		var relativeUriString = relativeUri.MakeRelativeUri(pathUri).ToString();
+		string relativeUriString = relativeUri.MakeRelativeUri(pathUri).ToString();
 		return Uri.UnescapeDataString(relativeUriString).Replace('/', Path.DirectorySeparatorChar);
 	}
 
@@ -81,14 +81,16 @@ internal static class PathPolyfill
 	public static bool IsPathFullyQualified(string path)
 	{
 		if (string.IsNullOrWhiteSpace(path))
+		{
 			return false;
+		}
 
 		if (Path.IsPathRooted(path))
 		{
 			// On Windows, check if it's a drive letter or UNC path
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
-				return path.Length >= 3 && char.IsLetter(path[0]) && path[1] == ':' && path[2] == Path.DirectorySeparatorChar
+				return (path.Length >= 3 && char.IsLetter(path[0]) && path[1] == ':' && path[2] == Path.DirectorySeparatorChar)
 					|| path.StartsWith(@"\\", StringComparison.Ordinal);
 			}
 			// On Unix-like systems, rooted paths are fully qualified
@@ -107,9 +109,11 @@ internal static class PathPolyfill
 	public static string GetFullPath(string path, string basePath)
 	{
 		if (IsPathFullyQualified(path))
+		{
 			return Path.GetFullPath(path);
+		}
 
-		var combinedPath = Path.Combine(basePath, path);
+		string combinedPath = Path.Combine(basePath, path);
 		return Path.GetFullPath(combinedPath);
 	}
 }
@@ -135,7 +139,7 @@ internal static class StringPolyfill
 		}
 
 		// For other comparison types, we need a more complex implementation
-		var result = str;
+		string result = str;
 		int index = 0;
 		while ((index = result.IndexOf(oldValue, index, comparisonType)) >= 0)
 		{

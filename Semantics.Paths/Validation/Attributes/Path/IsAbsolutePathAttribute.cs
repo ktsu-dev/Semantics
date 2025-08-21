@@ -19,7 +19,7 @@ using ktsu.Semantics.Strings;
 /// <item><description><c>/usr/local/bin</c> - Unix/Linux absolute path</description></item>
 /// <item><description><c>\\server\share\file.txt</c> - UNC path</description></item>
 /// </list>
-/// This validation uses <see cref="Path.IsPathFullyQualified(string)"/> with a directory separator appended
+/// This validation uses the system's path qualification logic with a directory separator appended
 /// to handle edge cases where the path might be interpreted differently.
 /// Empty or null strings are considered valid for flexibility in initialization scenarios.
 /// </remarks>

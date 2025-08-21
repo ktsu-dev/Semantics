@@ -36,7 +36,11 @@ public sealed class IsExtensionAttribute : NativeSemanticStringValidationAttribu
 				return ValidationResult.Success();
 			}
 
+#if NETSTANDARD2_0
 			bool isValidExtension = value.StartsWith(".");
+#else
+			bool isValidExtension = value.StartsWith('.');
+#endif
 			return isValidExtension
 				? ValidationResult.Success()
 				: ValidationResult.Failure("File extension must start with a period (.).");

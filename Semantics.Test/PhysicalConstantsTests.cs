@@ -607,7 +607,7 @@ public class PhysicalConstantsTests
 		// Verify temperature scale consistency
 		Assert.AreEqual(273.15, absoluteZero, Tolerance, "Absolute zero should be exactly 273.15 K");
 		Assert.AreEqual(standardTemperature, absoluteZero, Tolerance, "Standard temperature equals absolute zero");
-		Assert.IsTrue(waterTriplePoint > absoluteZero, "Water triple point should be above absolute zero");
+		Assert.IsGreaterThan(absoluteZero, waterTriplePoint, "Water triple point should be above absolute zero");
 	}
 
 	[TestMethod]

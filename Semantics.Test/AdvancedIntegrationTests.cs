@@ -155,7 +155,7 @@ public class AdvancedIntegrationTests
 
 		// Assert
 		Assert.AreEqual(1000.0, activity.Value, Tolerance, "Activity should be 1000 Bq");
-		Assert.IsTrue(activity.Value > 0, "Activity should be positive");
+		Assert.IsGreaterThan(0, activity.Value, "Activity should be positive");
 	}
 
 	#endregion

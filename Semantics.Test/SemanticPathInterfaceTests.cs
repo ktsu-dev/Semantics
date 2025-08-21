@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Test;
 
+using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -241,11 +242,11 @@ public class SemanticPathInterfaceTests
 		relativePaths.Add(RelativeDirectoryPath.Create<RelativeDirectoryPath>("relative\\directory"));
 
 		// Assert
-		Assert.AreEqual(9, paths.Count);
-		Assert.AreEqual(3, filePaths.Count);
-		Assert.AreEqual(3, directoryPaths.Count);
-		Assert.AreEqual(3, absolutePaths.Count);
-		Assert.AreEqual(3, relativePaths.Count);
+		Assert.HasCount(9, paths);
+		Assert.HasCount(3, filePaths);
+		Assert.HasCount(3, directoryPaths);
+		Assert.HasCount(3, absolutePaths);
+		Assert.HasCount(3, relativePaths);
 
 		// Verify all items can be cast to IPath
 		Assert.IsTrue(paths.All(p => p is not null));
@@ -314,10 +315,10 @@ public class SemanticPathInterfaceTests
 		List<IRelativePath> relativePaths = [.. paths.OfType<IRelativePath>()];
 
 		// Assert
-		Assert.AreEqual(1, filePaths.Count);
-		Assert.AreEqual(1, directoryPaths.Count);
-		Assert.AreEqual(1, absolutePaths.Count);
-		Assert.AreEqual(1, relativePaths.Count);
+		Assert.HasCount(1, filePaths);
+		Assert.HasCount(1, directoryPaths);
+		Assert.HasCount(1, absolutePaths);
+		Assert.HasCount(1, relativePaths);
 
 		Assert.IsInstanceOfType<AbsoluteFilePath>(filePaths[0]);
 		Assert.IsInstanceOfType<RelativeDirectoryPath>(directoryPaths[0]);
@@ -406,7 +407,7 @@ public class SemanticPathInterfaceTests
 		// 2. AsAbsolute(baseDirectory) - convert to absolute using specific base
 		AbsoluteFilePath absFromRelativeWithBase = relativeFile.AsAbsolute(baseDir);
 		Assert.IsInstanceOfType<AbsoluteFilePath>(absFromRelativeWithBase);
-		Assert.IsTrue(absFromRelativeWithBase.WeakString.Contains("C:\\base"));
+		Assert.Contains("C:\\base", absFromRelativeWithBase.WeakString);
 
 		// 3. AsRelative(baseDirectory) - convert to relative using base
 		RelativeFilePath relFromAbsolute = absoluteFile.AsRelative(baseDir);
@@ -425,7 +426,7 @@ public class SemanticPathInterfaceTests
 		Assert.AreEqual("sub", relDirFromAbsolute.WeakString);
 
 		AbsoluteDirectoryPath absDirFromRelative = relativeSubDir.AsAbsolute(baseDir);
-		Assert.IsTrue(absDirFromRelative.WeakString.Contains("C:\\base\\sub"));
+		Assert.Contains("C:\\base\\sub", absDirFromRelative.WeakString);
 	}
 
 	[TestMethod]
@@ -708,7 +709,7 @@ public class SemanticPathInterfaceTests
 			bool hasContent = !string.IsNullOrEmpty(pathWithPrefix);
 
 			Assert.IsTrue(hasContent);
-			Assert.IsTrue(pathWithPrefix.StartsWith("prefix_"));
+			Assert.StartsWith("prefix_", pathWithPrefix);
 		}
 	}
 }

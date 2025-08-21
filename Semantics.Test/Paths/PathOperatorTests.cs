@@ -6,6 +6,7 @@ namespace ktsu.Semantics.Test.Paths;
 
 using System;
 using ktsu.Semantics;
+using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -63,10 +64,10 @@ public class PathOperatorTests
 
 		Assert.IsNotNull(combinedDir);
 		Assert.IsNotNull(finalFile);
-		Assert.IsTrue(finalFile.WeakString.Contains(@"C:\projects"));
-		Assert.IsTrue(finalFile.WeakString.Contains(@"app\src"));
-		Assert.IsTrue(finalFile.WeakString.Contains(@"components"));
-		Assert.IsTrue(finalFile.WeakString.Contains("Component.tsx"));
+		Assert.Contains(@"C:\projects", finalFile.WeakString);
+		Assert.Contains(@"app\src", finalFile.WeakString);
+		Assert.Contains(@"components", finalFile.WeakString);
+		Assert.Contains("Component.tsx", finalFile.WeakString);
 	}
 
 	[TestMethod]
@@ -101,9 +102,9 @@ public class PathOperatorTests
 
 		Assert.IsNotNull(combinedDir);
 		Assert.IsNotNull(combinedFile);
-		Assert.IsTrue(combinedFile.WeakString.Contains("test folder"));
-		Assert.IsTrue(combinedFile.WeakString.Contains("sub folder (1)"));
-		Assert.IsTrue(combinedFile.WeakString.Contains("file name with spaces.txt"));
+		Assert.Contains("test folder", combinedFile.WeakString);
+		Assert.Contains("sub folder (1)", combinedFile.WeakString);
+		Assert.Contains("file name with spaces.txt", combinedFile.WeakString);
 	}
 
 	[TestMethod]

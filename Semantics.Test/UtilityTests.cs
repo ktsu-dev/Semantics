@@ -6,6 +6,7 @@ namespace ktsu.Semantics.Test;
 
 using System.Text;
 using ktsu.Semantics;
+using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 /// <summary>

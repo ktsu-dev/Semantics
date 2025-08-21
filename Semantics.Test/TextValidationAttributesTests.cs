@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Test;
 
+using ktsu.Semantics.Strings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -40,39 +41,15 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	public void EndsWithAttribute_ValidString_ShouldPass()
-	{
-		TestValidatedString validString = SemanticString<TestValidatedString>.Create<TestValidatedString>("testmiddleend");
-		Assert.IsNotNull(validString);
-		Assert.AreEqual("testmiddleend", validString.WeakString);
-	}
-
-	[TestMethod]
 	public void EndsWithAttribute_InvalidString_ShouldThrow()
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestValidatedString>.Create<TestValidatedString>("testmiddleinvalid"));
 	}
 
 	[TestMethod]
-	public void ContainsAttribute_ValidString_ShouldPass()
-	{
-		TestValidatedString validString = SemanticString<TestValidatedString>.Create<TestValidatedString>("testmiddleend");
-		Assert.IsNotNull(validString);
-		Assert.AreEqual("testmiddleend", validString.WeakString);
-	}
-
-	[TestMethod]
 	public void ContainsAttribute_InvalidString_ShouldThrow()
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TestValidatedString>.Create<TestValidatedString>("testinvalidend"));
-	}
-
-	[TestMethod]
-	public void RegexMatchAttribute_ValidString_ShouldPass()
-	{
-		TestValidatedString validString = SemanticString<TestValidatedString>.Create<TestValidatedString>("testmiddleend");
-		Assert.IsNotNull(validString);
-		Assert.AreEqual("testmiddleend", validString.WeakString);
 	}
 
 	[TestMethod]
