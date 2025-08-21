@@ -4,7 +4,6 @@
 
 namespace ktsu.Semantics.Test.Paths;
 
-using ktsu.Semantics;
 using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
