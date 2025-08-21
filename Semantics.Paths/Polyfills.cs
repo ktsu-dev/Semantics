@@ -63,12 +63,12 @@ internal static class PathPolyfill
 		// Simplified implementation - in a real scenario you'd want more robust logic
 		var relativeUri = new Uri(Path.GetFullPath(relativeTo + Path.DirectorySeparatorChar));
 		var pathUri = new Uri(Path.GetFullPath(path));
-		
+
 		if (relativeUri.Scheme != pathUri.Scheme)
 		{
 			return path; // Different schemes, can't make relative
 		}
-		
+
 		var relativeUriString = relativeUri.MakeRelativeUri(pathUri).ToString();
 		return Uri.UnescapeDataString(relativeUriString).Replace('/', Path.DirectorySeparatorChar);
 	}

@@ -20,7 +20,7 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 		{
 #if NETSTANDARD2_0
 			string span = WeakString;
-			
+
 			// Find the last dot
 			int lastDotIndex = span.LastIndexOf('.');
 			if (lastDotIndex == -1 || lastDotIndex == span.Length - 1)
