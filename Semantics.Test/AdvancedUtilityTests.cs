@@ -10,7 +10,7 @@ using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
-public class AdvancedUtilityTests
+public static class AdvancedUtilityTests
 {
 	[TestClass]
 	public class PooledStringBuilderAdvancedTests

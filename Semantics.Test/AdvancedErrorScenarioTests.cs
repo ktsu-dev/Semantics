@@ -11,7 +11,7 @@ using ktsu.Semantics.Strings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
-public class AdvancedErrorScenarioTests
+public static class AdvancedErrorScenarioTests
 {
 	[TestClass]
 	public class SemanticQuantityErrorTests
