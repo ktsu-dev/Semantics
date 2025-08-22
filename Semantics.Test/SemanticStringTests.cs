@@ -1311,7 +1311,7 @@ public class SemanticStringAdditionalTests
 		}
 		catch (ArgumentException ex)
 		{
-			Assert.Contains(ex.Message, nameof(ValidationTestSemanticString));
+			Assert.Contains(nameof(ValidationTestSemanticString), ex.Message);
 		}
 	}
 }
