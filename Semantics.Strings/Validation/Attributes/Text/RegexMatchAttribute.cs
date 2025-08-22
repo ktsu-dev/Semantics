@@ -56,7 +56,7 @@ public sealed class RegexMatchAttribute(string pattern, RegexOptions options = R
 
 			try
 			{
-				bool matches = Regex.IsMatch(value, _pattern, _options);
+				bool matches = Regex.IsMatch(value, _pattern, _options, TimeSpan.FromSeconds(1));
 				return matches
 					? ValidationResult.Success()
 					: ValidationResult.Failure($"The value must match the pattern: {_pattern}");
