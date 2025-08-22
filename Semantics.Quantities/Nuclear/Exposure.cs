@@ -80,7 +80,7 @@ public sealed record Exposure<T> : PhysicalQuantity<Exposure<T>, T>
 	{
 		ArgumentNullException.ThrowIfNull(mass);
 
-		T exposure = In(Units.Coulomb);
+		T exposure = In(Units.CoulombPerKilogram);
 		T massKg = mass.In(Units.Kilogram);
 		T charge = exposure * massKg;
 
@@ -98,7 +98,7 @@ public sealed record Exposure<T> : PhysicalQuantity<Exposure<T>, T>
 	{
 		ArgumentNullException.ThrowIfNull(charge);
 
-		T exposure = In(Units.Coulomb);
+		T exposure = In(Units.CoulombPerKilogram);
 		T chargeCoulombs = charge.In(Units.Coulomb);
 
 		if (exposure == T.Zero)
@@ -121,7 +121,7 @@ public sealed record Exposure<T> : PhysicalQuantity<Exposure<T>, T>
 	{
 		ArgumentNullException.ThrowIfNull(time);
 
-		T exposure = In(Units.Coulomb);
+		T exposure = In(Units.CoulombPerKilogram);
 		T timeSeconds = time.In(Units.Second);
 
 		return timeSeconds == T.Zero ? throw new ArgumentException("Time cannot be zero.", nameof(time)) : exposure / timeSeconds;
@@ -135,7 +135,7 @@ public sealed record Exposure<T> : PhysicalQuantity<Exposure<T>, T>
 	/// </remarks>
 	public AbsorbedDose<T> ToAbsorbedDoseInAir()
 	{
-		T exposureCperKg = In(Units.Coulomb);
+		T exposureCperKg = In(Units.CoulombPerKilogram);
 		T exposureRoentgens = exposureCperKg / T.CreateChecked(2.58e-4);
 		T doseGray = exposureRoentgens * PhysicalConstants.Generic.RoentgensToGraysInAir<T>();
 		return AbsorbedDose<T>.Create(doseGray);

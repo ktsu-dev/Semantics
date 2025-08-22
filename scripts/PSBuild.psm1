@@ -1470,7 +1470,7 @@ function Invoke-DotNetTest {
     New-Item -Path $testResultsPath -ItemType Directory -Force | Out-Null
 
     # Run tests with both coverage collection and TRX logging for SonarQube
-    "dotnet test --configuration $Configuration --collect:`"Code Coverage;Format=opencover`" --results-directory `"$testResultsPath`" --logger `"trx;LogFileName=TestResults.trx`"" | Invoke-ExpressionWithLogging | Write-InformationStream -Tags "Invoke-DotNetTest"
+    "dotnet test --configuration $Configuration -p:TestingPlatformCommandLineArguments=`"--results-directory `"$testResultsPath`" --report-trx --coverage --coverage-output-format cobertura`"" | Invoke-ExpressionWithLogging | Write-InformationStream -Tags "Invoke-DotNetTest"
     Assert-LastExitCode "Tests failed"
 
     # Find and copy coverage file to expected location for SonarQube
