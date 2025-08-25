@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Test;
 
+using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -241,11 +242,11 @@ public class SemanticPathInterfaceTests
 		relativePaths.Add(RelativeDirectoryPath.Create<RelativeDirectoryPath>("relative\\directory"));
 
 		// Assert
-		Assert.AreEqual(9, paths.Count);
-		Assert.AreEqual(3, filePaths.Count);
-		Assert.AreEqual(3, directoryPaths.Count);
-		Assert.AreEqual(3, absolutePaths.Count);
-		Assert.AreEqual(3, relativePaths.Count);
+		Assert.HasCount(9, paths);
+		Assert.HasCount(3, filePaths);
+		Assert.HasCount(3, directoryPaths);
+		Assert.HasCount(3, absolutePaths);
+		Assert.HasCount(3, relativePaths);
 
 		// Verify all items can be cast to IPath
 		Assert.IsTrue(paths.All(p => p is not null));
@@ -314,10 +315,10 @@ public class SemanticPathInterfaceTests
 		List<IRelativePath> relativePaths = [.. paths.OfType<IRelativePath>()];
 
 		// Assert
-		Assert.AreEqual(1, filePaths.Count);
-		Assert.AreEqual(1, directoryPaths.Count);
-		Assert.AreEqual(1, absolutePaths.Count);
-		Assert.AreEqual(1, relativePaths.Count);
+		Assert.HasCount(1, filePaths);
+		Assert.HasCount(1, directoryPaths);
+		Assert.HasCount(1, absolutePaths);
+		Assert.HasCount(1, relativePaths);
 
 		Assert.IsInstanceOfType<AbsoluteFilePath>(filePaths[0]);
 		Assert.IsInstanceOfType<RelativeDirectoryPath>(directoryPaths[0]);
@@ -406,7 +407,7 @@ public class SemanticPathInterfaceTests
 		// 2. AsAbsolute(baseDirectory) - convert to absolute using specific base
 		AbsoluteFilePath absFromRelativeWithBase = relativeFile.AsAbsolute(baseDir);
 		Assert.IsInstanceOfType<AbsoluteFilePath>(absFromRelativeWithBase);
-		Assert.IsTrue(absFromRelativeWithBase.WeakString.Contains("C:\\base"));
+		Assert.Contains("C:\\base", absFromRelativeWithBase.WeakString);
 
 		// 3. AsRelative(baseDirectory) - convert to relative using base
 		RelativeFilePath relFromAbsolute = absoluteFile.AsRelative(baseDir);
@@ -425,7 +426,7 @@ public class SemanticPathInterfaceTests
 		Assert.AreEqual("sub", relDirFromAbsolute.WeakString);
 
 		AbsoluteDirectoryPath absDirFromRelative = relativeSubDir.AsAbsolute(baseDir);
-		Assert.IsTrue(absDirFromRelative.WeakString.Contains("C:\\base\\sub"));
+		Assert.Contains("C:\\base\\sub", absDirFromRelative.WeakString);
 	}
 
 	[TestMethod]
@@ -448,10 +449,10 @@ public class SemanticPathInterfaceTests
 
 			// Test DirectoryPath
 			DirectoryPath dirPath = DirectoryPath.Create<DirectoryPath>(testDir);
-			IEnumerable<IPath> contents = dirPath.Contents;
+			IPath[] contents = [.. dirPath.GetContents()];
 
-			Assert.IsTrue(contents.Any(), "Contents should not be empty");
-			Assert.AreEqual(3, contents.Count(), "Should contain 2 files and 1 directory");
+			Assert.IsTrue(contents.Length > 0, "Contents should not be empty");
+			Assert.AreEqual(3, contents.Length, "Should contain 2 files and 1 directory");
 
 			// Verify file types
 			IFilePath[] files = [.. contents.OfType<IFilePath>()];
@@ -491,10 +492,10 @@ public class SemanticPathInterfaceTests
 
 			// Test AbsoluteDirectoryPath
 			AbsoluteDirectoryPath absDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(testDir);
-			IEnumerable<IPath> contents = absDir.Contents;
+			IPath[] contents = [.. absDir.GetContents()];
 
-			Assert.IsTrue(contents.Any(), "Contents should not be empty");
-			Assert.AreEqual(2, contents.Count(), "Should contain 1 file and 1 directory");
+			Assert.IsTrue(contents.Length > 0, "Contents should not be empty");
+			Assert.AreEqual(2, contents.Length, "Should contain 1 file and 1 directory");
 
 			// Verify file types are absolute
 			IAbsoluteFilePath[] absoluteFiles = [.. contents.OfType<IAbsoluteFilePath>()];
@@ -521,7 +522,7 @@ public class SemanticPathInterfaceTests
 	{
 		// Test non-existent directory
 		DirectoryPath nonExistentDir = DirectoryPath.Create<DirectoryPath>("/path/that/does/not/exist");
-		IEnumerable<IPath> contents = nonExistentDir.Contents;
+		IEnumerable<IPath> contents = nonExistentDir.GetContents();
 
 		Assert.IsFalse(contents.Any(), "Non-existent directory should return empty contents");
 	}
@@ -537,7 +538,7 @@ public class SemanticPathInterfaceTests
 		try
 		{
 			DirectoryPath dirPath = DirectoryPath.Create<DirectoryPath>(testDir);
-			IEnumerable<IPath> contents = dirPath.Contents;
+			IEnumerable<IPath> contents = dirPath.GetContents();
 
 			Assert.IsFalse(contents.Any(), "Empty directory should return empty contents");
 		}
@@ -569,17 +570,18 @@ public class SemanticPathInterfaceTests
 
 			// Test polymorphic usage with IDirectoryPath
 			DirectoryPath dirPath = DirectoryPath.Create<DirectoryPath>(testDir);
-			IEnumerable<IPath> contents = dirPath.Contents;
+			IEnumerable<IPath> contents = dirPath.GetContents();
 
-			Assert.IsTrue(contents.Any(), "Contents should not be empty");
-			Assert.AreEqual(2, contents.Count(), "Should contain 2 files");
+			List<IPath> contentsList = [.. contents];
+			Assert.IsTrue(contentsList.Count != 0, "Contents should not be empty");
+			Assert.AreEqual(2, contentsList.Count, "Should contain 2 files");
 
 			// Test filtering by type
 			IFilePath[] files = [.. contents.OfType<IFilePath>()];
 			Assert.AreEqual(2, files.Length, "Should be able to filter files polymorphically");
 
 			// Test that all returned items are paths
-			Assert.IsTrue(contents.All(item => item is not null), "All contents should implement IPath");
+			Assert.IsTrue(contentsList.All(item => item is not null), "All contents should implement IPath");
 		}
 		finally
 		{
@@ -708,7 +710,7 @@ public class SemanticPathInterfaceTests
 			bool hasContent = !string.IsNullOrEmpty(pathWithPrefix);
 
 			Assert.IsTrue(hasContent);
-			Assert.IsTrue(pathWithPrefix.StartsWith("prefix_"));
+			Assert.StartsWith("prefix_", pathWithPrefix);
 		}
 	}
 }

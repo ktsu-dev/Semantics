@@ -55,7 +55,7 @@ public class PerformanceBenchmarks
 		double operationsPerSecond = IterationCount * 6 / stopwatch.Elapsed.TotalSeconds; // 6 conversions per iteration
 
 		Console.WriteLine($"Unit conversions: {operationsPerSecond:F0} operations/second");
-		Assert.IsTrue(operationsPerSecond > 100000, "Unit conversions should be fast");
+		Assert.IsGreaterThan(100000, operationsPerSecond, "Unit conversions should be fast");
 	}
 
 	/// <summary>
@@ -98,7 +98,7 @@ public class PerformanceBenchmarks
 		double operationsPerSecond = IterationCount * 7 / stopwatch.Elapsed.TotalSeconds;
 
 		Console.WriteLine($"Arithmetic operations: {operationsPerSecond:F0} operations/second");
-		Assert.IsTrue(operationsPerSecond > 500000, "Arithmetic operations should be very fast");
+		Assert.IsGreaterThan(500000, operationsPerSecond, "Arithmetic operations should be very fast");
 	}
 
 	/// <summary>
@@ -142,7 +142,7 @@ public class PerformanceBenchmarks
 		double operationsPerSecond = IterationCount * 4 / stopwatch.Elapsed.TotalSeconds;
 
 		Console.WriteLine($"Physics relationships: {operationsPerSecond:F0} operations/second");
-		Assert.IsTrue(operationsPerSecond > 200000, "Physics relationships should be efficient");
+		Assert.IsGreaterThan(200000, operationsPerSecond, "Physics relationships should be efficient");
 	}
 
 	/// <summary>
@@ -178,7 +178,7 @@ public class PerformanceBenchmarks
 		double operationsPerSecond = IterationCount * 8 / stopwatch.Elapsed.TotalSeconds;
 
 		Console.WriteLine($"Quantity creation: {operationsPerSecond:F0} operations/second");
-		Assert.IsTrue(operationsPerSecond > 300000, "Quantity creation should be fast");
+		Assert.IsGreaterThan(300000, operationsPerSecond, "Quantity creation should be fast");
 	}
 
 	/// <summary>
@@ -212,7 +212,7 @@ public class PerformanceBenchmarks
 		double operationsPerSecond = IterationCount * 5 / stopwatch.Elapsed.TotalSeconds;
 
 		Console.WriteLine($"Constant access: {operationsPerSecond:F0} operations/second");
-		Assert.IsTrue(operationsPerSecond > 1000000, "Constant access should be very fast");
+		Assert.IsGreaterThan(1000000, operationsPerSecond, "Constant access should be very fast");
 	}
 
 	/// <summary>
@@ -252,6 +252,6 @@ public class PerformanceBenchmarks
 		double operationsPerSecond = IterationCount / stopwatch.Elapsed.TotalSeconds;
 
 		Console.WriteLine($"Cross-domain calculations: {operationsPerSecond:F0} operations/second");
-		Assert.IsTrue(operationsPerSecond > 100000, "Cross-domain calculations should be efficient");
+		Assert.IsGreaterThan(100000, operationsPerSecond, "Cross-domain calculations should be efficient");
 	}
 }

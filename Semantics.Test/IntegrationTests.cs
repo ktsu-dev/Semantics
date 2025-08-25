@@ -55,7 +55,7 @@ public class IntegrationTests
 		Power<double> electricalPower = voltage * current;                          // P = VI
 
 		// Assert - Verify reasonable values
-		Assert.IsTrue(photonEnergy.Value > 0, "Photon energy should be positive");
+		Assert.IsGreaterThan(0, photonEnergy.Value, "Photon energy should be positive");
 		Assert.AreEqual(0.066, electricalPower.Value, 0.001, "Electrical power should be 66mW");
 
 		// Green light photon should be around 2.25 eV = 3.6e-19 J
@@ -109,7 +109,7 @@ public class IntegrationTests
 		// Assert
 		Assert.AreEqual(250.0, remainingActivity.Value, 1.0,
 			"Activity should be 1/4 original after 2 half-lives");
-		Assert.IsTrue(totalThermalEnergy.Value > 0, "Thermal energy should be released from decay");
+		Assert.IsGreaterThan(0, totalThermalEnergy.Value, "Thermal energy should be released from decay");
 	}
 
 	/// <summary>
@@ -155,13 +155,13 @@ public class IntegrationTests
 		RateConstant<double> highTempRate = RateConstant<double>.FromArrheniusEquation(preExponentialFactor, activationEnergy, highTemp);
 
 		// Assert - Higher temperature should give higher rate constant
-		Assert.IsTrue(highTempRate.Value > lowTempRate.Value,
-			"Rate constant should increase with temperature");
+		Assert.IsGreaterThan(lowTempRate.Value,
+highTempRate.Value, "Rate constant should increase with temperature");
 
 		// Rate should increase significantly (exponentially) with temperature
 		double rateRatio = highTempRate.Value / lowTempRate.Value;
-		Assert.IsTrue(rateRatio > 5.0,
-			"Rate constant should increase substantially with 75°C temperature increase");
+		Assert.IsGreaterThan(5.0,
+rateRatio, "Rate constant should increase substantially with 75°C temperature increase");
 	}
 
 	/// <summary>
@@ -217,9 +217,9 @@ public class IntegrationTests
 		// Assert
 		Assert.IsTrue(numericalAperture is > 0.1 and < 0.2,
 			"Numerical aperture should be around 0.17");
-		Assert.IsTrue(receivedPower.Value < laserPower.Value,
-			"Received power should be less than transmitted power");
-		Assert.IsTrue(receivedPower.Value > 0.0006,
-			"Should receive more than 0.6 mW after 10 km with 0.2 dB/km loss");
+		Assert.IsLessThan(laserPower.Value,
+receivedPower.Value, "Received power should be less than transmitted power");
+		Assert.IsGreaterThan(0.0006,
+receivedPower.Value, "Should receive more than 0.6 mW after 10 km with 0.2 dB/km loss");
 	}
 }

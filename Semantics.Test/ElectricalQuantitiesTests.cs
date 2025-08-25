@@ -192,7 +192,7 @@ public class ElectricalQuantitiesTests
 
 		Assert.IsNotNull(current.ToString());
 		Assert.IsNotNull(voltage.ToString());
-		Assert.IsTrue(current.ToString().Contains("2.5"));
-		Assert.IsTrue(voltage.ToString().Contains("12"));
+		Assert.Contains("2.5", current.ToString());
+		Assert.Contains("12", voltage.ToString());
 	}
 }

@@ -6,6 +6,8 @@ namespace ktsu.Semantics.Test;
 
 using System.Collections.Concurrent;
 using System.Text;
+using ktsu.Semantics.Paths;
+using ktsu.Semantics.Strings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -317,13 +319,13 @@ public static class AdvancedErrorScenarioTests
 					{
 						exceptions.Add(ex);
 					}
-				});
+				}, TestContext.CancellationTokenSource.Token);
 			}
 
-			Task.WaitAll(tasks);
+			Task.WaitAll(tasks, TestContext.CancellationTokenSource.Token);
 
-			Assert.AreEqual(0, exceptions.Count, $"Exceptions occurred: {string.Join(", ", exceptions.Select(e => e.Message))}");
-			Assert.AreEqual(threadCount * operationsPerThread, results.Count);
+			Assert.IsEmpty(exceptions, $"Exceptions occurred: {string.Join(", ", exceptions.Select(e => e.Message))}");
+			Assert.HasCount(threadCount * operationsPerThread, results);
 		}
 
 		[StartsWith("thread")]
@@ -365,14 +367,16 @@ public static class AdvancedErrorScenarioTests
 					{
 						exceptions.Add(ex);
 					}
-				});
+				}, TestContext.CancellationTokenSource.Token);
 			}
 
-			Task.WaitAll(tasks);
+			Task.WaitAll(tasks, TestContext.CancellationTokenSource.Token);
 
-			Assert.AreEqual(0, exceptions.Count, $"Exceptions occurred: {string.Join(", ", exceptions.Select(e => e.Message))}");
-			Assert.AreEqual(threadCount * operationsPerThread, results.Count);
+			Assert.IsEmpty(exceptions, $"Exceptions occurred: {string.Join(", ", exceptions.Select(e => e.Message))}");
+			Assert.HasCount(threadCount * operationsPerThread, results);
 		}
+
+		public TestContext TestContext { get; set; }
 	}
 
 	[TestClass]

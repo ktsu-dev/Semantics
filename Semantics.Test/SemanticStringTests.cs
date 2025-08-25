@@ -8,6 +8,7 @@ using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ktsu.Semantics.Strings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 public record MySemanticString : SemanticString<MySemanticString> { }
@@ -80,13 +81,6 @@ public class StringTests
 		MySemanticString result = semanticString.WithSuffix("-post");
 		Assert.AreEqual("test-post", result.ToString());
 	}
-	[TestMethod]
-	public void AsStringExtensionMethod()
-	{
-		string systemString = "test";
-		MySemanticString semanticString = systemString.As<MySemanticString>();
-		Assert.AreEqual("test", semanticString.WeakString);
-	}
 
 	[TestMethod]
 	public void AsCharArrayExtensionMethod()
@@ -152,8 +146,8 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 		Assert.AreEqual(0, semanticString.CompareTo("test"));
-		Assert.IsTrue(semanticString.CompareTo("apple") > 0);
-		Assert.IsTrue(semanticString.CompareTo("zebra") < 0);
+		Assert.IsGreaterThan(0, semanticString.CompareTo("apple"));
+		Assert.IsLessThan(0, semanticString.CompareTo("zebra"));
 	}
 
 	[TestMethod]
@@ -164,7 +158,7 @@ public class StringTests
 		MySemanticString semanticString3 = SemanticString<MySemanticString>.Create<MySemanticString>("apple");
 
 		Assert.AreEqual(0, semanticString1.CompareTo(semanticString2));
-		Assert.IsTrue(semanticString1.CompareTo(semanticString3) > 0);
+		Assert.IsGreaterThan(0, semanticString1.CompareTo(semanticString3));
 	}
 
 	[TestMethod]
@@ -1210,10 +1204,10 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 
 		int result = semantic.CompareTo((object?)null);
-		Assert.IsTrue(result > 0);
+		Assert.IsGreaterThan(0, result);
 
 		int resultSemantic = semantic.CompareTo(null);
-		Assert.IsTrue(resultSemantic > 0);
+		Assert.IsGreaterThan(0, resultSemantic);
 	}
 
 	[TestMethod]
@@ -1273,7 +1267,7 @@ public class SemanticStringAdditionalTests
 		}
 
 		// Empty string split returns no parts in the current implementation
-		Assert.AreEqual(0, parts.Count);
+		Assert.IsEmpty(parts);
 	}
 	private static readonly string[] expectedSingleCharacter = ["a"];
 
@@ -1303,7 +1297,7 @@ public class SemanticStringAdditionalTests
 		}
 
 		// ",," split by comma returns two empty parts in the current implementation
-		Assert.AreEqual(2, parts.Count);
+		Assert.HasCount(2, parts);
 		Assert.IsTrue(parts.All(string.IsNullOrEmpty));
 	}
 
@@ -1317,7 +1311,7 @@ public class SemanticStringAdditionalTests
 		}
 		catch (ArgumentException ex)
 		{
-			StringAssert.Contains(ex.Message, nameof(ValidationTestSemanticString));
+			Assert.Contains(nameof(ValidationTestSemanticString), ex.Message);
 		}
 	}
 }

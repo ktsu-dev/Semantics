@@ -62,8 +62,8 @@ public class PerformanceRegressionTests
 			Console.WriteLine($"{domain.Key} creation: {operationsPerSecond:F0} ops/sec");
 
 			// Performance regression test - should be > 1M ops/sec (CI-friendly target)
-			Assert.IsTrue(operationsPerSecond > 1000000,
-				$"{domain.Key} quantity creation performance regression: {operationsPerSecond:F0} ops/sec < 1M ops/sec");
+			Assert.IsGreaterThan(1000000,
+operationsPerSecond, $"{domain.Key} quantity creation performance regression: {operationsPerSecond:F0} ops/sec < 1M ops/sec");
 		}
 
 		// Overall performance should be consistent across domains (within 50% variance)
@@ -71,8 +71,8 @@ public class PerformanceRegressionTests
 		foreach (KeyValuePair<string, double> result in results)
 		{
 			double variance = Math.Abs(result.Value - averagePerformance) / averagePerformance;
-			Assert.IsTrue(variance < 0.5,
-				$"{result.Key} performance variance too high: {variance:P1} from average {averagePerformance:F0}");
+			Assert.IsLessThan(0.5,
+variance, $"{result.Key} performance variance too high: {variance:P1} from average {averagePerformance:F0}");
 		}
 	}
 
@@ -105,8 +105,8 @@ public class PerformanceRegressionTests
 			double performance = MeasurePerformance(conversion.action, MediumIterationCount);
 			Console.WriteLine($"{conversion.name}: {performance:F0} ops/sec");
 
-			Assert.IsTrue(performance > 3000000,
-$"Conversion performance regression: {conversion.name} = {performance:F0} ops/sec < 3M ops/sec");
+			Assert.IsGreaterThan(3000000,
+performance, $"Conversion performance regression: {conversion.name} = {performance:F0} ops/sec < 3M ops/sec");
 		}
 	}
 
@@ -151,8 +151,8 @@ $"Conversion performance regression: {conversion.name} = {performance:F0} ops/se
 			double performance = MeasurePerformance(test.action, LargeIterationCount);
 			Console.WriteLine($"{test.name}: {performance:F0} ops/sec");
 
-			Assert.IsTrue(performance > 1000000,
-	$"Arithmetic operation performance regression: {test.name} = {performance:F0} ops/sec < 1M ops/sec");
+			Assert.IsGreaterThan(1000000,
+performance, $"Arithmetic operation performance regression: {test.name} = {performance:F0} ops/sec < 1M ops/sec");
 		}
 	}
 
@@ -199,8 +199,8 @@ $"Conversion performance regression: {conversion.name} = {performance:F0} ops/se
 			double performance = MeasurePerformance(test.action, MediumIterationCount);
 			Console.WriteLine($"{test.name}: {performance:F0} ops/sec");
 
-			Assert.IsTrue(performance > 800000,
-$"Physics relationship performance regression: {test.name} = {performance:F0} ops/sec < 800K ops/sec");
+			Assert.IsGreaterThan(800000,
+performance, $"Physics relationship performance regression: {test.name} = {performance:F0} ops/sec < 800K ops/sec");
 		}
 	}
 
@@ -232,8 +232,8 @@ $"Physics relationship performance regression: {test.name} = {performance:F0} op
 			double performance = MeasurePerformance(test.action, LargeIterationCount);
 			Console.WriteLine($"{test.name}: {performance:F0} ops/sec");
 
-			Assert.IsTrue(performance > 15000000,
-	$"Constant access performance regression: {test.name} = {performance:F0} ops/sec < 15M ops/sec");
+			Assert.IsGreaterThan(15000000,
+performance, $"Constant access performance regression: {test.name} = {performance:F0} ops/sec < 15M ops/sec");
 		}
 	}
 
@@ -282,8 +282,8 @@ $"Physics relationship performance regression: {test.name} = {performance:F0} op
 			double performance = MeasurePerformance(test.action, MediumIterationCount);
 			Console.WriteLine($"{test.name}: {performance:F0} ops/sec");
 
-			Assert.IsTrue(performance > 500000,
-	$"Cross-domain performance regression: {test.name} = {performance:F0} ops/sec < 500K ops/sec");
+			Assert.IsGreaterThan(500000,
+performance, $"Cross-domain performance regression: {test.name} = {performance:F0} ops/sec < 500K ops/sec");
 		}
 	}
 

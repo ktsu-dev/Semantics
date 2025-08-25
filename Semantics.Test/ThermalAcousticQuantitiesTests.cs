@@ -243,9 +243,9 @@ public static class ThermalAcousticQuantitiesTests
 			Frequency<double> frequency = Frequency<double>.Create(1000.0);
 
 			// These should all be valid quantities
-			Assert.IsTrue(tempGradient.Value > 0);
-			Assert.IsTrue(acousticPower.Value > 0);
-			Assert.IsTrue(frequency.Value > 0);
+			Assert.IsGreaterThan(0, tempGradient.Value);
+			Assert.IsGreaterThan(0, acousticPower.Value);
+			Assert.IsGreaterThan(0, frequency.Value);
 		}
 	}
 

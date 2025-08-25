@@ -1,0 +1,9 @@
+<Project>
+  <Sdk Name="Microsoft.NET.Sdk" />
+  <Sdk Name="ktsu.Sdk" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net8.0;net7.0;</TargetFrameworks>
+  </PropertyGroup>
+
+</Project>

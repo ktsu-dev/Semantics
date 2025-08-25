@@ -6,7 +6,7 @@ namespace ktsu.Semantics.Test.Paths;
 
 using System;
 using System.IO;
-using ktsu.Semantics;
+using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -77,10 +77,10 @@ public class PathConversionTests
 
 		Assert.IsNotNull(absoluteFile);
 		Assert.IsNotNull(absoluteDir);
-		Assert.IsTrue(absoluteFile.WeakString.Contains(@"C:\projects"));
-		Assert.IsTrue(absoluteFile.WeakString.Contains(@"app\src\file.ts"));
-		Assert.IsTrue(absoluteDir.WeakString.Contains(@"C:\projects"));
-		Assert.IsTrue(absoluteDir.WeakString.Contains(@"app\src"));
+		Assert.Contains(@"C:\projects", absoluteFile.WeakString);
+		Assert.Contains(@"app\src\file.ts", absoluteFile.WeakString);
+		Assert.Contains(@"C:\projects", absoluteDir.WeakString);
+		Assert.Contains(@"app\src", absoluteDir.WeakString);
 	}
 
 	[TestMethod]
@@ -96,9 +96,9 @@ public class PathConversionTests
 
 		Assert.IsNotNull(relativeFile);
 		Assert.IsNotNull(relativeDir);
-		Assert.IsTrue(relativeFile.WeakString.Contains("app"));
-		Assert.IsTrue(relativeFile.WeakString.Contains("file.ts"));
-		Assert.IsTrue(relativeDir.WeakString.Contains("app"));
+		Assert.Contains("app", relativeFile.WeakString);
+		Assert.Contains("file.ts", relativeFile.WeakString);
+		Assert.Contains("app", relativeDir.WeakString);
 	}
 
 	[TestMethod]
@@ -163,9 +163,9 @@ public class PathConversionTests
 		// Should be equivalent (though not necessarily identical due to normalization)
 		Assert.IsNotNull(roundTripFile);
 		Assert.IsNotNull(roundTripDir);
-		Assert.IsTrue(roundTripFile.WeakString.Contains("app"));
-		Assert.IsTrue(roundTripFile.WeakString.Contains("file.txt"));
-		Assert.IsTrue(roundTripDir.WeakString.Contains("app"));
+		Assert.Contains("app", roundTripFile.WeakString);
+		Assert.Contains("file.txt", roundTripFile.WeakString);
+		Assert.Contains("app", roundTripDir.WeakString);
 	}
 
 	[TestMethod]
@@ -196,9 +196,9 @@ public class PathConversionTests
 
 		Assert.IsNotNull(absoluteFile);
 		Assert.IsNotNull(absoluteDir);
-		Assert.IsTrue(absoluteFile.WeakString.Contains("app"));
-		Assert.IsTrue(absoluteFile.WeakString.Contains("file.js"));
-		Assert.IsTrue(absoluteDir.WeakString.Contains("app"));
+		Assert.Contains("app", absoluteFile.WeakString);
+		Assert.Contains("file.js", absoluteFile.WeakString);
+		Assert.Contains("app", absoluteDir.WeakString);
 	}
 
 	[TestMethod]
