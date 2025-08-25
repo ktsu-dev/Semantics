@@ -6,6 +6,8 @@
     <IsTestProject>true</IsTestProject>
     <TargetFramework>net9.0</TargetFramework>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
+    <TestingPlatformShowTestsFailureDetails>true</TestingPlatformShowTestsFailureDetails>
   </PropertyGroup>
 
   <ItemGroup>
