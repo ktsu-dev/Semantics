@@ -1455,7 +1455,7 @@ function Invoke-DotNetTest {
     #>
     Write-StepHeader "Running Tests with Coverage" -Tags "Invoke-DotNetTest"
     # Run tests with both coverage collection and TRX logging for SonarQube
-    "dotnet-coverage collect `"dotnet test`"" | Invoke-ExpressionWithLogging | Write-InformationStream -Tags "Invoke-DotNetTest"
+    "dotnet-coverage collect `"dotnet test`" -f xml -o `"coverage.xml`"" | Invoke-ExpressionWithLogging | Write-InformationStream -Tags "Invoke-DotNetTest"
     Assert-LastExitCode "Tests failed"
 }
 
