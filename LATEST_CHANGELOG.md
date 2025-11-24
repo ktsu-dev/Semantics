@@ -1,5 +1,5 @@
-## v1.0.23 (patch)
+## v1.0.24 (patch)
 
-Changes since v1.0.22:
+Changes since v1.0.23:
 
-- Add compatibility supression files ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance project detection logic to support multi-project solutions ([@matt-edmondson](https://github.com/matt-edmondson))
