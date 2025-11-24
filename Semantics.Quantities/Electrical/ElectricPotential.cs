@@ -37,8 +37,8 @@ public sealed record ElectricPotential<T> : PhysicalQuantity<ElectricPotential<T
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Power<T> operator *(ElectricPotential<T> voltage, ElectricCurrent<T> current)
 	{
-		ArgumentNullException.ThrowIfNull(voltage);
-		ArgumentNullException.ThrowIfNull(current);
+		Guard.NotNull(voltage);
+		Guard.NotNull(current);
 
 		T powerValue = voltage.Value * current.Value;
 
@@ -54,8 +54,8 @@ public sealed record ElectricPotential<T> : PhysicalQuantity<ElectricPotential<T
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static ElectricCurrent<T> operator /(ElectricPotential<T> voltage, ElectricResistance<T> resistance)
 	{
-		ArgumentNullException.ThrowIfNull(voltage);
-		ArgumentNullException.ThrowIfNull(resistance);
+		Guard.NotNull(voltage);
+		Guard.NotNull(resistance);
 
 		T currentValue = voltage.Value / resistance.Value;
 
@@ -71,8 +71,8 @@ public sealed record ElectricPotential<T> : PhysicalQuantity<ElectricPotential<T
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static ElectricField<T> operator /(ElectricPotential<T> voltage, Length<T> distance)
 	{
-		ArgumentNullException.ThrowIfNull(voltage);
-		ArgumentNullException.ThrowIfNull(distance);
+		Guard.NotNull(voltage);
+		Guard.NotNull(distance);
 
 		T fieldValue = voltage.Value / distance.Value;
 

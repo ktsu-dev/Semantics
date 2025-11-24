@@ -29,10 +29,10 @@ public sealed record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>,
 	public static ActivationEnergy<T> FromArrheniusPlot(RateConstant<T> rateConstant1, RateConstant<T> rateConstant2,
 		Temperature<T> temperature1, Temperature<T> temperature2)
 	{
-		ArgumentNullException.ThrowIfNull(rateConstant1);
-		ArgumentNullException.ThrowIfNull(rateConstant2);
-		ArgumentNullException.ThrowIfNull(temperature1);
-		ArgumentNullException.ThrowIfNull(temperature2);
+		Guard.NotNull(rateConstant1);
+		Guard.NotNull(rateConstant2);
+		Guard.NotNull(temperature1);
+		Guard.NotNull(temperature2);
 
 		T k1 = rateConstant1.In(Units.PerSecond);
 		T k2 = rateConstant2.In(Units.PerSecond);
@@ -74,8 +74,8 @@ public sealed record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>,
 	/// <returns>The ratio k2/k1.</returns>
 	public T CalculateRateRatio(Temperature<T> temperature1, Temperature<T> temperature2)
 	{
-		ArgumentNullException.ThrowIfNull(temperature1);
-		ArgumentNullException.ThrowIfNull(temperature2);
+		Guard.NotNull(temperature1);
+		Guard.NotNull(temperature2);
 
 		T ea = In(Units.JoulesPerMole);
 		T t1 = temperature1.In(Units.Kelvin);

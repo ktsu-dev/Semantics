@@ -63,8 +63,8 @@ public sealed record VolumetricFlowRate<T> : PhysicalQuantity<VolumetricFlowRate
 	/// </remarks>
 	public static VolumetricFlowRate<T> FromVelocityAndArea(Velocity<T> velocity, Area<T> area)
 	{
-		ArgumentNullException.ThrowIfNull(velocity);
-		ArgumentNullException.ThrowIfNull(area);
+		Guard.NotNull(velocity);
+		Guard.NotNull(area);
 
 		T v = velocity.In(Units.MetersPerSecond);
 		T a = area.In(Units.SquareMeter);
@@ -81,7 +81,7 @@ public sealed record VolumetricFlowRate<T> : PhysicalQuantity<VolumetricFlowRate
 	/// </remarks>
 	public Velocity<T> CalculateVelocity(Area<T> area)
 	{
-		ArgumentNullException.ThrowIfNull(area);
+		Guard.NotNull(area);
 
 		T q = In(Units.CubicMeter);
 		T a = area.In(Units.SquareMeter);
@@ -104,7 +104,7 @@ public sealed record VolumetricFlowRate<T> : PhysicalQuantity<VolumetricFlowRate
 	/// </remarks>
 	public Area<T> CalculateArea(Velocity<T> velocity)
 	{
-		ArgumentNullException.ThrowIfNull(velocity);
+		Guard.NotNull(velocity);
 
 		T q = In(Units.CubicMeter);
 		T v = velocity.In(Units.MetersPerSecond);
@@ -127,7 +127,7 @@ public sealed record VolumetricFlowRate<T> : PhysicalQuantity<VolumetricFlowRate
 	/// </remarks>
 	public MassFlowRate<T> CalculateMassFlowRate(Density<T> density)
 	{
-		ArgumentNullException.ThrowIfNull(density);
+		Guard.NotNull(density);
 
 		T q = In(Units.CubicMeter);
 		T rho = density.In(Units.Kilogram);
@@ -145,7 +145,7 @@ public sealed record VolumetricFlowRate<T> : PhysicalQuantity<VolumetricFlowRate
 	/// </remarks>
 	public Time<T> CalculateFillTime(Volume<T> volume)
 	{
-		ArgumentNullException.ThrowIfNull(volume);
+		Guard.NotNull(volume);
 
 		T v = volume.In(Units.CubicMeter);
 		T q = In(Units.CubicMeter);
@@ -168,7 +168,7 @@ public sealed record VolumetricFlowRate<T> : PhysicalQuantity<VolumetricFlowRate
 	/// </remarks>
 	public Volume<T> CalculateVolumeDelivered(Time<T> time)
 	{
-		ArgumentNullException.ThrowIfNull(time);
+		Guard.NotNull(time);
 
 		T q = In(Units.CubicMeter);
 		T t = time.In(Units.Second);

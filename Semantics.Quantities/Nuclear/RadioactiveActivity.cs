@@ -90,8 +90,8 @@ public sealed record RadioactiveActivity<T> : PhysicalQuantity<RadioactiveActivi
 	/// </remarks>
 	public Time<T> CalculateHalfLife(RadioactiveActivity<T> initialActivity, Time<T> timeElapsed)
 	{
-		ArgumentNullException.ThrowIfNull(initialActivity);
-		ArgumentNullException.ThrowIfNull(timeElapsed);
+		Guard.NotNull(initialActivity);
+		Guard.NotNull(timeElapsed);
 
 		T currentActivity = In(Units.Becquerel);
 		T initialActivityValue = initialActivity.In(Units.Becquerel);
@@ -119,8 +119,8 @@ public sealed record RadioactiveActivity<T> : PhysicalQuantity<RadioactiveActivi
 	/// </remarks>
 	public RadioactiveActivity<T> CalculateActivityAfterTime(Time<T> halfLife, Time<T> timeElapsed)
 	{
-		ArgumentNullException.ThrowIfNull(halfLife);
-		ArgumentNullException.ThrowIfNull(timeElapsed);
+		Guard.NotNull(halfLife);
+		Guard.NotNull(timeElapsed);
 
 		T currentActivity = In(Units.Becquerel);
 		T halfLifeSeconds = halfLife.In(Units.Second);

@@ -50,7 +50,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	public RelativeFilePath ChangeExtension(FileExtension newExtension)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(newExtension);
+		Guard.NotNull(newExtension);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(newExtension);
 #endif
@@ -99,7 +99,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	public AbsoluteFilePath AsAbsolute(AbsoluteDirectoryPath baseDirectory)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(baseDirectory);
+		Guard.NotNull(baseDirectory);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
 #endif
@@ -121,7 +121,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(baseDirectory);
+		Guard.NotNull(baseDirectory);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
 #endif

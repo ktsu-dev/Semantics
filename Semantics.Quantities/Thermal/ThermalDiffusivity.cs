@@ -68,9 +68,9 @@ public sealed record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity
 		Density<T> density,
 		SpecificHeat<T> specificHeat)
 	{
-		ArgumentNullException.ThrowIfNull(thermalConductivity);
-		ArgumentNullException.ThrowIfNull(density);
-		ArgumentNullException.ThrowIfNull(specificHeat);
+		Guard.NotNull(thermalConductivity);
+		Guard.NotNull(density);
+		Guard.NotNull(specificHeat);
 		return Create(thermalConductivity.Value / (density.Value * specificHeat.Value));
 	}
 
@@ -81,7 +81,7 @@ public sealed record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity
 	/// <returns>The characteristic diffusion time.</returns>
 	public Time<T> CalculateDiffusionTime(Length<T> characteristicLength)
 	{
-		ArgumentNullException.ThrowIfNull(characteristicLength);
+		Guard.NotNull(characteristicLength);
 		T lengthSquared = characteristicLength.Value * characteristicLength.Value;
 		return Time<T>.Create(lengthSquared / Value);
 	}
@@ -93,7 +93,7 @@ public sealed record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity
 	/// <returns>The thermal penetration depth.</returns>
 	public Length<T> CalculatePenetrationDepth(Time<T> time)
 	{
-		ArgumentNullException.ThrowIfNull(time);
+		Guard.NotNull(time);
 		return Length<T>.Create(T.CreateChecked(Math.Sqrt(double.CreateChecked(Value * time.Value))));
 	}
 
@@ -105,8 +105,8 @@ public sealed record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity
 	/// <returns>The thermal conductivity.</returns>
 	public ThermalConductivity<T> CalculateThermalConductivity(Density<T> density, SpecificHeat<T> specificHeat)
 	{
-		ArgumentNullException.ThrowIfNull(density);
-		ArgumentNullException.ThrowIfNull(specificHeat);
+		Guard.NotNull(density);
+		Guard.NotNull(specificHeat);
 		return ThermalConductivity<T>.Create(Value * density.Value * specificHeat.Value);
 	}
 

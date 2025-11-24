@@ -51,7 +51,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	public RelativeDirectoryPath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(baseDirectory);
+		Guard.NotNull(baseDirectory);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
 #endif
@@ -75,8 +75,8 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	public static DirectoryPath operator /(DirectoryPath left, RelativeDirectoryPath right)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Guard.NotNull(left);
+		Guard.NotNull(right);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
 		ArgumentNullExceptionPolyfill.ThrowIfNull(right);
@@ -96,8 +96,8 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	public static FilePath operator /(DirectoryPath left, RelativeFilePath right)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Guard.NotNull(left);
+		Guard.NotNull(right);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
 		ArgumentNullExceptionPolyfill.ThrowIfNull(right);
@@ -117,8 +117,8 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	public static FilePath operator /(DirectoryPath left, FileName right)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Guard.NotNull(left);
+		Guard.NotNull(right);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
 		ArgumentNullExceptionPolyfill.ThrowIfNull(right);

@@ -18,7 +18,7 @@ public static class UnitExtensions
 	/// <returns>True if this is a base unit in its system, false otherwise.</returns>
 	public static bool IsBaseUnit(this IUnit unit)
 	{
-		ArgumentNullException.ThrowIfNull(unit);
+		Guard.NotNull(unit);
 
 		return unit.System switch
 		{
@@ -43,7 +43,7 @@ public static class UnitExtensions
 	/// <returns>True if this is an SI unit, false otherwise.</returns>
 	public static bool IsSI(this IUnit unit)
 	{
-		ArgumentNullException.ThrowIfNull(unit);
+		Guard.NotNull(unit);
 		return unit.System is UnitSystem.SIBase or UnitSystem.SIDerived;
 	}
 
@@ -54,7 +54,7 @@ public static class UnitExtensions
 	/// <returns>True if this is a metric unit, false otherwise.</returns>
 	public static bool IsMetric(this IUnit unit)
 	{
-		ArgumentNullException.ThrowIfNull(unit);
+		Guard.NotNull(unit);
 		return unit.System is UnitSystem.SIBase or UnitSystem.SIDerived or UnitSystem.Metric or UnitSystem.CGS;
 	}
 
@@ -65,7 +65,7 @@ public static class UnitExtensions
 	/// <returns>True if this is an Imperial or US Customary unit, false otherwise.</returns>
 	public static bool IsImperial(this IUnit unit)
 	{
-		ArgumentNullException.ThrowIfNull(unit);
+		Guard.NotNull(unit);
 		return unit.System is UnitSystem.Imperial or UnitSystem.USCustomary;
 	}
 }

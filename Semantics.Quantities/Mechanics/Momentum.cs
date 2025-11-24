@@ -36,8 +36,8 @@ public sealed record Momentum<T> : PhysicalQuantity<Momentum<T>, T>
 	/// <returns>The resulting momentum.</returns>
 	public static Momentum<T> Multiply(Mass<T> mass, Velocity<T> velocity)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
-		ArgumentNullException.ThrowIfNull(velocity);
+		Guard.NotNull(mass);
+		Guard.NotNull(velocity);
 		return Create(mass.Value * velocity.Value);
 	}
 
@@ -49,8 +49,8 @@ public sealed record Momentum<T> : PhysicalQuantity<Momentum<T>, T>
 	/// <returns>The resulting velocity.</returns>
 	public static Velocity<T> Divide(Momentum<T> momentum, Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(momentum);
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(momentum);
+		Guard.NotNull(mass);
 		return Velocity<T>.Create(momentum.Value / mass.Value);
 	}
 
@@ -62,8 +62,8 @@ public sealed record Momentum<T> : PhysicalQuantity<Momentum<T>, T>
 	/// <returns>The resulting mass.</returns>
 	public static Mass<T> Divide(Momentum<T> momentum, Velocity<T> velocity)
 	{
-		ArgumentNullException.ThrowIfNull(momentum);
-		ArgumentNullException.ThrowIfNull(velocity);
+		Guard.NotNull(momentum);
+		Guard.NotNull(velocity);
 		return Mass<T>.Create(momentum.Value / velocity.Value);
 	}
 }

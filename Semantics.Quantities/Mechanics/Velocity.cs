@@ -36,8 +36,8 @@ public sealed record Velocity<T> : PhysicalQuantity<Velocity<T>, T>
 	/// <returns>The resulting acceleration.</returns>
 	public static Acceleration<T> operator /(Velocity<T> left, Time<T> right)
 	{
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Guard.NotNull(left);
+		Guard.NotNull(right);
 
 		T velocityValue = left.In(Units.MetersPerSecond);
 		T timeValue = right.In(Units.Second);
@@ -63,8 +63,8 @@ public sealed record Velocity<T> : PhysicalQuantity<Velocity<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Length<T> operator *(Velocity<T> velocity, Time<T> time)
 	{
-		ArgumentNullException.ThrowIfNull(velocity);
-		ArgumentNullException.ThrowIfNull(time);
+		Guard.NotNull(velocity);
+		Guard.NotNull(time);
 
 		T distanceValue = velocity.Value * time.Value;
 
@@ -89,8 +89,8 @@ public sealed record Velocity<T> : PhysicalQuantity<Velocity<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Time<T> operator /(Length<T> distance, Velocity<T> velocity)
 	{
-		ArgumentNullException.ThrowIfNull(distance);
-		ArgumentNullException.ThrowIfNull(velocity);
+		Guard.NotNull(distance);
+		Guard.NotNull(velocity);
 
 		T timeValue = distance.Value / velocity.Value;
 
@@ -106,8 +106,8 @@ public sealed record Velocity<T> : PhysicalQuantity<Velocity<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Time<T> operator /(Velocity<T> velocity, Acceleration<T> acceleration)
 	{
-		ArgumentNullException.ThrowIfNull(velocity);
-		ArgumentNullException.ThrowIfNull(acceleration);
+		Guard.NotNull(velocity);
+		Guard.NotNull(acceleration);
 
 		T timeValue = velocity.Value / acceleration.Value;
 

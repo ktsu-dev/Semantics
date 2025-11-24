@@ -274,7 +274,7 @@ public static class PhysicalDimensionExtensions
 	/// <returns>The value converted to the base unit.</returns>
 	private static T ConvertToBaseUnit<T>(T value, IUnit sourceUnit) where T : struct, INumber<T>
 	{
-		ArgumentNullException.ThrowIfNull(sourceUnit);
+		Guard.NotNull(sourceUnit);
 
 		// Handle offset units (like temperature conversions)
 		if (Math.Abs(sourceUnit.ToBaseOffset) > 1e-10)

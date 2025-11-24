@@ -54,8 +54,8 @@ public sealed record Exposure<T> : PhysicalQuantity<Exposure<T>, T>
 	/// </remarks>
 	public static Exposure<T> FromChargeAndMass(ElectricCharge<T> charge, Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(charge);
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(charge);
+		Guard.NotNull(mass);
 
 		T chargeCoulombs = charge.In(Units.Coulomb);
 		T massKg = mass.In(Units.Kilogram);
@@ -78,7 +78,7 @@ public sealed record Exposure<T> : PhysicalQuantity<Exposure<T>, T>
 	/// </remarks>
 	public ElectricCharge<T> CalculateCharge(Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(mass);
 
 		T exposure = In(Units.CoulombPerKilogram);
 		T massKg = mass.In(Units.Kilogram);
@@ -96,7 +96,7 @@ public sealed record Exposure<T> : PhysicalQuantity<Exposure<T>, T>
 	/// </remarks>
 	public Mass<T> CalculateMass(ElectricCharge<T> charge)
 	{
-		ArgumentNullException.ThrowIfNull(charge);
+		Guard.NotNull(charge);
 
 		T exposure = In(Units.CoulombPerKilogram);
 		T chargeCoulombs = charge.In(Units.Coulomb);
@@ -119,7 +119,7 @@ public sealed record Exposure<T> : PhysicalQuantity<Exposure<T>, T>
 	/// </remarks>
 	public T CalculateExposureRate(Time<T> time)
 	{
-		ArgumentNullException.ThrowIfNull(time);
+		Guard.NotNull(time);
 
 		T exposure = In(Units.CoulombPerKilogram);
 		T timeSeconds = time.In(Units.Second);

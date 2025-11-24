@@ -37,8 +37,8 @@ public sealed record ElectricResistance<T> : PhysicalQuantity<ElectricResistance
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static ElectricPotential<T> operator *(ElectricResistance<T> resistance, ElectricCurrent<T> current)
 	{
-		ArgumentNullException.ThrowIfNull(resistance);
-		ArgumentNullException.ThrowIfNull(current);
+		Guard.NotNull(resistance);
+		Guard.NotNull(current);
 
 		T voltageValue = resistance.Value * current.Value;
 
@@ -54,8 +54,8 @@ public sealed record ElectricResistance<T> : PhysicalQuantity<ElectricResistance
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static ElectricCurrent<T> operator /(ElectricPotential<T> voltage, ElectricResistance<T> resistance)
 	{
-		ArgumentNullException.ThrowIfNull(voltage);
-		ArgumentNullException.ThrowIfNull(resistance);
+		Guard.NotNull(voltage);
+		Guard.NotNull(resistance);
 
 		T currentValue = voltage.Value / resistance.Value;
 

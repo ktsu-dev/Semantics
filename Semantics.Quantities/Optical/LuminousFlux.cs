@@ -53,7 +53,7 @@ public sealed record LuminousFlux<T> : PhysicalQuantity<LuminousFlux<T>, T>
 	/// </remarks>
 	public Illuminance<T> CalculateIlluminance(Area<T> area)
 	{
-		ArgumentNullException.ThrowIfNull(area);
+		Guard.NotNull(area);
 
 		T flux = In(Units.Lumen);
 		T areaSquareMeters = area.In(Units.SquareMeter);
@@ -70,7 +70,7 @@ public sealed record LuminousFlux<T> : PhysicalQuantity<LuminousFlux<T>, T>
 	/// </remarks>
 	public T CalculateLuminousEfficacy(Power<T> radiantFlux)
 	{
-		ArgumentNullException.ThrowIfNull(radiantFlux);
+		Guard.NotNull(radiantFlux);
 
 		T flux = In(Units.Lumen);
 		T power = radiantFlux.In(Units.Watt);
@@ -86,8 +86,8 @@ public sealed record LuminousFlux<T> : PhysicalQuantity<LuminousFlux<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Illuminance<T> operator /(LuminousFlux<T> flux, Area<T> area)
 	{
-		ArgumentNullException.ThrowIfNull(flux);
-		ArgumentNullException.ThrowIfNull(area);
+		Guard.NotNull(flux);
+		Guard.NotNull(area);
 
 		T illuminanceValue = flux.Value / area.Value;
 

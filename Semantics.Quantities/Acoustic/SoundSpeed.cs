@@ -43,8 +43,8 @@ public sealed record SoundSpeed<T> : PhysicalQuantity<SoundSpeed<T>, T>
 	/// <returns>The resulting sound speed.</returns>
 	public static SoundSpeed<T> Multiply(Wavelength<T> wavelength, Frequency<T> frequency)
 	{
-		ArgumentNullException.ThrowIfNull(wavelength);
-		ArgumentNullException.ThrowIfNull(frequency);
+		Guard.NotNull(wavelength);
+		Guard.NotNull(frequency);
 		return Create(wavelength.Value * frequency.Value);
 	}
 

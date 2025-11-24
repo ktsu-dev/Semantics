@@ -69,7 +69,7 @@ public sealed record Loudness<T> : PhysicalQuantity<Loudness<T>, T>
 	/// <returns>The combined loudness.</returns>
 	public Loudness<T> CombineWith(Loudness<T> other)
 	{
-		ArgumentNullException.ThrowIfNull(other);
+		Guard.NotNull(other);
 
 		// Simplified combination using power law
 		double alpha = 0.3;

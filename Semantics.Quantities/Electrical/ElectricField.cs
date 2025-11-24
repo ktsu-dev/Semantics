@@ -36,8 +36,8 @@ public sealed record ElectricField<T> : PhysicalQuantity<ElectricField<T>, T>
 	/// <returns>The resulting electric field.</returns>
 	public static ElectricField<T> Divide(ElectricPotential<T> potential, Length<T> length)
 	{
-		ArgumentNullException.ThrowIfNull(potential);
-		ArgumentNullException.ThrowIfNull(length);
+		Guard.NotNull(potential);
+		Guard.NotNull(length);
 		return Create(potential.Value / length.Value);
 	}
 
@@ -49,8 +49,8 @@ public sealed record ElectricField<T> : PhysicalQuantity<ElectricField<T>, T>
 	/// <returns>The resulting electric potential.</returns>
 	public static ElectricPotential<T> Multiply(ElectricField<T> field, Length<T> length)
 	{
-		ArgumentNullException.ThrowIfNull(field);
-		ArgumentNullException.ThrowIfNull(length);
+		Guard.NotNull(field);
+		Guard.NotNull(length);
 		return ElectricPotential<T>.Create(field.Value * length.Value);
 	}
 }

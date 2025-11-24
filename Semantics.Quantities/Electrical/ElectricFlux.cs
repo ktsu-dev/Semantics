@@ -36,8 +36,8 @@ public sealed record ElectricFlux<T> : PhysicalQuantity<ElectricFlux<T>, T>
 	/// <returns>The resulting electric flux.</returns>
 	public static ElectricFlux<T> Multiply(ElectricField<T> field, Area<T> area)
 	{
-		ArgumentNullException.ThrowIfNull(field);
-		ArgumentNullException.ThrowIfNull(area);
+		Guard.NotNull(field);
+		Guard.NotNull(area);
 		return Create(field.Value * area.Value);
 	}
 
@@ -49,8 +49,8 @@ public sealed record ElectricFlux<T> : PhysicalQuantity<ElectricFlux<T>, T>
 	/// <returns>The resulting electric field.</returns>
 	public static ElectricField<T> Divide(ElectricFlux<T> flux, Area<T> area)
 	{
-		ArgumentNullException.ThrowIfNull(flux);
-		ArgumentNullException.ThrowIfNull(area);
+		Guard.NotNull(flux);
+		Guard.NotNull(area);
 		return ElectricField<T>.Create(flux.Value / area.Value);
 	}
 }

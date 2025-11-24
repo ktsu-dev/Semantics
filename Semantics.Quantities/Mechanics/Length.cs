@@ -36,8 +36,8 @@ public sealed record Length<T> : PhysicalQuantity<Length<T>, T>
 	/// <returns>The resulting area.</returns>
 	public static Area<T> operator *(Length<T> left, Length<T> right)
 	{
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Guard.NotNull(left);
+		Guard.NotNull(right);
 		return Area<T>.Create(left.Value * right.Value);
 	}
 
@@ -57,8 +57,8 @@ public sealed record Length<T> : PhysicalQuantity<Length<T>, T>
 	/// <returns>The resulting velocity.</returns>
 	public static Velocity<T> operator /(Length<T> left, Time<T> right)
 	{
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Guard.NotNull(left);
+		Guard.NotNull(right);
 		return Velocity<T>.Create(left.Value / right.Value);
 	}
 

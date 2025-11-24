@@ -36,8 +36,8 @@ public sealed record Density<T> : PhysicalQuantity<Density<T>, T>
 	/// <returns>The resulting density.</returns>
 	public static Density<T> Divide(Mass<T> mass, Volume<T> volume)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
-		ArgumentNullException.ThrowIfNull(volume);
+		Guard.NotNull(mass);
+		Guard.NotNull(volume);
 		return Create(mass.Value / volume.Value);
 	}
 
@@ -49,8 +49,8 @@ public sealed record Density<T> : PhysicalQuantity<Density<T>, T>
 	/// <returns>The resulting mass.</returns>
 	public static Mass<T> Multiply(Density<T> density, Volume<T> volume)
 	{
-		ArgumentNullException.ThrowIfNull(density);
-		ArgumentNullException.ThrowIfNull(volume);
+		Guard.NotNull(density);
+		Guard.NotNull(volume);
 		return Mass<T>.Create(density.Value * volume.Value);
 	}
 
@@ -62,8 +62,8 @@ public sealed record Density<T> : PhysicalQuantity<Density<T>, T>
 	/// <returns>The resulting volume.</returns>
 	public static Volume<T> Divide(Mass<T> mass, Density<T> density)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
-		ArgumentNullException.ThrowIfNull(density);
+		Guard.NotNull(mass);
+		Guard.NotNull(density);
 		return Volume<T>.Create(mass.Value / density.Value);
 	}
 }

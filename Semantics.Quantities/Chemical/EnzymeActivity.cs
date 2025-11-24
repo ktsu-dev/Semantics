@@ -26,8 +26,8 @@ public sealed record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>
 	/// <returns>The enzyme activity.</returns>
 	public static EnzymeActivity<T> FromSubstrateConversion(AmountOfSubstance<T> substrateConverted, Time<T> timeInterval)
 	{
-		ArgumentNullException.ThrowIfNull(substrateConverted);
-		ArgumentNullException.ThrowIfNull(timeInterval);
+		Guard.NotNull(substrateConverted);
+		Guard.NotNull(timeInterval);
 
 		T moles = substrateConverted.In(Units.Mole);
 		T seconds = timeInterval.In(Units.Second);
@@ -40,7 +40,7 @@ public sealed record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>
 	/// <returns>Specific activity in units per gram.</returns>
 	public T CalculateSpecificActivity(Mass<T> enzymeMass)
 	{
-		ArgumentNullException.ThrowIfNull(enzymeMass);
+		Guard.NotNull(enzymeMass);
 
 		T activity = In(Units.Katal);
 		T massInGrams = enzymeMass.In(Units.Gram);
@@ -55,9 +55,9 @@ public sealed record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>
 	public static EnzymeActivity<T> MichaelisMenten(EnzymeActivity<T> maxVelocity,
 		Concentration<T> substrateConcentration, Concentration<T> michaelisConstant)
 	{
-		ArgumentNullException.ThrowIfNull(maxVelocity);
-		ArgumentNullException.ThrowIfNull(substrateConcentration);
-		ArgumentNullException.ThrowIfNull(michaelisConstant);
+		Guard.NotNull(maxVelocity);
+		Guard.NotNull(substrateConcentration);
+		Guard.NotNull(michaelisConstant);
 
 		T vmax = maxVelocity.In(Units.Katal);
 		T s = substrateConcentration.In(Units.Molar);
@@ -73,8 +73,8 @@ public sealed record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>
 	/// <returns>Turnover number in s⁻¹.</returns>
 	public static T CalculateTurnoverNumber(EnzymeActivity<T> maxVelocity, Concentration<T> enzymeConcentration)
 	{
-		ArgumentNullException.ThrowIfNull(maxVelocity);
-		ArgumentNullException.ThrowIfNull(enzymeConcentration);
+		Guard.NotNull(maxVelocity);
+		Guard.NotNull(enzymeConcentration);
 
 		T vmax = maxVelocity.In(Units.Katal);
 		T et = enzymeConcentration.In(Units.Molar);

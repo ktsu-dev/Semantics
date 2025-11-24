@@ -30,7 +30,7 @@ public sealed record FilePath : SemanticFilePath<FilePath>, IFilePath
 	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(baseDirectory);
+		Guard.NotNull(baseDirectory);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
 #endif

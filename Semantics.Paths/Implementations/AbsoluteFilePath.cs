@@ -50,7 +50,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	public AbsoluteFilePath ChangeExtension(FileExtension newExtension)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(newExtension);
+		Guard.NotNull(newExtension);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(newExtension);
 #endif
@@ -81,7 +81,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	public bool IsChildOf(AbsoluteDirectoryPath parentPath)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(parentPath);
+		Guard.NotNull(parentPath);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(parentPath);
 #endif
@@ -154,7 +154,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(baseDirectory);
+		Guard.NotNull(baseDirectory);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
 #endif

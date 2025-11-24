@@ -58,7 +58,7 @@ public sealed record Luminance<T> : PhysicalQuantity<Luminance<T>, T>
 	/// </remarks>
 	public LuminousIntensity<T> CalculateLuminousIntensity(Area<T> projectedArea)
 	{
-		ArgumentNullException.ThrowIfNull(projectedArea);
+		Guard.NotNull(projectedArea);
 
 		T luminance = In(Units.CandelaPerSquareMeter);
 		T areaSquareMeters = projectedArea.In(Units.SquareMeter);

@@ -37,8 +37,8 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	/// <returns>The kinetic energy.</returns>
 	public static Energy<T> FromKineticEnergy(Mass<T> mass, Velocity<T> velocity)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
-		ArgumentNullException.ThrowIfNull(velocity);
+		Guard.NotNull(mass);
+		Guard.NotNull(velocity);
 
 		T halfValue = PhysicalConstants.Generic.OneHalf<T>();
 		T kineticEnergyValue = halfValue * mass.Value * velocity.Value * velocity.Value;
@@ -55,8 +55,8 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	/// <returns>The gravitational potential energy.</returns>
 	public static Energy<T> FromPotentialEnergy(Mass<T> mass, Length<T> height, Acceleration<T>? gravity = null)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
-		ArgumentNullException.ThrowIfNull(height);
+		Guard.NotNull(mass);
+		Guard.NotNull(height);
 
 		T massValue = mass.In(Units.Kilogram);
 		T heightValue = height.In(Units.Meter);
@@ -74,8 +74,8 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	/// <returns>The work done (energy transferred).</returns>
 	public static Energy<T> FromWork(Force<T> force, Length<T> distance)
 	{
-		ArgumentNullException.ThrowIfNull(force);
-		ArgumentNullException.ThrowIfNull(distance);
+		Guard.NotNull(force);
+		Guard.NotNull(distance);
 
 		T forceValue = force.In(Units.Newton);
 		T distanceValue = distance.In(Units.Meter);
@@ -92,7 +92,7 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	/// <returns>The velocity (v = √(2E/m)).</returns>
 	public Velocity<T> GetVelocityFromKineticEnergy(Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(mass);
 
 		T energyValue = In(Units.Joule);
 		T massValue = mass.In(Units.Kilogram);
@@ -116,8 +116,8 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Power<T> operator /(Energy<T> energy, Time<T> time)
 	{
-		ArgumentNullException.ThrowIfNull(energy);
-		ArgumentNullException.ThrowIfNull(time);
+		Guard.NotNull(energy);
+		Guard.NotNull(time);
 
 		T powerValue = energy.Value / time.Value;
 
@@ -133,8 +133,8 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Time<T> operator /(Energy<T> energy, Power<T> power)
 	{
-		ArgumentNullException.ThrowIfNull(energy);
-		ArgumentNullException.ThrowIfNull(power);
+		Guard.NotNull(energy);
+		Guard.NotNull(power);
 
 		T timeValue = energy.Value / power.Value;
 
@@ -150,8 +150,8 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Force<T> operator /(Energy<T> energy, Length<T> distance)
 	{
-		ArgumentNullException.ThrowIfNull(energy);
-		ArgumentNullException.ThrowIfNull(distance);
+		Guard.NotNull(energy);
+		Guard.NotNull(distance);
 
 		T forceValue = energy.Value / distance.Value;
 
@@ -167,8 +167,8 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Length<T> operator /(Energy<T> energy, Force<T> force)
 	{
-		ArgumentNullException.ThrowIfNull(energy);
-		ArgumentNullException.ThrowIfNull(force);
+		Guard.NotNull(energy);
+		Guard.NotNull(force);
 
 		T distanceValue = energy.Value / force.Value;
 
@@ -183,8 +183,8 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	/// <returns>The resulting gravitational potential energy.</returns>
 	public static Energy<T> FromGravitationalPotential(Mass<T> mass, Length<T> height)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
-		ArgumentNullException.ThrowIfNull(height);
+		Guard.NotNull(mass);
+		Guard.NotNull(height);
 
 		T gravityValue = PhysicalConstants.Generic.StandardGravity<T>();
 		T potentialEnergyValue = mass.Value * gravityValue * height.Value;
@@ -200,8 +200,8 @@ public sealed record Energy<T> : PhysicalQuantity<Energy<T>, T>
 	/// <returns>The resulting velocity.</returns>
 	public static Velocity<T> GetVelocityFromKineticEnergy(Energy<T> kineticEnergy, Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(kineticEnergy);
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(kineticEnergy);
+		Guard.NotNull(mass);
 
 		T twoValue = T.CreateChecked(2.0);
 		T velocitySquared = twoValue * kineticEnergy.Value / mass.Value;

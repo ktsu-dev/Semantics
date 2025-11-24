@@ -36,7 +36,7 @@ public sealed record ElectricConductivity<T> : PhysicalQuantity<ElectricConducti
 	/// <returns>The resulting electric conductivity.</returns>
 	public static ElectricConductivity<T> Divide(T currentDensity, ElectricField<T> electricField)
 	{
-		ArgumentNullException.ThrowIfNull(electricField);
+		Guard.NotNull(electricField);
 		return Create(currentDensity / electricField.Value);
 	}
 }

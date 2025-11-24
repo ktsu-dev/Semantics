@@ -37,8 +37,8 @@ public sealed record Power<T> : PhysicalQuantity<Power<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Energy<T> operator *(Power<T> power, Time<T> time)
 	{
-		ArgumentNullException.ThrowIfNull(power);
-		ArgumentNullException.ThrowIfNull(time);
+		Guard.NotNull(power);
+		Guard.NotNull(time);
 
 		T energyValue = power.Value * time.Value;
 

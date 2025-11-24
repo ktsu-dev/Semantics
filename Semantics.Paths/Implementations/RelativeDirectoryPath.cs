@@ -93,8 +93,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	public static RelativeDirectoryPath operator /(RelativeDirectoryPath left, RelativeDirectoryPath right)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Guard.NotNull(left);
+		Guard.NotNull(right);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
 		ArgumentNullExceptionPolyfill.ThrowIfNull(right);
@@ -114,8 +114,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	public static RelativeFilePath operator /(RelativeDirectoryPath left, RelativeFilePath right)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Guard.NotNull(left);
+		Guard.NotNull(right);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
 		ArgumentNullExceptionPolyfill.ThrowIfNull(right);
@@ -135,8 +135,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	public static RelativeFilePath operator /(RelativeDirectoryPath left, FileName right)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Guard.NotNull(left);
+		Guard.NotNull(right);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
 		ArgumentNullExceptionPolyfill.ThrowIfNull(right);
@@ -176,7 +176,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	public AbsoluteDirectoryPath AsAbsolute(AbsoluteDirectoryPath baseDirectory)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(baseDirectory);
+		Guard.NotNull(baseDirectory);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
 #endif
@@ -198,7 +198,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	public RelativeDirectoryPath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(baseDirectory);
+		Guard.NotNull(baseDirectory);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
 #endif

@@ -63,8 +63,8 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public static MassFlowRate<T> FromVolumetricFlowRateAndDensity(VolumetricFlowRate<T> volumetricFlowRate, Density<T> density)
 	{
-		ArgumentNullException.ThrowIfNull(volumetricFlowRate);
-		ArgumentNullException.ThrowIfNull(density);
+		Guard.NotNull(volumetricFlowRate);
+		Guard.NotNull(density);
 
 		T q = volumetricFlowRate.In(Units.CubicMeter);
 		T rho = density.In(Units.Kilogram);
@@ -81,7 +81,7 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public VolumetricFlowRate<T> CalculateVolumetricFlowRate(Density<T> density)
 	{
-		ArgumentNullException.ThrowIfNull(density);
+		Guard.NotNull(density);
 
 		T massFlow = In(Units.Kilogram);
 		T rho = density.In(Units.Kilogram);
@@ -104,7 +104,7 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public Density<T> CalculateDensity(VolumetricFlowRate<T> volumetricFlowRate)
 	{
-		ArgumentNullException.ThrowIfNull(volumetricFlowRate);
+		Guard.NotNull(volumetricFlowRate);
 
 		T massFlow = In(Units.Kilogram);
 		T volumeFlow = volumetricFlowRate.In(Units.CubicMeter);
@@ -127,7 +127,7 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public Mass<T> CalculateMassTransferred(Time<T> time)
 	{
-		ArgumentNullException.ThrowIfNull(time);
+		Guard.NotNull(time);
 
 		T massFlow = In(Units.Kilogram);
 		T t = time.In(Units.Second);
@@ -145,7 +145,7 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public Time<T> CalculateTransferTime(Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(mass);
 
 		T m = mass.In(Units.Kilogram);
 		T massFlow = In(Units.Kilogram);
@@ -169,7 +169,7 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public T CalculateMomentumFlowRate(Velocity<T> velocity)
 	{
-		ArgumentNullException.ThrowIfNull(velocity);
+		Guard.NotNull(velocity);
 
 		T massFlow = In(Units.Kilogram);
 		T v = velocity.In(Units.MetersPerSecond);

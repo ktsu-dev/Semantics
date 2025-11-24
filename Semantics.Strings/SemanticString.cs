@@ -7,9 +7,7 @@ namespace ktsu.Semantics.Strings;
 using System;
 using System.Collections;
 using System.Diagnostics;
-#if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
-#endif
 using System.Globalization;
 using System.Text;
 
@@ -197,13 +195,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public string PadRight(int totalWidth, char paddingChar) => WeakString.PadRight(totalWidth: totalWidth, paddingChar: paddingChar);
 
 	/// <inheritdoc/>
-#if NET5_0_OR_GREATER
-#if NET6_0_OR_GREATER
-	[SuppressMessage("Style", "IDE0057:Use range operator", Justification = "I'd rather wrap the class 1:1 than reimplement it")]
-#else
-	[SuppressMessage("Style", "IDE0057:Use range operator")]
-#endif
-#endif
 	public string Remove(int startIndex) => WeakString.Remove(startIndex);
 	/// <inheritdoc/>
 	public string Remove(int startIndex, int count) => WeakString.Remove(startIndex: startIndex, count: count);
@@ -234,11 +225,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public bool StartsWith(string value, StringComparison comparisonType) => WeakString.StartsWith(value: value, comparisonType: comparisonType);
 
 	/// <inheritdoc/>
-#if NET6_0_OR_GREATER
 	public string Substring(int startIndex) => WeakString[startIndex..];
-#else
-	public string Substring(int startIndex) => WeakString.Substring(startIndex);
-#endif
 	/// <inheritdoc/>
 	public string Substring(int startIndex, int length) => WeakString.Substring(startIndex: startIndex, length: length);
 
@@ -287,23 +274,16 @@ public abstract record SemanticString<TDerived> : ISemanticString
 
 	// SemanticString implementation
 	/// <inheritdoc/>
-#if NET5_0_OR_GREATER
-#if NET6_0_OR_GREATER
-	[ExcludeFromCodeCoverage(Justification = "DebuggerDisplay")]
-#else
 	[ExcludeFromCodeCoverage]
-#endif
-#endif
 	protected string GetDebuggerDisplay() => $"({GetType().Name})\"{WeakString}\"";
 
 	/// <inheritdoc/>
 	public static string ToString(ISemanticString? semanticString) => semanticString?.WeakString ?? string.Empty;
 	/// <inheritdoc/>
 	public static char[] ToCharArray(ISemanticString? semanticString) => semanticString?.WeakString.ToCharArray() ?? [];
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
+
 	/// <inheritdoc/>
 	public static ReadOnlySpan<char> ToReadOnlySpan(ISemanticString? semanticString) => semanticString is null ? [] : semanticString.WeakString.AsSpan();
-#endif
 
 	/// <inheritdoc/>
 	public bool IsEmpty() => IsEmpty(semanticString: this);
@@ -412,14 +392,12 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <returns>A character array containing the characters of the semantic string, or an empty array if the value is <see langword="null"/>.</returns>
 	public static implicit operator char[](SemanticString<TDerived>? value) => value?.ToCharArray() ?? [];
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Implicitly converts a semantic string to a read-only character span.
 	/// </summary>
 	/// <param name="value">The semantic string to convert.</param>
 	/// <returns>A read-only span containing the characters of the semantic string, or an empty span if the value is <see langword="null"/>.</returns>
 	public static implicit operator ReadOnlySpan<char>(SemanticString<TDerived>? value) => value is null ? default : value.AsSpan();
-#endif
 
 	/// <summary>
 	/// Implicitly converts a semantic string to a regular string.
@@ -472,18 +450,10 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public static TDest Create<TDest>(char[]? value)
 		where TDest : SemanticString<TDest>
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(value);
-#else
-		if (value is null)
-		{
-			throw new ArgumentNullException(nameof(value));
-		}
-#endif
+		Guard.NotNull(value);
 		return Create<TDest>(value: new string(value: value));
 	}
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Creates a new instance of the specified semantic string type from a read-only character span.
 	/// </summary>
@@ -501,7 +471,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public static TDest Create<TDest>(ReadOnlySpan<char> value)
 		where TDest : SemanticString<TDest>
 		=> Create<TDest>(value: value.ToString());
-#endif
 
 	/// <summary>
 	/// Creates a new instance of the specified semantic string type from a string value.
@@ -546,18 +515,10 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	private static TDest FromCharArray<TDest>(char[]? value)
 		where TDest : SemanticString<TDest>
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(value);
-#else
-		if (value is null)
-		{
-			throw new ArgumentNullException(nameof(value));
-		}
-#endif
+		Guard.NotNull(value);
 		return FromString<TDest>(value: new string(value: value));
 	}
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Creates a new instance of the specified semantic string type from a read-only character span.
 	/// </summary>
@@ -575,7 +536,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	private static TDest FromReadOnlySpan<TDest>(ReadOnlySpan<char> value)
 		where TDest : SemanticString<TDest>
 		=> FromString<TDest>(value: value.ToString());
-#endif
 
 	/// <summary>
 	/// Internal factory method that creates a new semantic string instance without validation.
@@ -591,14 +551,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	private static TDest FromStringInternal<TDest>(string? value)
 		where TDest : SemanticString<TDest>
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(value);
-#else
-		if (value is null)
-		{
-			throw new ArgumentNullException(nameof(value));
-		}
-#endif
+		Guard.NotNull(value);
 
 		Type typeOfTDest = typeof(TDest);
 		TDest newInstance = (TDest)Activator.CreateInstance(type: typeOfTDest)!;
@@ -649,7 +602,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	public static TDerived Create(char[]? value) => Create<TDerived>(value);
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Creates a new instance of this semantic string type from a read-only character span.
 	/// </summary>
@@ -661,7 +613,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// eliminating the need for explicit generic type parameters.
 	/// </remarks>
 	public static TDerived Create(ReadOnlySpan<char> value) => Create<TDerived>(value);
-#endif
 
 	/// <summary>
 	/// Attempts to create a new instance of this semantic string type from a string value without throwing exceptions.
@@ -697,7 +648,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	public static bool TryCreate(char[]? value, out TDerived? result) => TryFromCharArray(value, out result);
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Attempts to create a new instance of this semantic string type from a read-only character span without throwing exceptions.
 	/// </summary>
@@ -714,7 +664,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// It eliminates the need for explicit generic type parameters when called on concrete types.
 	/// </remarks>
 	public static bool TryCreate(ReadOnlySpan<char> value, out TDerived? result) => TryFromReadOnlySpan(value, out result);
-#endif
 
 	/// <summary>
 	/// Attempts to create a new instance of the specified semantic string type from a string value without throwing exceptions.
@@ -756,7 +705,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		where TDest : SemanticString<TDest>
 		=> TryFromCharArray(value, out result);
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Attempts to create a new instance of the specified semantic string type from a read-only character span without throwing exceptions.
 	/// </summary>
@@ -776,7 +724,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public static bool TryCreate<TDest>(ReadOnlySpan<char> value, out TDest? result)
 		where TDest : SemanticString<TDest>
 		=> TryFromReadOnlySpan(value, out result);
-#endif
 
 	/// <summary>
 	/// Attempts to create a new instance of the specified semantic string type from a string value without throwing exceptions.
@@ -841,7 +788,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		}
 	}
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Attempts to create a new instance of the specified semantic string type from a read-only character span without throwing exceptions.
 	/// </summary>
@@ -868,9 +814,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 			return false;
 		}
 	}
-#endif
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Gets this semantic string as a read-only span without allocation.
 	/// </summary>
@@ -880,9 +824,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// and is more efficient than ToCharArray() or implicit char[] conversion.
 	/// </remarks>
 	public ReadOnlySpan<char> AsSpan() => WeakString.AsSpan();
-#endif
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Gets a portion of this semantic string as a read-only span without allocation.
 	/// </summary>
@@ -906,7 +848,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	public ReadOnlySpan<char> AsSpan(int start, int length) => WeakString.AsSpan(start, length);
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Finds the first occurrence of a character sequence in the semantic string using span semantics.
 	/// </summary>
@@ -928,9 +869,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// This overload uses span-based search which can be more efficient than string-based LastIndexOf for certain scenarios.
 	/// </remarks>
 	public int LastIndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.LastIndexOf(value.ToString(), comparisonType);
-#endif
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Determines whether the semantic string starts with the specified span using efficient span comparison.
 	/// </summary>
@@ -963,7 +902,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// This overload uses span-based search which can be more efficient than string-based Contains for certain scenarios.
 	/// </remarks>
 	public bool Contains(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.Contains(value.ToString(), comparisonType);
-#endif
 
 	/// <summary>
 	/// Counts the number of characters that match the specified predicate using span semantics.
@@ -976,14 +914,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	public int Count(Func<char, bool> predicate)
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(predicate);
-#else
-		if (predicate is null)
-		{
-			throw new ArgumentNullException(nameof(predicate));
-		}
-#endif
+		Guard.NotNull(predicate);
 
 		ReadOnlySpan<char> span = AsSpan();
 		int count = 0;
@@ -1136,5 +1067,4 @@ public abstract record SemanticString<TDerived> : ISemanticString
 			return true;
 		}
 	}
-#endif
 }

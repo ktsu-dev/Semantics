@@ -36,8 +36,8 @@ public sealed record ImpedanceAC<T> : PhysicalQuantity<ImpedanceAC<T>, T>
 	/// <returns>The resulting AC impedance.</returns>
 	public static ImpedanceAC<T> Divide(ElectricPotential<T> potential, ElectricCurrent<T> current)
 	{
-		ArgumentNullException.ThrowIfNull(potential);
-		ArgumentNullException.ThrowIfNull(current);
+		Guard.NotNull(potential);
+		Guard.NotNull(current);
 		return Create(potential.Value / current.Value);
 	}
 
@@ -49,8 +49,8 @@ public sealed record ImpedanceAC<T> : PhysicalQuantity<ImpedanceAC<T>, T>
 	/// <returns>The resulting electric potential.</returns>
 	public static ElectricPotential<T> Multiply(ImpedanceAC<T> impedance, ElectricCurrent<T> current)
 	{
-		ArgumentNullException.ThrowIfNull(impedance);
-		ArgumentNullException.ThrowIfNull(current);
+		Guard.NotNull(impedance);
+		Guard.NotNull(current);
 		return ElectricPotential<T>.Create(impedance.Value * current.Value);
 	}
 }

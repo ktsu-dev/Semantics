@@ -64,8 +64,8 @@ public sealed record Entropy<T> : PhysicalQuantity<Entropy<T>, T>
 	/// <returns>The entropy change.</returns>
 	public static Entropy<T> CalculateEntropyChange(Heat<T> heat, Temperature<T> temperature)
 	{
-		ArgumentNullException.ThrowIfNull(heat);
-		ArgumentNullException.ThrowIfNull(temperature);
+		Guard.NotNull(heat);
+		Guard.NotNull(temperature);
 		return Create(heat.Value / temperature.Value);
 	}
 
@@ -77,8 +77,8 @@ public sealed record Entropy<T> : PhysicalQuantity<Entropy<T>, T>
 	/// <returns>The Gibbs free energy change.</returns>
 	public Energy<T> CalculateGibbsFreeEnergy(Energy<T> enthalpy, Temperature<T> temperature)
 	{
-		ArgumentNullException.ThrowIfNull(enthalpy);
-		ArgumentNullException.ThrowIfNull(temperature);
+		Guard.NotNull(enthalpy);
+		Guard.NotNull(temperature);
 		return Energy<T>.Create(enthalpy.Value - (temperature.Value * Value));
 	}
 }

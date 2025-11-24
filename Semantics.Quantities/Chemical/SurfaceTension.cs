@@ -26,8 +26,8 @@ public sealed record SurfaceTension<T> : PhysicalQuantity<SurfaceTension<T>, T>
 	/// <returns>The surface tension.</returns>
 	public static SurfaceTension<T> FromForceAndLength(Force<T> force, Length<T> length)
 	{
-		ArgumentNullException.ThrowIfNull(force);
-		ArgumentNullException.ThrowIfNull(length);
+		Guard.NotNull(force);
+		Guard.NotNull(length);
 
 		T forceValue = force.In(Units.Newton);
 		T lengthValue = length.In(Units.Meter);
@@ -40,7 +40,7 @@ public sealed record SurfaceTension<T> : PhysicalQuantity<SurfaceTension<T>, T>
 	/// <returns>The surface energy.</returns>
 	public Energy<T> CalculateSurfaceEnergy(Area<T> areaChange)
 	{
-		ArgumentNullException.ThrowIfNull(areaChange);
+		Guard.NotNull(areaChange);
 
 		T tensionValue = In(Units.NewtonPerMeter);
 		T areaValue = areaChange.In(Units.SquareMeter);
@@ -79,9 +79,9 @@ public sealed record SurfaceTension<T> : PhysicalQuantity<SurfaceTension<T>, T>
 	public Length<T> CalculateCapillaryRise(T contactAngle, Length<T> tubeRadius,
 		Density<T> liquidDensity, Acceleration<T> gravity)
 	{
-		ArgumentNullException.ThrowIfNull(tubeRadius);
-		ArgumentNullException.ThrowIfNull(liquidDensity);
-		ArgumentNullException.ThrowIfNull(gravity);
+		Guard.NotNull(tubeRadius);
+		Guard.NotNull(liquidDensity);
+		Guard.NotNull(gravity);
 
 		T gamma = In(Units.NewtonPerMeter);
 		T cosTheta = T.CreateChecked(Math.Cos(double.CreateChecked(contactAngle)));

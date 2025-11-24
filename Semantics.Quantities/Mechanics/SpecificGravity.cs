@@ -36,8 +36,8 @@ public sealed record SpecificGravity<T> : PhysicalQuantity<SpecificGravity<T>, T
 	/// <returns>The resulting specific gravity.</returns>
 	public static SpecificGravity<T> Divide(Density<T> density, Density<T> referenceDensity)
 	{
-		ArgumentNullException.ThrowIfNull(density);
-		ArgumentNullException.ThrowIfNull(referenceDensity);
+		Guard.NotNull(density);
+		Guard.NotNull(referenceDensity);
 		return Create(density.Value / referenceDensity.Value);
 	}
 
@@ -49,8 +49,8 @@ public sealed record SpecificGravity<T> : PhysicalQuantity<SpecificGravity<T>, T
 	/// <returns>The resulting density.</returns>
 	public static Density<T> Multiply(SpecificGravity<T> specificGravity, Density<T> referenceDensity)
 	{
-		ArgumentNullException.ThrowIfNull(specificGravity);
-		ArgumentNullException.ThrowIfNull(referenceDensity);
+		Guard.NotNull(specificGravity);
+		Guard.NotNull(referenceDensity);
 		return Density<T>.Create(specificGravity.Value * referenceDensity.Value);
 	}
 }

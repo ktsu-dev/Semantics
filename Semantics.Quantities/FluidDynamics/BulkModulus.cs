@@ -64,7 +64,7 @@ public sealed record BulkModulus<T> : PhysicalQuantity<BulkModulus<T>, T>
 	/// </remarks>
 	public static BulkModulus<T> FromPressureAndVolumeChange(Pressure<T> pressureChange, T relativeVolumeChange)
 	{
-		ArgumentNullException.ThrowIfNull(pressureChange);
+		Guard.NotNull(pressureChange);
 
 		if (relativeVolumeChange == T.Zero)
 		{
@@ -85,7 +85,7 @@ public sealed record BulkModulus<T> : PhysicalQuantity<BulkModulus<T>, T>
 	/// </remarks>
 	public T CalculateRelativeVolumeChange(Pressure<T> pressureChange)
 	{
-		ArgumentNullException.ThrowIfNull(pressureChange);
+		Guard.NotNull(pressureChange);
 
 		T deltaP = pressureChange.In(Units.Pascal);
 		T k = In(Units.Pascal);
@@ -116,7 +116,7 @@ public sealed record BulkModulus<T> : PhysicalQuantity<BulkModulus<T>, T>
 	/// </remarks>
 	public Velocity<T> CalculateSpeedOfSound(Density<T> density)
 	{
-		ArgumentNullException.ThrowIfNull(density);
+		Guard.NotNull(density);
 
 		T k = In(Units.Pascal);
 		T rho = density.In(Units.Kilogram);

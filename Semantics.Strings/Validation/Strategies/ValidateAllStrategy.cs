@@ -13,7 +13,7 @@ public sealed class ValidateAllStrategy : IValidationStrategy
 	public bool Validate(ISemanticString semanticString, Type type)
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(type);
+		Guard.NotNull(type);
 #else
 		if (type is null)
 		{

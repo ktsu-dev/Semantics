@@ -4,110 +4,144 @@
 
 namespace ktsu.Semantics.Paths;
 
-#if !NET6_0_OR_GREATER
 using System;
-#endif
-#if !NET5_0_OR_GREATER || NETSTANDARD2_0
-using System.Runtime.InteropServices;
-#endif
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
-#if !NET6_0_OR_GREATER
 /// <summary>
-/// Polyfill for ArgumentNullException.ThrowIfNull for older .NET versions
+/// Provides polyfill methods for ArgumentNullException for older frameworks.
 /// </summary>
 internal static class ArgumentNullExceptionPolyfill
 {
 	/// <summary>
-	/// Throws an <see cref="ArgumentNullException"/> if <paramref name="argument"/> is null.
+	/// Throws an ArgumentNullException if the argument is null.
 	/// </summary>
-	/// <param name="argument">The reference type argument to validate as non-null.</param>
-	/// <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
-	public static void ThrowIfNull(object? argument, string? paramName = null)
+	/// <param name="argument">The argument to check.</param>
+	/// <param name="paramName">The name of the parameter.</param>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Polyfill for older frameworks")]
+	public static void ThrowIfNull([NotNull] object? argument, [System.Runtime.CompilerServices.CallerArgumentExpression(nameof(argument))] string? paramName = null)
+#if NET6_0_OR_GREATER
+		=> ArgumentNullException.ThrowIfNull(argument, paramName);
+#else
 	{
 		if (argument is null)
 		{
 			throw new ArgumentNullException(paramName);
 		}
 	}
-}
 #endif
-
-#if !NET5_0_OR_GREATER
-/// <summary>
-/// Polyfill for OperatingSystem class for older .NET versions
-/// </summary>
-internal static class OperatingSystem
-{
-	/// <summary>
-	/// Indicates whether the current application is running on Windows.
-	/// </summary>
-	/// <returns>true if the current application is running on Windows; otherwise, false.</returns>
-	public static bool IsWindows() => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 }
-#endif
 
-#if NETSTANDARD2_0
 /// <summary>
-/// Polyfill for Path methods not available in .NET Standard 2.0
+/// Provides polyfill methods for Path class for older frameworks.
 /// </summary>
 internal static class PathPolyfill
 {
 	/// <summary>
-	/// Returns a relative path from one path to another.
+	/// Returns the relative path from one path to another.
 	/// </summary>
 	/// <param name="relativeTo">The source path the result should be relative to.</param>
 	/// <param name="path">The destination path.</param>
 	/// <returns>The relative path, or path if the paths don't share the same root.</returns>
 	public static string GetRelativePath(string relativeTo, string path)
 	{
-		// Simplified implementation - in a real scenario you'd want more robust logic
-		Uri relativeUri = new(Path.GetFullPath(relativeTo + Path.DirectorySeparatorChar));
-		Uri pathUri = new(Path.GetFullPath(path));
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+		return Path.GetRelativePath(relativeTo, path);
+#else
+		// Fallback implementation for netstandard2.0
+		relativeTo = Path.GetFullPath(relativeTo);
+		path = Path.GetFullPath(path);
 
-		if (relativeUri.Scheme != pathUri.Scheme)
+		Uri fromUri = new(AppendDirectorySeparatorChar(relativeTo));
+		Uri toUri = new(AppendDirectorySeparatorChar(path));
+
+		if (fromUri.Scheme != toUri.Scheme)
 		{
-			return path; // Different schemes, can't make relative
+			return path;
 		}
 
-		string relativeUriString = relativeUri.MakeRelativeUri(pathUri).ToString();
-		return Uri.UnescapeDataString(relativeUriString).Replace('/', Path.DirectorySeparatorChar);
+		Uri relativeUri = fromUri.MakeRelativeUri(toUri);
+		string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+
+		if (string.Equals(toUri.Scheme, Uri.UriSchemeFile, StringComparison.OrdinalIgnoreCase))
+		{
+			relativePath = relativePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+		}
+
+		return relativePath;
+#endif
 	}
 
 	/// <summary>
-	/// Gets a value that indicates whether the specified path string contains absolute or relative path information.
+	/// Returns a value that indicates whether a path is fully qualified.
 	/// </summary>
-	/// <param name="path">The path to test.</param>
-	/// <returns>true if path contains an absolute path; otherwise, false.</returns>
+	/// <param name="path">The path to check.</param>
+	/// <returns>true if the path is fully qualified; otherwise, false.</returns>
 	public static bool IsPathFullyQualified(string path)
 	{
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+		return Path.IsPathFullyQualified(path);
+#else
+		// Fallback implementation for netstandard2.0
 		if (string.IsNullOrWhiteSpace(path))
 		{
 			return false;
 		}
 
-		if (Path.IsPathRooted(path))
+		if (path.Length < 2)
 		{
-			// On Windows, check if it's a drive letter or UNC path
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-			{
-				return (path.Length >= 3 && char.IsLetter(path[0]) && path[1] == ':' && path[2] == Path.DirectorySeparatorChar)
-					|| path.StartsWith(@"\\", StringComparison.Ordinal);
-			}
-			// On Unix-like systems, rooted paths are fully qualified
+			return false;
+		}
+
+		// Check for UNC paths (\\server\share)
+		if (path.Length >= 2 && IsDirectorySeparator(path[0]) && IsDirectorySeparator(path[1]))
+		{
+			return true;
+		}
+
+		// Check for drive letter paths (C:\)
+		if (path.Length >= 3 &&
+			char.IsLetter(path[0]) &&
+			path[1] == ':' &&
+			IsDirectorySeparator(path[2]))
+		{
+			return true;
+		}
+
+		// Unix absolute paths start with /
+		if (Path.DirectorySeparatorChar == '/' && path[0] == '/')
+		{
 			return true;
 		}
 
 		return false;
+#endif
 	}
 
 	/// <summary>
-	/// Returns the absolute path for the specified path string, using the specified base path.
+	/// Gets the absolute path for the specified path string relative to the base path.
 	/// </summary>
-	/// <param name="path">The relative or absolute path.</param>
-	/// <param name="basePath">The base path to use if path is relative.</param>
-	/// <returns>The absolute path.</returns>
+	/// <param name="path">The file or directory for which to obtain absolute path information.</param>
+	/// <param name="basePath">The beginning of a fully qualified path.</param>
+	/// <returns>The fully qualified location of path, such as "C:\MyFile.txt".</returns>
 	public static string GetFullPath(string path, string basePath)
 	{
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+		return Path.GetFullPath(path, basePath);
+#else
+		// Fallback implementation for netstandard2.0 and netcoreapp2.0
+		if (string.IsNullOrEmpty(path))
+		{
+			throw new ArgumentException("Path cannot be empty.", nameof(path));
+		}
+
+		if (string.IsNullOrEmpty(basePath))
+		{
+			throw new ArgumentException("Base path cannot be empty.", nameof(basePath));
+		}
+
+		basePath = Path.GetFullPath(basePath);
+
 		if (IsPathFullyQualified(path))
 		{
 			return Path.GetFullPath(path);
@@ -115,11 +149,27 @@ internal static class PathPolyfill
 
 		string combinedPath = Path.Combine(basePath, path);
 		return Path.GetFullPath(combinedPath);
+#endif
 	}
+
+#if !(NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+	private static string AppendDirectorySeparatorChar(string path)
+	{
+		if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+		{
+			return path + Path.DirectorySeparatorChar;
+		}
+
+		return path;
+	}
+
+	private static bool IsDirectorySeparator(char c) =>
+		c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar;
+#endif
 }
 
 /// <summary>
-/// Polyfill for string methods not available in older .NET versions
+/// Provides polyfill methods for String class for older frameworks.
 /// </summary>
 internal static class StringPolyfill
 {
@@ -129,24 +179,45 @@ internal static class StringPolyfill
 	/// <param name="str">The string to perform the replacement on.</param>
 	/// <param name="oldValue">The string to be replaced.</param>
 	/// <param name="newValue">The string to replace all occurrences of oldValue.</param>
-	/// <param name="comparisonType">One of the enumeration values that determines how this method searches for oldValue.</param>
+	/// <param name="comparisonType">One of the enumeration values that determines how oldValue is searched within this instance.</param>
 	/// <returns>A string that is equivalent to the current string except that all instances of oldValue are replaced with newValue.</returns>
 	public static string Replace(string str, string oldValue, string newValue, StringComparison comparisonType)
 	{
-		if (comparisonType == StringComparison.Ordinal)
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+		return str.Replace(oldValue, newValue, comparisonType);
+#else
+		// Fallback implementation for netstandard2.0
+		if (string.IsNullOrEmpty(str))
 		{
-			return str.Replace(oldValue, newValue);
+			return str;
 		}
 
-		// For other comparison types, we need a more complex implementation
-		string result = str;
-		int index = 0;
-		while ((index = result.IndexOf(oldValue, index, comparisonType)) >= 0)
+		if (string.IsNullOrEmpty(oldValue))
 		{
-			result = result.Remove(index, oldValue.Length).Insert(index, newValue);
-			index += newValue.Length;
+			throw new ArgumentException("Old value cannot be null or empty.", nameof(oldValue));
 		}
-		return result;
+
+		newValue ??= string.Empty;
+
+		int index = str.IndexOf(oldValue, comparisonType);
+		if (index < 0)
+		{
+			return str;
+		}
+
+		System.Text.StringBuilder result = new(str.Length);
+		int lastIndex = 0;
+
+		while (index >= 0)
+		{
+			result.Append(str, lastIndex, index - lastIndex);
+			result.Append(newValue);
+			lastIndex = index + oldValue.Length;
+			index = str.IndexOf(oldValue, lastIndex, comparisonType);
+		}
+
+		result.Append(str, lastIndex, str.Length - lastIndex);
+		return result.ToString();
+#endif
 	}
 }
-#endif

@@ -50,7 +50,7 @@ public sealed record ReverberationTime<T> : PhysicalQuantity<ReverberationTime<T
 	/// <returns>The calculated reverberation time.</returns>
 	public static ReverberationTime<T> CalculateSabine(Volume<T> volume, T totalAbsorption)
 	{
-		ArgumentNullException.ThrowIfNull(volume);
+		Guard.NotNull(volume);
 		return Create(T.CreateChecked(0.161) * volume.Value / totalAbsorption);
 	}
 

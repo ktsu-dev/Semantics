@@ -63,7 +63,7 @@ public sealed record EquivalentDose<T> : PhysicalQuantity<EquivalentDose<T>, T>
 	/// </remarks>
 	public static EquivalentDose<T> FromAbsorbedDoseAndWeightingFactor(AbsorbedDose<T> absorbedDose, T radiationWeightingFactor)
 	{
-		ArgumentNullException.ThrowIfNull(absorbedDose);
+		Guard.NotNull(absorbedDose);
 
 		T dose = absorbedDose.In(Units.Gray);
 		T equivalentDose = dose * radiationWeightingFactor;
@@ -112,7 +112,7 @@ public sealed record EquivalentDose<T> : PhysicalQuantity<EquivalentDose<T>, T>
 	/// </remarks>
 	public T CalculateDoseRate(Time<T> time)
 	{
-		ArgumentNullException.ThrowIfNull(time);
+		Guard.NotNull(time);
 
 		T dose = In(Units.Sievert);
 		T timeSeconds = time.In(Units.Second);

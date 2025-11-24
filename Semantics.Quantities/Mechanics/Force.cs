@@ -37,8 +37,8 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	/// <returns>The resulting force.</returns>
 	public static Force<T> FromMassAndAcceleration(Mass<T> mass, Acceleration<T> acceleration)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
-		ArgumentNullException.ThrowIfNull(acceleration);
+		Guard.NotNull(mass);
+		Guard.NotNull(acceleration);
 
 		T massValue = mass.In(Units.Kilogram);
 		T accelerationValue = acceleration.In(Units.MetersPerSecondSquared);
@@ -54,7 +54,7 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	/// <returns>The weight force under standard gravity (9.80665 m/s²).</returns>
 	public static Force<T> FromWeight(Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(mass);
 
 		T massValue = mass.In(Units.Kilogram);
 		T gravity = PhysicalConstants.Generic.StandardGravity<T>();
@@ -70,7 +70,7 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	/// <returns>The resulting acceleration (a = F/m).</returns>
 	public Acceleration<T> GetAcceleration(Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(mass);
 
 		T forceValue = In(Units.Newton);
 		T massValue = mass.In(Units.Kilogram);
@@ -88,8 +88,8 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Power<T> operator *(Force<T> force, Velocity<T> velocity)
 	{
-		ArgumentNullException.ThrowIfNull(force);
-		ArgumentNullException.ThrowIfNull(velocity);
+		Guard.NotNull(force);
+		Guard.NotNull(velocity);
 
 		T powerValue = force.Value * velocity.Value;
 
@@ -116,8 +116,8 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Energy<T> operator *(Force<T> force, Length<T> distance)
 	{
-		ArgumentNullException.ThrowIfNull(force);
-		ArgumentNullException.ThrowIfNull(distance);
+		Guard.NotNull(force);
+		Guard.NotNull(distance);
 
 		T energyValue = force.Value * distance.Value;
 
@@ -144,8 +144,8 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Acceleration<T> operator /(Force<T> force, Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(force);
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(force);
+		Guard.NotNull(mass);
 
 		T accelerationValue = force.Value / mass.Value;
 
@@ -161,8 +161,8 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Mass<T> operator /(Force<T> force, Acceleration<T> acceleration)
 	{
-		ArgumentNullException.ThrowIfNull(force);
-		ArgumentNullException.ThrowIfNull(acceleration);
+		Guard.NotNull(force);
+		Guard.NotNull(acceleration);
 
 		T massValue = force.Value / acceleration.Value;
 
@@ -178,7 +178,7 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	/// <returns>The resulting torque.</returns>
 	public Torque<T> CalculateTorque(Length<T> momentArm)
 	{
-		ArgumentNullException.ThrowIfNull(momentArm);
+		Guard.NotNull(momentArm);
 
 		T torqueValue = Value * momentArm.Value;
 
@@ -195,8 +195,8 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	/// <returns>The resulting torque.</returns>
 	public static Torque<T> CalculateTorque(Force<T> force, Length<T> momentArm)
 	{
-		ArgumentNullException.ThrowIfNull(force);
-		ArgumentNullException.ThrowIfNull(momentArm);
+		Guard.NotNull(force);
+		Guard.NotNull(momentArm);
 
 		T torqueValue = force.Value * momentArm.Value;
 
@@ -212,8 +212,8 @@ public sealed record Force<T> : PhysicalQuantity<Force<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Pressure<T> operator /(Force<T> force, Area<T> area)
 	{
-		ArgumentNullException.ThrowIfNull(force);
-		ArgumentNullException.ThrowIfNull(area);
+		Guard.NotNull(force);
+		Guard.NotNull(area);
 
 		T pressureValue = force.Value / area.Value;
 

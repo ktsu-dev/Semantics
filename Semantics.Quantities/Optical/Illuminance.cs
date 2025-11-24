@@ -62,7 +62,7 @@ public sealed record Illuminance<T> : PhysicalQuantity<Illuminance<T>, T>
 	/// </remarks>
 	public LuminousFlux<T> CalculateLuminousFlux(Area<T> area)
 	{
-		ArgumentNullException.ThrowIfNull(area);
+		Guard.NotNull(area);
 
 		T illuminance = In(Units.Lux);
 		T areaSquareMeters = area.In(Units.SquareMeter);
@@ -79,7 +79,7 @@ public sealed record Illuminance<T> : PhysicalQuantity<Illuminance<T>, T>
 	/// </remarks>
 	public Length<T> CalculateDistanceFromSource(LuminousIntensity<T> luminousIntensity)
 	{
-		ArgumentNullException.ThrowIfNull(luminousIntensity);
+		Guard.NotNull(luminousIntensity);
 
 		T illuminance = In(Units.Lux);
 		T intensity = luminousIntensity.In(Units.Candela);

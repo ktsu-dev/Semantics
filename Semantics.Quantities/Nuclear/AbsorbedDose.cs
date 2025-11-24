@@ -63,8 +63,8 @@ public sealed record AbsorbedDose<T> : PhysicalQuantity<AbsorbedDose<T>, T>
 	/// </remarks>
 	public static AbsorbedDose<T> FromEnergyAndMass(Energy<T> energy, Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(energy);
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(energy);
+		Guard.NotNull(mass);
 
 		T energyJoules = energy.In(Units.Joule);
 		T massKg = mass.In(Units.Kilogram);
@@ -87,7 +87,7 @@ public sealed record AbsorbedDose<T> : PhysicalQuantity<AbsorbedDose<T>, T>
 	/// </remarks>
 	public Energy<T> CalculateEnergyAbsorbed(Mass<T> mass)
 	{
-		ArgumentNullException.ThrowIfNull(mass);
+		Guard.NotNull(mass);
 
 		T dose = In(Units.Gray);
 		T massKg = mass.In(Units.Kilogram);
@@ -119,7 +119,7 @@ public sealed record AbsorbedDose<T> : PhysicalQuantity<AbsorbedDose<T>, T>
 	/// </remarks>
 	public T CalculateDoseRate(Time<T> time)
 	{
-		ArgumentNullException.ThrowIfNull(time);
+		Guard.NotNull(time);
 
 		T dose = In(Units.Gray);
 		T timeSeconds = time.In(Units.Second);
@@ -136,7 +136,7 @@ public sealed record AbsorbedDose<T> : PhysicalQuantity<AbsorbedDose<T>, T>
 	/// </remarks>
 	public Mass<T> CalculateMass(Energy<T> energy)
 	{
-		ArgumentNullException.ThrowIfNull(energy);
+		Guard.NotNull(energy);
 
 		T dose = In(Units.Gray);
 		T energyJoules = energy.In(Units.Joule);

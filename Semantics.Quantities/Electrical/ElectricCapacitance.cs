@@ -37,8 +37,8 @@ public sealed record ElectricCapacitance<T> : PhysicalQuantity<ElectricCapacitan
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static ElectricCharge<T> operator *(ElectricCapacitance<T> capacitance, ElectricPotential<T> voltage)
 	{
-		ArgumentNullException.ThrowIfNull(capacitance);
-		ArgumentNullException.ThrowIfNull(voltage);
+		Guard.NotNull(capacitance);
+		Guard.NotNull(voltage);
 
 		T chargeValue = capacitance.Value * voltage.Value;
 
@@ -54,8 +54,8 @@ public sealed record ElectricCapacitance<T> : PhysicalQuantity<ElectricCapacitan
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static ElectricPotential<T> operator /(ElectricCharge<T> charge, ElectricCapacitance<T> capacitance)
 	{
-		ArgumentNullException.ThrowIfNull(charge);
-		ArgumentNullException.ThrowIfNull(capacitance);
+		Guard.NotNull(charge);
+		Guard.NotNull(capacitance);
 
 		T voltageValue = charge.Value / capacitance.Value;
 

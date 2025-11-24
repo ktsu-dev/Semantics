@@ -43,8 +43,8 @@ public sealed record AcousticImpedance<T> : PhysicalQuantity<AcousticImpedance<T
 	/// <returns>The resulting acoustic impedance.</returns>
 	public static AcousticImpedance<T> FromDensityAndSoundSpeed(Density<T> density, SoundSpeed<T> soundSpeed)
 	{
-		ArgumentNullException.ThrowIfNull(density);
-		ArgumentNullException.ThrowIfNull(soundSpeed);
+		Guard.NotNull(density);
+		Guard.NotNull(soundSpeed);
 
 		T impedanceValue = density.Value * soundSpeed.Value;
 
@@ -59,8 +59,8 @@ public sealed record AcousticImpedance<T> : PhysicalQuantity<AcousticImpedance<T
 	/// <returns>The resulting sound speed.</returns>
 	public static SoundSpeed<T> CalculateSoundSpeed(AcousticImpedance<T> impedance, Density<T> density)
 	{
-		ArgumentNullException.ThrowIfNull(impedance);
-		ArgumentNullException.ThrowIfNull(density);
+		Guard.NotNull(impedance);
+		Guard.NotNull(density);
 
 		T soundSpeedValue = impedance.Value / density.Value;
 
@@ -75,8 +75,8 @@ public sealed record AcousticImpedance<T> : PhysicalQuantity<AcousticImpedance<T
 	/// <returns>The resulting material density.</returns>
 	public static Density<T> CalculateDensity(AcousticImpedance<T> impedance, SoundSpeed<T> soundSpeed)
 	{
-		ArgumentNullException.ThrowIfNull(impedance);
-		ArgumentNullException.ThrowIfNull(soundSpeed);
+		Guard.NotNull(impedance);
+		Guard.NotNull(soundSpeed);
 
 		T densityValue = impedance.Value / soundSpeed.Value;
 
@@ -104,8 +104,8 @@ public sealed record AcousticImpedance<T> : PhysicalQuantity<AcousticImpedance<T
 	/// <returns>The resulting acoustic impedance.</returns>
 	public static AcousticImpedance<T> Multiply(Density<T> density, SoundSpeed<T> soundSpeed)
 	{
-		ArgumentNullException.ThrowIfNull(density);
-		ArgumentNullException.ThrowIfNull(soundSpeed);
+		Guard.NotNull(density);
+		Guard.NotNull(soundSpeed);
 		return Create(density.Value * soundSpeed.Value);
 	}
 
@@ -117,8 +117,8 @@ public sealed record AcousticImpedance<T> : PhysicalQuantity<AcousticImpedance<T
 	/// <returns>The resulting acoustic impedance.</returns>
 	public static AcousticImpedance<T> Divide(SoundPressure<T> soundPressure, Velocity<T> velocity)
 	{
-		ArgumentNullException.ThrowIfNull(soundPressure);
-		ArgumentNullException.ThrowIfNull(velocity);
+		Guard.NotNull(soundPressure);
+		Guard.NotNull(velocity);
 		return Create(soundPressure.Value / velocity.Value);
 	}
 }

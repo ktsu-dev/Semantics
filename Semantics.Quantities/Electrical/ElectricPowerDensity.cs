@@ -36,8 +36,8 @@ public sealed record ElectricPowerDensity<T> : PhysicalQuantity<ElectricPowerDen
 	/// <returns>The resulting power density.</returns>
 	public static ElectricPowerDensity<T> Divide(Power<T> power, Volume<T> volume)
 	{
-		ArgumentNullException.ThrowIfNull(power);
-		ArgumentNullException.ThrowIfNull(volume);
+		Guard.NotNull(power);
+		Guard.NotNull(volume);
 		return Create(power.Value / volume.Value);
 	}
 
@@ -49,8 +49,8 @@ public sealed record ElectricPowerDensity<T> : PhysicalQuantity<ElectricPowerDen
 	/// <returns>The resulting power.</returns>
 	public static Power<T> Multiply(ElectricPowerDensity<T> powerDensity, Volume<T> volume)
 	{
-		ArgumentNullException.ThrowIfNull(powerDensity);
-		ArgumentNullException.ThrowIfNull(volume);
+		Guard.NotNull(powerDensity);
+		Guard.NotNull(volume);
 		return Power<T>.Create(powerDensity.Value * volume.Value);
 	}
 }

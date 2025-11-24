@@ -20,8 +20,8 @@ public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 		where TToPath : SemanticPath<TToPath>
 	{
 #if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(from);
-		ArgumentNullException.ThrowIfNull(to);
+		Guard.NotNull(from);
+		Guard.NotNull(to);
 #else
 		ArgumentNullExceptionPolyfill.ThrowIfNull(from);
 		ArgumentNullExceptionPolyfill.ThrowIfNull(to);

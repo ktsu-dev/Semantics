@@ -63,8 +63,8 @@ public sealed record ThermalExpansion<T> : PhysicalQuantity<ThermalExpansion<T>,
 	/// <returns>The change in length.</returns>
 	public Length<T> CalculateLinearExpansion(Length<T> originalLength, Temperature<T> temperatureChange)
 	{
-		ArgumentNullException.ThrowIfNull(originalLength);
-		ArgumentNullException.ThrowIfNull(temperatureChange);
+		Guard.NotNull(originalLength);
+		Guard.NotNull(temperatureChange);
 		return Length<T>.Create(Value * originalLength.Value * temperatureChange.Value);
 	}
 
@@ -76,8 +76,8 @@ public sealed record ThermalExpansion<T> : PhysicalQuantity<ThermalExpansion<T>,
 	/// <returns>The final length.</returns>
 	public Length<T> CalculateFinalLength(Length<T> originalLength, Temperature<T> temperatureChange)
 	{
-		ArgumentNullException.ThrowIfNull(originalLength);
-		ArgumentNullException.ThrowIfNull(temperatureChange);
+		Guard.NotNull(originalLength);
+		Guard.NotNull(temperatureChange);
 		T expansionFactor = T.One + (Value * temperatureChange.Value);
 		return Length<T>.Create(originalLength.Value * expansionFactor);
 	}
