@@ -555,6 +555,36 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Semantics.Paths.DirectoryName.Equals(ktsu.Semantics.Paths.DirectoryName):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Semantics.Paths.DirectoryName.Equals(ktsu.Semantics.Strings.SemanticString{ktsu.Semantics.Paths.DirectoryName})$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Semantics.Paths.DirectoryName.Equals(System.Object):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Semantics.Paths.DirectoryName.op_Equality(ktsu.Semantics.Paths.DirectoryName,ktsu.Semantics.Paths.DirectoryName):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:ktsu.Semantics.Paths.DirectoryName.op_Inequality(ktsu.Semantics.Paths.DirectoryName,ktsu.Semantics.Paths.DirectoryName):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
     <Target>M:ktsu.Semantics.Paths.DirectoryPath.Equals(ktsu.Semantics.Paths.DirectoryPath):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
@@ -1365,6 +1395,18 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:ktsu.Semantics.Paths.DirectoryName:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:ktsu.Semantics.Paths.DirectoryName:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
     <Target>T:ktsu.Semantics.Paths.DirectoryPath:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
@@ -1414,6 +1456,18 @@
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
     <Target>T:ktsu.Semantics.Paths.IDirectoryPath:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:ktsu.Semantics.Paths.IsValidDirectoryNameAttribute:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:ktsu.Semantics.Paths.IsValidDirectoryNameAttribute:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
   </Suppression>

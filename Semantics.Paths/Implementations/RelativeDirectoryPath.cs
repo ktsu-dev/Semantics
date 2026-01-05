@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 /// <summary>
 /// Represents a relative directory path
 /// </summary>
-[IsPath, IsRelativePath, IsDirectoryPath]
+[IsPath, IsRelativePath]
 public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirectoryPath>, IRelativeDirectoryPath
 {
 	// Cache for expensive parent directory computation
@@ -26,13 +26,13 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	public RelativeDirectoryPath Parent => _cachedParent ??= Create<RelativeDirectoryPath>(Path.GetDirectoryName(WeakString) ?? "");
 
 	// Cache for directory name
-	private FileName? _cachedName;
+	private DirectoryName? _cachedName;
 
 	/// <summary>
 	/// Gets the name of this directory (the last component of the path).
 	/// </summary>
-	/// <value>A <see cref="FileName"/> representing just the directory name.</value>
-	public FileName Name => _cachedName ??= FileName.Create<FileName>(Path.GetFileName(WeakString) ?? "");
+	/// <value>A <see cref="DirectoryName"/> representing just the directory name.</value>
+	public DirectoryName Name => _cachedName ??= DirectoryName.Create<DirectoryName>(Path.GetFileName(WeakString) ?? "");
 
 	// Cache for depth calculation
 	private int? _cachedDepth;

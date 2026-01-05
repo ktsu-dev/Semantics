@@ -108,6 +108,27 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	}
 
 	/// <summary>
+	/// Combines a directory path with a directory name using the '/' operator.
+	/// </summary>
+	/// <param name="left">The base directory path.</param>
+	/// <param name="right">The directory name to append.</param>
+	/// <returns>A new <see cref="DirectoryPath"/> representing the combined path.</returns>
+	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
+	public static DirectoryPath operator /(DirectoryPath left, DirectoryName right)
+	{
+#if NET6_0_OR_GREATER
+		Guard.NotNull(left);
+		Guard.NotNull(right);
+#else
+		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
+		ArgumentNullExceptionPolyfill.ThrowIfNull(right);
+#endif
+
+		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
+		return Create<DirectoryPath>(combinedPath);
+	}
+
+	/// <summary>
 	/// Combines a directory path with a file name using the '/' operator.
 	/// </summary>
 	/// <param name="left">The base directory path.</param>
