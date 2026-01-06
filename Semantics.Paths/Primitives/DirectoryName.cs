@@ -7,9 +7,9 @@ namespace ktsu.Semantics.Paths;
 using ktsu.Semantics.Strings;
 
 /// <summary>
-/// Represents a filename (without directory path)
+/// Represents a directory name
 /// </summary>
-[IsValidFileName]
-public sealed record FileName : SemanticString<FileName>, IFileName
+[IsValidDirectoryName]
+public sealed record DirectoryName : SemanticString<DirectoryName>, IDirectoryName
 {
 }
