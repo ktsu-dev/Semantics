@@ -1,5 +1,6 @@
-## v1.0.25 (patch)
+## v1.0.26-pre.1 (prerelease)
 
-Changes since v1.0.24:
+Changes since v1.0.25:
 
-- Add DirectoryName type and improve path validation semantics ([@matt-edmondson](https://github.com/matt-edmondson))
+- Bump the microsoft group with 3 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Bump MSTest.Sdk from 3.10.2 to 4.0.2 ([@dependabot[bot]](https://github.com/dependabot[bot]))
