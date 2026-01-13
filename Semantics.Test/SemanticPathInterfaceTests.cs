@@ -432,17 +432,17 @@ public class SemanticPathInterfaceTests
 			DirectoryPath dirPath = DirectoryPath.Create<DirectoryPath>(testDir);
 			IPath[] contents = [.. dirPath.GetContents()];
 
-			Assert.IsTrue(contents.Length > 0, "Contents should not be empty");
-			Assert.AreEqual(3, contents.Length, "Should contain 2 files and 1 directory");
+			Assert.IsNotEmpty(contents, "Contents should not be empty");
+			Assert.HasCount(3, contents, "Should contain 2 files and 1 directory");
 
 			// Verify file types
 			IFilePath[] files = [.. contents.OfType<IFilePath>()];
-			Assert.AreEqual(2, files.Length, "Should contain 2 files");
+			Assert.HasCount(2, files, "Should contain 2 files");
 			Assert.IsTrue(files.All(f => f is FilePath), "Files should be FilePath type");
 
 			// Verify directory types
 			IDirectoryPath[] directories = [.. contents.OfType<IDirectoryPath>()];
-			Assert.AreEqual(1, directories.Length, "Should contain 1 directory");
+			Assert.HasCount(1, directories, "Should contain 1 directory");
 			Assert.IsTrue(directories.All(d => d is DirectoryPath), "Directories should be DirectoryPath type");
 		}
 		finally
@@ -475,17 +475,17 @@ public class SemanticPathInterfaceTests
 			AbsoluteDirectoryPath absDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(testDir);
 			IPath[] contents = [.. absDir.GetContents()];
 
-			Assert.IsTrue(contents.Length > 0, "Contents should not be empty");
-			Assert.AreEqual(2, contents.Length, "Should contain 1 file and 1 directory");
+			Assert.IsNotEmpty(contents, "Contents should not be empty");
+			Assert.HasCount(2, contents, "Should contain 1 file and 1 directory");
 
 			// Verify file types are absolute
 			IAbsoluteFilePath[] absoluteFiles = [.. contents.OfType<IAbsoluteFilePath>()];
-			Assert.AreEqual(1, absoluteFiles.Length, "Should contain 1 absolute file");
+			Assert.HasCount(1, absoluteFiles, "Should contain 1 absolute file");
 			Assert.IsTrue(absoluteFiles.All(f => f is AbsoluteFilePath), "Files should be AbsoluteFilePath type");
 
 			// Verify directory types are absolute
 			IAbsoluteDirectoryPath[] absoluteDirectories = [.. contents.OfType<IAbsoluteDirectoryPath>()];
-			Assert.AreEqual(1, absoluteDirectories.Length, "Should contain 1 absolute directory");
+			Assert.HasCount(1, absoluteDirectories, "Should contain 1 absolute directory");
 			Assert.IsTrue(absoluteDirectories.All(d => d is AbsoluteDirectoryPath), "Directories should be AbsoluteDirectoryPath type");
 		}
 		finally
@@ -554,12 +554,12 @@ public class SemanticPathInterfaceTests
 			IEnumerable<IPath> contents = dirPath.GetContents();
 
 			List<IPath> contentsList = [.. contents];
-			Assert.IsTrue(contentsList.Count != 0, "Contents should not be empty");
-			Assert.AreEqual(2, contentsList.Count, "Should contain 2 files");
+			Assert.IsNotEmpty(contentsList, "Contents should not be empty");
+			Assert.HasCount(2, contentsList, "Should contain 2 files");
 
 			// Test filtering by type
 			IFilePath[] files = [.. contents.OfType<IFilePath>()];
-			Assert.AreEqual(2, files.Length, "Should be able to filter files polymorphically");
+			Assert.HasCount(2, files, "Should be able to filter files polymorphically");
 
 			// Test that all returned items are paths
 			Assert.IsTrue(contentsList.All(item => item is not null), "All contents should implement IPath");

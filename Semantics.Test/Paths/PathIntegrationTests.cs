@@ -26,7 +26,7 @@ public class PathIntegrationTests
 			FilePath.Create<FilePath>("any.txt")
 		];
 
-		Assert.AreEqual(6, paths.Count);
+		Assert.HasCount(6, paths);
 		foreach (IPath path in paths)
 		{
 			Assert.IsNotNull(path);
@@ -45,8 +45,8 @@ public class PathIntegrationTests
 			DirectoryName.Create<DirectoryName>("folder3")
 		];
 
-		Assert.AreEqual(3, names.Count);
-		Assert.IsTrue(names.Contains(DirectoryName.Create<DirectoryName>("folder1")));
+		Assert.HasCount(3, names);
+		Assert.Contains(DirectoryName.Create<DirectoryName>("folder1"), names);
 	}
 
 	[TestMethod]
@@ -60,7 +60,7 @@ public class PathIntegrationTests
 			DirectoryName.Create<DirectoryName>("folder1") // Duplicate
 		];
 
-		Assert.AreEqual(2, uniqueNames.Count); // Duplicate should be ignored
+		Assert.HasCount(2, uniqueNames); // Duplicate should be ignored
 	}
 
 	[TestMethod]
@@ -185,8 +185,8 @@ public class PathIntegrationTests
 		RelativeDirectoryPath medium = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"a\b");
 		RelativeDirectoryPath deep = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"a\b\c");
 
-		Assert.IsTrue(shallow.Depth < medium.Depth);
-		Assert.IsTrue(medium.Depth < deep.Depth);
+		Assert.IsLessThan(medium.Depth, shallow.Depth);
+		Assert.IsLessThan(deep.Depth, medium.Depth);
 		Assert.AreEqual(0, shallow.Depth);
 		Assert.AreEqual(1, medium.Depth);
 		Assert.AreEqual(2, deep.Depth);

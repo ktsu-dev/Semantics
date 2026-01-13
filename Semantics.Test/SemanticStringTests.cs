@@ -302,7 +302,7 @@ public class StringTests
 	{
 		MySemanticString? nullSemanticString = null;
 		char[] result = SemanticString<MySemanticString>.ToCharArray(nullSemanticString);
-		Assert.AreEqual(0, result.Length);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]
@@ -329,7 +329,7 @@ public class StringTests
 		ReadOnlySpan<char> spanResult = nullSemanticString;
 
 		Assert.AreEqual(string.Empty, stringResult);
-		Assert.AreEqual(0, charArrayResult.Length);
+		Assert.IsEmpty(charArrayResult);
 		Assert.IsTrue(spanResult.IsEmpty);
 	}
 
@@ -1227,7 +1227,7 @@ public class SemanticStringAdditionalTests
 		Assert.AreEqual(string.Empty, result);
 
 		char[] charResult = SemanticString<MySemanticString>.ToCharArray(null);
-		Assert.AreEqual(0, charResult.Length);
+		Assert.IsEmpty(charResult);
 
 		ReadOnlySpan<char> spanResult = SemanticString<MySemanticString>.ToReadOnlySpan(null);
 		Assert.IsTrue(spanResult.IsEmpty);

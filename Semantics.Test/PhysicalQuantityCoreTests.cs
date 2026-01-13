@@ -34,8 +34,8 @@ public sealed class PhysicalQuantityCoreTests
 	{
 		Length<double> a = Length<double>.Create(1.0);
 		Length<double> b = Length<double>.Create(2.0);
-		Assert.IsTrue(a.CompareTo(b) < 0);
-		Assert.IsTrue(b.CompareTo(a) > 0);
+		Assert.IsLessThan(0, a.CompareTo(b));
+		Assert.IsGreaterThan(0, b.CompareTo(a));
 		Assert.IsTrue(a.Equals(Length<double>.Create(1.0)));
 
 		IPhysicalQuantity<double> other = new FakeQuantity();
