@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <ProjectReference Include="..\Semantics.Strings\Semantics.Strings.csproj" />
     <ProjectReference Include="..\Semantics.Paths\Semantics.Paths.csproj" />
     <ProjectReference Include="..\Semantics.Quantities\Semantics.Quantities.csproj" />
