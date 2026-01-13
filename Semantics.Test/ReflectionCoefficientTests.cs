@@ -49,7 +49,7 @@ public sealed class ReflectionCoefficientTests
 		ReflectionCoefficient<double> rOblique = ReflectionCoefficient<double>.AtObliqueIncidence(angleRad, ratio);
 		double rNormal = (ratio - 1.0) / (ratio + 1.0);
 
-		Assert.IsTrue(rOblique.Value < rNormal);
+		Assert.IsLessThan(rNormal, rOblique.Value);
 	}
 }
 
