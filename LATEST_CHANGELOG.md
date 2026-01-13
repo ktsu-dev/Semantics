@@ -1,6 +1,6 @@
-## v1.0.26 (patch)
+## v1.0.27-pre.1 (prerelease)
 
-Changes since v1.0.25:
+Changes since v1.0.26:
 
-- Increase performance variance threshold in regression tests to 70% for CI environment consistency ([@matt-edmondson](https://github.com/matt-edmondson))
-- Remove Polyfill package references and update test assertions for clarity ([@matt-edmondson](https://github.com/matt-edmondson))
+- Bump Polyfill from 8.8.0 to 9.7.1 ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Bump the microsoft group with 1 update ([@dependabot[bot]](https://github.com/dependabot[bot]))
