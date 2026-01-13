@@ -9,5 +9,8 @@
     <!-- CA2249: Consider using String.Contains instead of String.IndexOf -->
     <!-- IDE0057: Substring can be simplified -->
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Polyfill" VersionOverride="9.7.1" />
+  </ItemGroup>
 
 </Project>
