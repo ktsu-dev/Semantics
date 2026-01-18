@@ -12,18 +12,18 @@ using ktsu.Semantics.Strings;
 /// Validates that a path represents a directory (not an existing file)
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsDirectoryPathAttribute : NativeSemanticStringValidationAttribute
+public sealed class IsAbsoluteDirectoryPathAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
 	/// Creates the validation adapter for directory path validation.
 	/// </summary>
 	/// <returns>A validation adapter for directory paths</returns>
-	protected override ValidationAdapter CreateValidator() => new DirectoryPathValidator();
+	protected override ValidationAdapter CreateValidator() => new AbsoluteDirectoryPathValidator();
 
 	/// <summary>
 	/// validation adapter for directory paths.
 	/// </summary>
-	private sealed class DirectoryPathValidator : ValidationAdapter
+	private sealed class AbsoluteDirectoryPathValidator : ValidationAdapter
 	{
 		/// <summary>
 		/// Validates that a path represents a directory by ensuring it's not an existing file.

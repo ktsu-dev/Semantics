@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 /// <summary>
 /// Represents a directory path (path to a directory)
 /// </summary>
-[IsPath, IsDirectoryPath]
+[IsPath, IsAbsoluteDirectoryPath]
 public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDirectoryPath
 {
 	/// <summary>
