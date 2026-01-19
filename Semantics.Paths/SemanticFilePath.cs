@@ -7,7 +7,6 @@ namespace ktsu.Semantics.Paths;
 /// <summary>
 /// Base class for file paths (paths that represent files)
 /// </summary>
-[IsPath, IsFilePath]
 public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 	where TDerived : SemanticFilePath<TDerived>
 {

@@ -9,7 +9,7 @@ using ktsu.Semantics.Strings;
 /// <summary>
 /// Represents a file extension (starts with a period)
 /// </summary>
-[IsExtension]
+[IsFileExtension]
 public sealed record FileExtension : SemanticString<FileExtension>, IFileExtension
 {
 }

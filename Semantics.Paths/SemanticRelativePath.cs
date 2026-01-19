@@ -7,7 +7,7 @@ namespace ktsu.Semantics.Paths;
 /// <summary>
 /// Base class for relative paths (not fully qualified)
 /// </summary>
-[IsPath, IsRelativePath]
+[IsRelativePath]
 public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 	where TDerived : SemanticRelativePath<TDerived>
 {

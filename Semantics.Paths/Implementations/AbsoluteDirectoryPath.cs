@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 /// <summary>
 /// Represents an absolute directory path
 /// </summary>
-[IsPath, IsAbsolutePath, IsDirectoryPath]
+[IsAbsolutePath]
 public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirectoryPath>, IAbsoluteDirectoryPath
 {
 	// Cache for expensive parent directory computation

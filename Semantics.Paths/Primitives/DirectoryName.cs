@@ -9,7 +9,7 @@ using ktsu.Semantics.Strings;
 /// <summary>
 /// Represents a directory name
 /// </summary>
-[IsValidDirectoryName]
+[IsDirectoryName]
 public sealed record DirectoryName : SemanticString<DirectoryName>, IDirectoryName
 {
 }

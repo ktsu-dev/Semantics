@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 /// <summary>
 /// Represents a relative directory path
 /// </summary>
-[IsPath, IsRelativePath]
+[IsRelativePath]
 public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirectoryPath>, IRelativeDirectoryPath
 {
 	// Cache for expensive parent directory computation

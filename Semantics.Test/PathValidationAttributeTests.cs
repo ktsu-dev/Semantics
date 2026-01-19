@@ -418,7 +418,7 @@ public record TestAbsolutePath : SemanticString<TestAbsolutePath> { }
 [IsRelativePath]
 public record TestRelativePath : SemanticString<TestRelativePath> { }
 
-[IsValidFileName]
+[IsFileName]
 public record TestFileName : SemanticString<TestFileName> { }
 
 [IsDirectoryPath]
@@ -430,8 +430,8 @@ public record TestFilePath : SemanticString<TestFilePath> { }
 [DoesExist]
 public record TestExistingPath : SemanticString<TestExistingPath> { }
 
-[IsExtension]
+[IsFileExtension]
 public record TestExtension : SemanticString<TestExtension> { }
 
-[IsValidDirectoryName]
+[IsDirectoryName]
 public record TestDirectoryName : SemanticString<TestDirectoryName> { }

@@ -7,7 +7,6 @@ namespace ktsu.Semantics.Paths;
 /// <summary>
 /// Represents a file path (path to a file)
 /// </summary>
-[IsPath, IsFilePath]
 public sealed record FilePath : SemanticFilePath<FilePath>, IFilePath
 {
 	/// <summary>

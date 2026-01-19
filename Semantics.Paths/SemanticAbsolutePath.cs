@@ -7,7 +7,7 @@ namespace ktsu.Semantics.Paths;
 /// <summary>
 /// Base class for absolute paths (fully qualified paths)
 /// </summary>
-[IsPath, IsAbsolutePath]
+[IsAbsolutePath]
 public abstract record SemanticAbsolutePath<TDerived> : SemanticPath<TDerived>
 	where TDerived : SemanticAbsolutePath<TDerived>
 {

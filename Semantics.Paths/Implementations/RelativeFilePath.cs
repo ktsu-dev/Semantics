@@ -7,7 +7,7 @@ namespace ktsu.Semantics.Paths;
 /// <summary>
 /// Represents a relative file path
 /// </summary>
-[IsPath, IsRelativePath]
+[IsRelativePath]
 public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRelativeFilePath
 {
 	// Cache for expensive directory path computation

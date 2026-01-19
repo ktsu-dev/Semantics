@@ -9,21 +9,21 @@ using System.IO;
 using ktsu.Semantics.Strings;
 
 /// <summary>
-/// Validates that a path string contains valid filename characters using span semantics.
+/// Validates that a string represents a valid filename (contains only valid filename characters).
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public sealed class IsValidFileNameAttribute : NativeSemanticStringValidationAttribute
+public sealed class IsFileNameAttribute : NativeSemanticStringValidationAttribute
 {
 	/// <summary>
-	/// Creates the validation adapter for valid filename validation.
+	/// Creates the validation adapter for filename validation.
 	/// </summary>
-	/// <returns>A validation adapter for valid filename strings</returns>
-	protected override ValidationAdapter CreateValidator() => new ValidFileNameValidator();
+	/// <returns>A validation adapter for filename strings</returns>
+	protected override ValidationAdapter CreateValidator() => new FileNameValidator();
 
 	/// <summary>
-	/// validation adapter for valid filename strings.
+	/// Validation adapter for filename strings.
 	/// </summary>
-	private sealed class ValidFileNameValidator : ValidationAdapter
+	private sealed class FileNameValidator : ValidationAdapter
 	{
 		private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
 

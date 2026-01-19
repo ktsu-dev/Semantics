@@ -7,7 +7,7 @@ namespace ktsu.Semantics.Paths;
 /// <summary>
 /// Represents an absolute file path
 /// </summary>
-[IsPath, IsAbsolutePath, IsFilePath]
+[IsAbsolutePath]
 public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbsoluteFilePath
 {
 	// Cache for expensive directory path computation

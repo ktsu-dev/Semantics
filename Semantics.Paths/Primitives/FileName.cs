@@ -9,7 +9,7 @@ using ktsu.Semantics.Strings;
 /// <summary>
 /// Represents a filename (without directory path)
 /// </summary>
-[IsValidFileName]
+[IsFileName]
 public sealed record FileName : SemanticString<FileName>, IFileName
 {
 }
