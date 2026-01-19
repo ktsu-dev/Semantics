@@ -75,11 +75,11 @@ public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 	/// </summary>
 	/// <typeparam name="T">The type of semantic path to check.</typeparam>
 	/// <param name="path">The path instance to check.</param>
-	/// <returns><see langword="true"/> if the path type has the <see cref="IsDirectoryPathAttribute"/>; otherwise, <see langword="false"/>.</returns>
+	/// <returns><see langword="true"/> if the path type has the <see cref="IsAbsoluteDirectoryPathAttribute"/>; otherwise, <see langword="false"/>.</returns>
 	private static bool IsDirectoryPath<T>(T path) where T : SemanticPath<T>
 	{
 		// Check if it's a directory-specific type based on validation attributes
 		Type type = path.GetType();
-		return type.GetCustomAttributes(typeof(IsDirectoryPathAttribute), true).Length > 0;
+		return type.GetCustomAttributes(typeof(IsAbsoluteDirectoryPathAttribute), true).Length > 0;
 	}
 }
