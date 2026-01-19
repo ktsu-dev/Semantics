@@ -50,8 +50,8 @@ public sealed record Wavelength<T> : PhysicalQuantity<Wavelength<T>, T>
 	/// <returns>The resulting wavelength.</returns>
 	public static Wavelength<T> Divide(Velocity<T> speed, Frequency<T> frequency)
 	{
-		Guard.NotNull(speed);
-		Guard.NotNull(frequency);
+		Ensure.NotNull(speed);
+		Ensure.NotNull(frequency);
 		return Create(speed.Value / frequency.Value);
 	}
 
@@ -64,8 +64,8 @@ public sealed record Wavelength<T> : PhysicalQuantity<Wavelength<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static SoundSpeed<T> operator *(Wavelength<T> wavelength, Frequency<T> frequency)
 	{
-		Guard.NotNull(wavelength);
-		Guard.NotNull(frequency);
+		Ensure.NotNull(wavelength);
+		Ensure.NotNull(frequency);
 
 		T speedValue = wavelength.Value * frequency.Value;
 
@@ -81,8 +81,8 @@ public sealed record Wavelength<T> : PhysicalQuantity<Wavelength<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Frequency<T> operator /(SoundSpeed<T> speed, Wavelength<T> wavelength)
 	{
-		Guard.NotNull(speed);
-		Guard.NotNull(wavelength);
+		Ensure.NotNull(speed);
+		Ensure.NotNull(wavelength);
 
 		T frequencyValue = speed.Value / wavelength.Value;
 

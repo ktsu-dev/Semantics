@@ -63,8 +63,8 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public static MassFlowRate<T> FromVolumetricFlowRateAndDensity(VolumetricFlowRate<T> volumetricFlowRate, Density<T> density)
 	{
-		Guard.NotNull(volumetricFlowRate);
-		Guard.NotNull(density);
+		Ensure.NotNull(volumetricFlowRate);
+		Ensure.NotNull(density);
 
 		T q = volumetricFlowRate.In(Units.CubicMeter);
 		T rho = density.In(Units.Kilogram);
@@ -81,7 +81,7 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public VolumetricFlowRate<T> CalculateVolumetricFlowRate(Density<T> density)
 	{
-		Guard.NotNull(density);
+		Ensure.NotNull(density);
 
 		T massFlow = In(Units.Kilogram);
 		T rho = density.In(Units.Kilogram);
@@ -104,7 +104,7 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public Density<T> CalculateDensity(VolumetricFlowRate<T> volumetricFlowRate)
 	{
-		Guard.NotNull(volumetricFlowRate);
+		Ensure.NotNull(volumetricFlowRate);
 
 		T massFlow = In(Units.Kilogram);
 		T volumeFlow = volumetricFlowRate.In(Units.CubicMeter);
@@ -127,7 +127,7 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public Mass<T> CalculateMassTransferred(Time<T> time)
 	{
-		Guard.NotNull(time);
+		Ensure.NotNull(time);
 
 		T massFlow = In(Units.Kilogram);
 		T t = time.In(Units.Second);
@@ -145,7 +145,7 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public Time<T> CalculateTransferTime(Mass<T> mass)
 	{
-		Guard.NotNull(mass);
+		Ensure.NotNull(mass);
 
 		T m = mass.In(Units.Kilogram);
 		T massFlow = In(Units.Kilogram);
@@ -169,7 +169,7 @@ public sealed record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>
 	/// </remarks>
 	public T CalculateMomentumFlowRate(Velocity<T> velocity)
 	{
-		Guard.NotNull(velocity);
+		Ensure.NotNull(velocity);
 
 		T massFlow = In(Units.Kilogram);
 		T v = velocity.In(Units.MetersPerSecond);

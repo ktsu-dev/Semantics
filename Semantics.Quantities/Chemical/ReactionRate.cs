@@ -26,8 +26,8 @@ public sealed record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>
 	/// <returns>The reaction rate.</returns>
 	public static ReactionRate<T> FromConcentrationChange(Concentration<T> concentrationChange, Time<T> timeInterval)
 	{
-		Guard.NotNull(concentrationChange);
-		Guard.NotNull(timeInterval);
+		Ensure.NotNull(concentrationChange);
+		Ensure.NotNull(timeInterval);
 
 		T deltaConcentration = concentrationChange.In(Units.Molar);
 		T deltaTime = timeInterval.In(Units.Second);
@@ -46,9 +46,9 @@ public sealed record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>
 		Concentration<T> concentrationA, T orderA,
 		Concentration<T> concentrationB, T orderB)
 	{
-		Guard.NotNull(rateConstant);
-		Guard.NotNull(concentrationA);
-		Guard.NotNull(concentrationB);
+		Ensure.NotNull(rateConstant);
+		Ensure.NotNull(concentrationA);
+		Ensure.NotNull(concentrationB);
 
 		T k = rateConstant.In(Units.PerSecond);
 		T cA = concentrationA.In(Units.Molar);
@@ -67,8 +67,8 @@ public sealed record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>
 	public RateConstant<T> CalculateRateConstant(Concentration<T> concentrationA, Concentration<T> concentrationB,
 		T orderA, T orderB)
 	{
-		Guard.NotNull(concentrationA);
-		Guard.NotNull(concentrationB);
+		Ensure.NotNull(concentrationA);
+		Ensure.NotNull(concentrationB);
 
 		T rate = In(Units.MolesPerSecond);
 		T cA = concentrationA.In(Units.Molar);
@@ -84,7 +84,7 @@ public sealed record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>
 	/// <returns>The half-life time.</returns>
 	public static Time<T> CalculateHalfLife(RateConstant<T> rateConstant)
 	{
-		Guard.NotNull(rateConstant);
+		Ensure.NotNull(rateConstant);
 
 		T k = rateConstant.In(Units.PerSecond);
 		T ln2 = PhysicalConstants.Generic.Ln2<T>();

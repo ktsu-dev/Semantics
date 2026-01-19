@@ -37,8 +37,8 @@ public sealed record Mass<T> : PhysicalQuantity<Mass<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Force<T> operator *(Mass<T> mass, Acceleration<T> acceleration)
 	{
-		Guard.NotNull(mass);
-		Guard.NotNull(acceleration);
+		Ensure.NotNull(mass);
+		Ensure.NotNull(acceleration);
 
 		T forceValue = mass.Value * acceleration.Value;
 
@@ -63,8 +63,8 @@ public sealed record Mass<T> : PhysicalQuantity<Mass<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Momentum<T> operator *(Mass<T> mass, Velocity<T> velocity)
 	{
-		Guard.NotNull(mass);
-		Guard.NotNull(velocity);
+		Ensure.NotNull(mass);
+		Ensure.NotNull(velocity);
 
 		T momentumValue = mass.Value * velocity.Value;
 
@@ -89,8 +89,8 @@ public sealed record Mass<T> : PhysicalQuantity<Mass<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Density<T> operator /(Mass<T> mass, Volume<T> volume)
 	{
-		Guard.NotNull(mass);
-		Guard.NotNull(volume);
+		Ensure.NotNull(mass);
+		Ensure.NotNull(volume);
 
 		T densityValue = mass.Value / volume.Value;
 

@@ -36,7 +36,7 @@ public sealed record SoundPressureLevel<T> : PhysicalQuantity<SoundPressureLevel
 	/// <returns>The corresponding sound pressure level in dB SPL.</returns>
 	public static SoundPressureLevel<T> FromSoundPressure(SoundPressure<T> soundPressure)
 	{
-		Guard.NotNull(soundPressure);
+		Ensure.NotNull(soundPressure);
 		T referencePressure = PhysicalConstants.Generic.ReferenceSoundPressure<T>();
 		T ratio = soundPressure.Value / referencePressure;
 		T decibels = T.CreateChecked(20.0 * Math.Log10(double.CreateChecked(ratio)));
@@ -70,8 +70,8 @@ public sealed record SoundPressureLevel<T> : PhysicalQuantity<SoundPressureLevel
 	/// <returns>The equivalent continuous sound level.</returns>
 	public SoundPressureLevel<T> EquivalentLevel(Time<T> duration, Time<T> totalTime)
 	{
-		Guard.NotNull(duration);
-		Guard.NotNull(totalTime);
+		Ensure.NotNull(duration);
+		Ensure.NotNull(totalTime);
 		T ratio = duration.Value / totalTime.Value;
 		T correction = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(ratio)));
 		return FromDecibels(Value + correction);

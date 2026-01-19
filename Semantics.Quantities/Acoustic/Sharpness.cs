@@ -69,7 +69,7 @@ public sealed record Sharpness<T> : PhysicalQuantity<Sharpness<T>, T>
 	/// <returns>The combined sharpness.</returns>
 	public Sharpness<T> CombineWith(Sharpness<T> other)
 	{
-		Guard.NotNull(other);
+		Ensure.NotNull(other);
 
 		// Simplified linear combination
 		// Real sharpness calculation requires detailed spectral analysis

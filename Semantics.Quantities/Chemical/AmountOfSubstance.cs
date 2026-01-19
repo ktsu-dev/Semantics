@@ -44,7 +44,7 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	/// <returns>The mass of the substance.</returns>
 	public Mass<T> CalculateMass(MolarMass<T> molarMass)
 	{
-		Guard.NotNull(molarMass);
+		Ensure.NotNull(molarMass);
 		T molesValue = In(Units.Mole);
 		T molarMassValue = molarMass.In(Units.GramPerMole);
 		T massInGrams = molesValue * molarMassValue;
@@ -70,8 +70,8 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Concentration<T> operator /(AmountOfSubstance<T> amount, Volume<T> volume)
 	{
-		Guard.NotNull(amount);
-		Guard.NotNull(volume);
+		Ensure.NotNull(amount);
+		Ensure.NotNull(volume);
 
 		T concentrationValue = amount.Value / volume.Value;
 
@@ -87,8 +87,8 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Mass<T> operator *(AmountOfSubstance<T> amount, MolarMass<T> molarMass)
 	{
-		Guard.NotNull(amount);
-		Guard.NotNull(molarMass);
+		Ensure.NotNull(amount);
+		Ensure.NotNull(molarMass);
 
 		T massValue = amount.Value * molarMass.Value;
 
@@ -111,9 +111,9 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	/// <returns>The resulting amount of substance in moles.</returns>
 	public static AmountOfSubstance<T> FromIdealGasLaw(Pressure<T> pressure, Volume<T> volume, Temperature<T> temperature)
 	{
-		Guard.NotNull(pressure);
-		Guard.NotNull(volume);
-		Guard.NotNull(temperature);
+		Ensure.NotNull(pressure);
+		Ensure.NotNull(volume);
+		Ensure.NotNull(temperature);
 
 		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
 		T amountValue = pressure.Value * volume.Value / (gasConstant * temperature.Value);
@@ -130,9 +130,9 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	/// <returns>The resulting pressure.</returns>
 	public static Pressure<T> CalculatePressureFromIdealGas(AmountOfSubstance<T> amount, Temperature<T> temperature, Volume<T> volume)
 	{
-		Guard.NotNull(amount);
-		Guard.NotNull(temperature);
-		Guard.NotNull(volume);
+		Ensure.NotNull(amount);
+		Ensure.NotNull(temperature);
+		Ensure.NotNull(volume);
 
 		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
 		T pressureValue = amount.Value * gasConstant * temperature.Value / volume.Value;
@@ -149,9 +149,9 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	/// <returns>The resulting volume.</returns>
 	public static Volume<T> CalculateVolumeFromIdealGas(AmountOfSubstance<T> amount, Temperature<T> temperature, Pressure<T> pressure)
 	{
-		Guard.NotNull(amount);
-		Guard.NotNull(temperature);
-		Guard.NotNull(pressure);
+		Ensure.NotNull(amount);
+		Ensure.NotNull(temperature);
+		Ensure.NotNull(pressure);
 
 		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
 		T volumeValue = amount.Value * gasConstant * temperature.Value / pressure.Value;
@@ -168,9 +168,9 @@ public sealed record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T
 	/// <returns>The resulting absolute temperature.</returns>
 	public static Temperature<T> CalculateTemperatureFromIdealGas(Pressure<T> pressure, Volume<T> volume, AmountOfSubstance<T> amount)
 	{
-		Guard.NotNull(pressure);
-		Guard.NotNull(volume);
-		Guard.NotNull(amount);
+		Ensure.NotNull(pressure);
+		Ensure.NotNull(volume);
+		Ensure.NotNull(amount);
 
 		T gasConstant = PhysicalConstants.Generic.GasConstant<T>();
 		T temperatureValue = pressure.Value * volume.Value / (amount.Value * gasConstant);

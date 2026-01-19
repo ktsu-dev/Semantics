@@ -450,7 +450,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public static TDest Create<TDest>(char[]? value)
 		where TDest : SemanticString<TDest>
 	{
-		Guard.NotNull(value);
+		Ensure.NotNull(value);
 		return Create<TDest>(value: new string(value: value));
 	}
 
@@ -515,7 +515,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	private static TDest FromCharArray<TDest>(char[]? value)
 		where TDest : SemanticString<TDest>
 	{
-		Guard.NotNull(value);
+		Ensure.NotNull(value);
 		return FromString<TDest>(value: new string(value: value));
 	}
 
@@ -551,7 +551,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	private static TDest FromStringInternal<TDest>(string? value)
 		where TDest : SemanticString<TDest>
 	{
-		Guard.NotNull(value);
+		Ensure.NotNull(value);
 
 		Type typeOfTDest = typeof(TDest);
 		TDest newInstance = (TDest)Activator.CreateInstance(type: typeOfTDest)!;
@@ -914,7 +914,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	public int Count(Func<char, bool> predicate)
 	{
-		Guard.NotNull(predicate);
+		Ensure.NotNull(predicate);
 
 		ReadOnlySpan<char> span = AsSpan();
 		int count = 0;

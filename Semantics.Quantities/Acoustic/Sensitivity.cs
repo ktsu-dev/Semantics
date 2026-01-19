@@ -80,7 +80,7 @@ public sealed record Sensitivity<T> : PhysicalQuantity<Sensitivity<T>, T>
 	/// <returns>Estimated power consumption in watts.</returns>
 	public T EstimatePowerConsumption(SoundPressureLevel<T> targetSpl)
 	{
-		Guard.NotNull(targetSpl);
+		Ensure.NotNull(targetSpl);
 
 		// Power (dB) = Target SPL - Sensitivity
 		// Power (W) = 10^(Power(dB)/10)
@@ -96,7 +96,7 @@ public sealed record Sensitivity<T> : PhysicalQuantity<Sensitivity<T>, T>
 	/// <returns>The maximum SPL at 1 meter.</returns>
 	public SoundPressureLevel<T> MaximumSplAt1m(Power<T> inputPower)
 	{
-		Guard.NotNull(inputPower);
+		Ensure.NotNull(inputPower);
 
 		// SPL = Sensitivity + 10*log10(Power)
 		T powerDb = T.CreateChecked(10.0 * Math.Log10(double.CreateChecked(inputPower.Value)));

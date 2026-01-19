@@ -65,7 +65,7 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	/// <returns>The resulting wavelength in vacuum.</returns>
 	public static Wavelength<T> GetElectromagneticWavelength(Frequency<T> frequency)
 	{
-		Guard.NotNull(frequency);
+		Ensure.NotNull(frequency);
 
 		T speedOfLight = PhysicalConstants.Generic.SpeedOfLight<T>();
 		T wavelengthValue = speedOfLight / frequency.Value;
@@ -80,7 +80,7 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	/// <returns>The resulting photon energy.</returns>
 	public static Energy<T> GetPhotonEnergy(Frequency<T> frequency)
 	{
-		Guard.NotNull(frequency);
+		Ensure.NotNull(frequency);
 
 		T planckConstant = T.CreateChecked(PhysicalConstants.Fundamental.PlanckConstant);
 		T energyValue = planckConstant * frequency.Value;
@@ -95,7 +95,7 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	/// <returns>The resulting frequency.</returns>
 	public static Frequency<T> FromPhotonEnergy(Energy<T> photonEnergy)
 	{
-		Guard.NotNull(photonEnergy);
+		Ensure.NotNull(photonEnergy);
 
 		T planckConstant = T.CreateChecked(PhysicalConstants.Fundamental.PlanckConstant);
 		T frequencyValue = photonEnergy.Value / planckConstant;
@@ -111,7 +111,7 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	/// <returns>The resulting frequency.</returns>
 	public static Frequency<T> Divide(T one, Time<T> time)
 	{
-		Guard.NotNull(time);
+		Ensure.NotNull(time);
 		return Create(one / time.Value);
 	}
 
@@ -123,8 +123,8 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	/// <returns>The resulting speed.</returns>
 	public static Velocity<T> Multiply(Frequency<T> frequency, Wavelength<T> wavelength)
 	{
-		Guard.NotNull(frequency);
-		Guard.NotNull(wavelength);
+		Ensure.NotNull(frequency);
+		Ensure.NotNull(wavelength);
 		return Velocity<T>.Create(frequency.Value * wavelength.Value);
 	}
 
@@ -137,8 +137,8 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static SoundSpeed<T> operator *(Frequency<T> frequency, Wavelength<T> wavelength)
 	{
-		Guard.NotNull(frequency);
-		Guard.NotNull(wavelength);
+		Ensure.NotNull(frequency);
+		Ensure.NotNull(wavelength);
 
 		T speedValue = frequency.Value * wavelength.Value;
 
@@ -154,7 +154,7 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Time<T> operator /(T one, Frequency<T> frequency)
 	{
-		Guard.NotNull(frequency);
+		Ensure.NotNull(frequency);
 
 		T periodValue = one / frequency.Value;
 
@@ -170,8 +170,8 @@ public sealed record Frequency<T> : PhysicalQuantity<Frequency<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Wavelength<T> operator /(SoundSpeed<T> speed, Frequency<T> frequency)
 	{
-		Guard.NotNull(speed);
-		Guard.NotNull(frequency);
+		Ensure.NotNull(speed);
+		Ensure.NotNull(frequency);
 
 		T wavelengthValue = speed.Value / frequency.Value;
 

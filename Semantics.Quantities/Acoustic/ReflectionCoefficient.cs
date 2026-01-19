@@ -36,7 +36,7 @@ public sealed record ReflectionCoefficient<T> : PhysicalQuantity<ReflectionCoeff
 	/// <returns>The corresponding reflection coefficient.</returns>
 	public static ReflectionCoefficient<T> FromAbsorptionCoefficient(SoundAbsorption<T> absorptionCoefficient)
 	{
-		Guard.NotNull(absorptionCoefficient);
+		Ensure.NotNull(absorptionCoefficient);
 		return FromCoefficient(T.One - absorptionCoefficient.Value);
 	}
 
@@ -56,8 +56,8 @@ public sealed record ReflectionCoefficient<T> : PhysicalQuantity<ReflectionCoeff
 	/// <returns>The pressure reflection coefficient.</returns>
 	public static ReflectionCoefficient<T> FromImpedances(AcousticImpedance<T> impedance1, AcousticImpedance<T> impedance2)
 	{
-		Guard.NotNull(impedance1);
-		Guard.NotNull(impedance2);
+		Ensure.NotNull(impedance1);
+		Ensure.NotNull(impedance2);
 
 		T numerator = impedance2.Value - impedance1.Value;
 		T denominator = impedance2.Value + impedance1.Value;

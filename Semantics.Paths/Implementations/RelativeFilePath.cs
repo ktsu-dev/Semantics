@@ -49,11 +49,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	/// <returns>A new <see cref="RelativeFilePath"/> with the changed extension.</returns>
 	public RelativeFilePath ChangeExtension(FileExtension newExtension)
 	{
-#if NET6_0_OR_GREATER
-		Guard.NotNull(newExtension);
-#else
-		ArgumentNullExceptionPolyfill.ThrowIfNull(newExtension);
-#endif
+		Ensure.NotNull(newExtension);
 
 		string newPath = Path.ChangeExtension(WeakString, newExtension.WeakString);
 		return Create<RelativeFilePath>(newPath);
@@ -98,11 +94,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public AbsoluteFilePath AsAbsolute(AbsoluteDirectoryPath baseDirectory)
 	{
-#if NET6_0_OR_GREATER
-		Guard.NotNull(baseDirectory);
-#else
-		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
-#endif
+		Ensure.NotNull(baseDirectory);
 #if NETSTANDARD2_0
 		string absolutePath = PathPolyfill.GetFullPath(WeakString, baseDirectory.WeakString);
 #else
@@ -120,11 +112,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
-#if NET6_0_OR_GREATER
-		Guard.NotNull(baseDirectory);
-#else
-		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
-#endif
+		Ensure.NotNull(baseDirectory);
 		return this;
 	}
 }

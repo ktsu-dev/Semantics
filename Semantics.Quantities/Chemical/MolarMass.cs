@@ -26,8 +26,8 @@ public sealed record MolarMass<T> : PhysicalQuantity<MolarMass<T>, T>
 	/// <returns>The molar mass.</returns>
 	public static MolarMass<T> FromMassAndAmount(Mass<T> totalMass, AmountOfSubstance<T> amountOfSubstance)
 	{
-		Guard.NotNull(totalMass);
-		Guard.NotNull(amountOfSubstance);
+		Ensure.NotNull(totalMass);
+		Ensure.NotNull(amountOfSubstance);
 
 		T massInGrams = totalMass.In(Units.Gram);
 		T moles = amountOfSubstance.In(Units.Mole);
@@ -62,7 +62,7 @@ public sealed record MolarMass<T> : PhysicalQuantity<MolarMass<T>, T>
 	/// <returns>The total mass.</returns>
 	public Mass<T> CalculateMass(AmountOfSubstance<T> amount)
 	{
-		Guard.NotNull(amount);
+		Ensure.NotNull(amount);
 
 		T molarMassValue = In(Units.GramPerMole);
 		T moles = amount.In(Units.Mole);

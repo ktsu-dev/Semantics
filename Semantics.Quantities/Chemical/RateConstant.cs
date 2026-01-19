@@ -28,8 +28,8 @@ public sealed record RateConstant<T> : PhysicalQuantity<RateConstant<T>, T>
 	public static RateConstant<T> FromArrheniusEquation(T preExponentialFactor,
 		ActivationEnergy<T> activationEnergy, Temperature<T> temperature)
 	{
-		Guard.NotNull(activationEnergy);
-		Guard.NotNull(temperature);
+		Ensure.NotNull(activationEnergy);
+		Ensure.NotNull(temperature);
 
 		T ea = activationEnergy.In(Units.JoulesPerMole);
 		T temp = temperature.In(Units.Kelvin);
@@ -48,9 +48,9 @@ public sealed record RateConstant<T> : PhysicalQuantity<RateConstant<T>, T>
 	public RateConstant<T> AtTemperature(Temperature<T> temperature1, Temperature<T> temperature2,
 		ActivationEnergy<T> activationEnergy)
 	{
-		Guard.NotNull(temperature1);
-		Guard.NotNull(temperature2);
-		Guard.NotNull(activationEnergy);
+		Ensure.NotNull(temperature1);
+		Ensure.NotNull(temperature2);
+		Ensure.NotNull(activationEnergy);
 
 		T k1 = In(Units.PerSecond);
 		T t1 = temperature1.In(Units.Kelvin);

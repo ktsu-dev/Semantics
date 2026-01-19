@@ -26,8 +26,8 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 	/// <returns>The molarity (mol/L).</returns>
 	public static Concentration<T> FromMolarity(AmountOfSubstance<T> amountOfSubstance, Volume<T> volume)
 	{
-		Guard.NotNull(amountOfSubstance);
-		Guard.NotNull(volume);
+		Ensure.NotNull(amountOfSubstance);
+		Ensure.NotNull(volume);
 		T moles = amountOfSubstance.In(Units.Mole);
 		T liters = volume.In(Units.Liter);
 		T molarity = moles / liters;
@@ -40,8 +40,8 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 	/// <returns>The concentration in ppm.</returns>
 	public static Concentration<T> FromPartsPerMillion(Mass<T> soluteMass, Mass<T> solutionMass)
 	{
-		Guard.NotNull(soluteMass);
-		Guard.NotNull(solutionMass);
+		Ensure.NotNull(soluteMass);
+		Ensure.NotNull(solutionMass);
 		T soluteGrams = soluteMass.In(Units.Gram);
 		T solutionGrams = solutionMass.In(Units.Gram);
 		T ratio = soluteGrams / solutionGrams;
@@ -55,8 +55,8 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 	/// <returns>The concentration in % w/v.</returns>
 	public static Concentration<T> FromWeightVolumePercent(Mass<T> soluteMass, Volume<T> solutionVolume)
 	{
-		Guard.NotNull(soluteMass);
-		Guard.NotNull(solutionVolume);
+		Ensure.NotNull(soluteMass);
+		Ensure.NotNull(solutionVolume);
 		T massGrams = soluteMass.In(Units.Gram);
 		T volumeML = solutionVolume.In(Units.Milliliter);
 		T ratio = massGrams / volumeML;
@@ -70,8 +70,8 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 	/// <returns>The final concentration after dilution.</returns>
 	public Concentration<T> Dilute(Volume<T> initialVolume, Volume<T> finalVolume)
 	{
-		Guard.NotNull(initialVolume);
-		Guard.NotNull(finalVolume);
+		Ensure.NotNull(initialVolume);
+		Ensure.NotNull(finalVolume);
 		T c1 = In(Units.Molar);
 		T v1 = initialVolume.In(Units.Liter);
 		T v2 = finalVolume.In(Units.Liter);
@@ -88,8 +88,8 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static AmountOfSubstance<T> operator *(Concentration<T> concentration, Volume<T> volume)
 	{
-		Guard.NotNull(concentration);
-		Guard.NotNull(volume);
+		Ensure.NotNull(concentration);
+		Ensure.NotNull(volume);
 
 		T amountValue = concentration.Value * volume.Value;
 
@@ -105,8 +105,8 @@ public sealed record Concentration<T> : PhysicalQuantity<Concentration<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Volume<T> operator /(AmountOfSubstance<T> amount, Concentration<T> concentration)
 	{
-		Guard.NotNull(amount);
-		Guard.NotNull(concentration);
+		Ensure.NotNull(amount);
+		Ensure.NotNull(concentration);
 
 		T volumeValue = amount.Value / concentration.Value;
 

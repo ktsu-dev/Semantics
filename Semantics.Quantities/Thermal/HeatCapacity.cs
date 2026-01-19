@@ -63,7 +63,7 @@ public sealed record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>
 	/// <returns>The heat required.</returns>
 	public Heat<T> CalculateHeatRequired(Temperature<T> temperatureChange)
 	{
-		Guard.NotNull(temperatureChange);
+		Ensure.NotNull(temperatureChange);
 		return Heat<T>.Create(Value * temperatureChange.Value);
 	}
 
@@ -74,7 +74,7 @@ public sealed record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>
 	/// <returns>The temperature change.</returns>
 	public Temperature<T> CalculateTemperatureChange(Heat<T> heat)
 	{
-		Guard.NotNull(heat);
+		Ensure.NotNull(heat);
 		return Temperature<T>.Create(heat.Value / Value);
 	}
 
@@ -85,7 +85,7 @@ public sealed record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>
 	/// <returns>The specific heat capacity.</returns>
 	public SpecificHeat<T> CalculateSpecificHeat(Mass<T> mass)
 	{
-		Guard.NotNull(mass);
+		Ensure.NotNull(mass);
 		return SpecificHeat<T>.Create(Value / mass.Value);
 	}
 }

@@ -5,32 +5,7 @@
 namespace ktsu.Semantics.Paths;
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-
-/// <summary>
-/// Provides polyfill methods for ArgumentNullException for older frameworks.
-/// </summary>
-internal static class ArgumentNullExceptionPolyfill
-{
-	/// <summary>
-	/// Throws an ArgumentNullException if the argument is null.
-	/// </summary>
-	/// <param name="argument">The argument to check.</param>
-	/// <param name="paramName">The name of the parameter.</param>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Polyfill for older frameworks")]
-	public static void ThrowIfNull([NotNull] object? argument, [System.Runtime.CompilerServices.CallerArgumentExpression(nameof(argument))] string? paramName = null)
-#if NET6_0_OR_GREATER
-		=> ArgumentNullException.ThrowIfNull(argument, paramName);
-#else
-	{
-		if (argument is null)
-		{
-			throw new ArgumentNullException(paramName);
-		}
-	}
-#endif
-}
 
 /// <summary>
 /// Provides polyfill methods for Path class for older frameworks.

@@ -64,8 +64,8 @@ public sealed record HeatTransferCoefficient<T> : PhysicalQuantity<HeatTransferC
 	/// <returns>The heat transfer rate.</returns>
 	public Power<T> CalculateHeatTransferRate(Area<T> area, Temperature<T> temperatureDifference)
 	{
-		Guard.NotNull(area);
-		Guard.NotNull(temperatureDifference);
+		Ensure.NotNull(area);
+		Ensure.NotNull(temperatureDifference);
 		return Power<T>.Create(Value * area.Value * temperatureDifference.Value);
 	}
 
@@ -76,7 +76,7 @@ public sealed record HeatTransferCoefficient<T> : PhysicalQuantity<HeatTransferC
 	/// <returns>The convective thermal resistance.</returns>
 	public ThermalResistance<T> CalculateThermalResistance(Area<T> area)
 	{
-		Guard.NotNull(area);
+		Ensure.NotNull(area);
 		return ThermalResistance<T>.Create(T.One / (Value * area.Value));
 	}
 

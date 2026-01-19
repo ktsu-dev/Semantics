@@ -67,7 +67,7 @@ public sealed record SoundTransmissionClass<T> : PhysicalQuantity<SoundTransmiss
 	/// <returns>The estimated transmission loss in dB.</returns>
 	public T EstimateTransmissionLoss(Frequency<T> frequency)
 	{
-		Guard.NotNull(frequency);
+		Ensure.NotNull(frequency);
 
 		// Simplified STC contour approximation
 		// Real STC calculation requires detailed frequency analysis

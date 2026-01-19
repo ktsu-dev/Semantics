@@ -35,7 +35,7 @@ public sealed record OpticalPower<T> : PhysicalQuantity<OpticalPower<T>, T>
 	/// </remarks>
 	public static OpticalPower<T> FromFocalLength(Length<T> focalLength)
 	{
-		Guard.NotNull(focalLength);
+		Ensure.NotNull(focalLength);
 
 		T focalLengthMeters = focalLength.In(Units.Meter);
 		if (focalLengthMeters == T.Zero)
@@ -89,7 +89,7 @@ public sealed record OpticalPower<T> : PhysicalQuantity<OpticalPower<T>, T>
 	/// </remarks>
 	public OpticalPower<T> CombineWith(OpticalPower<T> other)
 	{
-		Guard.NotNull(other);
+		Ensure.NotNull(other);
 
 		T power1 = In(Units.Diopter);
 		T power2 = other.In(Units.Diopter);
@@ -107,8 +107,8 @@ public sealed record OpticalPower<T> : PhysicalQuantity<OpticalPower<T>, T>
 	/// </remarks>
 	public OpticalPower<T> CombineWithSeparation(OpticalPower<T> other, Length<T> separation)
 	{
-		Guard.NotNull(other);
-		Guard.NotNull(separation);
+		Ensure.NotNull(other);
+		Ensure.NotNull(separation);
 
 		T power1 = In(Units.Diopter);
 		T power2 = other.In(Units.Diopter);

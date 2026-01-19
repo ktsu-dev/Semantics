@@ -50,11 +50,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public RelativeDirectoryPath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
-#if NET6_0_OR_GREATER
-		Guard.NotNull(baseDirectory);
-#else
-		ArgumentNullExceptionPolyfill.ThrowIfNull(baseDirectory);
-#endif
+		Ensure.NotNull(baseDirectory);
 
 		string absolutePath = Path.GetFullPath(WeakString);
 #if NETSTANDARD2_0
@@ -74,13 +70,8 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
 	public static DirectoryPath operator /(DirectoryPath left, RelativeDirectoryPath right)
 	{
-#if NET6_0_OR_GREATER
-		Guard.NotNull(left);
-		Guard.NotNull(right);
-#else
-		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
-		ArgumentNullExceptionPolyfill.ThrowIfNull(right);
-#endif
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 
 		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
 		return Create<DirectoryPath>(combinedPath);
@@ -95,13 +86,8 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
 	public static FilePath operator /(DirectoryPath left, RelativeFilePath right)
 	{
-#if NET6_0_OR_GREATER
-		Guard.NotNull(left);
-		Guard.NotNull(right);
-#else
-		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
-		ArgumentNullExceptionPolyfill.ThrowIfNull(right);
-#endif
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 
 		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
 		return FilePath.Create<FilePath>(combinedPath);
@@ -116,13 +102,8 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
 	public static DirectoryPath operator /(DirectoryPath left, DirectoryName right)
 	{
-#if NET6_0_OR_GREATER
-		Guard.NotNull(left);
-		Guard.NotNull(right);
-#else
-		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
-		ArgumentNullExceptionPolyfill.ThrowIfNull(right);
-#endif
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 
 		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
 		return Create<DirectoryPath>(combinedPath);
@@ -137,13 +118,8 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
 	public static FilePath operator /(DirectoryPath left, FileName right)
 	{
-#if NET6_0_OR_GREATER
-		Guard.NotNull(left);
-		Guard.NotNull(right);
-#else
-		ArgumentNullExceptionPolyfill.ThrowIfNull(left);
-		ArgumentNullExceptionPolyfill.ThrowIfNull(right);
-#endif
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 
 		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
 		return FilePath.Create<FilePath>(combinedPath);

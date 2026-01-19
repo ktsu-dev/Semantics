@@ -65,8 +65,8 @@ public record SemanticQuantity<TSelf, TStorage>
 	public static TResult Multiply<TResult>(SemanticQuantity<TStorage> self, SemanticQuantity<TStorage> other)
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
-		Guard.NotNull(self);
-		Guard.NotNull(other);
+		Ensure.NotNull(self);
+		Ensure.NotNull(other);
 		return Create<TResult>(self.Quantity * other.Quantity)!;
 	}
 
@@ -80,7 +80,7 @@ public record SemanticQuantity<TSelf, TStorage>
 	public static TResult Multiply<TResult>(SemanticQuantity<TStorage> self, TStorage other)
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
-		Guard.NotNull(self);
+		Ensure.NotNull(self);
 		return Create<TResult>(self.Quantity * other)!;
 	}
 
@@ -94,8 +94,8 @@ public record SemanticQuantity<TSelf, TStorage>
 	public static TResult Divide<TResult>(SemanticQuantity<TStorage> self, SemanticQuantity<TStorage> other)
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
-		Guard.NotNull(self);
-		Guard.NotNull(other);
+		Ensure.NotNull(self);
+		Ensure.NotNull(other);
 		return Create<TResult>(self.Quantity / other.Quantity)!;
 	}
 
@@ -109,7 +109,7 @@ public record SemanticQuantity<TSelf, TStorage>
 	public static TResult Divide<TResult>(SemanticQuantity<TStorage> self, TStorage other)
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
-		Guard.NotNull(self);
+		Ensure.NotNull(self);
 		return Create<TResult>(self.Quantity / other)!;
 	}
 
@@ -121,8 +121,8 @@ public record SemanticQuantity<TSelf, TStorage>
 	/// <returns>The quotient as a storage type.</returns>
 	public static TStorage DivideToStorage(SemanticQuantity<TStorage> self, SemanticQuantity<TStorage> other)
 	{
-		Guard.NotNull(self);
-		Guard.NotNull(other);
+		Ensure.NotNull(self);
+		Ensure.NotNull(other);
 		if (TStorage.IsZero(other.Quantity))
 		{
 			throw new DivideByZeroException("Cannot divide by zero.");
@@ -140,8 +140,8 @@ public record SemanticQuantity<TSelf, TStorage>
 	public static TResult Add<TResult>(SemanticQuantity<TStorage> self, SemanticQuantity<TStorage> other)
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
-		Guard.NotNull(self);
-		Guard.NotNull(other);
+		Ensure.NotNull(self);
+		Ensure.NotNull(other);
 		return Create<TResult>(self.Quantity + other.Quantity)!;
 	}
 
@@ -155,8 +155,8 @@ public record SemanticQuantity<TSelf, TStorage>
 	public static TResult Subtract<TResult>(SemanticQuantity<TStorage> self, SemanticQuantity<TStorage> other)
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
-		Guard.NotNull(self);
-		Guard.NotNull(other);
+		Ensure.NotNull(self);
+		Ensure.NotNull(other);
 		return Create<TResult>(self.Quantity - other.Quantity)!;
 	}
 
@@ -169,7 +169,7 @@ public record SemanticQuantity<TSelf, TStorage>
 	public static TResult Negate<TResult>(SemanticQuantity<TStorage> self)
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
-		Guard.NotNull(self);
+		Ensure.NotNull(self);
 		return Create<TResult>(-self.Quantity)!;
 	}
 

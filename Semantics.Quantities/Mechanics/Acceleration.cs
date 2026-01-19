@@ -37,8 +37,8 @@ public sealed record Acceleration<T> : PhysicalQuantity<Acceleration<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Velocity<T> operator *(Acceleration<T> acceleration, Time<T> time)
 	{
-		Guard.NotNull(acceleration);
-		Guard.NotNull(time);
+		Ensure.NotNull(acceleration);
+		Ensure.NotNull(time);
 
 		T velocityValue = acceleration.Value * time.Value;
 
@@ -63,8 +63,8 @@ public sealed record Acceleration<T> : PhysicalQuantity<Acceleration<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Time<T> operator /(Velocity<T> velocity, Acceleration<T> acceleration)
 	{
-		Guard.NotNull(velocity);
-		Guard.NotNull(acceleration);
+		Ensure.NotNull(velocity);
+		Ensure.NotNull(acceleration);
 
 		T timeValue = velocity.Value / acceleration.Value;
 

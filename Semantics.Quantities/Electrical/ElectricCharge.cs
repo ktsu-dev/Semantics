@@ -37,8 +37,8 @@ public sealed record ElectricCharge<T> : PhysicalQuantity<ElectricCharge<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static ElectricCurrent<T> operator /(ElectricCharge<T> charge, Time<T> time)
 	{
-		Guard.NotNull(charge);
-		Guard.NotNull(time);
+		Ensure.NotNull(charge);
+		Ensure.NotNull(time);
 
 		T currentValue = charge.Value / time.Value;
 
@@ -54,8 +54,8 @@ public sealed record ElectricCharge<T> : PhysicalQuantity<ElectricCharge<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Time<T> operator /(ElectricCharge<T> charge, ElectricCurrent<T> current)
 	{
-		Guard.NotNull(charge);
-		Guard.NotNull(current);
+		Ensure.NotNull(charge);
+		Ensure.NotNull(current);
 
 		T timeValue = charge.Value / current.Value;
 

@@ -46,7 +46,7 @@ public abstract record PhysicalQuantity<TSelf, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>")]
 	public virtual T In(IUnit targetUnit)
 	{
-		Guard.NotNull(targetUnit);
+		Ensure.NotNull(targetUnit);
 
 		if (!targetUnit.Dimension.Equals(Dimension))
 		{

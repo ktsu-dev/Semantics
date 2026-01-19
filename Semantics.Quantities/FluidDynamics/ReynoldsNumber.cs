@@ -37,9 +37,9 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 	/// </remarks>
 	public static ReynoldsNumber<T> FromVelocityLengthAndKinematicViscosity(Velocity<T> velocity, Length<T> characteristicLength, KinematicViscosity<T> kinematicViscosity)
 	{
-		Guard.NotNull(velocity);
-		Guard.NotNull(characteristicLength);
-		Guard.NotNull(kinematicViscosity);
+		Ensure.NotNull(velocity);
+		Ensure.NotNull(characteristicLength);
+		Ensure.NotNull(kinematicViscosity);
 
 		T v = velocity.In(Units.MetersPerSecond);
 		T length = characteristicLength.In(Units.Meter);
@@ -66,10 +66,10 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 	/// </remarks>
 	public static ReynoldsNumber<T> FromVelocityLengthDynamicViscosityAndDensity(Velocity<T> velocity, Length<T> characteristicLength, DynamicViscosity<T> dynamicViscosity, Density<T> density)
 	{
-		Guard.NotNull(velocity);
-		Guard.NotNull(characteristicLength);
-		Guard.NotNull(dynamicViscosity);
-		Guard.NotNull(density);
+		Ensure.NotNull(velocity);
+		Ensure.NotNull(characteristicLength);
+		Ensure.NotNull(dynamicViscosity);
+		Ensure.NotNull(density);
 
 		T v = velocity.In(Units.MetersPerSecond);
 		T length = characteristicLength.In(Units.Meter);
@@ -96,8 +96,8 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 	/// </remarks>
 	public static Velocity<T> CalculateCriticalVelocity(Length<T> characteristicLength, KinematicViscosity<T> kinematicViscosity, T? criticalReynoldsNumber = null)
 	{
-		Guard.NotNull(characteristicLength);
-		Guard.NotNull(kinematicViscosity);
+		Ensure.NotNull(characteristicLength);
+		Ensure.NotNull(kinematicViscosity);
 
 		T reCritical = criticalReynoldsNumber ?? T.CreateChecked(2300); // Default for pipe flow
 		T length = characteristicLength.In(Units.Meter);
@@ -240,10 +240,10 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 	/// <returns>The resulting Reynolds number.</returns>
 	public static ReynoldsNumber<T> FromFluidProperties(Density<T> density, Velocity<T> velocity, Length<T> length, DynamicViscosity<T> dynamicViscosity)
 	{
-		Guard.NotNull(density);
-		Guard.NotNull(velocity);
-		Guard.NotNull(length);
-		Guard.NotNull(dynamicViscosity);
+		Ensure.NotNull(density);
+		Ensure.NotNull(velocity);
+		Ensure.NotNull(length);
+		Ensure.NotNull(dynamicViscosity);
 
 		T reynoldsValue = density.Value * velocity.Value * length.Value / dynamicViscosity.Value;
 
@@ -259,9 +259,9 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 	/// <returns>The resulting Reynolds number.</returns>
 	public static ReynoldsNumber<T> FromKinematicProperties(Velocity<T> velocity, Length<T> length, KinematicViscosity<T> kinematicViscosity)
 	{
-		Guard.NotNull(velocity);
-		Guard.NotNull(length);
-		Guard.NotNull(kinematicViscosity);
+		Ensure.NotNull(velocity);
+		Ensure.NotNull(length);
+		Ensure.NotNull(kinematicViscosity);
 
 		T reynoldsValue = velocity.Value * length.Value / kinematicViscosity.Value;
 
@@ -276,8 +276,8 @@ public sealed record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 	/// <returns>The resulting Reynolds number for standard air.</returns>
 	public static ReynoldsNumber<T> ForStandardAir(Velocity<T> velocity, Length<T> length)
 	{
-		Guard.NotNull(velocity);
-		Guard.NotNull(length);
+		Ensure.NotNull(velocity);
+		Ensure.NotNull(length);
 
 		// Standard air properties at 20°C, 1 atm
 		T airDensity = PhysicalConstants.Generic.StandardAirDensity<T>();

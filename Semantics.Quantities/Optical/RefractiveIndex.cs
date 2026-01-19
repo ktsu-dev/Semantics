@@ -56,7 +56,7 @@ public sealed record RefractiveIndex<T> : PhysicalQuantity<RefractiveIndex<T>, T
 	/// </remarks>
 	public T CalculateCriticalAngle(RefractiveIndex<T> externalMedium)
 	{
-		Guard.NotNull(externalMedium);
+		Ensure.NotNull(externalMedium);
 
 		T n1 = In(Units.Radian);
 		T n2 = externalMedium.In(Units.Radian);
@@ -79,7 +79,7 @@ public sealed record RefractiveIndex<T> : PhysicalQuantity<RefractiveIndex<T>, T
 	/// </remarks>
 	public T CalculateReflectionCoefficient(RefractiveIndex<T> externalMedium)
 	{
-		Guard.NotNull(externalMedium);
+		Ensure.NotNull(externalMedium);
 
 		T n1 = In(Units.Radian);
 		T n2 = externalMedium.In(Units.Radian);

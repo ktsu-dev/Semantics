@@ -36,8 +36,8 @@ public sealed record Torque<T> : PhysicalQuantity<Torque<T>, T>
 	/// <returns>The resulting torque.</returns>
 	public static Torque<T> Multiply(Force<T> force, Length<T> length)
 	{
-		Guard.NotNull(force);
-		Guard.NotNull(length);
+		Ensure.NotNull(force);
+		Ensure.NotNull(length);
 		return Create(force.Value * length.Value);
 	}
 
@@ -49,8 +49,8 @@ public sealed record Torque<T> : PhysicalQuantity<Torque<T>, T>
 	/// <returns>The resulting length.</returns>
 	public static Length<T> Divide(Torque<T> torque, Force<T> force)
 	{
-		Guard.NotNull(torque);
-		Guard.NotNull(force);
+		Ensure.NotNull(torque);
+		Ensure.NotNull(force);
 		return Length<T>.Create(torque.Value / force.Value);
 	}
 
@@ -62,8 +62,8 @@ public sealed record Torque<T> : PhysicalQuantity<Torque<T>, T>
 	/// <returns>The resulting force.</returns>
 	public static Force<T> Divide(Torque<T> torque, Length<T> length)
 	{
-		Guard.NotNull(torque);
-		Guard.NotNull(length);
+		Ensure.NotNull(torque);
+		Ensure.NotNull(length);
 		return Force<T>.Create(torque.Value / length.Value);
 	}
 
@@ -74,7 +74,7 @@ public sealed record Torque<T> : PhysicalQuantity<Torque<T>, T>
 	/// <returns>The tangential force.</returns>
 	public Force<T> GetTangentialForce(Length<T> length)
 	{
-		Guard.NotNull(length);
+		Ensure.NotNull(length);
 
 		return Force<T>.Create(Value / length.Value);
 	}
@@ -88,8 +88,8 @@ public sealed record Torque<T> : PhysicalQuantity<Torque<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Force<T> operator /(Torque<T> torque, Length<T> distance)
 	{
-		Guard.NotNull(torque);
-		Guard.NotNull(distance);
+		Ensure.NotNull(torque);
+		Ensure.NotNull(distance);
 
 		T forceValue = torque.Value / distance.Value;
 
@@ -105,8 +105,8 @@ public sealed record Torque<T> : PhysicalQuantity<Torque<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Length<T> operator /(Torque<T> torque, Force<T> force)
 	{
-		Guard.NotNull(torque);
-		Guard.NotNull(force);
+		Ensure.NotNull(torque);
+		Ensure.NotNull(force);
 
 		T distanceValue = torque.Value / force.Value;
 

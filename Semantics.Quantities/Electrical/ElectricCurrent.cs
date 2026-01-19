@@ -37,8 +37,8 @@ public sealed record ElectricCurrent<T> : PhysicalQuantity<ElectricCurrent<T>, T
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static ElectricCharge<T> operator *(ElectricCurrent<T> current, Time<T> time)
 	{
-		Guard.NotNull(current);
-		Guard.NotNull(time);
+		Ensure.NotNull(current);
+		Ensure.NotNull(time);
 
 		T chargeValue = current.Value * time.Value;
 
@@ -63,8 +63,8 @@ public sealed record ElectricCurrent<T> : PhysicalQuantity<ElectricCurrent<T>, T
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static ElectricPotential<T> operator *(ElectricCurrent<T> current, ElectricResistance<T> resistance)
 	{
-		Guard.NotNull(current);
-		Guard.NotNull(resistance);
+		Ensure.NotNull(current);
+		Ensure.NotNull(resistance);
 
 		T voltageValue = current.Value * resistance.Value;
 
@@ -80,8 +80,8 @@ public sealed record ElectricCurrent<T> : PhysicalQuantity<ElectricCurrent<T>, T
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static ElectricResistance<T> operator /(ElectricPotential<T> voltage, ElectricCurrent<T> current)
 	{
-		Guard.NotNull(voltage);
-		Guard.NotNull(current);
+		Ensure.NotNull(voltage);
+		Ensure.NotNull(current);
 
 		T resistanceValue = voltage.Value / current.Value;
 

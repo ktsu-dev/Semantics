@@ -50,8 +50,8 @@ public sealed record SoundPower<T> : PhysicalQuantity<SoundPower<T>, T>
 	/// <returns>The resulting sound power.</returns>
 	public static SoundPower<T> Multiply(SoundIntensity<T> soundIntensity, Area<T> area)
 	{
-		Guard.NotNull(soundIntensity);
-		Guard.NotNull(area);
+		Ensure.NotNull(soundIntensity);
+		Ensure.NotNull(area);
 		return Create(soundIntensity.Value * area.Value);
 	}
 
@@ -63,8 +63,8 @@ public sealed record SoundPower<T> : PhysicalQuantity<SoundPower<T>, T>
 	/// <returns>The resulting sound power.</returns>
 	public static SoundPower<T> FromSoundIntensityAndArea(SoundIntensity<T> soundIntensity, Area<T> area)
 	{
-		Guard.NotNull(soundIntensity);
-		Guard.NotNull(area);
+		Ensure.NotNull(soundIntensity);
+		Ensure.NotNull(area);
 
 		return Create(soundIntensity.Value * area.Value);
 	}
@@ -78,8 +78,8 @@ public sealed record SoundPower<T> : PhysicalQuantity<SoundPower<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static SoundIntensity<T> operator /(SoundPower<T> power, Area<T> area)
 	{
-		Guard.NotNull(power);
-		Guard.NotNull(area);
+		Ensure.NotNull(power);
+		Ensure.NotNull(area);
 
 		T intensityValue = power.Value / area.Value;
 

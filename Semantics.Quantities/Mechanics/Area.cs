@@ -36,8 +36,8 @@ public sealed record Area<T> : PhysicalQuantity<Area<T>, T>
 	/// <returns>The resulting volume.</returns>
 	public static Volume<T> operator *(Area<T> left, Length<T> right)
 	{
-		Guard.NotNull(left);
-		Guard.NotNull(right);
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 		return Volume<T>.Create(left.Value * right.Value);
 	}
 

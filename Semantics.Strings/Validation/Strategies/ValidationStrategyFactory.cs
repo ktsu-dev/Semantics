@@ -20,7 +20,7 @@ public static class ValidationStrategyFactory
 	public static IValidationStrategy CreateStrategy(Type type)
 	{
 #if NET6_0_OR_GREATER
-		Guard.NotNull(type);
+		Ensure.NotNull(type);
 #else
 		if (type is null)
 		{

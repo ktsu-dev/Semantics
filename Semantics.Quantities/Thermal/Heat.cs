@@ -86,7 +86,7 @@ public sealed record Heat<T> : PhysicalQuantity<Heat<T>, T>
 	/// <returns>The equivalent heat.</returns>
 	public static Heat<T> FromEnergy(Energy<T> energy)
 	{
-		Guard.NotNull(energy);
+		Ensure.NotNull(energy);
 		return Create(energy.Value);
 	}
 
@@ -99,8 +99,8 @@ public sealed record Heat<T> : PhysicalQuantity<Heat<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Power<T> operator /(Heat<T> heat, Time<T> time)
 	{
-		Guard.NotNull(heat);
-		Guard.NotNull(time);
+		Ensure.NotNull(heat);
+		Ensure.NotNull(time);
 
 		T powerValue = heat.Value / time.Value;
 
@@ -116,8 +116,8 @@ public sealed record Heat<T> : PhysicalQuantity<Heat<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Time<T> operator /(Heat<T> heat, Power<T> power)
 	{
-		Guard.NotNull(heat);
-		Guard.NotNull(power);
+		Ensure.NotNull(heat);
+		Ensure.NotNull(power);
 
 		T timeValue = heat.Value / power.Value;
 

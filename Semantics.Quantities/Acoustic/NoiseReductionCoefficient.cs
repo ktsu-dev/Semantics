@@ -43,10 +43,10 @@ public sealed record NoiseReductionCoefficient<T> : PhysicalQuantity<NoiseReduct
 		SoundAbsorption<T> alpha1000Hz,
 		SoundAbsorption<T> alpha2000Hz)
 	{
-		Guard.NotNull(alpha250Hz);
-		Guard.NotNull(alpha500Hz);
-		Guard.NotNull(alpha1000Hz);
-		Guard.NotNull(alpha2000Hz);
+		Ensure.NotNull(alpha250Hz);
+		Ensure.NotNull(alpha500Hz);
+		Ensure.NotNull(alpha1000Hz);
+		Ensure.NotNull(alpha2000Hz);
 
 		T sum = alpha250Hz.Value + alpha500Hz.Value + alpha1000Hz.Value + alpha2000Hz.Value;
 		T average = sum / T.CreateChecked(4);

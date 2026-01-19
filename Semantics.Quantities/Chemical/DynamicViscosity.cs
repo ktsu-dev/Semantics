@@ -26,7 +26,7 @@ public sealed record DynamicViscosity<T> : PhysicalQuantity<DynamicViscosity<T>,
 	/// <returns>The dynamic viscosity.</returns>
 	public static DynamicViscosity<T> FromShearStressAndRate(Pressure<T> shearStress, T shearRate)
 	{
-		Guard.NotNull(shearStress);
+		Ensure.NotNull(shearStress);
 
 		T stress = shearStress.In(Units.Pascal);
 		T viscosity = stress / shearRate;
@@ -38,7 +38,7 @@ public sealed record DynamicViscosity<T> : PhysicalQuantity<DynamicViscosity<T>,
 	/// <returns>The kinematic viscosity.</returns>
 	public T CalculateKinematicViscosity(Density<T> density)
 	{
-		Guard.NotNull(density);
+		Ensure.NotNull(density);
 
 		T dynamicVisc = In(Units.PascalSecond);
 		T rho = density.In(Units.Gram); // kg/m³
@@ -77,9 +77,9 @@ public sealed record DynamicViscosity<T> : PhysicalQuantity<DynamicViscosity<T>,
 	/// <returns>Reynolds number (dimensionless).</returns>
 	public T CalculateReynoldsNumber(Density<T> density, Velocity<T> velocity, Length<T> characteristicLength)
 	{
-		Guard.NotNull(density);
-		Guard.NotNull(velocity);
-		Guard.NotNull(characteristicLength);
+		Ensure.NotNull(density);
+		Ensure.NotNull(velocity);
+		Ensure.NotNull(characteristicLength);
 
 		T rho = density.In(Units.Gram); // kg/m³
 		T v = velocity.In(Units.MetersPerSecond);

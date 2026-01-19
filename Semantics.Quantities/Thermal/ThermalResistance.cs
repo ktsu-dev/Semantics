@@ -55,7 +55,7 @@ public sealed record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T
 	/// <returns>The heat flow rate.</returns>
 	public Power<T> CalculateHeatFlow(Temperature<T> temperatureDifference)
 	{
-		Guard.NotNull(temperatureDifference);
+		Ensure.NotNull(temperatureDifference);
 		return Power<T>.Create(temperatureDifference.Value / Value);
 	}
 
@@ -67,8 +67,8 @@ public sealed record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T
 	/// <returns>The total thermal resistance.</returns>
 	public static ThermalResistance<T> operator +(ThermalResistance<T> left, ThermalResistance<T> right)
 	{
-		Guard.NotNull(left);
-		Guard.NotNull(right);
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 		return Create(left.Value + right.Value);
 	}
 
@@ -79,7 +79,7 @@ public sealed record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T
 	/// <returns>The total thermal resistance.</returns>
 	public ThermalResistance<T> Add(ThermalResistance<T> other)
 	{
-		Guard.NotNull(other);
+		Ensure.NotNull(other);
 		return this + other;
 	}
 
@@ -90,7 +90,7 @@ public sealed record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T
 	/// <returns>The parallel thermal resistance.</returns>
 	public ThermalResistance<T> InParallelWith(ThermalResistance<T> other)
 	{
-		Guard.NotNull(other);
+		Ensure.NotNull(other);
 		return Create(T.CreateChecked(1) / ((T.CreateChecked(1) / Value) + (T.CreateChecked(1) / other.Value)));
 	}
 }

@@ -36,7 +36,7 @@ public sealed record SoundPowerLevel<T> : PhysicalQuantity<SoundPowerLevel<T>, T
 	/// <returns>The corresponding sound power level in dB PWL.</returns>
 	public static SoundPowerLevel<T> FromSoundPower(SoundPower<T> soundPower)
 	{
-		Guard.NotNull(soundPower);
+		Ensure.NotNull(soundPower);
 
 		// Reference power: 10⁻¹² W
 		T referencePower = T.CreateChecked(1e-12);
@@ -66,7 +66,7 @@ public sealed record SoundPowerLevel<T> : PhysicalQuantity<SoundPowerLevel<T>, T
 	/// <returns>The combined sound power level.</returns>
 	public SoundPowerLevel<T> CombineWith(SoundPowerLevel<T> other)
 	{
-		Guard.NotNull(other);
+		Ensure.NotNull(other);
 
 		T exp1 = T.CreateChecked(Math.Pow(10.0, double.CreateChecked(Value / T.CreateChecked(10.0))));
 		T exp2 = T.CreateChecked(Math.Pow(10.0, double.CreateChecked(other.Value / T.CreateChecked(10.0))));
@@ -83,8 +83,8 @@ public sealed record SoundPowerLevel<T> : PhysicalQuantity<SoundPowerLevel<T>, T
 	/// <returns>The directivity factor in dB.</returns>
 	public T CalculateDirectivity(SoundPressureLevel<T> soundPressureLevel, Length<T> distance)
 	{
-		Guard.NotNull(soundPressureLevel);
-		Guard.NotNull(distance);
+		Ensure.NotNull(soundPressureLevel);
+		Ensure.NotNull(distance);
 
 		T sphericalSpreading = T.CreateChecked(10.0 * Math.Log10(4.0 * Math.PI * double.CreateChecked(distance.Value * distance.Value)));
 		return Value - soundPressureLevel.Value + sphericalSpreading;

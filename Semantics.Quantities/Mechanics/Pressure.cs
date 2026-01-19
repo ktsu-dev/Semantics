@@ -38,8 +38,8 @@ public sealed record Pressure<T> : PhysicalQuantity<Pressure<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
 	public static Force<T> operator *(Pressure<T> pressure, Area<T> area)
 	{
-		Guard.NotNull(pressure);
-		Guard.NotNull(area);
+		Ensure.NotNull(pressure);
+		Ensure.NotNull(area);
 
 		T forceValue = pressure.Value * area.Value;
 
@@ -60,7 +60,7 @@ public sealed record Pressure<T> : PhysicalQuantity<Pressure<T>, T>
 	/// <returns>The resulting force (F = P·A).</returns>
 	public Force<T> GetForce(Area<T> area)
 	{
-		Guard.NotNull(area);
+		Ensure.NotNull(area);
 
 		T pressureValue = In(Units.Pascal);
 		T areaValue = area.In(Units.SquareMeter);
@@ -78,8 +78,8 @@ public sealed record Pressure<T> : PhysicalQuantity<Pressure<T>, T>
 	/// <returns>The hydrostatic pressure (P = ρgh).</returns>
 	public static Pressure<T> FromHydrostaticPressure(Density<T> density, Length<T> depth, Acceleration<T>? gravity = null)
 	{
-		Guard.NotNull(density);
-		Guard.NotNull(depth);
+		Ensure.NotNull(density);
+		Ensure.NotNull(depth);
 
 		T densityValue = density.In(Units.KilogramPerCubicMeter);
 		T depthValue = depth.In(Units.Meter);

@@ -36,8 +36,8 @@ public sealed record AngularVelocity<T> : PhysicalQuantity<AngularVelocity<T>, T
 	/// <returns>The resulting angular acceleration.</returns>
 	public static AngularAcceleration<T> Divide(AngularVelocity<T> angularVelocity, Time<T> time)
 	{
-		Guard.NotNull(angularVelocity);
-		Guard.NotNull(time);
+		Ensure.NotNull(angularVelocity);
+		Ensure.NotNull(time);
 		return AngularAcceleration<T>.Create(angularVelocity.Value / time.Value);
 	}
 }

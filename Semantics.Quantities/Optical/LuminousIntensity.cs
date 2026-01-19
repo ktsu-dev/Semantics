@@ -58,7 +58,7 @@ public sealed record LuminousIntensity<T> : PhysicalQuantity<LuminousIntensity<T
 	/// </remarks>
 	public Illuminance<T> CalculateIlluminanceAtDistance(Length<T> distance)
 	{
-		Guard.NotNull(distance);
+		Ensure.NotNull(distance);
 
 		T intensity = In(Units.Candela);
 		T distanceMeters = distance.In(Units.Meter);

@@ -19,13 +19,8 @@ public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 		where TFromPath : SemanticPath<TFromPath>
 		where TToPath : SemanticPath<TToPath>
 	{
-#if NET6_0_OR_GREATER
-		Guard.NotNull(from);
-		Guard.NotNull(to);
-#else
-		ArgumentNullExceptionPolyfill.ThrowIfNull(from);
-		ArgumentNullExceptionPolyfill.ThrowIfNull(to);
-#endif
+		Ensure.NotNull(from);
+		Ensure.NotNull(to);
 
 		FileInfo fromInfo = new(Path.GetFullPath(from.WeakString));
 		FileInfo toInfo = new(Path.GetFullPath(to.WeakString));

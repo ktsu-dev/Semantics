@@ -25,7 +25,7 @@ public sealed record PH<T> : PhysicalQuantity<PH<T>, T>
 	/// <returns>The pH value.</returns>
 	public static PH<T> FromHydrogenConcentration(Concentration<T> hydrogenConcentration)
 	{
-		Guard.NotNull(hydrogenConcentration);
+		Ensure.NotNull(hydrogenConcentration);
 
 		T concentration = hydrogenConcentration.In(Units.Molar);
 		T logValue = T.CreateChecked(Math.Log10(double.CreateChecked(concentration)));

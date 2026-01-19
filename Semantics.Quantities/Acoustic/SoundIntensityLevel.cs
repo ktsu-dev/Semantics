@@ -36,7 +36,7 @@ public sealed record SoundIntensityLevel<T> : PhysicalQuantity<SoundIntensityLev
 	/// <returns>The corresponding sound intensity level in dB IL.</returns>
 	public static SoundIntensityLevel<T> FromSoundIntensity(SoundIntensity<T> soundIntensity)
 	{
-		Guard.NotNull(soundIntensity);
+		Ensure.NotNull(soundIntensity);
 
 		// Reference intensity: 10⁻¹² W/m²
 		T referenceIntensity = T.CreateChecked(1e-12);
@@ -66,7 +66,7 @@ public sealed record SoundIntensityLevel<T> : PhysicalQuantity<SoundIntensityLev
 	/// <returns>The combined sound intensity level.</returns>
 	public SoundIntensityLevel<T> CombineWith(SoundIntensityLevel<T> other)
 	{
-		Guard.NotNull(other);
+		Ensure.NotNull(other);
 
 		T exp1 = T.CreateChecked(Math.Pow(10.0, double.CreateChecked(Value / T.CreateChecked(10.0))));
 		T exp2 = T.CreateChecked(Math.Pow(10.0, double.CreateChecked(other.Value / T.CreateChecked(10.0))));

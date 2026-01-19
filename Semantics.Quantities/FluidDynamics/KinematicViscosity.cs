@@ -54,8 +54,8 @@ public sealed record KinematicViscosity<T> : PhysicalQuantity<KinematicViscosity
 	/// </remarks>
 	public static KinematicViscosity<T> FromDynamicViscosityAndDensity(DynamicViscosity<T> dynamicViscosity, Density<T> density)
 	{
-		Guard.NotNull(dynamicViscosity);
-		Guard.NotNull(density);
+		Ensure.NotNull(dynamicViscosity);
+		Ensure.NotNull(density);
 
 		T mu = dynamicViscosity.In(Units.Pascal);
 		T rho = density.In(Units.Kilogram);
@@ -78,7 +78,7 @@ public sealed record KinematicViscosity<T> : PhysicalQuantity<KinematicViscosity
 	/// </remarks>
 	public DynamicViscosity<T> CalculateDynamicViscosity(Density<T> density)
 	{
-		Guard.NotNull(density);
+		Ensure.NotNull(density);
 
 		T nu = In(Units.Meter);
 		T rho = density.In(Units.Kilogram);
@@ -96,7 +96,7 @@ public sealed record KinematicViscosity<T> : PhysicalQuantity<KinematicViscosity
 	/// </remarks>
 	public Density<T> CalculateDensity(DynamicViscosity<T> dynamicViscosity)
 	{
-		Guard.NotNull(dynamicViscosity);
+		Ensure.NotNull(dynamicViscosity);
 
 		T nu = In(Units.Meter);
 		T mu = dynamicViscosity.In(Units.Pascal);
@@ -120,8 +120,8 @@ public sealed record KinematicViscosity<T> : PhysicalQuantity<KinematicViscosity
 	/// </remarks>
 	public T CalculateReynoldsNumber(Velocity<T> velocity, Length<T> characteristicLength)
 	{
-		Guard.NotNull(velocity);
-		Guard.NotNull(characteristicLength);
+		Ensure.NotNull(velocity);
+		Ensure.NotNull(characteristicLength);
 
 		T v = velocity.In(Units.MetersPerSecond);
 		T length = characteristicLength.In(Units.Meter);

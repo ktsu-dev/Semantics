@@ -36,8 +36,8 @@ public sealed record MomentOfInertia<T> : PhysicalQuantity<MomentOfInertia<T>, T
 	/// <returns>The resulting moment of inertia.</returns>
 	public static MomentOfInertia<T> Multiply(Mass<T> mass, Area<T> area)
 	{
-		Guard.NotNull(mass);
-		Guard.NotNull(area);
+		Ensure.NotNull(mass);
+		Ensure.NotNull(area);
 		return Create(mass.Value * area.Value);
 	}
 
@@ -49,8 +49,8 @@ public sealed record MomentOfInertia<T> : PhysicalQuantity<MomentOfInertia<T>, T
 	/// <returns>The resulting area.</returns>
 	public static Area<T> Divide(MomentOfInertia<T> momentOfInertia, Mass<T> mass)
 	{
-		Guard.NotNull(momentOfInertia);
-		Guard.NotNull(mass);
+		Ensure.NotNull(momentOfInertia);
+		Ensure.NotNull(mass);
 		return Area<T>.Create(momentOfInertia.Value / mass.Value);
 	}
 
@@ -62,8 +62,8 @@ public sealed record MomentOfInertia<T> : PhysicalQuantity<MomentOfInertia<T>, T
 	/// <returns>The resulting mass.</returns>
 	public static Mass<T> Divide(MomentOfInertia<T> momentOfInertia, Area<T> area)
 	{
-		Guard.NotNull(momentOfInertia);
-		Guard.NotNull(area);
+		Ensure.NotNull(momentOfInertia);
+		Ensure.NotNull(area);
 		return Mass<T>.Create(momentOfInertia.Value / area.Value);
 	}
 }

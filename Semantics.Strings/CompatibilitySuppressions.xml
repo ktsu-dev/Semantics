@@ -165,6 +165,18 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0001</DiagnosticId>
+    <Target>T:System.Buffers.ReadOnlySpanAction`2</Target>
+    <Left>lib/netstandard2.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/netstandard2.1/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0001</DiagnosticId>
+    <Target>T:System.Buffers.SpanAction`2</Target>
+    <Left>lib/netstandard2.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/netstandard2.1/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0001</DiagnosticId>
     <Target>T:System.Collections.Generic.KeyValuePair</Target>
     <Left>lib/netstandard2.0/ktsu.Semantics.Strings.dll</Left>
     <Right>lib/netstandard2.1/ktsu.Semantics.Strings.dll</Right>
@@ -357,6 +369,126 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.AllConstructors</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.AllEvents</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.AllFields</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.AllMethods</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.AllNestedTypes</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.AllProperties</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.NonPublicConstructorsWithInherited</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.NonPublicEventsWithInherited</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.NonPublicFieldsWithInherited</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.NonPublicMethodsWithInherited</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.NonPublicNestedTypesWithInherited</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.NonPublicPropertiesWithInherited</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructorsWithInherited</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicNestedTypesWithInherited</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.get_Message</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.set_Message(System.String)</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:System.Diagnostics.CodeAnalysis.RequiresDynamicCodeAttribute.get_ExcludeStatics</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:System.Diagnostics.CodeAnalysis.RequiresDynamicCodeAttribute.set_ExcludeStatics(System.Boolean)</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute.get_ExcludeStatics</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute.set_ExcludeStatics(System.Boolean)</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:ktsu.Semantics.Strings.ISemanticStringFactory`1.FromReadOnlySpan(System.ReadOnlySpan{System.Char})</Target>
     <Left>lib/netstandard2.0/ktsu.Semantics.Strings.dll</Left>
     <Right>lib/netstandard2.1/ktsu.Semantics.Strings.dll</Right>
@@ -396,6 +528,12 @@
     <Target>T:System.IO.UnixFileMode</Target>
     <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0008</DiagnosticId>
+    <Target>T:System.Text.SpanLineEnumerator</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0014</DiagnosticId>
@@ -446,6 +584,24 @@
     <Right>lib/net9.0/ktsu.Semantics.Strings.dll</Right>
   </Suppression>
   <Suppression>
+    <DiagnosticId>CP0014</DiagnosticId>
+    <Target>M:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.get_UrlFormat:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0014</DiagnosticId>
+    <Target>M:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.set_UrlFormat(System.String):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0014</DiagnosticId>
+    <Target>P:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.UrlFormat:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
     <DiagnosticId>CP0015</DiagnosticId>
     <Target>T:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute:[T:System.AttributeUsageAttribute]</Target>
     <Left>lib/net5.0/ktsu.Semantics.Strings.dll</Left>
@@ -468,6 +624,12 @@
     <Target>T:System.Runtime.Versioning.UnsupportedOSPlatformAttribute:[T:System.AttributeUsageAttribute]</Target>
     <Left>lib/net5.0/ktsu.Semantics.Strings.dll</Left>
     <Right>lib/net6.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0015</DiagnosticId>
+    <Target>T:System.Diagnostics.CodeAnalysis.ExperimentalAttribute:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
@@ -1077,6 +1239,54 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:System.Buffers.ReadOnlySpanAction`2.BeginInvoke(System.ReadOnlySpan{`0},`1,System.AsyncCallback,System.Object)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:System.Buffers.ReadOnlySpanAction`2.BeginInvoke(System.ReadOnlySpan{`0},`1,System.AsyncCallback,System.Object)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:System.Buffers.ReadOnlySpanAction`2.Invoke(System.ReadOnlySpan{`0},`1):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:System.Buffers.ReadOnlySpanAction`2.Invoke(System.ReadOnlySpan{`0},`1)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:System.Buffers.SpanAction`2.BeginInvoke(System.Span{`0},`1,System.AsyncCallback,System.Object)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:System.Buffers.SpanAction`2.BeginInvoke(System.Span{`0},`1,System.AsyncCallback,System.Object)$1:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:System.Buffers.SpanAction`2.Invoke(System.Span{`0},`1):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:System.Buffers.SpanAction`2.Invoke(System.Span{`0},`1)$0:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
     <Target>M:System.Collections.Generic.KeyValuePair.Create``2(``0,``1)-&gt;System.Collections.Generic.KeyValuePair&lt;TKey, TValue&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
@@ -1527,6 +1737,30 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:System.Buffers.ReadOnlySpanAction`2&lt;0&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:System.Buffers.ReadOnlySpanAction`2&lt;1&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:System.Buffers.SpanAction`2&lt;0&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:System.Buffers.SpanAction`2&lt;1&gt;:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
     <Target>T:System.Diagnostics.CodeAnalysis.ConstantExpectedAttribute:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
@@ -1746,5 +1980,47 @@
     <Target>T:System.Runtime.Versioning.UnsupportedOSPlatformAttribute:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Strings.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>F:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All:[T:System.ComponentModel.EditorBrowsableAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.#ctor(System.String):[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>M:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.get_DiagnosticId:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>P:System.Diagnostics.CodeAnalysis.DynamicDependencyAttribute.Condition:[T:System.ComponentModel.EditorBrowsableAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>P:System.Diagnostics.CodeAnalysis.DynamicDependencyAttribute.Condition:[T:System.ObsoleteAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>P:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.DiagnosticId:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute:[T:System.Runtime.CompilerServices.CompilerLoweringPreserveAttribute]</Target>
+    <Left>lib/net9.0/ktsu.Semantics.Strings.dll</Left>
+    <Right>lib/net10.0/ktsu.Semantics.Strings.dll</Right>
   </Suppression>
 </Suppressions>

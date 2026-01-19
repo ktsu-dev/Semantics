@@ -57,9 +57,9 @@ public sealed record ThermalConductivity<T> : PhysicalQuantity<ThermalConductivi
 	/// <returns>The heat flow rate.</returns>
 	public Power<T> CalculateHeatFlow(Area<T> area, Temperature<T> temperatureDifference, Length<T> length)
 	{
-		Guard.NotNull(area);
-		Guard.NotNull(temperatureDifference);
-		Guard.NotNull(length);
+		Ensure.NotNull(area);
+		Ensure.NotNull(temperatureDifference);
+		Ensure.NotNull(length);
 		return Power<T>.Create(Value * area.Value * temperatureDifference.Value / length.Value);
 	}
 
@@ -71,8 +71,8 @@ public sealed record ThermalConductivity<T> : PhysicalQuantity<ThermalConductivi
 	/// <returns>The thermal resistance.</returns>
 	public ThermalResistance<T> CalculateThermalResistance(Length<T> length, Area<T> area)
 	{
-		Guard.NotNull(length);
-		Guard.NotNull(area);
+		Ensure.NotNull(length);
+		Ensure.NotNull(area);
 		return ThermalResistance<T>.Create(length.Value / (Value * area.Value));
 	}
 }

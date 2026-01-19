@@ -3,14 +3,19 @@
   <Sdk Name="ktsu.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;net5.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
-    <NoWarn>$(NoWarn);CA1866;CA2249;IDE0056;IDE0057;</NoWarn>
+    <TargetFrameworks>net10.0;net9.0;net8.0;net7.0;net6.0;net5.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
+    <NoWarn>$(NoWarn);CA1866;CA2249;IDE0056;IDE0057;IDE0032;</NoWarn>
+    <!-- IDE0032: Use auto property - suppressed due to intentional caching pattern -->
     <!-- CA1866: Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char -->
     <!-- CA2249: Consider using String.Contains instead of String.IndexOf -->
     <!-- IDE0056: Indexing can be simplified -->
     <!-- IDE0057: Substring can be simplified -->
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Polyfill" />
+    <PackageReference Include="System.Memory" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Semantics.Strings\Semantics.Strings.csproj" />
   </ItemGroup>

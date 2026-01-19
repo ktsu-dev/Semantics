@@ -85,7 +85,7 @@ public sealed record Pitch<T> : PhysicalQuantity<Pitch<T>, T>
 	/// <returns>The interval in cents (1200 cents = 1 octave).</returns>
 	public T IntervalInCents(Pitch<T> other)
 	{
-		Guard.NotNull(other);
+		Ensure.NotNull(other);
 
 		double ratio = double.CreateChecked(other.Value) / double.CreateChecked(Value);
 		double cents = 1200.0 * Math.Log2(ratio);
