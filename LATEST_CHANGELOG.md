@@ -3,3 +3,4 @@
 Changes since v1.0.26:
 
 - Refactor null checks to use Ensure instead of Guard; update target frameworks and package references ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor validation attributes and update path-related records for consistency ([@matt-edmondson](https://github.com/matt-edmondson))
