@@ -65,7 +65,6 @@ public class PerformanceRegressionTests
 			Assert.IsGreaterThan(1000000,
 operationsPerSecond, $"{domain.Key} quantity creation performance regression: {operationsPerSecond:F0} ops/sec < 1M ops/sec");
 		}
-
 	}
 
 	/// <summary>
