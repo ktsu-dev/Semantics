@@ -1671,37 +1671,49 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>T:ktsu.Semantics.Paths.IsValidDirectoryNameAttribute:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>T:ktsu.Semantics.Paths.IsDirectoryNameAttribute:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>T:ktsu.Semantics.Paths.IsValidDirectoryNameAttribute:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Target>T:ktsu.Semantics.Paths.IsDirectoryNameAttribute:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>T:ktsu.Semantics.Paths.IsValidFileNameAttribute:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>T:ktsu.Semantics.Paths.IsFileExtensionAttribute:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>T:ktsu.Semantics.Paths.IsValidFileNameAttribute:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Target>T:ktsu.Semantics.Paths.IsFileExtensionAttribute:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>T:ktsu.Semantics.Paths.IsValidPathAttribute:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Target>T:ktsu.Semantics.Paths.IsFileNameAttribute:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0016</DiagnosticId>
-    <Target>T:ktsu.Semantics.Paths.IsValidPathAttribute:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Target>T:ktsu.Semantics.Paths.IsFileNameAttribute:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:ktsu.Semantics.Paths.IsPathAttribute:[T:System.Runtime.CompilerServices.NullableAttribute]</Target>
+    <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
+    <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0016</DiagnosticId>
+    <Target>T:ktsu.Semantics.Paths.IsPathAttribute:[T:System.Runtime.CompilerServices.NullableContextAttribute]</Target>
     <Left>lib/net7.0/ktsu.Semantics.Paths.dll</Left>
     <Right>lib/net8.0/ktsu.Semantics.Paths.dll</Right>
   </Suppression>
