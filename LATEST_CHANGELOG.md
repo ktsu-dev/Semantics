@@ -1,5 +1,6 @@
-## v1.0.29-pre.2 (prerelease)
+## v1.0.29-pre.3 (prerelease)
 
-Changes since v1.0.29-pre.1:
+Changes since v1.0.29-pre.2:
 
-- Bump Polyfill from 9.7.4 to 9.7.5 ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Sync scripts\PSBuild.psm1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .gitignore ([@ktsu[bot]](https://github.com/ktsu[bot]))
