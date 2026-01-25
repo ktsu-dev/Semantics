@@ -1,6 +1,6 @@
-## v1.0.29-pre.3 (prerelease)
+## v1.0.29-pre.4 (prerelease)
 
-Changes since v1.0.29-pre.2:
+Changes since v1.0.29-pre.3:
 
-- Sync scripts\PSBuild.psm1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .gitignore ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Merge remote-tracking branch 'refs/remotes/origin/main' ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
