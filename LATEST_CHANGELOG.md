@@ -1,8 +1,5 @@
-## v1.0.29-pre.6 (prerelease)
+## v1.0.29-pre.7 (prerelease)
 
-Changes since v1.0.29-pre.5:
+Changes since v1.0.29-pre.6:
 
-- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .gitignore ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Merge remote-tracking branch 'refs/remotes/origin/main' ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Bump the ktsu group with 3 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
