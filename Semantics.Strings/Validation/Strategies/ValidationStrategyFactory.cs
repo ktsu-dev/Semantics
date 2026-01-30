@@ -19,14 +19,8 @@ public static class ValidationStrategyFactory
 	/// <returns>The appropriate validation strategy instance</returns>
 	public static IValidationStrategy CreateStrategy(Type type)
 	{
-#if NET6_0_OR_GREATER
 		Ensure.NotNull(type);
-#else
-		if (type is null)
-		{
-			throw new ArgumentNullException(nameof(type));
-		}
-#endif
+
 		// Check for ValidateAny attribute
 		object[] validateAnyAttributes = type.GetCustomAttributes(typeof(ValidateAnyAttribute), true);
 		return validateAnyAttributes.Length > 0 ? AnyStrategy : AllStrategy;
