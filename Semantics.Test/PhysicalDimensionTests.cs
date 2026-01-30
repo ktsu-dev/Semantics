@@ -16,8 +16,8 @@ public sealed class PhysicalDimensionTests
 		PhysicalDimension b = new(baseUnit: BootstrapUnits.Meter, length: 1, time: -1);
 		PhysicalDimension c = new(baseUnit: BootstrapUnits.Meter, length: 2, time: -2);
 
-		Assert.IsTrue(a == b);
-		Assert.IsFalse(a == c);
+		Assert.IsTrue(a == b, "Dimensions with same exponents should be equal");
+		Assert.IsFalse(a == c, "Dimensions with different exponents should not be equal");
 		Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
 	}
 

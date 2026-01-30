@@ -62,7 +62,7 @@ public sealed class AcousticImpedanceTests
 	public void ForStandardAir_ShouldReturnReasonableValue()
 	{
 		AcousticImpedance<double> zAir = AcousticImpedance<double>.ForStandardAir();
-		Assert.IsTrue(zAir.Value is > 400 and < 450);
+		Assert.IsTrue(zAir.Value is > 400 and < 450, "Standard air acoustic impedance should be between 400 and 450 Rayls");
 	}
 
 	[TestMethod]

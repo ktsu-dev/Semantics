@@ -243,11 +243,11 @@ public class SemanticPathInterfaceTests
 		Assert.HasCount(1, relativePaths);
 
 		// Verify all items can be cast to IPath
-		Assert.IsTrue(paths.All(p => p is not null));
-		Assert.IsTrue(filePaths.All(p => p is IPath));
-		Assert.IsTrue(directoryPaths.All(p => p is IPath));
-		Assert.IsTrue(absolutePaths.All(p => p is IPath));
-		Assert.IsTrue(relativePaths.All(p => p is IPath));
+		Assert.IsTrue(paths.All(p => p is not null), "All paths should be non-null");
+		Assert.IsTrue(filePaths.All(p => p is IPath), "All file paths should implement IPath");
+		Assert.IsTrue(directoryPaths.All(p => p is IPath), "All directory paths should implement IPath");
+		Assert.IsTrue(absolutePaths.All(p => p is IPath), "All absolute paths should implement IPath");
+		Assert.IsTrue(relativePaths.All(p => p is IPath), "All relative paths should implement IPath");
 	}
 
 	[TestMethod]
@@ -278,16 +278,16 @@ public class SemanticPathInterfaceTests
 		AbsoluteFilePath absoluteFilePath = AbsoluteFilePath.Create<AbsoluteFilePath>("C:\\test\\file.txt");
 
 		// Act & Assert - Test inheritance hierarchy
-		Assert.IsTrue(absoluteFilePath is IAbsoluteFilePath);
-		Assert.IsTrue(absoluteFilePath is IFilePath);
-		Assert.IsTrue(absoluteFilePath is IAbsolutePath);
-		Assert.IsTrue(absoluteFilePath is IPath);
+		Assert.IsTrue(absoluteFilePath is IAbsoluteFilePath, "Should be IAbsoluteFilePath");
+		Assert.IsTrue(absoluteFilePath is IFilePath, "Should be IFilePath");
+		Assert.IsTrue(absoluteFilePath is IAbsolutePath, "Should be IAbsolutePath");
+		Assert.IsTrue(absoluteFilePath is IPath, "Should be IPath");
 
 		// Test that interfaces inherit correctly
 		IAbsoluteFilePath iAbsoluteFilePath = absoluteFilePath;
-		Assert.IsTrue(iAbsoluteFilePath is IFilePath);
-		Assert.IsTrue(iAbsoluteFilePath is IAbsolutePath);
-		Assert.IsTrue(iAbsoluteFilePath is IPath);
+		Assert.IsTrue(iAbsoluteFilePath is IFilePath, "IAbsoluteFilePath should be IFilePath");
+		Assert.IsTrue(iAbsoluteFilePath is IAbsolutePath, "IAbsoluteFilePath should be IAbsolutePath");
+		Assert.IsTrue(iAbsoluteFilePath is IPath, "IAbsoluteFilePath should be IPath");
 	}
 
 	[TestMethod]
@@ -324,8 +324,8 @@ public class SemanticPathInterfaceTests
 
 		// Assert - These types implement their own interfaces but not IPath
 		// (The compiler prevents us from even checking 'is IPath' since it knows they don't implement it)
-		Assert.IsTrue(fileName is IFileName);
-		Assert.IsTrue(fileExtension is IFileExtension);
+		Assert.IsTrue(fileName is IFileName, "FileName should implement IFileName");
+		Assert.IsTrue(fileExtension is IFileExtension, "FileExtension should implement IFileExtension");
 
 		// Verify they can be cast to their interfaces
 		IFileName iFileName = fileName;
@@ -438,12 +438,12 @@ public class SemanticPathInterfaceTests
 			// Verify file types
 			IFilePath[] files = [.. contents.OfType<IFilePath>()];
 			Assert.HasCount(2, files, "Should contain 2 files");
-			Assert.IsTrue(files.All(f => f is FilePath), "Files should be FilePath type");
+			Assert.IsTrue(files.All(f => f is FilePath), "All files should be FilePath type");
 
 			// Verify directory types
 			IDirectoryPath[] directories = [.. contents.OfType<IDirectoryPath>()];
 			Assert.HasCount(1, directories, "Should contain 1 directory");
-			Assert.IsTrue(directories.All(d => d is DirectoryPath), "Directories should be DirectoryPath type");
+			Assert.IsTrue(directories.All(d => d is DirectoryPath), "All directories should be DirectoryPath type");
 		}
 		finally
 		{
@@ -481,12 +481,12 @@ public class SemanticPathInterfaceTests
 			// Verify file types are absolute
 			IAbsoluteFilePath[] absoluteFiles = [.. contents.OfType<IAbsoluteFilePath>()];
 			Assert.HasCount(1, absoluteFiles, "Should contain 1 absolute file");
-			Assert.IsTrue(absoluteFiles.All(f => f is AbsoluteFilePath), "Files should be AbsoluteFilePath type");
+			Assert.IsTrue(absoluteFiles.All(f => f is AbsoluteFilePath), "All files should be AbsoluteFilePath type");
 
 			// Verify directory types are absolute
 			IAbsoluteDirectoryPath[] absoluteDirectories = [.. contents.OfType<IAbsoluteDirectoryPath>()];
 			Assert.HasCount(1, absoluteDirectories, "Should contain 1 absolute directory");
-			Assert.IsTrue(absoluteDirectories.All(d => d is AbsoluteDirectoryPath), "Directories should be AbsoluteDirectoryPath type");
+			Assert.IsTrue(absoluteDirectories.All(d => d is AbsoluteDirectoryPath), "All directories should be AbsoluteDirectoryPath type");
 		}
 		finally
 		{
@@ -505,7 +505,7 @@ public class SemanticPathInterfaceTests
 		DirectoryPath nonExistentDir = DirectoryPath.Create<DirectoryPath>("/path/that/does/not/exist");
 		IEnumerable<IPath> contents = nonExistentDir.GetContents();
 
-		Assert.IsFalse(contents.Any(), "Non-existent directory should return empty contents");
+		Assert.IsFalse(contents.Any(), "Non-existent directory should have no contents");
 	}
 
 	[TestMethod]
@@ -521,7 +521,7 @@ public class SemanticPathInterfaceTests
 			DirectoryPath dirPath = DirectoryPath.Create<DirectoryPath>(testDir);
 			IEnumerable<IPath> contents = dirPath.GetContents();
 
-			Assert.IsFalse(contents.Any(), "Empty directory should return empty contents");
+			Assert.IsFalse(contents.Any(), "Empty directory should have no contents");
 		}
 		finally
 		{
@@ -562,7 +562,7 @@ public class SemanticPathInterfaceTests
 			Assert.HasCount(2, files, "Should be able to filter files polymorphically");
 
 			// Test that all returned items are paths
-			Assert.IsTrue(contentsList.All(item => item is not null), "All contents should implement IPath");
+			Assert.IsTrue(contentsList.All(item => item is not null), "All contents should be non-null");
 		}
 		finally
 		{
@@ -624,7 +624,8 @@ public class SemanticPathInterfaceTests
 
 		Assert.AreEqual("C:\\temp", directory ?? string.Empty);
 		Assert.AreEqual("test.txt", filename);
-		Assert.IsTrue(combined.Contains("documents") && combined.Contains("readme.md"));
+		Assert.Contains("documents", combined);
+		Assert.Contains("readme.md", combined);
 	}
 
 	[TestMethod]
@@ -649,8 +650,8 @@ public class SemanticPathInterfaceTests
 			bool fileExists = File.Exists(semanticFile); // Implicit conversion to string
 			string content = File.ReadAllText(semanticFile); // Implicit conversion to string
 
-			Assert.IsTrue(dirExists);
-			Assert.IsTrue(fileExists);
+			Assert.IsTrue(dirExists, "Directory should exist after creation");
+			Assert.IsTrue(fileExists, "File should exist after creation");
 			Assert.AreEqual("test content", content);
 		}
 		finally

@@ -28,7 +28,7 @@ public class SemanticPathTests
 		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:\\test\\path");
 
 		// Assert
-		Assert.IsTrue(path.IsValid());
+		Assert.IsTrue(path.IsValid(), "Absolute path should be valid");
 	}
 
 	[TestMethod]
@@ -46,7 +46,7 @@ public class SemanticPathTests
 		RelativePath path = RelativePath.Create<RelativePath>("test\\path");
 
 		// Assert
-		Assert.IsTrue(path.IsValid());
+		Assert.IsTrue(path.IsValid(), "Relative path should be valid");
 	}
 
 	[TestMethod]
@@ -129,7 +129,7 @@ public class SemanticPathTests
 		FileName fileName = FileName.Create<FileName>("test.txt");
 
 		// Assert
-		Assert.IsTrue(fileName.IsValid());
+		Assert.IsTrue(fileName.IsValid(), "Valid file name should be valid");
 	}
 
 	[TestMethod]
@@ -147,7 +147,7 @@ public class SemanticPathTests
 		FileExtension extension = FileExtension.Create<FileExtension>(".txt");
 
 		// Assert
-		Assert.IsTrue(extension.IsValid());
+		Assert.IsTrue(extension.IsValid(), "Valid file extension should be valid");
 	}
 
 	[TestMethod]
@@ -165,7 +165,8 @@ public class SemanticPathTests
 		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:/test\\path/");
 		Assert.IsNotNull(path);
 		// Path should be normalized regardless of input format
-		Assert.IsTrue(path.ToString().Contains("test") && path.ToString().Contains("path"));
+		Assert.Contains("test", path.ToString());
+		Assert.Contains("path", path.ToString());
 	}
 
 	[TestMethod]
@@ -212,12 +213,12 @@ public class SemanticPathTests
 		RelativePath relativePath = RelativePath.Create<RelativePath>("folder/subfolder\\file");
 		Assert.IsNotNull(relativePath);
 		// These methods should exist based on the path type
-		Assert.IsTrue(relativePath.IsValid());
+		Assert.IsTrue(relativePath.IsValid(), "Relative path should be valid");
 
 		// Test with absolute path
 		AbsolutePath absolutePath = AbsolutePath.Create<AbsolutePath>("C:\\folder/subfolder\\file");
 		Assert.IsNotNull(absolutePath);
-		Assert.IsTrue(absolutePath.IsValid());
+		Assert.IsTrue(absolutePath.IsValid(), "Absolute path should be valid");
 	}
 
 	[TestMethod]
@@ -225,7 +226,7 @@ public class SemanticPathTests
 	{
 		// Test that empty paths are considered valid per the IsPath attribute
 		AbsolutePath emptyPath = AbsolutePath.Create<AbsolutePath>("");
-		Assert.IsTrue(emptyPath.IsValid());
+		Assert.IsTrue(emptyPath.IsValid(), "Empty path should be valid");
 		Assert.AreEqual("", emptyPath.ToString());
 	}
 
@@ -261,7 +262,7 @@ public class SemanticPathTests
 		// Assert
 		Assert.IsNotNull(relativePath);
 		// The exact result depends on the platform, but it should be a valid relative path
-		Assert.IsTrue(relativePath.IsValid());
+		Assert.IsTrue(relativePath.IsValid(), "Created relative path should be valid");
 	}
 
 	// Additional comprehensive tests for edge cases and missing coverage
@@ -362,7 +363,7 @@ public class SemanticPathTests
 
 		RelativePath relativePath = RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(from, to);
 		Assert.IsNotNull(relativePath);
-		Assert.IsTrue(relativePath.IsValid());
+		Assert.IsTrue(relativePath.IsValid(), "Relative path between directories should be valid");
 	}
 
 	[TestMethod]
@@ -370,7 +371,7 @@ public class SemanticPathTests
 	{
 		// Test that empty filenames are valid per the IsFileName attribute
 		FileName emptyFileName = FileName.Create<FileName>("");
-		Assert.IsTrue(emptyFileName.IsValid());
+		Assert.IsTrue(emptyFileName.IsValid(), "Empty file name should be valid");
 	}
 
 	[TestMethod]
@@ -378,6 +379,6 @@ public class SemanticPathTests
 	{
 		// Test that empty extensions are valid (no extension case)
 		FileExtension emptyExtension = FileExtension.Create<FileExtension>("");
-		Assert.IsTrue(emptyExtension.IsValid());
+		Assert.IsTrue(emptyExtension.IsValid(), "Empty file extension should be valid");
 	}
 }

@@ -90,7 +90,7 @@ public class DirectoryNameTests
 		// Test TryCreate with valid directory name
 		bool success = DirectoryName.TryCreate("ValidFolder", out DirectoryName? result);
 
-		Assert.IsTrue(success);
+		Assert.IsTrue(success, "TryCreate should return true for a valid directory name");
 		Assert.IsNotNull(result);
 		Assert.AreEqual("ValidFolder", result.WeakString);
 	}
@@ -101,7 +101,7 @@ public class DirectoryNameTests
 		// Test TryCreate with invalid directory name
 		bool success = DirectoryName.TryCreate("invalid\\name", out DirectoryName? result);
 
-		Assert.IsFalse(success);
+		Assert.IsFalse(success, "TryCreate should return false for a directory name containing a path separator");
 		Assert.IsNull(result);
 	}
 
@@ -180,7 +180,7 @@ public class DirectoryNameTests
 		dict[key] = "some value";
 
 		Assert.AreEqual("some value", dict[key]);
-		Assert.IsTrue(dict.ContainsKey(DirectoryName.Create<DirectoryName>("MyFolder")));
+		Assert.IsTrue(dict.ContainsKey(DirectoryName.Create<DirectoryName>("MyFolder")), "Dictionary should contain the DirectoryName key with equal value");
 	}
 
 	[TestMethod]
@@ -265,6 +265,6 @@ public class DirectoryNameTests
 
 		bool isValid = name.IsValid();
 
-		Assert.IsTrue(isValid);
+		Assert.IsTrue(isValid, "IsValid should return true for a valid DirectoryName");
 	}
 }

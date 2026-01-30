@@ -276,7 +276,7 @@ public class SemanticQuantityTests
 
 		// Act & Assert
 		Assert.AreEqual(distance1, distance2);
-		Assert.IsTrue(distance1.Equals(distance2));
+		Assert.IsTrue(distance1.Equals(distance2), "Quantities with same value should be equal");
 	}
 
 	[TestMethod]
@@ -288,7 +288,7 @@ public class SemanticQuantityTests
 
 		// Act & Assert
 		Assert.AreNotEqual(distance1, distance2);
-		Assert.IsFalse(distance1.Equals(distance2));
+		Assert.IsFalse(distance1.Equals(distance2), "Quantities with different values should not be equal");
 	}
 
 	[TestMethod]
@@ -396,8 +396,8 @@ public class SemanticQuantityTests
 		Assert.IsGreaterThan(distance1.Quantity, distance2.Quantity);
 		Assert.IsGreaterThanOrEqualTo(distance1.Quantity, distance2.Quantity);
 		Assert.IsGreaterThanOrEqualTo(distance3.Quantity, distance1.Quantity);
-		Assert.IsTrue(distance1 == distance3); // Record equality works
-		Assert.IsTrue(distance1 != distance2); // Record inequality works
+		Assert.IsTrue(distance1 == distance3, "Record equality should return true for equal values");
+		Assert.IsTrue(distance1 != distance2, "Record inequality should return true for different values");
 	}
 
 	[TestMethod]

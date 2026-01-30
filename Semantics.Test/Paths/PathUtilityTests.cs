@@ -20,7 +20,7 @@ public class PathUtilityTests
 
 		bool result = child.IsChildOf(parent);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Child path should be recognized as a child of its parent directory");
 	}
 
 	[TestMethod]
@@ -32,7 +32,7 @@ public class PathUtilityTests
 
 		bool result = path1.IsChildOf(path2);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "A path should not be considered a child of itself");
 	}
 
 	[TestMethod]
@@ -44,7 +44,7 @@ public class PathUtilityTests
 
 		bool result = path1.IsChildOf(path2);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "Unrelated paths should not have a parent-child relationship");
 	}
 
 	[TestMethod]
@@ -56,7 +56,7 @@ public class PathUtilityTests
 
 		bool result = parent.IsChildOf(child);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "Parent path should not be recognized as a child of its own child");
 	}
 
 	[TestMethod]
@@ -77,7 +77,7 @@ public class PathUtilityTests
 
 		bool result = child.IsChildOf(parent);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "IsChildOf should work correctly with mixed path separators");
 	}
 
 	[TestMethod]
@@ -106,7 +106,7 @@ public class PathUtilityTests
 
 		Assert.IsNotNull(result);
 		// Should be "." or empty depending on implementation
-		Assert.IsTrue(result.WeakString is "." || string.IsNullOrEmpty(result.WeakString));
+		Assert.IsTrue(result.WeakString is "." || string.IsNullOrEmpty(result.WeakString), "Relative path to same location should be '.' or empty");
 	}
 
 	[TestMethod]

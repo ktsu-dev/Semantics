@@ -142,7 +142,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> path = $"test{Path.DirectorySeparatorChar}".AsSpan();
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result, "Path ending with directory separator should return true");
 		}
 
 		[TestMethod]
@@ -150,7 +150,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> path = "test".AsSpan();
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
-			Assert.IsFalse(result);
+			Assert.IsFalse(result, "Path not ending with separator should return false");
 		}
 
 		[TestMethod]
@@ -158,7 +158,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> path = [];
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
-			Assert.IsFalse(result);
+			Assert.IsFalse(result, "Empty span should return false");
 		}
 
 		[TestMethod]
@@ -166,7 +166,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> path = Path.DirectorySeparatorChar.ToString().AsSpan();
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result, "Single separator character should return true");
 		}
 
 		[TestMethod]
@@ -194,7 +194,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> longPath = (new string('a', 1000) + Path.DirectorySeparatorChar).AsSpan();
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(longPath);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result, "Long path ending with separator should return true");
 		}
 
 		[TestMethod]
@@ -202,7 +202,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> path = $"test{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}".AsSpan();
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result, "Path ending with multiple separators should return true");
 		}
 	}
 
@@ -282,7 +282,7 @@ public static class AdvancedUtilityTests
 
 			// All instances should be the same reference
 			string firstEmpty = allEmpty.First();
-			Assert.IsTrue(allEmpty.All(e => ReferenceEquals(e, firstEmpty)));
+			Assert.IsTrue(allEmpty.All(e => ReferenceEquals(e, firstEmpty)), "All empty string instances should be the same reference");
 		}
 
 		public TestContext TestContext { get; set; }
