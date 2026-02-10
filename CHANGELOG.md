@@ -1,9 +1,8 @@
-## v1.0.30-pre.10 (prerelease)
+## v1.0.30 (patch)
 
-Changes since v1.0.30-pre.9:
+Changes since v1.0.29:
 
-- Merge remote-tracking branch 'refs/remotes/origin/main' ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync scripts\update-winget-manifests.ps1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Add ktsu.RoundTripStringJsonConverter package reference and update SemanticString to use its JsonConverter ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.0.30-pre.10 (prerelease)
 
 Changes since v1.0.30-pre.9:
