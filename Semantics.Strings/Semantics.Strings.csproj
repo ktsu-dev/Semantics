@@ -10,6 +10,7 @@
     <!-- IDE0057: Substring can be simplified -->
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="ktsu.RoundTripStringJsonConverter" />
     <PackageReference Include="Polyfill" />
     <PackageReference Include="System.Memory" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
   </ItemGroup>

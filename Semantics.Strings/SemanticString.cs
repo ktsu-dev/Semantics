@@ -10,13 +10,16 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
+using System.Text.Json.Serialization;
+
+using ktsu.RoundTripStringJsonConverter;
 
 /// <summary>
 /// Base class for all semantic string types using CRTP (Curiously Recurring Template Pattern).
 /// Provides type safety and validation for string values that have specific meaning or format requirements.
 /// </summary>
 [DebuggerDisplay(value: $"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-
+[JsonConverter(typeof(RoundTripStringJsonConverterFactory))]
 public abstract record SemanticString<TDerived> : ISemanticString
 	where TDerived : SemanticString<TDerived>
 {
