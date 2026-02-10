@@ -1,3 +1,6 @@
+## v1.0.30
+
+No significant changes detected since v1.0.30.
 ## v1.0.30 (patch)
 
 Changes since v1.0.29:
@@ -62,9 +65,7 @@ Changes since v1.0.30-pre.1:
 - Sync scripts\update-winget-manifests.ps1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
 ## v1.0.30-pre.1 (prerelease)
 
-Changes since v1.0.29:
-
-- Bump the ktsu group with 3 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
+Incremental prerelease update.
 ## v1.0.29 (patch)
 
 Changes since v1.0.28:
