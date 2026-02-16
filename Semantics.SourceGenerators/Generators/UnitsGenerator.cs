@@ -23,6 +23,10 @@ public class UnitsGenerator : GeneratorBase<UnitsMetadata>
 		{
 			FileName = "Units.g.cs",
 			Namespace = "ktsu.Semantics.Units",
+			Usings =
+			[
+				"static ktsu.Semantics.Units.ConversionConstants",
+			],
 		};
 
 		foreach (UnitCategory category in metadata.UnitCategories)

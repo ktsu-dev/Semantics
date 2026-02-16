@@ -16,6 +16,13 @@ internal abstract class TemplateBase
 	public List<string> Attributes { get; set; } = [];
 	public List<string> Keywords { get; set; } = [];
 	public List<string> Comments { get; set; } = [];
+
+	public virtual void WriteTo(CodeBlocker codeBlocker)
+	{
+		codeBlocker.AddComments(Comments);
+		codeBlocker.AddAttributes(Attributes);
+		codeBlocker.AddKeywords(Keywords);
+	}
 }
 
 internal static class TemplateBaseExtensions

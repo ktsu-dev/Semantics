@@ -16,6 +16,7 @@ internal class ClassTemplate : TemplateBase
 	public List<string> Interfaces { get; set; } = [];
 	public List<string> Constraints { get; set; } = [];
 	public List<MemberTemplate> Members { get; set; } = [];
+	public List<ClassTemplate> NestedClasses { get; set; } = [];
 
 	public override void WriteTo(CodeBlocker codeBlocker)
 	{
@@ -65,7 +66,7 @@ internal class ClassTemplate : TemplateBase
 
 	public void WriteMembersTo(CodeBlocker codeBlocker)
 	{
-		if (Members.Count == 0)
+		if (Members.Count == 0 && NestedClasses.Count == 0)
 		{
 			codeBlocker.WriteLine("{ }");
 			return;
@@ -79,6 +80,12 @@ internal class ClassTemplate : TemplateBase
 			{
 				member.WriteTo(codeBlocker);
 			}
+
+			foreach (ClassTemplate nestedClass in NestedClasses)
+			{
+				codeBlocker.NewLine();
+				nestedClass.WriteTo(codeBlocker);
+			}
 		}
 	}
 }
@@ -87,7 +94,7 @@ internal static class ClassTemplateExtensions
 {
 	public static CodeBlocker AddClass(this CodeBlocker codeBlocker, ClassTemplate classTemplate)
 	{
-		codeBlocker.AddTemplate(classTemplate);
+		classTemplate.WriteTo(codeBlocker);
 
 		return codeBlocker;
 	}

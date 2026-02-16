@@ -70,6 +70,6 @@ public abstract class GeneratorBase<T>(string metadataFilename) : IIncrementalGe
 	internal static void WriteSourceFileTo(CodeBlocker codeBlocker, SourceFileTemplate sourceFileTemplate)
 	{
 		WriteHeaderTo(codeBlocker);
-		sourceFileTemplate.WriteTo(codeBlocker);
+		codeBlocker.AddSourceFile(sourceFileTemplate);
 	}
 }

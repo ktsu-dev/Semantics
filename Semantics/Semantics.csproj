@@ -1,51 +1,28 @@
-﻿<Project>
+<Project>
   <Sdk Name="Microsoft.NET.Sdk" />
   <Sdk Name="ktsu.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0;net7.0;net6.0;net5.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
+    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
-    <NoWarn>$(NoWarn);CA1716;CA2225</NoWarn>
-    <!-- Source Generator Debugging -->
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+    <NoWarn>$(NoWarn);CA1716;CA2225;KTSU0003;IDE0032</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
+    <PackageReference Include="ktsu.PreciseNumber" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" PrivateAssets="all" />
+    <PackageReference Include="Polyfill" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Semantics.SourceGenerators/Semantics.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <PackageReference Include="ktsu.PreciseNumber" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="../Semantics.SourceGenerators/Metadata/*.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Generated\" />
+    <InternalsVisibleTo Include="ktsu.Semantics.Test" />
   </ItemGroup>
-
-  <!-- Target to clear Generated directory before source generators run -->
-  <Target Name="ClearGeneratedDirectory" BeforeTargets="CoreGenerateSources">
-    <RemoveDir Directories="$(CompilerGeneratedFilesOutputPath)" Condition="Exists('$(CompilerGeneratedFilesOutputPath)')" />
-    <MakeDir Directories="$(CompilerGeneratedFilesOutputPath)" />
-  </Target>
-
-  <!-- Target to flatten generated files after source generation but before compilation -->
-  <Target Name="FlattenGeneratedFiles" AfterTargets="CoreGenerateSources" BeforeTargets="CoreCompile">
-    <!-- Find all generated .cs files in subdirectories -->
-    <ItemGroup>
-      <GeneratedFiles Include="$(CompilerGeneratedFilesOutputPath)\**\*.cs" Exclude="$(CompilerGeneratedFilesOutputPath)\*.cs" />
-    </ItemGroup>
-
-    <!-- Move files to root of Generated directory -->
-    <Move SourceFiles="@(GeneratedFiles)" DestinationFolder="$(CompilerGeneratedFilesOutputPath)" Condition="@(GeneratedFiles-&gt;Count()) &gt; 0" />
-
-    <!-- Remove empty nested directories -->
-    <ItemGroup>
-      <NestedDirs Include="$([System.IO.Directory]::GetDirectories('$(CompilerGeneratedFilesOutputPath)'))" Condition="Exists('$(CompilerGeneratedFilesOutputPath)')" />
-    </ItemGroup>
-    <RemoveDir Directories="@(NestedDirs)" Condition="@(NestedDirs-&gt;Count()) &gt; 0" />
-  </Target>
 </Project>
