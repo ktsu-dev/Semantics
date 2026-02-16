@@ -28,7 +28,7 @@ public class PrecisionGenerator : GeneratorBase<PrecisionMetadata>
 		SourceFileTemplate sourceFileTemplate = new()
 		{
 			FileName = "StorageTypes.g.cs",
-			Namespace = "ktsu.Semantics",
+			Namespace = "ktsu.Semantics.Quantities",
 			Usings =
 			[
 				"System",

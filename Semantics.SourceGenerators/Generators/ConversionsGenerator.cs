@@ -27,7 +27,7 @@ public class ConversionsGenerator : GeneratorBase<ConversionsMetadata>
 		SourceFileTemplate sourceFileTemplate = new()
 		{
 			FileName = "ConversionConstants.g.cs",
-			Namespace = "ktsu.Semantics.Units",
+			Namespace = "ktsu.Semantics.Quantities.Units",
 		};
 
 		ClassTemplate constantsClass = new()

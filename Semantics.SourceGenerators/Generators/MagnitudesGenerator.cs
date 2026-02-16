@@ -27,7 +27,7 @@ public class MagnitudesGenerator : GeneratorBase<MagnitudesMetadata>
 		SourceFileTemplate sourceFileTemplate = new()
 		{
 			FileName = "MetricMagnitudes.g.cs",
-			Namespace = "ktsu.Semantics",
+			Namespace = "ktsu.Semantics.Quantities",
 		};
 
 		ClassTemplate magnitudesClass = new()

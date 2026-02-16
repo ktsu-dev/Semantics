@@ -3,6 +3,7 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Test;
+nusing ktsu.Semantics.Strings;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

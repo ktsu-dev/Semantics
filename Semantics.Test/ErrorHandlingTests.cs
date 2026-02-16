@@ -3,6 +3,8 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Test;
+nusing ktsu.Semantics.Strings;
+using ktsu.Semantics.Quantities;
 
 using System;
 using System.IO;

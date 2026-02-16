@@ -30,7 +30,7 @@ public class PhysicalConstantsGenerator : GeneratorBase<DomainsMetadata>
 		SourceFileTemplate sourceFileTemplate = new()
 		{
 			FileName = "PhysicalConstants.g.cs",
-			Namespace = "ktsu.Semantics",
+			Namespace = "ktsu.Semantics.Quantities",
 			Usings =
 			[
 				"System.Globalization",

@@ -1,0 +1,54 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
+namespace ktsu.Semantics.Paths;
+
+using System;
+using System.IO;
+using ktsu.Semantics.Strings;
+
+/// <summary>
+/// Validates that a string represents a valid filename (contains only valid filename characters).
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+public sealed class IsFileNameAttribute : NativeSemanticStringValidationAttribute
+{
+	/// <summary>
+	/// Creates the validation adapter for filename validation.
+	/// </summary>
+	/// <returns>A validation adapter for filename strings</returns>
+	protected override ValidationAdapter CreateValidator() => new FileNameValidator();
+
+	/// <summary>
+	/// Validation adapter for filename strings.
+	/// </summary>
+	private sealed class FileNameValidator : ValidationAdapter
+	{
+		private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
+
+		/// <summary>
+		/// Validates that a filename string contains only valid filename characters.
+		/// </summary>
+		/// <param name="value">The string value to validate</param>
+		/// <returns>A validation result indicating success or failure</returns>
+		protected override ValidationResult ValidateValue(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+			// Use span-based search for invalid characters
+#if NETSTANDARD2_0
+			bool hasInvalidChars = value.IndexOfAny(InvalidFileNameChars) != -1;
+#else
+			ReadOnlySpan<char> valueSpan = value.AsSpan();
+			bool hasInvalidChars = valueSpan.IndexOfAny(InvalidFileNameChars) != -1;
+#endif
+			return hasInvalidChars
+				? ValidationResult.Failure("The filename contains invalid characters.")
+				: ValidationResult.Success();
+		}
+	}
+}

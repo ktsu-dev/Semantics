@@ -9,7 +9,7 @@
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.3.2" />
     <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.0.2" />
     <!-- Semantics project packages -->
-    <PackageVersion Include="FluentValidation" Version="12.1.1" />
+    <!-- Strings has no external validation dependency - uses native ValidationAdapter -->
     <PackageVersion Include="ktsu.PreciseNumber" Version="1.7.5" />
     <PackageVersion Include="Polyfill" Version="9.8.1" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />

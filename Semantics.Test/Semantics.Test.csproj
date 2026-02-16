@@ -13,7 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Semantics\Semantics.csproj" />
+    <ProjectReference Include="..\Semantics.Strings\Semantics.Strings.csproj" />
+    <ProjectReference Include="..\Semantics.Paths\Semantics.Paths.csproj" />
+    <ProjectReference Include="..\Semantics.Quantities\Semantics.Quantities.csproj" />
   </ItemGroup>
 
 </Project>

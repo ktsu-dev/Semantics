@@ -29,7 +29,7 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 		SourceFileTemplate sourceFileTemplate = new()
 		{
 			FileName = "PhysicalDimensions.g.cs",
-			Namespace = "ktsu.Semantics",
+			Namespace = "ktsu.Semantics.Quantities",
 			Usings =
 			[
 				"System.Collections.Generic",

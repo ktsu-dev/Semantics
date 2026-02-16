@@ -22,10 +22,10 @@ public class UnitsGenerator : GeneratorBase<UnitsMetadata>
 		SourceFileTemplate sourceFileTemplate = new()
 		{
 			FileName = "Units.g.cs",
-			Namespace = "ktsu.Semantics.Units",
+			Namespace = "ktsu.Semantics.Quantities.Units",
 			Usings =
 			[
-				"static ktsu.Semantics.Units.ConversionConstants",
+				"static ktsu.Semantics.Quantities.Units.ConversionConstants",
 			],
 		};
 
