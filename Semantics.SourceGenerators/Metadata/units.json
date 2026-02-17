@@ -402,6 +402,36 @@
           "system": "Imperial",
           "conversionFactor": "FahrenheitScale",
           "offset": "FahrenheitToKelvinOffset"
+        },
+        {
+          "name": "JoulePerKelvin",
+          "symbol": "J/K",
+          "description": "Joule per kelvin - SI derived unit of entropy and heat capacity.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "JoulePerKilogramKelvin",
+          "symbol": "J/(kg·K)",
+          "description": "Joule per kilogram kelvin - SI derived unit of specific heat capacity.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "WattPerMeterKelvin",
+          "symbol": "W/(m·K)",
+          "description": "Watt per meter kelvin - SI derived unit of thermal conductivity.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "WattPerSquareMeterKelvin",
+          "symbol": "W/(m²·K)",
+          "description": "Watt per square meter kelvin - SI derived unit of heat transfer coefficient.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "PerKelvin",
+          "symbol": "K⁻¹",
+          "description": "Per kelvin - SI derived unit of thermal expansion coefficient.",
+          "system": "SIDerived"
         }
       ]
     },
@@ -443,6 +473,37 @@
           "name": "Farad",
           "symbol": "F",
           "description": "Farad - SI derived unit of electric capacitance.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Siemens",
+          "symbol": "S",
+          "description": "Siemens - SI derived unit of electric conductance.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Tesla",
+          "symbol": "T",
+          "description": "Tesla - SI derived unit of magnetic flux density.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Gauss",
+          "symbol": "G",
+          "description": "Gauss - CGS unit of magnetic flux density.",
+          "system": "CGS",
+          "conversionFactor": "GaussToTesla"
+        },
+        {
+          "name": "Weber",
+          "symbol": "Wb",
+          "description": "Weber - SI derived unit of magnetic flux.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Henry",
+          "symbol": "H",
+          "description": "Henry - SI derived unit of inductance.",
           "system": "SIDerived"
         }
       ]
@@ -548,6 +609,12 @@
           "description": "Barn - Unit of nuclear cross section.",
           "system": "Other",
           "conversionFactor": "BarnToSquareMeters"
+        },
+        {
+          "name": "CoulombPerKilogram",
+          "symbol": "C/kg",
+          "description": "Coulomb per kilogram - SI derived unit of radiation exposure.",
+          "system": "SIDerived"
         }
       ]
     },
@@ -579,6 +646,125 @@
           "description": "Molar - Moles per liter concentration.",
           "system": "SIDerived",
           "conversionFactor": "MolarToCubicMeter"
+        }
+      ]
+    },
+    {
+      "name": "FluidMechanics",
+      "description": "Units of fluid dynamics quantities",
+      "units": [
+        {
+          "name": "SquareMeterPerSecond",
+          "symbol": "m²/s",
+          "description": "Square meter per second - SI derived unit of kinematic viscosity.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Stokes",
+          "symbol": "St",
+          "description": "Stokes - CGS unit of kinematic viscosity.",
+          "system": "CGS",
+          "conversionFactor": "StokesToSquareMeterPerSecond"
+        },
+        {
+          "name": "PascalSecond",
+          "symbol": "Pa·s",
+          "description": "Pascal second - SI derived unit of dynamic viscosity.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "Poise",
+          "symbol": "P",
+          "description": "Poise - CGS unit of dynamic viscosity.",
+          "system": "CGS",
+          "conversionFactor": "PoiseToPascalSecond"
+        },
+        {
+          "name": "CubicMeterPerSecond",
+          "symbol": "m³/s",
+          "description": "Cubic meter per second - SI derived unit of volumetric flow rate.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "LiterPerSecond",
+          "symbol": "L/s",
+          "description": "Liter per second - Common unit of volumetric flow rate.",
+          "system": "SIDerived",
+          "conversionFactor": "LiterPerSecondToCubicMeterPerSecond"
+        },
+        {
+          "name": "KilogramPerSecond",
+          "symbol": "kg/s",
+          "description": "Kilogram per second - SI derived unit of mass flow rate.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "NewtonPerMeter",
+          "symbol": "N/m",
+          "description": "Newton per meter - SI derived unit of surface tension.",
+          "system": "SIDerived"
+        }
+      ]
+    },
+    {
+      "name": "Chemistry",
+      "description": "Units of chemical quantities",
+      "units": [
+        {
+          "name": "KilogramPerMole",
+          "symbol": "kg/mol",
+          "description": "Kilogram per mole - SI derived unit of molar mass.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "GramPerMole",
+          "symbol": "g/mol",
+          "description": "Gram per mole - Common unit of molar mass.",
+          "system": "SIDerived",
+          "conversionFactor": "GramPerMoleToKilogramPerMole"
+        },
+        {
+          "name": "Katal",
+          "symbol": "kat",
+          "description": "Katal - SI derived unit of catalytic activity.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "MolePerCubicMeterSecond",
+          "symbol": "mol/(m³·s)",
+          "description": "Mole per cubic meter second - SI derived unit of reaction rate.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "JoulePerMole",
+          "symbol": "J/mol",
+          "description": "Joule per mole - SI derived unit of molar energy.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "KilojoulePerMole",
+          "symbol": "kJ/mol",
+          "description": "Kilojoule per mole - Common unit of molar energy.",
+          "system": "SIDerived",
+          "conversionFactor": "KilojoulePerMoleToJoulePerMole"
+        }
+      ]
+    },
+    {
+      "name": "AcousticsAndOptics",
+      "description": "Units of acoustic and optical quantities",
+      "units": [
+        {
+          "name": "WattPerSquareMeter",
+          "symbol": "W/m²",
+          "description": "Watt per square meter - SI derived unit of irradiance and sound intensity.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "PascalSecondPerMeter",
+          "symbol": "Pa·s/m",
+          "description": "Pascal second per meter - SI derived unit of acoustic impedance.",
+          "system": "SIDerived"
         }
       ]
     }

@@ -247,6 +247,54 @@
           "value": "1000.0"
         }
       ]
+    },
+    {
+      "category": "FluidMechanics",
+      "description": "Fluid mechanics unit conversion factors",
+      "factors": [
+        {
+          "name": "StokesToSquareMeterPerSecond",
+          "description": "Stokes to square meter per second: 1e-4 m²/s per St (exact by definition)",
+          "value": "1e-4"
+        },
+        {
+          "name": "PoiseToPascalSecond",
+          "description": "Poise to pascal second: 0.1 Pa·s per P (exact by definition)",
+          "value": "0.1"
+        },
+        {
+          "name": "LiterPerSecondToCubicMeterPerSecond",
+          "description": "Liter per second to cubic meter per second: 0.001 m³/s per L/s (exact by definition)",
+          "value": "0.001"
+        }
+      ]
+    },
+    {
+      "category": "Electromagnetism",
+      "description": "Electromagnetic unit conversion factors",
+      "factors": [
+        {
+          "name": "GaussToTesla",
+          "description": "Gauss to Tesla: 1e-4 T per G (exact by definition)",
+          "value": "1e-4"
+        }
+      ]
+    },
+    {
+      "category": "Chemistry",
+      "description": "Chemistry unit conversion factors",
+      "factors": [
+        {
+          "name": "GramPerMoleToKilogramPerMole",
+          "description": "Gram per mole to kilogram per mole: 0.001 kg/mol per g/mol (exact by definition)",
+          "value": "0.001"
+        },
+        {
+          "name": "KilojoulePerMoleToJoulePerMole",
+          "description": "Kilojoule per mole to joule per mole: 1000 J/mol per kJ/mol (exact by definition)",
+          "value": "1000"
+        }
+      ]
     }
   ]
 }
