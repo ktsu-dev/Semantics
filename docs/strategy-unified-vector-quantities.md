@@ -119,37 +119,346 @@ Speed<double> s = v.Magnitude();      // 5.0
 Velocity3D<double> n = v.Normalize(); // (0.6, 0.8, 0.0)
 ```
 
-## Dimensional Relationships Across Vector Types
+## Cross-Dimensional Relationships
 
-Physical relationships (integrals and derivatives) must be defined per-vector-dimensionality. The dimension of the direction space is preserved through operations:
+This is the core of the type system: when you multiply or divide quantities of different physical dimensions, the result must be the correct semantic type at the correct vector form.
+
+### Three Kinds of Cross-Dimensional Operations
+
+**1. Scalar operations** (`*`, `/`) - one or both operands are V0:
 
 ```
-Vector0 * Vector0 → Vector0     (Speed * Time = Distance)
-Vector0 * Vector1 → Vector1     (Speed * Direction1D = Velocity1D)
-Vector1 / Vector0 → Vector1     (Velocity1D / Time = Acceleration1D)
-Vector3 / Vector0 → Vector3     (Velocity3D / Time = Acceleration3D)
-Vector3 * Vector0 → Vector3     (Force3D * Distance = ... depends on context)
-
-// Dot product: VectorN . VectorN → Vector0
-Vector3 . Vector3 → Vector0     (Force3D . Displacement3D = Work/Energy as magnitude)
-
-// Cross product: Vector3 x Vector3 → Vector3
-Vector3 x Vector3 → Vector3     (Velocity3D x MagneticField3D = Force3D direction)
+V0 * V0 → V0       Speed * Duration       = Length
+V0 * VN → VN       Duration * Acceleration3D = Velocity3D
+VN * V0 → VN       Velocity3D * Duration   = Displacement3D
+VN / V0 → VN       Displacement3D / Duration = Velocity3D
+V0 / V0 → V0       Length / Duration       = Speed
 ```
 
-### Rules for Operator Dimensionality
+**2. Dot product** (`.Dot()`) - two VN operands of the same N, result is always V0:
 
-| Operation | Left | Right | Result | Notes |
-|-----------|------|-------|--------|-------|
-| `*` (scalar multiply) | Vector0 | Vector0 | Vector0 | Magnitude times magnitude |
-| `*` (scale vector) | VectorN | Vector0 | VectorN | Scale a vector by a magnitude |
-| `*` (scale vector) | Vector0 | VectorN | VectorN | Commutative |
-| `/` (scalar divide) | VectorN | Vector0 | VectorN | Divide vector by magnitude |
-| `/` (scalar divide) | Vector0 | Vector0 | Vector0 | Magnitude ratio |
-| `Dot` | VectorN | VectorN | Vector0 | Dot product yields magnitude |
-| `Cross` | Vector3 | Vector3 | Vector3 | Cross product yields vector |
-| `+` / `-` | VectorN | VectorN | VectorN | Same dimension required |
-| `Magnitude()` | VectorN | - | Vector0 | Extract magnitude |
+```
+VN · VN → V0       Force3D · Displacement3D = Energy
+                    Velocity3D · Velocity3D  = Speed² (not a named type)
+```
+
+**3. Cross product** (`.Cross()`) - two V3 operands, result is V3:
+
+```
+V3 × V3 → V3       Displacement3D × Force3D = Torque3D
+                    AngularVelocity3D × Displacement3D = Velocity3D
+```
+
+### Vector Form Propagation Rules
+
+When the source generator encounters a dimensional relationship like `Velocity * Time = Displacement`, it must generate operators for every valid combination of vector forms across both operands.
+
+**Rule: The result vector form equals the highest vector form among the operands, provided the result dimension supports that form.**
+
+| Self form | Other form | Result form | Condition | Example |
+|-----------|-----------|-------------|-----------|---------|
+| V0 | V0 | V0 | Always valid | `Speed * Duration = Length` |
+| V1 | V0 | V1 | Result has V1 | `Velocity1D * Duration = Displacement1D` |
+| V0 | V1 | V1 | Result has V1 | `Duration * Velocity1D = Displacement1D` |
+| V2 | V0 | V2 | Result has V2 | `Velocity2D * Duration = Displacement2D` |
+| V0 | V2 | V2 | Result has V2 | `Duration * Velocity2D = Displacement2D` |
+| V3 | V0 | V3 | Result has V3 | `Velocity3D * Duration = Displacement3D` |
+| V0 | V3 | V3 | Result has V3 | `Duration * Velocity3D = Displacement3D` |
+| V4 | V0 | V4 | Result has V4 | `Velocity4D * Duration = Displacement4D` |
+| V0 | V4 | V4 | Result has V4 | `Duration * Velocity4D = Displacement4D` |
+| VN | VN | - | **Not a `*` operator** | Use `.Dot()` or `.Cross()` instead |
+
+**If the result dimension does not have the required vector form, the operator is not generated.** For example, `Force * Length = Energy` only generates `ForceMagnitude * Length = Energy` (V0 * V0 = V0), because Energy is scalar-only. `Force3D * Length` is not Energy3D - it's a scaled Force3D (same-dimension scalar multiplication, not a cross-dimensional relationship).
+
+### Relationship Types in dimensions.json
+
+The current `integrals` and `derivatives` lists are supplemented with `dotProducts` and `crossProducts`:
+
+```json
+{
+  "name": "Force",
+  "symbol": "M L T⁻²",
+  "dimensionalFormula": { "mass": 1, "length": 1, "time": -2 },
+  "quantities": {
+    "vector0": { "base": "ForceMagnitude" },
+    "vector1": { "base": "Force1D" },
+    "vector2": { "base": "Force2D" },
+    "vector3": { "base": "Force3D" },
+    "vector4": { "base": "Force4D" }
+  },
+  "integrals": [
+    { "other": "Length", "result": "Energy" },
+    { "other": "Time", "result": "Momentum" }
+  ],
+  "derivatives": [],
+  "dotProducts": [
+    { "other": "Length", "result": "Energy" }
+  ],
+  "crossProducts": [
+    { "other": "Length", "result": "Torque" }
+  ]
+}
+```
+
+**How the generator uses each relationship type:**
+
+- **`integrals`** (`Self * Other = Result`): Generates `*` operators following the vector form propagation rules above. Only V0-V0 and VN-V0 combinations.
+- **`derivatives`** (`Self / Other = Result`): Generates `/` operators following the same propagation rules.
+- **`dotProducts`** (`Self · Other = Result`): Generates `.Dot()` methods on VN types (N >= 1) where both self and other have that VN form. Result is always V0 of the result dimension.
+- **`crossProducts`** (`Self × Other = Result`): Generates `.Cross()` methods only on V3 types where both self and other have V3 forms. Result is V3 of the result dimension.
+
+### Complete Example: Velocity Dimension
+
+Given:
+
+```json
+{
+  "name": "Velocity",
+  "quantities": {
+    "vector0": { "base": "Speed" },
+    "vector1": { "base": "Velocity1D" },
+    "vector2": { "base": "Velocity2D" },
+    "vector3": { "base": "Velocity3D" },
+    "vector4": { "base": "Velocity4D" }
+  },
+  "integrals": [
+    { "other": "Time", "result": "Length" }
+  ],
+  "derivatives": [
+    { "other": "Time", "result": "Acceleration" }
+  ]
+}
+```
+
+The generator produces these `*` operators (from `integrals`):
+
+```csharp
+// V0 * V0 → V0
+public static Length operator *(Speed left, Duration right);
+public static Length operator *(Duration left, Speed right);
+
+// V1 * V0 → V1 (Length has V1 = Displacement1D)
+public static Displacement1D operator *(Velocity1D left, Duration right);
+public static Displacement1D operator *(Duration left, Velocity1D right);
+
+// V2 * V0 → V2 (Length has V2 = Displacement2D)
+public static Displacement2D operator *(Velocity2D left, Duration right);
+public static Displacement2D operator *(Duration left, Velocity2D right);
+
+// V3 * V0 → V3 (Length has V3 = Displacement3D)
+public static Displacement3D operator *(Velocity3D left, Duration right);
+public static Displacement3D operator *(Duration left, Velocity3D right);
+
+// V4 * V0 → V4 (Length has V4 = Displacement4D)
+public static Displacement4D operator *(Velocity4D left, Duration right);
+public static Displacement4D operator *(Duration left, Velocity4D right);
+```
+
+And these `/` operators (from `derivatives`):
+
+```csharp
+// V0 / V0 → V0
+public static AccelerationMagnitude operator /(Speed left, Duration right);
+
+// V1 / V0 → V1
+public static Acceleration1D operator /(Velocity1D left, Duration right);
+
+// V2 / V0 → V2
+public static Acceleration2D operator /(Velocity2D left, Duration right);
+
+// V3 / V0 → V3
+public static Acceleration3D operator /(Velocity3D left, Duration right);
+
+// V4 / V0 → V4
+public static Acceleration4D operator /(Velocity4D left, Duration right);
+```
+
+### Complete Example: Force Dimension (with dot/cross)
+
+Given:
+
+```json
+{
+  "name": "Force",
+  "quantities": {
+    "vector0": { "base": "ForceMagnitude" },
+    "vector1": { "base": "Force1D" },
+    "vector3": { "base": "Force3D" }
+  },
+  "integrals": [
+    { "other": "Length", "result": "Energy" },
+    { "other": "Time", "result": "Momentum" }
+  ],
+  "dotProducts": [
+    { "other": "Length", "result": "Energy" }
+  ],
+  "crossProducts": [
+    { "other": "Length", "result": "Torque" }
+  ]
+}
+```
+
+**Scalar operators from `integrals`:**
+
+```csharp
+// Force * Length = Energy (V0 * V0 → V0 only, because Energy is scalar-only)
+public static Energy operator *(ForceMagnitude left, Length right);
+public static Energy operator *(Length left, ForceMagnitude right);
+
+// Force * Time = Momentum (propagates across all matching forms)
+public static MomentumMagnitude operator *(ForceMagnitude left, Duration right);  // V0*V0→V0
+public static Momentum1D operator *(Force1D left, Duration right);               // V1*V0→V1
+public static Momentum3D operator *(Force3D left, Duration right);               // V3*V0→V3
+// (plus commutative versions)
+```
+
+Note: `Force1D * Length` does NOT generate an Energy1D operator because Energy has no V1 form. That combination is simply not available as a `*` operator.
+
+**Dot product methods from `dotProducts`:**
+
+```csharp
+// Force · Length = Energy (dot product: VN · VN → V0)
+public Energy Force1D.Dot(Displacement1D other);     // V1·V1 → V0
+public Energy Force3D.Dot(Displacement3D other);     // V3·V3 → V0
+```
+
+This is how `Force3D * Displacement3D = Energy` is expressed: not as a `*` operator (which would be ambiguous) but as an explicit `.Dot()` call that always returns V0.
+
+**Cross product methods from `crossProducts`:**
+
+```csharp
+// Force × Length = Torque (cross product: V3 × V3 → V3)
+public Torque3D Force3D.Cross(Displacement3D other);
+```
+
+### How Semantic Overloads Participate
+
+Semantic overloads participate in cross-dimensional operations through implicit widening to their base type. The resolution chain:
+
+```csharp
+// User writes:
+Weight w = Weight.FromNewtons(9.8);       // V0 overload of ForceMagnitude
+Height h = Height.FromMeters(10.0);       // V0 overload of Length
+Energy e = w * h;                         // How does this work?
+
+// Resolution:
+// 1. Weight implicitly converts to ForceMagnitude (base)
+// 2. Height implicitly converts to Length (base)
+// 3. ForceMagnitude * Length = Energy (generated operator)
+// 4. Result: Energy
+```
+
+```csharp
+// Vector overloads:
+WeightVector wv = WeightVector.Create(0, -9.8, 0);  // V3 overload of Force3D
+Displacement3D d = Displacement3D.Create(5, 0, 0);
+
+// Dot product:
+Energy e = wv.Dot(d);
+// 1. WeightVector widens to Force3D
+// 2. Force3D.Dot(Displacement3D) = Energy
+// 3. Result: Energy
+
+// Cross product:
+Torque3D t = wv.Cross(d);
+// 1. WeightVector widens to Force3D
+// 2. Force3D.Cross(Displacement3D) = Torque3D
+// 3. Result: Torque3D
+```
+
+**The result of a cross-dimensional operation is always a base type**, never a semantic overload. This is consistent with rule 5 from the semantic overloads section. If the user wants to assert the result is a specific overload, they use explicit narrowing:
+
+```csharp
+Energy e = w * h;                     // base type result
+Work work = Work.From(e);             // explicit narrowing to semantic overload
+// or: Work work = (Work)(w * h);     // cast syntax
+```
+
+### Inverse Relationships
+
+Every integral generates a corresponding derivative, and vice versa. The generator automatically creates the inverse operators:
+
+```
+If:    A * B = C     (integral)
+Then:  C / B = A     (auto-generated derivative)
+And:   C / A = B     (auto-generated derivative)
+```
+
+Example: `Force * Time = Momentum` generates:
+
+```csharp
+// Forward (integral):
+MomentumMagnitude = ForceMagnitude * Duration;
+Momentum3D = Force3D * Duration;
+
+// Inverse (auto-derived):
+ForceMagnitude = MomentumMagnitude / Duration;
+Force3D = Momentum3D / Duration;
+Duration = MomentumMagnitude / ForceMagnitude;
+// (Duration is V0-only, so the VN/VN case uses scalar division:)
+// Momentum3D / Force3D is NOT generated as a Duration operator.
+// Instead: Duration = Momentum3D.Magnitude() / Force3D.Magnitude()
+```
+
+**VN / VN across different dimensions is never generated as a `/` operator** because the result would be ambiguous (component-wise division is not physically meaningful). Users must either:
+
+- Use magnitudes: `Duration d = velocity3D.Magnitude() / acceleration3D.Magnitude()`
+- Use dot product where appropriate
+- Work at V0 level
+
+### Same-Dimension Operators vs Cross-Dimension Operators
+
+To avoid confusion, there are two distinct categories of operators:
+
+**Same-dimension operators** (always present, defined on the type itself):
+
+```csharp
+// Addition/subtraction (same type)
+Speed + Speed → Speed
+Velocity3D + Velocity3D → Velocity3D
+
+// Scalar multiplication/division (by raw T, not another quantity)
+Velocity3D * T → Velocity3D
+Speed / T → Speed
+
+// Same-type division → raw T
+Speed / Speed → T
+```
+
+**Cross-dimension operators** (generated from relationships):
+
+```csharp
+// Integral: Velocity * Time → Displacement
+Speed * Duration → Length
+Velocity3D * Duration → Displacement3D
+
+// Derivative: Velocity / Time → Acceleration
+Speed / Duration → AccelerationMagnitude
+Velocity3D / Duration → Acceleration3D
+
+// Dot product:
+Force3D.Dot(Displacement3D) → Energy
+
+// Cross product:
+Force3D.Cross(Displacement3D) → Torque3D
+```
+
+These are distinct because same-dimension `*` by `T` is always available, while cross-dimension `*` by another quantity type is only available when a relationship is declared.
+
+### Rules for Operator Dimensionality (Summary)
+
+| Operation | Left | Right | Result form | Generated from |
+|-----------|------|-------|-------------|----------------|
+| `*` | V0(A) | V0(B) | V0(C) | `integrals` |
+| `*` | VN(A) | V0(B) | VN(C) if C has VN | `integrals` |
+| `*` | V0(A) | VN(B) | VN(C) if C has VN | `integrals` (commutative) |
+| `/` | VN(A) | V0(B) | VN(C) if C has VN | `derivatives` |
+| `/` | V0(A) | V0(B) | V0(C) | `derivatives` |
+| `.Dot()` | VN(A) | VN(B) | V0(C) | `dotProducts` |
+| `.Cross()` | V3(A) | V3(B) | V3(C) | `crossProducts` |
+| `+` / `-` | VN(A) | VN(A) | VN(A) | Same dimension |
+| `*` / `/` | VN(A) | T | VN(A) | Same dimension (scalar) |
+| `Magnitude()` | VN(A) | - | V0(A) | Structural |
 
 ## Impact on dimensions.json
 
