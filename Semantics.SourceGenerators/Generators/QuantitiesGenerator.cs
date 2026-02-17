@@ -285,13 +285,11 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		cb.WriteLine("/// <summary>Calculates the length of the vector.</summary>");
 		cb.WriteLine("/// <returns>The length of the vector.</returns>");
 		cb.WriteLine("public T Length()");
-		using (new Scope(cb))
-		{
-			cb.WriteLine($"T sum = {sumOfSquares};");
-			cb.WriteLine("double asDouble = double.CreateChecked(sum);");
-			cb.WriteLine("return T.CreateChecked(Math.Sqrt(asDouble));");
-		}
-
+		cb.WriteLine("{");
+		cb.WriteLine($"\tT sum = {sumOfSquares};");
+		cb.WriteLine("\tdouble asDouble = double.CreateChecked(sum);");
+		cb.WriteLine("\treturn T.CreateChecked(Math.Sqrt(asDouble));");
+		cb.WriteLine("}");
 		cb.NewLine();
 
 		// LengthSquared()
@@ -315,11 +313,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			cb.WriteLine("/// <param name=\"other\">The other vector.</param>");
 			cb.WriteLine("/// <returns>The cross product.</returns>");
 			cb.WriteLine($"public {fullType} Cross({fullType} other)");
-			using (new Scope(cb))
-			{
-				cb.WriteLine($"return new() {{ X = (Y * other.Z) - (Z * other.Y), Y = (Z * other.X) - (X * other.Z), Z = (X * other.Y) - (Y * other.X) }};");
-			}
-
+			cb.WriteLine("{");
+			cb.WriteLine($"\treturn new() {{ X = (Y * other.Z) - (Z * other.Y), Y = (Z * other.X) - (X * other.Z), Z = (X * other.Y) - (Y * other.X) }};");
+			cb.WriteLine("}");
 			cb.NewLine();
 		}
 
@@ -328,19 +324,17 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		cb.WriteLine("/// <param name=\"other\">The other vector.</param>");
 		cb.WriteLine("/// <returns>The distance between the vectors.</returns>");
 		cb.WriteLine($"public T Distance({fullType} other)");
-		using (new Scope(cb))
+		cb.WriteLine("{");
+		foreach (string comp in components)
 		{
-			foreach (string comp in components)
-			{
-				cb.WriteLine($"T d{comp} = {comp} - other.{comp};");
-			}
-
-			string distSum = string.Join(" + ", components.Select(c => $"(d{c} * d{c})"));
-			cb.WriteLine($"T sum = {distSum};");
-			cb.WriteLine("double asDouble = double.CreateChecked(sum);");
-			cb.WriteLine("return T.CreateChecked(Math.Sqrt(asDouble));");
+			cb.WriteLine($"\tT d{comp} = {comp} - other.{comp};");
 		}
 
+		string distSum = string.Join(" + ", components.Select(c => $"(d{c} * d{c})"));
+		cb.WriteLine($"\tT sum = {distSum};");
+		cb.WriteLine("\tdouble asDouble = double.CreateChecked(sum);");
+		cb.WriteLine("\treturn T.CreateChecked(Math.Sqrt(asDouble));");
+		cb.WriteLine("}");
 		cb.NewLine();
 
 		// DistanceSquared()
@@ -348,30 +342,26 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		cb.WriteLine("/// <param name=\"other\">The other vector.</param>");
 		cb.WriteLine("/// <returns>The squared distance between the vectors.</returns>");
 		cb.WriteLine($"public T DistanceSquared({fullType} other)");
-		using (new Scope(cb))
+		cb.WriteLine("{");
+		foreach (string comp in components)
 		{
-			foreach (string comp in components)
-			{
-				cb.WriteLine($"T d{comp} = {comp} - other.{comp};");
-			}
-
-			string distSum = string.Join(" + ", components.Select(c => $"(d{c} * d{c})"));
-			cb.WriteLine($"return {distSum};");
+			cb.WriteLine($"\tT d{comp} = {comp} - other.{comp};");
 		}
 
+		string distSqSum = string.Join(" + ", components.Select(c => $"(d{c} * d{c})"));
+		cb.WriteLine($"\treturn {distSqSum};");
+		cb.WriteLine("}");
 		cb.NewLine();
 
 		// Normalize()
 		cb.WriteLine("/// <summary>Returns a normalized version of the vector.</summary>");
 		cb.WriteLine("/// <returns>The normalized vector.</returns>");
 		cb.WriteLine($"public {fullType} Normalize()");
-		using (new Scope(cb))
-		{
-			cb.WriteLine("T len = Length();");
-			string normInit = string.Join(", ", components.Select(c => $"{c} = {c} / len"));
-			cb.WriteLine($"return new() {{ {normInit} }};");
-		}
-
+		cb.WriteLine("{");
+		cb.WriteLine("\tT len = Length();");
+		string normInit = string.Join(", ", components.Select(c => $"{c} = {c} / len"));
+		cb.WriteLine($"\treturn new() {{ {normInit} }};");
+		cb.WriteLine("}");
 		cb.NewLine();
 	}
 
