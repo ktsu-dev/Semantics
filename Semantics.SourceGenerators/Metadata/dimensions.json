@@ -6,7 +6,15 @@
       "dimensionalFormula": {},
       "availableUnits": ["Dimensionless", "Radian", "Degree"],
       "quantities": {
-        "vector0": { "base": "Ratio" },
+        "vector0": {
+          "base": "Ratio",
+          "overloads": [
+            { "name": "RefractiveIndex", "description": "Ratio of speed of light in vacuum to speed in a medium." },
+            { "name": "ReynoldsNumber", "description": "Ratio of inertial to viscous forces in fluid flow." },
+            { "name": "SpecificGravity", "description": "Ratio of a substance's density to a reference density." },
+            { "name": "MachNumber", "description": "Ratio of flow velocity to local speed of sound." }
+          ]
+        },
         "vector1": { "base": "SignedRatio" }
       },
       "integrals": [],
@@ -79,7 +87,10 @@
           ]
         }
       },
-      "integrals": [],
+      "integrals": [
+        { "other": "Acceleration", "result": "Force" },
+        { "other": "Velocity", "result": "Momentum" }
+      ],
       "derivatives": [],
       "dotProducts": [],
       "crossProducts": []
@@ -99,7 +110,9 @@
             { "name": "Period", "description": "Time interval for one complete cycle." },
             { "name": "HalfLife", "description": "Time for half of a substance to decay." },
             { "name": "TimeConstant", "description": "Characteristic response time of a system." },
-            { "name": "Latency", "description": "Delay before a response begins." }
+            { "name": "Latency", "description": "Delay before a response begins." },
+            { "name": "ReverberationTime", "description": "Time for sound to decay by 60 dB in an enclosed space." },
+            { "name": "DecayTime", "description": "Time for exponential decay to a specific fraction." }
           ]
         }
       },
@@ -241,7 +254,10 @@
             { "name": "FlowSpeed", "description": "Speed of fluid flow." },
             { "name": "WindSpeed", "description": "Speed of wind movement." },
             { "name": "GroundSpeed", "description": "Speed relative to the ground." },
-            { "name": "Airspeed", "description": "Speed relative to the air." }
+            { "name": "Airspeed", "description": "Speed relative to the air." },
+            { "name": "SoundSpeed", "description": "Speed of sound propagation in a medium." },
+            { "name": "PhaseVelocity", "description": "Speed at which a wave phase propagates." },
+            { "name": "GroupVelocity", "description": "Speed at which the wave envelope propagates." }
           ]
         },
         "vector1": { "base": "Velocity1D" },
@@ -345,7 +361,8 @@
           "overloads": [
             { "name": "SamplingRate", "description": "Rate at which samples are taken." },
             { "name": "ClockSpeed", "description": "Operating frequency of a processor." },
-            { "name": "Bandwidth", "description": "Range of frequencies in a signal." }
+            { "name": "Bandwidth", "description": "Range of frequencies in a signal." },
+            { "name": "Pitch", "description": "Perceived fundamental frequency of a sound." }
           ]
         }
       },
@@ -497,7 +514,10 @@
       "quantities": {
         "vector0": { "base": "MomentOfInertia" }
       },
-      "integrals": [],
+      "integrals": [
+        { "other": "AngularVelocity", "result": "AngularMomentum" },
+        { "other": "AngularAcceleration", "result": "Torque" }
+      ],
       "derivatives": [],
       "dotProducts": [],
       "crossProducts": []
@@ -533,9 +553,12 @@
       },
       "integrals": [
         { "other": "Length", "result": "Energy" },
-        { "other": "Time", "result": "Momentum" }
+        { "other": "Time", "result": "Momentum" },
+        { "other": "Velocity", "result": "Power" }
       ],
-      "derivatives": [],
+      "derivatives": [
+        { "other": "Area", "result": "Pressure" }
+      ],
       "dotProducts": [
         { "other": "Length", "result": "Energy" }
       ],
@@ -573,7 +596,10 @@
           "overloads": [
             { "name": "Stress", "description": "Internal force per unit area in a material." },
             { "name": "AtmosphericPressure", "description": "Pressure exerted by the atmosphere." },
-            { "name": "GaugePressure", "description": "Pressure relative to atmospheric pressure." }
+            { "name": "GaugePressure", "description": "Pressure relative to atmospheric pressure." },
+            { "name": "BulkModulus", "description": "Resistance of a substance to uniform compression." },
+            { "name": "YoungsModulus", "description": "Ratio of stress to strain in a material." },
+            { "name": "ShearModulus", "description": "Ratio of shear stress to shear strain." }
           ]
         }
       },
@@ -792,7 +818,12 @@
       "dimensionalFormula": { "luminousIntensity": 1, "length": -2 },
       "availableUnits": ["Lux"],
       "quantities": {
-        "vector0": { "base": "Illuminance" }
+        "vector0": {
+          "base": "Illuminance",
+          "overloads": [
+            { "name": "Luminance", "description": "Luminous intensity per unit area of a surface." }
+          ]
+        }
       },
       "integrals": [
         { "other": "Area", "result": "LuminousFlux" }

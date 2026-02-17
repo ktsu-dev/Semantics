@@ -363,6 +363,18 @@
           "symbol": "kg⋅m²/s",
           "description": "Kilogram-meter squared per second - SI derived unit of angular momentum.",
           "system": "SIDerived"
+        },
+        {
+          "name": "MetersPerSecondCubed",
+          "symbol": "m/s³",
+          "description": "Meters per second cubed - SI derived unit of jerk.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "MetersPerSecondQuartic",
+          "symbol": "m/s⁴",
+          "description": "Meters per second to the fourth - SI derived unit of snap.",
+          "system": "SIDerived"
         }
       ]
     },
@@ -456,6 +468,12 @@
           "name": "RadiansPerSecondSquared",
           "symbol": "rad/s²",
           "description": "Radians per second squared - SI derived unit of angular acceleration.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "RadiansPerSecondCubed",
+          "symbol": "rad/s³",
+          "description": "Radians per second cubed - SI derived unit of angular jerk.",
           "system": "SIDerived"
         }
       ]
