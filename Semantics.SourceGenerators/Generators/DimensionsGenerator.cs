@@ -67,7 +67,7 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 
 		foreach (PhysicalDimension dimension in sortedDimensions)
 		{
-			string description = dimension.Quantities.FirstOrDefault()?.Description ?? $"Physical dimension: {dimension.Name}";
+			string description = $"Physical dimension: {dimension.Name}";
 
 			// Build dimensional formula initializer
 			string formulaInit;
@@ -81,11 +81,26 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 				formulaInit = "new Dictionary<string, int>()";
 			}
 
+			// Collect all type names from vector forms (base types + overloads)
+			List<string> quantityNames = [];
+			VectorFormDefinition?[] forms = [dimension.Quantities.Vector0, dimension.Quantities.Vector1, dimension.Quantities.Vector2, dimension.Quantities.Vector3, dimension.Quantities.Vector4];
+			foreach (VectorFormDefinition? form in forms)
+			{
+				if (form != null)
+				{
+					quantityNames.Add(form.Base);
+					foreach (OverloadDefinition overload in form.Overloads)
+					{
+						quantityNames.Add(overload.Name);
+					}
+				}
+			}
+
 			// Build quantities list initializer
 			string quantitiesInit;
-			if (dimension.Quantities.Count > 0)
+			if (quantityNames.Count > 0)
 			{
-				IEnumerable<string> names = dimension.Quantities.Select(q => $"\"{q.Name}\"");
+				IEnumerable<string> names = quantityNames.Select(n => $"\"{n}\"");
 				quantitiesInit = $"new List<string> {{ {string.Join(", ", names)} }}";
 			}
 			else

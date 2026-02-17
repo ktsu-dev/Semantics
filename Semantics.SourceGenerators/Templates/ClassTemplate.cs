@@ -79,6 +79,7 @@ internal class ClassTemplate : TemplateBase
 			foreach (MemberTemplate member in sortedMembers)
 			{
 				member.WriteTo(codeBlocker);
+				codeBlocker.NewLine();
 			}
 
 			foreach (ClassTemplate nestedClass in NestedClasses)
