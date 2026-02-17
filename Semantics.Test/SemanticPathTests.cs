@@ -4,7 +4,6 @@
 
 namespace ktsu.Semantics.Test;
 
-using ktsu.Semantics.Strings;
 using ktsu.Semantics.Paths;
 using System;
 using System.Linq;
