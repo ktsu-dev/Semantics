@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Paths;
-nusing ktsu.Semantics.Strings;
 
 /// <summary>
 /// Represents a relative (not fully qualified) path

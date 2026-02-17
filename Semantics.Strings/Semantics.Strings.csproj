@@ -11,6 +11,5 @@
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="ktsu.Semantics.Test" />
-    <InternalsVisibleTo Include="ktsu.Semantics.Paths" />
   </ItemGroup>
 </Project>

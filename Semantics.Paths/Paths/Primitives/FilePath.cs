@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Paths;
-nusing ktsu.Semantics.Strings;
 
 /// <summary>
 /// Represents a file path (path to a file)
@@ -30,9 +29,9 @@ public sealed record FilePath : SemanticFilePath<FilePath>, IFilePath
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
-		ArgumentNullException.ThrowIfNull(baseDirectory);
+		Ensure.NotNull(baseDirectory);
 		string absolutePath = Path.GetFullPath(WeakString);
-		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, absolutePath);
+		string relativePath = PathHelper.GetRelativePath(baseDirectory.WeakString, absolutePath);
 		return RelativeFilePath.Create<RelativeFilePath>(relativePath);
 	}
 }

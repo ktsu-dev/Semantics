@@ -270,7 +270,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 
 	// SemanticString implementation
 	/// <inheritdoc/>
-	[ExcludeFromCodeCoverage(Justification = "DebuggerDisplay")]
+	[ExcludeFromCodeCoverage]
 	protected string GetDebuggerDisplay() => $"({GetType().Name})\"{WeakString}\"";
 
 	/// <inheritdoc/>
@@ -445,7 +445,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public static TDest Create<TDest>(char[]? value)
 		where TDest : SemanticString<TDest>
 	{
-		ArgumentNullException.ThrowIfNull(value);
+		Ensure.NotNull(value);
 		return Create<TDest>(value: new string(value: value));
 	}
 
@@ -510,7 +510,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	private static TDest FromCharArray<TDest>(char[]? value)
 		where TDest : SemanticString<TDest>
 	{
-		ArgumentNullException.ThrowIfNull(value);
+		Ensure.NotNull(value);
 		return FromString<TDest>(value: new string(value: value));
 	}
 
@@ -546,7 +546,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	private static TDest FromStringInternal<TDest>(string? value)
 		where TDest : SemanticString<TDest>
 	{
-		ArgumentNullException.ThrowIfNull(value);
+		Ensure.NotNull(value);
 
 		Type typeOfTDest = typeof(TDest);
 		TDest newInstance = (TDest)Activator.CreateInstance(type: typeOfTDest)!;
@@ -863,7 +863,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <remarks>
 	/// This overload uses span-based search which can be more efficient than string-based LastIndexOf for certain scenarios.
 	/// </remarks>
-	public int LastIndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().LastIndexOf(value, comparisonType);
+	public int LastIndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.LastIndexOf(value.ToString(), comparisonType);
 
 	/// <summary>
 	/// Determines whether the semantic string starts with the specified span using efficient span comparison.
@@ -909,7 +909,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	public int Count(Func<char, bool> predicate)
 	{
-		ArgumentNullException.ThrowIfNull(predicate);
+		Ensure.NotNull(predicate);
 
 		ReadOnlySpan<char> span = AsSpan();
 		int count = 0;

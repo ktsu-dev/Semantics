@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Paths;
-nusing ktsu.Semantics.Strings;
 
 /// <summary>
 /// Represents an absolute file path
@@ -50,7 +49,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	/// <returns>A new <see cref="AbsoluteFilePath"/> with the changed extension.</returns>
 	public AbsoluteFilePath ChangeExtension(FileExtension newExtension)
 	{
-		ArgumentNullException.ThrowIfNull(newExtension);
+		Ensure.NotNull(newExtension);
 		string newPath = Path.ChangeExtension(WeakString, newExtension.WeakString);
 		return Create<AbsoluteFilePath>(newPath);
 	}
@@ -76,7 +75,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	/// </remarks>
 	public bool IsChildOf(AbsoluteDirectoryPath parentPath)
 	{
-		ArgumentNullException.ThrowIfNull(parentPath);
+		Ensure.NotNull(parentPath);
 
 		// Get normalized paths using span semantics for comparison
 		ReadOnlySpan<char> thisPathSpan = Path.GetFullPath(WeakString).AsSpan();
@@ -122,8 +121,8 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
-		ArgumentNullException.ThrowIfNull(baseDirectory);
-		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, WeakString);
+		Ensure.NotNull(baseDirectory);
+		string relativePath = PathHelper.GetRelativePath(baseDirectory.WeakString, WeakString);
 		return RelativeFilePath.Create<RelativeFilePath>(relativePath);
 	}
 }

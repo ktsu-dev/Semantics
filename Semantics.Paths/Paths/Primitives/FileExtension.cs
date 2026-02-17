@@ -3,7 +3,8 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Paths;
-nusing ktsu.Semantics.Strings;
+
+using ktsu.Semantics.Strings;
 
 /// <summary>
 /// Represents a file extension (starts with a period)

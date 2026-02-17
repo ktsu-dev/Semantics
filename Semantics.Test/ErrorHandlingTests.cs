@@ -3,9 +3,10 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Test;
-nusing ktsu.Semantics.Strings;
-using ktsu.Semantics.Quantities;
 
+using ktsu.Semantics.Strings;
+using ktsu.Semantics.Paths;
+using ktsu.Semantics.Quantities;
 using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

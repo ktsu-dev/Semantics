@@ -3,8 +3,8 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Test;
-nusing ktsu.Semantics.Quantities;
 
+using ktsu.Semantics.Quantities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]

@@ -33,7 +33,6 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 			Usings =
 			[
 				"System.Collections.Generic",
-				"System.Collections.Frozen",
 			],
 		};
 
@@ -108,9 +107,9 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 		dimensionsClass.Members.Add(new FieldTemplate()
 		{
 			Comments = ["/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>"],
-			Keywords = ["public", "static", "FrozenSet<DimensionInfo>"],
+			Keywords = ["public", "static", "IReadOnlySet<DimensionInfo>"],
 			Name = "All",
-			DefaultValue = $"new HashSet<DimensionInfo>([ {allDimensions} ]).ToFrozenSet()",
+			DefaultValue = $"new HashSet<DimensionInfo>([ {allDimensions} ])",
 		});
 
 		sourceFileTemplate.Classes.Add(dimensionsClass);

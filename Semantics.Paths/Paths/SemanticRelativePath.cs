@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Paths;
-nusing ktsu.Semantics.Strings;
 
 /// <summary>
 /// Base class for relative paths (not fully qualified)
@@ -20,8 +19,8 @@ public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 		where TFromPath : SemanticPath<TFromPath>
 		where TToPath : SemanticPath<TToPath>
 	{
-		ArgumentNullException.ThrowIfNull(from);
-		ArgumentNullException.ThrowIfNull(to);
+		Ensure.NotNull(from);
+		Ensure.NotNull(to);
 
 		FileInfo fromInfo = new(Path.GetFullPath(from.WeakString));
 		FileInfo toInfo = new(Path.GetFullPath(to.WeakString));

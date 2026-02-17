@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Paths;
-nusing ktsu.Semantics.Strings;
 
 using System.Diagnostics.CodeAnalysis;
 
@@ -89,8 +88,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
 	public static RelativeDirectoryPath operator /(RelativeDirectoryPath left, RelativeDirectoryPath right)
 	{
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 
 		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return Create<RelativeDirectoryPath>(combinedPath);
@@ -105,8 +104,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
 	public static RelativeFilePath operator /(RelativeDirectoryPath left, RelativeFilePath right)
 	{
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 
 		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return RelativeFilePath.Create<RelativeFilePath>(combinedPath);
@@ -121,8 +120,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
 	public static RelativeFilePath operator /(RelativeDirectoryPath left, FileName right)
 	{
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 
 		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return RelativeFilePath.Create<RelativeFilePath>(combinedPath);
@@ -157,8 +156,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public AbsoluteDirectoryPath AsAbsolute(AbsoluteDirectoryPath baseDirectory)
 	{
-		ArgumentNullException.ThrowIfNull(baseDirectory);
-		string absolutePath = Path.GetFullPath(WeakString, baseDirectory.WeakString);
+		Ensure.NotNull(baseDirectory);
+		string absolutePath = PathHelper.GetFullPath(WeakString, baseDirectory.WeakString);
 		return AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(absolutePath);
 	}
 
@@ -171,7 +170,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public RelativeDirectoryPath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
-		ArgumentNullException.ThrowIfNull(baseDirectory);
+		Ensure.NotNull(baseDirectory);
 		return this;
 	}
 
@@ -190,7 +189,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 		// Use Path.GetFullPath with a dummy base to normalize relative paths
 		string dummyBase = OperatingSystem.IsWindows() ? "C:\\" : "/";
 		string fullPath = Path.GetFullPath(Path.Combine(dummyBase, path));
-		string normalized = Path.GetRelativePath(dummyBase, fullPath);
+		string normalized = PathHelper.GetRelativePath(dummyBase, fullPath);
 
 		return Create<RelativeDirectoryPath>(normalized);
 	}

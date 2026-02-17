@@ -3,7 +3,6 @@
 // Licensed under the MIT license.
 
 namespace ktsu.Semantics.Paths;
-nusing ktsu.Semantics.Strings;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -108,8 +107,8 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
 	public static AbsoluteDirectoryPath operator /(AbsoluteDirectoryPath left, RelativeDirectoryPath right)
 	{
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 
 		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return Create<AbsoluteDirectoryPath>(combinedPath);
@@ -124,8 +123,8 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
 	public static AbsoluteFilePath operator /(AbsoluteDirectoryPath left, RelativeFilePath right)
 	{
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 
 		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return AbsoluteFilePath.Create<AbsoluteFilePath>(combinedPath);
@@ -140,8 +139,8 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
 	public static AbsoluteFilePath operator /(AbsoluteDirectoryPath left, FileName right)
 	{
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
 
 		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return AbsoluteFilePath.Create<AbsoluteFilePath>(combinedPath);
@@ -158,7 +157,7 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// </remarks>
 	public bool IsChildOf(AbsoluteDirectoryPath parentPath)
 	{
-		ArgumentNullException.ThrowIfNull(parentPath);
+		Ensure.NotNull(parentPath);
 
 		// Get normalized paths using span semantics for comparison
 		ReadOnlySpan<char> thisPathSpan = Path.GetFullPath(WeakString).AsSpan();
@@ -194,7 +193,7 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// </remarks>
 	public bool IsParentOf(AbsoluteDirectoryPath childPath)
 	{
-		ArgumentNullException.ThrowIfNull(childPath);
+		Ensure.NotNull(childPath);
 		return childPath.IsChildOf(this);
 	}
 
@@ -224,9 +223,9 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// <returns>A <see cref="RelativeDirectoryPath"/> from this directory to the target.</returns>
 	public RelativeDirectoryPath GetRelativePathTo(AbsoluteDirectoryPath targetDirectory)
 	{
-		ArgumentNullException.ThrowIfNull(targetDirectory);
+		Ensure.NotNull(targetDirectory);
 		// Use Path.GetRelativePath to compute the relative path
-		string relativePath = Path.GetRelativePath(WeakString, targetDirectory.WeakString);
+		string relativePath = PathHelper.GetRelativePath(WeakString, targetDirectory.WeakString);
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
 	}
 
@@ -251,8 +250,8 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// <exception cref="ArgumentNullException"><paramref name="baseDirectory"/> is <see langword="null"/>.</exception>
 	public RelativeDirectoryPath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
-		ArgumentNullException.ThrowIfNull(baseDirectory);
-		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, WeakString);
+		Ensure.NotNull(baseDirectory);
+		string relativePath = PathHelper.GetRelativePath(baseDirectory.WeakString, WeakString);
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
 	}
 

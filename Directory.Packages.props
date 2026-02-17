@@ -12,6 +12,7 @@
     <!-- Strings has no external validation dependency - uses native ValidationAdapter -->
     <PackageVersion Include="ktsu.PreciseNumber" Version="1.7.5" />
     <PackageVersion Include="Polyfill" Version="9.8.1" />
+    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.3" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <!-- SourceGenerators project packages -->
     <PackageVersion Include="ktsu.CodeBlocker" Version="1.1.9" />
