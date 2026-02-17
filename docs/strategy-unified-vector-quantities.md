@@ -626,6 +626,195 @@ Below is a non-exhaustive list of overloads to illustrate the breadth:
 
 4. **Overload-specific validation**: Beyond the shared base validation, can overloads add constraints? (e.g., `Radius >= 0` is already guaranteed by Vector0, but `Altitude` might have a domain-specific minimum).
 
+## Proposed Base Types
+
+This section defines the base type name for every physical dimension at each supported vector form. These are the canonical types that carry the full operator suite and cross-dimensional relationships. Semantic overloads (Width, Weight, etc.) derive from these.
+
+### Naming Patterns
+
+Three patterns emerge naturally based on whether the dimension has an established magnitude name:
+
+**Pattern A** - Distinct magnitude name exists in physics:
+
+| V0 | V1 | V2 | V3 | V4 |
+|----|----|----|----|----|
+| Speed | Velocity1D | Velocity2D | Velocity3D | Velocity4D |
+
+**Pattern B** - Dimension is inherently non-directional (V0 only):
+
+| V0 |
+|----|
+| Mass |
+
+**Pattern C** - Directional but no distinct magnitude name:
+
+| V0 | V1 | V2 | V3 | V4 |
+|----|----|----|----|----|
+| ForceMagnitude | Force1D | Force2D | Force3D | Force4D |
+
+### Vector Form Applicability
+
+Not all dimensions support all vector forms. Three categories:
+
+- **Scalar-only** (V0): Quantities with no meaningful directional interpretation. Mass, Time, Energy, Pressure, etc.
+- **Linear** (V0, V1, V2, V3, V4): Quantities that can point in any spatial direction. Velocity, Force, Acceleration, etc.
+- **Rotational** (V0, V1, V3): Pseudovectors that are scalar in 2D and axial vectors in 3D. Angular velocity, Torque, etc. No V2 or V4 forms because angular quantities in 2D reduce to a signed scalar (V1), not a 2-component vector.
+
+### Complete Base Type Catalog
+
+#### Base SI Dimensions
+
+| Dimension | Formula | V0 | V1 | V2 | V3 | V4 | Category |
+|-----------|---------|----|----|----|----|-----|----------|
+| Dimensionless | 1 | Ratio | SignedRatio | - | - | - | Scalar + signed |
+| Length | L | Length | Displacement1D | Displacement2D | Displacement3D | Displacement4D | Linear |
+| Mass | M | Mass | - | - | - | - | Scalar-only |
+| Time | T | Duration | - | - | - | - | Scalar-only |
+| ElectricCurrent | I | CurrentMagnitude | Current1D | - | Current3D | - | Linear (partial) |
+| Temperature | Θ | Temperature | TemperatureDelta | - | - | - | Scalar + signed |
+| AmountOfSubstance | N | AmountOfSubstance | - | - | - | - | Scalar-only |
+| LuminousIntensity | J | LuminousIntensity | - | - | - | - | Scalar-only |
+
+#### Geometry
+
+| Dimension | Formula | V0 | V1 | V2 | V3 | V4 | Category |
+|-----------|---------|----|----|----|----|-----|----------|
+| Area | L² | Area | - | - | - | - | Scalar-only |
+| Volume | L³ | Volume | - | - | - | - | Scalar-only |
+| NuclearCrossSection | L² | NuclearCrossSection | - | - | - | - | Scalar-only |
+
+#### Linear Motion
+
+| Dimension | Formula | V0 | V1 | V2 | V3 | V4 | Category |
+|-----------|---------|----|----|----|----|-----|----------|
+| Velocity | L T⁻¹ | Speed | Velocity1D | Velocity2D | Velocity3D | Velocity4D | Linear |
+| Acceleration | L T⁻² | AccelerationMagnitude | Acceleration1D | Acceleration2D | Acceleration3D | Acceleration4D | Linear |
+| Jerk | L T⁻³ | JerkMagnitude | Jerk1D | Jerk2D | Jerk3D | Jerk4D | Linear |
+| Snap | L T⁻⁴ | SnapMagnitude | Snap1D | Snap2D | Snap3D | Snap4D | Linear |
+
+#### Rotational Motion
+
+| Dimension | Formula | V0 | V1 | V3 | Category |
+|-----------|---------|----|----|-----|----------|
+| AngularDisplacement | 1 | Angle | SignedAngle | AngularDisplacement3D | Rotational |
+| AngularVelocity | T⁻¹ | AngularSpeed | AngularVelocity1D | AngularVelocity3D | Rotational |
+| AngularAcceleration | T⁻² | AngularAccelerationMagnitude | AngularAcceleration1D | AngularAcceleration3D | Rotational |
+| AngularJerk | T⁻³ | AngularJerkMagnitude | AngularJerk1D | AngularJerk3D | Rotational |
+| Torque | M L² T⁻² | TorqueMagnitude | Torque1D | Torque3D | Rotational |
+| AngularMomentum | M L² T⁻¹ | AngularMomentumMagnitude | AngularMomentum1D | AngularMomentum3D | Rotational |
+| MomentOfInertia | M L² | MomentOfInertia | - | - | Scalar-only |
+
+#### Mechanics
+
+| Dimension | Formula | V0 | V1 | V2 | V3 | V4 | Category |
+|-----------|---------|----|----|----|----|-----|----------|
+| Force | M L T⁻² | ForceMagnitude | Force1D | Force2D | Force3D | Force4D | Linear |
+| Momentum | M L T⁻¹ | MomentumMagnitude | Momentum1D | Momentum2D | Momentum3D | Momentum4D | Linear |
+| Pressure | M L⁻¹ T⁻² | Pressure | - | - | - | - | Scalar-only |
+| Energy | M L² T⁻² | Energy | - | - | - | - | Scalar-only |
+| Power | M L² T⁻³ | Power | - | - | - | - | Scalar-only |
+| Density | M L⁻³ | Density | - | - | - | - | Scalar-only |
+
+#### Frequency and Rates
+
+| Dimension | Formula | V0 | V1 | V2 | V3 | V4 | Category |
+|-----------|---------|----|----|----|----|-----|----------|
+| Frequency | T⁻¹ | Frequency | - | - | - | - | Scalar-only |
+| RadioactiveActivity | T⁻¹ | RadioactiveActivity | - | - | - | - | Scalar-only |
+
+#### Electrical
+
+| Dimension | Formula | V0 | V1 | V2 | V3 | V4 | Category |
+|-----------|---------|----|----|----|----|-----|----------|
+| ElectricCharge | I T | ChargeMagnitude | Charge | - | - | - | Scalar + signed |
+| ElectricPotential | M L² T⁻³ I⁻¹ | VoltageMagnitude | Voltage | - | - | - | Scalar + signed |
+| ElectricField | M L T⁻³ I⁻¹ | ElectricFieldMagnitude | ElectricField1D | ElectricField2D | ElectricField3D | - | Linear (partial) |
+| ElectricResistance | M L² T⁻³ I⁻² | Resistance | - | - | - | - | Scalar-only |
+| ElectricCapacitance | M⁻¹ L⁻² T⁴ I² | Capacitance | - | - | - | - | Scalar-only |
+
+#### Radiation
+
+| Dimension | Formula | V0 | V1 | V2 | V3 | V4 | Category |
+|-----------|---------|----|----|----|----|-----|----------|
+| AbsorbedDose | L² T⁻² | AbsorbedDose | - | - | - | - | Scalar-only |
+| EquivalentDose | L² T⁻² | EquivalentDose | - | - | - | - | Scalar-only |
+
+#### Optical
+
+| Dimension | Formula | V0 | V1 | V2 | V3 | V4 | Category |
+|-----------|---------|----|----|----|----|-----|----------|
+| LuminousFlux | J | LuminousFlux | - | - | - | - | Scalar-only |
+| Illuminance | J L⁻² | Illuminance | - | - | - | - | Scalar-only |
+| OpticalPower | L⁻¹ | OpticalPower | - | - | - | - | Scalar-only |
+
+#### Chemical
+
+| Dimension | Formula | V0 | V1 | V2 | V3 | V4 | Category |
+|-----------|---------|----|----|----|----|-----|----------|
+| Concentration | N L⁻³ | Concentration | - | - | - | - | Scalar-only |
+
+### Naming Rationale
+
+**Names chosen over alternatives:**
+
+| Chosen | Alternative considered | Rationale |
+|--------|----------------------|-----------|
+| `Duration` (V0 of Time) | `Time` | "Time" is the dimension name; "Duration" is the magnitude concept (a span of time, always >= 0). Avoids ambiguity when the dimension and the type share a name. |
+| `Ratio` (V0 of Dimensionless) | `Dimensionless` | Clearer intent. A ratio is always a non-negative magnitude. The dimension is "Dimensionless"; the V0 base type is "Ratio". |
+| `SignedRatio` (V1 of Dimensionless) | `Dimensionless1D` | More readable than appending "1D" to "Dimensionless". Conveys that it's a signed value. |
+| `Angle` (V0 of AngularDisplacement) | `AngularDisplacementMagnitude` | "Angle" is the universally understood magnitude name. No one says "angular displacement magnitude". |
+| `SignedAngle` (V1 of AngularDisplacement) | `AngularDisplacement1D` | Idiomatic. Matches how game engines and graphics APIs name the signed variant. |
+| `AngularSpeed` (V0 of AngularVelocity) | `AngularVelocityMagnitude` | Parallels Speed/Velocity. "Angular speed" is the established physics term for the magnitude. |
+| `Length` (V0 of Length dimension) | `Distance` | "Length" is the most general term. "Distance" is a semantic overload (separation between two points). |
+| `CurrentMagnitude` (V0 of ElectricCurrent) | `ElectricCurrentMagnitude` | Shorter while unambiguous. "Current" alone is too common a word. |
+| `VoltageMagnitude` (V0 of ElectricPotential) | `ElectricPotentialMagnitude` | "Voltage" is far more commonly used than "electric potential" in practice. |
+| `Voltage` (V1 of ElectricPotential) | `ElectricPotential` | Same reasoning. V1 because voltage/potential difference is naturally signed (above or below reference). |
+| `Charge` (V1 of ElectricCharge) | `ElectricCharge` | Shorter. V1 because charge is naturally signed (positive/negative). |
+| `Resistance` (V0 of ElectricResistance) | `ElectricResistance` | Shorter while unambiguous in context. |
+| `Capacitance` (V0 of ElectricCapacitance) | `ElectricCapacitance` | Same reasoning. |
+
+**The `{Name}Magnitude` pattern** is used when:
+- The dimension is fundamentally directional (Force, Acceleration, Momentum)
+- No distinct magnitude name exists in common physics terminology
+- The unqualified name is more naturally associated with the directional form
+
+**Type counts by vector form:**
+
+| Form | Count | Notes |
+|------|-------|-------|
+| V0 | 39 | Every dimension has a V0 form |
+| V1 | 17 | Signed scalars and 1D directional |
+| V2 | 8 | 2D linear quantities only |
+| V3 | 16 | 3D linear + rotational pseudovectors |
+| V4 | 8 | 4D linear quantities only |
+| **Total** | **88** | Base types only, before semantic overloads |
+
+### Magnitude Relationships
+
+Every V1+ type has a structural `Magnitude()` method returning its V0 base:
+
+| From (VN base) | Magnitude() returns (V0 base) |
+|-----------------|-------------------------------|
+| Velocity1D/2D/3D/4D | Speed |
+| Acceleration1D/2D/3D/4D | AccelerationMagnitude |
+| Force1D/2D/3D/4D | ForceMagnitude |
+| Momentum1D/2D/3D/4D | MomentumMagnitude |
+| Displacement1D/2D/3D/4D | Length |
+| Jerk1D/2D/3D/4D | JerkMagnitude |
+| Snap1D/2D/3D/4D | SnapMagnitude |
+| SignedRatio | Ratio |
+| TemperatureDelta | Temperature |
+| Charge | ChargeMagnitude |
+| Voltage | VoltageMagnitude |
+| ElectricField1D/2D/3D | ElectricFieldMagnitude |
+| Current1D/3D | CurrentMagnitude |
+| SignedAngle | Angle |
+| AngularVelocity1D/3D | AngularSpeed |
+| AngularAcceleration1D/3D | AngularAccelerationMagnitude |
+| AngularJerk1D/3D | AngularJerkMagnitude |
+| Torque1D/3D | TorqueMagnitude |
+| AngularMomentum1D/3D | AngularMomentumMagnitude |
+
 ## Migration Strategy
 
 ### Phase 1: Add IVector0 and IVector1 interfaces
