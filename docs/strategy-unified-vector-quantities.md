@@ -460,73 +460,395 @@ These are distinct because same-dimension `*` by `T` is always available, while 
 | `*` / `/` | VN(A) | T | VN(A) | Same dimension (scalar) |
 | `Magnitude()` | VN(A) | - | V0(A) | Structural |
 
-## Impact on dimensions.json
+## Definitive dimensions.json Schema
 
-The current `"scalar": true/false` and `"vectors": true/false` flags would be replaced with a single field describing which vector forms the quantity supports:
+This section consolidates all the schema changes into a single reference. The current per-quantity `"scalar"` / `"vectors"` booleans and per-quantity `"integrals"` / `"derivatives"` are replaced with a dimension-level structure.
 
-### Current Format
+### Schema Definition
+
 ```json
 {
-  "name": "Velocity",
-  "scalar": true,
-  "vectors": true,
-  ...
+  "physicalDimensions": [
+    {
+      "name": "string",
+      "symbol": "string",
+      "dimensionalFormula": { "length": 0, "mass": 0, "time": 0, "...": 0 },
+      "availableUnits": ["UnitName", "..."],
+      "quantities": {
+        "vector0": {
+          "base": "BaseTypeName",
+          "overloads": [
+            {
+              "name": "OverloadTypeName",
+              "description": "string",
+              "relationships": { "toOther": "expression", "...": "..." }
+            }
+          ]
+        },
+        "vector1": { "base": "...", "overloads": [] },
+        "vector2": { "base": "...", "overloads": [] },
+        "vector3": { "base": "...", "overloads": [] },
+        "vector4": { "base": "...", "overloads": [] }
+      },
+      "integrals": [
+        { "other": "DimensionName", "result": "DimensionName" }
+      ],
+      "derivatives": [
+        { "other": "DimensionName", "result": "DimensionName" }
+      ],
+      "dotProducts": [
+        { "other": "DimensionName", "result": "DimensionName" }
+      ],
+      "crossProducts": [
+        { "other": "DimensionName", "result": "DimensionName" }
+      ]
+    }
+  ]
 }
 ```
 
-### Proposed Format
+**Key changes from current format:**
+
+1. **`availableUnits` moves to dimension level** - all vector forms of the same dimension share units.
+2. **`quantities` becomes a map of vector forms** - each form has a base type name and optional overloads.
+3. **`integrals`/`derivatives` move to dimension level** - they reference dimension names, not quantity names. The source generator resolves the correct base type at each vector form.
+4. **`dotProducts`/`crossProducts` are new** - separate from scalar `integrals` because they have different vector form propagation rules.
+5. **Only present vector forms are generated** - if `vector2` is absent, no V2 type is generated for that dimension.
+
+### Full Example: Velocity Dimension
+
 ```json
 {
   "name": "Velocity",
-  "vectorForms": [0, 1, 2, 3, 4],
-  ...
-}
-```
-
-Or, to make the naming explicit:
-
-```json
-{
-  "name": "Velocity",
-  "vectorForms": {
-    "vector0": { "name": "Speed" },
-    "vector1": { "name": "Velocity1D" },
-    "vector2": { "name": "Velocity2D" },
-    "vector3": { "name": "Velocity3D" },
-    "vector4": { "name": "Velocity4D" }
+  "symbol": "L T⁻¹",
+  "dimensionalFormula": { "length": 1, "time": -1 },
+  "availableUnits": ["MetersPerSecond", "KilometersPerHour", "MilesPerHour"],
+  "quantities": {
+    "vector0": { "base": "Speed" },
+    "vector1": { "base": "Velocity1D" },
+    "vector2": { "base": "Velocity2D" },
+    "vector3": { "base": "Velocity3D" },
+    "vector4": { "base": "Velocity4D" }
   },
-  ...
+  "integrals": [
+    { "other": "Time", "result": "Length" }
+  ],
+  "derivatives": [
+    { "other": "Time", "result": "Acceleration" }
+  ],
+  "dotProducts": [],
+  "crossProducts": []
 }
 ```
 
-This allows:
-- Quantities that only exist as magnitudes (e.g., Mass: only vector0)
-- Quantities with distinct names for each form (Speed vs Velocity)
-- Quantities where some dimensions don't make physical sense (e.g., Temperature might only have vector0 and vector1, not vector3)
+### Full Example: Force Dimension (with dot/cross)
 
-## Impact on Source Generator
+```json
+{
+  "name": "Force",
+  "symbol": "M L T⁻²",
+  "dimensionalFormula": { "mass": 1, "length": 1, "time": -2 },
+  "availableUnits": ["Newton"],
+  "quantities": {
+    "vector0": {
+      "base": "ForceMagnitude",
+      "overloads": [
+        { "name": "Weight", "description": "Gravitational force magnitude." },
+        { "name": "Thrust", "description": "Propulsive force magnitude." },
+        { "name": "Drag", "description": "Resistive force magnitude." },
+        { "name": "Lift", "description": "Force magnitude perpendicular to flow." },
+        { "name": "Tension", "description": "Pulling force along a line." }
+      ]
+    },
+    "vector1": { "base": "Force1D" },
+    "vector2": { "base": "Force2D" },
+    "vector3": {
+      "base": "Force3D",
+      "overloads": [
+        { "name": "WeightVector", "description": "Gravitational force vector." }
+      ]
+    },
+    "vector4": { "base": "Force4D" }
+  },
+  "integrals": [
+    { "other": "Length", "result": "Energy" },
+    { "other": "Time", "result": "Momentum" }
+  ],
+  "derivatives": [],
+  "dotProducts": [
+    { "other": "Length", "result": "Energy" }
+  ],
+  "crossProducts": [
+    { "other": "Length", "result": "Torque" }
+  ]
+}
+```
 
-The `QuantitiesGenerator` currently generates two separate categories:
+### Full Example: Energy Dimension (scalar-only)
 
-1. Scalar types: `public record Velocity<T> : SemanticQuantity<Velocity<T>, T>`
-2. Vector types: `public record VelocityVector2<T> : IVector2<VelocityVector2<T>, T>`
+```json
+{
+  "name": "Energy",
+  "symbol": "M L² T⁻²",
+  "dimensionalFormula": { "mass": 1, "length": 2, "time": -2 },
+  "availableUnits": ["Joule", "ElectronVolt", "Calorie", "KilowattHour"],
+  "quantities": {
+    "vector0": {
+      "base": "Energy",
+      "overloads": [
+        { "name": "Work", "description": "Energy transferred by a force." },
+        { "name": "Heat", "description": "Energy transferred due to temperature difference." },
+        { "name": "KineticEnergy", "description": "Energy of motion." },
+        { "name": "PotentialEnergy", "description": "Energy of position or configuration." }
+      ]
+    }
+  },
+  "integrals": [],
+  "derivatives": [
+    { "other": "Time", "result": "Power" },
+    { "other": "Length", "result": "Force" }
+  ],
+  "dotProducts": [],
+  "crossProducts": []
+}
+```
 
-Under the unified model, the generator would produce:
+### Full Example: Length Dimension (with overloads)
 
-1. `Speed<T>` implementing `IVector0<Speed<T>, T>` - the magnitude form
-2. `Velocity1D<T>` implementing `IVector1<Velocity1D<T>, T>` - signed 1D form
-3. `Velocity2D<T>` implementing `IVector2<Velocity2D<T>, T>` - 2D form
-4. `Velocity3D<T>` implementing `IVector3<Velocity3D<T>, T>` - 3D form
-5. `Velocity4D<T>` implementing `IVector4<Velocity4D<T>, T>` - 4D form
+```json
+{
+  "name": "Length",
+  "symbol": "L",
+  "dimensionalFormula": { "length": 1 },
+  "availableUnits": [
+    "Meter", "Kilometer", "Centimeter", "Millimeter",
+    "Micrometer", "Nanometer", "Angstrom",
+    "Foot", "Inch", "Yard", "Mile"
+  ],
+  "quantities": {
+    "vector0": {
+      "base": "Length",
+      "overloads": [
+        { "name": "Width", "description": "Horizontal extent." },
+        { "name": "Height", "description": "Vertical extent." },
+        { "name": "Depth", "description": "Extent into a surface." },
+        { "name": "Radius", "description": "Distance from center to edge." },
+        {
+          "name": "Diameter",
+          "description": "Distance across through center.",
+          "relationships": { "toRadius": "Value / 2", "fromRadius": "Value * 2" }
+        },
+        { "name": "Distance", "description": "Separation between two points." },
+        { "name": "Altitude", "description": "Height above reference level." },
+        { "name": "Wavelength", "description": "Spatial period of a wave." },
+        { "name": "Thickness", "description": "Extent through thinnest dimension." },
+        { "name": "Perimeter", "description": "Boundary length of a 2D shape." },
+        {
+          "name": "Circumference",
+          "description": "Perimeter of a circle.",
+          "relationships": { "toRadius": "Value / (2 * pi)", "toDiameter": "Value / pi" }
+        }
+      ]
+    },
+    "vector1": {
+      "base": "Displacement1D",
+      "overloads": [
+        { "name": "Offset", "description": "Signed distance from reference." }
+      ]
+    },
+    "vector2": { "base": "Displacement2D" },
+    "vector3": {
+      "base": "Displacement3D",
+      "overloads": [
+        { "name": "Position3D", "description": "Location in 3D space." },
+        { "name": "Translation3D", "description": "Movement applied in 3D." }
+      ]
+    },
+    "vector4": { "base": "Displacement4D" }
+  },
+  "integrals": [
+    { "other": "Length", "result": "Area" }
+  ],
+  "derivatives": [],
+  "dotProducts": [],
+  "crossProducts": []
+}
+```
 
-Each generated type includes:
-- A `Magnitude()` method returning the corresponding Vector0 type (for N >= 1)
-- Operators that respect the vector dimensionality rules above
-- Factory methods from the appropriate units
+## Source Generator Specification
+
+This section defines exactly what the `QuantitiesGenerator` produces for each element in the schema.
+
+### Generated Output Per Dimension
+
+For each dimension in `physicalDimensions`, the generator produces:
+
+#### 1. Base Types (one per vector form)
+
+For each entry in `quantities` (vector0 through vector4):
+
+```csharp
+// vector0 → implements IVector0
+public record Speed<T> : IVector0<Speed<T>, T>
+    where T : struct, INumber<T>
+{
+    public T Value { get; init; }
+
+    // Static members
+    public static Speed<T> Zero => new() { Value = T.Zero };
+
+    // Factory methods (from availableUnits)
+    public static Speed<T> FromMetersPerSecond(T value) => new() { Value = value };
+    public static Speed<T> FromKilometersPerHour(T value) => new() { Value = value * ... };
+    public static Speed<T> FromMilesPerHour(T value) => new() { Value = value * ... };
+
+    // Same-dimension arithmetic
+    public static Speed<T> operator +(Speed<T> left, Speed<T> right) => ...;
+    public static Speed<T> operator *(Speed<T> left, T right) => ...;
+    public static Speed<T> operator *(T left, Speed<T> right) => ...;
+    public static Speed<T> operator /(Speed<T> left, T right) => ...;
+    public static T operator /(Speed<T> left, Speed<T> right) => ...;
+
+    // Cross-dimension operators (from integrals/derivatives + propagation rules)
+    // See "Cross-Dimension Operator Generation" below
+}
+```
+
+```csharp
+// vector1 → implements IVector1
+public record Velocity1D<T> : IVector1<Velocity1D<T>, T>
+    where T : struct, INumber<T>
+{
+    public T Value { get; init; }
+    public static Velocity1D<T> Zero => ...;
+
+    // Factory methods (shared units)
+    public static Velocity1D<T> FromMetersPerSecond(T value) => ...;
+
+    // Same-dimension arithmetic (includes subtraction and negation)
+    public static Velocity1D<T> operator +(Velocity1D<T> left, Velocity1D<T> right) => ...;
+    public static Velocity1D<T> operator -(Velocity1D<T> left, Velocity1D<T> right) => ...;
+    public static Velocity1D<T> operator -(Velocity1D<T> value) => ...;
+    public static Velocity1D<T> operator *(Velocity1D<T> left, T right) => ...;
+
+    // Magnitude extraction → returns V0 base of same dimension
+    public Speed<T> Magnitude() => Speed<T>.FromMetersPerSecond(T.Abs(Value));
+
+    // Dot product methods (from dotProducts)
+    // Cross-dimension operators (from integrals/derivatives)
+}
+```
+
+```csharp
+// vector3 → implements IVector3
+public record Velocity3D<T> : IVector3<Velocity3D<T>, T>
+    where T : struct, INumber<T>
+{
+    public T X { get; init; }
+    public T Y { get; init; }
+    public T Z { get; init; }
+
+    public static Velocity3D<T> Zero => ...;
+    public static Velocity3D<T> UnitX => ...;
+    public static Velocity3D<T> UnitY => ...;
+    public static Velocity3D<T> UnitZ => ...;
+
+    // Factory
+    public static Velocity3D<T> Create(T x, T y, T z) => ...;
+
+    // IVector3 methods
+    public Speed<T> Magnitude() => ...;   // Returns V0 base, NOT raw T
+    public T LengthSquared() => ...;
+    public Velocity3D<T> Normalize() => ...;
+    public T Dot(Velocity3D<T> other) => ...; // Same-type dot → raw T
+
+    // Typed dot products (from dotProducts, returns V0 of result dimension)
+    // Typed cross products (from crossProducts, returns V3 of result dimension)
+    // Cross-dimension operators
+}
+```
+
+#### 2. Semantic Overload Types (one per overload entry)
+
+For each overload in a vector form's `overloads` array:
+
+```csharp
+public record Width<T> : IVector0<Width<T>, T>
+    where T : struct, INumber<T>
+{
+    public T Value { get; init; }
+    public static Width<T> Zero => ...;
+
+    // Factory methods (same units as base)
+    public static Width<T> FromMeters(T value) => ...;
+
+    // Same-overload arithmetic (preserves Width type)
+    public static Width<T> operator +(Width<T> left, Width<T> right) => ...;
+    public static Width<T> operator *(Width<T> left, T right) => ...;
+
+    // Implicit widening to base
+    public static implicit operator Length<T>(Width<T> w) => new() { Value = w.Value };
+
+    // Explicit narrowing from base
+    public static explicit operator Width<T>(Length<T> l) => new() { Value = l.Value };
+    public static Width<T> From(Length<T> l) => new() { Value = l.Value };
+
+    // Relationship methods (if declared)
+    // e.g., Diameter has: public Radius<T> ToRadius() => ...;
+
+    // NO cross-dimension operators (participates via implicit widening)
+}
+```
+
+#### 3. Cross-Dimension Operator Generation
+
+For each `integrals` entry `{ "other": "B", "result": "C" }` on dimension A:
+
+```
+For each vector form VN that A has:
+    Let otherForm = V0 of B    (the "other" operand in VN * V0)
+    Let resultForm = VN of C   (propagated form)
+    If C has VN:
+        Generate: VN(A) * V0(B) → VN(C)     // forward
+        Generate: V0(B) * VN(A) → VN(C)     // commutative
+        Generate: VN(C) / V0(B) → VN(A)     // inverse
+        Generate: VN(C) / VN(A) → V0(B)     // inverse (only if result is V0)
+```
+
+For each `derivatives` entry `{ "other": "B", "result": "C" }` on dimension A:
+
+```
+For each vector form VN that A has:
+    If C has VN:
+        Generate: VN(A) / V0(B) → VN(C)     // forward
+        Generate: VN(C) * V0(B) → VN(A)     // inverse integral
+        Generate: V0(B) * VN(C) → VN(A)     // commutative inverse
+```
+
+For each `dotProducts` entry `{ "other": "B", "result": "C" }` on dimension A:
+
+```
+For each vector form VN (N >= 1) that both A and B have:
+    Generate: VN(A).Dot(VN(B)) → V0(C)       // typed dot product method
+```
+
+For each `crossProducts` entry `{ "other": "B", "result": "C" }` on dimension A:
+
+```
+If A, B, and C all have V3:
+    Generate: V3(A).Cross(V3(B)) → V3(C)     // typed cross product method
+```
+
+#### 4. Operator Deduplication
+
+Since inverse relationships are auto-generated, the same operator could be declared from both sides. For example:
+
+- Velocity declares integral `{ "other": "Time", "result": "Length" }` → generates `Speed * Duration = Length`
+- Length declares derivative `{ "other": "Time", "result": "Velocity" }` → generates `Length / Duration = Speed`
+
+The generator must deduplicate: each unique operator signature is generated exactly once, regardless of how many relationship declarations produce it.
 
 ### IVector0 Interface
-
-A new `IVector0<TSelf, T>` interface would be needed:
 
 ```csharp
 public interface IVector0<TSelf, T>
@@ -539,17 +861,16 @@ public interface IVector0<TSelf, T>
     /// <summary>Gets a quantity with value zero.</summary>
     static abstract TSelf Zero { get; }
 
-    // Arithmetic
+    // Same-type arithmetic
     static abstract TSelf operator +(TSelf left, TSelf right);
     static abstract TSelf operator *(TSelf quantity, T scalar);
     static abstract TSelf operator *(T scalar, TSelf quantity);
     static abstract TSelf operator /(TSelf quantity, T scalar);
+    static abstract T operator /(TSelf left, TSelf right);
 }
 ```
 
 ### IVector1 Interface
-
-A new `IVector1<TSelf, T>` interface:
 
 ```csharp
 public interface IVector1<TSelf, T>
@@ -562,47 +883,38 @@ public interface IVector1<TSelf, T>
     /// <summary>Gets a quantity with value zero.</summary>
     static abstract TSelf Zero { get; }
 
-    // Arithmetic
+    // Same-type arithmetic
     static abstract TSelf operator +(TSelf left, TSelf right);
     static abstract TSelf operator -(TSelf left, TSelf right);
     static abstract TSelf operator *(TSelf quantity, T scalar);
     static abstract TSelf operator *(T scalar, TSelf quantity);
     static abstract TSelf operator /(TSelf quantity, T scalar);
+    static abstract T operator /(TSelf left, TSelf right);
     static abstract TSelf operator -(TSelf value);  // Negation
 }
 ```
 
-## Naming Conventions
+### IVector2, IVector3, IVector4 Interfaces
 
-Where vector forms have established distinct names in physics, use them:
+These already exist in the codebase. The key change is that `Length()` is renamed/supplemented with a typed `Magnitude()` method that returns the V0 base type of the same dimension, rather than a raw `T`. The raw `T` length is still available for generic math but the typed version is preferred for dimensional safety.
 
-| Physical Dimension | Vector0 (Magnitude) | Vector1 (1D Signed) | VectorN (Multi-D) |
-|-------------------|---------------------|---------------------|--------------------|
-| Length/Displacement | Distance | Displacement1D | Displacement2D/3D |
-| Velocity | Speed | Velocity1D | Velocity2D/3D |
-| Force | ForceMagnitude | Force1D | Force2D/3D |
-| Acceleration | AccelerationMagnitude | Acceleration1D | Acceleration2D/3D |
-| Momentum | MomentumMagnitude | Momentum1D | Momentum2D/3D |
-| Mass | Mass | - | - |
-| Time | Time | - | - |
-| Energy | Energy | - | - |
-| Temperature | Temperature | TemperatureDelta | - |
-| Electric Charge | ChargeMagnitude | Charge | - |
+```csharp
+// Addition to existing IVector3 interface
+public interface IVector3<TVector, T>
+    where TVector : IVector3<TVector, T>
+    where T : struct, INumber<T>
+{
+    // ... existing members ...
 
-Where no established distinct name exists, use the `{Name}Magnitude` / `{Name}1D` / `{Name}ND` convention.
+    // Existing: returns raw T (kept for generic math)
+    public T Length();
 
-## Quantities That Don't Span All Forms
+    // New: typed magnitude returning V0 base of the same dimension
+    // (generated per-type, not on the interface, because return type varies)
+}
+```
 
-Not every quantity makes sense at every vector dimensionality:
-
-- **Mass**: Only Vector0. Mass has no direction.
-- **Time**: Only Vector0. Time has no direction.
-- **Temperature**: Vector0 (absolute) and Vector1 (delta). Not multi-dimensional.
-- **Energy**: Only Vector0. Energy is a scalar in classical mechanics.
-- **Velocity**: All forms. Speed (V0), Velocity1D (V1), Velocity2D/3D (VN).
-- **Force**: Vector0 (magnitude), Vector1, Vector2, Vector3. Force is fundamentally directional.
-
-The `vectorForms` metadata in dimensions.json controls which forms the source generator produces for each quantity.
+The typed `Magnitude()` method cannot be on the interface itself because its return type differs per dimension (Speed, ForceMagnitude, etc.). It is generated directly on each concrete vector type.
 
 ## Semantic Overloads
 
