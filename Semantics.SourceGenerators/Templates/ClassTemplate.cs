@@ -74,7 +74,7 @@ internal class ClassTemplate : TemplateBase
 
 		IEnumerable<MemberTemplate> sortedMembers = Members.OrderBy(MemberTemplate.MemberSortOrder);
 
-		using (new Scope(codeBlocker))
+		using (new ScopeWithTrailingSemicolon(codeBlocker))
 		{
 			foreach (MemberTemplate member in sortedMembers)
 			{
