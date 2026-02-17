@@ -4,7 +4,12 @@
   <PropertyGroup>
     <TargetFrameworks>net10.0;net9.0;net8.0;net7.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CA1716;CA2225;KTSU0003;IDE0032</NoWarn>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ktsu.PreciseNumber" />
     <PackageReference Include="Polyfill" PrivateAssets="all" />
