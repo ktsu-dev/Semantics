@@ -18,15 +18,20 @@ public record Lift<T> : PhysicalQuantity<Lift<T>, T>, IVector0<Lift<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Lift<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Lift from a value in Newton.</summary>
-	public static Lift<T> FromNewton(T value) => Create(value);
+	/// <summary>
+	/// Creates a new Lift from a value in Newton.
+	/// </summary>
+	/// <param name="value">The value in Newton.</param>
+	/// <returns>A new Lift instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Lift<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Lift<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>
 	public static explicit operator Lift<T>(ForceMagnitude<T> value) => Create(value.Value);
 /// <summary>Creates a Lift from a ForceMagnitude value.</summary>
 	public static Lift<T> From(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two Lift values, returning a signed Force1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Force1D<T> operator -(Lift<T> left, Lift<T> right) => Force1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Lift values, returning the absolute difference as a non-negative Lift.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Lift<T> operator -(Lift<T> left, Lift<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

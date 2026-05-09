@@ -22,11 +22,13 @@ public record MomentumMagnitude<T> : PhysicalQuantity<MomentumMagnitude<T>, T>, 
 	/// </summary>
 	/// <param name="value">The value in NewtonSecond.</param>
 	/// <returns>A new <see cref="MomentumMagnitude{T}"/> instance.</returns>
-	public static MomentumMagnitude<T> FromNewtonSecond(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MomentumMagnitude<T> FromNewtonSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two MomentumMagnitude values, returning a signed Momentum1D result.
+	/// Subtracts two MomentumMagnitude values, returning the absolute difference as a non-negative MomentumMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Momentum1D<T> operator -(MomentumMagnitude<T> left, MomentumMagnitude<T> right) => Momentum1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MomentumMagnitude<T> operator -(MomentumMagnitude<T> left, MomentumMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides MomentumMagnitude by Speed to produce Mass.
 	/// </summary>

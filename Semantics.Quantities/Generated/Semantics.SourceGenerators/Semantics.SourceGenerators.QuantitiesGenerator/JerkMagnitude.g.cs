@@ -22,11 +22,13 @@ public record JerkMagnitude<T> : PhysicalQuantity<JerkMagnitude<T>, T>, IVector0
 	/// </summary>
 	/// <param name="value">The value in MetersPerSecondCubed.</param>
 	/// <returns>A new <see cref="JerkMagnitude{T}"/> instance.</returns>
-	public static JerkMagnitude<T> FromMetersPerSecondCubed(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static JerkMagnitude<T> FromMetersPerSecondCubed(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two JerkMagnitude values, returning a signed Jerk1D result.
+	/// Subtracts two JerkMagnitude values, returning the absolute difference as a non-negative JerkMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Jerk1D<T> operator -(JerkMagnitude<T> left, JerkMagnitude<T> right) => Jerk1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static JerkMagnitude<T> operator -(JerkMagnitude<T> left, JerkMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies JerkMagnitude by Duration to produce AccelerationMagnitude.
 	/// </summary>

@@ -22,7 +22,13 @@ public record MagneticFlux<T> : PhysicalQuantity<MagneticFlux<T>, T>, IVector0<M
 	/// </summary>
 	/// <param name="value">The value in Weber.</param>
 	/// <returns>A new <see cref="MagneticFlux{T}"/> instance.</returns>
-	public static MagneticFlux<T> FromWeber(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MagneticFlux<T> FromWeber(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two MagneticFlux values, returning the absolute difference as a non-negative MagneticFlux.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MagneticFlux<T> operator -(MagneticFlux<T> left, MagneticFlux<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides MagneticFlux by Area to produce MagneticFluxDensityMagnitude.
 	/// </summary>

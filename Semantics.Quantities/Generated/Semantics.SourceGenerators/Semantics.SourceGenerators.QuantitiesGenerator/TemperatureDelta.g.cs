@@ -24,6 +24,18 @@ public record TemperatureDelta<T> : PhysicalQuantity<TemperatureDelta<T>, T>, IV
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
 	public static TemperatureDelta<T> FromKelvin(T value) => Create(value);
 /// <summary>
+	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Celsius.
+	/// </summary>
+	/// <param name="value">The value in Celsius.</param>
+	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
+	public static TemperatureDelta<T> FromCelsius(T value) => Create((value + T.CreateChecked(Units.ConversionConstants.CelsiusToKelvinOffset)));
+/// <summary>
+	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Fahrenheit.
+	/// </summary>
+	/// <param name="value">The value in Fahrenheit.</param>
+	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
+	public static TemperatureDelta<T> FromFahrenheit(T value) => Create(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)));
+/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Temperature{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>

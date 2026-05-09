@@ -18,13 +18,20 @@ public record Pitch<T> : PhysicalQuantity<Pitch<T>, T>, IVector0<Pitch<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Pitch<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Pitch from a value in Hertz.</summary>
-	public static Pitch<T> FromHertz(T value) => Create(value);
+	/// <summary>
+	/// Creates a new Pitch from a value in Hertz.
+	/// </summary>
+	/// <param name="value">The value in Hertz.</param>
+	/// <returns>A new Pitch instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Pitch<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(Pitch<T> value) => Frequency<T>.Create(value.Value);
 /// <summary>Explicit conversion from Frequency.</summary>
 	public static explicit operator Pitch<T>(Frequency<T> value) => Create(value.Value);
 /// <summary>Creates a Pitch from a Frequency value.</summary>
 	public static Pitch<T> From(Frequency<T> value) => Create(value.Value);
+/// <summary>Subtracts two Pitch values, returning the absolute difference as a non-negative Pitch.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Pitch<T> operator -(Pitch<T> left, Pitch<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

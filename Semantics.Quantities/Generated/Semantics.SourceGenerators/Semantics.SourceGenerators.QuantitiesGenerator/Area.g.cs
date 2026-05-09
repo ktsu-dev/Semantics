@@ -22,7 +22,27 @@ public record Area<T> : PhysicalQuantity<Area<T>, T>, IVector0<Area<T>, T>
 	/// </summary>
 	/// <param name="value">The value in SquareMeter.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
-	public static Area<T> FromSquareMeter(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Area<T> FromSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Area{T}"/> from a value in SquareFoot.
+	/// </summary>
+	/// <param name="value">The value in SquareFoot.</param>
+	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Area<T> FromSquareFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Area{T}"/> from a value in SquareInch.
+	/// </summary>
+	/// <param name="value">The value in SquareInch.</param>
+	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Area<T> FromSquareInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
+/// <summary>
+	/// Subtracts two Area values, returning the absolute difference as a non-negative Area.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Area<T> operator -(Area<T> left, Area<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides Area by Length to produce Length.
 	/// </summary>

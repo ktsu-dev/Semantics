@@ -22,6 +22,12 @@ public record OpticalPower<T> : PhysicalQuantity<OpticalPower<T>, T>, IVector0<O
 	/// </summary>
 	/// <param name="value">The value in Diopter.</param>
 	/// <returns>A new <see cref="OpticalPower{T}"/> instance.</returns>
-	public static OpticalPower<T> FromDiopter(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static OpticalPower<T> FromDiopter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two OpticalPower values, returning the absolute difference as a non-negative OpticalPower.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static OpticalPower<T> operator -(OpticalPower<T> left, OpticalPower<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

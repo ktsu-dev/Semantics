@@ -22,11 +22,13 @@ public record ChargeMagnitude<T> : PhysicalQuantity<ChargeMagnitude<T>, T>, IVec
 	/// </summary>
 	/// <param name="value">The value in Coulomb.</param>
 	/// <returns>A new <see cref="ChargeMagnitude{T}"/> instance.</returns>
-	public static ChargeMagnitude<T> FromCoulomb(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ChargeMagnitude<T> FromCoulomb(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two ChargeMagnitude values, returning a signed Charge result.
+	/// Subtracts two ChargeMagnitude values, returning the absolute difference as a non-negative ChargeMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Charge<T> operator -(ChargeMagnitude<T> left, ChargeMagnitude<T> right) => Charge<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ChargeMagnitude<T> operator -(ChargeMagnitude<T> left, ChargeMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides ChargeMagnitude by Duration to produce CurrentMagnitude.
 	/// </summary>

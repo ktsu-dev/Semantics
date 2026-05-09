@@ -22,11 +22,27 @@ public record Ratio<T> : PhysicalQuantity<Ratio<T>, T>, IVector0<Ratio<T>, T>
 	/// </summary>
 	/// <param name="value">The value in Dimensionless.</param>
 	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
-	public static Ratio<T> FromDimensionless(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Ratio<T> FromDimensionless(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two Ratio values, returning a signed SignedRatio result.
+	/// Creates a new <see cref="Ratio{T}"/> from a value in Radian.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedRatio<T> operator -(Ratio<T> left, Ratio<T> right) => SignedRatio<T>.Create(left.Quantity - right.Quantity);
+	/// <param name="value">The value in Radian.</param>
+	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Ratio<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Ratio{T}"/> from a value in Degree.
+	/// </summary>
+	/// <param name="value">The value in Degree.</param>
+	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Ratio<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
+/// <summary>
+	/// Subtracts two Ratio values, returning the absolute difference as a non-negative Ratio.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Ratio<T> operator -(Ratio<T> left, Ratio<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides Ratio by Duration to produce Frequency.
 	/// </summary>

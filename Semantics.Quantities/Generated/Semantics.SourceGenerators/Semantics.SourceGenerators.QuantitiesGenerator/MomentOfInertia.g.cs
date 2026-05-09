@@ -22,7 +22,13 @@ public record MomentOfInertia<T> : PhysicalQuantity<MomentOfInertia<T>, T>, IVec
 	/// </summary>
 	/// <param name="value">The value in KilogramMeterSquared.</param>
 	/// <returns>A new <see cref="MomentOfInertia{T}"/> instance.</returns>
-	public static MomentOfInertia<T> FromKilogramMeterSquared(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MomentOfInertia<T> FromKilogramMeterSquared(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two MomentOfInertia values, returning the absolute difference as a non-negative MomentOfInertia.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MomentOfInertia<T> operator -(MomentOfInertia<T> left, MomentOfInertia<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies MomentOfInertia by AngularSpeed to produce AngularMomentumMagnitude.
 	/// </summary>

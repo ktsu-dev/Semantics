@@ -22,7 +22,20 @@ public record MolarEnergy<T> : PhysicalQuantity<MolarEnergy<T>, T>, IVector0<Mol
 	/// </summary>
 	/// <param name="value">The value in JoulePerMole.</param>
 	/// <returns>A new <see cref="MolarEnergy{T}"/> instance.</returns>
-	public static MolarEnergy<T> FromJoulePerMole(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MolarEnergy<T> FromJoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="MolarEnergy{T}"/> from a value in KilojoulePerMole.
+	/// </summary>
+	/// <param name="value">The value in KilojoulePerMole.</param>
+	/// <returns>A new <see cref="MolarEnergy{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MolarEnergy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilojoulePerMoleToJoulePerMole)), nameof(value)));
+/// <summary>
+	/// Subtracts two MolarEnergy values, returning the absolute difference as a non-negative MolarEnergy.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MolarEnergy<T> operator -(MolarEnergy<T> left, MolarEnergy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies MolarEnergy by AmountOfSubstance to produce Energy.
 	/// </summary>

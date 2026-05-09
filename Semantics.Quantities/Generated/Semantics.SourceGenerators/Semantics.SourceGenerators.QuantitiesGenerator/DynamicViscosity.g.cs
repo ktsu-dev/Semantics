@@ -22,7 +22,20 @@ public record DynamicViscosity<T> : PhysicalQuantity<DynamicViscosity<T>, T>, IV
 	/// </summary>
 	/// <param name="value">The value in PascalSecond.</param>
 	/// <returns>A new <see cref="DynamicViscosity{T}"/> instance.</returns>
-	public static DynamicViscosity<T> FromPascalSecond(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static DynamicViscosity<T> FromPascalSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="DynamicViscosity{T}"/> from a value in Poise.
+	/// </summary>
+	/// <param name="value">The value in Poise.</param>
+	/// <returns>A new <see cref="DynamicViscosity{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static DynamicViscosity<T> FromPoise(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoiseToPascalSecond)), nameof(value)));
+/// <summary>
+	/// Subtracts two DynamicViscosity values, returning the absolute difference as a non-negative DynamicViscosity.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static DynamicViscosity<T> operator -(DynamicViscosity<T> left, DynamicViscosity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides DynamicViscosity by Density to produce KinematicViscosity.
 	/// </summary>

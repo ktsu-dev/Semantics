@@ -22,7 +22,20 @@ public record KinematicViscosity<T> : PhysicalQuantity<KinematicViscosity<T>, T>
 	/// </summary>
 	/// <param name="value">The value in SquareMeterPerSecond.</param>
 	/// <returns>A new <see cref="KinematicViscosity{T}"/> instance.</returns>
-	public static KinematicViscosity<T> FromSquareMeterPerSecond(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static KinematicViscosity<T> FromSquareMeterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="KinematicViscosity{T}"/> from a value in Stokes.
+	/// </summary>
+	/// <param name="value">The value in Stokes.</param>
+	/// <returns>A new <see cref="KinematicViscosity{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static KinematicViscosity<T> FromStokes(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.StokesToSquareMeterPerSecond)), nameof(value)));
+/// <summary>
+	/// Subtracts two KinematicViscosity values, returning the absolute difference as a non-negative KinematicViscosity.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static KinematicViscosity<T> operator -(KinematicViscosity<T> left, KinematicViscosity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies KinematicViscosity by Density to produce DynamicViscosity.
 	/// </summary>

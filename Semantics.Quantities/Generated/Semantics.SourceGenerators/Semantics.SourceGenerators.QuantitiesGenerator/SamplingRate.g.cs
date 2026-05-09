@@ -18,13 +18,20 @@ public record SamplingRate<T> : PhysicalQuantity<SamplingRate<T>, T>, IVector0<S
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static SamplingRate<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new SamplingRate from a value in Hertz.</summary>
-	public static SamplingRate<T> FromHertz(T value) => Create(value);
+	/// <summary>
+	/// Creates a new SamplingRate from a value in Hertz.
+	/// </summary>
+	/// <param name="value">The value in Hertz.</param>
+	/// <returns>A new SamplingRate instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SamplingRate<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(SamplingRate<T> value) => Frequency<T>.Create(value.Value);
 /// <summary>Explicit conversion from Frequency.</summary>
 	public static explicit operator SamplingRate<T>(Frequency<T> value) => Create(value.Value);
 /// <summary>Creates a SamplingRate from a Frequency value.</summary>
 	public static SamplingRate<T> From(Frequency<T> value) => Create(value.Value);
+/// <summary>Subtracts two SamplingRate values, returning the absolute difference as a non-negative SamplingRate.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SamplingRate<T> operator -(SamplingRate<T> left, SamplingRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

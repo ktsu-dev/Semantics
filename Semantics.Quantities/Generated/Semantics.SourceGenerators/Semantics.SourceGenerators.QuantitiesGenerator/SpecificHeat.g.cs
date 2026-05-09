@@ -22,7 +22,13 @@ public record SpecificHeat<T> : PhysicalQuantity<SpecificHeat<T>, T>, IVector0<S
 	/// </summary>
 	/// <param name="value">The value in JoulePerKilogramKelvin.</param>
 	/// <returns>A new <see cref="SpecificHeat{T}"/> instance.</returns>
-	public static SpecificHeat<T> FromJoulePerKilogramKelvin(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SpecificHeat<T> FromJoulePerKilogramKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two SpecificHeat values, returning the absolute difference as a non-negative SpecificHeat.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SpecificHeat<T> operator -(SpecificHeat<T> left, SpecificHeat<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies SpecificHeat by Mass to produce Entropy.
 	/// </summary>

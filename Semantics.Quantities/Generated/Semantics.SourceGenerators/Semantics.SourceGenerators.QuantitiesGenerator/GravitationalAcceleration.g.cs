@@ -18,15 +18,20 @@ public record GravitationalAcceleration<T> : PhysicalQuantity<GravitationalAccel
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static GravitationalAcceleration<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new GravitationalAcceleration from a value in MetersPerSecondSquared.</summary>
-	public static GravitationalAcceleration<T> FromMetersPerSecondSquared(T value) => Create(value);
+	/// <summary>
+	/// Creates a new GravitationalAcceleration from a value in MetersPerSecondSquared.
+	/// </summary>
+	/// <param name="value">The value in MetersPerSecondSquared.</param>
+	/// <returns>A new GravitationalAcceleration instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static GravitationalAcceleration<T> FromMetersPerSecondSquared(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to AccelerationMagnitude.</summary>
 	public static implicit operator AccelerationMagnitude<T>(GravitationalAcceleration<T> value) => AccelerationMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from AccelerationMagnitude.</summary>
 	public static explicit operator GravitationalAcceleration<T>(AccelerationMagnitude<T> value) => Create(value.Value);
 /// <summary>Creates a GravitationalAcceleration from a AccelerationMagnitude value.</summary>
 	public static GravitationalAcceleration<T> From(AccelerationMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two GravitationalAcceleration values, returning a signed Acceleration1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Acceleration1D<T> operator -(GravitationalAcceleration<T> left, GravitationalAcceleration<T> right) => Acceleration1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two GravitationalAcceleration values, returning the absolute difference as a non-negative GravitationalAcceleration.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static GravitationalAcceleration<T> operator -(GravitationalAcceleration<T> left, GravitationalAcceleration<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

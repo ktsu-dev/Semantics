@@ -22,7 +22,20 @@ public record MolarMass<T> : PhysicalQuantity<MolarMass<T>, T>, IVector0<MolarMa
 	/// </summary>
 	/// <param name="value">The value in KilogramPerMole.</param>
 	/// <returns>A new <see cref="MolarMass{T}"/> instance.</returns>
-	public static MolarMass<T> FromKilogramPerMole(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MolarMass<T> FromKilogramPerMole(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="MolarMass{T}"/> from a value in GramPerMole.
+	/// </summary>
+	/// <param name="value">The value in GramPerMole.</param>
+	/// <returns>A new <see cref="MolarMass{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MolarMass<T> FromGramPerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GramPerMoleToKilogramPerMole)), nameof(value)));
+/// <summary>
+	/// Subtracts two MolarMass values, returning the absolute difference as a non-negative MolarMass.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MolarMass<T> operator -(MolarMass<T> left, MolarMass<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies MolarMass by AmountOfSubstance to produce Mass.
 	/// </summary>

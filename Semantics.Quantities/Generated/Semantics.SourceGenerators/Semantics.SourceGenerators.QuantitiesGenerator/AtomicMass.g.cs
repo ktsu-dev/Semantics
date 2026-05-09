@@ -18,13 +18,48 @@ public record AtomicMass<T> : PhysicalQuantity<AtomicMass<T>, T>, IVector0<Atomi
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static AtomicMass<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new AtomicMass from a value in Kilogram.</summary>
-	public static AtomicMass<T> FromKilogram(T value) => Create(value);
+	/// <summary>
+	/// Creates a new AtomicMass from a value in Kilogram.
+	/// </summary>
+	/// <param name="value">The value in Kilogram.</param>
+	/// <returns>A new AtomicMass instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AtomicMass<T> FromKilogram(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new AtomicMass from a value in Gram.
+	/// </summary>
+	/// <param name="value">The value in Gram.</param>
+	/// <returns>A new AtomicMass instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AtomicMass<T> FromGram(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
+	/// Creates a new AtomicMass from a value in Ton.
+	/// </summary>
+	/// <param name="value">The value in Ton.</param>
+	/// <returns>A new AtomicMass instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AtomicMass<T> FromTon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.TonToKilograms)), nameof(value)));
+/// <summary>
+	/// Creates a new AtomicMass from a value in Pound.
+	/// </summary>
+	/// <param name="value">The value in Pound.</param>
+	/// <returns>A new AtomicMass instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AtomicMass<T> FromPound(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundToKilograms)), nameof(value)));
+/// <summary>
+	/// Creates a new AtomicMass from a value in Ounce.
+	/// </summary>
+	/// <param name="value">The value in Ounce.</param>
+	/// <returns>A new AtomicMass instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AtomicMass<T> FromOunce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.OunceToKilograms)), nameof(value)));
 /// <summary>Implicit conversion to Mass.</summary>
 	public static implicit operator Mass<T>(AtomicMass<T> value) => Mass<T>.Create(value.Value);
 /// <summary>Explicit conversion from Mass.</summary>
 	public static explicit operator AtomicMass<T>(Mass<T> value) => Create(value.Value);
 /// <summary>Creates a AtomicMass from a Mass value.</summary>
 	public static AtomicMass<T> From(Mass<T> value) => Create(value.Value);
+/// <summary>Subtracts two AtomicMass values, returning the absolute difference as a non-negative AtomicMass.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AtomicMass<T> operator -(AtomicMass<T> left, AtomicMass<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

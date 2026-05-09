@@ -18,13 +18,20 @@ public record Admittance<T> : PhysicalQuantity<Admittance<T>, T>, IVector0<Admit
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Admittance<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Admittance from a value in Siemens.</summary>
-	public static Admittance<T> FromSiemens(T value) => Create(value);
+	/// <summary>
+	/// Creates a new Admittance from a value in Siemens.
+	/// </summary>
+	/// <param name="value">The value in Siemens.</param>
+	/// <returns>A new Admittance instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Admittance<T> FromSiemens(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Conductance.</summary>
 	public static implicit operator Conductance<T>(Admittance<T> value) => Conductance<T>.Create(value.Value);
 /// <summary>Explicit conversion from Conductance.</summary>
 	public static explicit operator Admittance<T>(Conductance<T> value) => Create(value.Value);
 /// <summary>Creates a Admittance from a Conductance value.</summary>
 	public static Admittance<T> From(Conductance<T> value) => Create(value.Value);
+/// <summary>Subtracts two Admittance values, returning the absolute difference as a non-negative Admittance.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Admittance<T> operator -(Admittance<T> left, Admittance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

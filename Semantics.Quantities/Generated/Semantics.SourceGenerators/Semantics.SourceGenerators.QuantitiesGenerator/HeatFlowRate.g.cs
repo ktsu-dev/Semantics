@@ -18,13 +18,27 @@ public record HeatFlowRate<T> : PhysicalQuantity<HeatFlowRate<T>, T>, IVector0<H
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static HeatFlowRate<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new HeatFlowRate from a value in Watt.</summary>
-	public static HeatFlowRate<T> FromWatt(T value) => Create(value);
+	/// <summary>
+	/// Creates a new HeatFlowRate from a value in Watt.
+	/// </summary>
+	/// <param name="value">The value in Watt.</param>
+	/// <returns>A new HeatFlowRate instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static HeatFlowRate<T> FromWatt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new HeatFlowRate from a value in Horsepower.
+	/// </summary>
+	/// <param name="value">The value in Horsepower.</param>
+	/// <returns>A new HeatFlowRate instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static HeatFlowRate<T> FromHorsepower(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HorsepowerToWatts)), nameof(value)));
 /// <summary>Implicit conversion to Power.</summary>
 	public static implicit operator Power<T>(HeatFlowRate<T> value) => Power<T>.Create(value.Value);
 /// <summary>Explicit conversion from Power.</summary>
 	public static explicit operator HeatFlowRate<T>(Power<T> value) => Create(value.Value);
 /// <summary>Creates a HeatFlowRate from a Power value.</summary>
 	public static HeatFlowRate<T> From(Power<T> value) => Create(value.Value);
+/// <summary>Subtracts two HeatFlowRate values, returning the absolute difference as a non-negative HeatFlowRate.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static HeatFlowRate<T> operator -(HeatFlowRate<T> left, HeatFlowRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

@@ -22,11 +22,27 @@ public record Speed<T> : PhysicalQuantity<Speed<T>, T>, IVector0<Speed<T>, T>
 	/// </summary>
 	/// <param name="value">The value in MetersPerSecond.</param>
 	/// <returns>A new <see cref="Speed{T}"/> instance.</returns>
-	public static Speed<T> FromMetersPerSecond(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Speed<T> FromMetersPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two Speed values, returning a signed Velocity1D result.
+	/// Creates a new <see cref="Speed{T}"/> from a value in KilometersPerHour.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Velocity1D<T> operator -(Speed<T> left, Speed<T> right) => Velocity1D<T>.Create(left.Quantity - right.Quantity);
+	/// <param name="value">The value in KilometersPerHour.</param>
+	/// <returns>A new <see cref="Speed{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Speed<T> FromKilometersPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilometersPerHourToMetersPerSecond)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Speed{T}"/> from a value in MilesPerHour.
+	/// </summary>
+	/// <param name="value">The value in MilesPerHour.</param>
+	/// <returns>A new <see cref="Speed{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Speed<T> FromMilesPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)), nameof(value)));
+/// <summary>
+	/// Subtracts two Speed values, returning the absolute difference as a non-negative Speed.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Speed<T> operator -(Speed<T> left, Speed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies Speed by Mass to produce MomentumMagnitude.
 	/// </summary>

@@ -18,13 +18,41 @@ public record ShearModulus<T> : PhysicalQuantity<ShearModulus<T>, T>, IVector0<S
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static ShearModulus<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new ShearModulus from a value in Pascal.</summary>
-	public static ShearModulus<T> FromPascal(T value) => Create(value);
+	/// <summary>
+	/// Creates a new ShearModulus from a value in Pascal.
+	/// </summary>
+	/// <param name="value">The value in Pascal.</param>
+	/// <returns>A new ShearModulus instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ShearModulus<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new ShearModulus from a value in Bar.
+	/// </summary>
+	/// <param name="value">The value in Bar.</param>
+	/// <returns>A new ShearModulus instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ShearModulus<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
+/// <summary>
+	/// Creates a new ShearModulus from a value in Atmosphere.
+	/// </summary>
+	/// <param name="value">The value in Atmosphere.</param>
+	/// <returns>A new ShearModulus instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ShearModulus<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
+/// <summary>
+	/// Creates a new ShearModulus from a value in Psi.
+	/// </summary>
+	/// <param name="value">The value in Psi.</param>
+	/// <returns>A new ShearModulus instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ShearModulus<T> FromPsi(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PsiToPascals)), nameof(value)));
 /// <summary>Implicit conversion to Pressure.</summary>
 	public static implicit operator Pressure<T>(ShearModulus<T> value) => Pressure<T>.Create(value.Value);
 /// <summary>Explicit conversion from Pressure.</summary>
 	public static explicit operator ShearModulus<T>(Pressure<T> value) => Create(value.Value);
 /// <summary>Creates a ShearModulus from a Pressure value.</summary>
 	public static ShearModulus<T> From(Pressure<T> value) => Create(value.Value);
+/// <summary>Subtracts two ShearModulus values, returning the absolute difference as a non-negative ShearModulus.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ShearModulus<T> operator -(ShearModulus<T> left, ShearModulus<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

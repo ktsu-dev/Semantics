@@ -18,13 +18,41 @@ public record Heat<T> : PhysicalQuantity<Heat<T>, T>, IVector0<Heat<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Heat<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Heat from a value in Joule.</summary>
-	public static Heat<T> FromJoule(T value) => Create(value);
+	/// <summary>
+	/// Creates a new Heat from a value in Joule.
+	/// </summary>
+	/// <param name="value">The value in Joule.</param>
+	/// <returns>A new Heat instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Heat<T> FromJoule(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new Heat from a value in ElectronVolt.
+	/// </summary>
+	/// <param name="value">The value in ElectronVolt.</param>
+	/// <returns>A new Heat instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Heat<T> FromElectronVolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ElectronVoltToJoules)), nameof(value)));
+/// <summary>
+	/// Creates a new Heat from a value in Calorie.
+	/// </summary>
+	/// <param name="value">The value in Calorie.</param>
+	/// <returns>A new Heat instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Heat<T> FromCalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CalorieToJoules)), nameof(value)));
+/// <summary>
+	/// Creates a new Heat from a value in KilowattHour.
+	/// </summary>
+	/// <param name="value">The value in KilowattHour.</param>
+	/// <returns>A new Heat instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Heat<T> FromKilowattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
 /// <summary>Implicit conversion to Energy.</summary>
 	public static implicit operator Energy<T>(Heat<T> value) => Energy<T>.Create(value.Value);
 /// <summary>Explicit conversion from Energy.</summary>
 	public static explicit operator Heat<T>(Energy<T> value) => Create(value.Value);
 /// <summary>Creates a Heat from a Energy value.</summary>
 	public static Heat<T> From(Energy<T> value) => Create(value.Value);
+/// <summary>Subtracts two Heat values, returning the absolute difference as a non-negative Heat.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Heat<T> operator -(Heat<T> left, Heat<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

@@ -18,15 +18,34 @@ public record SpecificGravity<T> : PhysicalQuantity<SpecificGravity<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static SpecificGravity<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new SpecificGravity from a value in Dimensionless.</summary>
-	public static SpecificGravity<T> FromDimensionless(T value) => Create(value);
+	/// <summary>
+	/// Creates a new SpecificGravity from a value in Dimensionless.
+	/// </summary>
+	/// <param name="value">The value in Dimensionless.</param>
+	/// <returns>A new SpecificGravity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SpecificGravity<T> FromDimensionless(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new SpecificGravity from a value in Radian.
+	/// </summary>
+	/// <param name="value">The value in Radian.</param>
+	/// <returns>A new SpecificGravity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SpecificGravity<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new SpecificGravity from a value in Degree.
+	/// </summary>
+	/// <param name="value">The value in Degree.</param>
+	/// <returns>A new SpecificGravity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SpecificGravity<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>Implicit conversion to Ratio.</summary>
 	public static implicit operator Ratio<T>(SpecificGravity<T> value) => Ratio<T>.Create(value.Value);
 /// <summary>Explicit conversion from Ratio.</summary>
 	public static explicit operator SpecificGravity<T>(Ratio<T> value) => Create(value.Value);
 /// <summary>Creates a SpecificGravity from a Ratio value.</summary>
 	public static SpecificGravity<T> From(Ratio<T> value) => Create(value.Value);
-/// <summary>Subtracts two SpecificGravity values, returning a signed SignedRatio result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedRatio<T> operator -(SpecificGravity<T> left, SpecificGravity<T> right) => SignedRatio<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two SpecificGravity values, returning the absolute difference as a non-negative SpecificGravity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SpecificGravity<T> operator -(SpecificGravity<T> left, SpecificGravity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

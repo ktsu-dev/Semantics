@@ -18,15 +18,20 @@ public record VoltageDrop<T> : PhysicalQuantity<VoltageDrop<T>, T>, IVector0<Vol
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static VoltageDrop<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new VoltageDrop from a value in Volt.</summary>
-	public static VoltageDrop<T> FromVolt(T value) => Create(value);
+	/// <summary>
+	/// Creates a new VoltageDrop from a value in Volt.
+	/// </summary>
+	/// <param name="value">The value in Volt.</param>
+	/// <returns>A new VoltageDrop instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static VoltageDrop<T> FromVolt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to VoltageMagnitude.</summary>
 	public static implicit operator VoltageMagnitude<T>(VoltageDrop<T> value) => VoltageMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from VoltageMagnitude.</summary>
 	public static explicit operator VoltageDrop<T>(VoltageMagnitude<T> value) => Create(value.Value);
 /// <summary>Creates a VoltageDrop from a VoltageMagnitude value.</summary>
 	public static VoltageDrop<T> From(VoltageMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two VoltageDrop values, returning a signed Voltage result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Voltage<T> operator -(VoltageDrop<T> left, VoltageDrop<T> right) => Voltage<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two VoltageDrop values, returning the absolute difference as a non-negative VoltageDrop.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static VoltageDrop<T> operator -(VoltageDrop<T> left, VoltageDrop<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

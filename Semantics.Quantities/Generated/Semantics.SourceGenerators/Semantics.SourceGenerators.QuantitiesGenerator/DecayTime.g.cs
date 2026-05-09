@@ -18,13 +18,62 @@ public record DecayTime<T> : PhysicalQuantity<DecayTime<T>, T>, IVector0<DecayTi
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static DecayTime<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new DecayTime from a value in Second.</summary>
-	public static DecayTime<T> FromSecond(T value) => Create(value);
+	/// <summary>
+	/// Creates a new DecayTime from a value in Second.
+	/// </summary>
+	/// <param name="value">The value in Second.</param>
+	/// <returns>A new DecayTime instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static DecayTime<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new DecayTime from a value in Millisecond.
+	/// </summary>
+	/// <param name="value">The value in Millisecond.</param>
+	/// <returns>A new DecayTime instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static DecayTime<T> FromMillisecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
+	/// Creates a new DecayTime from a value in Microsecond.
+	/// </summary>
+	/// <param name="value">The value in Microsecond.</param>
+	/// <returns>A new DecayTime instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static DecayTime<T> FromMicrosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+/// <summary>
+	/// Creates a new DecayTime from a value in Minute.
+	/// </summary>
+	/// <param name="value">The value in Minute.</param>
+	/// <returns>A new DecayTime instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static DecayTime<T> FromMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new DecayTime from a value in Hour.
+	/// </summary>
+	/// <param name="value">The value in Hour.</param>
+	/// <returns>A new DecayTime instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static DecayTime<T> FromHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new DecayTime from a value in Day.
+	/// </summary>
+	/// <param name="value">The value in Day.</param>
+	/// <returns>A new DecayTime instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static DecayTime<T> FromDay(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new DecayTime from a value in Year.
+	/// </summary>
+	/// <param name="value">The value in Year.</param>
+	/// <returns>A new DecayTime instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static DecayTime<T> FromYear(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
 /// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(DecayTime<T> value) => Duration<T>.Create(value.Value);
 /// <summary>Explicit conversion from Duration.</summary>
 	public static explicit operator DecayTime<T>(Duration<T> value) => Create(value.Value);
 /// <summary>Creates a DecayTime from a Duration value.</summary>
 	public static DecayTime<T> From(Duration<T> value) => Create(value.Value);
+/// <summary>Subtracts two DecayTime values, returning the absolute difference as a non-negative DecayTime.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static DecayTime<T> operator -(DecayTime<T> left, DecayTime<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

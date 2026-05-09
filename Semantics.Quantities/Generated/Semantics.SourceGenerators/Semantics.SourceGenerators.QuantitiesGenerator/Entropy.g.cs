@@ -22,7 +22,13 @@ public record Entropy<T> : PhysicalQuantity<Entropy<T>, T>, IVector0<Entropy<T>,
 	/// </summary>
 	/// <param name="value">The value in JoulePerKelvin.</param>
 	/// <returns>A new <see cref="Entropy{T}"/> instance.</returns>
-	public static Entropy<T> FromJoulePerKelvin(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Entropy<T> FromJoulePerKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two Entropy values, returning the absolute difference as a non-negative Entropy.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Entropy<T> operator -(Entropy<T> left, Entropy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies Entropy by Temperature to produce Energy.
 	/// </summary>

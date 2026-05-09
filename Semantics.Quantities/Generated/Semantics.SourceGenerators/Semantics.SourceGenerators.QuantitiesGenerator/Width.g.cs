@@ -18,15 +18,90 @@ public record Width<T> : PhysicalQuantity<Width<T>, T>, IVector0<Width<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Width<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Width from a value in Meter.</summary>
-	public static Width<T> FromMeter(T value) => Create(value);
+	/// <summary>
+	/// Creates a new Width from a value in Meter.
+	/// </summary>
+	/// <param name="value">The value in Meter.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new Width from a value in Kilometer.
+	/// </summary>
+	/// <param name="value">The value in Kilometer.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromKilometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+/// <summary>
+	/// Creates a new Width from a value in Centimeter.
+	/// </summary>
+	/// <param name="value">The value in Centimeter.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Centi)), nameof(value)));
+/// <summary>
+	/// Creates a new Width from a value in Millimeter.
+	/// </summary>
+	/// <param name="value">The value in Millimeter.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromMillimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
+	/// Creates a new Width from a value in Micrometer.
+	/// </summary>
+	/// <param name="value">The value in Micrometer.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromMicrometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+/// <summary>
+	/// Creates a new Width from a value in Nanometer.
+	/// </summary>
+	/// <param name="value">The value in Nanometer.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromNanometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
+/// <summary>
+	/// Creates a new Width from a value in Angstrom.
+	/// </summary>
+	/// <param name="value">The value in Angstrom.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromAngstrom(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AngstromToMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Width from a value in Foot.
+	/// </summary>
+	/// <param name="value">The value in Foot.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FeetToMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Width from a value in Inch.
+	/// </summary>
+	/// <param name="value">The value in Inch.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.InchesToMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Width from a value in Yard.
+	/// </summary>
+	/// <param name="value">The value in Yard.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromYard(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YardToMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Width from a value in Mile.
+	/// </summary>
+	/// <param name="value">The value in Mile.</param>
+	/// <returns>A new Width instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Width<T> FromMile(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)), nameof(value)));
 /// <summary>Implicit conversion to Length.</summary>
 	public static implicit operator Length<T>(Width<T> value) => Length<T>.Create(value.Value);
 /// <summary>Explicit conversion from Length.</summary>
 	public static explicit operator Width<T>(Length<T> value) => Create(value.Value);
 /// <summary>Creates a Width from a Length value.</summary>
 	public static Width<T> From(Length<T> value) => Create(value.Value);
-/// <summary>Subtracts two Width values, returning a signed Displacement1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Displacement1D<T> operator -(Width<T> left, Width<T> right) => Displacement1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Width values, returning the absolute difference as a non-negative Width.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Width<T> operator -(Width<T> left, Width<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

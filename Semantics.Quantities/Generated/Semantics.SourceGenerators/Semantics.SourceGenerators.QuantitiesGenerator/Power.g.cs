@@ -22,7 +22,20 @@ public record Power<T> : PhysicalQuantity<Power<T>, T>, IVector0<Power<T>, T>
 	/// </summary>
 	/// <param name="value">The value in Watt.</param>
 	/// <returns>A new <see cref="Power{T}"/> instance.</returns>
-	public static Power<T> FromWatt(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Power<T> FromWatt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Power{T}"/> from a value in Horsepower.
+	/// </summary>
+	/// <param name="value">The value in Horsepower.</param>
+	/// <returns>A new <see cref="Power{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Power<T> FromHorsepower(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HorsepowerToWatts)), nameof(value)));
+/// <summary>
+	/// Subtracts two Power values, returning the absolute difference as a non-negative Power.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Power<T> operator -(Power<T> left, Power<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides Power by VoltageMagnitude to produce CurrentMagnitude.
 	/// </summary>

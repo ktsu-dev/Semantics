@@ -18,15 +18,27 @@ public record FieldOfView<T> : PhysicalQuantity<FieldOfView<T>, T>, IVector0<Fie
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static FieldOfView<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new FieldOfView from a value in Radian.</summary>
-	public static FieldOfView<T> FromRadian(T value) => Create(value);
+	/// <summary>
+	/// Creates a new FieldOfView from a value in Radian.
+	/// </summary>
+	/// <param name="value">The value in Radian.</param>
+	/// <returns>A new FieldOfView instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static FieldOfView<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new FieldOfView from a value in Degree.
+	/// </summary>
+	/// <param name="value">The value in Degree.</param>
+	/// <returns>A new FieldOfView instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static FieldOfView<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>Implicit conversion to Angle.</summary>
 	public static implicit operator Angle<T>(FieldOfView<T> value) => Angle<T>.Create(value.Value);
 /// <summary>Explicit conversion from Angle.</summary>
 	public static explicit operator FieldOfView<T>(Angle<T> value) => Create(value.Value);
 /// <summary>Creates a FieldOfView from a Angle value.</summary>
 	public static FieldOfView<T> From(Angle<T> value) => Create(value.Value);
-/// <summary>Subtracts two FieldOfView values, returning a signed SignedAngle result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedAngle<T> operator -(FieldOfView<T> left, FieldOfView<T> right) => SignedAngle<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two FieldOfView values, returning the absolute difference as a non-negative FieldOfView.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static FieldOfView<T> operator -(FieldOfView<T> left, FieldOfView<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

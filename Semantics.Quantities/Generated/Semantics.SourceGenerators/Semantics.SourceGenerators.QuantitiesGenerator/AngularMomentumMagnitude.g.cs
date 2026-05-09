@@ -22,11 +22,13 @@ public record AngularMomentumMagnitude<T> : PhysicalQuantity<AngularMomentumMagn
 	/// </summary>
 	/// <param name="value">The value in KilogramMeterSquaredPerSecond.</param>
 	/// <returns>A new <see cref="AngularMomentumMagnitude{T}"/> instance.</returns>
-	public static AngularMomentumMagnitude<T> FromKilogramMeterSquaredPerSecond(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AngularMomentumMagnitude<T> FromKilogramMeterSquaredPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two AngularMomentumMagnitude values, returning a signed AngularMomentum1D result.
+	/// Subtracts two AngularMomentumMagnitude values, returning the absolute difference as a non-negative AngularMomentumMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularMomentum1D<T> operator -(AngularMomentumMagnitude<T> left, AngularMomentumMagnitude<T> right) => AngularMomentum1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularMomentumMagnitude<T> operator -(AngularMomentumMagnitude<T> left, AngularMomentumMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides AngularMomentumMagnitude by Duration to produce TorqueMagnitude.
 	/// </summary>

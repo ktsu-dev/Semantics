@@ -18,16 +18,91 @@ public record Diameter<T> : PhysicalQuantity<Diameter<T>, T>, IVector0<Diameter<
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Diameter<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Diameter from a value in Meter.</summary>
-	public static Diameter<T> FromMeter(T value) => Create(value);
+	/// <summary>
+	/// Creates a new Diameter from a value in Meter.
+	/// </summary>
+	/// <param name="value">The value in Meter.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new Diameter from a value in Kilometer.
+	/// </summary>
+	/// <param name="value">The value in Kilometer.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromKilometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+/// <summary>
+	/// Creates a new Diameter from a value in Centimeter.
+	/// </summary>
+	/// <param name="value">The value in Centimeter.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Centi)), nameof(value)));
+/// <summary>
+	/// Creates a new Diameter from a value in Millimeter.
+	/// </summary>
+	/// <param name="value">The value in Millimeter.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromMillimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
+	/// Creates a new Diameter from a value in Micrometer.
+	/// </summary>
+	/// <param name="value">The value in Micrometer.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromMicrometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+/// <summary>
+	/// Creates a new Diameter from a value in Nanometer.
+	/// </summary>
+	/// <param name="value">The value in Nanometer.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromNanometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
+/// <summary>
+	/// Creates a new Diameter from a value in Angstrom.
+	/// </summary>
+	/// <param name="value">The value in Angstrom.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromAngstrom(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AngstromToMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Diameter from a value in Foot.
+	/// </summary>
+	/// <param name="value">The value in Foot.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FeetToMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Diameter from a value in Inch.
+	/// </summary>
+	/// <param name="value">The value in Inch.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.InchesToMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Diameter from a value in Yard.
+	/// </summary>
+	/// <param name="value">The value in Yard.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromYard(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YardToMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Diameter from a value in Mile.
+	/// </summary>
+	/// <param name="value">The value in Mile.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromMile(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)), nameof(value)));
 /// <summary>Implicit conversion to Length.</summary>
 	public static implicit operator Length<T>(Diameter<T> value) => Length<T>.Create(value.Value);
 /// <summary>Explicit conversion from Length.</summary>
 	public static explicit operator Diameter<T>(Length<T> value) => Create(value.Value);
 /// <summary>Creates a Diameter from a Length value.</summary>
 	public static Diameter<T> From(Length<T> value) => Create(value.Value);
-/// <summary>Subtracts two Diameter values, returning a signed Displacement1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Displacement1D<T> operator -(Diameter<T> left, Diameter<T> right) => Displacement1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Diameter values, returning the absolute difference as a non-negative Diameter.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Diameter<T> operator -(Diameter<T> left, Diameter<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>Converts this Diameter to a Radius.</summary>
 	public Radius<T> ToRadius() => Radius<T>.Create(Value / T.CreateChecked(2));
 /// <summary>Creates a Diameter from a Radius value.</summary>

@@ -18,8 +18,24 @@ public record TemperatureDrop<T> : PhysicalQuantity<TemperatureDrop<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static TemperatureDrop<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new TemperatureDrop from a value in Kelvin.</summary>
+	/// <summary>
+	/// Creates a new TemperatureDrop from a value in Kelvin.
+	/// </summary>
+	/// <param name="value">The value in Kelvin.</param>
+	/// <returns>A new TemperatureDrop instance.</returns>
 	public static TemperatureDrop<T> FromKelvin(T value) => Create(value);
+/// <summary>
+	/// Creates a new TemperatureDrop from a value in Celsius.
+	/// </summary>
+	/// <param name="value">The value in Celsius.</param>
+	/// <returns>A new TemperatureDrop instance.</returns>
+	public static TemperatureDrop<T> FromCelsius(T value) => Create((value + T.CreateChecked(Units.ConversionConstants.CelsiusToKelvinOffset)));
+/// <summary>
+	/// Creates a new TemperatureDrop from a value in Fahrenheit.
+	/// </summary>
+	/// <param name="value">The value in Fahrenheit.</param>
+	/// <returns>A new TemperatureDrop instance.</returns>
+	public static TemperatureDrop<T> FromFahrenheit(T value) => Create(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)));
 /// <summary>Implicit conversion to TemperatureDelta.</summary>
 	public static implicit operator TemperatureDelta<T>(TemperatureDrop<T> value) => TemperatureDelta<T>.Create(value.Value);
 /// <summary>Explicit conversion from TemperatureDelta.</summary>

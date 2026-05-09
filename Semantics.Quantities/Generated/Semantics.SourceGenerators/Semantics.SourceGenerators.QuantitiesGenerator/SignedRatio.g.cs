@@ -24,6 +24,18 @@ public record SignedRatio<T> : PhysicalQuantity<SignedRatio<T>, T>, IVector1<Sig
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromDimensionless(T value) => Create(value);
 /// <summary>
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Radian.
+	/// </summary>
+	/// <param name="value">The value in Radian.</param>
+	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
+	public static SignedRatio<T> FromRadian(T value) => Create(value);
+/// <summary>
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Degree.
+	/// </summary>
+	/// <param name="value">The value in Degree.</param>
+	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
+	public static SignedRatio<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Ratio{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>

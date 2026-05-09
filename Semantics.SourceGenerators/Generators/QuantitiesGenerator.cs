@@ -33,9 +33,21 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 
 	/// <summary>
 	/// Holds the metadata that drives quantity emission. Combined from dimensions.json and
-	/// units.json so factory methods can apply per-unit conversion factors.
+	/// units.json so factory methods can apply per-unit conversion factors. Plain class
+	/// (not a positional record) because the netstandard2.0 source-generator target lacks
+	/// <c>System.Runtime.CompilerServices.IsExternalInit</c>.
 	/// </summary>
-	private sealed record CombinedMetadata(DimensionsMetadata Dimensions, UnitsMetadata Units);
+	private sealed class CombinedMetadata
+	{
+		public DimensionsMetadata Dimensions { get; }
+		public UnitsMetadata Units { get; }
+
+		public CombinedMetadata(DimensionsMetadata dimensions, UnitsMetadata units)
+		{
+			Dimensions = dimensions;
+			Units = units;
+		}
+	}
 
 	/// <summary>
 	/// Override to load both dimensions.json and units.json. The base class only loads a single
@@ -410,6 +422,11 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 	/// Emits one <c>From{Unit}</c> static factory per entry in <paramref name="availableUnits"/>.
 	/// The first unit is treated as the SI base unit (no conversion). Subsequent units use the
 	/// conversion factor / magnitude / offset declared in <paramref name="unitMap"/>.
+	/// When <paramref name="applyV0Guard"/> is true, the converted value is wrapped with
+	/// <c>Vector0Guards.EnsureNonNegative</c> so a negative input — including one that becomes
+	/// negative after a unit conversion (e.g. <c>FromCelsius(-300)</c>) — throws
+	/// <see cref="System.ArgumentException"/>. This locks in the V0 non-negativity invariant
+	/// from #50 across every per-unit factory introduced for #48.
 	/// </summary>
 	private static void AddUnitFactories(
 		ClassTemplate cls,
@@ -417,7 +434,8 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		Dictionary<string, UnitDefinition> unitMap,
 		string typeName,
 		string fullType,
-		string crefForComment)
+		string crefForComment,
+		bool applyV0Guard)
 	{
 		if (availableUnits == null || availableUnits.Count == 0)
 		{
@@ -432,20 +450,30 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				? "value"
 				: BuildToBaseExpression(unitName, unitMap);
 
+			string body = applyV0Guard
+				? $" => Create(Vector0Guards.EnsureNonNegative({conversionExpr}, nameof(value)));"
+				: $" => Create({conversionExpr});";
+
+			List<string> comments =
+			[
+				"/// <summary>",
+				$"/// Creates a new {crefForComment} from a value in {unitName}.",
+				"/// </summary>",
+				$"/// <param name=\"value\">The value in {unitName}.</param>",
+				$"/// <returns>A new {crefForComment} instance.</returns>",
+			];
+			if (applyV0Guard)
+			{
+				comments.Add("/// <exception cref=\"System.ArgumentException\">Thrown when the resulting magnitude would be negative.</exception>");
+			}
+
 			cls.Members.Add(new MethodTemplate()
 			{
-				Comments =
-				[
-					"/// <summary>",
-					$"/// Creates a new {crefForComment} from a value in {unitName}.",
-					"/// </summary>",
-					$"/// <param name=\"value\">The value in {unitName}.</param>",
-					$"/// <returns>A new {crefForComment} instance.</returns>",
-				],
+				Comments = comments,
 				Keywords = ["public", "static", fullType],
 				Name = $"From{unitName}",
 				Parameters = [new ParameterTemplate { Type = "T", Name = "value" }],
-				BodyFactory = (body) => body.Write($" => Create({conversionExpr});"),
+				BodyFactory = (b) => b.Write(body),
 			});
 		}
 	}
@@ -520,7 +548,6 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		VectorFormDefinition v0 = dim.Quantities.Vector0!;
 		string typeName = v0.Base;
 		string fullType = $"{typeName}<T>";
-		string? v1TypeName = dim.Quantities.Vector1?.Base;
 
 		using CodeBlocker cb = CodeBlocker.Create();
 
@@ -555,31 +582,42 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			Name = "Zero => Create(T.Zero)",
 		});
 
-		// Factory methods for every available unit (one From{Unit} per unit, applying conversion).
-		AddUnitFactories(cls, dim.AvailableUnits, unitMap, typeName, fullType, "<see cref=\"" + typeName + "{T}\"/>");
+		// Factory methods for every available unit (#48). The V0 non-negativity invariant from
+		// #50 is enforced by AddUnitFactories — for non-base units the guard runs *after* the
+		// conversion, so an input that is non-negative in its source unit but negative in the
+		// SI base unit (e.g. -300 °C → -26.85 K) still throws.
+		AddUnitFactories(
+			cls,
+			dim.AvailableUnits,
+			unitMap,
+			typeName,
+			fullType,
+			"<see cref=\"" + typeName + "{T}\"/>",
+			applyV0Guard: true);
 
-		// V0 subtraction hiding: returns V1 if V1 exists for this dimension
-		if (v1TypeName != null)
+		// V0 - V0 returns the same V0 of T.Abs(left - right) (locked decision in #52).
+		// We emit this on every V0 base type so the derived operator wins overload resolution
+		// over PhysicalQuantity's plain subtraction (which can produce a negative magnitude
+		// and would trip the non-negativity guard from #50).
+		cls.Members.Add(new MethodTemplate()
 		{
-			cls.Members.Add(new MethodTemplate()
-			{
-				Comments =
-				[
-					"/// <summary>",
-					$"/// Subtracts two {typeName} values, returning a signed {v1TypeName} result.",
-					"/// </summary>",
-				],
-				Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
-				Keywords = ["public", "static", $"{v1TypeName}<T>"],
-				Name = "operator -",
-				Parameters =
-				[
-					new ParameterTemplate { Type = fullType, Name = "left" },
-					new ParameterTemplate { Type = fullType, Name = "right" },
-				],
-				BodyFactory = (body) => body.Write($" => {v1TypeName}<T>.Create(left.Quantity - right.Quantity);"),
-			});
-		}
+			Comments =
+			[
+				"/// <summary>",
+				$"/// Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.",
+				"/// Magnitude subtraction stays a magnitude (per the unified-vector model).",
+				"/// </summary>",
+			],
+			Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
+			Keywords = ["public", "static", fullType],
+			Name = "operator -",
+			Parameters =
+			[
+				new ParameterTemplate { Type = fullType, Name = "left" },
+				new ParameterTemplate { Type = fullType, Name = "right" },
+			],
+			BodyFactory = (body) => body.Write(" => Create(T.Abs(left.Quantity - right.Quantity));"),
+		});
 
 		// Cross-dimensional operators
 		EmitScalarOperators(cls, typeName, operatorsByOwner, typeFormMap);
@@ -636,7 +674,15 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		});
 
 		// Factory methods for every available unit.
-		AddUnitFactories(cls, dim.AvailableUnits, unitMap, typeName, fullType, "<see cref=\"" + typeName + "{T}\"/>");
+		// V1 quantities are signed; no V0 non-negativity guard.
+		AddUnitFactories(
+			cls,
+			dim.AvailableUnits,
+			unitMap,
+			typeName,
+			fullType,
+			"<see cref=\"" + typeName + "{T}\"/>",
+			applyV0Guard: false);
 
 		// Magnitude method returning V0 base
 		if (v0TypeName != null)
@@ -768,7 +814,6 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		string typeName = overload.Name;
 		string fullType = $"{typeName}<T>";
 		string baseFullType = $"{baseTypeName}<T>";
-		string? v1TypeName = dim.Quantities.Vector1?.Base;
 
 		// V0/V1 overloads inherit from PhysicalQuantity
 		if (vectorForm <= 1)
@@ -809,8 +854,17 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				Name = "Zero => Create(T.Zero)",
 			});
 
-			// Factory methods for every available unit (overloads inherit the dimension's units).
-			AddUnitFactories(cls, dim.AvailableUnits, unitMap, typeName, fullType, typeName);
+			// Factory methods for every available unit (#48); overloads inherit the dimension's
+			// units. V0 overloads enforce the same non-negativity invariant as their V0 base
+			// type (#50); V1 overloads accept any sign.
+			AddUnitFactories(
+				cls,
+				dim.AvailableUnits,
+				unitMap,
+				typeName,
+				fullType,
+				typeName,
+				applyV0Guard: vectorForm == 0);
 
 			// Implicit widening to base type
 			cls.Members.Add(new MethodTemplate()
@@ -842,21 +896,24 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				BodyFactory = (body) => body.Write(" => Create(value.Value);"),
 			});
 
-			// V0 overload subtraction hiding (returns V1 base if exists)
-			if (vectorForm == 0 && v1TypeName != null)
+			// V0 overload subtraction returns the same V0 of T.Abs(left - right) (locked
+			// in #52). The overload-typed operator hides the base PhysicalQuantity's plain
+			// subtraction so overloads stay in their own type and the magnitude invariant
+			// is preserved.
+			if (vectorForm == 0)
 			{
 				cls.Members.Add(new MethodTemplate()
 				{
-					Comments = [$"/// <summary>Subtracts two {typeName} values, returning a signed {v1TypeName} result.</summary>"],
+					Comments = [$"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.</summary>"],
 					Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
-					Keywords = ["public", "static", $"{v1TypeName}<T>"],
+					Keywords = ["public", "static", fullType],
 					Name = "operator -",
 					Parameters =
 					[
 						new ParameterTemplate { Type = fullType, Name = "left" },
 						new ParameterTemplate { Type = fullType, Name = "right" },
 					],
-					BodyFactory = (body) => body.Write($" => {v1TypeName}<T>.Create(left.Quantity - right.Quantity);"),
+					BodyFactory = (body) => body.Write(" => Create(T.Abs(left.Quantity - right.Quantity));"),
 				});
 			}
 

@@ -22,7 +22,34 @@ public record Energy<T> : PhysicalQuantity<Energy<T>, T>, IVector0<Energy<T>, T>
 	/// </summary>
 	/// <param name="value">The value in Joule.</param>
 	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
-	public static Energy<T> FromJoule(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Energy<T> FromJoule(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Energy{T}"/> from a value in ElectronVolt.
+	/// </summary>
+	/// <param name="value">The value in ElectronVolt.</param>
+	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Energy<T> FromElectronVolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ElectronVoltToJoules)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Energy{T}"/> from a value in Calorie.
+	/// </summary>
+	/// <param name="value">The value in Calorie.</param>
+	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Energy<T> FromCalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CalorieToJoules)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Energy{T}"/> from a value in KilowattHour.
+	/// </summary>
+	/// <param name="value">The value in KilowattHour.</param>
+	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Energy<T> FromKilowattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
+/// <summary>
+	/// Subtracts two Energy values, returning the absolute difference as a non-negative Energy.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Energy<T> operator -(Energy<T> left, Energy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides Energy by Angle to produce TorqueMagnitude.
 	/// </summary>

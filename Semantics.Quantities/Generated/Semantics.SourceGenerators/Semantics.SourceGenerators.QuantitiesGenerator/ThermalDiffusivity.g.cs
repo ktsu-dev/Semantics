@@ -18,13 +18,27 @@ public record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static ThermalDiffusivity<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new ThermalDiffusivity from a value in SquareMeterPerSecond.</summary>
-	public static ThermalDiffusivity<T> FromSquareMeterPerSecond(T value) => Create(value);
+	/// <summary>
+	/// Creates a new ThermalDiffusivity from a value in SquareMeterPerSecond.
+	/// </summary>
+	/// <param name="value">The value in SquareMeterPerSecond.</param>
+	/// <returns>A new ThermalDiffusivity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ThermalDiffusivity<T> FromSquareMeterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new ThermalDiffusivity from a value in Stokes.
+	/// </summary>
+	/// <param name="value">The value in Stokes.</param>
+	/// <returns>A new ThermalDiffusivity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ThermalDiffusivity<T> FromStokes(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.StokesToSquareMeterPerSecond)), nameof(value)));
 /// <summary>Implicit conversion to KinematicViscosity.</summary>
 	public static implicit operator KinematicViscosity<T>(ThermalDiffusivity<T> value) => KinematicViscosity<T>.Create(value.Value);
 /// <summary>Explicit conversion from KinematicViscosity.</summary>
 	public static explicit operator ThermalDiffusivity<T>(KinematicViscosity<T> value) => Create(value.Value);
 /// <summary>Creates a ThermalDiffusivity from a KinematicViscosity value.</summary>
 	public static ThermalDiffusivity<T> From(KinematicViscosity<T> value) => Create(value.Value);
+/// <summary>Subtracts two ThermalDiffusivity values, returning the absolute difference as a non-negative ThermalDiffusivity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ThermalDiffusivity<T> operator -(ThermalDiffusivity<T> left, ThermalDiffusivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

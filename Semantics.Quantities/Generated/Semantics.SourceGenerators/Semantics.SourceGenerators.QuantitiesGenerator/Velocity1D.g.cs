@@ -24,6 +24,18 @@ public record Velocity1D<T> : PhysicalQuantity<Velocity1D<T>, T>, IVector1<Veloc
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
 	public static Velocity1D<T> FromMetersPerSecond(T value) => Create(value);
 /// <summary>
+	/// Creates a new <see cref="Velocity1D{T}"/> from a value in KilometersPerHour.
+	/// </summary>
+	/// <param name="value">The value in KilometersPerHour.</param>
+	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
+	public static Velocity1D<T> FromKilometersPerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.KilometersPerHourToMetersPerSecond)));
+/// <summary>
+	/// Creates a new <see cref="Velocity1D{T}"/> from a value in MilesPerHour.
+	/// </summary>
+	/// <param name="value">The value in MilesPerHour.</param>
+	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
+	public static Velocity1D<T> FromMilesPerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)));
+/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Speed{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>

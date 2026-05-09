@@ -18,13 +18,20 @@ public record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>, IVecto
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static EnzymeActivity<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new EnzymeActivity from a value in Katal.</summary>
-	public static EnzymeActivity<T> FromKatal(T value) => Create(value);
+	/// <summary>
+	/// Creates a new EnzymeActivity from a value in Katal.
+	/// </summary>
+	/// <param name="value">The value in Katal.</param>
+	/// <returns>A new EnzymeActivity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static EnzymeActivity<T> FromKatal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to CatalyticActivity.</summary>
 	public static implicit operator CatalyticActivity<T>(EnzymeActivity<T> value) => CatalyticActivity<T>.Create(value.Value);
 /// <summary>Explicit conversion from CatalyticActivity.</summary>
 	public static explicit operator EnzymeActivity<T>(CatalyticActivity<T> value) => Create(value.Value);
 /// <summary>Creates a EnzymeActivity from a CatalyticActivity value.</summary>
 	public static EnzymeActivity<T> From(CatalyticActivity<T> value) => Create(value.Value);
+/// <summary>Subtracts two EnzymeActivity values, returning the absolute difference as a non-negative EnzymeActivity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static EnzymeActivity<T> operator -(EnzymeActivity<T> left, EnzymeActivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

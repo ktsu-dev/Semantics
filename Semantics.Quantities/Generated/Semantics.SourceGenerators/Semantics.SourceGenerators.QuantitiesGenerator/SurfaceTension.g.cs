@@ -22,7 +22,13 @@ public record SurfaceTension<T> : PhysicalQuantity<SurfaceTension<T>, T>, IVecto
 	/// </summary>
 	/// <param name="value">The value in NewtonPerMeter.</param>
 	/// <returns>A new <see cref="SurfaceTension{T}"/> instance.</returns>
-	public static SurfaceTension<T> FromNewtonPerMeter(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SurfaceTension<T> FromNewtonPerMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two SurfaceTension values, returning the absolute difference as a non-negative SurfaceTension.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SurfaceTension<T> operator -(SurfaceTension<T> left, SurfaceTension<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies SurfaceTension by Length to produce ForceMagnitude.
 	/// </summary>

@@ -18,15 +18,34 @@ public record RefractiveIndex<T> : PhysicalQuantity<RefractiveIndex<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static RefractiveIndex<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new RefractiveIndex from a value in Dimensionless.</summary>
-	public static RefractiveIndex<T> FromDimensionless(T value) => Create(value);
+	/// <summary>
+	/// Creates a new RefractiveIndex from a value in Dimensionless.
+	/// </summary>
+	/// <param name="value">The value in Dimensionless.</param>
+	/// <returns>A new RefractiveIndex instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static RefractiveIndex<T> FromDimensionless(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new RefractiveIndex from a value in Radian.
+	/// </summary>
+	/// <param name="value">The value in Radian.</param>
+	/// <returns>A new RefractiveIndex instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static RefractiveIndex<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new RefractiveIndex from a value in Degree.
+	/// </summary>
+	/// <param name="value">The value in Degree.</param>
+	/// <returns>A new RefractiveIndex instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static RefractiveIndex<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>Implicit conversion to Ratio.</summary>
 	public static implicit operator Ratio<T>(RefractiveIndex<T> value) => Ratio<T>.Create(value.Value);
 /// <summary>Explicit conversion from Ratio.</summary>
 	public static explicit operator RefractiveIndex<T>(Ratio<T> value) => Create(value.Value);
 /// <summary>Creates a RefractiveIndex from a Ratio value.</summary>
 	public static RefractiveIndex<T> From(Ratio<T> value) => Create(value.Value);
-/// <summary>Subtracts two RefractiveIndex values, returning a signed SignedRatio result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedRatio<T> operator -(RefractiveIndex<T> left, RefractiveIndex<T> right) => SignedRatio<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two RefractiveIndex values, returning the absolute difference as a non-negative RefractiveIndex.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static RefractiveIndex<T> operator -(RefractiveIndex<T> left, RefractiveIndex<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

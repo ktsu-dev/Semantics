@@ -18,13 +18,34 @@ public record CrossSectionalArea<T> : PhysicalQuantity<CrossSectionalArea<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static CrossSectionalArea<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new CrossSectionalArea from a value in SquareMeter.</summary>
-	public static CrossSectionalArea<T> FromSquareMeter(T value) => Create(value);
+	/// <summary>
+	/// Creates a new CrossSectionalArea from a value in SquareMeter.
+	/// </summary>
+	/// <param name="value">The value in SquareMeter.</param>
+	/// <returns>A new CrossSectionalArea instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static CrossSectionalArea<T> FromSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new CrossSectionalArea from a value in SquareFoot.
+	/// </summary>
+	/// <param name="value">The value in SquareFoot.</param>
+	/// <returns>A new CrossSectionalArea instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static CrossSectionalArea<T> FromSquareFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new CrossSectionalArea from a value in SquareInch.
+	/// </summary>
+	/// <param name="value">The value in SquareInch.</param>
+	/// <returns>A new CrossSectionalArea instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static CrossSectionalArea<T> FromSquareInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
 /// <summary>Implicit conversion to Area.</summary>
 	public static implicit operator Area<T>(CrossSectionalArea<T> value) => Area<T>.Create(value.Value);
 /// <summary>Explicit conversion from Area.</summary>
 	public static explicit operator CrossSectionalArea<T>(Area<T> value) => Create(value.Value);
 /// <summary>Creates a CrossSectionalArea from a Area value.</summary>
 	public static CrossSectionalArea<T> From(Area<T> value) => Create(value.Value);
+/// <summary>Subtracts two CrossSectionalArea values, returning the absolute difference as a non-negative CrossSectionalArea.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static CrossSectionalArea<T> operator -(CrossSectionalArea<T> left, CrossSectionalArea<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 
