@@ -354,7 +354,6 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		VectorFormDefinition v0 = dim.Quantities.Vector0!;
 		string typeName = v0.Base;
 		string fullType = $"{typeName}<T>";
-		string? v1TypeName = dim.Quantities.Vector1?.Base;
 
 		using CodeBlocker cb = CodeBlocker.Create();
 
@@ -389,7 +388,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			Name = "Zero => Create(T.Zero)",
 		});
 
-		// Factory methods from available units
+		// Factory methods from available units. The body wraps Create(...) with
+		// Vector0Guards.EnsureNonNegative so a negative input throws ArgumentException —
+		// the V0 non-negativity invariant locked in #50.
 		if (dim.AvailableUnits.Count > 0)
 		{
 			string firstUnit = dim.AvailableUnits[0];
@@ -402,36 +403,38 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 					"/// </summary>",
 					$"/// <param name=\"value\">The value in {firstUnit}.</param>",
 					$"/// <returns>A new <see cref=\"{typeName}{{T}}\"/> instance.</returns>",
+					"/// <exception cref=\"System.ArgumentException\">Thrown when the resulting magnitude would be negative.</exception>",
 				],
 				Keywords = ["public", "static", fullType],
 				Name = $"From{firstUnit}",
 				Parameters = [new ParameterTemplate { Type = "T", Name = "value" }],
-				BodyFactory = (body) => body.Write(" => Create(value);"),
+				BodyFactory = (body) => body.Write(" => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));"),
 			});
 		}
 
-		// V0 subtraction hiding: returns V1 if V1 exists for this dimension
-		if (v1TypeName != null)
+		// V0 - V0 returns the same V0 of T.Abs(left - right) (locked decision in #52).
+		// We emit this on every V0 base type so the derived operator wins overload resolution
+		// over PhysicalQuantity's plain subtraction (which can produce a negative magnitude
+		// and would trip the non-negativity guard from #50).
+		cls.Members.Add(new MethodTemplate()
 		{
-			cls.Members.Add(new MethodTemplate()
-			{
-				Comments =
-				[
-					"/// <summary>",
-					$"/// Subtracts two {typeName} values, returning a signed {v1TypeName} result.",
-					"/// </summary>",
-				],
-				Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
-				Keywords = ["public", "static", $"{v1TypeName}<T>"],
-				Name = "operator -",
-				Parameters =
-				[
-					new ParameterTemplate { Type = fullType, Name = "left" },
-					new ParameterTemplate { Type = fullType, Name = "right" },
-				],
-				BodyFactory = (body) => body.Write($" => {v1TypeName}<T>.Create(left.Quantity - right.Quantity);"),
-			});
-		}
+			Comments =
+			[
+				"/// <summary>",
+				$"/// Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.",
+				"/// Magnitude subtraction stays a magnitude (per the unified-vector model).",
+				"/// </summary>",
+			],
+			Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
+			Keywords = ["public", "static", fullType],
+			Name = "operator -",
+			Parameters =
+			[
+				new ParameterTemplate { Type = fullType, Name = "left" },
+				new ParameterTemplate { Type = fullType, Name = "right" },
+			],
+			BodyFactory = (body) => body.Write(" => Create(T.Abs(left.Quantity - right.Quantity));"),
+		});
 
 		// Cross-dimensional operators
 		EmitScalarOperators(cls, typeName, operatorsByOwner, typeFormMap);
@@ -636,7 +639,6 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		string typeName = overload.Name;
 		string fullType = $"{typeName}<T>";
 		string baseFullType = $"{baseTypeName}<T>";
-		string? v1TypeName = dim.Quantities.Vector1?.Base;
 
 		// V0/V1 overloads inherit from PhysicalQuantity
 		if (vectorForm <= 1)
@@ -677,17 +679,21 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				Name = "Zero => Create(T.Zero)",
 			});
 
-			// Factory methods
+			// Factory methods. V0 overloads enforce the same non-negativity invariant as
+			// their V0 base type (#50); V1 overloads accept any sign.
 			if (dim.AvailableUnits.Count > 0)
 			{
 				string firstUnit = dim.AvailableUnits[0];
+				string body = vectorForm == 0
+					? " => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));"
+					: " => Create(value);";
 				cls.Members.Add(new MethodTemplate()
 				{
 					Comments = [$"/// <summary>Creates a new {typeName} from a value in {firstUnit}.</summary>"],
 					Keywords = ["public", "static", fullType],
 					Name = $"From{firstUnit}",
 					Parameters = [new ParameterTemplate { Type = "T", Name = "value" }],
-					BodyFactory = (body) => body.Write(" => Create(value);"),
+					BodyFactory = (b) => b.Write(body),
 				});
 			}
 
@@ -721,21 +727,24 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				BodyFactory = (body) => body.Write(" => Create(value.Value);"),
 			});
 
-			// V0 overload subtraction hiding (returns V1 base if exists)
-			if (vectorForm == 0 && v1TypeName != null)
+			// V0 overload subtraction returns the same V0 of T.Abs(left - right) (locked
+			// in #52). The overload-typed operator hides the base PhysicalQuantity's plain
+			// subtraction so overloads stay in their own type and the magnitude invariant
+			// is preserved.
+			if (vectorForm == 0)
 			{
 				cls.Members.Add(new MethodTemplate()
 				{
-					Comments = [$"/// <summary>Subtracts two {typeName} values, returning a signed {v1TypeName} result.</summary>"],
+					Comments = [$"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.</summary>"],
 					Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
-					Keywords = ["public", "static", $"{v1TypeName}<T>"],
+					Keywords = ["public", "static", fullType],
 					Name = "operator -",
 					Parameters =
 					[
 						new ParameterTemplate { Type = fullType, Name = "left" },
 						new ParameterTemplate { Type = fullType, Name = "right" },
 					],
-					BodyFactory = (body) => body.Write($" => {v1TypeName}<T>.Create(left.Quantity - right.Quantity);"),
+					BodyFactory = (body) => body.Write(" => Create(T.Abs(left.Quantity - right.Quantity));"),
 				});
 			}
 
