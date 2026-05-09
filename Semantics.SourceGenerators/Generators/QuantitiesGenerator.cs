@@ -21,6 +21,14 @@ using Semantics.SourceGenerators.Templates;
 [Generator]
 public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 {
+	private static readonly DiagnosticDescriptor UnknownDimensionReference = new(
+		id: "SEM001",
+		title: "Unknown dimension reference in physics relationship",
+		messageFormat: "Dimension '{0}' references unknown dimension '{1}' in {2}; the operator will not be generated. Check spelling and that the referenced dimension exists in dimensions.json.",
+		category: "Semantics.SourceGenerators",
+		defaultSeverity: DiagnosticSeverity.Warning,
+		isEnabledByDefault: true);
+
 	public QuantitiesGenerator() : base("dimensions.json") { }
 
 	/// <summary>
@@ -96,8 +104,8 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		// Phase A: Build maps and collect operators
 		Dictionary<string, PhysicalDimension> dimensionMap = BuildDimensionMap(metadata);
 		Dictionary<string, int> typeFormMap = BuildTypeFormMap(metadata);
-		List<OperatorInfo> allOperators = CollectAllOperators(metadata, dimensionMap);
-		List<ProductInfo> allProducts = CollectAllProducts(metadata, dimensionMap);
+		List<OperatorInfo> allOperators = CollectAllOperators(context, metadata, dimensionMap);
+		List<ProductInfo> allProducts = CollectAllProducts(context, metadata, dimensionMap);
 		Dictionary<string, List<OperatorInfo>> operatorsByOwner = GroupBy(allOperators, o => o.OwnerTypeName);
 		Dictionary<string, List<ProductInfo>> productsByOwner = GroupBy(allProducts, p => p.SelfTypeName);
 
@@ -176,7 +184,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		return map;
 	}
 
-	private static List<OperatorInfo> CollectAllOperators(DimensionsMetadata metadata, Dictionary<string, PhysicalDimension> dimMap)
+	private static List<OperatorInfo> CollectAllOperators(SourceProductionContext context, DimensionsMetadata metadata, Dictionary<string, PhysicalDimension> dimMap)
 	{
 		HashSet<string> seen = [];
 		List<OperatorInfo> result = [];
@@ -188,11 +196,13 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			{
 				if (!dimMap.TryGetValue(integral.Other, out PhysicalDimension? otherDim))
 				{
+					ReportUnknownReference(context, dim.Name, integral.Other, $"integrals[{integral.Other} -> {integral.Result}].other");
 					continue;
 				}
 
 				if (!dimMap.TryGetValue(integral.Result, out PhysicalDimension? resultDim))
 				{
+					ReportUnknownReference(context, dim.Name, integral.Result, $"integrals[{integral.Other} -> {integral.Result}].result");
 					continue;
 				}
 
@@ -232,11 +242,13 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			{
 				if (!dimMap.TryGetValue(derivative.Other, out PhysicalDimension? otherDim))
 				{
+					ReportUnknownReference(context, dim.Name, derivative.Other, $"derivatives[{derivative.Other} -> {derivative.Result}].other");
 					continue;
 				}
 
 				if (!dimMap.TryGetValue(derivative.Result, out PhysicalDimension? resultDim))
 				{
+					ReportUnknownReference(context, dim.Name, derivative.Result, $"derivatives[{derivative.Other} -> {derivative.Result}].result");
 					continue;
 				}
 
@@ -269,7 +281,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		return result;
 	}
 
-	private static List<ProductInfo> CollectAllProducts(DimensionsMetadata metadata, Dictionary<string, PhysicalDimension> dimMap)
+	private static List<ProductInfo> CollectAllProducts(SourceProductionContext context, DimensionsMetadata metadata, Dictionary<string, PhysicalDimension> dimMap)
 	{
 		HashSet<string> seen = [];
 		List<ProductInfo> result = [];
@@ -281,11 +293,13 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			{
 				if (!dimMap.TryGetValue(dot.Other, out PhysicalDimension? otherDim))
 				{
+					ReportUnknownReference(context, dim.Name, dot.Other, $"dotProducts[{dot.Other} -> {dot.Result}].other");
 					continue;
 				}
 
 				if (!dimMap.TryGetValue(dot.Result, out PhysicalDimension? resultDim))
 				{
+					ReportUnknownReference(context, dim.Name, dot.Result, $"dotProducts[{dot.Other} -> {dot.Result}].result");
 					continue;
 				}
 
@@ -319,11 +333,13 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			{
 				if (!dimMap.TryGetValue(cross.Other, out PhysicalDimension? otherDim))
 				{
+					ReportUnknownReference(context, dim.Name, cross.Other, $"crossProducts[{cross.Other} -> {cross.Result}].other");
 					continue;
 				}
 
 				if (!dimMap.TryGetValue(cross.Result, out PhysicalDimension? resultDim))
 				{
+					ReportUnknownReference(context, dim.Name, cross.Result, $"crossProducts[{cross.Other} -> {cross.Result}].result");
 					continue;
 				}
 
@@ -359,6 +375,16 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		{
 			list.Add(new OperatorInfo(op, left, right, ret, owner));
 		}
+	}
+
+	private static void ReportUnknownReference(SourceProductionContext context, string owningDimension, string unknownReference, string fieldPath)
+	{
+		context.ReportDiagnostic(Diagnostic.Create(
+			UnknownDimensionReference,
+			Location.None,
+			owningDimension,
+			unknownReference,
+			fieldPath));
 	}
 
 	private static Dictionary<string, UnitDefinition> BuildUnitMap(UnitsMetadata units)
