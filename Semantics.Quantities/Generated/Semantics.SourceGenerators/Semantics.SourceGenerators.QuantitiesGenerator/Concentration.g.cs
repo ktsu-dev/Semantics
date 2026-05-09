@@ -22,7 +22,13 @@ public record Concentration<T> : PhysicalQuantity<Concentration<T>, T>, IVector0
 	/// </summary>
 	/// <param name="value">The value in Molar.</param>
 	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
-	public static Concentration<T> FromMolar(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Concentration<T> FromMolar(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two Concentration values, returning the absolute difference as a non-negative Concentration.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Concentration<T> operator -(Concentration<T> left, Concentration<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies Concentration by Volume to produce AmountOfSubstance.
 	/// </summary>

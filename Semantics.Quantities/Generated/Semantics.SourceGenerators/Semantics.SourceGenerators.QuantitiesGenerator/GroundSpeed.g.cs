@@ -19,14 +19,14 @@ public record GroundSpeed<T> : PhysicalQuantity<GroundSpeed<T>, T>, IVector0<Gro
 	public static GroundSpeed<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new GroundSpeed from a value in MetersPerSecond.</summary>
-	public static GroundSpeed<T> FromMetersPerSecond(T value) => Create(value);
+	public static GroundSpeed<T> FromMetersPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Speed.</summary>
 	public static implicit operator Speed<T>(GroundSpeed<T> value) => Speed<T>.Create(value.Value);
 /// <summary>Explicit conversion from Speed.</summary>
 	public static explicit operator GroundSpeed<T>(Speed<T> value) => Create(value.Value);
 /// <summary>Creates a GroundSpeed from a Speed value.</summary>
 	public static GroundSpeed<T> From(Speed<T> value) => Create(value.Value);
-/// <summary>Subtracts two GroundSpeed values, returning a signed Velocity1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Velocity1D<T> operator -(GroundSpeed<T> left, GroundSpeed<T> right) => Velocity1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two GroundSpeed values, returning the absolute difference as a non-negative GroundSpeed.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static GroundSpeed<T> operator -(GroundSpeed<T> left, GroundSpeed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

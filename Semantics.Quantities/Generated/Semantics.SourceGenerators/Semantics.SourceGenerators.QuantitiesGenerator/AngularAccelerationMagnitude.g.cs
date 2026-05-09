@@ -22,11 +22,13 @@ public record AngularAccelerationMagnitude<T> : PhysicalQuantity<AngularAccelera
 	/// </summary>
 	/// <param name="value">The value in RadiansPerSecondSquared.</param>
 	/// <returns>A new <see cref="AngularAccelerationMagnitude{T}"/> instance.</returns>
-	public static AngularAccelerationMagnitude<T> FromRadiansPerSecondSquared(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AngularAccelerationMagnitude<T> FromRadiansPerSecondSquared(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two AngularAccelerationMagnitude values, returning a signed AngularAcceleration1D result.
+	/// Subtracts two AngularAccelerationMagnitude values, returning the absolute difference as a non-negative AngularAccelerationMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularAcceleration1D<T> operator -(AngularAccelerationMagnitude<T> left, AngularAccelerationMagnitude<T> right) => AngularAcceleration1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularAccelerationMagnitude<T> operator -(AngularAccelerationMagnitude<T> left, AngularAccelerationMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies AngularAccelerationMagnitude by Duration to produce AngularSpeed.
 	/// </summary>

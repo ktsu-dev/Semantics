@@ -19,14 +19,14 @@ public record SoundSpeed<T> : PhysicalQuantity<SoundSpeed<T>, T>, IVector0<Sound
 	public static SoundSpeed<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new SoundSpeed from a value in MetersPerSecond.</summary>
-	public static SoundSpeed<T> FromMetersPerSecond(T value) => Create(value);
+	public static SoundSpeed<T> FromMetersPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Speed.</summary>
 	public static implicit operator Speed<T>(SoundSpeed<T> value) => Speed<T>.Create(value.Value);
 /// <summary>Explicit conversion from Speed.</summary>
 	public static explicit operator SoundSpeed<T>(Speed<T> value) => Create(value.Value);
 /// <summary>Creates a SoundSpeed from a Speed value.</summary>
 	public static SoundSpeed<T> From(Speed<T> value) => Create(value.Value);
-/// <summary>Subtracts two SoundSpeed values, returning a signed Velocity1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Velocity1D<T> operator -(SoundSpeed<T> left, SoundSpeed<T> right) => Velocity1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two SoundSpeed values, returning the absolute difference as a non-negative SoundSpeed.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SoundSpeed<T> operator -(SoundSpeed<T> left, SoundSpeed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

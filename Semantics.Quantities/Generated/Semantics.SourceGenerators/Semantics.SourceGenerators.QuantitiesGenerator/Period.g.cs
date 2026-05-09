@@ -19,12 +19,14 @@ public record Period<T> : PhysicalQuantity<Period<T>, T>, IVector0<Period<T>, T>
 	public static Period<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Period from a value in Second.</summary>
-	public static Period<T> FromSecond(T value) => Create(value);
+	public static Period<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(Period<T> value) => Duration<T>.Create(value.Value);
 /// <summary>Explicit conversion from Duration.</summary>
 	public static explicit operator Period<T>(Duration<T> value) => Create(value.Value);
 /// <summary>Creates a Period from a Duration value.</summary>
 	public static Period<T> From(Duration<T> value) => Create(value.Value);
+/// <summary>Subtracts two Period values, returning the absolute difference as a non-negative Period.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Period<T> operator -(Period<T> left, Period<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

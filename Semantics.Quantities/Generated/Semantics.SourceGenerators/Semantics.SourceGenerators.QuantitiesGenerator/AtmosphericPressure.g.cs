@@ -19,12 +19,14 @@ public record AtmosphericPressure<T> : PhysicalQuantity<AtmosphericPressure<T>, 
 	public static AtmosphericPressure<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new AtmosphericPressure from a value in Pascal.</summary>
-	public static AtmosphericPressure<T> FromPascal(T value) => Create(value);
+	public static AtmosphericPressure<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Pressure.</summary>
 	public static implicit operator Pressure<T>(AtmosphericPressure<T> value) => Pressure<T>.Create(value.Value);
 /// <summary>Explicit conversion from Pressure.</summary>
 	public static explicit operator AtmosphericPressure<T>(Pressure<T> value) => Create(value.Value);
 /// <summary>Creates a AtmosphericPressure from a Pressure value.</summary>
 	public static AtmosphericPressure<T> From(Pressure<T> value) => Create(value.Value);
+/// <summary>Subtracts two AtmosphericPressure values, returning the absolute difference as a non-negative AtmosphericPressure.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AtmosphericPressure<T> operator -(AtmosphericPressure<T> left, AtmosphericPressure<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

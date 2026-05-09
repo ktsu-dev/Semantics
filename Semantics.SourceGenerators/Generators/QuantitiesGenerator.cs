@@ -28,6 +28,14 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true);
 
+	private static readonly DiagnosticDescriptor MetadataValidationFailed = new(
+		id: "SEM002",
+		title: "dimensions.json metadata validation failed",
+		messageFormat: "dimensions.json validation issue: {0}",
+		category: "Semantics.SourceGenerators",
+		defaultSeverity: DiagnosticSeverity.Warning,
+		isEnabledByDefault: true);
+
 	public QuantitiesGenerator() : base("dimensions.json") { }
 
 	protected override void Generate(SourceProductionContext context, DimensionsMetadata metadata, CodeBlocker codeBlocker)
@@ -35,6 +43,17 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		if (metadata.PhysicalDimensions == null || metadata.PhysicalDimensions.Count == 0)
 		{
 			return;
+		}
+
+		// Issue #60: surface schema-level metadata problems as diagnostics so they
+		// show up in the build log instead of crashing mid-emit.
+		List<string> validationIssues = metadata.Validate();
+		foreach (string issue in validationIssues)
+		{
+			context.ReportDiagnostic(Diagnostic.Create(
+				MetadataValidationFailed,
+				Location.None,
+				issue));
 		}
 
 		// Phase A: Build maps and collect operators

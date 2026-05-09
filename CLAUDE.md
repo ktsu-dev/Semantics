@@ -51,19 +51,25 @@ These are now baked into the generator and enforced by tests. **Do not reopen wi
 1. **`V0 - V0` returns the same `V0` of `T.Abs(a - b)`.** Magnitude subtraction stays non-negative; signed subtraction must use the V1 form explicitly.
 2. **Dimensionless and angular quantities have both `Ratio` (V0) and `SignedRatio` (V1) bases.** Ratios that semantically must be non-negative (e.g. `RefractiveIndex`, `MachNumber`, `SpecificGravity`) are V0 overloads of `Ratio`.
 3. **Semantic overloads widen implicitly to their base, narrow explicitly from it.** A `Weight` is implicitly a `ForceMagnitude`; the reverse requires `Weight.From(forceMagnitude)` or an explicit cast.
-4. **Physical constraints come from per-dimension metadata.** Floors like absolute zero or non-negative frequency are declared in `dimensions.json` and the generator emits `ArgumentException`-throwing guards inside the `Create`/`From*` factories.
+4. **Physical constraints are enforced structurally via the V0 (magnitude) form.** `Vector0` factories run `Vector0Guards.EnsureNonNegative` and throw `ArgumentException` on a negative value. That covers absolute zero (Temperature is V0, so Kelvin must be ≥ 0), non-negative frequency, non-negative absolute pressure, etc. Strict-positive or upper-bound constraints are not yet declared in metadata (tracked separately).
 
 ### Physical constants
 
-`PhysicalConstants` is **generated** from `dimensions.json` (and a constants fixture). Public surface:
+`PhysicalConstants` is **generated** from `domains.json`. Public surface:
 
 ```csharp
+// Domain-grouped PreciseNumber values:
+PhysicalConstants.Fundamental.SpeedOfLight
+PhysicalConstants.Fundamental.PlanckConstant
+PhysicalConstants.AngularMechanics.DegreesPerRadian
+
+// Generic accessors that materialise into any T : INumber<T>:
 PhysicalConstants.Generic.SpeedOfLight<T>()
 PhysicalConstants.Generic.PlanckConstant<T>()
-PhysicalConstants.Conversion.FeetToMeters<T>()
+PhysicalConstants.Generic.DegreesPerRadian<T>()
 ```
 
-Use these accessors instead of hard-coded numerics. Backing values are stored as `PreciseNumber` and converted with `T.CreateChecked` per call.
+Backing values are stored as `PreciseNumber` and converted with `T.CreateChecked` per call.
 
 ### Operators and physics relationships
 
@@ -139,6 +145,9 @@ var converted = sourceString.As<SourceType, TargetType>();
 - Edit `Semantics.SourceGenerators/Metadata/dimensions.json` to add a dimension, vector form, semantic overload, or relationship.
 - Rebuild `Semantics.SourceGenerators` and the consuming `Semantics.Quantities` project; emitted files appear in `Semantics.Quantities/Generated/Semantics.SourceGenerators/<GeneratorName>/`.
 - Treat generator output as committed source. Diff it before commit so accidental regressions are visible.
+- Generator diagnostics:
+  - **SEM001** — a relationship in `dimensions.json` references a dimension that does not exist (typo or rename). The operator is silently dropped.
+  - **SEM002** — schema-level validation issue (missing `name`/`symbol`, empty `availableUnits`, duplicate type names, no vector forms declared).
 - See `docs/physics-generator.md` for the full schema and an end-to-end "add a dimension" walk-through.
 
 This file is the entry point. For deeper material:

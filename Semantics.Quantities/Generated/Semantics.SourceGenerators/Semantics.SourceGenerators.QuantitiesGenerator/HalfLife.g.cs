@@ -19,12 +19,14 @@ public record HalfLife<T> : PhysicalQuantity<HalfLife<T>, T>, IVector0<HalfLife<
 	public static HalfLife<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new HalfLife from a value in Second.</summary>
-	public static HalfLife<T> FromSecond(T value) => Create(value);
+	public static HalfLife<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(HalfLife<T> value) => Duration<T>.Create(value.Value);
 /// <summary>Explicit conversion from Duration.</summary>
 	public static explicit operator HalfLife<T>(Duration<T> value) => Create(value.Value);
 /// <summary>Creates a HalfLife from a Duration value.</summary>
 	public static HalfLife<T> From(Duration<T> value) => Create(value.Value);
+/// <summary>Subtracts two HalfLife values, returning the absolute difference as a non-negative HalfLife.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static HalfLife<T> operator -(HalfLife<T> left, HalfLife<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

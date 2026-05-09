@@ -22,11 +22,13 @@ public record AccelerationMagnitude<T> : PhysicalQuantity<AccelerationMagnitude<
 	/// </summary>
 	/// <param name="value">The value in MetersPerSecondSquared.</param>
 	/// <returns>A new <see cref="AccelerationMagnitude{T}"/> instance.</returns>
-	public static AccelerationMagnitude<T> FromMetersPerSecondSquared(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AccelerationMagnitude<T> FromMetersPerSecondSquared(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two AccelerationMagnitude values, returning a signed Acceleration1D result.
+	/// Subtracts two AccelerationMagnitude values, returning the absolute difference as a non-negative AccelerationMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Acceleration1D<T> operator -(AccelerationMagnitude<T> left, AccelerationMagnitude<T> right) => Acceleration1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AccelerationMagnitude<T> operator -(AccelerationMagnitude<T> left, AccelerationMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies AccelerationMagnitude by Mass to produce ForceMagnitude.
 	/// </summary>

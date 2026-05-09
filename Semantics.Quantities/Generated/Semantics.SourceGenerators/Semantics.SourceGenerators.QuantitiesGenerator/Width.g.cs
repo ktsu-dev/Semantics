@@ -19,14 +19,14 @@ public record Width<T> : PhysicalQuantity<Width<T>, T>, IVector0<Width<T>, T>
 	public static Width<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Width from a value in Meter.</summary>
-	public static Width<T> FromMeter(T value) => Create(value);
+	public static Width<T> FromMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Length.</summary>
 	public static implicit operator Length<T>(Width<T> value) => Length<T>.Create(value.Value);
 /// <summary>Explicit conversion from Length.</summary>
 	public static explicit operator Width<T>(Length<T> value) => Create(value.Value);
 /// <summary>Creates a Width from a Length value.</summary>
 	public static Width<T> From(Length<T> value) => Create(value.Value);
-/// <summary>Subtracts two Width values, returning a signed Displacement1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Displacement1D<T> operator -(Width<T> left, Width<T> right) => Displacement1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Width values, returning the absolute difference as a non-negative Width.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Width<T> operator -(Width<T> left, Width<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

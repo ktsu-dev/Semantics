@@ -22,7 +22,13 @@ public record Density<T> : PhysicalQuantity<Density<T>, T>, IVector0<Density<T>,
 	/// </summary>
 	/// <param name="value">The value in KilogramPerCubicMeter.</param>
 	/// <returns>A new <see cref="Density{T}"/> instance.</returns>
-	public static Density<T> FromKilogramPerCubicMeter(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Density<T> FromKilogramPerCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two Density values, returning the absolute difference as a non-negative Density.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Density<T> operator -(Density<T> left, Density<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies Density by Volume to produce Mass.
 	/// </summary>

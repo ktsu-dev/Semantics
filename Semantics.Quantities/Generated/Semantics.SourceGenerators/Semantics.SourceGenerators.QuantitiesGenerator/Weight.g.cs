@@ -19,14 +19,14 @@ public record Weight<T> : PhysicalQuantity<Weight<T>, T>, IVector0<Weight<T>, T>
 	public static Weight<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Weight from a value in Newton.</summary>
-	public static Weight<T> FromNewton(T value) => Create(value);
+	public static Weight<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Weight<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>
 	public static explicit operator Weight<T>(ForceMagnitude<T> value) => Create(value.Value);
 /// <summary>Creates a Weight from a ForceMagnitude value.</summary>
 	public static Weight<T> From(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two Weight values, returning a signed Force1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Force1D<T> operator -(Weight<T> left, Weight<T> right) => Force1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Weight values, returning the absolute difference as a non-negative Weight.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Weight<T> operator -(Weight<T> left, Weight<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

@@ -19,12 +19,14 @@ public record SpecificEntropy<T> : PhysicalQuantity<SpecificEntropy<T>, T>, IVec
 	public static SpecificEntropy<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new SpecificEntropy from a value in JoulePerKilogramKelvin.</summary>
-	public static SpecificEntropy<T> FromJoulePerKilogramKelvin(T value) => Create(value);
+	public static SpecificEntropy<T> FromJoulePerKilogramKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to SpecificHeat.</summary>
 	public static implicit operator SpecificHeat<T>(SpecificEntropy<T> value) => SpecificHeat<T>.Create(value.Value);
 /// <summary>Explicit conversion from SpecificHeat.</summary>
 	public static explicit operator SpecificEntropy<T>(SpecificHeat<T> value) => Create(value.Value);
 /// <summary>Creates a SpecificEntropy from a SpecificHeat value.</summary>
 	public static SpecificEntropy<T> From(SpecificHeat<T> value) => Create(value.Value);
+/// <summary>Subtracts two SpecificEntropy values, returning the absolute difference as a non-negative SpecificEntropy.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SpecificEntropy<T> operator -(SpecificEntropy<T> left, SpecificEntropy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

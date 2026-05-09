@@ -19,12 +19,14 @@ public record Capacity<T> : PhysicalQuantity<Capacity<T>, T>, IVector0<Capacity<
 	public static Capacity<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Capacity from a value in CubicMeter.</summary>
-	public static Capacity<T> FromCubicMeter(T value) => Create(value);
+	public static Capacity<T> FromCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Volume.</summary>
 	public static implicit operator Volume<T>(Capacity<T> value) => Volume<T>.Create(value.Value);
 /// <summary>Explicit conversion from Volume.</summary>
 	public static explicit operator Capacity<T>(Volume<T> value) => Create(value.Value);
 /// <summary>Creates a Capacity from a Volume value.</summary>
 	public static Capacity<T> From(Volume<T> value) => Create(value.Value);
+/// <summary>Subtracts two Capacity values, returning the absolute difference as a non-negative Capacity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Capacity<T> operator -(Capacity<T> left, Capacity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

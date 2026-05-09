@@ -12,6 +12,112 @@ using System.Collections.Generic;
 public class DimensionsMetadata
 {
 	public List<PhysicalDimension> PhysicalDimensions { get; set; } = [];
+
+	/// <summary>
+	/// Validates the deserialised metadata, returning a list of human-readable issues.
+	/// An empty list means the metadata is well-formed.
+	/// </summary>
+	/// <remarks>
+	/// Per #60: catches malformed entries before they reach the generator emit
+	/// pass, so problems surface as Roslyn diagnostics rather than a mid-emit crash
+	/// or a silently dropped operator. Cross-dimension reference checks are still
+	/// performed in the generator (#56 / SEM001) because they need the full
+	/// dimension map.
+	/// </remarks>
+	public List<string> Validate()
+	{
+		List<string> issues = [];
+
+		if (PhysicalDimensions.Count == 0)
+		{
+			issues.Add("dimensions.json contains no physicalDimensions entries.");
+			return issues;
+		}
+
+		HashSet<string> seenDimensionNames = [];
+		HashSet<string> seenTypeNames = [];
+
+		foreach (PhysicalDimension dim in PhysicalDimensions)
+		{
+			string label = string.IsNullOrEmpty(dim.Name) ? "<unnamed>" : dim.Name;
+
+			if (string.IsNullOrEmpty(dim.Name))
+			{
+				issues.Add("A physicalDimensions entry is missing 'name'.");
+			}
+			else if (!seenDimensionNames.Add(dim.Name))
+			{
+				issues.Add($"Dimension '{dim.Name}' is declared more than once.");
+			}
+
+			if (string.IsNullOrEmpty(dim.Symbol))
+			{
+				issues.Add($"Dimension '{label}' is missing 'symbol'.");
+			}
+
+			if (dim.AvailableUnits.Count == 0)
+			{
+				issues.Add($"Dimension '{label}' has an empty 'availableUnits' list.");
+			}
+			else
+			{
+				foreach (string unit in dim.AvailableUnits)
+				{
+					if (string.IsNullOrWhiteSpace(unit))
+					{
+						issues.Add($"Dimension '{label}' has a blank entry in 'availableUnits'.");
+					}
+				}
+			}
+
+			VectorFormDefinition?[] forms = [
+				dim.Quantities.Vector0,
+				dim.Quantities.Vector1,
+				dim.Quantities.Vector2,
+				dim.Quantities.Vector3,
+				dim.Quantities.Vector4,
+			];
+
+			if (System.Array.TrueForAll(forms, f => f == null))
+			{
+				issues.Add($"Dimension '{label}' declares no vector forms (vector0..vector4).");
+			}
+
+			for (int i = 0; i < forms.Length; i++)
+			{
+				VectorFormDefinition? form = forms[i];
+				if (form == null)
+				{
+					continue;
+				}
+
+				if (string.IsNullOrEmpty(form.Base))
+				{
+					issues.Add($"Dimension '{label}' vector{i} is missing 'base'.");
+				}
+				else if (!seenTypeNames.Add(form.Base))
+				{
+					issues.Add($"Type name '{form.Base}' (dimension '{label}' vector{i}) collides with another base or overload.");
+				}
+
+				foreach (OverloadDefinition overload in form.Overloads)
+				{
+					if (string.IsNullOrEmpty(overload.Name))
+					{
+						issues.Add($"Dimension '{label}' vector{i} has an overload missing 'name'.");
+						continue;
+					}
+
+					if (!seenTypeNames.Add(overload.Name))
+					{
+						issues.Add($"Overload type name '{overload.Name}' (dimension '{label}' vector{i}) collides with another base or overload.");
+					}
+				}
+			}
+		}
+
+		return issues;
+	}
 }
 
 /// <summary>

@@ -19,14 +19,14 @@ public record Thrust<T> : PhysicalQuantity<Thrust<T>, T>, IVector0<Thrust<T>, T>
 	public static Thrust<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Thrust from a value in Newton.</summary>
-	public static Thrust<T> FromNewton(T value) => Create(value);
+	public static Thrust<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Thrust<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>
 	public static explicit operator Thrust<T>(ForceMagnitude<T> value) => Create(value.Value);
 /// <summary>Creates a Thrust from a ForceMagnitude value.</summary>
 	public static Thrust<T> From(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two Thrust values, returning a signed Force1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Force1D<T> operator -(Thrust<T> left, Thrust<T> right) => Force1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Thrust values, returning the absolute difference as a non-negative Thrust.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Thrust<T> operator -(Thrust<T> left, Thrust<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

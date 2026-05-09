@@ -19,14 +19,14 @@ public record Tension<T> : PhysicalQuantity<Tension<T>, T>, IVector0<Tension<T>,
 	public static Tension<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Tension from a value in Newton.</summary>
-	public static Tension<T> FromNewton(T value) => Create(value);
+	public static Tension<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Tension<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>
 	public static explicit operator Tension<T>(ForceMagnitude<T> value) => Create(value.Value);
 /// <summary>Creates a Tension from a ForceMagnitude value.</summary>
 	public static Tension<T> From(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two Tension values, returning a signed Force1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Force1D<T> operator -(Tension<T> left, Tension<T> right) => Force1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Tension values, returning the absolute difference as a non-negative Tension.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Tension<T> operator -(Tension<T> left, Tension<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

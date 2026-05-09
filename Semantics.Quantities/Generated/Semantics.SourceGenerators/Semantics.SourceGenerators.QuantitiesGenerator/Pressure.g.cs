@@ -22,7 +22,13 @@ public record Pressure<T> : PhysicalQuantity<Pressure<T>, T>, IVector0<Pressure<
 	/// </summary>
 	/// <param name="value">The value in Pascal.</param>
 	/// <returns>A new <see cref="Pressure{T}"/> instance.</returns>
-	public static Pressure<T> FromPascal(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Pressure<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two Pressure values, returning the absolute difference as a non-negative Pressure.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Pressure<T> operator -(Pressure<T> left, Pressure<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies Pressure by Area to produce ForceMagnitude.
 	/// </summary>

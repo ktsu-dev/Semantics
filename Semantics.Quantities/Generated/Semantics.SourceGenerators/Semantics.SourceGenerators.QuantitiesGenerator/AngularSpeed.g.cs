@@ -22,11 +22,13 @@ public record AngularSpeed<T> : PhysicalQuantity<AngularSpeed<T>, T>, IVector0<A
 	/// </summary>
 	/// <param name="value">The value in RadiansPerSecond.</param>
 	/// <returns>A new <see cref="AngularSpeed{T}"/> instance.</returns>
-	public static AngularSpeed<T> FromRadiansPerSecond(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AngularSpeed<T> FromRadiansPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two AngularSpeed values, returning a signed AngularVelocity1D result.
+	/// Subtracts two AngularSpeed values, returning the absolute difference as a non-negative AngularSpeed.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularVelocity1D<T> operator -(AngularSpeed<T> left, AngularSpeed<T> right) => AngularVelocity1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularSpeed<T> operator -(AngularSpeed<T> left, AngularSpeed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies AngularSpeed by Duration to produce Angle.
 	/// </summary>

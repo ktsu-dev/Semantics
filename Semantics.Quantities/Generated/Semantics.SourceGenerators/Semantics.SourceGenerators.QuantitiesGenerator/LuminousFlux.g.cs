@@ -22,7 +22,13 @@ public record LuminousFlux<T> : PhysicalQuantity<LuminousFlux<T>, T>, IVector0<L
 	/// </summary>
 	/// <param name="value">The value in Lumen.</param>
 	/// <returns>A new <see cref="LuminousFlux{T}"/> instance.</returns>
-	public static LuminousFlux<T> FromLumen(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static LuminousFlux<T> FromLumen(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two LuminousFlux values, returning the absolute difference as a non-negative LuminousFlux.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static LuminousFlux<T> operator -(LuminousFlux<T> left, LuminousFlux<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides LuminousFlux by Area to produce Illuminance.
 	/// </summary>

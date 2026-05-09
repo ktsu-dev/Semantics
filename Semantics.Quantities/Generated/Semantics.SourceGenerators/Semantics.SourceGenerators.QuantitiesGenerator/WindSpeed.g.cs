@@ -19,14 +19,14 @@ public record WindSpeed<T> : PhysicalQuantity<WindSpeed<T>, T>, IVector0<WindSpe
 	public static WindSpeed<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new WindSpeed from a value in MetersPerSecond.</summary>
-	public static WindSpeed<T> FromMetersPerSecond(T value) => Create(value);
+	public static WindSpeed<T> FromMetersPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Speed.</summary>
 	public static implicit operator Speed<T>(WindSpeed<T> value) => Speed<T>.Create(value.Value);
 /// <summary>Explicit conversion from Speed.</summary>
 	public static explicit operator WindSpeed<T>(Speed<T> value) => Create(value.Value);
 /// <summary>Creates a WindSpeed from a Speed value.</summary>
 	public static WindSpeed<T> From(Speed<T> value) => Create(value.Value);
-/// <summary>Subtracts two WindSpeed values, returning a signed Velocity1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Velocity1D<T> operator -(WindSpeed<T> left, WindSpeed<T> right) => Velocity1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two WindSpeed values, returning the absolute difference as a non-negative WindSpeed.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static WindSpeed<T> operator -(WindSpeed<T> left, WindSpeed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

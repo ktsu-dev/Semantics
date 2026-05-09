@@ -19,12 +19,14 @@ public record TimeConstant<T> : PhysicalQuantity<TimeConstant<T>, T>, IVector0<T
 	public static TimeConstant<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new TimeConstant from a value in Second.</summary>
-	public static TimeConstant<T> FromSecond(T value) => Create(value);
+	public static TimeConstant<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(TimeConstant<T> value) => Duration<T>.Create(value.Value);
 /// <summary>Explicit conversion from Duration.</summary>
 	public static explicit operator TimeConstant<T>(Duration<T> value) => Create(value.Value);
 /// <summary>Creates a TimeConstant from a Duration value.</summary>
 	public static TimeConstant<T> From(Duration<T> value) => Create(value.Value);
+/// <summary>Subtracts two TimeConstant values, returning the absolute difference as a non-negative TimeConstant.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static TimeConstant<T> operator -(TimeConstant<T> left, TimeConstant<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

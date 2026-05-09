@@ -19,12 +19,14 @@ public record ShearModulus<T> : PhysicalQuantity<ShearModulus<T>, T>, IVector0<S
 	public static ShearModulus<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new ShearModulus from a value in Pascal.</summary>
-	public static ShearModulus<T> FromPascal(T value) => Create(value);
+	public static ShearModulus<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Pressure.</summary>
 	public static implicit operator Pressure<T>(ShearModulus<T> value) => Pressure<T>.Create(value.Value);
 /// <summary>Explicit conversion from Pressure.</summary>
 	public static explicit operator ShearModulus<T>(Pressure<T> value) => Create(value.Value);
 /// <summary>Creates a ShearModulus from a Pressure value.</summary>
 	public static ShearModulus<T> From(Pressure<T> value) => Create(value.Value);
+/// <summary>Subtracts two ShearModulus values, returning the absolute difference as a non-negative ShearModulus.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ShearModulus<T> operator -(ShearModulus<T> left, ShearModulus<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

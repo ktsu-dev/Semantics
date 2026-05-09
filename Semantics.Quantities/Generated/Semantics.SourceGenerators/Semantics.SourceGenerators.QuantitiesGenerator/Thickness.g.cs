@@ -19,14 +19,14 @@ public record Thickness<T> : PhysicalQuantity<Thickness<T>, T>, IVector0<Thickne
 	public static Thickness<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Thickness from a value in Meter.</summary>
-	public static Thickness<T> FromMeter(T value) => Create(value);
+	public static Thickness<T> FromMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Length.</summary>
 	public static implicit operator Length<T>(Thickness<T> value) => Length<T>.Create(value.Value);
 /// <summary>Explicit conversion from Length.</summary>
 	public static explicit operator Thickness<T>(Length<T> value) => Create(value.Value);
 /// <summary>Creates a Thickness from a Length value.</summary>
 	public static Thickness<T> From(Length<T> value) => Create(value.Value);
-/// <summary>Subtracts two Thickness values, returning a signed Displacement1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Displacement1D<T> operator -(Thickness<T> left, Thickness<T> right) => Displacement1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Thickness values, returning the absolute difference as a non-negative Thickness.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Thickness<T> operator -(Thickness<T> left, Thickness<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

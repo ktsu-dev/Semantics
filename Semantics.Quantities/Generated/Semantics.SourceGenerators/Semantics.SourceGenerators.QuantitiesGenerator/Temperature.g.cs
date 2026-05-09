@@ -22,11 +22,13 @@ public record Temperature<T> : PhysicalQuantity<Temperature<T>, T>, IVector0<Tem
 	/// </summary>
 	/// <param name="value">The value in Kelvin.</param>
 	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
-	public static Temperature<T> FromKelvin(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Temperature<T> FromKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two Temperature values, returning a signed TemperatureDelta result.
+	/// Subtracts two Temperature values, returning the absolute difference as a non-negative Temperature.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static TemperatureDelta<T> operator -(Temperature<T> left, Temperature<T> right) => TemperatureDelta<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Temperature<T> operator -(Temperature<T> left, Temperature<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies Temperature by Entropy to produce Energy.
 	/// </summary>

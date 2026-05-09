@@ -22,11 +22,13 @@ public record Length<T> : PhysicalQuantity<Length<T>, T>, IVector0<Length<T>, T>
 	/// </summary>
 	/// <param name="value">The value in Meter.</param>
 	/// <returns>A new <see cref="Length{T}"/> instance.</returns>
-	public static Length<T> FromMeter(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Length<T> FromMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two Length values, returning a signed Displacement1D result.
+	/// Subtracts two Length values, returning the absolute difference as a non-negative Length.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Displacement1D<T> operator -(Length<T> left, Length<T> right) => Displacement1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Length<T> operator -(Length<T> left, Length<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies Length by Length to produce Area.
 	/// </summary>

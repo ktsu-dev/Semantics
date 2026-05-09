@@ -19,12 +19,14 @@ public record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>, IVector0<H
 	public static HeatCapacity<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new HeatCapacity from a value in JoulePerKelvin.</summary>
-	public static HeatCapacity<T> FromJoulePerKelvin(T value) => Create(value);
+	public static HeatCapacity<T> FromJoulePerKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Entropy.</summary>
 	public static implicit operator Entropy<T>(HeatCapacity<T> value) => Entropy<T>.Create(value.Value);
 /// <summary>Explicit conversion from Entropy.</summary>
 	public static explicit operator HeatCapacity<T>(Entropy<T> value) => Create(value.Value);
 /// <summary>Creates a HeatCapacity from a Entropy value.</summary>
 	public static HeatCapacity<T> From(Entropy<T> value) => Create(value.Value);
+/// <summary>Subtracts two HeatCapacity values, returning the absolute difference as a non-negative HeatCapacity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static HeatCapacity<T> operator -(HeatCapacity<T> left, HeatCapacity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 
