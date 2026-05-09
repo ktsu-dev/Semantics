@@ -1,125 +1,151 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code working in this repository. Read this together with `docs/strategy-unified-vector-quantities.md` (the architecture spec for the physics system) and `docs/physics-generator.md` (the metadata workflow).
 
-## Build Commands
+## Build commands
 
-This is a .NET C# library project that uses custom MSBuild SDKs from ktsu. Common development commands:
+This is a multi-target .NET library (`net10.0;net9.0;net8.0;net7.0`) using ktsu MSBuild SDKs.
 
 - **Build**: `dotnet build`
-- **Test**: `dotnet test` (runs all unit tests with coverage)
-- **Test (no parallel)**: `dotnet test --logger "console;verbosity=detailed"`
+- **Test**: `dotnet test`
+- **Test (verbose)**: `dotnet test --logger "console;verbosity=detailed"`
 - **Clean**: `dotnet clean`
 - **Restore**: `dotnet restore`
-- **Format**: `dotnet format` (fixes formatting issues like IDE0055)
+- **Format**: `dotnet format`
 
-The project uses MSTest for unit testing with comprehensive coverage across all physics domains.
+Tests use MSTest. Generator output is emitted to `Semantics.Quantities/Generated/` (committed) so the project can be inspected without first running the generator.
 
-## Project Architecture
+## Project layout
 
-### Core Components
+| Project | Responsibility |
+|---|---|
+| `Semantics.Strings` | Strongly-typed string wrappers (`SemanticString<T>`) and validation attributes/strategies. |
+| `Semantics.Paths` | Polymorphic file system path types (`IPath`, `IFilePath`, `IDirectoryPath`, …). |
+| `Semantics.Quantities` | Hand-written runtime types (`PhysicalQuantity<TSelf, T>`, `IVector0`..`IVector4`, `UnitSystem`) plus generator output under `Generated/`. |
+| `Semantics.SourceGenerators` | Roslyn incremental generators that emit quantity types, units, conversions, magnitudes, physical constants, and storage-type helpers from metadata. |
+| `Semantics.Test` | MSTest project covering all of the above. |
 
-**ktsu.Semantics** is a comprehensive .NET library for creating type-safe, validated types with semantic meaning, encompassing three major areas:
+## Physics quantities architecture (the unified vector model)
 
-1. **Semantic Strings** - Strongly-typed string wrappers with validation
-2. **Semantic Paths** - Specialized file system path handling with polymorphic interfaces  
-3. **Physics Quantities System** - Complete physics quantities across 8 scientific domains
+The physics system is **metadata-driven**. The single source of truth is
+`Semantics.SourceGenerators/Metadata/dimensions.json`, which lists every physical dimension and the vector forms it supports.
 
-### Key Architectural Patterns
+Every quantity is a vector. Dimensionality of the *direction space* is part of the type:
 
-- **Bootstrap Architecture**: Resolves circular dependencies between units, dimensions, and constants using `BootstrapUnits` class
-- **Generic Type Safety**: All physics quantities use generic constraints `where T : struct, INumber<T>`
-- **Factory Pattern**: `SemanticStringFactory<T>` for dependency injection scenarios
-- **Polymorphic Path Interfaces**: Rich interface hierarchy (`IPath`, `IFilePath`, `IDirectoryPath`, etc.)
+| Form | Meaning | Sign | Examples |
+|---|---|---|---|
+| `IVector0<TSelf, T>` | Magnitude only | Always `>= 0` | `Speed`, `Mass`, `Energy`, `Distance`, `Area` |
+| `IVector1<TSelf, T>` | Signed 1D | Signed | `Velocity1D`, `Force1D`, `Temperature`, `ElectricCharge` |
+| `IVector2<TSelf, T>` | 2D directional | Per-component | `Velocity2D`, `Force2D`, `Acceleration2D` |
+| `IVector3<TSelf, T>` | 3D directional | Per-component | `Velocity3D`, `Force3D`, `Position3D` |
+| `IVector4<TSelf, T>` | 4D directional | Per-component | (reserved for relativistic / spacetime) |
 
-### Physics System Structure
+`IVectorN.Magnitude()` (for N >= 1) returns the corresponding `IVector0`.
 
-**8 Complete Domains** (80+ quantities total):
-- Mechanics (15): Force, Energy, Power, Pressure, Velocity, etc.
-- Electrical (11): Voltage, Current, Resistance, Capacitance, etc.
-- Thermal (10): Temperature, Heat, Entropy, Thermal Conductivity, etc.
-- Chemical (10): AmountOfSubstance, Concentration, pH, Reaction rates, etc.
-- Acoustic (20): Frequency, Sound pressure/power, Wavelength, etc.
-- Nuclear (5): Radioactive activity, Absorbed dose, Exposure, etc.
-- Optical (6): Luminous flux, Illuminance, Refractive index, etc.
-- Fluid Dynamics (5): Viscosity, Flow rates, Reynolds number, etc.
+All generated types are generic over a numeric storage type: `where T : struct, INumber<T>`.
 
-### Physical Constants System
+### Resolved design decisions
 
-Centralized in `PhysicalConstants` class with type-safe generic access:
-- `PhysicalConstants.Generic.SpeedOfLight<T>()`
-- `PhysicalConstants.Generic.PlanckConstant<T>()`  
-- `PhysicalConstants.Conversion.FeetToMeters<T>()`
+These are now baked into the generator and enforced by tests. **Do not reopen without an architecture discussion.**
 
-All derived constants are validated against fundamental relationships in comprehensive unit tests.
+1. **`V0 - V0` returns the same `V0` of `T.Abs(a - b)`.** Magnitude subtraction stays non-negative; signed subtraction must use the V1 form explicitly.
+2. **Dimensionless and angular quantities have both `Ratio` (V0) and `SignedRatio` (V1) bases.** Ratios that semantically must be non-negative (e.g. `RefractiveIndex`, `MachNumber`, `SpecificGravity`) are V0 overloads of `Ratio`.
+3. **Semantic overloads widen implicitly to their base, narrow explicitly from it.** A `Weight` is implicitly a `ForceMagnitude`; the reverse requires `Weight.From(forceMagnitude)` or an explicit cast.
+4. **Physical constraints come from per-dimension metadata.** Floors like absolute zero or non-negative frequency are declared in `dimensions.json` and the generator emits `ArgumentException`-throwing guards inside the `Create`/`From*` factories.
 
-## Code Standards and Guidelines
+### Physical constants
 
-### File Headers
-Always include this header on new files:
+`PhysicalConstants` is **generated** from `dimensions.json` (and a constants fixture). Public surface:
+
 ```csharp
-// Copyright (c) KTSU. All rights reserved.
+PhysicalConstants.Generic.SpeedOfLight<T>()
+PhysicalConstants.Generic.PlanckConstant<T>()
+PhysicalConstants.Conversion.FeetToMeters<T>()
 ```
 
-### Physics Quantities Standards
-- Use `PhysicalConstants.Generic` methods instead of hardcoded values
-- Implement physics relationships as operators with dimensional analysis
-- Suppress CA2225 warnings for physics operators: 
+Use these accessors instead of hard-coded numerics. Backing values are stored as `PreciseNumber` and converted with `T.CreateChecked` per call.
+
+### Operators and physics relationships
+
+Cross-dimensional relationships are also declared in `dimensions.json` (`integrals`, `derivatives`, `dotProducts`, `crossProducts`). The generator emits operators like:
+
 ```csharp
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "CA2225:Provide named alternates for operator overloads", Justification = "Physics relationship operators represent fundamental equations, not arithmetic")]
+public static Energy<T> operator *(Force1D<T> f, Length<T> d) =>
+    Energy<T>.Create(f.Value * d.Value);
 ```
 
-### Validation and Error Handling
-- Throw `ArgumentException` for validation failures (not `FormatException`)
-- Use specific exception types instead of general exceptions
-- Temperature values cannot be below absolute zero (0 K)
-- Frequency values cannot be negative
-- Throw `DivideByZeroException` when dividing by zero in `DivideToStorage`
+All values are stored in SI base units, so operators read `.Value` directly. Suppress `CA2225` on physics operators because "named alternates" (`Add`, `Multiply`) don't carry the dimensional meaning:
 
-### Testing Standards
-- Use explicit types instead of `var`
-- Pre-create objects outside measurement loops in performance tests
-- Mark OS-specific tests with `[TestCategory("OS-Specific")]`
-- Use path length limit of 259 characters for cross-platform compatibility
-- Force GC before memory measurements: `GC.Collect(); GC.WaitForPendingFinalizers()`
-
-### XML Documentation Standards
-- Use explicit dimension documentation: `/// <summary>Gets the physical dimension of [quantity] [SYMBOL].</summary>`
-- Constructor documentation: `/// <summary>Initializes a new instance of the <see cref="[ClassName]{T}"/> class.</summary>`
-- Include `<param>`, `<returns>`, `<exception>`, and `<see cref="">` tags appropriately
-
-## Important Implementation Notes
-
-### Semantic String Creation
 ```csharp
-// Preferred creation methods
+[System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Usage", "CA2225:Operator overloads have named alternates",
+    Justification = "Physics relationship operators represent fundamental equations.")]
+```
+
+## Code standards
+
+### File headers
+
+```csharp
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+```
+
+Generator-emitted files additionally carry `// <auto-generated />`.
+
+### Validation and error handling
+
+- Throw `ArgumentException` for validation failures (not `FormatException`).
+- Throw `DivideByZeroException` when dividing by zero in `DivideToStorage`.
+- Use the most specific exception type available.
+
+### Testing
+
+- Use explicit types (no `var`) in test bodies.
+- Pre-create fixtures outside measurement loops in performance tests.
+- Mark OS-specific tests with `[TestCategory("OS-Specific")]`.
+- Use 259-character path limit for cross-platform path tests.
+- Force GC before memory measurements: `GC.Collect(); GC.WaitForPendingFinalizers();`
+
+### XML documentation
+
+- `/// <summary>Gets the physical dimension of <quantity> [<symbol>].</summary>` style for dimension properties.
+- Include `<param>`, `<returns>`, `<exception>`, and `<see cref="">` tags on public APIs.
+
+## Important implementation notes
+
+### Semantic string creation
+
+```csharp
 var email = EmailAddress.Create("user@example.com");
 var userId = UserId.Create("USER_123");
 
 // Extension method conversion
-var email = "user@example.com".As<EmailAddress>();
+var email2 = "user@example.com".As<EmailAddress>();
 
 // Cross-type conversion
 var converted = sourceString.As<SourceType, TargetType>();
 ```
 
-### Path Interface Usage
-Complete conversion API:
-- `AsAbsolute()` - Convert to absolute using current working directory
-- `AsAbsolute(baseDirectory)` - Convert to absolute using specific base  
-- `AsRelative(baseDirectory)` - Convert to relative using specific base
+### Path conversion
 
-### Physics Relationships Implementation
-Use `.Value` property directly for calculations since quantities are already in SI base units:
-```csharp
-// Force * Length = Energy (Work)
-public static Energy<T> operator *(Force<T> force, Length<T> length) =>
-    Energy<T>.FromJoules(force.Value * length.Value);
-```
+- `AsAbsolute()` — convert to absolute using current working directory.
+- `AsAbsolute(baseDirectory)` — convert to absolute using a specific base.
+- `AsRelative(baseDirectory)` — convert to relative against a specific base.
 
-### Bootstrap vs Regular Units
-- Use `BootstrapUnits` in `PhysicalDimensions.cs` to avoid circular dependencies
-- Replace with full `Units` class after system initialization
-- Keep bootstrap units in dedicated `BootstrapUnits` class
+### Working with the source generator
 
-This architecture enables a sophisticated type-safe physics system while maintaining clean separation of concerns and avoiding circular dependencies through the bootstrap pattern.
+- Edit `Semantics.SourceGenerators/Metadata/dimensions.json` to add a dimension, vector form, semantic overload, or relationship.
+- Rebuild `Semantics.SourceGenerators` and the consuming `Semantics.Quantities` project; emitted files appear in `Semantics.Quantities/Generated/Semantics.SourceGenerators/<GeneratorName>/`.
+- Treat generator output as committed source. Diff it before commit so accidental regressions are visible.
+- See `docs/physics-generator.md` for the full schema and an end-to-end "add a dimension" walk-through.
+
+This file is the entry point. For deeper material:
+
+- `docs/strategy-unified-vector-quantities.md` — architecture spec for the unified vector model.
+- `docs/physics-generator.md` — generator + `dimensions.json` schema.
+- `docs/architecture.md` — semantic strings/paths/validation architecture (SOLID, design patterns).
+- `docs/complete-library-guide.md` — user-facing guide to all components.
+- `docs/validation-reference.md` — list of validation attributes.
+- `docs/advanced-usage.md` — advanced patterns for strings/paths.
