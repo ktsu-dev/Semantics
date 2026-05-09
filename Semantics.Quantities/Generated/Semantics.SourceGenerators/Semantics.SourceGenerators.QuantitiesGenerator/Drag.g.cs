@@ -19,14 +19,14 @@ public record Drag<T> : PhysicalQuantity<Drag<T>, T>, IVector0<Drag<T>, T>
 	public static Drag<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Drag from a value in Newton.</summary>
-	public static Drag<T> FromNewton(T value) => Create(value);
+	public static Drag<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Drag<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>
 	public static explicit operator Drag<T>(ForceMagnitude<T> value) => Create(value.Value);
 /// <summary>Creates a Drag from a ForceMagnitude value.</summary>
 	public static Drag<T> From(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two Drag values, returning a signed Force1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Force1D<T> operator -(Drag<T> left, Drag<T> right) => Force1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Drag values, returning the absolute difference as a non-negative Drag.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Drag<T> operator -(Drag<T> left, Drag<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

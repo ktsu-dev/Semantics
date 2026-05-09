@@ -22,11 +22,13 @@ public record ElectricFieldMagnitude<T> : PhysicalQuantity<ElectricFieldMagnitud
 	/// </summary>
 	/// <param name="value">The value in VoltPerMeter.</param>
 	/// <returns>A new <see cref="ElectricFieldMagnitude{T}"/> instance.</returns>
-	public static ElectricFieldMagnitude<T> FromVoltPerMeter(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ElectricFieldMagnitude<T> FromVoltPerMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two ElectricFieldMagnitude values, returning a signed ElectricField1D result.
+	/// Subtracts two ElectricFieldMagnitude values, returning the absolute difference as a non-negative ElectricFieldMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ElectricField1D<T> operator -(ElectricFieldMagnitude<T> left, ElectricFieldMagnitude<T> right) => ElectricField1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ElectricFieldMagnitude<T> operator -(ElectricFieldMagnitude<T> left, ElectricFieldMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies ElectricFieldMagnitude by Length to produce VoltageMagnitude.
 	/// </summary>

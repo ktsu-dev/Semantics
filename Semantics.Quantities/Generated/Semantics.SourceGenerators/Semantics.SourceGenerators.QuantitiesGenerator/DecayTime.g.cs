@@ -19,12 +19,14 @@ public record DecayTime<T> : PhysicalQuantity<DecayTime<T>, T>, IVector0<DecayTi
 	public static DecayTime<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new DecayTime from a value in Second.</summary>
-	public static DecayTime<T> FromSecond(T value) => Create(value);
+	public static DecayTime<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(DecayTime<T> value) => Duration<T>.Create(value.Value);
 /// <summary>Explicit conversion from Duration.</summary>
 	public static explicit operator DecayTime<T>(Duration<T> value) => Create(value.Value);
 /// <summary>Creates a DecayTime from a Duration value.</summary>
 	public static DecayTime<T> From(Duration<T> value) => Create(value.Value);
+/// <summary>Subtracts two DecayTime values, returning the absolute difference as a non-negative DecayTime.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static DecayTime<T> operator -(DecayTime<T> left, DecayTime<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

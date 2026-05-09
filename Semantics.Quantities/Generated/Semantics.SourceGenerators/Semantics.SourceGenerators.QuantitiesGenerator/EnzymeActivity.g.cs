@@ -19,12 +19,14 @@ public record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>, IVecto
 	public static EnzymeActivity<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new EnzymeActivity from a value in Katal.</summary>
-	public static EnzymeActivity<T> FromKatal(T value) => Create(value);
+	public static EnzymeActivity<T> FromKatal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to CatalyticActivity.</summary>
 	public static implicit operator CatalyticActivity<T>(EnzymeActivity<T> value) => CatalyticActivity<T>.Create(value.Value);
 /// <summary>Explicit conversion from CatalyticActivity.</summary>
 	public static explicit operator EnzymeActivity<T>(CatalyticActivity<T> value) => Create(value.Value);
 /// <summary>Creates a EnzymeActivity from a CatalyticActivity value.</summary>
 	public static EnzymeActivity<T> From(CatalyticActivity<T> value) => Create(value.Value);
+/// <summary>Subtracts two EnzymeActivity values, returning the absolute difference as a non-negative EnzymeActivity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static EnzymeActivity<T> operator -(EnzymeActivity<T> left, EnzymeActivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

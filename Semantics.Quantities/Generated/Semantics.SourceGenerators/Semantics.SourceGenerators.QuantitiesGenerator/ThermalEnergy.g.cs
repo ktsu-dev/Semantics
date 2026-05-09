@@ -19,12 +19,14 @@ public record ThermalEnergy<T> : PhysicalQuantity<ThermalEnergy<T>, T>, IVector0
 	public static ThermalEnergy<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new ThermalEnergy from a value in Joule.</summary>
-	public static ThermalEnergy<T> FromJoule(T value) => Create(value);
+	public static ThermalEnergy<T> FromJoule(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Energy.</summary>
 	public static implicit operator Energy<T>(ThermalEnergy<T> value) => Energy<T>.Create(value.Value);
 /// <summary>Explicit conversion from Energy.</summary>
 	public static explicit operator ThermalEnergy<T>(Energy<T> value) => Create(value.Value);
 /// <summary>Creates a ThermalEnergy from a Energy value.</summary>
 	public static ThermalEnergy<T> From(Energy<T> value) => Create(value.Value);
+/// <summary>Subtracts two ThermalEnergy values, returning the absolute difference as a non-negative ThermalEnergy.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ThermalEnergy<T> operator -(ThermalEnergy<T> left, ThermalEnergy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

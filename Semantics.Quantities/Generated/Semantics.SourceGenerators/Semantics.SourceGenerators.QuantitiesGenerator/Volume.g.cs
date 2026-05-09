@@ -22,7 +22,13 @@ public record Volume<T> : PhysicalQuantity<Volume<T>, T>, IVector0<Volume<T>, T>
 	/// </summary>
 	/// <param name="value">The value in CubicMeter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
-	public static Volume<T> FromCubicMeter(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Volume<T> FromCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two Volume values, returning the absolute difference as a non-negative Volume.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Volume<T> operator -(Volume<T> left, Volume<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides Volume by Length to produce Area.
 	/// </summary>

@@ -22,7 +22,13 @@ public record Conductance<T> : PhysicalQuantity<Conductance<T>, T>, IVector0<Con
 	/// </summary>
 	/// <param name="value">The value in Siemens.</param>
 	/// <returns>A new <see cref="Conductance{T}"/> instance.</returns>
-	public static Conductance<T> FromSiemens(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Conductance<T> FromSiemens(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two Conductance values, returning the absolute difference as a non-negative Conductance.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Conductance<T> operator -(Conductance<T> left, Conductance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies Conductance by VoltageMagnitude to produce CurrentMagnitude.
 	/// </summary>

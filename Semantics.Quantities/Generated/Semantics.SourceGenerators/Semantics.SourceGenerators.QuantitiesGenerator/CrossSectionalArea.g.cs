@@ -19,12 +19,14 @@ public record CrossSectionalArea<T> : PhysicalQuantity<CrossSectionalArea<T>, T>
 	public static CrossSectionalArea<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new CrossSectionalArea from a value in SquareMeter.</summary>
-	public static CrossSectionalArea<T> FromSquareMeter(T value) => Create(value);
+	public static CrossSectionalArea<T> FromSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Area.</summary>
 	public static implicit operator Area<T>(CrossSectionalArea<T> value) => Area<T>.Create(value.Value);
 /// <summary>Explicit conversion from Area.</summary>
 	public static explicit operator CrossSectionalArea<T>(Area<T> value) => Create(value.Value);
 /// <summary>Creates a CrossSectionalArea from a Area value.</summary>
 	public static CrossSectionalArea<T> From(Area<T> value) => Create(value.Value);
+/// <summary>Subtracts two CrossSectionalArea values, returning the absolute difference as a non-negative CrossSectionalArea.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static CrossSectionalArea<T> operator -(CrossSectionalArea<T> left, CrossSectionalArea<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

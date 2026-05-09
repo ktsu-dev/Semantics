@@ -22,11 +22,13 @@ public record AngularJerkMagnitude<T> : PhysicalQuantity<AngularJerkMagnitude<T>
 	/// </summary>
 	/// <param name="value">The value in RadiansPerSecondCubed.</param>
 	/// <returns>A new <see cref="AngularJerkMagnitude{T}"/> instance.</returns>
-	public static AngularJerkMagnitude<T> FromRadiansPerSecondCubed(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AngularJerkMagnitude<T> FromRadiansPerSecondCubed(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two AngularJerkMagnitude values, returning a signed AngularJerk1D result.
+	/// Subtracts two AngularJerkMagnitude values, returning the absolute difference as a non-negative AngularJerkMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularJerk1D<T> operator -(AngularJerkMagnitude<T> left, AngularJerkMagnitude<T> right) => AngularJerk1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularJerkMagnitude<T> operator -(AngularJerkMagnitude<T> left, AngularJerkMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies AngularJerkMagnitude by Duration to produce AngularAccelerationMagnitude.
 	/// </summary>

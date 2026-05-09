@@ -19,12 +19,14 @@ public record Latency<T> : PhysicalQuantity<Latency<T>, T>, IVector0<Latency<T>,
 	public static Latency<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Latency from a value in Second.</summary>
-	public static Latency<T> FromSecond(T value) => Create(value);
+	public static Latency<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(Latency<T> value) => Duration<T>.Create(value.Value);
 /// <summary>Explicit conversion from Duration.</summary>
 	public static explicit operator Latency<T>(Duration<T> value) => Create(value.Value);
 /// <summary>Creates a Latency from a Duration value.</summary>
 	public static Latency<T> From(Duration<T> value) => Create(value.Value);
+/// <summary>Subtracts two Latency values, returning the absolute difference as a non-negative Latency.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Latency<T> operator -(Latency<T> left, Latency<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

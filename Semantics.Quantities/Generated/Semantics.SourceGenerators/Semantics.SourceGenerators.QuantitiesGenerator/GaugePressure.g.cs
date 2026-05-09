@@ -19,12 +19,14 @@ public record GaugePressure<T> : PhysicalQuantity<GaugePressure<T>, T>, IVector0
 	public static GaugePressure<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new GaugePressure from a value in Pascal.</summary>
-	public static GaugePressure<T> FromPascal(T value) => Create(value);
+	public static GaugePressure<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Pressure.</summary>
 	public static implicit operator Pressure<T>(GaugePressure<T> value) => Pressure<T>.Create(value.Value);
 /// <summary>Explicit conversion from Pressure.</summary>
 	public static explicit operator GaugePressure<T>(Pressure<T> value) => Create(value.Value);
 /// <summary>Creates a GaugePressure from a Pressure value.</summary>
 	public static GaugePressure<T> From(Pressure<T> value) => Create(value.Value);
+/// <summary>Subtracts two GaugePressure values, returning the absolute difference as a non-negative GaugePressure.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static GaugePressure<T> operator -(GaugePressure<T> left, GaugePressure<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

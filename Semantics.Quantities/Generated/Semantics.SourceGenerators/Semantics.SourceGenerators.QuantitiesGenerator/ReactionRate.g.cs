@@ -22,7 +22,13 @@ public record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>, IVector0<R
 	/// </summary>
 	/// <param name="value">The value in MolePerCubicMeterSecond.</param>
 	/// <returns>A new <see cref="ReactionRate{T}"/> instance.</returns>
-	public static ReactionRate<T> FromMolePerCubicMeterSecond(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ReactionRate<T> FromMolePerCubicMeterSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two ReactionRate values, returning the absolute difference as a non-negative ReactionRate.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ReactionRate<T> operator -(ReactionRate<T> left, ReactionRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies ReactionRate by Duration to produce Concentration.
 	/// </summary>

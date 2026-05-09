@@ -19,12 +19,14 @@ public record ClockSpeed<T> : PhysicalQuantity<ClockSpeed<T>, T>, IVector0<Clock
 	public static ClockSpeed<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new ClockSpeed from a value in Hertz.</summary>
-	public static ClockSpeed<T> FromHertz(T value) => Create(value);
+	public static ClockSpeed<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(ClockSpeed<T> value) => Frequency<T>.Create(value.Value);
 /// <summary>Explicit conversion from Frequency.</summary>
 	public static explicit operator ClockSpeed<T>(Frequency<T> value) => Create(value.Value);
 /// <summary>Creates a ClockSpeed from a Frequency value.</summary>
 	public static ClockSpeed<T> From(Frequency<T> value) => Create(value.Value);
+/// <summary>Subtracts two ClockSpeed values, returning the absolute difference as a non-negative ClockSpeed.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ClockSpeed<T> operator -(ClockSpeed<T> left, ClockSpeed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

@@ -22,11 +22,13 @@ public record Angle<T> : PhysicalQuantity<Angle<T>, T>, IVector0<Angle<T>, T>
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new <see cref="Angle{T}"/> instance.</returns>
-	public static Angle<T> FromRadian(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Angle<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two Angle values, returning a signed SignedAngle result.
+	/// Subtracts two Angle values, returning the absolute difference as a non-negative Angle.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedAngle<T> operator -(Angle<T> left, Angle<T> right) => SignedAngle<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Angle<T> operator -(Angle<T> left, Angle<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides Angle by Duration to produce AngularSpeed.
 	/// </summary>

@@ -22,6 +22,12 @@ public record EquivalentDose<T> : PhysicalQuantity<EquivalentDose<T>, T>, IVecto
 	/// </summary>
 	/// <param name="value">The value in Sievert.</param>
 	/// <returns>A new <see cref="EquivalentDose{T}"/> instance.</returns>
-	public static EquivalentDose<T> FromSievert(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static EquivalentDose<T> FromSievert(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two EquivalentDose values, returning the absolute difference as a non-negative EquivalentDose.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static EquivalentDose<T> operator -(EquivalentDose<T> left, EquivalentDose<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

@@ -22,11 +22,13 @@ public record VoltageMagnitude<T> : PhysicalQuantity<VoltageMagnitude<T>, T>, IV
 	/// </summary>
 	/// <param name="value">The value in Volt.</param>
 	/// <returns>A new <see cref="VoltageMagnitude{T}"/> instance.</returns>
-	public static VoltageMagnitude<T> FromVolt(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static VoltageMagnitude<T> FromVolt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two VoltageMagnitude values, returning a signed Voltage result.
+	/// Subtracts two VoltageMagnitude values, returning the absolute difference as a non-negative VoltageMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Voltage<T> operator -(VoltageMagnitude<T> left, VoltageMagnitude<T> right) => Voltage<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static VoltageMagnitude<T> operator -(VoltageMagnitude<T> left, VoltageMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides VoltageMagnitude by Resistance to produce CurrentMagnitude.
 	/// </summary>

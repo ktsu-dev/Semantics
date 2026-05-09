@@ -22,11 +22,13 @@ public record TorqueMagnitude<T> : PhysicalQuantity<TorqueMagnitude<T>, T>, IVec
 	/// </summary>
 	/// <param name="value">The value in NewtonMeter.</param>
 	/// <returns>A new <see cref="TorqueMagnitude{T}"/> instance.</returns>
-	public static TorqueMagnitude<T> FromNewtonMeter(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static TorqueMagnitude<T> FromNewtonMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two TorqueMagnitude values, returning a signed Torque1D result.
+	/// Subtracts two TorqueMagnitude values, returning the absolute difference as a non-negative TorqueMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Torque1D<T> operator -(TorqueMagnitude<T> left, TorqueMagnitude<T> right) => Torque1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static TorqueMagnitude<T> operator -(TorqueMagnitude<T> left, TorqueMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies TorqueMagnitude by Angle to produce Energy.
 	/// </summary>

@@ -22,7 +22,13 @@ public record CatalyticActivity<T> : PhysicalQuantity<CatalyticActivity<T>, T>, 
 	/// </summary>
 	/// <param name="value">The value in Katal.</param>
 	/// <returns>A new <see cref="CatalyticActivity{T}"/> instance.</returns>
-	public static CatalyticActivity<T> FromKatal(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static CatalyticActivity<T> FromKatal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two CatalyticActivity values, returning the absolute difference as a non-negative CatalyticActivity.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static CatalyticActivity<T> operator -(CatalyticActivity<T> left, CatalyticActivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies CatalyticActivity by Duration to produce AmountOfSubstance.
 	/// </summary>

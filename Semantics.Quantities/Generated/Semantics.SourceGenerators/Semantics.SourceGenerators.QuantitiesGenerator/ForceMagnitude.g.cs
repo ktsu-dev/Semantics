@@ -22,11 +22,13 @@ public record ForceMagnitude<T> : PhysicalQuantity<ForceMagnitude<T>, T>, IVecto
 	/// </summary>
 	/// <param name="value">The value in Newton.</param>
 	/// <returns>A new <see cref="ForceMagnitude{T}"/> instance.</returns>
-	public static ForceMagnitude<T> FromNewton(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ForceMagnitude<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two ForceMagnitude values, returning a signed Force1D result.
+	/// Subtracts two ForceMagnitude values, returning the absolute difference as a non-negative ForceMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Force1D<T> operator -(ForceMagnitude<T> left, ForceMagnitude<T> right) => Force1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ForceMagnitude<T> operator -(ForceMagnitude<T> left, ForceMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Divides ForceMagnitude by AccelerationMagnitude to produce Mass.
 	/// </summary>

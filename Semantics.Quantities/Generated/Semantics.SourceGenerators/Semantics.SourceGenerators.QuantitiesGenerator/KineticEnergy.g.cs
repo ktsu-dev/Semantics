@@ -19,12 +19,14 @@ public record KineticEnergy<T> : PhysicalQuantity<KineticEnergy<T>, T>, IVector0
 	public static KineticEnergy<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new KineticEnergy from a value in Joule.</summary>
-	public static KineticEnergy<T> FromJoule(T value) => Create(value);
+	public static KineticEnergy<T> FromJoule(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Energy.</summary>
 	public static implicit operator Energy<T>(KineticEnergy<T> value) => Energy<T>.Create(value.Value);
 /// <summary>Explicit conversion from Energy.</summary>
 	public static explicit operator KineticEnergy<T>(Energy<T> value) => Create(value.Value);
 /// <summary>Creates a KineticEnergy from a Energy value.</summary>
 	public static KineticEnergy<T> From(Energy<T> value) => Create(value.Value);
+/// <summary>Subtracts two KineticEnergy values, returning the absolute difference as a non-negative KineticEnergy.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static KineticEnergy<T> operator -(KineticEnergy<T> left, KineticEnergy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

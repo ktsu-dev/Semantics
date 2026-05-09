@@ -19,12 +19,14 @@ public record Work<T> : PhysicalQuantity<Work<T>, T>, IVector0<Work<T>, T>
 	public static Work<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Work from a value in Joule.</summary>
-	public static Work<T> FromJoule(T value) => Create(value);
+	public static Work<T> FromJoule(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Energy.</summary>
 	public static implicit operator Energy<T>(Work<T> value) => Energy<T>.Create(value.Value);
 /// <summary>Explicit conversion from Energy.</summary>
 	public static explicit operator Work<T>(Energy<T> value) => Create(value.Value);
 /// <summary>Creates a Work from a Energy value.</summary>
 	public static Work<T> From(Energy<T> value) => Create(value.Value);
+/// <summary>Subtracts two Work values, returning the absolute difference as a non-negative Work.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Work<T> operator -(Work<T> left, Work<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

@@ -22,6 +22,12 @@ public record AbsorbedDose<T> : PhysicalQuantity<AbsorbedDose<T>, T>, IVector0<A
 	/// </summary>
 	/// <param name="value">The value in Gray.</param>
 	/// <returns>A new <see cref="AbsorbedDose{T}"/> instance.</returns>
-	public static AbsorbedDose<T> FromGray(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AbsorbedDose<T> FromGray(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two AbsorbedDose values, returning the absolute difference as a non-negative AbsorbedDose.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AbsorbedDose<T> operator -(AbsorbedDose<T> left, AbsorbedDose<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

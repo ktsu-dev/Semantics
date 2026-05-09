@@ -19,14 +19,14 @@ public record Friction<T> : PhysicalQuantity<Friction<T>, T>, IVector0<Friction<
 	public static Friction<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Friction from a value in Newton.</summary>
-	public static Friction<T> FromNewton(T value) => Create(value);
+	public static Friction<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Friction<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>
 	public static explicit operator Friction<T>(ForceMagnitude<T> value) => Create(value.Value);
 /// <summary>Creates a Friction from a ForceMagnitude value.</summary>
 	public static Friction<T> From(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two Friction values, returning a signed Force1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Force1D<T> operator -(Friction<T> left, Friction<T> right) => Force1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Friction values, returning the absolute difference as a non-negative Friction.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Friction<T> operator -(Friction<T> left, Friction<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

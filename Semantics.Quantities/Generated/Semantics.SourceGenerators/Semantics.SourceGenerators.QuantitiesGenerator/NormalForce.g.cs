@@ -19,14 +19,14 @@ public record NormalForce<T> : PhysicalQuantity<NormalForce<T>, T>, IVector0<Nor
 	public static NormalForce<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new NormalForce from a value in Newton.</summary>
-	public static NormalForce<T> FromNewton(T value) => Create(value);
+	public static NormalForce<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(NormalForce<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>
 	public static explicit operator NormalForce<T>(ForceMagnitude<T> value) => Create(value.Value);
 /// <summary>Creates a NormalForce from a ForceMagnitude value.</summary>
 	public static NormalForce<T> From(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two NormalForce values, returning a signed Force1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Force1D<T> operator -(NormalForce<T> left, NormalForce<T> right) => Force1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two NormalForce values, returning the absolute difference as a non-negative NormalForce.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static NormalForce<T> operator -(NormalForce<T> left, NormalForce<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

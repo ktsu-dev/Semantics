@@ -19,14 +19,14 @@ public record Wavelength<T> : PhysicalQuantity<Wavelength<T>, T>, IVector0<Wavel
 	public static Wavelength<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Wavelength from a value in Meter.</summary>
-	public static Wavelength<T> FromMeter(T value) => Create(value);
+	public static Wavelength<T> FromMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Length.</summary>
 	public static implicit operator Length<T>(Wavelength<T> value) => Length<T>.Create(value.Value);
 /// <summary>Explicit conversion from Length.</summary>
 	public static explicit operator Wavelength<T>(Length<T> value) => Create(value.Value);
 /// <summary>Creates a Wavelength from a Length value.</summary>
 	public static Wavelength<T> From(Length<T> value) => Create(value.Value);
-/// <summary>Subtracts two Wavelength values, returning a signed Displacement1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Displacement1D<T> operator -(Wavelength<T> left, Wavelength<T> right) => Displacement1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Wavelength values, returning the absolute difference as a non-negative Wavelength.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Wavelength<T> operator -(Wavelength<T> left, Wavelength<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

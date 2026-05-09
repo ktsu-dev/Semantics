@@ -22,11 +22,13 @@ public record Speed<T> : PhysicalQuantity<Speed<T>, T>, IVector0<Speed<T>, T>
 	/// </summary>
 	/// <param name="value">The value in MetersPerSecond.</param>
 	/// <returns>A new <see cref="Speed{T}"/> instance.</returns>
-	public static Speed<T> FromMetersPerSecond(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Speed<T> FromMetersPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two Speed values, returning a signed Velocity1D result.
+	/// Subtracts two Speed values, returning the absolute difference as a non-negative Speed.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Velocity1D<T> operator -(Speed<T> left, Speed<T> right) => Velocity1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Speed<T> operator -(Speed<T> left, Speed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies Speed by Mass to produce MomentumMagnitude.
 	/// </summary>

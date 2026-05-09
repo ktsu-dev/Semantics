@@ -19,14 +19,14 @@ public record EMF<T> : PhysicalQuantity<EMF<T>, T>, IVector0<EMF<T>, T>
 	public static EMF<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new EMF from a value in Volt.</summary>
-	public static EMF<T> FromVolt(T value) => Create(value);
+	public static EMF<T> FromVolt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to VoltageMagnitude.</summary>
 	public static implicit operator VoltageMagnitude<T>(EMF<T> value) => VoltageMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from VoltageMagnitude.</summary>
 	public static explicit operator EMF<T>(VoltageMagnitude<T> value) => Create(value.Value);
 /// <summary>Creates a EMF from a VoltageMagnitude value.</summary>
 	public static EMF<T> From(VoltageMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two EMF values, returning a signed Voltage result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Voltage<T> operator -(EMF<T> left, EMF<T> right) => Voltage<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two EMF values, returning the absolute difference as a non-negative EMF.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static EMF<T> operator -(EMF<T> left, EMF<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

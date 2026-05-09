@@ -22,11 +22,13 @@ public record SnapMagnitude<T> : PhysicalQuantity<SnapMagnitude<T>, T>, IVector0
 	/// </summary>
 	/// <param name="value">The value in MetersPerSecondQuartic.</param>
 	/// <returns>A new <see cref="SnapMagnitude{T}"/> instance.</returns>
-	public static SnapMagnitude<T> FromMetersPerSecondQuartic(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SnapMagnitude<T> FromMetersPerSecondQuartic(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Subtracts two SnapMagnitude values, returning a signed Snap1D result.
+	/// Subtracts two SnapMagnitude values, returning the absolute difference as a non-negative SnapMagnitude.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Snap1D<T> operator -(SnapMagnitude<T> left, SnapMagnitude<T> right) => Snap1D<T>.Create(left.Quantity - right.Quantity);
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SnapMagnitude<T> operator -(SnapMagnitude<T> left, SnapMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies SnapMagnitude by Duration to produce JerkMagnitude.
 	/// </summary>

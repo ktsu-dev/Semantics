@@ -19,14 +19,14 @@ public record Distance<T> : PhysicalQuantity<Distance<T>, T>, IVector0<Distance<
 	public static Distance<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Distance from a value in Meter.</summary>
-	public static Distance<T> FromMeter(T value) => Create(value);
+	public static Distance<T> FromMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Length.</summary>
 	public static implicit operator Length<T>(Distance<T> value) => Length<T>.Create(value.Value);
 /// <summary>Explicit conversion from Length.</summary>
 	public static explicit operator Distance<T>(Length<T> value) => Create(value.Value);
 /// <summary>Creates a Distance from a Length value.</summary>
 	public static Distance<T> From(Length<T> value) => Create(value.Value);
-/// <summary>Subtracts two Distance values, returning a signed Displacement1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Displacement1D<T> operator -(Distance<T> left, Distance<T> right) => Displacement1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Distance values, returning the absolute difference as a non-negative Distance.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Distance<T> operator -(Distance<T> left, Distance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

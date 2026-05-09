@@ -19,12 +19,14 @@ public record AtomicMass<T> : PhysicalQuantity<AtomicMass<T>, T>, IVector0<Atomi
 	public static AtomicMass<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new AtomicMass from a value in Kilogram.</summary>
-	public static AtomicMass<T> FromKilogram(T value) => Create(value);
+	public static AtomicMass<T> FromKilogram(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Mass.</summary>
 	public static implicit operator Mass<T>(AtomicMass<T> value) => Mass<T>.Create(value.Value);
 /// <summary>Explicit conversion from Mass.</summary>
 	public static explicit operator AtomicMass<T>(Mass<T> value) => Create(value.Value);
 /// <summary>Creates a AtomicMass from a Mass value.</summary>
 	public static AtomicMass<T> From(Mass<T> value) => Create(value.Value);
+/// <summary>Subtracts two AtomicMass values, returning the absolute difference as a non-negative AtomicMass.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AtomicMass<T> operator -(AtomicMass<T> left, AtomicMass<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

@@ -19,12 +19,14 @@ public record Bandwidth<T> : PhysicalQuantity<Bandwidth<T>, T>, IVector0<Bandwid
 	public static Bandwidth<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Bandwidth from a value in Hertz.</summary>
-	public static Bandwidth<T> FromHertz(T value) => Create(value);
+	public static Bandwidth<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(Bandwidth<T> value) => Frequency<T>.Create(value.Value);
 /// <summary>Explicit conversion from Frequency.</summary>
 	public static explicit operator Bandwidth<T>(Frequency<T> value) => Create(value.Value);
 /// <summary>Creates a Bandwidth from a Frequency value.</summary>
 	public static Bandwidth<T> From(Frequency<T> value) => Create(value.Value);
+/// <summary>Subtracts two Bandwidth values, returning the absolute difference as a non-negative Bandwidth.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Bandwidth<T> operator -(Bandwidth<T> left, Bandwidth<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

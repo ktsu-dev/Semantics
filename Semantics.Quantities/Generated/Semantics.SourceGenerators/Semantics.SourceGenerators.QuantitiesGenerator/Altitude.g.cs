@@ -19,14 +19,14 @@ public record Altitude<T> : PhysicalQuantity<Altitude<T>, T>, IVector0<Altitude<
 	public static Altitude<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Altitude from a value in Meter.</summary>
-	public static Altitude<T> FromMeter(T value) => Create(value);
+	public static Altitude<T> FromMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Length.</summary>
 	public static implicit operator Length<T>(Altitude<T> value) => Length<T>.Create(value.Value);
 /// <summary>Explicit conversion from Length.</summary>
 	public static explicit operator Altitude<T>(Length<T> value) => Create(value.Value);
 /// <summary>Creates a Altitude from a Length value.</summary>
 	public static Altitude<T> From(Length<T> value) => Create(value.Value);
-/// <summary>Subtracts two Altitude values, returning a signed Displacement1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Displacement1D<T> operator -(Altitude<T> left, Altitude<T> right) => Displacement1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Altitude values, returning the absolute difference as a non-negative Altitude.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Altitude<T> operator -(Altitude<T> left, Altitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

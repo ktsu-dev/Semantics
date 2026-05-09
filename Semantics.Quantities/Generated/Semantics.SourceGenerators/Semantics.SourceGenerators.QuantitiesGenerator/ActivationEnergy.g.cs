@@ -19,12 +19,14 @@ public record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>, T>, IV
 	public static ActivationEnergy<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new ActivationEnergy from a value in JoulePerMole.</summary>
-	public static ActivationEnergy<T> FromJoulePerMole(T value) => Create(value);
+	public static ActivationEnergy<T> FromJoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to MolarEnergy.</summary>
 	public static implicit operator MolarEnergy<T>(ActivationEnergy<T> value) => MolarEnergy<T>.Create(value.Value);
 /// <summary>Explicit conversion from MolarEnergy.</summary>
 	public static explicit operator ActivationEnergy<T>(MolarEnergy<T> value) => Create(value.Value);
 /// <summary>Creates a ActivationEnergy from a MolarEnergy value.</summary>
 	public static ActivationEnergy<T> From(MolarEnergy<T> value) => Create(value.Value);
+/// <summary>Subtracts two ActivationEnergy values, returning the absolute difference as a non-negative ActivationEnergy.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ActivationEnergy<T> operator -(ActivationEnergy<T> left, ActivationEnergy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

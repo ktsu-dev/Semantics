@@ -22,7 +22,13 @@ public record Irradiance<T> : PhysicalQuantity<Irradiance<T>, T>, IVector0<Irrad
 	/// </summary>
 	/// <param name="value">The value in WattPerSquareMeter.</param>
 	/// <returns>A new <see cref="Irradiance{T}"/> instance.</returns>
-	public static Irradiance<T> FromWattPerSquareMeter(T value) => Create(value);
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Irradiance<T> FromWattPerSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Subtracts two Irradiance values, returning the absolute difference as a non-negative Irradiance.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Irradiance<T> operator -(Irradiance<T> left, Irradiance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
 	/// Multiplies Irradiance by Area to produce Power.
 	/// </summary>

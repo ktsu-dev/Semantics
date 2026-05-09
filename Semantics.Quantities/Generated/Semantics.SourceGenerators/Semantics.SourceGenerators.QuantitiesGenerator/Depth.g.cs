@@ -19,14 +19,14 @@ public record Depth<T> : PhysicalQuantity<Depth<T>, T>, IVector0<Depth<T>, T>
 	public static Depth<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new Depth from a value in Meter.</summary>
-	public static Depth<T> FromMeter(T value) => Create(value);
+	public static Depth<T> FromMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Length.</summary>
 	public static implicit operator Length<T>(Depth<T> value) => Length<T>.Create(value.Value);
 /// <summary>Explicit conversion from Length.</summary>
 	public static explicit operator Depth<T>(Length<T> value) => Create(value.Value);
 /// <summary>Creates a Depth from a Length value.</summary>
 	public static Depth<T> From(Length<T> value) => Create(value.Value);
-/// <summary>Subtracts two Depth values, returning a signed Displacement1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Displacement1D<T> operator -(Depth<T> left, Depth<T> right) => Displacement1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two Depth values, returning the absolute difference as a non-negative Depth.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Depth<T> operator -(Depth<T> left, Depth<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

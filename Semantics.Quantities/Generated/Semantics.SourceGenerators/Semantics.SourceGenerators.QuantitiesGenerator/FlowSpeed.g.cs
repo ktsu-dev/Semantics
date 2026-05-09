@@ -19,14 +19,14 @@ public record FlowSpeed<T> : PhysicalQuantity<FlowSpeed<T>, T>, IVector0<FlowSpe
 	public static FlowSpeed<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new FlowSpeed from a value in MetersPerSecond.</summary>
-	public static FlowSpeed<T> FromMetersPerSecond(T value) => Create(value);
+	public static FlowSpeed<T> FromMetersPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Speed.</summary>
 	public static implicit operator Speed<T>(FlowSpeed<T> value) => Speed<T>.Create(value.Value);
 /// <summary>Explicit conversion from Speed.</summary>
 	public static explicit operator FlowSpeed<T>(Speed<T> value) => Create(value.Value);
 /// <summary>Creates a FlowSpeed from a Speed value.</summary>
 	public static FlowSpeed<T> From(Speed<T> value) => Create(value.Value);
-/// <summary>Subtracts two FlowSpeed values, returning a signed Velocity1D result.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Velocity1D<T> operator -(FlowSpeed<T> left, FlowSpeed<T> right) => Velocity1D<T>.Create(left.Quantity - right.Quantity);
+/// <summary>Subtracts two FlowSpeed values, returning the absolute difference as a non-negative FlowSpeed.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static FlowSpeed<T> operator -(FlowSpeed<T> left, FlowSpeed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 

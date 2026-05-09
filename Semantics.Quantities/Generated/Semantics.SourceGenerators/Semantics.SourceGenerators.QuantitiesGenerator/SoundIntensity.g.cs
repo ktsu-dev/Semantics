@@ -19,12 +19,14 @@ public record SoundIntensity<T> : PhysicalQuantity<SoundIntensity<T>, T>, IVecto
 	public static SoundIntensity<T> Zero => Create(T.Zero);
 
 	/// <summary>Creates a new SoundIntensity from a value in WattPerSquareMeter.</summary>
-	public static SoundIntensity<T> FromWattPerSquareMeter(T value) => Create(value);
+	public static SoundIntensity<T> FromWattPerSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Irradiance.</summary>
 	public static implicit operator Irradiance<T>(SoundIntensity<T> value) => Irradiance<T>.Create(value.Value);
 /// <summary>Explicit conversion from Irradiance.</summary>
 	public static explicit operator SoundIntensity<T>(Irradiance<T> value) => Create(value.Value);
 /// <summary>Creates a SoundIntensity from a Irradiance value.</summary>
 	public static SoundIntensity<T> From(Irradiance<T> value) => Create(value.Value);
+/// <summary>Subtracts two SoundIntensity values, returning the absolute difference as a non-negative SoundIntensity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SoundIntensity<T> operator -(SoundIntensity<T> left, SoundIntensity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 };
 
