@@ -1,281 +1,277 @@
 # Complete Semantics Library Guide
 
-This document provides a comprehensive overview of all features and components in the ktsu.Semantics library.
+ktsu.Semantics is a .NET library for replacing primitive obsession with strongly-typed, self-validating domain models. It has three pillars:
 
-## Table of Contents
+- **Semantic Strings** — type-safe string wrappers with attribute-driven validation.
+- **Semantic Paths** — polymorphic file system path types with rich operations.
+- **Physics Quantities** — a metadata-generated, type-safe physics system built on a unified vector model.
 
-- [Core Components](#core-components)
-- [Semantic Strings](#semantic-strings)
-- [Semantic Quantities](#semantic-quantities)
-- [Path System](#path-system)
-- [Validation System](#validation-system)
-- [Performance Features](#performance-features)
+All three share a runtime philosophy: validate at construction time, fail fast with `ArgumentException`, and never let an invalid value into the type.
 
-## Core Components
+## Document map
 
-The Semantics library consists of six main areas:
+| Topic | Doc |
+|---|---|
+| Architecture (strings/paths/validation) | `architecture.md` |
+| Architecture (physics quantities) | `strategy-unified-vector-quantities.md` |
+| Source-generator workflow | `physics-generator.md` |
+| Validation attribute reference | `validation-reference.md` |
+| Advanced patterns | `advanced-usage.md` |
+| Physics quick reference by dimension | `physics-domains-guide.md` |
 
-1. **Semantic Strings** - Type-safe string wrappers with validation
-2. **Physics Quantities System** - Complete physics library with 80+ quantities across 8 domains
-3. **Physical Constants** - Centralized, type-safe access to fundamental and derived constants
-4. **Path System** - Comprehensive file system path handling
-5. **Validation System** - 50+ validation attributes across multiple categories
-6. **Performance Utilities** - Optimizations for high-performance scenarios
+## Semantic strings
 
-## Semantic Strings
-
-Transform primitive string obsession into strongly-typed domain models:
+Define a strongly-typed string by deriving from `SemanticString<TSelf>` and decorating with validation attributes:
 
 ```csharp
-[IsEmail]
+[IsEmailAddress]
 public sealed record EmailAddress : SemanticString<EmailAddress> { }
 
-[HasLength(8, 50), IsNotEmpty]
+[StartsWith("USER_"), HasNonWhitespaceContent]
 public sealed record UserId : SemanticString<UserId> { }
-
-// Usage with factory pattern
-var emailFactory = new SemanticStringFactory<EmailAddress>();
-var email = emailFactory.Create("user@example.com");
-
-// Compile-time safety
-public void SendEmail(EmailAddress to, UserId userId) { /* ... */ }
-// SendEmail(userId, email); // ❌ Won't compile!
 ```
 
-## Physics Quantities System
-
-A comprehensive physics library with **80+ quantities** across **8 scientific domains** featuring:
-
-- **Type-safe arithmetic** with dimensional analysis
-- **Automatic unit conversions** with compile-time safety  
-- **Physics relationships** as operators (F = ma, E = mc², etc.)
-- **Physical constants** integrated throughout
-- **Generic numeric types** (double, float, decimal) support
-
-### Complete Domain Coverage
-
-#### 🔧 Mechanics (15 quantities)
-Position, velocity, acceleration, force, pressure, energy, power, momentum, torque, angular velocity, angular acceleration, moment of inertia, density, and more.
-
-#### ⚡ Electrical (11 quantities)  
-Voltage, current, resistance, power, charge, capacitance, inductance, electric field, magnetic field, and electrical properties.
-
-#### 🌡️ Thermal (10 quantities)
-Temperature, heat, entropy, thermal conductivity, heat capacity, thermal expansion, and thermodynamic properties.
-
-#### 🧪 Chemical (10 quantities)
-Amount of substance, molarity, reaction rates, pH, molar mass, activation energy, and chemical kinetics.
-
-#### 🔊 Acoustic (20 quantities)
-Sound pressure, intensity, frequency, wavelength, acoustic impedance, loudness, pitch, and audio metrics.
-
-#### ☢️ Nuclear (5 quantities)
-Radioactive activity, absorbed dose, equivalent dose, exposure, and nuclear cross-sections.
-
-#### 💡 Optical (6 quantities)
-Luminous intensity, flux, illuminance, luminance, refractive index, and optical power.
-
-#### 🌊 Fluid Dynamics (5 quantities)
-Viscosity, flow rates, Reynolds numbers, bulk modulus, and fluid properties.
-
-### Usage Examples
+Construction goes through one of:
 
 ```csharp
-// Create quantities with dimensional safety
-var force = Force<double>.FromNewtons(100.0);
-var distance = Length<double>.FromMeters(5.0);
-var time = Time<double>.FromSeconds(2.0);
+// Direct, type-inferred
+var email  = EmailAddress.Create("user@example.com");
+var userId = UserId.Create("USER_12345");
 
-// Physics relationships as operators
-var work = force * distance;                    // W = F⋅d (Energy)
-var power = work / time;                        // P = W/t (Power)
-var velocity = distance / time;                 // v = d/t (Velocity)
+// From char span / array
+var email2 = EmailAddress.Create("user@example.com".AsSpan());
 
-// Automatic unit conversions
-Console.WriteLine(work.ToKilowattHours());      // 1.389e-7 kWh
-Console.WriteLine(power.ToHorsepower());        // 6.705e-5 hp
+// Explicit cast
+var email3 = (EmailAddress)"user@example.com";
 
-// Type safety prevents errors
-// var invalid = force + time;                  // ❌ Compiler error!
-
-// Complex calculations with multiple domains
-var temp = Temperature<double>.FromCelsius(25.0);
-var pressure = Pressure<double>.FromPascals(101325.0);
-var volume = Volume<double>.FromLiters(22.4);
-var gasConstant = PhysicalConstants.Generic.GasConstant<double>();
-
-// Ideal gas law: PV = nRT
-var moles = (pressure * volume) / (gasConstant * temp);
+// Safe creation
+if (EmailAddress.TryCreate("maybe@invalid", out EmailAddress? safeEmail)) { /* … */ }
 ```
 
-## Physical Constants
-
-Centralized, type-safe access to **100+ physical constants** across all domains:
+Compile-time safety prevents the classic mix-up:
 
 ```csharp
-// Fundamental constants (CODATA 2018)
-var c = PhysicalConstants.Generic.SpeedOfLight<double>();        // 299,792,458 m/s
-var h = PhysicalConstants.Generic.PlanckConstant<double>();      // 6.626070×10⁻³⁴ J⋅s
-var Na = PhysicalConstants.Generic.AvogadroNumber<double>();     // 6.022140×10²³ mol⁻¹
-
-// Derived constants with automatic type conversion
-var g = PhysicalConstants.Generic.StandardGravity<float>();     // 9.80665 m/s²
-var R = PhysicalConstants.Generic.GasConstant<decimal>();       // 8.314462618 J/(mol⋅K)
-
-// Domain-specific constants
-var rho = PhysicalConstants.Generic.StandardAirDensity<double>(); // 1.225 kg/m³
-var c_sound = PhysicalConstants.Generic.SoundSpeedInAir<double>(); // 343 m/s
+public void SendWelcomeEmail(EmailAddress to, UserId userId) { … }
+// SendWelcomeEmail(userId, email);  // ❌ won't compile
 ```
 
-## Path System
+Validation runs through the strategy/rule pipeline — see `architecture.md` and `validation-reference.md`.
 
-Comprehensive polymorphic path handling with 11 different path types:
+### Factory pattern (DI)
 
-### Interface Hierarchy
+Use `SemanticStringFactory<T>` when you want to inject construction:
+
+```csharp
+services.AddTransient<ISemanticStringFactory<EmailAddress>, SemanticStringFactory<EmailAddress>>();
+
+public class UserService(ISemanticStringFactory<EmailAddress> emails)
+{
+    public Task<User> CreateUserAsync(string raw) =>
+        emails.TryCreate(raw, out var email)
+            ? Task.FromResult(new User(email))
+            : throw new ArgumentException("invalid email");
+}
 ```
-IPath (base)
-├── IAbsolutePath : IPath
-├── IRelativePath : IPath
-├── IFilePath : IPath
-├── IDirectoryPath : IPath
-├── IAbsoluteFilePath : IFilePath, IAbsolutePath
-├── IRelativeFilePath : IFilePath, IRelativePath
+
+## Semantic paths
+
+Paths are a separate hierarchy on top of `SemanticString<TSelf>`. Everything is a record so equality and immutability come for free.
+
+```
+IPath
+├── IAbsolutePath          ├── IFilePath
+├── IRelativePath          └── IDirectoryPath
+├── IAbsoluteFilePath  : IFilePath, IAbsolutePath
+├── IRelativeFilePath  : IFilePath, IRelativePath
 ├── IAbsoluteDirectoryPath : IDirectoryPath, IAbsolutePath
 └── IRelativeDirectoryPath : IDirectoryPath, IRelativePath
 
-IFileName / IFileExtension (separate hierarchies)
+IFileName, IFileExtension  // separate hierarchies for non-path components
 ```
 
-### Usage Example
 ```csharp
-var filePath = AbsoluteFilePath.FromString<AbsoluteFilePath>(@"C:\app\config.json");
+var configFile = AbsoluteFilePath.Create(@"C:\app\config.json");
 
-// Rich path operations
-Console.WriteLine(filePath.FileName);        // config.json
-Console.WriteLine(filePath.FileExtension);   // .json
-Console.WriteLine(filePath.DirectoryPath);   // C:\app
-Console.WriteLine(filePath.Exists);          // True/False
+configFile.FileName;       // config.json
+configFile.FileExtension;  // .json
+configFile.DirectoryPath;  // C:\app
+configFile.Exists;         // bool
 
 // Polymorphic collections
-List<IPath> paths = [
-    AbsoluteFilePath.FromString<AbsoluteFilePath>(@"C:\data.txt"),
-    RelativeDirectoryPath.FromString<RelativeDirectoryPath>(@"temp\logs")
+List<IPath> all = [
+    AbsoluteFilePath.Create(@"C:\data.txt"),
+    RelativeDirectoryPath.Create(@"logs\app"),
+    FilePath.Create(@"document.pdf")
 ];
 
-var files = paths.OfType<IFilePath>().ToList();
+var files     = all.OfType<IFilePath>().ToList();
+var absolutes = all.OfType<IAbsolutePath>().ToList();
 ```
 
-## Validation System
+### Conversion API
 
-The library includes 50+ validation attributes across multiple categories:
+- `AsAbsolute()` — using current working directory.
+- `AsAbsolute(baseDirectory)` — using a specific base.
+- `AsRelative(baseDirectory)` — relative against a base.
 
-### Text Validation
-- `IsEmailAddress` - Email format validation
-- `RegexMatch(pattern)` - Custom regex patterns
-- `StartsWith` / `EndsWith` - Prefix/suffix validation
-- `Contains` - Substring validation
-- `IsBase64` - Base64 encoding validation
+## Physics quantities
 
-### Format Validation  
-- `IsEmptyOrWhitespace` - Empty/whitespace validation
-- `HasNonWhitespaceContent` - Non-whitespace requirement
-- `IsSingleLine` / `IsMultiLine` - Line count validation
-- `HasExactLines` / `HasMinimumLines` / `HasMaximumLines` - Line counts
+The physics system is **metadata-driven**: the source of truth is `Semantics.SourceGenerators/Metadata/dimensions.json`, and the Roslyn generator emits one record per quantity into `Semantics.Quantities/Generated/`.
 
-### First-Class Type Validation
-- `IsBoolean` - Boolean representation validation
-- `IsDateTime` - Date/time format validation  
-- `IsDecimal` / `IsDouble` / `IsInt32` - Numeric validation
-- `IsGuid` - GUID format validation
-- `IsIpAddress` - IP address validation
-- `IsTimeSpan` - Time span validation
-- `IsUri` - URI format validation
-- `IsVersion` - Version string validation
+### The unified vector model
 
-### Quantity Validation
-- `IsPositive` / `IsNegative` - Sign validation
-- `IsInRange(min, max)` - Value range validation
+Every quantity is a vector. Direction-space dimensionality is part of the type:
 
-### Path Validation
-- `IsPath` - Path format validation
-- `IsAbsolutePath` / `IsRelativePath` - Path type validation
-- `IsFilePath` / `IsDirectoryPath` - Path category validation
-- `DoesExist` - File system existence validation
+| Form | Sign | Examples |
+|---|---|---|
+| `IVector0<TSelf, T>` (magnitude) | `>= 0` | `Speed`, `Mass`, `Energy`, `Distance`, `Area` |
+| `IVector1<TSelf, T>` (signed 1D) | signed | `Velocity1D`, `Force1D`, `Temperature`, `ElectricCharge` |
+| `IVector2<TSelf, T>` (2D) | per-component | `Velocity2D`, `Force2D`, `Acceleration2D` |
+| `IVector3<TSelf, T>` (3D) | per-component | `Velocity3D`, `Force3D`, `Position3D` |
+| `IVector4<TSelf, T>` | per-component | reserved (relativistic / spacetime) |
 
-### Validation Strategies
+`IVectorN.Magnitude()` (for N >= 1) returns the corresponding `IVector0`.
+
+The model and its rationale live in `strategy-unified-vector-quantities.md`. Rules of thumb:
+
+- A `Vector0` is *always* non-negative. `Speed.Create(-1)` throws.
+- `V0 - V0` returns the same `V0` of `T.Abs(a - b)` (signed subtraction must use V1 explicitly).
+- A semantic overload (e.g. `Weight` over `ForceMagnitude`) implicitly widens to its base; narrowing is explicit.
+- All values are stored in SI base units.
+
+### Creating quantities
+
 ```csharp
-// All must pass (default)
-[ValidateAll]
-[IsNotEmpty, IsEmail, HasLength(5, 100)]
+// Vector0 — magnitudes (non-negative)
+var speed     = Speed<double>.FromMetersPerSecond(15.0);
+var mass      = Mass<double>.FromKilogram(10.0);
+var distance  = Distance<double>.FromMeter(5.0);
+var energy    = Energy<double>.FromJoule(1_000.0);
+
+// Vector1 — signed scalar
+var v1        = Velocity1D<double>.FromMetersPerSecond(-3.5);
+var temp      = Temperature<double>.FromKelvin(300.0);
+
+// Vector3 — directional
+var force3d   = Force3D<double>.FromNewton(0.0, 0.0, -9.8);
+var disp3d    = Displacement3D<double>.FromMeter(3.0, 4.0, 0.0);
+```
+
+### Operators and dimensional analysis
+
+Cross-dimensional operators are declared in `dimensions.json` and emitted automatically:
+
+```csharp
+// V0 × V0 (magnitudes)
+var force      = mass * Acceleration<double>.FromMeter(9.8);  // Mass × Accel = Force
+var work       = ForceMagnitude<double>.FromNewton(10.0) * distance;  // F·d = Energy
+var power      = work / Duration<double>.FromSecond(2.0);     // W/t = Power
+
+// Vector ops
+var workScalar = force3d.Dot(disp3d);                          // Energy
+var torque     = force3d.Cross(disp3d);                        // Torque3D
+var magnitude  = disp3d.Magnitude();                           // Distance
+
+// Type safety
+// var nope = force + temp;   // ❌ compiler error
+```
+
+### Semantic overloads
+
+Several dimensions declare narrower-named overloads with implicit widening:
+
+```csharp
+var w   = Weight<double>.From(force);                   // Weight is a ForceMagnitude
+var fm  = ForceMagnitude<double>.From(w);               // implicit widening also OK
+var d   = Distance<double>.FromMeter(10.0);
+var rad = Radius<double>.From(d);
+var dia = rad.ToDiameter();                             // 20m via metadata-defined relationship
+```
+
+Overload preservation: `Weight + Weight => Weight`, but `Weight + Drag => ForceMagnitude` (narrowest-shared base).
+
+### Physical constants
+
+Centralised, generated, and generic over storage type:
+
+```csharp
+var c   = PhysicalConstants.Generic.SpeedOfLight<double>();         // 299_792_458 m/s
+var h   = PhysicalConstants.Generic.PlanckConstant<double>();
+var R   = PhysicalConstants.Generic.GasConstant<decimal>();
+var ftM = PhysicalConstants.Conversion.FeetToMeters<double>();      // 0.3048
+```
+
+Backing storage is `PreciseNumber`; the accessor converts via `T.CreateChecked` per call.
+
+### Adding new dimensions / overloads / relationships
+
+Edit `dimensions.json` and rebuild — see `physics-generator.md` for the full schema and an end-to-end walk-through.
+
+## Validation system
+
+Validation is attribute-driven and pipes through a strategy + rule architecture:
+
+1. **Attribute layer** — declarative validation on a type (`[IsEmailAddress]`, `[HasNonWhitespaceContent]`).
+2. **Strategy layer** — `ValidateAllStrategy` (default), `ValidateAnyStrategy`, or a custom `IValidationStrategy`.
+3. **Rule layer** — `IValidationRule` implementations selected per attribute.
+4. **Factory layer** — `ValidationStrategyFactory` resolves the right strategy.
+
+```csharp
+// Default: all must pass
+[HasNonWhitespaceContent, IsEmailAddress, EndsWith(".com")]
 public sealed record BusinessEmail : SemanticString<BusinessEmail> { }
 
 // Any can pass
 [ValidateAny]
-[IsEmail, IsUri]
+[IsEmailAddress, IsUri]
 public sealed record ContactMethod : SemanticString<ContactMethod> { }
 ```
 
-## Performance Features
+The full attribute list is in `validation-reference.md`. The runtime architecture (interfaces, strategies, contracts) is in `architecture.md`.
 
-The library is optimized for high-performance scenarios:
+## Performance utilities
 
-- **Span-based Operations** - Minimal memory allocations
-- **Pooled String Builders** - Reused StringBuilder instances
-- **Interned Path Strings** - Memory optimization for common paths
-- **Zero-cost Conversions** - Efficient implicit conversions
-- **Lazy Validation** - Validation only when needed
+The library is tuned for throughput-sensitive scenarios:
 
-### Performance Utilities
+- `PooledStringBuilder` — pooled, disposable `StringBuilder` for hot paths.
+- `InternedPathStrings` — intern frequently-used path literals.
+- `SpanPathUtilities` — span-based path manipulation with no allocations.
+- Validation runs once at construction and caches the verdict on the immutable record.
+
+## Integration
+
+### ASP.NET Core model binding
+
 ```csharp
-// Pooled string builder for high-performance string operations
-public class PooledStringBuilder : IDisposable
-
-// Interned strings for common paths  
-public static class InternedPathStrings
-
-// Span-based path utilities for minimal allocations
-public static class SpanPathUtilities
-```
-
-## Integration Examples
-
-### Dependency Injection
-```csharp
-services.AddTransient<ISemanticStringFactory<EmailAddress>, SemanticStringFactory<EmailAddress>>();
-
-public class UserService
+[HttpPost]
+public IActionResult CreateUser([FromBody] CreateUserRequest req)
 {
-    private readonly ISemanticStringFactory<EmailAddress> _emailFactory;
-    
-    public UserService(ISemanticStringFactory<EmailAddress> emailFactory)
-    {
-        _emailFactory = emailFactory;
-    }
+    if (!EmailAddress.TryCreate(req.Email, out var email))
+        return BadRequest("Invalid email");
+    return Ok(new User(email));
 }
 ```
 
-### Entity Framework
+### Entity Framework Core value conversion
+
 ```csharp
 modelBuilder.Entity<User>()
     .Property(u => u.Email)
     .HasConversion(
         email => email.ToString(),
-        value => EmailAddress.FromString<EmailAddress>(value));
+        value => EmailAddress.Create(value));
 ```
 
-### ASP.NET Core
+### Dependency injection
+
 ```csharp
-[HttpPost]
-public IActionResult CreateUser([FromBody] CreateUserRequest request)
-{
-    if (!_emailFactory.TryCreate(request.Email, out var email))
-    {
-        return BadRequest("Invalid email format");
-    }
-    
-    var user = new User(email);
-    return Ok(user);
-}
+services.AddTransient<ISemanticStringFactory<EmailAddress>, SemanticStringFactory<EmailAddress>>();
 ```
 
-This library transforms primitive-obsessed code into strongly-typed, self-validating domain models with comprehensive validation, complete physics capabilities across all major scientific domains, and excellent performance characteristics. With **80+ physics quantities**, **100+ physical constants**, and **50+ validation attributes**, it provides enterprise-ready solutions for scientific computing, engineering applications, and domain modeling. 
+## Where to go next
+
+- `strategy-unified-vector-quantities.md` for the physics architecture rationale and the full type hierarchy.
+- `physics-generator.md` for the metadata schema and how to add new dimensions.
+- `architecture.md` for SOLID/DRY patterns inside strings, paths, and validation.
+- `validation-reference.md` for the complete attribute catalogue.
+- `advanced-usage.md` for custom validation, contract validation, and DI patterns.

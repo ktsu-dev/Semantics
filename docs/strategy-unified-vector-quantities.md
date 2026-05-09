@@ -86,16 +86,18 @@ Speed<double> s = Speed.FromMetersPerSecond(-1.0);   // throws: magnitude cannot
 Speed<double> a = Speed.FromMetersPerSecond(3.0);
 Speed<double> b = Speed.FromMetersPerSecond(5.0);
 Speed<double> sum = a + b;    // 8.0 - OK
-// a - b would need to return absolute value or throw, since magnitudes can't go negative
+Speed<double> diff = b - a;   // 2.0 - OK; subtraction returns the same V0 of |a - b|
 ```
 
-**Design decision needed**: What happens when subtracting two Vector0 values would produce a negative result?
+**Decision (locked)**: `V0 - V0` returns the same V0 of `T.Abs(a - b)`. Magnitude subtraction stays a magnitude — non-negative, same dimension, same overload type. If the consumer needs the signed difference, they must convert to the V1 form explicitly:
 
-Options:
-1. Return the absolute value of the difference (magnitude of difference)
-2. Throw an exception
-3. Don't define subtraction on Vector0 at all (force users to convert to Vector1 first)
-4. Return a Vector1 (the signed difference) and let the user extract magnitude if needed
+```csharp
+Velocity1D<double> aSigned = Velocity1D.FromMetersPerSecond(a.Value);
+Velocity1D<double> bSigned = Velocity1D.FromMetersPerSecond(b.Value);
+Velocity1D<double> signed = aSigned - bSigned;   // -2.0
+```
+
+This rule is enforced by the generator; tests assert it for every V0 dimension.
 
 ### Vector1: Signed One-Dimensional
 
@@ -1237,15 +1239,17 @@ Below is a non-exhaustive list of overloads to illustrate the breadth:
 | Frequency | V0 | Frequency | SamplingRate, ClockSpeed, Bandwidth |
 | ElectricPotential | V0 | Voltage | EMF, VoltageDrop, BackEMF |
 
-### Open Questions (Semantic Overloads)
+### Resolved Decisions (Semantic Overloads)
 
-1. **Overload depth**: Should overloads be allowed to have their own overloads? (e.g., `Weight` as an overload of `ForceMagnitude`, then `BodyWeight` as an overload of `Weight`). Probably not - keep it flat.
+1. **Overload depth — flat.** Overloads do not nest. `Weight` is an overload of `ForceMagnitude`, but `BodyWeight` is *not* an overload of `Weight`. If a domain wants `BodyWeight`, declare it as a sibling overload of `ForceMagnitude` directly.
 
-2. **Cross-overload operations**: When `Width + Height` returns `Length`, should there be a way to annotate that the result could be semantically promoted? (e.g., `Perimeter` = `Width + Width + Height + Height`). Probably out of scope - that's application logic.
+2. **Cross-overload arithmetic — narrowest-shared-base wins.** `Width + Width => Width`. `Width + Height => Length` (the shared base). The generator does not introduce new overload types from arithmetic; semantic promotion such as `Perimeter = 2·Width + 2·Height` is application logic, not a generator concern.
 
-3. **Unit scoping**: Should overloads restrict available units? (e.g., `Wavelength` might typically use nanometers/micrometers rather than miles). This could be a display hint rather than a hard restriction.
+3. **Conversions — implicit widen, explicit narrow.** A `Weight` is implicitly a `ForceMagnitude`; the reverse requires `Weight.From(forceMagnitude)` or an explicit cast. This is the rule for every overload, regardless of vector form.
 
-4. **Overload-specific validation**: Beyond the shared base validation, can overloads add constraints? (e.g., `Radius >= 0` is already guaranteed by Vector0, but `Altitude` might have a domain-specific minimum).
+4. **Unit scoping — display hint only.** All overloads accept the full unit set of their dimension. Display preferences (e.g. `Wavelength` reading out in nm) are a presentation-layer concern.
+
+5. **Overload-specific validation — via per-dimension metadata.** Constraints stronger than the form's structural rules (V0 non-negativity is automatic; absolute zero on `Temperature` is not) are declared via `physicalConstraints` on the dimension entry in `dimensions.json`. The generator emits guards inside `Create`/`From*` that throw `ArgumentException`. Overloads inherit their dimension's constraints.
 
 ## Proposed Base Types
 
@@ -1457,20 +1461,24 @@ Every V1+ type has a structural `Magnitude()` method returning its V0 base:
 - Evaluate whether `SemanticQuantity<TSelf, TStorage>` becomes the base for Vector0/Vector1
 - Or whether the IVector interfaces stand alone with generated record types
 
-## Open Questions
+## Resolved Decisions
 
-1. **Subtraction on Vector0**: What should `Distance(5) - Distance(8)` return? Options: absolute value, throw, return Vector1, or don't define it.
+These were originally tracked as open questions; they are now locked. Reopening requires an architecture discussion.
 
-2. **Implicit conversions**: Should `Speed<T>` implicitly convert to `Velocity1D<T>` (promoting magnitude to positive signed value)? Should `Velocity1D<T>` implicitly yield `Speed<T>` via `.Magnitude()`?
+1. **`V0 - V0` returns the same V0 of `T.Abs(a - b)`.** Magnitude subtraction stays a magnitude. Signed subtraction must use the V1 form explicitly.
 
-3. **Naming**: For quantities with no established magnitude name (e.g., Jerk), is `JerkMagnitude` acceptable or is there a better convention?
+2. **Implicit conversions across vector forms — none.** `Speed<T>` does not implicitly convert to `Velocity1D<T>`, and vice versa. Magnitude extraction is `vN.Magnitude() => V0`; constructing a V1 from a V0 must be explicit.
 
-4. **Base class vs interface-only**: Should Vector0/Vector1 types inherit from `SemanticQuantity<TSelf, TStorage>` (giving them the existing arithmetic infrastructure) or should they be standalone records implementing only the IVector interfaces?
+3. **`{Dimension}Magnitude` is the canonical V0 name when no established magnitude term exists.** `JerkMagnitude`, `ForceMagnitude`, `TorqueMagnitude`. Dimensions with a vernacular magnitude name use it directly (`Speed` for `Velocity`, `Distance`/`Length` for displacement, etc.).
 
-5. **Dimensionless quantities**: Is `Dimensionless` a Vector0 (always positive ratio) or do we need both `Dimensionless` (Vector0) and `SignedDimensionless` (Vector1)?
+4. **Vector types inherit from `PhysicalQuantity<TSelf, T>` and implement the matching `IVector{N}`.** `IVector0`..`IVector4` are interfaces; the concrete generated records share a common base for arithmetic infrastructure.
 
-6. **Angular quantities**: Are angles Vector0 (magnitude) or Vector1 (signed, since clockwise vs counterclockwise matters)?
+5. **`Dimensionless` has both V0 (`Ratio`) and V1 (`SignedRatio`) bases.** Non-negative dimensionless quantities (`RefractiveIndex`, `MachNumber`, `SpecificGravity`, `ReynoldsNumber`) are V0 overloads of `Ratio`. Signed differential ratios use `SignedRatio`.
+
+6. **Angular quantities have V0/V1/V3 forms.** V0 (`AngularDisplacement`, etc.) for magnitudes (also covering 2D scalar angles), V1 for signed scalar angles, V3 for axial vectors. There is no V2 form for angular quantities — in 2D they reduce to a signed scalar.
+
+7. **Physical constraints come from `physicalConstraints` metadata.** Floors stronger than V0's structural non-negativity (e.g. absolute zero, non-negative frequency) are declared per-dimension in `dimensions.json` and emitted as `ArgumentException`-throwing guards inside `Create`/`From*`.
 
 ---
 
-*This document defines the strategic direction. Implementation details for each phase will be tracked in separate design documents as work proceeds.*
+*This document is the architecture spec for the unified vector model. The metadata schema and generator workflow live in `docs/physics-generator.md`.*
