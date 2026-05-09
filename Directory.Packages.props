@@ -8,13 +8,13 @@
     <!-- Test packages -->
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.3.2" />
     <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.0.2" />
-    <!-- Semantics project packages -->
-    <!-- Strings has no external validation dependency - uses native ValidationAdapter -->
+    <!-- Semantics runtime packages -->
     <PackageVersion Include="ktsu.PreciseNumber" Version="1.7.5" />
-    <PackageVersion Include="Polyfill" Version="9.8.1" />
+    <PackageVersion Include="ktsu.RoundTripStringJsonConverter" Version="1.0.10" />
+    <PackageVersion Include="Polyfill" Version="10.5.0" />
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.3" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
-    <!-- SourceGenerators project packages -->
+    <!-- Source generator packages -->
     <PackageVersion Include="ktsu.CodeBlocker" Version="1.2.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />

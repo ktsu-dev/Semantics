@@ -127,7 +127,7 @@ public static class UtilityTests
 			ReadOnlySpan<char> result = SpanPathUtilities.GetDirectoryName([]);
 
 			// Assert
-			Assert.IsTrue(result.IsEmpty);
+			Assert.IsTrue(result.IsEmpty, "GetDirectoryName should return empty for an empty path");
 		}
 
 		[TestMethod]
@@ -140,7 +140,7 @@ public static class UtilityTests
 			ReadOnlySpan<char> result = SpanPathUtilities.GetDirectoryName(path);
 
 			// Assert
-			Assert.IsTrue(result.IsEmpty);
+			Assert.IsTrue(result.IsEmpty, "GetDirectoryName should return empty when path has no directory separator");
 		}
 
 		[TestMethod]
@@ -190,7 +190,7 @@ public static class UtilityTests
 			ReadOnlySpan<char> result = SpanPathUtilities.GetFileName([]);
 
 			// Assert
-			Assert.IsTrue(result.IsEmpty);
+			Assert.IsTrue(result.IsEmpty, "GetFileName should return empty for an empty path");
 		}
 
 		[TestMethod]
@@ -255,7 +255,7 @@ public static class UtilityTests
 			ReadOnlySpan<char> result = SpanPathUtilities.GetFileName(path);
 
 			// Assert
-			Assert.IsTrue(result.IsEmpty);
+			Assert.IsTrue(result.IsEmpty, "GetFileName should return empty for path with trailing separator");
 		}
 
 		[TestMethod]
@@ -265,7 +265,7 @@ public static class UtilityTests
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator([]);
 
 			// Assert
-			Assert.IsFalse(result);
+			Assert.IsFalse(result, "EndsWithDirectorySeparator should return false for empty path");
 		}
 
 		[TestMethod]
@@ -278,7 +278,7 @@ public static class UtilityTests
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
 
 			// Assert
-			Assert.IsTrue(result);
+			Assert.IsTrue(result, "EndsWithDirectorySeparator should return true for path ending with directory separator");
 		}
 
 		[TestMethod]
@@ -291,7 +291,7 @@ public static class UtilityTests
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
 
 			// Assert
-			Assert.IsTrue(result);
+			Assert.IsTrue(result, "EndsWithDirectorySeparator should return true for path ending with alt directory separator");
 		}
 
 		[TestMethod]
@@ -304,7 +304,7 @@ public static class UtilityTests
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
 
 			// Assert
-			Assert.IsFalse(result);
+			Assert.IsFalse(result, "EndsWithDirectorySeparator should return false for path without trailing separator");
 		}
 	}
 
@@ -318,42 +318,42 @@ public static class UtilityTests
 		public void DirectorySeparator_IsInterned()
 		{
 			// Assert
-			Assert.IsTrue(ReferenceEquals(InternedPathStrings.DirectorySeparator, string.Intern(Path.DirectorySeparatorChar.ToString())));
+			Assert.IsTrue(ReferenceEquals(InternedPathStrings.DirectorySeparator, string.Intern(Path.DirectorySeparatorChar.ToString())), "DirectorySeparator should be interned");
 		}
 
 		[TestMethod]
 		public void AltDirectorySeparator_IsInterned()
 		{
 			// Assert
-			Assert.IsTrue(ReferenceEquals(InternedPathStrings.AltDirectorySeparator, string.Intern(Path.AltDirectorySeparatorChar.ToString())));
+			Assert.IsTrue(ReferenceEquals(InternedPathStrings.AltDirectorySeparator, string.Intern(Path.AltDirectorySeparatorChar.ToString())), "AltDirectorySeparator should be interned");
 		}
 
 		[TestMethod]
 		public void Empty_IsInterned()
 		{
 			// Assert
-			Assert.IsTrue(ReferenceEquals(InternedPathStrings.Empty, string.Intern(string.Empty)));
+			Assert.IsTrue(ReferenceEquals(InternedPathStrings.Empty, string.Intern(string.Empty)), "Empty should be interned");
 		}
 
 		[TestMethod]
 		public void WindowsRoot_IsInterned()
 		{
 			// Assert
-			Assert.IsTrue(ReferenceEquals(InternedPathStrings.WindowsRoot, string.Intern(@"C:\")));
+			Assert.IsTrue(ReferenceEquals(InternedPathStrings.WindowsRoot, string.Intern(@"C:\")), "WindowsRoot should be interned");
 		}
 
 		[TestMethod]
 		public void UnixRoot_IsInterned()
 		{
 			// Assert
-			Assert.IsTrue(ReferenceEquals(InternedPathStrings.UnixRoot, string.Intern("/")));
+			Assert.IsTrue(ReferenceEquals(InternedPathStrings.UnixRoot, string.Intern("/")), "UnixRoot should be interned");
 		}
 
 		[TestMethod]
 		public void WindowsUncRoot_IsInterned()
 		{
 			// Assert
-			Assert.IsTrue(ReferenceEquals(InternedPathStrings.WindowsUncRoot, string.Intern(@"\\")));
+			Assert.IsTrue(ReferenceEquals(InternedPathStrings.WindowsUncRoot, string.Intern(@"\\")), "WindowsUncRoot should be interned");
 		}
 
 		[TestMethod]

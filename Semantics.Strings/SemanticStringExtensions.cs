@@ -61,6 +61,7 @@ public static class SemanticStringExtensions
 		where TDerived : SemanticString<TDerived>
 		=> SemanticString<TDerived>.Create<TDerived>(value: value);
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	/// <summary>
 	/// Converts a read-only character span to the specified semantic string type.
 	/// </summary>
@@ -82,6 +83,7 @@ public static class SemanticStringExtensions
 	public static TDerived As<TDerived>(this ReadOnlySpan<char> value)
 		where TDerived : SemanticString<TDerived>
 		=> SemanticString<TDerived>.Create<TDerived>(value: value);
+#endif
 
 	/// <summary>
 	/// Converts one semantic string type to another semantic string type.

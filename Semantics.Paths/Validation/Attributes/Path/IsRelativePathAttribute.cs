@@ -47,7 +47,11 @@ public sealed class IsRelativePathAttribute : NativeSemanticStringValidationAttr
 				return ValidationResult.Success();
 			}
 
-			bool isRelative = !PathHelper.IsPathFullyQualified(value);
+#if NETSTANDARD2_0
+			bool isRelative = !PathPolyfill.IsPathFullyQualified(value);
+#else
+			bool isRelative = !Path.IsPathFullyQualified(value);
+#endif
 			return isRelative
 					? ValidationResult.Success()
 					: ValidationResult.Failure("The path must be relative (not fully qualified).");

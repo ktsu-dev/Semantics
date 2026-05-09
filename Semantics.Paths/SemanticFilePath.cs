@@ -7,7 +7,6 @@ namespace ktsu.Semantics.Paths;
 /// <summary>
 /// Base class for file paths (paths that represent files)
 /// </summary>
-[IsPath, IsFilePath]
 public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 	where TDerived : SemanticFilePath<TDerived>
 {
@@ -18,6 +17,21 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 	{
 		get
 		{
+#if NETSTANDARD2_0
+			string span = WeakString;
+
+			// Find the last dot
+			int lastDotIndex = span.LastIndexOf('.');
+			if (lastDotIndex == -1 || lastDotIndex == span.Length - 1)
+			{
+				// No extension or trailing dot
+				return FileExtension.Create<FileExtension>("");
+			}
+
+			// Return extension including the dot
+			string extension = span.Substring(lastDotIndex);
+			return FileExtension.Create<FileExtension>(extension);
+#else
 			ReadOnlySpan<char> span = WeakString.AsSpan();
 
 			// Find the last dot
@@ -31,6 +45,7 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 			// Return extension including the dot
 			ReadOnlySpan<char> extension = span[lastDotIndex..];
 			return FileExtension.Create<FileExtension>(extension.ToString());
+#endif
 		}
 	}
 
@@ -41,6 +56,21 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 	{
 		get
 		{
+#if NETSTANDARD2_0
+			string span = WeakString;
+
+			// Find the first dot
+			int firstDotIndex = span.IndexOf('.');
+			if (firstDotIndex == -1)
+			{
+				// No extension
+				return FileExtension.Create<FileExtension>("");
+			}
+
+			// Return everything from the first dot onward
+			string fullExtension = span.Substring(firstDotIndex);
+			return FileExtension.Create<FileExtension>(fullExtension);
+#else
 			ReadOnlySpan<char> span = WeakString.AsSpan();
 
 			// Find the first dot
@@ -54,6 +84,7 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 			// Return everything from the first dot onward
 			ReadOnlySpan<char> fullExtension = span[firstDotIndex..];
 			return FileExtension.Create<FileExtension>(fullExtension.ToString());
+#endif
 		}
 	}
 

@@ -7,7 +7,7 @@ namespace ktsu.Semantics.Paths;
 /// <summary>
 /// Represents a relative file path
 /// </summary>
-[IsPath, IsRelativePath, IsFilePath]
+[IsRelativePath]
 public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRelativeFilePath
 {
 	// Cache for expensive directory path computation
@@ -50,6 +50,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	public RelativeFilePath ChangeExtension(FileExtension newExtension)
 	{
 		Ensure.NotNull(newExtension);
+
 		string newPath = Path.ChangeExtension(WeakString, newExtension.WeakString);
 		return Create<RelativeFilePath>(newPath);
 	}
@@ -94,7 +95,11 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	public AbsoluteFilePath AsAbsolute(AbsoluteDirectoryPath baseDirectory)
 	{
 		Ensure.NotNull(baseDirectory);
-		string absolutePath = PathHelper.GetFullPath(WeakString, baseDirectory.WeakString);
+#if NETSTANDARD2_0
+		string absolutePath = PathPolyfill.GetFullPath(WeakString, baseDirectory.WeakString);
+#else
+		string absolutePath = Path.GetFullPath(WeakString, baseDirectory.WeakString);
+#endif
 		return AbsoluteFilePath.Create<AbsoluteFilePath>(absolutePath);
 	}
 

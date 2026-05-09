@@ -7,6 +7,7 @@ namespace ktsu.Semantics.Test;
 using ktsu.Semantics.Paths;
 using System.Collections.Concurrent;
 using System.Text;
+using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -101,9 +102,9 @@ public static class AdvancedUtilityTests
 			string path3 = $"{Path.DirectorySeparatorChar}end";
 			string result = PooledStringBuilder.CombinePaths(path1, path2, path3);
 
-			Assert.IsTrue(result.Contains("root"));
-			Assert.IsTrue(result.Contains("middle"));
-			Assert.IsTrue(result.Contains("end"));
+			Assert.Contains("root", result);
+			Assert.Contains("middle", result);
+			Assert.Contains("end", result);
 		}
 
 		[TestMethod]
@@ -124,12 +125,14 @@ public static class AdvancedUtilityTests
 						string result = PooledStringBuilder.CombinePaths($"thread{threadId}", $"op{j}");
 						results.Add(result);
 					}
-				});
+				}, TestContext.CancellationTokenSource.Token);
 			}
 
-			Task.WaitAll(tasks);
-			Assert.AreEqual(threadCount * operationsPerThread, results.Count);
+			Task.WaitAll(tasks, TestContext.CancellationTokenSource.Token);
+			Assert.HasCount(threadCount * operationsPerThread, results);
 		}
+
+		public TestContext TestContext { get; set; }
 	}
 
 	[TestClass]
@@ -140,7 +143,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> path = $"test{Path.DirectorySeparatorChar}".AsSpan();
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result, "Path ending with directory separator should return true");
 		}
 
 		[TestMethod]
@@ -148,7 +151,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> path = "test".AsSpan();
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
-			Assert.IsFalse(result);
+			Assert.IsFalse(result, "Path not ending with separator should return false");
 		}
 
 		[TestMethod]
@@ -156,7 +159,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> path = [];
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
-			Assert.IsFalse(result);
+			Assert.IsFalse(result, "Empty span should return false");
 		}
 
 		[TestMethod]
@@ -164,7 +167,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> path = Path.DirectorySeparatorChar.ToString().AsSpan();
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result, "Single separator character should return true");
 		}
 
 		[TestMethod]
@@ -192,7 +195,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> longPath = (new string('a', 1000) + Path.DirectorySeparatorChar).AsSpan();
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(longPath);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result, "Long path ending with separator should return true");
 		}
 
 		[TestMethod]
@@ -200,7 +203,7 @@ public static class AdvancedUtilityTests
 		{
 			ReadOnlySpan<char> path = $"test{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}".AsSpan();
 			bool result = SpanPathUtilities.EndsWithDirectorySeparator(path);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result, "Path ending with multiple separators should return true");
 		}
 	}
 
@@ -273,15 +276,17 @@ public static class AdvancedUtilityTests
 					{
 						allEmpty.Add(InternedPathStrings.Empty);
 					}
-				});
+				}, TestContext.CancellationTokenSource.Token);
 			}
 
-			Task.WaitAll(tasks);
+			Task.WaitAll(tasks, TestContext.CancellationTokenSource.Token);
 
 			// All instances should be the same reference
 			string firstEmpty = allEmpty.First();
-			Assert.IsTrue(allEmpty.All(e => ReferenceEquals(e, firstEmpty)));
+			Assert.IsTrue(allEmpty.All(e => ReferenceEquals(e, firstEmpty)), "All empty string instances should be the same reference");
 		}
+
+		public TestContext TestContext { get; set; }
 	}
 
 	[TestClass]
@@ -298,8 +303,8 @@ public static class AdvancedUtilityTests
 			bool endsWithSeparator = SpanPathUtilities.EndsWithDirectorySeparator(pathSpan);
 
 			Assert.IsFalse(endsWithSeparator, "File path should not end with separator");
-			Assert.IsTrue(combinedPath.Contains("root"));
-			Assert.IsTrue(combinedPath.Contains("file.txt"));
+			Assert.Contains("root", combinedPath);
+			Assert.Contains("file.txt", combinedPath);
 		}
 
 		[TestMethod]
@@ -308,8 +313,8 @@ public static class AdvancedUtilityTests
 			string emptyPath = InternedPathStrings.Empty;
 			string pathWithEmpty = PooledStringBuilder.CombinePaths("root", emptyPath, "file");
 
-			Assert.IsTrue(pathWithEmpty.Contains("root"));
-			Assert.IsTrue(pathWithEmpty.Contains("file"));
+			Assert.Contains("root", pathWithEmpty);
+			Assert.Contains("file", pathWithEmpty);
 		}
 
 		[TestMethod]
@@ -326,8 +331,8 @@ public static class AdvancedUtilityTests
 			}
 
 			stopwatch.Stop();
-			Assert.IsTrue(stopwatch.ElapsedMilliseconds < 1000,
-				$"Performance test took {stopwatch.ElapsedMilliseconds}ms, expected < 1000ms");
+			Assert.IsLessThan(1000,
+stopwatch.ElapsedMilliseconds, $"Performance test took {stopwatch.ElapsedMilliseconds}ms, expected < 1000ms");
 		}
 	}
 }

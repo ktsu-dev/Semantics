@@ -4,18 +4,22 @@
 
 namespace ktsu.Semantics.Strings;
 
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
+using System.Text.Json.Serialization;
+
+using ktsu.RoundTripStringJsonConverter;
 
 /// <summary>
 /// Base class for all semantic string types using CRTP (Curiously Recurring Template Pattern).
 /// Provides type safety and validation for string values that have specific meaning or format requirements.
 /// </summary>
 [DebuggerDisplay(value: $"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-
+[JsonConverter(typeof(RoundTripStringJsonConverterFactory))]
 public abstract record SemanticString<TDerived> : ISemanticString
 	where TDerived : SemanticString<TDerived>
 {
@@ -91,7 +95,11 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <inheritdoc/>
 	public bool Contains(string value) => WeakString.Contains(value: value);
 	/// <inheritdoc/>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
 	public bool Contains(string value, StringComparison comparisonType) => WeakString.Contains(value: value, comparisonType: comparisonType);
+#else
+	public bool Contains(string value, StringComparison comparisonType) => WeakString.IndexOf(value, comparisonType) >= 0;
+#endif
 
 	/// <inheritdoc/>
 	public void CopyTo(int sourceIndex, char[] destination, int destinationIndex, int count) => WeakString.CopyTo(sourceIndex: sourceIndex, destination: destination, destinationIndex: destinationIndex, count: count);
@@ -190,8 +198,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public string PadRight(int totalWidth, char paddingChar) => WeakString.PadRight(totalWidth: totalWidth, paddingChar: paddingChar);
 
 	/// <inheritdoc/>
-	[SuppressMessage("Style", "IDE0057:Use range operator", Justification = "I'd rather wrap the class 1:1 than reimplement it")]
-	public string Remove(int startIndex) => WeakString.Remove(startIndex: startIndex);
+	public string Remove(int startIndex) => WeakString.Remove(startIndex);
 	/// <inheritdoc/>
 	public string Remove(int startIndex, int count) => WeakString.Remove(startIndex: startIndex, count: count);
 
@@ -277,6 +284,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public static string ToString(ISemanticString? semanticString) => semanticString?.WeakString ?? string.Empty;
 	/// <inheritdoc/>
 	public static char[] ToCharArray(ISemanticString? semanticString) => semanticString?.WeakString.ToCharArray() ?? [];
+
 	/// <inheritdoc/>
 	public static ReadOnlySpan<char> ToReadOnlySpan(ISemanticString? semanticString) => semanticString is null ? [] : semanticString.WeakString.AsSpan();
 
@@ -852,7 +860,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <remarks>
 	/// This overload uses span-based search which can be more efficient than string-based IndexOf for certain scenarios.
 	/// </remarks>
-	public int IndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().IndexOf(value, comparisonType);
+	public int IndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.IndexOf(value.ToString(), comparisonType);
 
 	/// <summary>
 	/// Finds the last occurrence of a character sequence in the semantic string using span semantics.
@@ -874,7 +882,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <remarks>
 	/// This overload uses span-based comparison which avoids string allocations when working with substrings or spans.
 	/// </remarks>
-	public bool StartsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().StartsWith(value, comparisonType);
+	public bool StartsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.StartsWith(value.ToString(), comparisonType);
 
 	/// <summary>
 	/// Determines whether the semantic string ends with the specified span using efficient span comparison.
@@ -885,7 +893,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <remarks>
 	/// This overload uses span-based comparison which avoids string allocations when working with substrings or spans.
 	/// </remarks>
-	public bool EndsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().EndsWith(value, comparisonType);
+	public bool EndsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.EndsWith(value.ToString(), comparisonType);
 
 	/// <summary>
 	/// Determines whether the semantic string contains the specified span using efficient span comparison.
@@ -896,7 +904,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <remarks>
 	/// This overload uses span-based search which can be more efficient than string-based Contains for certain scenarios.
 	/// </remarks>
-	public bool Contains(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => AsSpan().Contains(value, comparisonType);
+	public bool Contains(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.Contains(value.ToString(), comparisonType);
 
 	/// <summary>
 	/// Counts the number of characters that match the specified predicate using span semantics.

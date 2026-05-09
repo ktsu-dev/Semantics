@@ -7,7 +7,7 @@ namespace ktsu.Semantics.Paths;
 /// <summary>
 /// Represents an absolute file path
 /// </summary>
-[IsPath, IsAbsolutePath, IsFilePath]
+[IsAbsolutePath]
 public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbsoluteFilePath
 {
 	// Cache for expensive directory path computation
@@ -50,6 +50,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	public AbsoluteFilePath ChangeExtension(FileExtension newExtension)
 	{
 		Ensure.NotNull(newExtension);
+
 		string newPath = Path.ChangeExtension(WeakString, newExtension.WeakString);
 		return Create<AbsoluteFilePath>(newPath);
 	}
@@ -78,6 +79,28 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 		Ensure.NotNull(parentPath);
 
 		// Get normalized paths using span semantics for comparison
+#if NETSTANDARD2_0
+		string thisPathSpan = Path.GetFullPath(WeakString);
+		string parentPathSpan = Path.GetFullPath(parentPath.WeakString);
+
+		// A path cannot be a child of itself
+		if (string.Equals(thisPathSpan, parentPathSpan, StringComparison.OrdinalIgnoreCase))
+		{
+			return false;
+		}
+
+		// Check if this path starts with the parent path followed by a separator
+		if (!thisPathSpan.StartsWith(parentPathSpan, StringComparison.OrdinalIgnoreCase))
+		{
+			return false;
+		}
+
+		// Ensure there's a separator after the parent path (not just a prefix match)
+		int nextIndex = parentPathSpan.Length;
+		return nextIndex < thisPathSpan.Length &&
+			   (thisPathSpan[nextIndex] == Path.DirectorySeparatorChar ||
+				thisPathSpan[nextIndex] == Path.AltDirectorySeparatorChar);
+#else
 		ReadOnlySpan<char> thisPathSpan = Path.GetFullPath(WeakString).AsSpan();
 		ReadOnlySpan<char> parentPathSpan = Path.GetFullPath(parentPath.WeakString).AsSpan();
 
@@ -98,6 +121,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 		return nextIndex < thisPathSpan.Length &&
 			   (thisPathSpan[nextIndex] == Path.DirectorySeparatorChar ||
 				thisPathSpan[nextIndex] == Path.AltDirectorySeparatorChar);
+#endif
 	}
 
 	/// <summary>
@@ -122,7 +146,11 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
 		Ensure.NotNull(baseDirectory);
-		string relativePath = PathHelper.GetRelativePath(baseDirectory.WeakString, WeakString);
+#if NETSTANDARD2_0
+		string relativePath = PathPolyfill.GetRelativePath(baseDirectory.WeakString, WeakString);
+#else
+		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, WeakString);
+#endif
 		return RelativeFilePath.Create<RelativeFilePath>(relativePath);
 	}
 }

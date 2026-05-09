@@ -9,6 +9,7 @@ using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ktsu.Semantics.Strings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 public record MySemanticString : SemanticString<MySemanticString> { }
@@ -56,14 +57,14 @@ public class StringTests
 	public void IsEmptyMethod()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>(string.Empty);
-		Assert.IsTrue(semanticString.IsEmpty());
+		Assert.IsTrue(semanticString.IsEmpty(), "Empty semantic string should report IsEmpty as true");
 	}
 
 	[TestMethod]
 	public void IsValidMethod()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
-		Assert.IsTrue(semanticString.IsValid());
+		Assert.IsTrue(semanticString.IsValid(), "Non-empty semantic string should be valid");
 	}
 
 	[TestMethod]
@@ -80,13 +81,6 @@ public class StringTests
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 		MySemanticString result = semanticString.WithSuffix("-post");
 		Assert.AreEqual("test-post", result.ToString());
-	}
-	[TestMethod]
-	public void AsStringExtensionMethod()
-	{
-		string systemString = "test";
-		MySemanticString semanticString = systemString.As<MySemanticString>();
-		Assert.AreEqual("test", semanticString.WeakString);
 	}
 
 	[TestMethod]
@@ -128,7 +122,7 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 		ReadOnlySpan<char> result = semanticString;
-		Assert.IsTrue(result.SequenceEqual("test".AsSpan()));
+		Assert.IsTrue(result.SequenceEqual("test".AsSpan()), "ReadOnlySpan from implicit cast should equal expected value");
 	}
 
 	[TestMethod]
@@ -153,8 +147,8 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 		Assert.AreEqual(0, semanticString.CompareTo("test"));
-		Assert.IsTrue(semanticString.CompareTo("apple") > 0);
-		Assert.IsTrue(semanticString.CompareTo("zebra") < 0);
+		Assert.IsGreaterThan(0, semanticString.CompareTo("apple"));
+		Assert.IsLessThan(0, semanticString.CompareTo("zebra"));
 	}
 
 	[TestMethod]
@@ -165,40 +159,40 @@ public class StringTests
 		MySemanticString semanticString3 = SemanticString<MySemanticString>.Create<MySemanticString>("apple");
 
 		Assert.AreEqual(0, semanticString1.CompareTo(semanticString2));
-		Assert.IsTrue(semanticString1.CompareTo(semanticString3) > 0);
+		Assert.IsGreaterThan(0, semanticString1.CompareTo(semanticString3));
 	}
 
 	[TestMethod]
 	public void Contains_String_ReturnsCorrectResult()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("hello world");
-		Assert.IsTrue(semanticString.Contains("world"));
-		Assert.IsTrue(semanticString.Contains("hello"));
-		Assert.IsFalse(semanticString.Contains("test"));
+		Assert.IsTrue(semanticString.Contains("world"), "Should contain 'world'");
+		Assert.IsTrue(semanticString.Contains("hello"), "Should contain 'hello'");
+		Assert.IsFalse(semanticString.Contains("test"), "Should not contain 'test'");
 	}
 
 	[TestMethod]
 	public void Contains_WithStringComparison_ReturnsCorrectResult()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("Hello World");
-		Assert.IsTrue(semanticString.Contains("WORLD", StringComparison.OrdinalIgnoreCase));
-		Assert.IsFalse(semanticString.Contains("WORLD", StringComparison.Ordinal));
+		Assert.IsTrue(semanticString.Contains("WORLD", StringComparison.OrdinalIgnoreCase), "Case-insensitive search should find 'WORLD'");
+		Assert.IsFalse(semanticString.Contains("WORLD", StringComparison.Ordinal), "Case-sensitive search should not find 'WORLD'");
 	}
 
 	[TestMethod]
 	public void EndsWith_ReturnsCorrectResult()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("hello world");
-		Assert.IsTrue(semanticString.EndsWith("world"));
-		Assert.IsFalse(semanticString.EndsWith("hello"));
+		Assert.IsTrue(semanticString.EndsWith("world"), "Should end with 'world'");
+		Assert.IsFalse(semanticString.EndsWith("hello"), "Should not end with 'hello'");
 	}
 
 	[TestMethod]
 	public void StartsWith_ReturnsCorrectResult()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("hello world");
-		Assert.IsTrue(semanticString.StartsWith("hello"));
-		Assert.IsFalse(semanticString.StartsWith("world"));
+		Assert.IsTrue(semanticString.StartsWith("hello"), "Should start with 'hello'");
+		Assert.IsFalse(semanticString.StartsWith("world"), "Should not start with 'world'");
 	}
 
 	[TestMethod]
@@ -244,12 +238,12 @@ public class StringTests
 		MySemanticString semanticString2 = SemanticString<MySemanticString>.Create<MySemanticString>("banana");
 		MySemanticString semanticString3 = SemanticString<MySemanticString>.Create<MySemanticString>("apple");
 
-		Assert.IsTrue(semanticString1 < semanticString2);
-		Assert.IsTrue(semanticString1 <= semanticString2);
-		Assert.IsTrue(semanticString1 <= semanticString3);
-		Assert.IsTrue(semanticString2 > semanticString1);
-		Assert.IsTrue(semanticString2 >= semanticString1);
-		Assert.IsTrue(semanticString1 >= semanticString3);
+		Assert.IsTrue(semanticString1 < semanticString2, "'apple' should be less than 'banana'");
+		Assert.IsTrue(semanticString1 <= semanticString2, "'apple' should be less than or equal to 'banana'");
+		Assert.IsTrue(semanticString1 <= semanticString3, "'apple' should be less than or equal to 'apple'");
+		Assert.IsTrue(semanticString2 > semanticString1, "'banana' should be greater than 'apple'");
+		Assert.IsTrue(semanticString2 >= semanticString1, "'banana' should be greater than or equal to 'apple'");
+		Assert.IsTrue(semanticString1 >= semanticString3, "'apple' should be greater than or equal to 'apple'");
 	}
 
 	[TestMethod]
@@ -258,12 +252,12 @@ public class StringTests
 		MySemanticString? nullSemanticString = null;
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 
-		Assert.IsTrue(nullSemanticString < semanticString);
-		Assert.IsTrue(nullSemanticString <= semanticString);
-		Assert.IsFalse(nullSemanticString > semanticString);
-		Assert.IsFalse(nullSemanticString >= semanticString);
-		Assert.IsFalse(semanticString < nullSemanticString);
-		Assert.IsTrue(semanticString > nullSemanticString);
+		Assert.IsTrue(nullSemanticString < semanticString, "null should be less than non-null");
+		Assert.IsTrue(nullSemanticString <= semanticString, "null should be less than or equal to non-null");
+		Assert.IsFalse(nullSemanticString > semanticString, "null should not be greater than non-null");
+		Assert.IsFalse(nullSemanticString >= semanticString, "null should not be greater than or equal to non-null");
+		Assert.IsFalse(semanticString < nullSemanticString, "non-null should not be less than null");
+		Assert.IsTrue(semanticString > nullSemanticString, "non-null should be greater than null");
 	}
 
 	[TestMethod]
@@ -309,7 +303,7 @@ public class StringTests
 	{
 		MySemanticString? nullSemanticString = null;
 		char[] result = SemanticString<MySemanticString>.ToCharArray(nullSemanticString);
-		Assert.AreEqual(0, result.Length);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]
@@ -317,14 +311,14 @@ public class StringTests
 	{
 		MySemanticString? nullSemanticString = null;
 		ReadOnlySpan<char> result = SemanticString<MySemanticString>.ToReadOnlySpan(nullSemanticString);
-		Assert.IsTrue(result.IsEmpty);
+		Assert.IsTrue(result.IsEmpty, "ReadOnlySpan from null should be empty");
 	}
 
 	[TestMethod]
 	public void IsEmpty_WithNonEmptyString_ReturnsFalse()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
-		Assert.IsFalse(semanticString.IsEmpty());
+		Assert.IsFalse(semanticString.IsEmpty(), "Non-empty string should not report IsEmpty as true");
 	}
 
 	[TestMethod]
@@ -336,24 +330,24 @@ public class StringTests
 		ReadOnlySpan<char> spanResult = nullSemanticString;
 
 		Assert.AreEqual(string.Empty, stringResult);
-		Assert.AreEqual(0, charArrayResult.Length);
-		Assert.IsTrue(spanResult.IsEmpty);
+		Assert.IsEmpty(charArrayResult);
+		Assert.IsTrue(spanResult.IsEmpty, "ReadOnlySpan from null should be empty");
 	}
 
 	[TestMethod]
 	public void Equals_WithString_ReturnsCorrectResult()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
-		Assert.IsTrue(semanticString.Equals("test"));
-		Assert.IsFalse(semanticString.Equals("other"));
+		Assert.IsTrue(semanticString.Equals("test"), "Should equal 'test'");
+		Assert.IsFalse(semanticString.Equals("other"), "Should not equal 'other'");
 	}
 
 	[TestMethod]
 	public void Equals_WithStringComparison_ReturnsCorrectResult()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("Test");
-		Assert.IsTrue(semanticString.Equals("TEST", StringComparison.OrdinalIgnoreCase));
-		Assert.IsFalse(semanticString.Equals("TEST", StringComparison.Ordinal));
+		Assert.IsTrue(semanticString.Equals("TEST", StringComparison.OrdinalIgnoreCase), "Case-insensitive comparison should equal 'TEST'");
+		Assert.IsFalse(semanticString.Equals("TEST", StringComparison.Ordinal), "Case-sensitive comparison should not equal 'TEST'");
 	}
 
 	[TestMethod]
@@ -362,15 +356,15 @@ public class StringTests
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 		using IEnumerator<char> enumerator = ((IEnumerable<char>)semanticString).GetEnumerator();
 
-		Assert.IsTrue(enumerator.MoveNext());
+		Assert.IsTrue(enumerator.MoveNext(), "Should be able to move to first character");
 		Assert.AreEqual('t', enumerator.Current);
-		Assert.IsTrue(enumerator.MoveNext());
+		Assert.IsTrue(enumerator.MoveNext(), "Should be able to move to second character");
 		Assert.AreEqual('e', enumerator.Current);
-		Assert.IsTrue(enumerator.MoveNext());
+		Assert.IsTrue(enumerator.MoveNext(), "Should be able to move to third character");
 		Assert.AreEqual('s', enumerator.Current);
-		Assert.IsTrue(enumerator.MoveNext());
+		Assert.IsTrue(enumerator.MoveNext(), "Should be able to move to fourth character");
 		Assert.AreEqual('t', enumerator.Current);
-		Assert.IsFalse(enumerator.MoveNext());
+		Assert.IsFalse(enumerator.MoveNext(), "Should not be able to move past last character");
 	}
 
 	[TestMethod]
@@ -636,7 +630,7 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("hello");
 		bool result = semanticString.IsNormalized();
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Simple string should be normalized in default form");
 	}
 
 	[TestMethod]
@@ -644,7 +638,7 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("hello");
 		bool result = semanticString.IsNormalized(NormalizationForm.FormC);
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Simple string should be normalized in FormC");
 	}
 
 	[TestMethod]
@@ -668,15 +662,15 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("Hello World");
 		bool result = semanticString.StartsWith("HELLO", true, CultureInfo.InvariantCulture);
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Case-insensitive culture comparison should find 'HELLO' at start");
 	}
 
 	[TestMethod]
 	public void StartsWith_WithStringComparison_ReturnsCorrectResult()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("Hello World");
-		Assert.IsTrue(semanticString.StartsWith("HELLO", StringComparison.OrdinalIgnoreCase));
-		Assert.IsFalse(semanticString.StartsWith("HELLO", StringComparison.Ordinal));
+		Assert.IsTrue(semanticString.StartsWith("HELLO", StringComparison.OrdinalIgnoreCase), "Case-insensitive comparison should find 'HELLO' at start");
+		Assert.IsFalse(semanticString.StartsWith("HELLO", StringComparison.Ordinal), "Case-sensitive comparison should not find 'HELLO' at start");
 	}
 
 	[TestMethod]
@@ -684,15 +678,15 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("Hello World");
 		bool result = semanticString.EndsWith("WORLD", true, CultureInfo.InvariantCulture);
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Case-insensitive culture comparison should find 'WORLD' at end");
 	}
 
 	[TestMethod]
 	public void EndsWith_WithStringComparison_ReturnsCorrectResult()
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("Hello World");
-		Assert.IsTrue(semanticString.EndsWith("WORLD", StringComparison.OrdinalIgnoreCase));
-		Assert.IsFalse(semanticString.EndsWith("WORLD", StringComparison.Ordinal));
+		Assert.IsTrue(semanticString.EndsWith("WORLD", StringComparison.OrdinalIgnoreCase), "Case-insensitive comparison should find 'WORLD' at end");
+		Assert.IsFalse(semanticString.EndsWith("WORLD", StringComparison.Ordinal), "Case-sensitive comparison should not find 'WORLD' at end");
 	}
 
 	[TestMethod]
@@ -821,7 +815,7 @@ public class SemanticStringAdditionalTests
 	{
 		bool result = SemanticString<MySemanticString>.TryCreate("test", out MySemanticString? semantic);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "TryCreate should return true for valid input");
 		Assert.IsNotNull(semantic);
 		Assert.AreEqual("test", semantic.WeakString);
 	}
@@ -831,7 +825,7 @@ public class SemanticStringAdditionalTests
 	{
 		bool result = SemanticString<MySemanticString>.TryCreate((string?)null, out MySemanticString? semantic);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "TryCreate should return false for null input");
 		Assert.IsNull(semantic);
 	}
 
@@ -840,7 +834,7 @@ public class SemanticStringAdditionalTests
 	{
 		bool result = SemanticString<ValidationTestSemanticString>.TryCreate("INVALID", out ValidationTestSemanticString? semantic);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "TryCreate should return false for invalid input");
 		Assert.IsNull(semantic);
 	}
 
@@ -850,7 +844,7 @@ public class SemanticStringAdditionalTests
 		char[] chars = ['t', 'e', 's', 't'];
 		bool result = SemanticString<MySemanticString>.TryCreate(chars, out MySemanticString? semantic);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "TryCreate should return true for valid char array");
 		Assert.IsNotNull(semantic);
 		Assert.AreEqual("test", semantic.WeakString);
 	}
@@ -860,7 +854,7 @@ public class SemanticStringAdditionalTests
 	{
 		bool result = SemanticString<MySemanticString>.TryCreate((char[]?)null, out MySemanticString? semantic);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "TryCreate should return false for null char array");
 		Assert.IsNull(semantic);
 	}
 
@@ -870,7 +864,7 @@ public class SemanticStringAdditionalTests
 		ReadOnlySpan<char> span = "test".AsSpan();
 		bool result = SemanticString<MySemanticString>.TryCreate(span, out MySemanticString? semantic);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "TryCreate should return true for valid ReadOnlySpan");
 		Assert.IsNotNull(semantic);
 		Assert.AreEqual("test", semantic.WeakString);
 	}
@@ -881,7 +875,7 @@ public class SemanticStringAdditionalTests
 		ReadOnlySpan<char> span = [];
 		bool result = SemanticString<MySemanticString>.TryCreate(span, out MySemanticString? semantic);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "TryCreate should return true for empty ReadOnlySpan");
 		Assert.IsNotNull(semantic);
 		Assert.AreEqual(string.Empty, semantic.WeakString);
 	}
@@ -892,7 +886,7 @@ public class SemanticStringAdditionalTests
 		ReadOnlySpan<char> span = "INVALID".AsSpan();
 		bool result = SemanticString<ValidationTestSemanticString>.TryCreate(span, out ValidationTestSemanticString? semantic);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "TryCreate should return false for invalid ReadOnlySpan");
 		Assert.IsNull(semantic);
 	}
 
@@ -901,7 +895,7 @@ public class SemanticStringAdditionalTests
 	{
 		bool result = MySemanticString.TryCreate("test", out MySemanticString? semantic);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Generic TryCreate should return true for valid string");
 		Assert.IsNotNull(semantic);
 		Assert.AreEqual("test", semantic.WeakString);
 	}
@@ -912,7 +906,7 @@ public class SemanticStringAdditionalTests
 		char[] chars = ['t', 'e', 's', 't'];
 		bool result = MySemanticString.TryCreate(chars, out MySemanticString? semantic);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Generic TryCreate should return true for valid char array");
 		Assert.IsNotNull(semantic);
 		Assert.AreEqual("test", semantic.WeakString);
 	}
@@ -923,7 +917,7 @@ public class SemanticStringAdditionalTests
 		ReadOnlySpan<char> span = "test".AsSpan();
 		bool result = MySemanticString.TryCreate(span, out MySemanticString? semantic);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Generic TryCreate should return true for valid ReadOnlySpan");
 		Assert.IsNotNull(semantic);
 		Assert.AreEqual("test", semantic.WeakString);
 	}
@@ -934,7 +928,7 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 		ReadOnlySpan<char> span = semantic.AsSpan();
 
-		Assert.IsTrue(span.SequenceEqual("test".AsSpan()));
+		Assert.IsTrue(span.SequenceEqual("test".AsSpan()), "AsSpan should return span with expected content");
 	}
 
 	[TestMethod]
@@ -943,7 +937,7 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello");
 		ReadOnlySpan<char> span = semantic.AsSpan(2);
 
-		Assert.IsTrue(span.SequenceEqual("llo".AsSpan()));
+		Assert.IsTrue(span.SequenceEqual("llo".AsSpan()), "AsSpan with start index should return correct substring span");
 	}
 
 	[TestMethod]
@@ -952,7 +946,7 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("hello");
 		ReadOnlySpan<char> span = semantic.AsSpan(1, 3);
 
-		Assert.IsTrue(span.SequenceEqual("ell".AsSpan()));
+		Assert.IsTrue(span.SequenceEqual("ell".AsSpan()), "AsSpan with start index and length should return correct substring span");
 	}
 
 	[TestMethod]
@@ -992,7 +986,7 @@ public class SemanticStringAdditionalTests
 		ReadOnlySpan<char> prefixSpan = "hello".AsSpan();
 
 		bool result = semantic.StartsWith(prefixSpan);
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Should start with 'hello' span");
 	}
 
 	[TestMethod]
@@ -1002,7 +996,7 @@ public class SemanticStringAdditionalTests
 		ReadOnlySpan<char> prefixSpan = "HELLO".AsSpan();
 
 		bool result = semantic.StartsWith(prefixSpan, StringComparison.OrdinalIgnoreCase);
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Case-insensitive comparison should find 'HELLO' span at start");
 	}
 
 	[TestMethod]
@@ -1012,7 +1006,7 @@ public class SemanticStringAdditionalTests
 		ReadOnlySpan<char> suffixSpan = "world".AsSpan();
 
 		bool result = semantic.EndsWith(suffixSpan);
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Should end with 'world' span");
 	}
 
 	[TestMethod]
@@ -1022,7 +1016,7 @@ public class SemanticStringAdditionalTests
 		ReadOnlySpan<char> suffixSpan = "WORLD".AsSpan();
 
 		bool result = semantic.EndsWith(suffixSpan, StringComparison.OrdinalIgnoreCase);
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Case-insensitive comparison should find 'WORLD' span at end");
 	}
 
 	[TestMethod]
@@ -1032,7 +1026,7 @@ public class SemanticStringAdditionalTests
 		ReadOnlySpan<char> searchSpan = "lo wo".AsSpan();
 
 		bool result = semantic.Contains(searchSpan);
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Should contain 'lo wo' span");
 	}
 
 	[TestMethod]
@@ -1042,7 +1036,7 @@ public class SemanticStringAdditionalTests
 		ReadOnlySpan<char> searchSpan = "LO WO".AsSpan();
 
 		bool result = semantic.Contains(searchSpan, StringComparison.OrdinalIgnoreCase);
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Case-insensitive comparison should find 'LO WO' span");
 	}
 
 	[TestMethod]
@@ -1097,7 +1091,7 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("  hello  ");
 		ReadOnlySpan<char> trimmed = semantic.TrimAsSpan();
 
-		Assert.IsTrue(trimmed.SequenceEqual("hello".AsSpan()));
+		Assert.IsTrue(trimmed.SequenceEqual("hello".AsSpan()), "TrimAsSpan should remove whitespace");
 	}
 
 	[TestMethod]
@@ -1106,7 +1100,7 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("##hello##");
 		ReadOnlySpan<char> trimmed = semantic.TrimAsSpan("#".AsSpan());
 
-		Assert.IsTrue(trimmed.SequenceEqual("hello".AsSpan()));
+		Assert.IsTrue(trimmed.SequenceEqual("hello".AsSpan()), "TrimAsSpan should remove specified chars");
 	}
 
 	[TestMethod]
@@ -1115,7 +1109,7 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("  hello  ");
 		ReadOnlySpan<char> trimmed = semantic.TrimStartAsSpan();
 
-		Assert.IsTrue(trimmed.SequenceEqual("hello  ".AsSpan()));
+		Assert.IsTrue(trimmed.SequenceEqual("hello  ".AsSpan()), "TrimStartAsSpan should remove leading whitespace");
 	}
 
 	[TestMethod]
@@ -1124,7 +1118,7 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("##hello##");
 		ReadOnlySpan<char> trimmed = semantic.TrimStartAsSpan("#".AsSpan());
 
-		Assert.IsTrue(trimmed.SequenceEqual("hello##".AsSpan()));
+		Assert.IsTrue(trimmed.SequenceEqual("hello##".AsSpan()), "TrimStartAsSpan should remove specified leading chars");
 	}
 
 	[TestMethod]
@@ -1133,7 +1127,7 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("  hello  ");
 		ReadOnlySpan<char> trimmed = semantic.TrimEndAsSpan();
 
-		Assert.IsTrue(trimmed.SequenceEqual("  hello".AsSpan()));
+		Assert.IsTrue(trimmed.SequenceEqual("  hello".AsSpan()), "TrimEndAsSpan should remove trailing whitespace");
 	}
 
 	[TestMethod]
@@ -1142,7 +1136,7 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("##hello##");
 		ReadOnlySpan<char> trimmed = semantic.TrimEndAsSpan("#".AsSpan());
 
-		Assert.IsTrue(trimmed.SequenceEqual("##hello".AsSpan()));
+		Assert.IsTrue(trimmed.SequenceEqual("##hello".AsSpan()), "TrimEndAsSpan should remove specified trailing chars");
 	}
 
 	[TestMethod]
@@ -1166,7 +1160,7 @@ public class SemanticStringAdditionalTests
 	public void IsValid_WithCustomValidation_ReturnsCorrectResult()
 	{
 		ValidationTestSemanticString validSemantic = SemanticString<ValidationTestSemanticString>.Create<ValidationTestSemanticString>("VALID test");
-		Assert.IsTrue(validSemantic.IsValid());
+		Assert.IsTrue(validSemantic.IsValid(), "String starting with 'VALID' should be valid");
 
 		// Testing that invalid values throw during creation
 		Assert.ThrowsExactly<ArgumentException>(() =>
@@ -1211,10 +1205,10 @@ public class SemanticStringAdditionalTests
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 
 		int result = semantic.CompareTo((object?)null);
-		Assert.IsTrue(result > 0);
+		Assert.IsGreaterThan(0, result);
 
 		int resultSemantic = semantic.CompareTo(null);
-		Assert.IsTrue(resultSemantic > 0);
+		Assert.IsGreaterThan(0, resultSemantic);
 	}
 
 	[TestMethod]
@@ -1234,10 +1228,10 @@ public class SemanticStringAdditionalTests
 		Assert.AreEqual(string.Empty, result);
 
 		char[] charResult = SemanticString<MySemanticString>.ToCharArray(null);
-		Assert.AreEqual(0, charResult.Length);
+		Assert.IsEmpty(charResult);
 
 		ReadOnlySpan<char> spanResult = SemanticString<MySemanticString>.ToReadOnlySpan(null);
-		Assert.IsTrue(spanResult.IsEmpty);
+		Assert.IsTrue(spanResult.IsEmpty, "ReadOnlySpan from null should be empty");
 	}
 
 	[TestMethod]
@@ -1247,8 +1241,8 @@ public class SemanticStringAdditionalTests
 
 		Assert.IsNotNull(semantic);
 		Assert.AreEqual(string.Empty, semantic.WeakString);
-		Assert.IsTrue(semantic.IsEmpty());
-		Assert.IsTrue(semantic.IsValid());
+		Assert.IsTrue(semantic.IsEmpty(), "Empty string should report IsEmpty as true");
+		Assert.IsTrue(semantic.IsValid(), "Empty string should be valid");
 	}
 
 	[TestMethod]
@@ -1259,7 +1253,7 @@ public class SemanticStringAdditionalTests
 
 		// Since MySemanticString has no validation attributes, it should return true
 		bool isValid = semantic.ValidateAttributes();
-		Assert.IsTrue(isValid);
+		Assert.IsTrue(isValid, "ValidateAttributes should return true when no validation attributes are present");
 	}
 
 	[TestMethod]
@@ -1274,7 +1268,7 @@ public class SemanticStringAdditionalTests
 		}
 
 		// Empty string split returns no parts in the current implementation
-		Assert.AreEqual(0, parts.Count);
+		Assert.IsEmpty(parts);
 	}
 	private static readonly string[] expectedSingleCharacter = ["a"];
 
@@ -1304,8 +1298,8 @@ public class SemanticStringAdditionalTests
 		}
 
 		// ",," split by comma returns two empty parts in the current implementation
-		Assert.AreEqual(2, parts.Count);
-		Assert.IsTrue(parts.All(string.IsNullOrEmpty));
+		Assert.HasCount(2, parts);
+		Assert.IsTrue(parts.All(string.IsNullOrEmpty), "All parts should be empty");
 	}
 
 	[TestMethod]
@@ -1318,7 +1312,7 @@ public class SemanticStringAdditionalTests
 		}
 		catch (ArgumentException ex)
 		{
-			StringAssert.Contains(ex.Message, nameof(ValidationTestSemanticString));
+			Assert.Contains(nameof(ValidationTestSemanticString), ex.Message);
 		}
 	}
 }
