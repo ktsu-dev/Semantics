@@ -18,7 +18,12 @@ public record Pitch<T> : PhysicalQuantity<Pitch<T>, T>, IVector0<Pitch<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Pitch<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Pitch from a value in Hertz.</summary>
+	/// <summary>
+	/// Creates a new Pitch from a value in Hertz.
+	/// </summary>
+	/// <param name="value">The value in Hertz.</param>
+	/// <returns>A new Pitch instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Pitch<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(Pitch<T> value) => Frequency<T>.Create(value.Value);

@@ -18,7 +18,12 @@ public record Admittance<T> : PhysicalQuantity<Admittance<T>, T>, IVector0<Admit
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Admittance<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Admittance from a value in Siemens.</summary>
+	/// <summary>
+	/// Creates a new Admittance from a value in Siemens.
+	/// </summary>
+	/// <param name="value">The value in Siemens.</param>
+	/// <returns>A new Admittance instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Admittance<T> FromSiemens(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Conductance.</summary>
 	public static implicit operator Conductance<T>(Admittance<T> value) => Conductance<T>.Create(value.Value);

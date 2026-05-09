@@ -18,7 +18,12 @@ public record EMF<T> : PhysicalQuantity<EMF<T>, T>, IVector0<EMF<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static EMF<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new EMF from a value in Volt.</summary>
+	/// <summary>
+	/// Creates a new EMF from a value in Volt.
+	/// </summary>
+	/// <param name="value">The value in Volt.</param>
+	/// <returns>A new EMF instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static EMF<T> FromVolt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to VoltageMagnitude.</summary>
 	public static implicit operator VoltageMagnitude<T>(EMF<T> value) => VoltageMagnitude<T>.Create(value.Value);

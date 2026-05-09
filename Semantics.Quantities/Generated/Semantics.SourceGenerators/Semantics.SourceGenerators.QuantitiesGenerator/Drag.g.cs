@@ -18,7 +18,12 @@ public record Drag<T> : PhysicalQuantity<Drag<T>, T>, IVector0<Drag<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Drag<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Drag from a value in Newton.</summary>
+	/// <summary>
+	/// Creates a new Drag from a value in Newton.
+	/// </summary>
+	/// <param name="value">The value in Newton.</param>
+	/// <returns>A new Drag instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Drag<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Drag<T> value) => ForceMagnitude<T>.Create(value.Value);

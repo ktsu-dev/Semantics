@@ -18,8 +18,27 @@ public record FlowSpeed<T> : PhysicalQuantity<FlowSpeed<T>, T>, IVector0<FlowSpe
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static FlowSpeed<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new FlowSpeed from a value in MetersPerSecond.</summary>
+	/// <summary>
+	/// Creates a new FlowSpeed from a value in MetersPerSecond.
+	/// </summary>
+	/// <param name="value">The value in MetersPerSecond.</param>
+	/// <returns>A new FlowSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static FlowSpeed<T> FromMetersPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new FlowSpeed from a value in KilometersPerHour.
+	/// </summary>
+	/// <param name="value">The value in KilometersPerHour.</param>
+	/// <returns>A new FlowSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static FlowSpeed<T> FromKilometersPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilometersPerHourToMetersPerSecond)), nameof(value)));
+/// <summary>
+	/// Creates a new FlowSpeed from a value in MilesPerHour.
+	/// </summary>
+	/// <param name="value">The value in MilesPerHour.</param>
+	/// <returns>A new FlowSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static FlowSpeed<T> FromMilesPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)), nameof(value)));
 /// <summary>Implicit conversion to Speed.</summary>
 	public static implicit operator Speed<T>(FlowSpeed<T> value) => Speed<T>.Create(value.Value);
 /// <summary>Explicit conversion from Speed.</summary>

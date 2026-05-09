@@ -18,7 +18,12 @@ public record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>, IVector0<H
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static HeatCapacity<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new HeatCapacity from a value in JoulePerKelvin.</summary>
+	/// <summary>
+	/// Creates a new HeatCapacity from a value in JoulePerKelvin.
+	/// </summary>
+	/// <param name="value">The value in JoulePerKelvin.</param>
+	/// <returns>A new HeatCapacity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HeatCapacity<T> FromJoulePerKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Entropy.</summary>
 	public static implicit operator Entropy<T>(HeatCapacity<T> value) => Entropy<T>.Create(value.Value);

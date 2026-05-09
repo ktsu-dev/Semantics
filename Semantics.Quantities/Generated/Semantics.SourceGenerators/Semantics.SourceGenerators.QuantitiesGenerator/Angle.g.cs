@@ -25,6 +25,13 @@ public record Angle<T> : PhysicalQuantity<Angle<T>, T>, IVector0<Angle<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Angle<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Angle{T}"/> from a value in Degree.
+	/// </summary>
+	/// <param name="value">The value in Degree.</param>
+	/// <returns>A new <see cref="Angle{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Angle<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
+/// <summary>
 	/// Subtracts two Angle values, returning the absolute difference as a non-negative Angle.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>

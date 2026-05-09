@@ -18,8 +18,34 @@ public record PotentialEnergy<T> : PhysicalQuantity<PotentialEnergy<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static PotentialEnergy<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new PotentialEnergy from a value in Joule.</summary>
+	/// <summary>
+	/// Creates a new PotentialEnergy from a value in Joule.
+	/// </summary>
+	/// <param name="value">The value in Joule.</param>
+	/// <returns>A new PotentialEnergy instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static PotentialEnergy<T> FromJoule(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new PotentialEnergy from a value in ElectronVolt.
+	/// </summary>
+	/// <param name="value">The value in ElectronVolt.</param>
+	/// <returns>A new PotentialEnergy instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static PotentialEnergy<T> FromElectronVolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ElectronVoltToJoules)), nameof(value)));
+/// <summary>
+	/// Creates a new PotentialEnergy from a value in Calorie.
+	/// </summary>
+	/// <param name="value">The value in Calorie.</param>
+	/// <returns>A new PotentialEnergy instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static PotentialEnergy<T> FromCalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CalorieToJoules)), nameof(value)));
+/// <summary>
+	/// Creates a new PotentialEnergy from a value in KilowattHour.
+	/// </summary>
+	/// <param name="value">The value in KilowattHour.</param>
+	/// <returns>A new PotentialEnergy instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static PotentialEnergy<T> FromKilowattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
 /// <summary>Implicit conversion to Energy.</summary>
 	public static implicit operator Energy<T>(PotentialEnergy<T> value) => Energy<T>.Create(value.Value);
 /// <summary>Explicit conversion from Energy.</summary>

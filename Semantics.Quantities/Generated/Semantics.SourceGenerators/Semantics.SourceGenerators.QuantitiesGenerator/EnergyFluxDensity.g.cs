@@ -18,7 +18,12 @@ public record EnergyFluxDensity<T> : PhysicalQuantity<EnergyFluxDensity<T>, T>, 
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static EnergyFluxDensity<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new EnergyFluxDensity from a value in WattPerSquareMeter.</summary>
+	/// <summary>
+	/// Creates a new EnergyFluxDensity from a value in WattPerSquareMeter.
+	/// </summary>
+	/// <param name="value">The value in WattPerSquareMeter.</param>
+	/// <returns>A new EnergyFluxDensity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static EnergyFluxDensity<T> FromWattPerSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Irradiance.</summary>
 	public static implicit operator Irradiance<T>(EnergyFluxDensity<T> value) => Irradiance<T>.Create(value.Value);

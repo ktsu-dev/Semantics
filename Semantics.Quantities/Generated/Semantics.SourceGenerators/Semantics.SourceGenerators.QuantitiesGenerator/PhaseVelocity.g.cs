@@ -18,8 +18,27 @@ public record PhaseVelocity<T> : PhysicalQuantity<PhaseVelocity<T>, T>, IVector0
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static PhaseVelocity<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new PhaseVelocity from a value in MetersPerSecond.</summary>
+	/// <summary>
+	/// Creates a new PhaseVelocity from a value in MetersPerSecond.
+	/// </summary>
+	/// <param name="value">The value in MetersPerSecond.</param>
+	/// <returns>A new PhaseVelocity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static PhaseVelocity<T> FromMetersPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new PhaseVelocity from a value in KilometersPerHour.
+	/// </summary>
+	/// <param name="value">The value in KilometersPerHour.</param>
+	/// <returns>A new PhaseVelocity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static PhaseVelocity<T> FromKilometersPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilometersPerHourToMetersPerSecond)), nameof(value)));
+/// <summary>
+	/// Creates a new PhaseVelocity from a value in MilesPerHour.
+	/// </summary>
+	/// <param name="value">The value in MilesPerHour.</param>
+	/// <returns>A new PhaseVelocity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static PhaseVelocity<T> FromMilesPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)), nameof(value)));
 /// <summary>Implicit conversion to Speed.</summary>
 	public static implicit operator Speed<T>(PhaseVelocity<T> value) => Speed<T>.Create(value.Value);
 /// <summary>Explicit conversion from Speed.</summary>

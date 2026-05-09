@@ -25,6 +25,13 @@ public record MolarEnergy<T> : PhysicalQuantity<MolarEnergy<T>, T>, IVector0<Mol
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MolarEnergy<T> FromJoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="MolarEnergy{T}"/> from a value in KilojoulePerMole.
+	/// </summary>
+	/// <param name="value">The value in KilojoulePerMole.</param>
+	/// <returns>A new <see cref="MolarEnergy{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MolarEnergy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilojoulePerMoleToJoulePerMole)), nameof(value)));
+/// <summary>
 	/// Subtracts two MolarEnergy values, returning the absolute difference as a non-negative MolarEnergy.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>

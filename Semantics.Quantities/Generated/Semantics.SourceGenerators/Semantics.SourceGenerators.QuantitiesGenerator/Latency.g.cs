@@ -18,8 +18,55 @@ public record Latency<T> : PhysicalQuantity<Latency<T>, T>, IVector0<Latency<T>,
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Latency<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Latency from a value in Second.</summary>
+	/// <summary>
+	/// Creates a new Latency from a value in Second.
+	/// </summary>
+	/// <param name="value">The value in Second.</param>
+	/// <returns>A new Latency instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Latency<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new Latency from a value in Millisecond.
+	/// </summary>
+	/// <param name="value">The value in Millisecond.</param>
+	/// <returns>A new Latency instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Latency<T> FromMillisecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
+	/// Creates a new Latency from a value in Microsecond.
+	/// </summary>
+	/// <param name="value">The value in Microsecond.</param>
+	/// <returns>A new Latency instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Latency<T> FromMicrosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+/// <summary>
+	/// Creates a new Latency from a value in Minute.
+	/// </summary>
+	/// <param name="value">The value in Minute.</param>
+	/// <returns>A new Latency instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Latency<T> FromMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new Latency from a value in Hour.
+	/// </summary>
+	/// <param name="value">The value in Hour.</param>
+	/// <returns>A new Latency instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Latency<T> FromHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new Latency from a value in Day.
+	/// </summary>
+	/// <param name="value">The value in Day.</param>
+	/// <returns>A new Latency instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Latency<T> FromDay(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new Latency from a value in Year.
+	/// </summary>
+	/// <param name="value">The value in Year.</param>
+	/// <returns>A new Latency instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Latency<T> FromYear(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
 /// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(Latency<T> value) => Duration<T>.Create(value.Value);
 /// <summary>Explicit conversion from Duration.</summary>

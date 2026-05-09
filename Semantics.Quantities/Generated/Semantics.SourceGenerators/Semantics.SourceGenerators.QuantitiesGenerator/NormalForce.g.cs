@@ -18,7 +18,12 @@ public record NormalForce<T> : PhysicalQuantity<NormalForce<T>, T>, IVector0<Nor
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static NormalForce<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new NormalForce from a value in Newton.</summary>
+	/// <summary>
+	/// Creates a new NormalForce from a value in Newton.
+	/// </summary>
+	/// <param name="value">The value in Newton.</param>
+	/// <returns>A new NormalForce instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static NormalForce<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(NormalForce<T> value) => ForceMagnitude<T>.Create(value.Value);

@@ -18,7 +18,12 @@ public record HeatFlux<T> : PhysicalQuantity<HeatFlux<T>, T>, IVector0<HeatFlux<
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static HeatFlux<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new HeatFlux from a value in WattPerSquareMeter.</summary>
+	/// <summary>
+	/// Creates a new HeatFlux from a value in WattPerSquareMeter.
+	/// </summary>
+	/// <param name="value">The value in WattPerSquareMeter.</param>
+	/// <returns>A new HeatFlux instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HeatFlux<T> FromWattPerSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Irradiance.</summary>
 	public static implicit operator Irradiance<T>(HeatFlux<T> value) => Irradiance<T>.Create(value.Value);

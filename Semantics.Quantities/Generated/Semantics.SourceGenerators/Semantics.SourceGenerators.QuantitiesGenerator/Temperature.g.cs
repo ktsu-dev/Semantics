@@ -25,6 +25,20 @@ public record Temperature<T> : PhysicalQuantity<Temperature<T>, T>, IVector0<Tem
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Temperature<T> FromKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Temperature{T}"/> from a value in Celsius.
+	/// </summary>
+	/// <param name="value">The value in Celsius.</param>
+	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Temperature<T> FromCelsius(T value) => Create(Vector0Guards.EnsureNonNegative((value + T.CreateChecked(Units.ConversionConstants.CelsiusToKelvinOffset)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Temperature{T}"/> from a value in Fahrenheit.
+	/// </summary>
+	/// <param name="value">The value in Fahrenheit.</param>
+	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Temperature<T> FromFahrenheit(T value) => Create(Vector0Guards.EnsureNonNegative(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)), nameof(value)));
+/// <summary>
 	/// Subtracts two Temperature values, returning the absolute difference as a non-negative Temperature.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>

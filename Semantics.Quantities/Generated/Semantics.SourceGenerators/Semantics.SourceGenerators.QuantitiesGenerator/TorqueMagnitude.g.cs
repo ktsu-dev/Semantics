@@ -25,6 +25,13 @@ public record TorqueMagnitude<T> : PhysicalQuantity<TorqueMagnitude<T>, T>, IVec
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static TorqueMagnitude<T> FromNewtonMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="TorqueMagnitude{T}"/> from a value in PoundFoot.
+	/// </summary>
+	/// <param name="value">The value in PoundFoot.</param>
+	/// <returns>A new <see cref="TorqueMagnitude{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static TorqueMagnitude<T> FromPoundFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundFootToNewtonMeters)), nameof(value)));
+/// <summary>
 	/// Subtracts two TorqueMagnitude values, returning the absolute difference as a non-negative TorqueMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>

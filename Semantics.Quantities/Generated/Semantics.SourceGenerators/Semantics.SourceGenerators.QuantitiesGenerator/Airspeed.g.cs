@@ -18,8 +18,27 @@ public record Airspeed<T> : PhysicalQuantity<Airspeed<T>, T>, IVector0<Airspeed<
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Airspeed<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Airspeed from a value in MetersPerSecond.</summary>
+	/// <summary>
+	/// Creates a new Airspeed from a value in MetersPerSecond.
+	/// </summary>
+	/// <param name="value">The value in MetersPerSecond.</param>
+	/// <returns>A new Airspeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Airspeed<T> FromMetersPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new Airspeed from a value in KilometersPerHour.
+	/// </summary>
+	/// <param name="value">The value in KilometersPerHour.</param>
+	/// <returns>A new Airspeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Airspeed<T> FromKilometersPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilometersPerHourToMetersPerSecond)), nameof(value)));
+/// <summary>
+	/// Creates a new Airspeed from a value in MilesPerHour.
+	/// </summary>
+	/// <param name="value">The value in MilesPerHour.</param>
+	/// <returns>A new Airspeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Airspeed<T> FromMilesPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)), nameof(value)));
 /// <summary>Implicit conversion to Speed.</summary>
 	public static implicit operator Speed<T>(Airspeed<T> value) => Speed<T>.Create(value.Value);
 /// <summary>Explicit conversion from Speed.</summary>

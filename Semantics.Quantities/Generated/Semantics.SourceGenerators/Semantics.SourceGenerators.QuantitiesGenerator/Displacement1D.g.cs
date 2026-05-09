@@ -24,6 +24,66 @@ public record Displacement1D<T> : PhysicalQuantity<Displacement1D<T>, T>, IVecto
 	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
 	public static Displacement1D<T> FromMeter(T value) => Create(value);
 /// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Kilometer.
+	/// </summary>
+	/// <param name="value">The value in Kilometer.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromKilometer(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
+/// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Centimeter.
+	/// </summary>
+	/// <param name="value">The value in Centimeter.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromCentimeter(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Centi)));
+/// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Millimeter.
+	/// </summary>
+	/// <param name="value">The value in Millimeter.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromMillimeter(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+/// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Micrometer.
+	/// </summary>
+	/// <param name="value">The value in Micrometer.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromMicrometer(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Micro)));
+/// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Nanometer.
+	/// </summary>
+	/// <param name="value">The value in Nanometer.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromNanometer(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Nano)));
+/// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Angstrom.
+	/// </summary>
+	/// <param name="value">The value in Angstrom.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromAngstrom(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.AngstromToMeters)));
+/// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Foot.
+	/// </summary>
+	/// <param name="value">The value in Foot.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromFoot(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FeetToMeters)));
+/// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Inch.
+	/// </summary>
+	/// <param name="value">The value in Inch.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromInch(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.InchesToMeters)));
+/// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Yard.
+	/// </summary>
+	/// <param name="value">The value in Yard.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromYard(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.YardToMeters)));
+/// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Mile.
+	/// </summary>
+	/// <param name="value">The value in Mile.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromMile(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)));
+/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Length{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>

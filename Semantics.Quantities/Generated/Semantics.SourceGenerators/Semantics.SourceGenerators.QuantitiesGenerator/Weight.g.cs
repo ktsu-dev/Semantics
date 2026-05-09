@@ -18,7 +18,12 @@ public record Weight<T> : PhysicalQuantity<Weight<T>, T>, IVector0<Weight<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Weight<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Weight from a value in Newton.</summary>
+	/// <summary>
+	/// Creates a new Weight from a value in Newton.
+	/// </summary>
+	/// <param name="value">The value in Newton.</param>
+	/// <returns>A new Weight instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Weight<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Weight<T> value) => ForceMagnitude<T>.Create(value.Value);

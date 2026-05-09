@@ -18,7 +18,12 @@ public record Lift<T> : PhysicalQuantity<Lift<T>, T>, IVector0<Lift<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Lift<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Lift from a value in Newton.</summary>
+	/// <summary>
+	/// Creates a new Lift from a value in Newton.
+	/// </summary>
+	/// <param name="value">The value in Newton.</param>
+	/// <returns>A new Lift instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Lift<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Lift<T> value) => ForceMagnitude<T>.Create(value.Value);

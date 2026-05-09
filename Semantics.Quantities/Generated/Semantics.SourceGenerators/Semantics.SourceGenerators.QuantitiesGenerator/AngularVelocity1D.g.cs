@@ -24,6 +24,12 @@ public record AngularVelocity1D<T> : PhysicalQuantity<AngularVelocity1D<T>, T>, 
 	/// <returns>A new <see cref="AngularVelocity1D{T}"/> instance.</returns>
 	public static AngularVelocity1D<T> FromRadiansPerSecond(T value) => Create(value);
 /// <summary>
+	/// Creates a new <see cref="AngularVelocity1D{T}"/> from a value in RevolutionsPerMinute.
+	/// </summary>
+	/// <param name="value">The value in RevolutionsPerMinute.</param>
+	/// <returns>A new <see cref="AngularVelocity1D{T}"/> instance.</returns>
+	public static AngularVelocity1D<T> FromRevolutionsPerMinute(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionsPerMinuteToRadiansPerSecond)));
+/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="AngularSpeed{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>

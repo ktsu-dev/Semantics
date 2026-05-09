@@ -24,6 +24,12 @@ public record Torque1D<T> : PhysicalQuantity<Torque1D<T>, T>, IVector1<Torque1D<
 	/// <returns>A new <see cref="Torque1D{T}"/> instance.</returns>
 	public static Torque1D<T> FromNewtonMeter(T value) => Create(value);
 /// <summary>
+	/// Creates a new <see cref="Torque1D{T}"/> from a value in PoundFoot.
+	/// </summary>
+	/// <param name="value">The value in PoundFoot.</param>
+	/// <returns>A new <see cref="Torque1D{T}"/> instance.</returns>
+	public static Torque1D<T> FromPoundFoot(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PoundFootToNewtonMeters)));
+/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="TorqueMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>

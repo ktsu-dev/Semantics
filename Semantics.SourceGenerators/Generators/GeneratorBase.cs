@@ -12,7 +12,7 @@ using Semantics.SourceGenerators.Templates;
 
 public abstract class GeneratorBase<T>(string metadataFilename) : IIncrementalGenerator
 {
-	public void Initialize(IncrementalGeneratorInitializationContext context)
+	public virtual void Initialize(IncrementalGeneratorInitializationContext context)
 	{
 		// Find the conversions metadata JSON file
 		IncrementalValuesProvider<string> metadataFiles = context.AdditionalTextsProvider

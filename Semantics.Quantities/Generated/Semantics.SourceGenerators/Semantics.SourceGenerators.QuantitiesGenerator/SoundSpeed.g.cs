@@ -18,8 +18,27 @@ public record SoundSpeed<T> : PhysicalQuantity<SoundSpeed<T>, T>, IVector0<Sound
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static SoundSpeed<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new SoundSpeed from a value in MetersPerSecond.</summary>
+	/// <summary>
+	/// Creates a new SoundSpeed from a value in MetersPerSecond.
+	/// </summary>
+	/// <param name="value">The value in MetersPerSecond.</param>
+	/// <returns>A new SoundSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SoundSpeed<T> FromMetersPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new SoundSpeed from a value in KilometersPerHour.
+	/// </summary>
+	/// <param name="value">The value in KilometersPerHour.</param>
+	/// <returns>A new SoundSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SoundSpeed<T> FromKilometersPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilometersPerHourToMetersPerSecond)), nameof(value)));
+/// <summary>
+	/// Creates a new SoundSpeed from a value in MilesPerHour.
+	/// </summary>
+	/// <param name="value">The value in MilesPerHour.</param>
+	/// <returns>A new SoundSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SoundSpeed<T> FromMilesPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)), nameof(value)));
 /// <summary>Implicit conversion to Speed.</summary>
 	public static implicit operator Speed<T>(SoundSpeed<T> value) => Speed<T>.Create(value.Value);
 /// <summary>Explicit conversion from Speed.</summary>

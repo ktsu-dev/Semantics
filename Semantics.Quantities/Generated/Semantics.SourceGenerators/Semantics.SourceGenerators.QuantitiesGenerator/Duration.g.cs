@@ -25,6 +25,48 @@ public record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<Duration<
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Duration<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Duration{T}"/> from a value in Millisecond.
+	/// </summary>
+	/// <param name="value">The value in Millisecond.</param>
+	/// <returns>A new <see cref="Duration{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Duration<T> FromMillisecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Duration{T}"/> from a value in Microsecond.
+	/// </summary>
+	/// <param name="value">The value in Microsecond.</param>
+	/// <returns>A new <see cref="Duration{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Duration<T> FromMicrosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Duration{T}"/> from a value in Minute.
+	/// </summary>
+	/// <param name="value">The value in Minute.</param>
+	/// <returns>A new <see cref="Duration{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Duration<T> FromMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Duration{T}"/> from a value in Hour.
+	/// </summary>
+	/// <param name="value">The value in Hour.</param>
+	/// <returns>A new <see cref="Duration{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Duration<T> FromHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Duration{T}"/> from a value in Day.
+	/// </summary>
+	/// <param name="value">The value in Day.</param>
+	/// <returns>A new <see cref="Duration{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Duration<T> FromDay(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Duration{T}"/> from a value in Year.
+	/// </summary>
+	/// <param name="value">The value in Year.</param>
+	/// <returns>A new <see cref="Duration{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Duration<T> FromYear(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
+/// <summary>
 	/// Subtracts two Duration values, returning the absolute difference as a non-negative Duration.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>

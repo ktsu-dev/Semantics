@@ -25,6 +25,13 @@ public record VolumetricFlowRate<T> : PhysicalQuantity<VolumetricFlowRate<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static VolumetricFlowRate<T> FromCubicMeterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="VolumetricFlowRate{T}"/> from a value in LiterPerSecond.
+	/// </summary>
+	/// <param name="value">The value in LiterPerSecond.</param>
+	/// <returns>A new <see cref="VolumetricFlowRate{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static VolumetricFlowRate<T> FromLiterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterPerSecondToCubicMeterPerSecond)), nameof(value)));
+/// <summary>
 	/// Subtracts two VolumetricFlowRate values, returning the absolute difference as a non-negative VolumetricFlowRate.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>

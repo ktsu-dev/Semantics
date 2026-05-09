@@ -25,6 +25,27 @@ public record Pressure<T> : PhysicalQuantity<Pressure<T>, T>, IVector0<Pressure<
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Pressure<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Pressure{T}"/> from a value in Bar.
+	/// </summary>
+	/// <param name="value">The value in Bar.</param>
+	/// <returns>A new <see cref="Pressure{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Pressure<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Pressure{T}"/> from a value in Atmosphere.
+	/// </summary>
+	/// <param name="value">The value in Atmosphere.</param>
+	/// <returns>A new <see cref="Pressure{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Pressure<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Pressure{T}"/> from a value in Psi.
+	/// </summary>
+	/// <param name="value">The value in Psi.</param>
+	/// <returns>A new <see cref="Pressure{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Pressure<T> FromPsi(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PsiToPascals)), nameof(value)));
+/// <summary>
 	/// Subtracts two Pressure values, returning the absolute difference as a non-negative Pressure.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>

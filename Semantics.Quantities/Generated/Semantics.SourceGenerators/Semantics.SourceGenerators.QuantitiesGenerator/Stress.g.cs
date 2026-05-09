@@ -18,8 +18,34 @@ public record Stress<T> : PhysicalQuantity<Stress<T>, T>, IVector0<Stress<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Stress<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Stress from a value in Pascal.</summary>
+	/// <summary>
+	/// Creates a new Stress from a value in Pascal.
+	/// </summary>
+	/// <param name="value">The value in Pascal.</param>
+	/// <returns>A new Stress instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Stress<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new Stress from a value in Bar.
+	/// </summary>
+	/// <param name="value">The value in Bar.</param>
+	/// <returns>A new Stress instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Stress<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
+/// <summary>
+	/// Creates a new Stress from a value in Atmosphere.
+	/// </summary>
+	/// <param name="value">The value in Atmosphere.</param>
+	/// <returns>A new Stress instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Stress<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
+/// <summary>
+	/// Creates a new Stress from a value in Psi.
+	/// </summary>
+	/// <param name="value">The value in Psi.</param>
+	/// <returns>A new Stress instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Stress<T> FromPsi(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PsiToPascals)), nameof(value)));
 /// <summary>Implicit conversion to Pressure.</summary>
 	public static implicit operator Pressure<T>(Stress<T> value) => Pressure<T>.Create(value.Value);
 /// <summary>Explicit conversion from Pressure.</summary>

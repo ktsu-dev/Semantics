@@ -18,7 +18,12 @@ public record Bandwidth<T> : PhysicalQuantity<Bandwidth<T>, T>, IVector0<Bandwid
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Bandwidth<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Bandwidth from a value in Hertz.</summary>
+	/// <summary>
+	/// Creates a new Bandwidth from a value in Hertz.
+	/// </summary>
+	/// <param name="value">The value in Hertz.</param>
+	/// <returns>A new Bandwidth instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Bandwidth<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(Bandwidth<T> value) => Frequency<T>.Create(value.Value);

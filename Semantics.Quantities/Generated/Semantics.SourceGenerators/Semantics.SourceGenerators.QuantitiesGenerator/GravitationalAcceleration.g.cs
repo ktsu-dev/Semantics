@@ -18,7 +18,12 @@ public record GravitationalAcceleration<T> : PhysicalQuantity<GravitationalAccel
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static GravitationalAcceleration<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new GravitationalAcceleration from a value in MetersPerSecondSquared.</summary>
+	/// <summary>
+	/// Creates a new GravitationalAcceleration from a value in MetersPerSecondSquared.
+	/// </summary>
+	/// <param name="value">The value in MetersPerSecondSquared.</param>
+	/// <returns>A new GravitationalAcceleration instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static GravitationalAcceleration<T> FromMetersPerSecondSquared(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to AccelerationMagnitude.</summary>
 	public static implicit operator AccelerationMagnitude<T>(GravitationalAcceleration<T> value) => AccelerationMagnitude<T>.Create(value.Value);

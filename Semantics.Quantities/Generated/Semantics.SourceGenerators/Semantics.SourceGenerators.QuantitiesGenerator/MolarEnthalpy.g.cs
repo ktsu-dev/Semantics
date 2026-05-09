@@ -18,8 +18,20 @@ public record MolarEnthalpy<T> : PhysicalQuantity<MolarEnthalpy<T>, T>, IVector0
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static MolarEnthalpy<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new MolarEnthalpy from a value in JoulePerMole.</summary>
+	/// <summary>
+	/// Creates a new MolarEnthalpy from a value in JoulePerMole.
+	/// </summary>
+	/// <param name="value">The value in JoulePerMole.</param>
+	/// <returns>A new MolarEnthalpy instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MolarEnthalpy<T> FromJoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new MolarEnthalpy from a value in KilojoulePerMole.
+	/// </summary>
+	/// <param name="value">The value in KilojoulePerMole.</param>
+	/// <returns>A new MolarEnthalpy instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MolarEnthalpy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilojoulePerMoleToJoulePerMole)), nameof(value)));
 /// <summary>Implicit conversion to MolarEnergy.</summary>
 	public static implicit operator MolarEnergy<T>(MolarEnthalpy<T> value) => MolarEnergy<T>.Create(value.Value);
 /// <summary>Explicit conversion from MolarEnergy.</summary>

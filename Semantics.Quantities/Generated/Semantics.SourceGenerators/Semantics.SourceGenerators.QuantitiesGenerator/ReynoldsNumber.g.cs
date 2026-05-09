@@ -18,8 +18,27 @@ public record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>, IVecto
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static ReynoldsNumber<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new ReynoldsNumber from a value in Dimensionless.</summary>
+	/// <summary>
+	/// Creates a new ReynoldsNumber from a value in Dimensionless.
+	/// </summary>
+	/// <param name="value">The value in Dimensionless.</param>
+	/// <returns>A new ReynoldsNumber instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromDimensionless(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new ReynoldsNumber from a value in Radian.
+	/// </summary>
+	/// <param name="value">The value in Radian.</param>
+	/// <returns>A new ReynoldsNumber instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ReynoldsNumber<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new ReynoldsNumber from a value in Degree.
+	/// </summary>
+	/// <param name="value">The value in Degree.</param>
+	/// <returns>A new ReynoldsNumber instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ReynoldsNumber<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>Implicit conversion to Ratio.</summary>
 	public static implicit operator Ratio<T>(ReynoldsNumber<T> value) => Ratio<T>.Create(value.Value);
 /// <summary>Explicit conversion from Ratio.</summary>

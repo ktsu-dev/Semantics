@@ -18,7 +18,12 @@ public record SoundIntensity<T> : PhysicalQuantity<SoundIntensity<T>, T>, IVecto
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static SoundIntensity<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new SoundIntensity from a value in WattPerSquareMeter.</summary>
+	/// <summary>
+	/// Creates a new SoundIntensity from a value in WattPerSquareMeter.
+	/// </summary>
+	/// <param name="value">The value in WattPerSquareMeter.</param>
+	/// <returns>A new SoundIntensity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SoundIntensity<T> FromWattPerSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Irradiance.</summary>
 	public static implicit operator Irradiance<T>(SoundIntensity<T> value) => Irradiance<T>.Create(value.Value);

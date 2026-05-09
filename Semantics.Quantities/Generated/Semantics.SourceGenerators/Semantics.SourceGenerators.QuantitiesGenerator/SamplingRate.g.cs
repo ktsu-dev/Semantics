@@ -18,7 +18,12 @@ public record SamplingRate<T> : PhysicalQuantity<SamplingRate<T>, T>, IVector0<S
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static SamplingRate<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new SamplingRate from a value in Hertz.</summary>
+	/// <summary>
+	/// Creates a new SamplingRate from a value in Hertz.
+	/// </summary>
+	/// <param name="value">The value in Hertz.</param>
+	/// <returns>A new SamplingRate instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SamplingRate<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(SamplingRate<T> value) => Frequency<T>.Create(value.Value);

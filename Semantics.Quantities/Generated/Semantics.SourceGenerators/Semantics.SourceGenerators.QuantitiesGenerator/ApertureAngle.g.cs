@@ -18,8 +18,20 @@ public record ApertureAngle<T> : PhysicalQuantity<ApertureAngle<T>, T>, IVector0
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static ApertureAngle<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new ApertureAngle from a value in Radian.</summary>
+	/// <summary>
+	/// Creates a new ApertureAngle from a value in Radian.
+	/// </summary>
+	/// <param name="value">The value in Radian.</param>
+	/// <returns>A new ApertureAngle instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ApertureAngle<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new ApertureAngle from a value in Degree.
+	/// </summary>
+	/// <param name="value">The value in Degree.</param>
+	/// <returns>A new ApertureAngle instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ApertureAngle<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>Implicit conversion to Angle.</summary>
 	public static implicit operator Angle<T>(ApertureAngle<T> value) => Angle<T>.Create(value.Value);
 /// <summary>Explicit conversion from Angle.</summary>

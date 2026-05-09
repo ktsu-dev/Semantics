@@ -18,7 +18,12 @@ public record ClockSpeed<T> : PhysicalQuantity<ClockSpeed<T>, T>, IVector0<Clock
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static ClockSpeed<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new ClockSpeed from a value in Hertz.</summary>
+	/// <summary>
+	/// Creates a new ClockSpeed from a value in Hertz.
+	/// </summary>
+	/// <param name="value">The value in Hertz.</param>
+	/// <returns>A new ClockSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ClockSpeed<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(ClockSpeed<T> value) => Frequency<T>.Create(value.Value);

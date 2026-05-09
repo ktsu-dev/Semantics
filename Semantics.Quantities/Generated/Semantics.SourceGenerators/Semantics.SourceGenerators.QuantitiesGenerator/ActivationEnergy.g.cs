@@ -18,8 +18,20 @@ public record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>, T>, IV
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static ActivationEnergy<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new ActivationEnergy from a value in JoulePerMole.</summary>
+	/// <summary>
+	/// Creates a new ActivationEnergy from a value in JoulePerMole.
+	/// </summary>
+	/// <param name="value">The value in JoulePerMole.</param>
+	/// <returns>A new ActivationEnergy instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ActivationEnergy<T> FromJoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new ActivationEnergy from a value in KilojoulePerMole.
+	/// </summary>
+	/// <param name="value">The value in KilojoulePerMole.</param>
+	/// <returns>A new ActivationEnergy instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ActivationEnergy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilojoulePerMoleToJoulePerMole)), nameof(value)));
 /// <summary>Implicit conversion to MolarEnergy.</summary>
 	public static implicit operator MolarEnergy<T>(ActivationEnergy<T> value) => MolarEnergy<T>.Create(value.Value);
 /// <summary>Explicit conversion from MolarEnergy.</summary>

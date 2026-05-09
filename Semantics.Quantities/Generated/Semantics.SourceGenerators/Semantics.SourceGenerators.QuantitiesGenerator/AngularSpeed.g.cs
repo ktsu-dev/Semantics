@@ -25,6 +25,13 @@ public record AngularSpeed<T> : PhysicalQuantity<AngularSpeed<T>, T>, IVector0<A
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AngularSpeed<T> FromRadiansPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="AngularSpeed{T}"/> from a value in RevolutionsPerMinute.
+	/// </summary>
+	/// <param name="value">The value in RevolutionsPerMinute.</param>
+	/// <returns>A new <see cref="AngularSpeed{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AngularSpeed<T> FromRevolutionsPerMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionsPerMinuteToRadiansPerSecond)), nameof(value)));
+/// <summary>
 	/// Subtracts two AngularSpeed values, returning the absolute difference as a non-negative AngularSpeed.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>

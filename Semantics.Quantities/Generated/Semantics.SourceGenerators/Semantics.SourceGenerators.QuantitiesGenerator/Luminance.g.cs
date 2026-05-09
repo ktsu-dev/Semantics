@@ -18,7 +18,12 @@ public record Luminance<T> : PhysicalQuantity<Luminance<T>, T>, IVector0<Luminan
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Luminance<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new Luminance from a value in Lux.</summary>
+	/// <summary>
+	/// Creates a new Luminance from a value in Lux.
+	/// </summary>
+	/// <param name="value">The value in Lux.</param>
+	/// <returns>A new Luminance instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Luminance<T> FromLux(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to Illuminance.</summary>
 	public static implicit operator Illuminance<T>(Luminance<T> value) => Illuminance<T>.Create(value.Value);

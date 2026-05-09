@@ -18,8 +18,24 @@ public record TemperatureRise<T> : PhysicalQuantity<TemperatureRise<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static TemperatureRise<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new TemperatureRise from a value in Kelvin.</summary>
+	/// <summary>
+	/// Creates a new TemperatureRise from a value in Kelvin.
+	/// </summary>
+	/// <param name="value">The value in Kelvin.</param>
+	/// <returns>A new TemperatureRise instance.</returns>
 	public static TemperatureRise<T> FromKelvin(T value) => Create(value);
+/// <summary>
+	/// Creates a new TemperatureRise from a value in Celsius.
+	/// </summary>
+	/// <param name="value">The value in Celsius.</param>
+	/// <returns>A new TemperatureRise instance.</returns>
+	public static TemperatureRise<T> FromCelsius(T value) => Create((value + T.CreateChecked(Units.ConversionConstants.CelsiusToKelvinOffset)));
+/// <summary>
+	/// Creates a new TemperatureRise from a value in Fahrenheit.
+	/// </summary>
+	/// <param name="value">The value in Fahrenheit.</param>
+	/// <returns>A new TemperatureRise instance.</returns>
+	public static TemperatureRise<T> FromFahrenheit(T value) => Create(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)));
 /// <summary>Implicit conversion to TemperatureDelta.</summary>
 	public static implicit operator TemperatureDelta<T>(TemperatureRise<T> value) => TemperatureDelta<T>.Create(value.Value);
 /// <summary>Explicit conversion from TemperatureDelta.</summary>

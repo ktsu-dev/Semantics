@@ -18,7 +18,12 @@ public record SpecificEntropy<T> : PhysicalQuantity<SpecificEntropy<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static SpecificEntropy<T> Zero => Create(T.Zero);
 
-	/// <summary>Creates a new SpecificEntropy from a value in JoulePerKilogramKelvin.</summary>
+	/// <summary>
+	/// Creates a new SpecificEntropy from a value in JoulePerKilogramKelvin.
+	/// </summary>
+	/// <param name="value">The value in JoulePerKilogramKelvin.</param>
+	/// <returns>A new SpecificEntropy instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SpecificEntropy<T> FromJoulePerKilogramKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to SpecificHeat.</summary>
 	public static implicit operator SpecificHeat<T>(SpecificEntropy<T> value) => SpecificHeat<T>.Create(value.Value);
