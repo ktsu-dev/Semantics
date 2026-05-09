@@ -7,6 +7,7 @@ namespace Semantics.SourceGenerators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
@@ -22,12 +23,75 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 {
 	public QuantitiesGenerator() : base("dimensions.json") { }
 
+	/// <summary>
+	/// Holds the metadata that drives quantity emission. Combined from dimensions.json and
+	/// units.json so factory methods can apply per-unit conversion factors.
+	/// </summary>
+	private sealed record CombinedMetadata(DimensionsMetadata Dimensions, UnitsMetadata Units);
+
+	/// <summary>
+	/// Override to load both dimensions.json and units.json. The base class only loads a single
+	/// metadata file; we need both because per-unit conversion factors are required to emit
+	/// <c>From{Unit}</c> factories that aren't the SI base unit.
+	/// </summary>
+	public override void Initialize(IncrementalGeneratorInitializationContext context)
+	{
+		IncrementalValueProvider<DimensionsMetadata?> dimensionsProvider = LoadJson<DimensionsMetadata>(context, "dimensions.json");
+		IncrementalValueProvider<UnitsMetadata?> unitsProvider = LoadJson<UnitsMetadata>(context, "units.json");
+		IncrementalValueProvider<CombinedMetadata?> combined = dimensionsProvider.Combine(unitsProvider).Select(static (pair, _) =>
+			pair.Left == null ? null : new CombinedMetadata(pair.Left, pair.Right ?? new UnitsMetadata()));
+
+		context.RegisterSourceOutput(combined, (ctx, metadata) =>
+		{
+			if (metadata == null)
+			{
+				return;
+			}
+
+			using CodeBlocker codeBlocker = CodeBlocker.Create();
+			GenerateInner(ctx, metadata.Dimensions, metadata.Units, codeBlocker);
+		});
+	}
+
+	private static IncrementalValueProvider<TMeta?> LoadJson<TMeta>(IncrementalGeneratorInitializationContext context, string filename)
+		where TMeta : class
+	{
+		return context.AdditionalTextsProvider
+			.Where(file => file.Path.EndsWith(filename, StringComparison.InvariantCulture))
+			.Select((file, ct) => file.GetText(ct)?.ToString() ?? "")
+			.Where(content => !string.IsNullOrEmpty(content))
+			.Select((content, _) =>
+			{
+				try
+				{
+					return JsonSerializer.Deserialize<TMeta>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+				}
+				catch (JsonException)
+				{
+					return null;
+				}
+			})
+			.Where(m => m != null)
+			.Collect()
+			.Select((arr, _) => arr.FirstOrDefault());
+	}
+
+	/// <summary>
+	/// The legacy abstract <see cref="GeneratorBase{T}.Generate"/> entry point is unused: the
+	/// overridden <see cref="Initialize"/> handles registration and calls
+	/// <see cref="GenerateInner"/> directly. This shim exists to satisfy the abstract contract.
+	/// </summary>
 	protected override void Generate(SourceProductionContext context, DimensionsMetadata metadata, CodeBlocker codeBlocker)
+		=> GenerateInner(context, metadata, new UnitsMetadata(), codeBlocker);
+
+	private void GenerateInner(SourceProductionContext context, DimensionsMetadata metadata, UnitsMetadata units, CodeBlocker codeBlocker)
 	{
 		if (metadata.PhysicalDimensions == null || metadata.PhysicalDimensions.Count == 0)
 		{
 			return;
 		}
+
+		Dictionary<string, UnitDefinition> unitMap = BuildUnitMap(units);
 
 		// Phase A: Build maps and collect operators
 		Dictionary<string, PhysicalDimension> dimensionMap = BuildDimensionMap(metadata);
@@ -42,12 +106,12 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		{
 			if (dim.Quantities.Vector0 != null)
 			{
-				EmitV0BaseType(context, dim, operatorsByOwner, typeFormMap);
+				EmitV0BaseType(context, dim, operatorsByOwner, typeFormMap, unitMap);
 			}
 
 			if (dim.Quantities.Vector1 != null)
 			{
-				EmitV1BaseType(context, dim, operatorsByOwner, typeFormMap);
+				EmitV1BaseType(context, dim, operatorsByOwner, typeFormMap, unitMap);
 			}
 
 			int[] vectorDims = [2, 3, 4];
@@ -69,7 +133,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				{
 					foreach (OverloadDefinition overload in form.Overloads)
 					{
-						EmitOverloadType(context, dim, f, form.Base, overload, typeFormMap);
+						EmitOverloadType(context, dim, f, form.Base, overload, typeFormMap, unitMap);
 					}
 				}
 			}
@@ -297,6 +361,107 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		}
 	}
 
+	private static Dictionary<string, UnitDefinition> BuildUnitMap(UnitsMetadata units)
+	{
+		Dictionary<string, UnitDefinition> map = [];
+		if (units.UnitCategories == null)
+		{
+			return map;
+		}
+
+		foreach (UnitCategory cat in units.UnitCategories)
+		{
+			foreach (UnitDefinition unit in cat.Units)
+			{
+				map[unit.Name] = unit;
+			}
+		}
+
+		return map;
+	}
+
+	/// <summary>
+	/// Emits one <c>From{Unit}</c> static factory per entry in <paramref name="availableUnits"/>.
+	/// The first unit is treated as the SI base unit (no conversion). Subsequent units use the
+	/// conversion factor / magnitude / offset declared in <paramref name="unitMap"/>.
+	/// </summary>
+	private static void AddUnitFactories(
+		ClassTemplate cls,
+		List<string> availableUnits,
+		Dictionary<string, UnitDefinition> unitMap,
+		string typeName,
+		string fullType,
+		string crefForComment)
+	{
+		if (availableUnits == null || availableUnits.Count == 0)
+		{
+			return;
+		}
+
+		string baseUnit = availableUnits[0];
+		foreach (string unitName in availableUnits)
+		{
+			bool isBase = unitName == baseUnit;
+			string conversionExpr = isBase
+				? "value"
+				: BuildToBaseExpression(unitName, unitMap);
+
+			cls.Members.Add(new MethodTemplate()
+			{
+				Comments =
+				[
+					"/// <summary>",
+					$"/// Creates a new {crefForComment} from a value in {unitName}.",
+					"/// </summary>",
+					$"/// <param name=\"value\">The value in {unitName}.</param>",
+					$"/// <returns>A new {crefForComment} instance.</returns>",
+				],
+				Keywords = ["public", "static", fullType],
+				Name = $"From{unitName}",
+				Parameters = [new ParameterTemplate { Type = "T", Name = "value" }],
+				BodyFactory = (body) => body.Write($" => Create({conversionExpr});"),
+			});
+		}
+	}
+
+	/// <summary>
+	/// Builds the C# expression converting <c>value</c> in <paramref name="unitName"/> to the SI
+	/// base unit. Honours magnitude (<c>Kilo</c>, <c>Centi</c>, …), conversionFactor (lookup in
+	/// <see cref="ConversionConstants"/>), and offset (additive, after scaling).
+	/// </summary>
+	private static string BuildToBaseExpression(string unitName, Dictionary<string, UnitDefinition> unitMap)
+	{
+		// If we don't have unit metadata, fall back to identity. The dimensions.json author is
+		// responsible for keeping availableUnits in sync with units.json; if a unit is missing,
+		// the emitted factory passes the value through unchanged so the build still succeeds.
+		// (A future SEM00x diagnostic could surface this gap.)
+		if (!unitMap.TryGetValue(unitName, out UnitDefinition? unit) || unit == null)
+		{
+			return "value";
+		}
+
+		string scaled = "value";
+		bool hasMagnitude = !string.IsNullOrEmpty(unit.Magnitude) && unit.Magnitude != "1";
+		bool hasFactor = !string.IsNullOrEmpty(unit.ConversionFactor) && unit.ConversionFactor != "1";
+
+		if (hasMagnitude)
+		{
+			scaled = $"(value * T.CreateChecked(MetricMagnitudes.{unit.Magnitude}))";
+		}
+		else if (hasFactor)
+		{
+			scaled = $"(value * T.CreateChecked(Units.ConversionConstants.{unit.ConversionFactor}))";
+		}
+
+		bool hasOffset = !string.IsNullOrEmpty(unit.Offset) && unit.Offset != "0";
+		if (hasOffset)
+		{
+			scaled = $"({scaled} + T.CreateChecked(Units.ConversionConstants.{unit.Offset}))";
+		}
+
+		return scaled;
+	}
+
 	private static Dictionary<string, List<T>> GroupBy<T>(List<T> items, Func<T, string> keySelector)
 	{
 		Dictionary<string, List<T>> groups = [];
@@ -323,7 +488,8 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		SourceProductionContext context,
 		PhysicalDimension dim,
 		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
-		Dictionary<string, int> typeFormMap)
+		Dictionary<string, int> typeFormMap,
+		Dictionary<string, UnitDefinition> unitMap)
 	{
 		VectorFormDefinition v0 = dim.Quantities.Vector0!;
 		string typeName = v0.Base;
@@ -363,26 +529,8 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			Name = "Zero => Create(T.Zero)",
 		});
 
-		// Factory methods from available units
-		if (dim.AvailableUnits.Count > 0)
-		{
-			string firstUnit = dim.AvailableUnits[0];
-			cls.Members.Add(new MethodTemplate()
-			{
-				Comments =
-				[
-					"/// <summary>",
-					$"/// Creates a new <see cref=\"{typeName}{{T}}\"/> from a value in {firstUnit}.",
-					"/// </summary>",
-					$"/// <param name=\"value\">The value in {firstUnit}.</param>",
-					$"/// <returns>A new <see cref=\"{typeName}{{T}}\"/> instance.</returns>",
-				],
-				Keywords = ["public", "static", fullType],
-				Name = $"From{firstUnit}",
-				Parameters = [new ParameterTemplate { Type = "T", Name = "value" }],
-				BodyFactory = (body) => body.Write(" => Create(value);"),
-			});
-		}
+		// Factory methods for every available unit (one From{Unit} per unit, applying conversion).
+		AddUnitFactories(cls, dim.AvailableUnits, unitMap, typeName, fullType, "<see cref=\"" + typeName + "{T}\"/>");
 
 		// V0 subtraction hiding: returns V1 if V1 exists for this dimension
 		if (v1TypeName != null)
@@ -420,7 +568,8 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		SourceProductionContext context,
 		PhysicalDimension dim,
 		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
-		Dictionary<string, int> typeFormMap)
+		Dictionary<string, int> typeFormMap,
+		Dictionary<string, UnitDefinition> unitMap)
 	{
 		VectorFormDefinition v1 = dim.Quantities.Vector1!;
 		string typeName = v1.Base;
@@ -460,26 +609,8 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			Name = "Zero => Create(T.Zero)",
 		});
 
-		// Factory methods
-		if (dim.AvailableUnits.Count > 0)
-		{
-			string firstUnit = dim.AvailableUnits[0];
-			cls.Members.Add(new MethodTemplate()
-			{
-				Comments =
-				[
-					"/// <summary>",
-					$"/// Creates a new <see cref=\"{typeName}{{T}}\"/> from a value in {firstUnit}.",
-					"/// </summary>",
-					$"/// <param name=\"value\">The value in {firstUnit}.</param>",
-					$"/// <returns>A new <see cref=\"{typeName}{{T}}\"/> instance.</returns>",
-				],
-				Keywords = ["public", "static", fullType],
-				Name = $"From{firstUnit}",
-				Parameters = [new ParameterTemplate { Type = "T", Name = "value" }],
-				BodyFactory = (body) => body.Write(" => Create(value);"),
-			});
-		}
+		// Factory methods for every available unit.
+		AddUnitFactories(cls, dim.AvailableUnits, unitMap, typeName, fullType, "<see cref=\"" + typeName + "{T}\"/>");
 
 		// Magnitude method returning V0 base
 		if (v0TypeName != null)
@@ -605,7 +736,8 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		int vectorForm,
 		string baseTypeName,
 		OverloadDefinition overload,
-		Dictionary<string, int> typeFormMap)
+		Dictionary<string, int> typeFormMap,
+		Dictionary<string, UnitDefinition> unitMap)
 	{
 		string typeName = overload.Name;
 		string fullType = $"{typeName}<T>";
@@ -651,19 +783,8 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				Name = "Zero => Create(T.Zero)",
 			});
 
-			// Factory methods
-			if (dim.AvailableUnits.Count > 0)
-			{
-				string firstUnit = dim.AvailableUnits[0];
-				cls.Members.Add(new MethodTemplate()
-				{
-					Comments = [$"/// <summary>Creates a new {typeName} from a value in {firstUnit}.</summary>"],
-					Keywords = ["public", "static", fullType],
-					Name = $"From{firstUnit}",
-					Parameters = [new ParameterTemplate { Type = "T", Name = "value" }],
-					BodyFactory = (body) => body.Write(" => Create(value);"),
-				});
-			}
+			// Factory methods for every available unit (overloads inherit the dimension's units).
+			AddUnitFactories(cls, dim.AvailableUnits, unitMap, typeName, fullType, typeName);
 
 			// Implicit widening to base type
 			cls.Members.Add(new MethodTemplate()
