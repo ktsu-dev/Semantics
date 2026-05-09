@@ -5,13 +5,11 @@
 namespace ktsu.Semantics.Paths;
 
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
 
 /// <summary>
 /// Represents an absolute directory path
 /// </summary>
-[IsPath, IsAbsolutePath, IsDirectoryPath]
+[IsAbsolutePath]
 public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirectoryPath>, IAbsoluteDirectoryPath
 {
 	// Cache for expensive parent directory computation
@@ -131,6 +129,22 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	}
 
 	/// <summary>
+	/// Combines an absolute directory path with a directory name using the '/' operator.
+	/// </summary>
+	/// <param name="left">The base absolute directory path.</param>
+	/// <param name="right">The directory name to append.</param>
+	/// <returns>A new <see cref="AbsoluteDirectoryPath"/> representing the combined path.</returns>
+	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
+	public static AbsoluteDirectoryPath operator /(AbsoluteDirectoryPath left, DirectoryName right)
+	{
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
+
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
+		return Create<AbsoluteDirectoryPath>(combinedPath);
+	}
+
+	/// <summary>
 	/// Combines an absolute directory path with a file name using the '/' operator.
 	/// </summary>
 	/// <param name="left">The base absolute directory path.</param>
@@ -225,7 +239,11 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	{
 		Ensure.NotNull(targetDirectory);
 		// Use Path.GetRelativePath to compute the relative path
-		string relativePath = PathHelper.GetRelativePath(WeakString, targetDirectory.WeakString);
+#if NETSTANDARD2_0
+		string relativePath = PathPolyfill.GetRelativePath(WeakString, targetDirectory.WeakString);
+#else
+		string relativePath = Path.GetRelativePath(WeakString, targetDirectory.WeakString);
+#endif
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
 	}
 
@@ -251,42 +269,12 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	public RelativeDirectoryPath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
 		Ensure.NotNull(baseDirectory);
-		string relativePath = PathHelper.GetRelativePath(baseDirectory.WeakString, WeakString);
+
+#if NETSTANDARD2_0
+		string relativePath = PathPolyfill.GetRelativePath(baseDirectory.WeakString, WeakString);
+#else
+		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, WeakString);
+#endif
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
-	}
-
-	/// <summary>
-	/// Asynchronously enumerates the files and directories contained in this directory as semantic path types.
-	/// This is more efficient for large directories as it streams results instead of loading everything into memory.
-	/// </summary>
-	/// <param name="cancellationToken">A cancellation token to cancel the enumeration.</param>
-	/// <returns>
-	/// An async enumerable of <see cref="IPath"/> objects representing the contents of the directory.
-	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
-	/// </returns>
-	public async IAsyncEnumerable<IPath> GetContentsAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
-	{
-		string directoryPath = WeakString;
-		if (!Directory.Exists(directoryPath))
-		{
-			yield break;
-		}
-
-		// Use Task.Run to avoid blocking the caller while enumerating
-		IEnumerable<string> entries = await Task.Run(() => Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.TopDirectoryOnly), cancellationToken).ConfigureAwait(false);
-
-		foreach (string item in entries)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-
-			if (Directory.Exists(item))
-			{
-				yield return CreateDirectoryPath(item);
-			}
-			else if (File.Exists(item))
-			{
-				yield return CreateFilePath(item);
-			}
-		}
 	}
 }

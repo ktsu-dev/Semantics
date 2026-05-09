@@ -7,7 +7,6 @@ namespace ktsu.Semantics.Paths;
 /// <summary>
 /// Represents a file path (path to a file)
 /// </summary>
-[IsPath, IsFilePath]
 public sealed record FilePath : SemanticFilePath<FilePath>, IFilePath
 {
 	/// <summary>
@@ -30,8 +29,13 @@ public sealed record FilePath : SemanticFilePath<FilePath>, IFilePath
 	public RelativeFilePath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
 		Ensure.NotNull(baseDirectory);
+
 		string absolutePath = Path.GetFullPath(WeakString);
-		string relativePath = PathHelper.GetRelativePath(baseDirectory.WeakString, absolutePath);
+#if NETSTANDARD2_0
+		string relativePath = PathPolyfill.GetRelativePath(baseDirectory.WeakString, absolutePath);
+#else
+		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, absolutePath);
+#endif
 		return RelativeFilePath.Create<RelativeFilePath>(relativePath);
 	}
 }

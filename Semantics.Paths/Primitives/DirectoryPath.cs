@@ -9,7 +9,6 @@ using System.Diagnostics.CodeAnalysis;
 /// <summary>
 /// Represents a directory path (path to a directory)
 /// </summary>
-[IsPath, IsDirectoryPath]
 public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDirectoryPath
 {
 	/// <summary>
@@ -51,44 +50,14 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	public RelativeDirectoryPath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
 		Ensure.NotNull(baseDirectory);
+
 		string absolutePath = Path.GetFullPath(WeakString);
-		string relativePath = PathHelper.GetRelativePath(baseDirectory.WeakString, absolutePath);
+#if NETSTANDARD2_0
+		string relativePath = PathPolyfill.GetRelativePath(baseDirectory.WeakString, absolutePath);
+#else
+		string relativePath = Path.GetRelativePath(baseDirectory.WeakString, absolutePath);
+#endif
 		return RelativeDirectoryPath.Create<RelativeDirectoryPath>(relativePath);
-	}
-
-	/// <summary>
-	/// Asynchronously enumerates the files and directories contained in this directory as semantic path types.
-	/// This is more efficient for large directories as it streams results instead of loading everything into memory.
-	/// </summary>
-	/// <param name="cancellationToken">A cancellation token to cancel the enumeration.</param>
-	/// <returns>
-	/// An async enumerable of <see cref="IPath"/> objects representing the contents of the directory.
-	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
-	/// </returns>
-	public async IAsyncEnumerable<IPath> GetContentsAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
-	{
-		string directoryPath = WeakString;
-		if (!Directory.Exists(directoryPath))
-		{
-			yield break;
-		}
-
-		// Use Task.Run to avoid blocking the caller while enumerating
-		IEnumerable<string> entries = await Task.Run(() => Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.TopDirectoryOnly), cancellationToken).ConfigureAwait(false);
-
-		foreach (string item in entries)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-
-			if (Directory.Exists(item))
-			{
-				yield return Create<DirectoryPath>(item);
-			}
-			else if (File.Exists(item))
-			{
-				yield return FilePath.Create<FilePath>(item);
-			}
-		}
 	}
 
 	/// <summary>
@@ -121,6 +90,22 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 
 		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
 		return FilePath.Create<FilePath>(combinedPath);
+	}
+
+	/// <summary>
+	/// Combines a directory path with a directory name using the '/' operator.
+	/// </summary>
+	/// <param name="left">The base directory path.</param>
+	/// <param name="right">The directory name to append.</param>
+	/// <returns>A new <see cref="DirectoryPath"/> representing the combined path.</returns>
+	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
+	public static DirectoryPath operator /(DirectoryPath left, DirectoryName right)
+	{
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
+
+		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
+		return Create<DirectoryPath>(combinedPath);
 	}
 
 	/// <summary>

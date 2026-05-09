@@ -5,7 +5,6 @@
 namespace ktsu.Semantics.Test.Paths;
 
 using System;
-using System.IO;
 using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,7 +20,7 @@ public class PathUtilityTests
 
 		bool result = child.IsChildOf(parent);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "Child path should be recognized as a child of its parent directory");
 	}
 
 	[TestMethod]
@@ -33,7 +32,7 @@ public class PathUtilityTests
 
 		bool result = path1.IsChildOf(path2);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "A path should not be considered a child of itself");
 	}
 
 	[TestMethod]
@@ -45,7 +44,7 @@ public class PathUtilityTests
 
 		bool result = path1.IsChildOf(path2);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "Unrelated paths should not have a parent-child relationship");
 	}
 
 	[TestMethod]
@@ -57,7 +56,7 @@ public class PathUtilityTests
 
 		bool result = parent.IsChildOf(child);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "Parent path should not be recognized as a child of its own child");
 	}
 
 	[TestMethod]
@@ -78,7 +77,7 @@ public class PathUtilityTests
 
 		bool result = child.IsChildOf(parent);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "IsChildOf should work correctly with mixed path separators");
 	}
 
 	[TestMethod]
@@ -91,9 +90,9 @@ public class PathUtilityTests
 		RelativeDirectoryPath result = from.GetRelativePathTo(to);
 
 		Assert.IsNotNull(result);
-		Assert.IsTrue(result.WeakString.Contains(".."));
-		Assert.IsTrue(result.WeakString.Contains("lib"));
-		Assert.IsTrue(result.WeakString.Contains("utils"));
+		Assert.Contains("..", result.WeakString);
+		Assert.Contains("lib", result.WeakString);
+		Assert.Contains("utils", result.WeakString);
 	}
 
 	[TestMethod]
@@ -107,7 +106,7 @@ public class PathUtilityTests
 
 		Assert.IsNotNull(result);
 		// Should be "." or empty depending on implementation
-		Assert.IsTrue(result.WeakString is "." || string.IsNullOrEmpty(result.WeakString));
+		Assert.IsTrue(result.WeakString is "." || string.IsNullOrEmpty(result.WeakString), "Relative path to same location should be '.' or empty");
 	}
 
 	[TestMethod]
@@ -129,9 +128,9 @@ public class PathUtilityTests
 		RelativeDirectoryPath result = parent.GetRelativePathTo(child);
 
 		Assert.IsNotNull(result);
-		Assert.IsTrue(result.WeakString.Contains("app"));
-		Assert.IsTrue(result.WeakString.Contains("src"));
-		Assert.IsFalse(result.WeakString.Contains(".."));
+		Assert.Contains("app", result.WeakString);
+		Assert.Contains("src", result.WeakString);
+		Assert.DoesNotContain("..", result.WeakString);
 	}
 
 	[TestMethod]
@@ -143,10 +142,10 @@ public class PathUtilityTests
 		RelativeDirectoryPath normalized = complexPath.Normalize();
 
 		Assert.IsNotNull(normalized);
-		Assert.IsTrue(normalized.WeakString.Contains("app"));
-		Assert.IsTrue(normalized.WeakString.Contains("lib"));
-		Assert.IsTrue(normalized.WeakString.Contains("utils"));
-		Assert.IsFalse(normalized.WeakString.Contains('.'));
+		Assert.Contains("app", normalized.WeakString);
+		Assert.Contains("lib", normalized.WeakString);
+		Assert.Contains("utils", normalized.WeakString);
+		Assert.DoesNotContain('.', normalized.WeakString);
 	}
 
 	[TestMethod]
@@ -181,7 +180,7 @@ public class PathUtilityTests
 		RelativeDirectoryPath normalized = dotPath.Normalize();
 
 		Assert.IsNotNull(normalized);
-		Assert.IsTrue(normalized.WeakString.Contains("folder"));
+		Assert.Contains("folder", normalized.WeakString);
 	}
 
 	[TestMethod]
@@ -193,8 +192,8 @@ public class PathUtilityTests
 		RelativeFilePath result = filePath.RemoveExtension();
 
 		Assert.IsNotNull(result);
-		Assert.IsTrue(result.WeakString.Contains("component"));
-		Assert.IsFalse(result.WeakString.Contains(".tsx"));
+		Assert.Contains("component", result.WeakString);
+		Assert.DoesNotContain(".tsx", result.WeakString);
 	}
 
 	[TestMethod]
@@ -206,8 +205,8 @@ public class PathUtilityTests
 		RelativeFilePath result = filePath.RemoveExtension();
 
 		Assert.IsNotNull(result);
-		Assert.IsTrue(result.WeakString.Contains("backup.tar"));
-		Assert.IsFalse(result.WeakString.Contains(".gz"));
+		Assert.Contains("backup.tar", result.WeakString);
+		Assert.DoesNotContain(".gz", result.WeakString);
 	}
 
 	[TestMethod]
@@ -219,7 +218,7 @@ public class PathUtilityTests
 		RelativeFilePath result = filePath.RemoveExtension();
 
 		Assert.IsNotNull(result);
-		Assert.IsTrue(result.WeakString.Contains("README"));
+		Assert.Contains("README", result.WeakString);
 	}
 
 	[TestMethod]

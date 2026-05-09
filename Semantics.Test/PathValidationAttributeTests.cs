@@ -7,6 +7,8 @@ namespace ktsu.Semantics.Test;
 using ktsu.Semantics.Strings;
 using ktsu.Semantics.Paths;
 using System;
+using ktsu.Semantics.Paths;
+using ktsu.Semantics.Strings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -326,6 +328,86 @@ public class PathValidationAttributeTests
 		// Act & Assert
 		Assert.IsTrue(specialCharsName.IsValid());
 	}
+
+	[TestMethod]
+	public void IsValidDirectoryNameAttribute_ValidDirectoryName_ShouldPass()
+	{
+		// Arrange
+		TestDirectoryName validName = TestDirectoryName.Create<TestDirectoryName>("MyFolder");
+
+		// Act & Assert
+		Assert.IsTrue(validName.IsValid());
+	}
+
+	[TestMethod]
+	public void IsValidDirectoryNameAttribute_DirectoryNameWithSpaces_ShouldPass()
+	{
+		// Arrange
+		TestDirectoryName nameWithSpaces = TestDirectoryName.Create<TestDirectoryName>("My Folder Name");
+
+		// Act & Assert
+		Assert.IsTrue(nameWithSpaces.IsValid());
+	}
+
+	[TestMethod]
+	public void IsValidDirectoryNameAttribute_DirectoryNameWithValidSpecialChars_ShouldPass()
+	{
+		// Arrange - using valid special chars
+		TestDirectoryName specialCharsName = TestDirectoryName.Create<TestDirectoryName>("valid-folder_name (1)");
+
+		// Act & Assert
+		Assert.IsTrue(specialCharsName.IsValid());
+	}
+
+	[TestMethod]
+	public void IsValidDirectoryNameAttribute_EmptyDirectoryName_ShouldPass()
+	{
+		// Arrange
+		TestDirectoryName emptyName = TestDirectoryName.Create<TestDirectoryName>("");
+
+		// Act & Assert
+		Assert.IsTrue(emptyName.IsValid());
+	}
+
+	[TestMethod]
+	public void IsValidDirectoryNameAttribute_DirectoryNameWithPathSeparator_ShouldFail()
+	{
+		// Arrange & Act & Assert - directory names shouldn't contain path separators
+		Assert.ThrowsExactly<ArgumentException>(() =>
+			TestDirectoryName.Create<TestDirectoryName>("folder\\subfolder"));
+	}
+
+	[TestMethod]
+	public void IsValidDirectoryNameAttribute_DirectoryNameWithForwardSlash_ShouldFail()
+	{
+		// Arrange & Act & Assert - directory names shouldn't contain forward slashes
+		Assert.ThrowsExactly<ArgumentException>(() =>
+			TestDirectoryName.Create<TestDirectoryName>("folder/subfolder"));
+	}
+
+	[TestMethod]
+	public void IsValidDirectoryNameAttribute_DirectoryNameWithInvalidChars_ShouldFail()
+	{
+		// Arrange & Act & Assert - test with invalid filename characters
+		Assert.ThrowsExactly<ArgumentException>(() =>
+			TestDirectoryName.Create<TestDirectoryName>("invalid<>name"));
+	}
+
+	[TestMethod]
+	public void IsValidDirectoryNameAttribute_DirectoryNameWithColon_ShouldFail()
+	{
+		// Arrange & Act & Assert - colon is invalid in directory names (except drive letters)
+		Assert.ThrowsExactly<ArgumentException>(() =>
+			TestDirectoryName.Create<TestDirectoryName>("invalid:name"));
+	}
+
+	[TestMethod]
+	public void IsValidDirectoryNameAttribute_DirectoryNameWithPipe_ShouldFail()
+	{
+		// Arrange & Act & Assert - pipe is an invalid character
+		Assert.ThrowsExactly<ArgumentException>(() =>
+			TestDirectoryName.Create<TestDirectoryName>("invalid|name"));
+	}
 }
 
 // Test record types for validation attribute testing
@@ -350,5 +432,8 @@ public record TestFilePath : SemanticString<TestFilePath> { }
 [DoesExist]
 public record TestExistingPath : SemanticString<TestExistingPath> { }
 
-[IsExtension]
+[IsFileExtension]
 public record TestExtension : SemanticString<TestExtension> { }
+
+[IsDirectoryName]
+public record TestDirectoryName : SemanticString<TestDirectoryName> { }

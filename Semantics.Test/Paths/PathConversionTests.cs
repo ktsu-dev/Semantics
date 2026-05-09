@@ -4,7 +4,6 @@
 
 namespace ktsu.Semantics.Test.Paths;
 
-using System;
 using System.IO;
 using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -42,24 +41,16 @@ public class PathConversionTests
 	public void AsAbsolute_WithCurrentWorkingDirectory_WorksCorrectly()
 	{
 		// Test AsAbsolute() without base directory (uses current working directory)
-		RelativeFilePath relativeFile = RelativeFilePath.Create<RelativeFilePath>("test.txt");
-		RelativeDirectoryPath relativeDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>("test");
 		FilePath genericFile = FilePath.Create<FilePath>("test.txt");
 		DirectoryPath genericDir = DirectoryPath.Create<DirectoryPath>("test");
 
-		AbsoluteFilePath absoluteFile1 = relativeFile.AsAbsolute();
-		AbsoluteDirectoryPath absoluteDir1 = relativeDir.AsAbsolute();
 		AbsoluteFilePath absoluteFile2 = genericFile.AsAbsolute();
 		AbsoluteDirectoryPath absoluteDir2 = genericDir.AsAbsolute();
 
-		Assert.IsNotNull(absoluteFile1);
-		Assert.IsNotNull(absoluteDir1);
 		Assert.IsNotNull(absoluteFile2);
 		Assert.IsNotNull(absoluteDir2);
 
 		// Should be fully qualified paths
-		Assert.IsTrue(Path.IsPathFullyQualified(absoluteFile1.WeakString));
-		Assert.IsTrue(Path.IsPathFullyQualified(absoluteDir1.WeakString));
 		Assert.IsTrue(Path.IsPathFullyQualified(absoluteFile2.WeakString));
 		Assert.IsTrue(Path.IsPathFullyQualified(absoluteDir2.WeakString));
 	}
@@ -77,10 +68,10 @@ public class PathConversionTests
 
 		Assert.IsNotNull(absoluteFile);
 		Assert.IsNotNull(absoluteDir);
-		Assert.IsTrue(absoluteFile.WeakString.Contains(@"C:\projects"));
-		Assert.IsTrue(absoluteFile.WeakString.Contains(@"app\src\file.ts"));
-		Assert.IsTrue(absoluteDir.WeakString.Contains(@"C:\projects"));
-		Assert.IsTrue(absoluteDir.WeakString.Contains(@"app\src"));
+		Assert.Contains(@"C:\projects", absoluteFile.WeakString);
+		Assert.Contains(@"app\src\file.ts", absoluteFile.WeakString);
+		Assert.Contains(@"C:\projects", absoluteDir.WeakString);
+		Assert.Contains(@"app\src", absoluteDir.WeakString);
 	}
 
 	[TestMethod]
@@ -96,9 +87,9 @@ public class PathConversionTests
 
 		Assert.IsNotNull(relativeFile);
 		Assert.IsNotNull(relativeDir);
-		Assert.IsTrue(relativeFile.WeakString.Contains("app"));
-		Assert.IsTrue(relativeFile.WeakString.Contains("file.ts"));
-		Assert.IsTrue(relativeDir.WeakString.Contains("app"));
+		Assert.Contains("app", relativeFile.WeakString);
+		Assert.Contains("file.ts", relativeFile.WeakString);
+		Assert.Contains("app", relativeDir.WeakString);
 	}
 
 	[TestMethod]
@@ -163,9 +154,9 @@ public class PathConversionTests
 		// Should be equivalent (though not necessarily identical due to normalization)
 		Assert.IsNotNull(roundTripFile);
 		Assert.IsNotNull(roundTripDir);
-		Assert.IsTrue(roundTripFile.WeakString.Contains("app"));
-		Assert.IsTrue(roundTripFile.WeakString.Contains("file.txt"));
-		Assert.IsTrue(roundTripDir.WeakString.Contains("app"));
+		Assert.Contains("app", roundTripFile.WeakString);
+		Assert.Contains("file.txt", roundTripFile.WeakString);
+		Assert.Contains("app", roundTripDir.WeakString);
 	}
 
 	[TestMethod]
@@ -196,9 +187,9 @@ public class PathConversionTests
 
 		Assert.IsNotNull(absoluteFile);
 		Assert.IsNotNull(absoluteDir);
-		Assert.IsTrue(absoluteFile.WeakString.Contains("app"));
-		Assert.IsTrue(absoluteFile.WeakString.Contains("file.js"));
-		Assert.IsTrue(absoluteDir.WeakString.Contains("app"));
+		Assert.Contains("app", absoluteFile.WeakString);
+		Assert.Contains("file.js", absoluteFile.WeakString);
+		Assert.Contains("app", absoluteDir.WeakString);
 	}
 
 	[TestMethod]
@@ -208,32 +199,24 @@ public class PathConversionTests
 		AbsolutePath absolutePath = AbsolutePath.Create<AbsolutePath>(@"C:\test");
 		RelativePath relativePath = RelativePath.Create<RelativePath>("test");
 		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>(@"C:\test\file.txt");
-		RelativeFilePath relativeFile = RelativeFilePath.Create<RelativeFilePath>("file.txt");
 		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
-		RelativeDirectoryPath relativeDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>("test");
 
 		// Test AsAbsolute methods
 		AbsolutePath result1 = absolutePath.AsAbsolute();
 		AbsolutePath result2 = relativePath.AsAbsolute();
 		AbsoluteFilePath result3 = absoluteFile.AsAbsolute();
-		AbsoluteFilePath result4 = relativeFile.AsAbsolute();
 		AbsoluteDirectoryPath result5 = absoluteDir.AsAbsolute();
-		AbsoluteDirectoryPath result6 = relativeDir.AsAbsolute();
 
 		// Verify correct types are returned
 		Assert.IsInstanceOfType<AbsolutePath>(result1);
 		Assert.IsInstanceOfType<AbsolutePath>(result2);
 		Assert.IsInstanceOfType<AbsoluteFilePath>(result3);
-		Assert.IsInstanceOfType<AbsoluteFilePath>(result4);
 		Assert.IsInstanceOfType<AbsoluteDirectoryPath>(result5);
-		Assert.IsInstanceOfType<AbsoluteDirectoryPath>(result6);
 
 		// Verify they're not null and valid
 		Assert.IsNotNull(result1);
 		Assert.IsNotNull(result2);
 		Assert.IsNotNull(result3);
-		Assert.IsNotNull(result4);
 		Assert.IsNotNull(result5);
-		Assert.IsNotNull(result6);
 	}
 }

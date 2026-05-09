@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Strings;
 
+using System;
 using System.Globalization;
 using System.Text;
 

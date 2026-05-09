@@ -5,11 +5,15 @@
 namespace ktsu.Semantics.Paths;
 
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+#if !NET5_0_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 
 /// <summary>
 /// Represents a relative directory path
 /// </summary>
-[IsPath, IsRelativePath, IsDirectoryPath]
+[IsRelativePath]
 public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirectoryPath>, IRelativeDirectoryPath
 {
 	// Cache for expensive parent directory computation
@@ -22,13 +26,13 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	public RelativeDirectoryPath Parent => _cachedParent ??= Create<RelativeDirectoryPath>(Path.GetDirectoryName(WeakString) ?? "");
 
 	// Cache for directory name
-	private FileName? _cachedName;
+	private DirectoryName? _cachedName;
 
 	/// <summary>
 	/// Gets the name of this directory (the last component of the path).
 	/// </summary>
-	/// <value>A <see cref="FileName"/> representing just the directory name.</value>
-	public FileName Name => _cachedName ??= FileName.Create<FileName>(Path.GetFileName(WeakString) ?? "");
+	/// <value>A <see cref="DirectoryName"/> representing just the directory name.</value>
+	public DirectoryName Name => _cachedName ??= DirectoryName.Create<DirectoryName>(Path.GetFileName(WeakString) ?? "");
 
 	// Cache for depth calculation
 	private int? _cachedDepth;
@@ -157,7 +161,11 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	public AbsoluteDirectoryPath AsAbsolute(AbsoluteDirectoryPath baseDirectory)
 	{
 		Ensure.NotNull(baseDirectory);
-		string absolutePath = PathHelper.GetFullPath(WeakString, baseDirectory.WeakString);
+#if NETSTANDARD2_0
+		string absolutePath = PathPolyfill.GetFullPath(WeakString, baseDirectory.WeakString);
+#else
+		string absolutePath = Path.GetFullPath(WeakString, baseDirectory.WeakString);
+#endif
 		return AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(absolutePath);
 	}
 
@@ -171,6 +179,7 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	public RelativeDirectoryPath AsRelative(AbsoluteDirectoryPath baseDirectory)
 	{
 		Ensure.NotNull(baseDirectory);
+
 		return this;
 	}
 
@@ -187,45 +196,18 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 		}
 
 		// Use Path.GetFullPath with a dummy base to normalize relative paths
+#if NET5_0_OR_GREATER
 		string dummyBase = OperatingSystem.IsWindows() ? "C:\\" : "/";
+#else
+		string dummyBase = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "C:\\" : "/";
+#endif
 		string fullPath = Path.GetFullPath(Path.Combine(dummyBase, path));
-		string normalized = PathHelper.GetRelativePath(dummyBase, fullPath);
+#if NETSTANDARD2_0
+		string normalized = PathPolyfill.GetRelativePath(dummyBase, fullPath);
+#else
+		string normalized = Path.GetRelativePath(dummyBase, fullPath);
+#endif
 
 		return Create<RelativeDirectoryPath>(normalized);
-	}
-
-	/// <summary>
-	/// Asynchronously enumerates the files and directories contained in this directory as semantic path types.
-	/// This is more efficient for large directories as it streams results instead of loading everything into memory.
-	/// </summary>
-	/// <param name="cancellationToken">A cancellation token to cancel the enumeration.</param>
-	/// <returns>
-	/// An async enumerable of <see cref="IPath"/> objects representing the contents of the directory.
-	/// Returns an empty enumerable if the directory doesn't exist or cannot be accessed.
-	/// </returns>
-	public async IAsyncEnumerable<IPath> GetContentsAsync([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
-	{
-		string directoryPath = WeakString;
-		if (!Directory.Exists(directoryPath))
-		{
-			yield break;
-		}
-
-		// Use Task.Run to avoid blocking the caller while enumerating
-		IEnumerable<string> entries = await Task.Run(() => Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.TopDirectoryOnly), cancellationToken).ConfigureAwait(false);
-
-		foreach (string item in entries)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-
-			if (Directory.Exists(item))
-			{
-				yield return CreateDirectoryPath(item);
-			}
-			else if (File.Exists(item))
-			{
-				yield return CreateFilePath(item);
-			}
-		}
 	}
 }
