@@ -152,9 +152,9 @@ var energy    = Energy<double>.FromJoules(1_000.0);
 var v1        = Velocity1D<double>.FromMetersPerSecond(-3.5);
 var temp      = Temperature<double>.FromKelvins(300.0);
 
-// Vector3 — directional
-var force3d   = Force3D<double>.FromNewtons(0.0, 0.0, -9.8);
-var disp3d    = Displacement3D<double>.FromMeters(3.0, 4.0, 0.0);
+// Vector3 — directional (object-initializer with X/Y/Z components)
+var force3d   = new Force3D<double>        { X = 0.0, Y = 0.0, Z = -9.8 };
+var disp3d    = new Displacement3D<double> { X = 3.0, Y = 4.0, Z =  0.0 };
 ```
 
 ### Operators and dimensional analysis
@@ -163,14 +163,14 @@ Cross-dimensional operators are declared in `dimensions.json` and emitted automa
 
 ```csharp
 // V0 × V0 (magnitudes)
-var force      = mass * Acceleration<double>.FromMeters(9.8);  // Mass × Accel = Force
-var work       = ForceMagnitude<double>.FromNewtons(10.0) * distance;  // F·d = Energy
-var power      = work / Duration<double>.FromSeconds(2.0);     // W/t = Power
+var force      = mass * AccelerationMagnitude<double>.FromMetersPerSecondSquared(9.8); // Mass × Accel = Force
+var work       = ForceMagnitude<double>.FromNewtons(10.0) * distance;                  // F·d = Energy
+var power      = work / Duration<double>.FromSeconds(2.0);                             // W/t = Power
 
 // Vector ops
-var workScalar = force3d.Dot(disp3d);                          // Energy
-var torque     = force3d.Cross(disp3d);                        // Torque3D
-var magnitude  = disp3d.Magnitude();                           // Distance
+var workScalar = force3d.Dot(disp3d);                          // Energy (V0)
+var torque     = force3d.Cross(disp3d);                        // Torque3D (V3)
+var magnitude  = disp3d.Magnitude();                           // Length (V0, always >= 0)
 
 // Type safety
 // var nope = force + temp;   // ❌ compiler error

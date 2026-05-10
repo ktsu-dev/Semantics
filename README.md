@@ -99,45 +99,53 @@ Every quantity is a vector. Direction-space dimensionality is part of the type:
 ```csharp
 using ktsu.Semantics.Quantities;
 
-// V0 magnitudes
+// V0 magnitudes — From{Unit} factories use the plural form (#49)
 var speed    = Speed<double>.FromMetersPerSecond(15.0);
-var mass     = Mass<double>.FromKilogram(10.0);
-var distance = Distance<double>.FromMeter(5.0);
+var mass     = Mass<double>.FromKilograms(10.0);
+var distance = Distance<double>.FromMeters(5.0);
 
-// V3 directional
-var force3d  = Force3D<double>.FromNewton(0.0, 0.0, -9.8);
-var disp3d   = Displacement3D<double>.FromMeter(3.0, 4.0, 0.0);
+// V3 directional — object-initializer syntax (X/Y/Z components)
+var force3d  = new Force3D<double> { X = 0.0, Y = 0.0, Z = -9.8 };
+var disp3d   = new Displacement3D<double> { X = 3.0, Y = 4.0, Z = 0.0 };
 
 // Operators flow from dimensions.json
-var work     = ForceMagnitude<double>.FromNewton(10.0) * distance;     // F·d = Energy
-var power    = work / Duration<double>.FromSecond(2.0);                // W/t = Power
+var work     = ForceMagnitude<double>.FromNewtons(10.0) * distance;    // F·d = Energy
+var power    = work / Duration<double>.FromSeconds(2.0);               // W/t = Power
 
 // Vector ops
 var workDot  = force3d.Dot(disp3d);                                    // Energy
 var torque   = force3d.Cross(disp3d);                                  // Torque3D
-var mag      = disp3d.Magnitude();                                     // Distance (always >= 0)
+var mag      = disp3d.Magnitude();                                     // Length (always >= 0)
+
+// Construction-time invariants (#50, #51)
+// Speed.FromMetersPerSecond(-1.0)        // ArgumentException — V0 must be non-negative
+// Wavelength<double>.FromMeters(0.0)     // ArgumentException — strict-positive overload
 
 // Type safety
-// var nope = force3d + speed;   // ❌ compiler error
+// var nope = force3d + speed;            // ❌ compiler error
 ```
 
 Semantic overloads (e.g. `Weight` over `ForceMagnitude`, `Diameter` ↔ `Radius`):
 
 ```csharp
-var raw    = ForceMagnitude<double>.FromNewton(686.0);
+var raw    = ForceMagnitude<double>.FromNewtons(686.0);
 var weight = Weight<double>.From(raw);   // explicit narrow
 ForceMagnitude<double> back = weight;    // implicit widen
 
-var radius   = Radius<double>.FromMeter(2.0);
+var radius   = Radius<double>.FromMeters(2.0);
 var diameter = radius.ToDiameter();       // 4 m via metadata-defined relationship
 ```
 
-Physical constants:
+Physical constants are exposed in two shapes:
 
 ```csharp
-var c   = PhysicalConstants.Generic.SpeedOfLight<double>();        // 299_792_458 m/s
-var R   = PhysicalConstants.Generic.GasConstant<decimal>();
-var ftM = PhysicalConstants.Conversion.FeetToMeters<double>();     // 0.3048
+// Domain-grouped, exact PreciseNumber values:
+PhysicalConstants.Fundamental.SpeedOfLight;    // 299_792_458 m/s as PreciseNumber
+PhysicalConstants.Chemistry.GasConstant;       // 8.31446... J/(mol·K)
+
+// Generic accessors — materialise into any T : INumber<T>:
+var c = PhysicalConstants.Generic.SpeedOfLight<double>();
+var R = PhysicalConstants.Generic.GasConstant<decimal>();
 ```
 
 The unified vector model and its rationale: [`docs/strategy-unified-vector-quantities.md`](docs/strategy-unified-vector-quantities.md).
@@ -161,12 +169,18 @@ public class UserService(ISemanticStringFactory<EmailAddress> emails)
 ## Architecture
 
 The physics system is **metadata-driven**. The single source of truth is
-`Semantics.SourceGenerators/Metadata/dimensions.json`, with a Roslyn incremental generator emitting:
+`Semantics.SourceGenerators/Metadata/dimensions.json` (with `units.json`, `magnitudes.json`, `conversions.json`, and `domains.json` alongside it), and a Roslyn incremental generator emits:
 
 - One record per quantity (Vector0/1/2/3/4 base + semantic overloads).
-- `From{Unit}` factories.
-- Cross-dimensional `*`, `/`, `Dot`, `Cross` operators.
-- `PhysicalConstants.Generic.X<T>()` and `PhysicalConstants.Conversion.X<T>()`.
+- A `From{Unit}` factory per declared unit, with built-in unit conversion to the SI base unit and a `Vector0Guards` enforce-non-negative (or strict-positive) check on V0 types.
+- Cross-dimensional `*`, `/`, `Dot`, `Cross` operators driven by `integrals` / `derivatives` / `dotProducts` / `crossProducts` declarations.
+- `PhysicalConstants` with both domain-grouped `PreciseNumber` fields and generic `T.CreateChecked`-backed accessors.
+
+Generator diagnostics catch metadata problems at build time:
+
+- **SEM001** — relationship references an unknown dimension name.
+- **SEM002** — schema-level metadata issue (missing fields, duplicate type names, etc).
+- **SEM003** — relationship's `forms` list references a vector form not declared on a participating dimension.
 
 Generated output is committed to `Semantics.Quantities/Generated/` so the project compiles without first running the generator.
 
