@@ -51,7 +51,7 @@ These are now baked into the generator and enforced by tests. **Do not reopen wi
 1. **`V0 - V0` returns the same `V0` of `T.Abs(a - b)`.** Magnitude subtraction stays non-negative; signed subtraction must use the V1 form explicitly.
 2. **Dimensionless and angular quantities have both `Ratio` (V0) and `SignedRatio` (V1) bases.** Ratios that semantically must be non-negative (e.g. `RefractiveIndex`, `MachNumber`, `SpecificGravity`) are V0 overloads of `Ratio`.
 3. **Semantic overloads widen implicitly to their base, narrow explicitly from it.** A `Weight` is implicitly a `ForceMagnitude`; the reverse requires `Weight.From(forceMagnitude)` or an explicit cast.
-4. **Physical constraints are enforced structurally via the V0 (magnitude) form.** `Vector0` factories run `Vector0Guards.EnsureNonNegative` and throw `ArgumentException` on a negative value. That covers absolute zero (Temperature is V0, so Kelvin must be ≥ 0), non-negative frequency, non-negative absolute pressure, etc. Strict-positive or upper-bound constraints are not yet declared in metadata (tracked separately).
+4. **Physical constraints are enforced structurally via the V0 (magnitude) form.** `Vector0` factories run `Vector0Guards.EnsureNonNegative` and throw `ArgumentException` on a negative value. That covers absolute zero (Temperature is V0, so Kelvin must be ≥ 0), non-negative frequency, non-negative absolute pressure, etc. A V0 *overload* can opt into a stricter rule by declaring `physicalConstraints: { "minExclusive": "0" }` in `dimensions.json` (#51); the generator then emits `Vector0Guards.EnsurePositive` and rejects zero too. Used today for `Wavelength`, `Period`, and `HalfLife` — quantities for which zero is unphysical.
 
 ### Physical constants
 

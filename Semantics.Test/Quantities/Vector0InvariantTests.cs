@@ -185,4 +185,102 @@ public sealed class Vector0InvariantTests
 			() => Vector0Guards.EnsureNonNegative(-1.0, "myParam"));
 		Assert.AreEqual("myParam", ex.ParamName);
 	}
+
+	// =========================================================== #51: Strict-positive overloads
+
+	// Wavelength, Period, HalfLife declare physicalConstraints.minExclusive: "0" in
+	// dimensions.json; their generated From{Unit} factories use Vector0Guards.EnsurePositive
+	// instead of EnsureNonNegative, rejecting zero as well as negative values.
+
+	[TestMethod]
+	public void Wavelength_FromMeters_Zero_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Wavelength<double>.FromMeters(0.0));
+
+	[TestMethod]
+	public void Wavelength_FromMeters_Negative_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Wavelength<double>.FromMeters(-1e-9));
+
+	[TestMethod]
+	public void Wavelength_FromMeters_Positive_Succeeds()
+	{
+		Wavelength<double> w = Wavelength<double>.FromMeters(550e-9);
+		Assert.AreEqual(550e-9, w.Value, 1e-15);
+	}
+
+	[TestMethod]
+	public void Wavelength_FromNanometers_Zero_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Wavelength<double>.FromNanometers(0.0));
+
+	[TestMethod]
+	public void Period_FromSeconds_Zero_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Period<double>.FromSeconds(0.0));
+
+	[TestMethod]
+	public void Period_FromSeconds_Positive_Succeeds()
+	{
+		Period<double> p = Period<double>.FromSeconds(0.001);
+		Assert.AreEqual(0.001, p.Value, Tolerance);
+	}
+
+	[TestMethod]
+	public void HalfLife_FromSeconds_Zero_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => HalfLife<double>.FromSeconds(0.0));
+
+	// The base type (Length, Duration) has no minExclusive, so zero is still allowed —
+	// only the constrained overloads reject it.
+
+	[TestMethod]
+	public void Length_FromMeters_Zero_Allowed()
+	{
+		Length<double> l = Length<double>.FromMeters(0.0);
+		Assert.AreEqual(0.0, l.Value, Tolerance);
+	}
+
+	[TestMethod]
+	public void Duration_FromSeconds_Zero_Allowed()
+	{
+		Duration<double> d = Duration<double>.FromSeconds(0.0);
+		Assert.AreEqual(0.0, d.Value, Tolerance);
+	}
+
+	// Other Length / Duration overloads without the constraint also still allow zero.
+
+	[TestMethod]
+	public void Distance_FromMeters_Zero_Allowed()
+	{
+		Distance<double> d = Distance<double>.FromMeters(0.0);
+		Assert.AreEqual(0.0, d.Value, Tolerance);
+	}
+
+	[TestMethod]
+	public void Latency_FromSeconds_Zero_Allowed()
+	{
+		// Latency has no minExclusive — a zero-latency response is meaningful.
+		Latency<double> l = Latency<double>.FromSeconds(0.0);
+		Assert.AreEqual(0.0, l.Value, Tolerance);
+	}
+
+	// Vector0Guards.EnsurePositive directly.
+
+	[TestMethod]
+	public void Vector0Guards_EnsurePositive_Allows_Positive()
+	{
+		Assert.AreEqual(3.5, Vector0Guards.EnsurePositive(3.5, "v"));
+	}
+
+	[TestMethod]
+	public void Vector0Guards_EnsurePositive_Throws_On_Zero_With_ParamName()
+	{
+		ArgumentException ex = Assert.ThrowsExactly<ArgumentException>(
+			() => Vector0Guards.EnsurePositive(0.0, "myParam"));
+		Assert.AreEqual("myParam", ex.ParamName);
+	}
+
+	[TestMethod]
+	public void Vector0Guards_EnsurePositive_Throws_On_Negative_With_ParamName()
+	{
+		ArgumentException ex = Assert.ThrowsExactly<ArgumentException>(
+			() => Vector0Guards.EnsurePositive(-1.0, "myParam"));
+		Assert.AreEqual("myParam", ex.ParamName);
+	}
 }
