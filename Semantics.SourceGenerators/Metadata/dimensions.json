@@ -563,7 +563,7 @@
         { "other": "Length", "result": "Energy" }
       ],
       "crossProducts": [
-        { "other": "Length", "result": "Torque" }
+        { "other": "Length", "result": "Torque", "forms": [3] }
       ]
     },
     {

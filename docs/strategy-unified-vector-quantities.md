@@ -223,6 +223,8 @@ The current `integrals` and `derivatives` lists are supplemented with `dotProduc
 - **`dotProducts`** (`Self · Other = Result`): Generates `.Dot()` methods on VN types (N >= 1) where both self and other have that VN form. Result is always V0 of the result dimension.
 - **`crossProducts`** (`Self × Other = Result`): Generates `.Cross()` methods only on V3 types where both self and other have V3 forms. Result is V3 of the result dimension.
 
+Each entry may also declare an explicit `forms` array (e.g. `{ "other": "Length", "result": "Torque", "forms": [3] }`). When set, the generator only emits operators at those forms; if a listed form is missing on any participating dimension, it surfaces as the `SEM003` diagnostic instead of being silently dropped. When `forms` is omitted, the generator falls back to per-relationship defaults: `[0, 1, 2, 3, 4]` for integrals/derivatives, `[1, 2, 3, 4]` for dot products, `[3]` for cross products.
+
 ### Complete Example: Velocity Dimension
 
 Given:

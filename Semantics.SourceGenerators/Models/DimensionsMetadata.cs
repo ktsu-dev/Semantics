@@ -179,4 +179,13 @@ public class RelationshipDefinition
 {
 	public string Other { get; set; } = string.Empty;
 	public string Result { get; set; } = string.Empty;
+
+	/// <summary>
+	/// Optional explicit list of vector forms (0..4) at which this relationship should
+	/// emit operators. When empty, the generator uses sensible defaults from the
+	/// relationship kind: <c>integrals</c>/<c>derivatives</c> default to all common forms,
+	/// <c>dotProducts</c> to V1+, <c>crossProducts</c> to V3 only. When set, missing forms
+	/// on either side surface as <c>SEM003</c> diagnostics instead of being silently dropped.
+	/// </summary>
+	public List<int> Forms { get; set; } = [];
 }
