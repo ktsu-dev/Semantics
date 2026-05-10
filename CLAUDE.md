@@ -149,6 +149,7 @@ var converted = sourceString.As<SourceType, TargetType>();
 - Generator diagnostics:
   - **SEM001** — a relationship in `dimensions.json` references a dimension that does not exist (typo or rename). The operator is silently dropped.
   - **SEM002** — schema-level validation issue (missing `name`/`symbol`, empty `availableUnits`, duplicate type names, no vector forms declared).
+  - **SEM003** — a relationship's explicit `forms` list references a vector form not declared on a participating dimension. Use `forms` to constrain a relationship to specific vector forms (e.g. `crossProducts: [{ "other": "Length", "result": "Torque", "forms": [3] }]`); when omitted, the legacy "emit at every common form" behaviour is preserved.
 - See `docs/physics-generator.md` for the full schema and an end-to-end "add a dimension" walk-through.
 
 This file is the entry point. For deeper material:

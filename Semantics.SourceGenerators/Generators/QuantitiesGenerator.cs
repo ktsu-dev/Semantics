@@ -37,6 +37,14 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true);
 
+	private static readonly DiagnosticDescriptor RelationshipFormMissing = new(
+		id: "SEM003",
+		title: "Relationship requires a vector form not declared on a participating dimension",
+		messageFormat: "Relationship in dimension '{0}' ({1}) explicitly requests form V{2}, but '{3}' does not declare that form. The operator will not be generated.",
+		category: "Semantics.SourceGenerators",
+		defaultSeverity: DiagnosticSeverity.Warning,
+		isEnabledByDefault: true);
+
 	public QuantitiesGenerator() : base("dimensions.json") { }
 
 	/// <summary>
@@ -244,7 +252,17 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 					continue;
 				}
 
-				int[] forms = [0, 1, 2, 3, 4];
+				// For integrals the "Other" multiplier is V0 only; the form propagates
+				// between Self and Result, so SEM003 should fire if either Self or
+				// Result is missing a declared form. (V0-only Other was already
+				// rejected above via the v0Other null check.)
+				int[] forms = ResolveForms(
+					context,
+					integral,
+					[0, 1, 2, 3, 4],
+					dim,
+					resultDim,
+					$"integrals[{integral.Other} -> {integral.Result}]");
 				foreach (int vn in forms)
 				{
 					string? selfType = GetBaseTypeName(dim, vn);
@@ -289,7 +307,13 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 					continue;
 				}
 
-				int[] forms = [0, 1, 2, 3, 4];
+				int[] forms = ResolveForms(
+					context,
+					derivative,
+					[0, 1, 2, 3, 4],
+					dim,
+					resultDim,
+					$"derivatives[{derivative.Other} -> {derivative.Result}]");
 				foreach (int vn in forms)
 				{
 					string? selfType = GetBaseTypeName(dim, vn);
@@ -340,8 +364,14 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 					continue;
 				}
 
-				// Dot product for V1+ forms where both self and other have that form
-				int[] forms = [1, 2, 3, 4];
+				// Dot product is undefined for V0; default forms are V1+.
+				int[] forms = ResolveForms(
+					context,
+					dot,
+					[1, 2, 3, 4],
+					dim,
+					otherDim,
+					$"dotProducts[{dot.Other} -> {dot.Result}]");
 				foreach (int vn in forms)
 				{
 					string? selfType = GetBaseTypeName(dim, vn);
@@ -371,6 +401,23 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				if (!dimMap.TryGetValue(cross.Result, out PhysicalDimension? resultDim))
 				{
 					ReportUnknownReference(context, dim.Name, cross.Result, $"crossProducts[{cross.Other} -> {cross.Result}].result");
+					continue;
+				}
+
+				// Cross product is intrinsically 3D. Default to V3 only; explicit Forms
+				// other than [3] are accepted but the operator emit below only handles V3.
+				// Pass resultDim so SEM003 surfaces when the declared form is missing on
+				// the result type too (e.g. Force × Length → Torque at V2: Torque has no V2).
+				int[] forms = ResolveForms(
+					context,
+					cross,
+					[3],
+					dim,
+					otherDim,
+					$"crossProducts[{cross.Other} -> {cross.Result}]",
+					resultDim);
+				if (Array.IndexOf(forms, 3) < 0)
+				{
 					continue;
 				}
 
@@ -416,6 +463,71 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			owningDimension,
 			unknownReference,
 			fieldPath));
+	}
+
+	/// <summary>
+	/// Resolves the forms at which a relationship should emit operators. When the metadata
+	/// declares <see cref="RelationshipDefinition.Forms"/> explicitly, that list wins and
+	/// any form missing from one of the participating dimensions is reported as
+	/// <c>SEM003</c>. When the list is empty, returns <paramref name="defaultForms"/>
+	/// (which the caller filters silently — preserving the legacy behaviour for relationships
+	/// that haven't opted into form-specific declarations).
+	/// </summary>
+	private static int[] ResolveForms(
+		SourceProductionContext context,
+		RelationshipDefinition rel,
+		int[] defaultForms,
+		PhysicalDimension dim,
+		PhysicalDimension otherDim,
+		string fieldPath,
+		PhysicalDimension? resultDim = null)
+	{
+		if (rel.Forms.Count == 0)
+		{
+			return defaultForms;
+		}
+
+		List<int> kept = [];
+		foreach (int form in rel.Forms)
+		{
+			if (form < 0 || form > 4)
+			{
+				continue;
+			}
+
+			if (GetBaseTypeName(dim, form) == null)
+			{
+				ReportFormMissing(context, dim.Name, fieldPath, form, dim.Name);
+				continue;
+			}
+
+			if (GetBaseTypeName(otherDim, form) == null)
+			{
+				ReportFormMissing(context, dim.Name, fieldPath, form, otherDim.Name);
+				continue;
+			}
+
+			if (resultDim != null && GetBaseTypeName(resultDim, form) == null)
+			{
+				ReportFormMissing(context, dim.Name, fieldPath, form, resultDim.Name);
+				continue;
+			}
+
+			kept.Add(form);
+		}
+
+		return [.. kept];
+	}
+
+	private static void ReportFormMissing(SourceProductionContext context, string owningDimension, string fieldPath, int form, string offendingDimension)
+	{
+		context.ReportDiagnostic(Diagnostic.Create(
+			RelationshipFormMissing,
+			Location.None,
+			owningDimension,
+			fieldPath,
+			form,
+			offendingDimension));
 	}
 
 	private static Dictionary<string, UnitDefinition> BuildUnitMap(UnitsMetadata units)
