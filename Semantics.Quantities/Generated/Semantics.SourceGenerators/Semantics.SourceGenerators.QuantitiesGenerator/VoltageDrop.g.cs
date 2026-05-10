@@ -24,7 +24,7 @@ public record VoltageDrop<T> : PhysicalQuantity<VoltageDrop<T>, T>, IVector0<Vol
 	/// <param name="value">The value in Volt.</param>
 	/// <returns>A new VoltageDrop instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static VoltageDrop<T> FromVolt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static VoltageDrop<T> FromVolts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to VoltageMagnitude.</summary>
 	public static implicit operator VoltageMagnitude<T>(VoltageDrop<T> value) => VoltageMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from VoltageMagnitude.</summary>

@@ -20,129 +20,129 @@ public sealed class MultiUnitFactoryTests
 	// ---- Length ----
 
 	[TestMethod]
-	public void Length_FromMeter_Identity()
+	public void Length_FromMeters_Identity()
 	{
-		Length<double> l = Length<double>.FromMeter(1.0);
+		Length<double> l = Length<double>.FromMeters(1.0);
 		Assert.AreEqual(1.0, l.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Length_FromKilometer_Scales_By_1000()
+	public void Length_FromKilometers_Scales_By_1000()
 	{
-		Length<double> l = Length<double>.FromKilometer(1.0);
+		Length<double> l = Length<double>.FromKilometers(1.0);
 		Assert.AreEqual(1000.0, l.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Length_FromCentimeter_Scales_By_0_01()
+	public void Length_FromCentimeters_Scales_By_0_01()
 	{
-		Length<double> l = Length<double>.FromCentimeter(1.0);
+		Length<double> l = Length<double>.FromCentimeters(1.0);
 		Assert.AreEqual(0.01, l.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Length_FromMillimeter_Scales_By_0_001()
+	public void Length_FromMillimeters_Scales_By_0_001()
 	{
-		Length<double> l = Length<double>.FromMillimeter(1.0);
+		Length<double> l = Length<double>.FromMillimeters(1.0);
 		Assert.AreEqual(0.001, l.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Length_FromFoot_Uses_FeetToMeters_Constant()
+	public void Length_FromFeet_Uses_FeetToMeters_Constant()
 	{
-		Length<double> l = Length<double>.FromFoot(1.0);
+		Length<double> l = Length<double>.FromFeet(1.0);
 		Assert.AreEqual(0.3048, l.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Length_FromInch_Uses_InchesToMeters_Constant()
+	public void Length_FromInches_Uses_InchesToMeters_Constant()
 	{
-		Length<double> l = Length<double>.FromInch(1.0);
+		Length<double> l = Length<double>.FromInches(1.0);
 		Assert.AreEqual(0.0254, l.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Length_FromMile_Uses_MileToMeters_Constant()
+	public void Length_FromMiles_Uses_MileToMeters_Constant()
 	{
-		Length<double> l = Length<double>.FromMile(1.0);
+		Length<double> l = Length<double>.FromMiles(1.0);
 		Assert.AreEqual(1609.344, l.Value, Tolerance);
 	}
 
 	// ---- Mass ----
 
 	[TestMethod]
-	public void Mass_FromKilogram_Identity()
+	public void Mass_FromKilograms_Identity()
 	{
-		Mass<double> m = Mass<double>.FromKilogram(1.0);
+		Mass<double> m = Mass<double>.FromKilograms(1.0);
 		Assert.AreEqual(1.0, m.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Mass_FromGram_Scales_By_0_001()
+	public void Mass_FromGrams_Scales_By_0_001()
 	{
-		Mass<double> m = Mass<double>.FromGram(1.0);
+		Mass<double> m = Mass<double>.FromGrams(1.0);
 		Assert.AreEqual(0.001, m.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Mass_FromPound_Uses_PoundToKilograms_Constant()
+	public void Mass_FromPounds_Uses_PoundToKilograms_Constant()
 	{
-		Mass<double> m = Mass<double>.FromPound(1.0);
+		Mass<double> m = Mass<double>.FromPounds(1.0);
 		Assert.AreEqual(0.45359237, m.Value, Tolerance);
 	}
 
 	// ---- Time / Duration ----
 
 	[TestMethod]
-	public void Duration_FromMinute_Equals_60_Seconds()
+	public void Duration_FromMinutes_Equals_60_Seconds()
 	{
-		Duration<double> d = Duration<double>.FromMinute(1.0);
+		Duration<double> d = Duration<double>.FromMinutes(1.0);
 		Assert.AreEqual(60.0, d.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Duration_FromHour_Equals_3600_Seconds()
+	public void Duration_FromHours_Equals_3600_Seconds()
 	{
-		Duration<double> d = Duration<double>.FromHour(1.0);
+		Duration<double> d = Duration<double>.FromHours(1.0);
 		Assert.AreEqual(3600.0, d.Value, Tolerance);
 	}
 
 	// ---- Semantic overloads inherit their dimension's full unit set ----
 
 	[TestMethod]
-	public void Distance_FromKilometer_Scales_By_1000()
+	public void Distance_FromKilometers_Scales_By_1000()
 	{
-		Distance<double> d = Distance<double>.FromKilometer(1.0);
+		Distance<double> d = Distance<double>.FromKilometers(1.0);
 		Assert.AreEqual(1000.0, d.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Diameter_FromMillimeter_Scales_By_0_001()
+	public void Diameter_FromMillimeters_Scales_By_0_001()
 	{
-		Diameter<double> d = Diameter<double>.FromMillimeter(1.0);
+		Diameter<double> d = Diameter<double>.FromMillimeters(1.0);
 		Assert.AreEqual(0.001, d.Value, Tolerance);
 	}
 
 	[TestMethod]
-	public void Wavelength_FromNanometer_Uses_Nano_Magnitude()
+	public void Wavelength_FromNanometers_Uses_Nano_Magnitude()
 	{
-		Wavelength<double> w = Wavelength<double>.FromNanometer(550.0);
+		Wavelength<double> w = Wavelength<double>.FromNanometers(550.0);
 		Assert.AreEqual(550.0e-9, w.Value, 1e-15);
 	}
 
 	// ---- Storage genericity ----
 
 	[TestMethod]
-	public void Length_FromKilometer_Works_With_Float()
+	public void Length_FromKilometers_Works_With_Float()
 	{
-		Length<float> l = Length<float>.FromKilometer(1.0f);
+		Length<float> l = Length<float>.FromKilometers(1.0f);
 		Assert.AreEqual(1000.0f, l.Value, 1e-3f);
 	}
 
 	[TestMethod]
-	public void Length_FromFoot_Works_With_Decimal()
+	public void Length_FromFeet_Works_With_Decimal()
 	{
-		Length<decimal> l = Length<decimal>.FromFoot(1m);
+		Length<decimal> l = Length<decimal>.FromFeet(1m);
 		Assert.AreEqual(0.3048m, l.Value);
 	}
 }

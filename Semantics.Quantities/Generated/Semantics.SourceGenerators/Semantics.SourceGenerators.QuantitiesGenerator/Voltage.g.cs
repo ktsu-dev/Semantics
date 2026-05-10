@@ -22,7 +22,7 @@ public record Voltage<T> : PhysicalQuantity<Voltage<T>, T>, IVector1<Voltage<T>,
 	/// </summary>
 	/// <param name="value">The value in Volt.</param>
 	/// <returns>A new <see cref="Voltage{T}"/> instance.</returns>
-	public static Voltage<T> FromVolt(T value) => Create(value);
+	public static Voltage<T> FromVolts(T value) => Create(value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="VoltageMagnitude{T}"/>.
 	/// </summary>

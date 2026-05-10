@@ -23,7 +23,7 @@ public record DynamicViscosity<T> : PhysicalQuantity<DynamicViscosity<T>, T>, IV
 	/// <param name="value">The value in PascalSecond.</param>
 	/// <returns>A new <see cref="DynamicViscosity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DynamicViscosity<T> FromPascalSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static DynamicViscosity<T> FromPascalSeconds(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="DynamicViscosity{T}"/> from a value in Poise.
 	/// </summary>

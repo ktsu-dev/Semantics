@@ -27,4 +27,13 @@ public class UnitDefinition
 	public string Magnitude { get; set; } = "1";
 	public string ConversionFactor { get; set; } = "1";
 	public string Offset { get; set; } = "0";
+
+	/// <summary>
+	/// Plural-form identifier used when emitting <c>From{FactoryName}</c> factories per #49.
+	/// Empty string means "fall back to the rule built into the generator" — currently
+	/// <c>Name + "s"</c>, which is correct for regular units (Meter→Meters, Newton→Newtons)
+	/// but wrong for irregulars (Foot, Inch), already-plural compounds (MetersPerSecond),
+	/// and mass nouns (Hertz, Lux, Siemens). Set this explicitly for those cases.
+	/// </summary>
+	public string FactoryName { get; set; } = string.Empty;
 }

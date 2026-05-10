@@ -145,6 +145,7 @@ var converted = sourceString.As<SourceType, TargetType>();
 - Edit `Semantics.SourceGenerators/Metadata/dimensions.json` to add a dimension, vector form, semantic overload, or relationship.
 - Rebuild `Semantics.SourceGenerators` and the consuming `Semantics.Quantities` project; emitted files appear in `Semantics.Quantities/Generated/Semantics.SourceGenerators/<GeneratorName>/`.
 - Treat generator output as committed source. Diff it before commit so accidental regressions are visible.
+- Factory names are **plural by convention** (#49). Each entry in `units.json` carries a `factoryName` field — the generator emits `From{factoryName}` (e.g. `Length.FromMeters`, `Mass.FromKilograms`, `Speed.FromMetersPerSecond`, `Length.FromFeet`, `Frequency.FromHertz`). Set it explicitly on every new unit; the generator falls back to `name + "s"` if absent, which is wrong for irregulars and "Per" compounds.
 - Generator diagnostics:
   - **SEM001** — a relationship in `dimensions.json` references a dimension that does not exist (typo or rename). The operator is silently dropped.
   - **SEM002** — schema-level validation issue (missing `name`/`symbol`, empty `availableUnits`, duplicate type names, no vector forms declared).

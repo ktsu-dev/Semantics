@@ -24,28 +24,28 @@ public record Capacity<T> : PhysicalQuantity<Capacity<T>, T>, IVector0<Capacity<
 	/// <param name="value">The value in CubicMeter.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Capacity<T> FromCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Capacity<T> FromCubicMeters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new Capacity from a value in Liter.
 	/// </summary>
 	/// <param name="value">The value in Liter.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Capacity<T> FromLiter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterToCubicMeters)), nameof(value)));
+	public static Capacity<T> FromLiters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new Capacity from a value in Milliliter.
 	/// </summary>
 	/// <param name="value">The value in Milliliter.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Capacity<T> FromMilliliter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static Capacity<T> FromMilliliters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new Capacity from a value in Gallon.
 	/// </summary>
 	/// <param name="value">The value in Gallon.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Capacity<T> FromGallon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GallonToCubicMeters)), nameof(value)));
+	public static Capacity<T> FromGallons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GallonToCubicMeters)), nameof(value)));
 /// <summary>Implicit conversion to Volume.</summary>
 	public static implicit operator Volume<T>(Capacity<T> value) => Volume<T>.Create(value.Value);
 /// <summary>Explicit conversion from Volume.</summary>

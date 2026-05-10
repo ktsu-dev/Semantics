@@ -23,7 +23,7 @@ public record VoltageMagnitude<T> : PhysicalQuantity<VoltageMagnitude<T>, T>, IV
 	/// <param name="value">The value in Volt.</param>
 	/// <returns>A new <see cref="VoltageMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static VoltageMagnitude<T> FromVolt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static VoltageMagnitude<T> FromVolts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two VoltageMagnitude values, returning the absolute difference as a non-negative VoltageMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

@@ -23,7 +23,7 @@ public record TemperatureRise<T> : PhysicalQuantity<TemperatureRise<T>, T>, IVec
 	/// </summary>
 	/// <param name="value">The value in Kelvin.</param>
 	/// <returns>A new TemperatureRise instance.</returns>
-	public static TemperatureRise<T> FromKelvin(T value) => Create(value);
+	public static TemperatureRise<T> FromKelvins(T value) => Create(value);
 /// <summary>
 	/// Creates a new TemperatureRise from a value in Celsius.
 	/// </summary>

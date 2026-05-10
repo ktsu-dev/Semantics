@@ -23,7 +23,7 @@ public record TemperatureDrop<T> : PhysicalQuantity<TemperatureDrop<T>, T>, IVec
 	/// </summary>
 	/// <param name="value">The value in Kelvin.</param>
 	/// <returns>A new TemperatureDrop instance.</returns>
-	public static TemperatureDrop<T> FromKelvin(T value) => Create(value);
+	public static TemperatureDrop<T> FromKelvins(T value) => Create(value);
 /// <summary>
 	/// Creates a new TemperatureDrop from a value in Celsius.
 	/// </summary>

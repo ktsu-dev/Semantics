@@ -23,13 +23,13 @@ public record Heading<T> : PhysicalQuantity<Heading<T>, T>, IVector1<Heading<T>,
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new Heading instance.</returns>
-	public static Heading<T> FromRadian(T value) => Create(value);
+	public static Heading<T> FromRadians(T value) => Create(value);
 /// <summary>
 	/// Creates a new Heading from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new Heading instance.</returns>
-	public static Heading<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static Heading<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
 /// <summary>Implicit conversion to SignedAngle.</summary>
 	public static implicit operator SignedAngle<T>(Heading<T> value) => SignedAngle<T>.Create(value.Value);
 /// <summary>Explicit conversion from SignedAngle.</summary>

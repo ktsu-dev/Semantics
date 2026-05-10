@@ -24,49 +24,49 @@ public record ReverberationTime<T> : PhysicalQuantity<ReverberationTime<T>, T>, 
 	/// <param name="value">The value in Second.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ReverberationTime<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static ReverberationTime<T> FromSeconds(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new ReverberationTime from a value in Millisecond.
 	/// </summary>
 	/// <param name="value">The value in Millisecond.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ReverberationTime<T> FromMillisecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static ReverberationTime<T> FromMilliseconds(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new ReverberationTime from a value in Microsecond.
 	/// </summary>
 	/// <param name="value">The value in Microsecond.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ReverberationTime<T> FromMicrosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+	public static ReverberationTime<T> FromMicroseconds(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
 /// <summary>
 	/// Creates a new ReverberationTime from a value in Minute.
 	/// </summary>
 	/// <param name="value">The value in Minute.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ReverberationTime<T> FromMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
+	public static ReverberationTime<T> FromMinutes(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new ReverberationTime from a value in Hour.
 	/// </summary>
 	/// <param name="value">The value in Hour.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ReverberationTime<T> FromHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
+	public static ReverberationTime<T> FromHours(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new ReverberationTime from a value in Day.
 	/// </summary>
 	/// <param name="value">The value in Day.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ReverberationTime<T> FromDay(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
+	public static ReverberationTime<T> FromDays(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new ReverberationTime from a value in Year.
 	/// </summary>
 	/// <param name="value">The value in Year.</param>
 	/// <returns>A new ReverberationTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ReverberationTime<T> FromYear(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
+	public static ReverberationTime<T> FromYears(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
 /// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(ReverberationTime<T> value) => Duration<T>.Create(value.Value);
 /// <summary>Explicit conversion from Duration.</summary>

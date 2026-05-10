@@ -23,7 +23,7 @@ public record NuclearCrossSection<T> : PhysicalQuantity<NuclearCrossSection<T>, 
 	/// <param name="value">The value in Barn.</param>
 	/// <returns>A new <see cref="NuclearCrossSection{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static NuclearCrossSection<T> FromBarn(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static NuclearCrossSection<T> FromBarns(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two NuclearCrossSection values, returning the absolute difference as a non-negative NuclearCrossSection.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

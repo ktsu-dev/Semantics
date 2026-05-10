@@ -23,7 +23,7 @@ public record AbsorbedDose<T> : PhysicalQuantity<AbsorbedDose<T>, T>, IVector0<A
 	/// <param name="value">The value in Gray.</param>
 	/// <returns>A new <see cref="AbsorbedDose{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AbsorbedDose<T> FromGray(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static AbsorbedDose<T> FromGrays(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two AbsorbedDose values, returning the absolute difference as a non-negative AbsorbedDose.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

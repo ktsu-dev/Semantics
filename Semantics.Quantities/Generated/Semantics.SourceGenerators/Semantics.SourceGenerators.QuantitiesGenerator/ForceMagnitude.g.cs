@@ -23,7 +23,7 @@ public record ForceMagnitude<T> : PhysicalQuantity<ForceMagnitude<T>, T>, IVecto
 	/// <param name="value">The value in Newton.</param>
 	/// <returns>A new <see cref="ForceMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ForceMagnitude<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static ForceMagnitude<T> FromNewtons(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two ForceMagnitude values, returning the absolute difference as a non-negative ForceMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

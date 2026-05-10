@@ -24,7 +24,7 @@ public record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>, IVecto
 	/// <param name="value">The value in Katal.</param>
 	/// <returns>A new EnzymeActivity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static EnzymeActivity<T> FromKatal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static EnzymeActivity<T> FromKatals(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to CatalyticActivity.</summary>
 	public static implicit operator CatalyticActivity<T>(EnzymeActivity<T> value) => CatalyticActivity<T>.Create(value.Value);
 /// <summary>Explicit conversion from CatalyticActivity.</summary>

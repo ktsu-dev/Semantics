@@ -24,21 +24,21 @@ public record AtmosphericPressure<T> : PhysicalQuantity<AtmosphericPressure<T>, 
 	/// <param name="value">The value in Pascal.</param>
 	/// <returns>A new AtmosphericPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtmosphericPressure<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static AtmosphericPressure<T> FromPascals(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new AtmosphericPressure from a value in Bar.
 	/// </summary>
 	/// <param name="value">The value in Bar.</param>
 	/// <returns>A new AtmosphericPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtmosphericPressure<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
+	public static AtmosphericPressure<T> FromBars(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
 /// <summary>
 	/// Creates a new AtmosphericPressure from a value in Atmosphere.
 	/// </summary>
 	/// <param name="value">The value in Atmosphere.</param>
 	/// <returns>A new AtmosphericPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtmosphericPressure<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
+	public static AtmosphericPressure<T> FromAtmospheres(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
 /// <summary>
 	/// Creates a new AtmosphericPressure from a value in Psi.
 	/// </summary>

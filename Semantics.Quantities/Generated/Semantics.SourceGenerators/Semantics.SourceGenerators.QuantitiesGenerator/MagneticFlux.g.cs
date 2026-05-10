@@ -23,7 +23,7 @@ public record MagneticFlux<T> : PhysicalQuantity<MagneticFlux<T>, T>, IVector0<M
 	/// <param name="value">The value in Weber.</param>
 	/// <returns>A new <see cref="MagneticFlux{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MagneticFlux<T> FromWeber(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static MagneticFlux<T> FromWebers(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two MagneticFlux values, returning the absolute difference as a non-negative MagneticFlux.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

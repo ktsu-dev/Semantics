@@ -23,7 +23,7 @@ public record LuminousFlux<T> : PhysicalQuantity<LuminousFlux<T>, T>, IVector0<L
 	/// <param name="value">The value in Lumen.</param>
 	/// <returns>A new <see cref="LuminousFlux{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static LuminousFlux<T> FromLumen(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static LuminousFlux<T> FromLumens(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two LuminousFlux values, returning the absolute difference as a non-negative LuminousFlux.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

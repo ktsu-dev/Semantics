@@ -22,7 +22,7 @@ public record Charge<T> : PhysicalQuantity<Charge<T>, T>, IVector1<Charge<T>, T>
 	/// </summary>
 	/// <param name="value">The value in Coulomb.</param>
 	/// <returns>A new <see cref="Charge{T}"/> instance.</returns>
-	public static Charge<T> FromCoulomb(T value) => Create(value);
+	public static Charge<T> FromCoulombs(T value) => Create(value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="ChargeMagnitude{T}"/>.
 	/// </summary>

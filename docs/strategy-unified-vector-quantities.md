@@ -58,6 +58,20 @@ IQuantity<T>                          // Root: all quantities
     └── ...
 ```
 
+### Form Coverage Matrix
+
+Not every dimension declares every form. The coverage is intentional and follows three patterns; new dimensions should pick the matching one:
+
+| Dimension family | Forms | Rationale |
+|---|---|---|
+| Linear motion: `Length`, `Velocity`, `Acceleration`, `Jerk`, `Snap`, `Force`, `Momentum`, `Displacement`, `ElectricField` | V0–V4 | Pure linear vectors; every dimensionality is meaningful. |
+| Angular motion: `AngularDisplacement`, `AngularVelocity`, `AngularAcceleration`, `AngularJerk`, `Torque`, `AngularMomentum` | V0, V1, V3 | Pseudovectors. 2D / 4D forms aren't physically meaningful; skip them. |
+| Electric current: `ElectricCurrent` | V0, V1, V3 | Same as angular — no 2D current. |
+| Scalar-only: `Mass`, `Energy`, `Area`, `Volume`, `Time`, `Frequency`, `RadioactiveActivity`, `MomentOfInertia`, etc. | V0 (sometimes + V1) | Inherently scalar. Add V1 only when a signed *delta* makes physical sense (e.g. `Temperature` (V0) + `TemperatureDelta` (V1), `ElectricCharge` is V1 because charge is signed). |
+| Dimensionless / angular ratios: `Dimensionless` | V0 (`Ratio`) + V1 (`SignedRatio`) | Lets ratios that semantically must be non-negative (e.g. `MachNumber`, `RefractiveIndex`) be V0 overloads of `Ratio`, and signed ratios use `SignedRatio`. |
+
+When you declare a relationship (`integrals` / `derivatives` / `dotProducts` / `crossProducts`) the generator only emits operators for forms that exist on **both** sides — e.g. a dot product between two dimensions that both declare V3 emits the V3 dot product, while V2 is silently skipped if either side is missing. Keep this in mind when adding a new dimension: if you need it to participate in a particular relationship form, it must declare that form.
+
 ## Semantic Relationships
 
 ### Magnitude Extraction

@@ -22,13 +22,13 @@ public record SignedAngle<T> : PhysicalQuantity<SignedAngle<T>, T>, IVector1<Sig
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromRadian(T value) => Create(value);
+	public static SignedAngle<T> FromRadians(T value) => Create(value);
 /// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static SignedAngle<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Angle{T}"/>.
 	/// </summary>

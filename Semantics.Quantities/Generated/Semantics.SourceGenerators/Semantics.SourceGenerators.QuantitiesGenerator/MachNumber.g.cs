@@ -31,14 +31,14 @@ public record MachNumber<T> : PhysicalQuantity<MachNumber<T>, T>, IVector0<MachN
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new MachNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MachNumber<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static MachNumber<T> FromRadians(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new MachNumber from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new MachNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MachNumber<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
+	public static MachNumber<T> FromDegrees(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>Implicit conversion to Ratio.</summary>
 	public static implicit operator Ratio<T>(MachNumber<T> value) => Ratio<T>.Create(value.Value);
 /// <summary>Explicit conversion from Ratio.</summary>

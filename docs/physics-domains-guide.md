@@ -29,10 +29,10 @@ Seven base dimensions:
 - `LuminousIntensity` — V0.
 
 ```csharp
-var height   = Height<double>.FromMeter(1.75);
-var atomic   = AtomicMass<double>.FromKilogram(1.66e-27);
-var lifetime = Lifetime<double>.FromSecond(3600);
-var temp     = Temperature<double>.FromKelvin(298.15);
+var height   = Height<double>.FromMeters(1.75);
+var atomic   = AtomicMass<double>.FromKilograms(1.66e-27);
+var lifetime = Lifetime<double>.FromSeconds(3600);
+var temp     = Temperature<double>.FromKelvins(298.15);
 ```
 
 ## Geometry and kinematics
@@ -57,7 +57,7 @@ var sampling   = SamplingRate<double>.FromHertz(48_000);
 - `MomentOfInertia` — V0.
 
 ```csharp
-var heading = Heading<double>.FromRadian(Math.PI / 2);     // V0 overload of AngularDisplacement
+var heading = Heading<double>.FromRadians(Math.PI / 2);     // V0 overload of AngularDisplacement
 var omega3d = AngularVelocity3D<double>.FromRadianPerSecond(0.0, 0.0, 1.5);
 ```
 
@@ -71,9 +71,9 @@ var omega3d = AngularVelocity3D<double>.FromRadianPerSecond(0.0, 0.0, 1.5);
 - `Density` — V0.
 
 ```csharp
-var weight = Weight<double>.From(ForceMagnitude<double>.FromNewton(686.0));
-var drag   = Drag<double>.FromNewton(20.0);
-var pe     = PotentialEnergy<double>.FromJoule(500.0);
+var weight = Weight<double>.From(ForceMagnitude<double>.FromNewtons(686.0));
+var drag   = Drag<double>.FromNewtons(20.0);
+var pe     = PotentialEnergy<double>.FromJoules(500.0);
 ```
 
 ## Thermal
@@ -96,8 +96,8 @@ Heat itself is currently expressed via `Energy` (and its `ThermalEnergy` overloa
 - `MagneticFlux` — V0.
 
 ```csharp
-var v   = Voltage<double>.FromVolt(12.0);
-var i   = ElectricCurrent<double>.FromAmpere(2.0);
+var v   = Voltage<double>.FromVolts(12.0);
+var i   = ElectricCurrent<double>.FromAmperes(2.0);
 var r   = v / i;                                  // ElectricResistance<double>
 var p   = v * i;                                  // Power<double>
 ```
@@ -110,8 +110,8 @@ var p   = v * i;                                  // Power<double>
 - `Irradiance` — V0 with overloads `RadiantExitance`, `Radiance`, `RadiantIntensity`.
 
 ```csharp
-var flux  = LuminousFlux<double>.FromLumen(800.0);
-var lux   = flux / Area<double>.FromSquareMeter(4.0);   // Illuminance<double>
+var flux  = LuminousFlux<double>.FromLumens(800.0);
+var lux   = flux / Area<double>.FromSquareMeters(4.0);   // Illuminance<double>
 ```
 
 ## Acoustic
@@ -143,8 +143,8 @@ var T = f.Period();                                      // Time<double>
 - `MolarEnergy` — V0 with overloads `ActivationEnergy`, `EnthalpyOfReaction`.
 
 ```csharp
-var n     = AmountOfSubstance<double>.FromMole(0.5);
-var V     = Volume<double>.FromCubicMeter(0.002);          // 2 L
+var n     = AmountOfSubstance<double>.FromMoles(0.5);
+var V     = Volume<double>.FromCubicMeters(0.002);          // 2 L
 var M     = n / V;                                         // Concentration<double>
 ```
 
@@ -172,22 +172,22 @@ Speed<double>      s = v.Magnitude();   // 5.0, always >= 0
 ### Cross product (V3 only)
 
 ```csharp
-Force3D<double>        F = Force3D<double>.FromNewton(0.0, 10.0, 0.0);
-Displacement3D<double> r = Displacement3D<double>.FromMeter(0.5, 0.0, 0.0);
+Force3D<double>        F = Force3D<double>.FromNewtons(0.0, 10.0, 0.0);
+Displacement3D<double> r = Displacement3D<double>.FromMeters(0.5, 0.0, 0.0);
 Torque3D<double>       τ = F.Cross(r);
 ```
 
 ### Dot product
 
 ```csharp
-Energy<double> work = Force3D<double>.FromNewton(10.0, 0.0, 0.0)
-                          .Dot(Displacement3D<double>.FromMeter(2.0, 0.0, 0.0));   // 20 J
+Energy<double> work = Force3D<double>.FromNewtons(10.0, 0.0, 0.0)
+                          .Dot(Displacement3D<double>.FromMeters(2.0, 0.0, 0.0));   // 20 J
 ```
 
 ### Semantic overload narrowing
 
 ```csharp
-ForceMagnitude<double> raw    = ForceMagnitude<double>.FromNewton(686.0);
+ForceMagnitude<double> raw    = ForceMagnitude<double>.FromNewtons(686.0);
 Weight<double>         weight = Weight<double>.From(raw);    // explicit narrow
 ForceMagnitude<double> back   = weight;                       // implicit widen
 ```
@@ -196,9 +196,9 @@ ForceMagnitude<double> back   = weight;                       // implicit widen
 
 ```csharp
 var R    = PhysicalConstants.Generic.GasConstant<double>();          // J/(mol·K)
-var n    = AmountOfSubstance<double>.FromMole(1.0);
-var T    = Temperature<double>.FromKelvin(273.15);
-var P    = Pressure<double>.FromPascal(101_325.0);
+var n    = AmountOfSubstance<double>.FromMoles(1.0);
+var T    = Temperature<double>.FromKelvins(273.15);
+var P    = Pressure<double>.FromPascals(101_325.0);
 
 // PV = nRT  →  V = nRT / P
 // (constants flow into operators because everything stores SI base units)

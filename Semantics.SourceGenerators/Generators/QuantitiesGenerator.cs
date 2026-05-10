@@ -473,6 +473,16 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				? $" => Create(Vector0Guards.EnsureNonNegative({conversionExpr}, nameof(value)));"
 				: $" => Create({conversionExpr});";
 
+			// Issue #49: factory names use the plural form. Prefer an explicit FactoryName from
+			// units.json (covers irregular plurals like Foot→Feet, mass nouns like Hertz, and
+			// already-plural compounds like MetersPerSecond). Fall back to "{Name}s" for units
+			// that haven't been migrated yet — wrong for those edge cases but produces a build
+			// rather than a hard failure.
+			string factorySuffix = unitMap.TryGetValue(unitName, out UnitDefinition? unitDef)
+				&& !string.IsNullOrEmpty(unitDef?.FactoryName)
+					? unitDef!.FactoryName
+					: unitName + "s";
+
 			List<string> comments =
 			[
 				"/// <summary>",
@@ -490,7 +500,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			{
 				Comments = comments,
 				Keywords = ["public", "static", fullType],
-				Name = $"From{unitName}",
+				Name = $"From{factorySuffix}",
 				Parameters = [new ParameterTemplate { Type = "T", Name = "value" }],
 				BodyFactory = (b) => b.Write(body),
 			});

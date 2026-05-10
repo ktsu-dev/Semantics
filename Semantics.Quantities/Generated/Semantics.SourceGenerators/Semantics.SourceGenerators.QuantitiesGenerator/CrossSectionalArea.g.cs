@@ -24,21 +24,21 @@ public record CrossSectionalArea<T> : PhysicalQuantity<CrossSectionalArea<T>, T>
 	/// <param name="value">The value in SquareMeter.</param>
 	/// <returns>A new CrossSectionalArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static CrossSectionalArea<T> FromSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static CrossSectionalArea<T> FromSquareMeters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new CrossSectionalArea from a value in SquareFoot.
 	/// </summary>
 	/// <param name="value">The value in SquareFoot.</param>
 	/// <returns>A new CrossSectionalArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static CrossSectionalArea<T> FromSquareFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
+	public static CrossSectionalArea<T> FromSquareFeet(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new CrossSectionalArea from a value in SquareInch.
 	/// </summary>
 	/// <param name="value">The value in SquareInch.</param>
 	/// <returns>A new CrossSectionalArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static CrossSectionalArea<T> FromSquareInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
+	public static CrossSectionalArea<T> FromSquareInches(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
 /// <summary>Implicit conversion to Area.</summary>
 	public static implicit operator Area<T>(CrossSectionalArea<T> value) => Area<T>.Create(value.Value);
 /// <summary>Explicit conversion from Area.</summary>

@@ -22,7 +22,7 @@ public record TemperatureDelta<T> : PhysicalQuantity<TemperatureDelta<T>, T>, IV
 	/// </summary>
 	/// <param name="value">The value in Kelvin.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
-	public static TemperatureDelta<T> FromKelvin(T value) => Create(value);
+	public static TemperatureDelta<T> FromKelvins(T value) => Create(value);
 /// <summary>
 	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Celsius.
 	/// </summary>

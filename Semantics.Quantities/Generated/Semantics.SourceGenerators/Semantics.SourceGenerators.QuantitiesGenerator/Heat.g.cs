@@ -24,28 +24,28 @@ public record Heat<T> : PhysicalQuantity<Heat<T>, T>, IVector0<Heat<T>, T>
 	/// <param name="value">The value in Joule.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Heat<T> FromJoule(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Heat<T> FromJoules(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new Heat from a value in ElectronVolt.
 	/// </summary>
 	/// <param name="value">The value in ElectronVolt.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Heat<T> FromElectronVolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ElectronVoltToJoules)), nameof(value)));
+	public static Heat<T> FromElectronVolts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ElectronVoltToJoules)), nameof(value)));
 /// <summary>
 	/// Creates a new Heat from a value in Calorie.
 	/// </summary>
 	/// <param name="value">The value in Calorie.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Heat<T> FromCalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CalorieToJoules)), nameof(value)));
+	public static Heat<T> FromCalories(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CalorieToJoules)), nameof(value)));
 /// <summary>
 	/// Creates a new Heat from a value in KilowattHour.
 	/// </summary>
 	/// <param name="value">The value in KilowattHour.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Heat<T> FromKilowattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
+	public static Heat<T> FromKilowattHours(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
 /// <summary>Implicit conversion to Energy.</summary>
 	public static implicit operator Energy<T>(Heat<T> value) => Energy<T>.Create(value.Value);
 /// <summary>Explicit conversion from Energy.</summary>
