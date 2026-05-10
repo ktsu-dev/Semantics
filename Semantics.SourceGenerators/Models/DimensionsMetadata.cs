@@ -170,6 +170,30 @@ public class OverloadDefinition
 	public string Name { get; set; } = string.Empty;
 	public string Description { get; set; } = string.Empty;
 	public Dictionary<string, string> Relationships { get; set; } = [];
+
+	/// <summary>
+	/// Optional per-overload physical constraints. Currently only <c>minExclusive</c> is
+	/// honoured (per #51): when set on a V0 overload, the generated <c>From{Unit}</c>
+	/// factories use <c>Vector0Guards.EnsurePositive</c> instead of the default
+	/// <c>EnsureNonNegative</c>, so a strict-positive overload like <c>Wavelength</c>
+	/// rejects a zero input. The field is a string so it can hold a literal SI-base-unit
+	/// value (e.g. <c>"0"</c>); the generator emits <c>T.CreateChecked(...)</c> around it.
+	/// </summary>
+	public PhysicalConstraints? PhysicalConstraints { get; set; }
+}
+
+/// <summary>
+/// Per-overload physical constraints applied at construction time, on top of the structural
+/// V0 non-negativity invariant. Only <c>MinExclusive</c> is implemented today; the other
+/// fields are reserved for future per-overload bounds (#51).
+/// </summary>
+public class PhysicalConstraints
+{
+	/// <summary>
+	/// Strict-positive lower bound. When set (typically to <c>"0"</c>), the value must be
+	/// strictly greater than this number after conversion to the SI base unit.
+	/// </summary>
+	public string MinExclusive { get; set; } = string.Empty;
 }
 
 /// <summary>

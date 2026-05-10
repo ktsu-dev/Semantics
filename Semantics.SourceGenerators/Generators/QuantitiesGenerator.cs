@@ -558,6 +558,10 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 	/// negative after a unit conversion (e.g. <c>FromCelsius(-300)</c>) — throws
 	/// <see cref="System.ArgumentException"/>. This locks in the V0 non-negativity invariant
 	/// from #50 across every per-unit factory introduced for #48.
+	/// When <paramref name="strictPositive"/> is also true (V0 overloads with
+	/// <c>physicalConstraints.minExclusive: "0"</c> per #51) the guard is upgraded to
+	/// <c>Vector0Guards.EnsurePositive</c>, which rejects zero as well as negative values.
+	/// <paramref name="strictPositive"/> is ignored when <paramref name="applyV0Guard"/> is false.
 	/// </summary>
 	private static void AddUnitFactories(
 		ClassTemplate cls,
@@ -566,12 +570,15 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		string typeName,
 		string fullType,
 		string crefForComment,
-		bool applyV0Guard)
+		bool applyV0Guard,
+		bool strictPositive = false)
 	{
 		if (availableUnits == null || availableUnits.Count == 0)
 		{
 			return;
 		}
+
+		string guardMethod = strictPositive ? "EnsurePositive" : "EnsureNonNegative";
 
 		string baseUnit = availableUnits[0];
 		foreach (string unitName in availableUnits)
@@ -582,7 +589,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				: BuildToBaseExpression(unitName, unitMap);
 
 			string body = applyV0Guard
-				? $" => Create(Vector0Guards.EnsureNonNegative({conversionExpr}, nameof(value)));"
+				? $" => Create(Vector0Guards.{guardMethod}({conversionExpr}, nameof(value)));"
 				: $" => Create({conversionExpr});";
 
 			// Issue #49: factory names use the plural form. Prefer an explicit FactoryName from
@@ -997,7 +1004,12 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 
 			// Factory methods for every available unit (#48); overloads inherit the dimension's
 			// units. V0 overloads enforce the same non-negativity invariant as their V0 base
-			// type (#50); V1 overloads accept any sign.
+			// type (#50). V0 overloads that declare physicalConstraints.minExclusive in
+			// dimensions.json (#51, e.g. Wavelength, Period, HalfLife) get the stricter
+			// EnsurePositive guard so a zero input is rejected too. V1 overloads accept
+			// any sign.
+			bool strictPositive = vectorForm == 0
+				&& overload.PhysicalConstraints?.MinExclusive == "0";
 			AddUnitFactories(
 				cls,
 				dim.AvailableUnits,
@@ -1005,7 +1017,8 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				typeName,
 				fullType,
 				typeName,
-				applyV0Guard: vectorForm == 0);
+				applyV0Guard: vectorForm == 0,
+				strictPositive: strictPositive);
 
 			// Implicit widening to base type
 			cls.Members.Add(new MethodTemplate()

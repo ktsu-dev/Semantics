@@ -46,7 +46,7 @@
             },
             { "name": "Distance", "description": "Separation between two points in space." },
             { "name": "Altitude", "description": "Height above a reference level." },
-            { "name": "Wavelength", "description": "Spatial period of a periodic wave." },
+            { "name": "Wavelength", "description": "Spatial period of a periodic wave.", "physicalConstraints": { "minExclusive": "0" } },
             { "name": "Thickness", "description": "Extent through the thinnest dimension." },
             { "name": "Perimeter", "description": "Total boundary length of a 2D shape." }
           ]
@@ -107,8 +107,8 @@
         "vector0": {
           "base": "Duration",
           "overloads": [
-            { "name": "Period", "description": "Time interval for one complete cycle." },
-            { "name": "HalfLife", "description": "Time for half of a substance to decay." },
+            { "name": "Period", "description": "Time interval for one complete cycle.", "physicalConstraints": { "minExclusive": "0" } },
+            { "name": "HalfLife", "description": "Time for half of a substance to decay.", "physicalConstraints": { "minExclusive": "0" } },
             { "name": "TimeConstant", "description": "Characteristic response time of a system." },
             { "name": "Latency", "description": "Delay before a response begins." },
             { "name": "ReverberationTime", "description": "Time for sound to decay by 60 dB in an enclosed space." },

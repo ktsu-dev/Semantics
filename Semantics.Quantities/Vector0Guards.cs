@@ -42,4 +42,30 @@ public static class Vector0Guards
 
 		return value;
 	}
+
+	/// <summary>
+	/// Returns <paramref name="value"/> unchanged when it is strictly positive; throws
+	/// <see cref="ArgumentException"/> otherwise. Used in generated <c>From{Unit}</c>
+	/// factories on V0 overloads that declare <c>physicalConstraints.minExclusive: "0"</c>
+	/// in <c>dimensions.json</c> (per #51). Examples: <c>Wavelength</c>, <c>Period</c>,
+	/// <c>HalfLife</c> — quantities for which zero is unphysical, distinct from the V0
+	/// default that allows zero.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <param name="value">The value (already converted to the SI base unit) to validate.</param>
+	/// <param name="paramName">Name of the originating parameter, used for the exception message.</param>
+	/// <returns>The validated, strictly-positive value.</returns>
+	/// <exception cref="ArgumentException">When <paramref name="value"/> is zero or negative.</exception>
+	public static T EnsurePositive<T>(T value, string paramName)
+		where T : struct, INumber<T>
+	{
+		if (T.Sign(value) <= 0)
+		{
+			throw new ArgumentException(
+				$"Value must be strictly positive; received {value}.",
+				paramName);
+		}
+
+		return value;
+	}
 }
