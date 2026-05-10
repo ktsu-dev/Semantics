@@ -23,7 +23,7 @@ public record MomentumMagnitude<T> : PhysicalQuantity<MomentumMagnitude<T>, T>, 
 	/// <param name="value">The value in NewtonSecond.</param>
 	/// <returns>A new <see cref="MomentumMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MomentumMagnitude<T> FromNewtonSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static MomentumMagnitude<T> FromNewtonSeconds(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two MomentumMagnitude values, returning the absolute difference as a non-negative MomentumMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

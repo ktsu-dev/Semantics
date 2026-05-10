@@ -24,77 +24,77 @@ public record Altitude<T> : PhysicalQuantity<Altitude<T>, T>, IVector0<Altitude<
 	/// <param name="value">The value in Meter.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Altitude<T> FromMeters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new Altitude from a value in Kilometer.
 	/// </summary>
 	/// <param name="value">The value in Kilometer.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromKilometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static Altitude<T> FromKilometers(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
 /// <summary>
 	/// Creates a new Altitude from a value in Centimeter.
 	/// </summary>
 	/// <param name="value">The value in Centimeter.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Centi)), nameof(value)));
+	public static Altitude<T> FromCentimeters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Centi)), nameof(value)));
 /// <summary>
 	/// Creates a new Altitude from a value in Millimeter.
 	/// </summary>
 	/// <param name="value">The value in Millimeter.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromMillimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static Altitude<T> FromMillimeters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new Altitude from a value in Micrometer.
 	/// </summary>
 	/// <param name="value">The value in Micrometer.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromMicrometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+	public static Altitude<T> FromMicrometers(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
 /// <summary>
 	/// Creates a new Altitude from a value in Nanometer.
 	/// </summary>
 	/// <param name="value">The value in Nanometer.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromNanometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
+	public static Altitude<T> FromNanometers(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
 /// <summary>
 	/// Creates a new Altitude from a value in Angstrom.
 	/// </summary>
 	/// <param name="value">The value in Angstrom.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromAngstrom(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AngstromToMeters)), nameof(value)));
+	public static Altitude<T> FromAngstroms(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AngstromToMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new Altitude from a value in Foot.
 	/// </summary>
 	/// <param name="value">The value in Foot.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FeetToMeters)), nameof(value)));
+	public static Altitude<T> FromFeet(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FeetToMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new Altitude from a value in Inch.
 	/// </summary>
 	/// <param name="value">The value in Inch.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.InchesToMeters)), nameof(value)));
+	public static Altitude<T> FromInches(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.InchesToMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new Altitude from a value in Yard.
 	/// </summary>
 	/// <param name="value">The value in Yard.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromYard(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YardToMeters)), nameof(value)));
+	public static Altitude<T> FromYards(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YardToMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new Altitude from a value in Mile.
 	/// </summary>
 	/// <param name="value">The value in Mile.</param>
 	/// <returns>A new Altitude instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Altitude<T> FromMile(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)), nameof(value)));
+	public static Altitude<T> FromMiles(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)), nameof(value)));
 /// <summary>Implicit conversion to Length.</summary>
 	public static implicit operator Length<T>(Altitude<T> value) => Length<T>.Create(value.Value);
 /// <summary>Explicit conversion from Length.</summary>

@@ -23,13 +23,13 @@ public record Rotation<T> : PhysicalQuantity<Rotation<T>, T>, IVector1<Rotation<
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new Rotation instance.</returns>
-	public static Rotation<T> FromRadian(T value) => Create(value);
+	public static Rotation<T> FromRadians(T value) => Create(value);
 /// <summary>
 	/// Creates a new Rotation from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new Rotation instance.</returns>
-	public static Rotation<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static Rotation<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
 /// <summary>Implicit conversion to SignedAngle.</summary>
 	public static implicit operator SignedAngle<T>(Rotation<T> value) => SignedAngle<T>.Create(value.Value);
 /// <summary>Explicit conversion from SignedAngle.</summary>

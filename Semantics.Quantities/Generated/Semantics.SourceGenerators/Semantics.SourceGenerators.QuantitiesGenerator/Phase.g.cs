@@ -23,13 +23,13 @@ public record Phase<T> : PhysicalQuantity<Phase<T>, T>, IVector1<Phase<T>, T>
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new Phase instance.</returns>
-	public static Phase<T> FromRadian(T value) => Create(value);
+	public static Phase<T> FromRadians(T value) => Create(value);
 /// <summary>
 	/// Creates a new Phase from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new Phase instance.</returns>
-	public static Phase<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static Phase<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
 /// <summary>Implicit conversion to SignedAngle.</summary>
 	public static implicit operator SignedAngle<T>(Phase<T> value) => SignedAngle<T>.Create(value.Value);
 /// <summary>Explicit conversion from SignedAngle.</summary>

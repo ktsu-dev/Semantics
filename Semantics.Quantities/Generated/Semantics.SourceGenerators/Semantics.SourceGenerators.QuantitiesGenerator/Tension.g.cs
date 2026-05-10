@@ -24,7 +24,7 @@ public record Tension<T> : PhysicalQuantity<Tension<T>, T>, IVector0<Tension<T>,
 	/// <param name="value">The value in Newton.</param>
 	/// <returns>A new Tension instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Tension<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Tension<T> FromNewtons(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Tension<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>

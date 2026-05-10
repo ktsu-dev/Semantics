@@ -24,21 +24,21 @@ public record SurfaceArea<T> : PhysicalQuantity<SurfaceArea<T>, T>, IVector0<Sur
 	/// <param name="value">The value in SquareMeter.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static SurfaceArea<T> FromSquareMeters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new SurfaceArea from a value in SquareFoot.
 	/// </summary>
 	/// <param name="value">The value in SquareFoot.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromSquareFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
+	public static SurfaceArea<T> FromSquareFeet(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new SurfaceArea from a value in SquareInch.
 	/// </summary>
 	/// <param name="value">The value in SquareInch.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromSquareInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
+	public static SurfaceArea<T> FromSquareInches(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
 /// <summary>Implicit conversion to Area.</summary>
 	public static implicit operator Area<T>(SurfaceArea<T> value) => Area<T>.Create(value.Value);
 /// <summary>Explicit conversion from Area.</summary>

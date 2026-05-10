@@ -24,7 +24,7 @@ public record Friction<T> : PhysicalQuantity<Friction<T>, T>, IVector0<Friction<
 	/// <param name="value">The value in Newton.</param>
 	/// <returns>A new Friction instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Friction<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Friction<T> FromNewtons(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Friction<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>

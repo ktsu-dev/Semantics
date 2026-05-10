@@ -23,7 +23,7 @@ public record Concentration<T> : PhysicalQuantity<Concentration<T>, T>, IVector0
 	/// <param name="value">The value in Molar.</param>
 	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Concentration<T> FromMolar(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Concentration<T> FromMolars(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two Concentration values, returning the absolute difference as a non-negative Concentration.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

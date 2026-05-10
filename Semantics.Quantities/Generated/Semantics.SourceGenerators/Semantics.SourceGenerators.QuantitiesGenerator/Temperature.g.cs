@@ -23,7 +23,7 @@ public record Temperature<T> : PhysicalQuantity<Temperature<T>, T>, IVector0<Tem
 	/// <param name="value">The value in Kelvin.</param>
 	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Temperature<T> FromKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Temperature<T> FromKelvins(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Temperature{T}"/> from a value in Celsius.
 	/// </summary>

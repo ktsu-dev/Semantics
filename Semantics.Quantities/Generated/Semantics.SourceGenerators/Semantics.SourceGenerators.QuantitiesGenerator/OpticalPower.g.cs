@@ -23,7 +23,7 @@ public record OpticalPower<T> : PhysicalQuantity<OpticalPower<T>, T>, IVector0<O
 	/// <param name="value">The value in Diopter.</param>
 	/// <returns>A new <see cref="OpticalPower{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static OpticalPower<T> FromDiopter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static OpticalPower<T> FromDiopters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two OpticalPower values, returning the absolute difference as a non-negative OpticalPower.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

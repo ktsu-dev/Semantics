@@ -27,16 +27,16 @@ public sealed class Vector0InvariantTests
 		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Speed<double>.FromMetersPerSecond(-1.0));
 
 	[TestMethod]
-	public void Mass_FromKilogram_Negative_Throws()
-		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Mass<double>.FromKilogram(-0.5));
+	public void Mass_FromKilograms_Negative_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Mass<double>.FromKilograms(-0.5));
 
 	[TestMethod]
-	public void Length_FromMeter_Negative_Throws()
-		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Length<double>.FromMeter(-3.0));
+	public void Length_FromMeters_Negative_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Length<double>.FromMeters(-3.0));
 
 	[TestMethod]
-	public void Energy_FromJoule_Negative_Throws()
-		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Energy<double>.FromJoule(-100.0));
+	public void Energy_FromJoules_Negative_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Energy<double>.FromJoules(-100.0));
 
 	[TestMethod]
 	public void Speed_FromMetersPerSecond_Zero_Allowed()
@@ -46,21 +46,21 @@ public sealed class Vector0InvariantTests
 	}
 
 	[TestMethod]
-	public void Mass_FromKilogram_Positive_Returns_Same_Value()
+	public void Mass_FromKilograms_Positive_Returns_Same_Value()
 	{
-		Mass<double> m = Mass<double>.FromKilogram(2.5);
+		Mass<double> m = Mass<double>.FromKilograms(2.5);
 		Assert.AreEqual(2.5, m.Value, Tolerance);
 	}
 
 	// V0 overloads inherit non-negativity from their dimension.
 
 	[TestMethod]
-	public void Distance_FromMeter_Negative_Throws()
-		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Distance<double>.FromMeter(-1.0));
+	public void Distance_FromMeters_Negative_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Distance<double>.FromMeters(-1.0));
 
 	[TestMethod]
-	public void Weight_FromNewton_Negative_Throws()
-		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Weight<double>.FromNewton(-9.81));
+	public void Weight_FromNewtons_Negative_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Weight<double>.FromNewtons(-9.81));
 
 	// V1 quantities are signed and accept any input.
 
@@ -72,29 +72,29 @@ public sealed class Vector0InvariantTests
 	}
 
 	[TestMethod]
-	public void TemperatureDelta_FromKelvin_Negative_Allowed()
+	public void TemperatureDelta_FromKelvins_Negative_Allowed()
 	{
-		TemperatureDelta<double> dt = TemperatureDelta<double>.FromKelvin(-10.0);
+		TemperatureDelta<double> dt = TemperatureDelta<double>.FromKelvins(-10.0);
 		Assert.AreEqual(-10.0, dt.Value, Tolerance);
 	}
 
 	// Storage-type genericity for the guard.
 
 	[TestMethod]
-	public void Mass_FromKilogram_Negative_Throws_With_Float()
-		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Mass<float>.FromKilogram(-1.0f));
+	public void Mass_FromKilograms_Negative_Throws_With_Float()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Mass<float>.FromKilograms(-1.0f));
 
 	[TestMethod]
-	public void Mass_FromKilogram_Negative_Throws_With_Decimal()
-		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Mass<decimal>.FromKilogram(-1m));
+	public void Mass_FromKilograms_Negative_Throws_With_Decimal()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Mass<decimal>.FromKilograms(-1m));
 
 	// =========================================================== #52: Absolute subtraction
 
 	[TestMethod]
 	public void Mass_Minus_Larger_Mass_Returns_Mass_Of_Absolute_Difference()
 	{
-		Mass<double> small = Mass<double>.FromKilogram(3.0);
-		Mass<double> large = Mass<double>.FromKilogram(5.0);
+		Mass<double> small = Mass<double>.FromKilograms(3.0);
+		Mass<double> large = Mass<double>.FromKilograms(5.0);
 		Mass<double> diff = small - large;
 		Assert.AreEqual(2.0, diff.Value, Tolerance);
 		Assert.IsInstanceOfType<Mass<double>>(diff);
@@ -103,8 +103,8 @@ public sealed class Vector0InvariantTests
 	[TestMethod]
 	public void Mass_Minus_Smaller_Mass_Returns_Positive_Mass()
 	{
-		Mass<double> large = Mass<double>.FromKilogram(5.0);
-		Mass<double> small = Mass<double>.FromKilogram(3.0);
+		Mass<double> large = Mass<double>.FromKilograms(5.0);
+		Mass<double> small = Mass<double>.FromKilograms(3.0);
 		Mass<double> diff = large - small;
 		Assert.AreEqual(2.0, diff.Value, Tolerance);
 	}
@@ -121,8 +121,8 @@ public sealed class Vector0InvariantTests
 	[TestMethod]
 	public void Length_Minus_Length_Returns_Length()
 	{
-		Length<double> a = Length<double>.FromMeter(7.0);
-		Length<double> b = Length<double>.FromMeter(2.0);
+		Length<double> a = Length<double>.FromMeters(7.0);
+		Length<double> b = Length<double>.FromMeters(2.0);
 		Length<double> diff = a - b;
 		Assert.AreEqual(5.0, diff.Value, Tolerance);
 	}
@@ -132,8 +132,8 @@ public sealed class Vector0InvariantTests
 	[TestMethod]
 	public void Weight_Minus_Weight_Stays_Weight_With_Absolute_Difference()
 	{
-		Weight<double> a = Weight<double>.FromNewton(100.0);
-		Weight<double> b = Weight<double>.FromNewton(150.0);
+		Weight<double> a = Weight<double>.FromNewtons(100.0);
+		Weight<double> b = Weight<double>.FromNewtons(150.0);
 		Weight<double> diff = a - b;
 		Assert.AreEqual(50.0, diff.Value, Tolerance);
 		Assert.IsInstanceOfType<Weight<double>>(diff);
@@ -142,8 +142,8 @@ public sealed class Vector0InvariantTests
 	[TestMethod]
 	public void Distance_Minus_Distance_Stays_Distance()
 	{
-		Distance<double> a = Distance<double>.FromMeter(2.5);
-		Distance<double> b = Distance<double>.FromMeter(7.5);
+		Distance<double> a = Distance<double>.FromMeters(2.5);
+		Distance<double> b = Distance<double>.FromMeters(7.5);
 		Distance<double> diff = a - b;
 		Assert.AreEqual(5.0, diff.Value, Tolerance);
 		Assert.IsInstanceOfType<Distance<double>>(diff);
@@ -154,8 +154,8 @@ public sealed class Vector0InvariantTests
 	[TestMethod]
 	public void Mass_Minus_Mass_With_Float_Storage()
 	{
-		Mass<float> a = Mass<float>.FromKilogram(1.0f);
-		Mass<float> b = Mass<float>.FromKilogram(4.0f);
+		Mass<float> a = Mass<float>.FromKilograms(1.0f);
+		Mass<float> b = Mass<float>.FromKilograms(4.0f);
 		Mass<float> diff = a - b;
 		Assert.AreEqual(3.0f, diff.Value, 1e-6f);
 	}
@@ -163,8 +163,8 @@ public sealed class Vector0InvariantTests
 	[TestMethod]
 	public void Mass_Minus_Mass_With_Decimal_Storage()
 	{
-		Mass<decimal> a = Mass<decimal>.FromKilogram(1m);
-		Mass<decimal> b = Mass<decimal>.FromKilogram(4m);
+		Mass<decimal> a = Mass<decimal>.FromKilograms(1m);
+		Mass<decimal> b = Mass<decimal>.FromKilograms(4m);
 		Mass<decimal> diff = a - b;
 		Assert.AreEqual(3m, diff.Value);
 	}

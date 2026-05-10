@@ -23,7 +23,7 @@ public record CatalyticActivity<T> : PhysicalQuantity<CatalyticActivity<T>, T>, 
 	/// <param name="value">The value in Katal.</param>
 	/// <returns>A new <see cref="CatalyticActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static CatalyticActivity<T> FromKatal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static CatalyticActivity<T> FromKatals(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two CatalyticActivity values, returning the absolute difference as a non-negative CatalyticActivity.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

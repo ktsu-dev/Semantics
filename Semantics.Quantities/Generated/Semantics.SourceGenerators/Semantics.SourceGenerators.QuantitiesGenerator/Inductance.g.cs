@@ -23,7 +23,7 @@ public record Inductance<T> : PhysicalQuantity<Inductance<T>, T>, IVector0<Induc
 	/// <param name="value">The value in Henry.</param>
 	/// <returns>A new <see cref="Inductance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Inductance<T> FromHenry(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Inductance<T> FromHenries(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two Inductance values, returning the absolute difference as a non-negative Inductance.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

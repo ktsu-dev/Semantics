@@ -23,7 +23,7 @@ public record LuminousIntensity<T> : PhysicalQuantity<LuminousIntensity<T>, T>, 
 	/// <param name="value">The value in Candela.</param>
 	/// <returns>A new <see cref="LuminousIntensity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static LuminousIntensity<T> FromCandela(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static LuminousIntensity<T> FromCandelas(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two LuminousIntensity values, returning the absolute difference as a non-negative LuminousIntensity.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

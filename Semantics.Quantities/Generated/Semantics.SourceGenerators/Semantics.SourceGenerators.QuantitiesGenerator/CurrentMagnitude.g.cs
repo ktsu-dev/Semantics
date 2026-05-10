@@ -23,7 +23,7 @@ public record CurrentMagnitude<T> : PhysicalQuantity<CurrentMagnitude<T>, T>, IV
 	/// <param name="value">The value in Ampere.</param>
 	/// <returns>A new <see cref="CurrentMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static CurrentMagnitude<T> FromAmpere(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static CurrentMagnitude<T> FromAmperes(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two CurrentMagnitude values, returning the absolute difference as a non-negative CurrentMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

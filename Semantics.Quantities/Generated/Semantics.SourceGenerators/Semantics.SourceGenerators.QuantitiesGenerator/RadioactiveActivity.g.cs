@@ -23,7 +23,7 @@ public record RadioactiveActivity<T> : PhysicalQuantity<RadioactiveActivity<T>, 
 	/// <param name="value">The value in Becquerel.</param>
 	/// <returns>A new <see cref="RadioactiveActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static RadioactiveActivity<T> FromBecquerel(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static RadioactiveActivity<T> FromBecquerels(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two RadioactiveActivity values, returning the absolute difference as a non-negative RadioactiveActivity.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

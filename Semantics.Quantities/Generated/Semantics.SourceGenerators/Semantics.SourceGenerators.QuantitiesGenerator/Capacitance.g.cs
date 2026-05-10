@@ -23,7 +23,7 @@ public record Capacitance<T> : PhysicalQuantity<Capacitance<T>, T>, IVector0<Cap
 	/// <param name="value">The value in Farad.</param>
 	/// <returns>A new <see cref="Capacitance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Capacitance<T> FromFarad(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Capacitance<T> FromFarads(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two Capacitance values, returning the absolute difference as a non-negative Capacitance.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

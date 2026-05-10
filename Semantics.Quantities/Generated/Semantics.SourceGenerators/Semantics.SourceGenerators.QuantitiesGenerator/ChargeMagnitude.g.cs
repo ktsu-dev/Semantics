@@ -23,7 +23,7 @@ public record ChargeMagnitude<T> : PhysicalQuantity<ChargeMagnitude<T>, T>, IVec
 	/// <param name="value">The value in Coulomb.</param>
 	/// <returns>A new <see cref="ChargeMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ChargeMagnitude<T> FromCoulomb(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static ChargeMagnitude<T> FromCoulombs(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two ChargeMagnitude values, returning the absolute difference as a non-negative ChargeMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

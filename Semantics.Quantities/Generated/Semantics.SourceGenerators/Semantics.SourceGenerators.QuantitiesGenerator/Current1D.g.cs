@@ -22,7 +22,7 @@ public record Current1D<T> : PhysicalQuantity<Current1D<T>, T>, IVector1<Current
 	/// </summary>
 	/// <param name="value">The value in Ampere.</param>
 	/// <returns>A new <see cref="Current1D{T}"/> instance.</returns>
-	public static Current1D<T> FromAmpere(T value) => Create(value);
+	public static Current1D<T> FromAmperes(T value) => Create(value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="CurrentMagnitude{T}"/>.
 	/// </summary>

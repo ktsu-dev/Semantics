@@ -23,7 +23,7 @@ public record MagneticFluxDensityMagnitude<T> : PhysicalQuantity<MagneticFluxDen
 	/// <param name="value">The value in Tesla.</param>
 	/// <returns>A new <see cref="MagneticFluxDensityMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MagneticFluxDensityMagnitude<T> FromTesla(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static MagneticFluxDensityMagnitude<T> FromTeslas(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="MagneticFluxDensityMagnitude{T}"/> from a value in Gauss.
 	/// </summary>

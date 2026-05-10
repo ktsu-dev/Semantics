@@ -22,7 +22,7 @@ public record Force1D<T> : PhysicalQuantity<Force1D<T>, T>, IVector1<Force1D<T>,
 	/// </summary>
 	/// <param name="value">The value in Newton.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
-	public static Force1D<T> FromNewton(T value) => Create(value);
+	public static Force1D<T> FromNewtons(T value) => Create(value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="ForceMagnitude{T}"/>.
 	/// </summary>

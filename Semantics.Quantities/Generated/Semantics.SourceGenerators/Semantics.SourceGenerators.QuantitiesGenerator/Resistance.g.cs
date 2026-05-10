@@ -23,7 +23,7 @@ public record Resistance<T> : PhysicalQuantity<Resistance<T>, T>, IVector0<Resis
 	/// <param name="value">The value in Ohm.</param>
 	/// <returns>A new <see cref="Resistance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Resistance<T> FromOhm(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Resistance<T> FromOhms(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Subtracts two Resistance values, returning the absolute difference as a non-negative Resistance.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

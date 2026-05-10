@@ -23,28 +23,28 @@ public record Volume<T> : PhysicalQuantity<Volume<T>, T>, IVector0<Volume<T>, T>
 	/// <param name="value">The value in CubicMeter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Volume<T> FromCubicMeters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in Liter.
 	/// </summary>
 	/// <param name="value">The value in Liter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromLiter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterToCubicMeters)), nameof(value)));
+	public static Volume<T> FromLiters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in Milliliter.
 	/// </summary>
 	/// <param name="value">The value in Milliliter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromMilliliter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static Volume<T> FromMilliliters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in Gallon.
 	/// </summary>
 	/// <param name="value">The value in Gallon.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromGallon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GallonToCubicMeters)), nameof(value)));
+	public static Volume<T> FromGallons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GallonToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Subtracts two Volume values, returning the absolute difference as a non-negative Volume.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

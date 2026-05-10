@@ -24,7 +24,7 @@ public record Thrust<T> : PhysicalQuantity<Thrust<T>, T>, IVector0<Thrust<T>, T>
 	/// <param name="value">The value in Newton.</param>
 	/// <returns>A new Thrust instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Thrust<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Thrust<T> FromNewtons(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Thrust<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>

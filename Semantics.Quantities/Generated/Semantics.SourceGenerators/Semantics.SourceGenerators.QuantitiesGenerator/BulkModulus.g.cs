@@ -24,21 +24,21 @@ public record BulkModulus<T> : PhysicalQuantity<BulkModulus<T>, T>, IVector0<Bul
 	/// <param name="value">The value in Pascal.</param>
 	/// <returns>A new BulkModulus instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static BulkModulus<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static BulkModulus<T> FromPascals(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new BulkModulus from a value in Bar.
 	/// </summary>
 	/// <param name="value">The value in Bar.</param>
 	/// <returns>A new BulkModulus instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static BulkModulus<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
+	public static BulkModulus<T> FromBars(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
 /// <summary>
 	/// Creates a new BulkModulus from a value in Atmosphere.
 	/// </summary>
 	/// <param name="value">The value in Atmosphere.</param>
 	/// <returns>A new BulkModulus instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static BulkModulus<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
+	public static BulkModulus<T> FromAtmospheres(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
 /// <summary>
 	/// Creates a new BulkModulus from a value in Psi.
 	/// </summary>

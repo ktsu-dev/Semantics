@@ -22,7 +22,7 @@ public record Momentum1D<T> : PhysicalQuantity<Momentum1D<T>, T>, IVector1<Momen
 	/// </summary>
 	/// <param name="value">The value in NewtonSecond.</param>
 	/// <returns>A new <see cref="Momentum1D{T}"/> instance.</returns>
-	public static Momentum1D<T> FromNewtonSecond(T value) => Create(value);
+	public static Momentum1D<T> FromNewtonSeconds(T value) => Create(value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="MomentumMagnitude{T}"/>.
 	/// </summary>

@@ -148,8 +148,8 @@ public sealed class VectorQuantityTests
 	[TestMethod]
 	public void Mass_Plus_Mass_Returns_Mass()
 	{
-		Mass<double> a = Mass<double>.FromKilogram(3.0);
-		Mass<double> b = Mass<double>.FromKilogram(5.0);
+		Mass<double> a = Mass<double>.FromKilograms(3.0);
+		Mass<double> b = Mass<double>.FromKilograms(5.0);
 		Mass<double> sum = a + b;
 		Assert.AreEqual(8.0, sum.Value, Tolerance);
 		Assert.IsInstanceOfType<Mass<double>>(sum);
@@ -173,8 +173,8 @@ public sealed class VectorQuantityTests
 	[Ignore("Locked in #52: V0 - V0 should return the same V0 of T.Abs(a - b). Generator currently emits unsigned subtraction.")]
 	public void Mass_Minus_Mass_Returns_Absolute_Difference_Pending52()
 	{
-		Mass<double> a = Mass<double>.FromKilogram(3.0);
-		Mass<double> b = Mass<double>.FromKilogram(5.0);
+		Mass<double> a = Mass<double>.FromKilograms(3.0);
+		Mass<double> b = Mass<double>.FromKilograms(5.0);
 		Mass<double> diff = a - b;
 		Assert.AreEqual(2.0, diff.Value, Tolerance);
 	}
@@ -196,7 +196,7 @@ public sealed class VectorQuantityTests
 	public void Mass_From_Negative_Throws_Pending50()
 	{
 		_ = Assert.ThrowsExactly<System.ArgumentException>(
-			() => Mass<double>.FromKilogram(-1.0));
+			() => Mass<double>.FromKilograms(-1.0));
 	}
 
 	// -------------------------------------------------- Magnitude on V1

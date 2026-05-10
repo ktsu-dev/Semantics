@@ -24,49 +24,49 @@ public record HalfLife<T> : PhysicalQuantity<HalfLife<T>, T>, IVector0<HalfLife<
 	/// <param name="value">The value in Second.</param>
 	/// <returns>A new HalfLife instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static HalfLife<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static HalfLife<T> FromSeconds(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new HalfLife from a value in Millisecond.
 	/// </summary>
 	/// <param name="value">The value in Millisecond.</param>
 	/// <returns>A new HalfLife instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static HalfLife<T> FromMillisecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static HalfLife<T> FromMilliseconds(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new HalfLife from a value in Microsecond.
 	/// </summary>
 	/// <param name="value">The value in Microsecond.</param>
 	/// <returns>A new HalfLife instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static HalfLife<T> FromMicrosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+	public static HalfLife<T> FromMicroseconds(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
 /// <summary>
 	/// Creates a new HalfLife from a value in Minute.
 	/// </summary>
 	/// <param name="value">The value in Minute.</param>
 	/// <returns>A new HalfLife instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static HalfLife<T> FromMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
+	public static HalfLife<T> FromMinutes(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new HalfLife from a value in Hour.
 	/// </summary>
 	/// <param name="value">The value in Hour.</param>
 	/// <returns>A new HalfLife instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static HalfLife<T> FromHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
+	public static HalfLife<T> FromHours(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new HalfLife from a value in Day.
 	/// </summary>
 	/// <param name="value">The value in Day.</param>
 	/// <returns>A new HalfLife instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static HalfLife<T> FromDay(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
+	public static HalfLife<T> FromDays(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new HalfLife from a value in Year.
 	/// </summary>
 	/// <param name="value">The value in Year.</param>
 	/// <returns>A new HalfLife instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static HalfLife<T> FromYear(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
+	public static HalfLife<T> FromYears(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
 /// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(HalfLife<T> value) => Duration<T>.Create(value.Value);
 /// <summary>Explicit conversion from Duration.</summary>

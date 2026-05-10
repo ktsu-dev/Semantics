@@ -24,14 +24,14 @@ public record FieldOfView<T> : PhysicalQuantity<FieldOfView<T>, T>, IVector0<Fie
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new FieldOfView instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static FieldOfView<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static FieldOfView<T> FromRadians(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new FieldOfView from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new FieldOfView instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static FieldOfView<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
+	public static FieldOfView<T> FromDegrees(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>Implicit conversion to Angle.</summary>
 	public static implicit operator Angle<T>(FieldOfView<T> value) => Angle<T>.Create(value.Value);
 /// <summary>Explicit conversion from Angle.</summary>

@@ -23,7 +23,7 @@ public record Power<T> : PhysicalQuantity<Power<T>, T>, IVector0<Power<T>, T>
 	/// <param name="value">The value in Watt.</param>
 	/// <returns>A new <see cref="Power{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Power<T> FromWatt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Power<T> FromWatts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Power{T}"/> from a value in Horsepower.
 	/// </summary>
