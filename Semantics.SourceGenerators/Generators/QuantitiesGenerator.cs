@@ -45,6 +45,14 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true);
 
+	private static readonly DiagnosticDescriptor UnknownUnitReference = new(
+		id: "SEM004",
+		title: "dimensions.json references a unit not declared in units.json",
+		messageFormat: "Unit '{0}' (referenced by dimension '{1}'.availableUnits) is not declared in units.json; the generated From{0} factory will use an identity conversion. Add the unit to units.json or fix the spelling.",
+		category: "Semantics.SourceGenerators",
+		defaultSeverity: DiagnosticSeverity.Warning,
+		isEnabledByDefault: true);
+
 	public QuantitiesGenerator() : base("dimensions.json") { }
 
 	/// <summary>
@@ -139,6 +147,13 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		}
 
 		Dictionary<string, UnitDefinition> unitMap = BuildUnitMap(units);
+
+		// Issue #58/#48 follow-up: surface dimensions.json availableUnits entries that
+		// don't exist in units.json. The generator's BuildToBaseExpression silently falls
+		// back to identity conversion in that case, which is wrong for any non-base unit
+		// — a typo (e.g. "Kilometres" vs "Kilometers") would silently produce a factory
+		// with no scale factor. SEM004 catches that at build time.
+		ReportUnknownUnitReferences(context, metadata, unitMap);
 
 		// Phase A: Build maps and collect operators
 		Dictionary<string, PhysicalDimension> dimensionMap = BuildDimensionMap(metadata);
@@ -547,6 +562,51 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		}
 
 		return map;
+	}
+
+	/// <summary>
+	/// Walks every <c>availableUnits</c> entry across the dimensions metadata and emits
+	/// <c>SEM004</c> for any unit name that doesn't appear in <paramref name="unitMap"/>.
+	/// Deduplicates by (unit, dimension) so a typo on a unit shared by many dimensions
+	/// reports once per offending dimension instead of per-form/overload.
+	/// </summary>
+	private static void ReportUnknownUnitReferences(
+		SourceProductionContext context,
+		DimensionsMetadata metadata,
+		Dictionary<string, UnitDefinition> unitMap)
+	{
+		// If units.json wasn't loaded the map is empty; treating every unit as "unknown"
+		// would flood the build log. The CombinedMetadata loader already supplies a
+		// non-null UnitsMetadata even when units.json is missing — check for that case
+		// and bail rather than report a useless wall of warnings.
+		if (unitMap.Count == 0)
+		{
+			return;
+		}
+
+		HashSet<string> seen = [];
+		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
+		{
+			foreach (string unitName in dim.AvailableUnits)
+			{
+				if (string.IsNullOrEmpty(unitName) || unitMap.ContainsKey(unitName))
+				{
+					continue;
+				}
+
+				string key = $"{dim.Name}::{unitName}";
+				if (!seen.Add(key))
+				{
+					continue;
+				}
+
+				context.ReportDiagnostic(Diagnostic.Create(
+					UnknownUnitReference,
+					Location.None,
+					unitName,
+					dim.Name));
+			}
+		}
 	}
 
 	/// <summary>
