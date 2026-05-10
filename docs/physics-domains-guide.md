@@ -43,7 +43,8 @@ var temp     = Temperature<double>.FromKelvins(298.15);
 - `Frequency` — V0 with overloads `SamplingRate`, `BitRate`, `RefreshRate`, `RotationalSpeed`.
 
 ```csharp
-var velocity3d = Velocity3D<double>.FromMetersPerSecond(3.0, 4.0, 0.0);
+// V3 vectors use object-initializer construction (X / Y / Z components)
+var velocity3d = new Velocity3D<double> { X = 3.0, Y = 4.0, Z = 0.0 };
 var speed      = velocity3d.Magnitude();          // 5.0 (Speed<double>)
 var sampling   = SamplingRate<double>.FromHertz(48_000);
 ```
@@ -165,23 +166,24 @@ var M     = n / V;                                         // Concentration<doub
 ### Magnitude extraction
 
 ```csharp
-Velocity3D<double> v = Velocity3D<double>.FromMetersPerSecond(3.0, 4.0, 0.0);
+Velocity3D<double> v = new() { X = 3.0, Y = 4.0, Z = 0.0 };
 Speed<double>      s = v.Magnitude();   // 5.0, always >= 0
 ```
 
 ### Cross product (V3 only)
 
 ```csharp
-Force3D<double>        F = Force3D<double>.FromNewtons(0.0, 10.0, 0.0);
-Displacement3D<double> r = Displacement3D<double>.FromMeters(0.5, 0.0, 0.0);
+Force3D<double>        F = new() { X = 0.0, Y = 10.0, Z = 0.0 };
+Displacement3D<double> r = new() { X = 0.5, Y = 0.0,  Z = 0.0 };
 Torque3D<double>       τ = F.Cross(r);
 ```
 
 ### Dot product
 
 ```csharp
-Energy<double> work = Force3D<double>.FromNewtons(10.0, 0.0, 0.0)
-                          .Dot(Displacement3D<double>.FromMeters(2.0, 0.0, 0.0));   // 20 J
+Force3D<double>        F = new() { X = 10.0, Y = 0.0, Z = 0.0 };
+Displacement3D<double> r = new() { X =  2.0, Y = 0.0, Z = 0.0 };
+Energy<double>         work = F.Dot(r);   // 20 J
 ```
 
 ### Semantic overload narrowing
