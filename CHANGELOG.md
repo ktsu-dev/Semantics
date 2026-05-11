@@ -2,6 +2,7 @@
 
 Changes since v1.0.34:
 
+- Bump Polyfill from 10.5.0 to 10.5.1 ([@dependabot[bot]](https://github.com/dependabot[bot]))
 - Bump Polyfill from 10.4.0 to 10.5.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
 - Bump Polyfill from 10.3.0 to 10.4.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
 - Bump MSTest.Sdk from 4.2.1 to 4.2.2 ([@dependabot[bot]](https://github.com/dependabot[bot]))
