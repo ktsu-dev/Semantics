@@ -1,6 +1,10 @@
 # Architecture Guide
 
-This document provides a detailed overview of the Semantics library architecture, focusing on the SOLID principles and DRY practices implemented throughout the codebase.
+This document covers the architecture of the **semantic strings, paths, and validation** subsystems. The physics quantities subsystem is metadata-driven and is documented separately:
+
+-   [`docs/strategy-unified-vector-quantities.md`](strategy-unified-vector-quantities.md) — the unified `IVector0..IVector4` model.
+-   [`docs/physics-generator.md`](physics-generator.md) — `dimensions.json` schema and the source-generator pipeline.
+-   The [Physics Quantities: Metadata-Driven Generation](#physics-quantities-metadata-driven-generation) section below provides a short orientation and links into those documents.
 
 ## Table of Contents
 
@@ -10,11 +14,12 @@ This document provides a detailed overview of the Semantics library architecture
 -   [Design Patterns](#design-patterns)
 -   [Class Hierarchy](#class-hierarchy)
 -   [Validation System](#validation-system)
+-   [Physics Quantities: Metadata-Driven Generation](#physics-quantities-metadata-driven-generation)
 -   [Testing Strategy](#testing-strategy)
 
 ## Overview
 
-The Semantics library is designed around clean architecture principles, with a focus on maintainability, extensibility, and testability. The core philosophy is to provide type-safe string wrappers while maintaining excellent separation of concerns and avoiding code duplication.
+The Semantics library is built around three pillars — **semantic strings**, **semantic paths**, and **physics quantities** — sharing a single philosophy: replace primitive obsession with strongly-typed, self-validating domain models. Strings and paths use a hand-authored attribute → strategy → rule → factory pipeline (described in this document). Physics quantities are emitted at compile time by a Roslyn incremental generator from declarative metadata (described in [Physics Quantities: Metadata-Driven Generation](#physics-quantities-metadata-driven-generation)). All three subsystems target `net10.0`, `net9.0`, `net8.0`, `net7.0`.
 
 ## SOLID Principles Implementation
 
@@ -270,6 +275,59 @@ User Creates Semantic String
            ↓
    Return Valid Object or Throw Exception
 ```
+
+## Physics Quantities: Metadata-Driven Generation
+
+Unlike strings and paths — which are hand-authored — every physics quantity type, factory, operator, and constant is emitted by a Roslyn incremental generator. The single source of truth is `Semantics.SourceGenerators/Metadata/`:
+
+| File | Contents |
+|---|---|
+| `dimensions.json` | Every physical dimension, the vector forms it supports (`Vector0`..`Vector4`), its `availableUnits`, semantic overloads (e.g. `Weight` over `ForceMagnitude`), and cross-dimensional relationships (`integrals`, `derivatives`, `dotProducts`, `crossProducts`). |
+| `units.json` | Unit declarations with `factoryName` (plural) and a base-unit conversion expression. |
+| `magnitudes.json` | SI magnitude prefixes for unit derivations. |
+| `conversions.json` | Conversion factors between non-SI units and the SI base. |
+| `domains.json` | Domain grouping for `PhysicalConstants` (e.g. `Fundamental`, `Chemistry`, `AngularMechanics`). |
+
+### Generator pipeline
+
+```
+Metadata/*.json
+       │
+       ▼
+Semantics.SourceGenerators (Roslyn IIncrementalGenerator)
+       │
+       ├── QuantitiesGenerator       → one record per quantity (V0/V1/V2/V3/V4 + overloads)
+       │                                + From{Unit} factory per declared unit
+       │                                + Vector0Guards.EnsureNonNegative / EnsurePositive
+       │                                + cross-dimensional *, /, Dot, Cross operators
+       ├── ConversionsGenerator      → unit-to-SI conversion helpers
+       ├── PhysicalConstantsGenerator → PhysicalConstants.<Domain>.* (PreciseNumber)
+       │                                + PhysicalConstants.Generic.*<T>() (T.CreateChecked)
+       └── StorageHelpersGenerator   → DivideToStorage with DivideByZeroException
+       │
+       ▼
+Semantics.Quantities/Generated/   (committed source — diff before commit)
+```
+
+### Vector-form invariants
+
+These are enforced structurally by the generated types and locked in by `Semantics.Test`:
+
+1. `V0` magnitudes are non-negative; the SI factory throws `ArgumentException` on a negative value, and `V0 - V0` returns `T.Abs(a - b)` to preserve the invariant.
+2. A V0 overload can opt into a strict-positive guard with `physicalConstraints: { "minExclusive": "0" }` (used by `Wavelength`, `Period`, `HalfLife`); `EnsurePositive` then rejects zero as well.
+3. Semantic overloads widen implicitly to their base, narrow explicitly (`Weight.From(forceMagnitude)`).
+4. `IVectorN.Magnitude()` for N ≥ 1 returns the corresponding `IVector0`.
+
+### Generator diagnostics
+
+Metadata errors fail the build rather than silently emitting wrong code:
+
+-   **SEM001** — a relationship references a dimension that does not exist.
+-   **SEM002** — schema-level metadata issue (missing `name` / `symbol`, empty `availableUnits`, duplicate type names, no vector forms declared).
+-   **SEM003** — a relationship's explicit `forms` list references a vector form not declared on a participating dimension.
+-   **SEM004** — a dimension's `availableUnits` array references a unit name that isn't declared in `units.json` (catches typos that would otherwise produce a wrong identity-conversion factory).
+
+For the schema, an end-to-end "add a dimension" walk-through, and the design rationale, see [`docs/physics-generator.md`](physics-generator.md) and [`docs/strategy-unified-vector-quantities.md`](strategy-unified-vector-quantities.md).
 
 ## Testing Strategy
 

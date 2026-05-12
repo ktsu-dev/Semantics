@@ -181,6 +181,7 @@ Generator diagnostics catch metadata problems at build time:
 - **SEM001** — relationship references an unknown dimension name.
 - **SEM002** — schema-level metadata issue (missing fields, duplicate type names, etc).
 - **SEM003** — relationship's `forms` list references a vector form not declared on a participating dimension.
+- **SEM004** — `availableUnits` references a unit not declared in `units.json`.
 
 Generated output is committed to `Semantics.Quantities/Generated/` so the project compiles without first running the generator.
 
