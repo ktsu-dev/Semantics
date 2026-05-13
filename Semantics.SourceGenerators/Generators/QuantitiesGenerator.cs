@@ -724,6 +724,43 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		return scaled;
 	}
 
+	/// <summary>
+	/// Adds the per-quantity surface required by <see cref="ktsu.Semantics.Quantities.IPhysicalQuantity{T}"/>
+	/// (#59): a <c>Dimension</c> override returning <c>PhysicalDimensions.{dim}</c>, plus a
+	/// typed <c>In(I{dim}Unit)</c> method that converts the stored SI-base value into the
+	/// caller's unit. Emitted for V0 and V1 (scalar-storage) types only; vector V2+ types
+	/// have per-component conversion needs and are deferred.
+	/// </summary>
+	private static void AddDimensionAndInMembers(ClassTemplate cls, PhysicalDimension dim)
+	{
+		cls.Members.Add(new FieldTemplate()
+		{
+			Comments = [$"/// <summary>Gets the physical dimension this quantity belongs to.</summary>"],
+			Keywords = ["public", "override", "DimensionInfo"],
+			Name = $"Dimension => PhysicalDimensions.{dim.Name}",
+		});
+
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments =
+			[
+				"/// <summary>",
+				$"/// Converts this quantity's SI-base value to the value in <paramref name=\"unit\"/>.",
+				"/// Cross-dimension calls (e.g. passing a non-" + dim.Name + " unit) fail at compile time.",
+				"/// </summary>",
+				"/// <param name=\"unit\">The dimensionally-compatible target unit.</param>",
+				"/// <returns>The value expressed in <paramref name=\"unit\"/>.</returns>",
+			],
+			Keywords = ["public", "T"],
+			Name = "In",
+			Parameters =
+			[
+				new ParameterTemplate { Type = $"global::ktsu.Semantics.Quantities.I{dim.Name}Unit", Name = "unit" },
+			],
+			BodyFactory = (body) => body.Write(" => unit.FromBase(Value);"),
+		});
+	}
+
 	private static Dictionary<string, List<T>> GroupBy<T>(List<T> items, Func<T, string> keySelector)
 	{
 		Dictionary<string, List<T>> groups = [];
@@ -802,6 +839,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			fullType,
 			"<see cref=\"" + typeName + "{T}\"/>",
 			applyV0Guard: true);
+
+		// Dimension override + typed In() (#59).
+		AddDimensionAndInMembers(cls, dim);
 
 		// V0 - V0 returns the same V0 of T.Abs(left - right) (locked decision in #52).
 		// We emit this on every V0 base type so the derived operator wins overload resolution
@@ -891,6 +931,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			fullType,
 			"<see cref=\"" + typeName + "{T}\"/>",
 			applyV0Guard: false);
+
+		// Dimension override + typed In() (#59).
+		AddDimensionAndInMembers(cls, dim);
 
 		// Magnitude method returning V0 base
 		if (v0TypeName != null)
@@ -1079,6 +1122,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				typeName,
 				applyV0Guard: vectorForm == 0,
 				strictPositive: strictPositive);
+
+			// Dimension override + typed In() (#59).
+			AddDimensionAndInMembers(cls, dim);
 
 			// Implicit widening to base type
 			cls.Members.Add(new MethodTemplate()

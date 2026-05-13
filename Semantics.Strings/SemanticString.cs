@@ -557,8 +557,8 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		Ensure.NotNull(value);
 
 		Type typeOfTDest = typeof(TDest);
-		TDest newInstance = (TDest)Activator.CreateInstance(type: typeOfTDest)!;
-		typeOfTDest.GetProperty(name: nameof(WeakString))!.SetValue(obj: newInstance, value: newInstance.MakeCanonical(value));
+		TDest newInstance = (TDest)Activator.CreateInstance(type: typeOfTDest);
+		typeOfTDest.GetProperty(name: nameof(WeakString)).SetValue(obj: newInstance, value: newInstance.MakeCanonical(value));
 		return newInstance;
 	}
 
