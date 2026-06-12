@@ -29,6 +29,20 @@ public record ClockSpeed<T> : PhysicalQuantity<ClockSpeed<T>, T>, IVector0<Clock
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ClockSpeed<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new ClockSpeed from a value in Kilohertz.
+	/// </summary>
+	/// <param name="value">The value in Kilohertz.</param>
+	/// <returns>A new ClockSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ClockSpeed<T> FromKilohertz(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+/// <summary>
+	/// Creates a new ClockSpeed from a value in Megahertz.
+	/// </summary>
+	/// <param name="value">The value in Megahertz.</param>
+	/// <returns>A new ClockSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ClockSpeed<T> FromMegahertz(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Frequency unit) fail at compile time.
 	/// </summary>

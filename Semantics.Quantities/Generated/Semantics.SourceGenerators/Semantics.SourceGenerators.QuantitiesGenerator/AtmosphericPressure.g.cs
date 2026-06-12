@@ -29,6 +29,13 @@ public record AtmosphericPressure<T> : PhysicalQuantity<AtmosphericPressure<T>, 
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AtmosphericPressure<T> FromPascals(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new AtmosphericPressure from a value in Kilopascal.
+	/// </summary>
+	/// <param name="value">The value in Kilopascal.</param>
+	/// <returns>A new AtmosphericPressure instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AtmosphericPressure<T> FromKilopascals(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+/// <summary>
 	/// Creates a new AtmosphericPressure from a value in Bar.
 	/// </summary>
 	/// <param name="value">The value in Bar.</param>
@@ -49,6 +56,13 @@ public record AtmosphericPressure<T> : PhysicalQuantity<AtmosphericPressure<T>, 
 	/// <returns>A new AtmosphericPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AtmosphericPressure<T> FromPsi(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PsiToPascals)), nameof(value)));
+/// <summary>
+	/// Creates a new AtmosphericPressure from a value in Torr.
+	/// </summary>
+	/// <param name="value">The value in Torr.</param>
+	/// <returns>A new AtmosphericPressure instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AtmosphericPressure<T> FromTorr(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.TorrToPascals)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Pressure unit) fail at compile time.

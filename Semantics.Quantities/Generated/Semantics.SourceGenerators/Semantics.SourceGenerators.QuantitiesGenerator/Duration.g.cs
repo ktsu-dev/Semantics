@@ -70,6 +70,20 @@ public record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<Duration<
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Duration<T> FromYears(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Duration{T}"/> from a value in Week.
+	/// </summary>
+	/// <param name="value">The value in Week.</param>
+	/// <returns>A new <see cref="Duration{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Duration<T> FromWeeks(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.WeekToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Duration{T}"/> from a value in Nanosecond.
+	/// </summary>
+	/// <param name="value">The value in Nanosecond.</param>
+	/// <returns>A new <see cref="Duration{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Duration<T> FromNanoseconds(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Time unit) fail at compile time.
 	/// </summary>

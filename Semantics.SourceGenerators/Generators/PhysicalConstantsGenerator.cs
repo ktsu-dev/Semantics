@@ -119,7 +119,10 @@ public class PhysicalConstantsGenerator : GeneratorBase<DomainsMetadata>
 					Name = $"{constant.Name}<T>",
 					BodyFactory = (body) =>
 					{
-						body.Write($" where T : struct, INumber<T> => T.CreateChecked({domainName}.{constant.Name});");
+						// PreciseNumber does not support T.CreateChecked conversion (its
+						// TryConvertToChecked throws NotSupportedException); To<T>() is the
+						// supported materialisation path.
+						body.Write($" where T : struct, INumber<T> => {domainName}.{constant.Name}.To<T>();");
 					},
 				});
 			}

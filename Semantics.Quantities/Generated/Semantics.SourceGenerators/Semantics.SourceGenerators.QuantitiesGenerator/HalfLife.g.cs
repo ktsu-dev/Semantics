@@ -71,6 +71,20 @@ public record HalfLife<T> : PhysicalQuantity<HalfLife<T>, T>, IVector0<HalfLife<
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HalfLife<T> FromYears(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
 /// <summary>
+	/// Creates a new HalfLife from a value in Week.
+	/// </summary>
+	/// <param name="value">The value in Week.</param>
+	/// <returns>A new HalfLife instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static HalfLife<T> FromWeeks(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.WeekToSeconds)), nameof(value)));
+/// <summary>
+	/// Creates a new HalfLife from a value in Nanosecond.
+	/// </summary>
+	/// <param name="value">The value in Nanosecond.</param>
+	/// <returns>A new HalfLife instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static HalfLife<T> FromNanoseconds(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Time unit) fail at compile time.
 	/// </summary>

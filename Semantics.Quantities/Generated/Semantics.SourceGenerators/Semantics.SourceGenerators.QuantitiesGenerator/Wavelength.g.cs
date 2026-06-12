@@ -99,6 +99,13 @@ public record Wavelength<T> : PhysicalQuantity<Wavelength<T>, T>, IVector0<Wavel
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Wavelength<T> FromMiles(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)), nameof(value)));
 /// <summary>
+	/// Creates a new Wavelength from a value in NauticalMile.
+	/// </summary>
+	/// <param name="value">The value in NauticalMile.</param>
+	/// <returns>A new Wavelength instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Wavelength<T> FromNauticalMiles(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.NauticalMileToMeters)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Length unit) fail at compile time.
 	/// </summary>

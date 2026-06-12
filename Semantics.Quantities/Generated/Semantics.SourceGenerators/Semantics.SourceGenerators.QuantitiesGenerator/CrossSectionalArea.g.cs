@@ -29,6 +29,20 @@ public record CrossSectionalArea<T> : PhysicalQuantity<CrossSectionalArea<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static CrossSectionalArea<T> FromSquareMeters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new CrossSectionalArea from a value in SquareKilometer.
+	/// </summary>
+	/// <param name="value">The value in SquareKilometer.</param>
+	/// <returns>A new CrossSectionalArea instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static CrossSectionalArea<T> FromSquareKilometers(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareKilometerToSquareMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new CrossSectionalArea from a value in SquareCentimeter.
+	/// </summary>
+	/// <param name="value">The value in SquareCentimeter.</param>
+	/// <returns>A new CrossSectionalArea instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static CrossSectionalArea<T> FromSquareCentimeters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareCentimeterToSquareMeters)), nameof(value)));
+/// <summary>
 	/// Creates a new CrossSectionalArea from a value in SquareFoot.
 	/// </summary>
 	/// <param name="value">The value in SquareFoot.</param>
@@ -42,6 +56,27 @@ public record CrossSectionalArea<T> : PhysicalQuantity<CrossSectionalArea<T>, T>
 	/// <returns>A new CrossSectionalArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static CrossSectionalArea<T> FromSquareInches(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new CrossSectionalArea from a value in SquareMile.
+	/// </summary>
+	/// <param name="value">The value in SquareMile.</param>
+	/// <returns>A new CrossSectionalArea instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static CrossSectionalArea<T> FromSquareMiles(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareMileToSquareMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new CrossSectionalArea from a value in Hectare.
+	/// </summary>
+	/// <param name="value">The value in Hectare.</param>
+	/// <returns>A new CrossSectionalArea instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static CrossSectionalArea<T> FromHectares(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HectareToSquareMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new CrossSectionalArea from a value in Acre.
+	/// </summary>
+	/// <param name="value">The value in Acre.</param>
+	/// <returns>A new CrossSectionalArea instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static CrossSectionalArea<T> FromAcres(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AcreToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Area unit) fail at compile time.

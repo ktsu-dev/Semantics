@@ -29,6 +29,13 @@ public record Work<T> : PhysicalQuantity<Work<T>, T>, IVector0<Work<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Work<T> FromJoules(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new Work from a value in Kilojoule.
+	/// </summary>
+	/// <param name="value">The value in Kilojoule.</param>
+	/// <returns>A new Work instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Work<T> FromKilojoules(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+/// <summary>
 	/// Creates a new Work from a value in ElectronVolt.
 	/// </summary>
 	/// <param name="value">The value in ElectronVolt.</param>
@@ -43,12 +50,40 @@ public record Work<T> : PhysicalQuantity<Work<T>, T>, IVector0<Work<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Work<T> FromCalories(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CalorieToJoules)), nameof(value)));
 /// <summary>
+	/// Creates a new Work from a value in Kilocalorie.
+	/// </summary>
+	/// <param name="value">The value in Kilocalorie.</param>
+	/// <returns>A new Work instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Work<T> FromKilocalories(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilocalorieToJoules)), nameof(value)));
+/// <summary>
 	/// Creates a new Work from a value in KilowattHour.
 	/// </summary>
 	/// <param name="value">The value in KilowattHour.</param>
 	/// <returns>A new Work instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Work<T> FromKilowattHours(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
+/// <summary>
+	/// Creates a new Work from a value in WattHour.
+	/// </summary>
+	/// <param name="value">The value in WattHour.</param>
+	/// <returns>A new Work instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Work<T> FromWattHours(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.WattHourToJoules)), nameof(value)));
+/// <summary>
+	/// Creates a new Work from a value in Erg.
+	/// </summary>
+	/// <param name="value">The value in Erg.</param>
+	/// <returns>A new Work instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Work<T> FromErgs(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ErgToJoules)), nameof(value)));
+/// <summary>
+	/// Creates a new Work from a value in Btu.
+	/// </summary>
+	/// <param name="value">The value in Btu.</param>
+	/// <returns>A new Work instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Work<T> FromBtus(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BtuToJoules)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Energy unit) fail at compile time.

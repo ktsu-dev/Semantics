@@ -4,7 +4,7 @@
       "name": "Dimensionless",
       "symbol": "1",
       "dimensionalFormula": {},
-      "availableUnits": ["Dimensionless", "Radian", "Degree"],
+      "availableUnits": ["Dimensionless", "Radian", "Degree", "Gradian", "Revolution", "Milliradian", "PartsPerMillion", "PartsPerBillion", "PercentByWeight"],
       "quantities": {
         "vector0": {
           "base": "Ratio",
@@ -29,7 +29,7 @@
       "availableUnits": [
         "Meter", "Kilometer", "Centimeter", "Millimeter",
         "Micrometer", "Nanometer", "Angstrom",
-        "Foot", "Inch", "Yard", "Mile"
+        "Foot", "Inch", "Yard", "Mile", "NauticalMile"
       ],
       "quantities": {
         "vector0": {
@@ -78,7 +78,7 @@
       "name": "Mass",
       "symbol": "M",
       "dimensionalFormula": { "mass": 1 },
-      "availableUnits": ["Kilogram", "Gram", "Ton", "Pound", "Ounce"],
+      "availableUnits": ["Kilogram", "Gram", "Ton", "Pound", "Ounce", "Stone", "ShortTon", "AtomicMassUnit"],
       "quantities": {
         "vector0": {
           "base": "Mass",
@@ -101,7 +101,7 @@
       "dimensionalFormula": { "time": 1 },
       "availableUnits": [
         "Second", "Millisecond", "Microsecond",
-        "Minute", "Hour", "Day", "Year"
+        "Minute", "Hour", "Day", "Year", "Week", "Nanosecond"
       ],
       "quantities": {
         "vector0": {
@@ -125,7 +125,7 @@
       "name": "ElectricCurrent",
       "symbol": "I",
       "dimensionalFormula": { "electricCurrent": 1 },
-      "availableUnits": ["Ampere"],
+      "availableUnits": ["Ampere", "Milliampere", "Kiloampere"],
       "quantities": {
         "vector0": { "base": "CurrentMagnitude" },
         "vector1": { "base": "Current1D" },
@@ -144,7 +144,7 @@
       "name": "Temperature",
       "symbol": "Θ",
       "dimensionalFormula": { "temperature": 1 },
-      "availableUnits": ["Kelvin", "Celsius", "Fahrenheit"],
+      "availableUnits": ["Kelvin", "Celsius", "Fahrenheit", "Rankine"],
       "quantities": {
         "vector0": { "base": "Temperature" },
         "vector1": {
@@ -164,7 +164,7 @@
       "name": "AmountOfSubstance",
       "symbol": "N",
       "dimensionalFormula": { "amountOfSubstance": 1 },
-      "availableUnits": ["Mole"],
+      "availableUnits": ["Mole", "Kilomole", "Millimole"],
       "quantities": {
         "vector0": { "base": "AmountOfSubstance" }
       },
@@ -177,7 +177,7 @@
       "name": "LuminousIntensity",
       "symbol": "J",
       "dimensionalFormula": { "luminousIntensity": 1 },
-      "availableUnits": ["Candela"],
+      "availableUnits": ["Candela", "Millicandela"],
       "quantities": {
         "vector0": { "base": "LuminousIntensity" }
       },
@@ -190,7 +190,7 @@
       "name": "Area",
       "symbol": "L²",
       "dimensionalFormula": { "length": 2 },
-      "availableUnits": ["SquareMeter", "SquareFoot", "SquareInch"],
+      "availableUnits": ["SquareMeter", "SquareKilometer", "SquareCentimeter", "SquareFoot", "SquareInch", "SquareMile", "Hectare", "Acre"],
       "quantities": {
         "vector0": {
           "base": "Area",
@@ -224,7 +224,7 @@
       "name": "Volume",
       "symbol": "L³",
       "dimensionalFormula": { "length": 3 },
-      "availableUnits": ["CubicMeter", "Liter", "Milliliter", "Gallon"],
+      "availableUnits": ["CubicMeter", "Liter", "Milliliter", "CubicCentimeter", "CubicFoot", "CubicInch", "Gallon", "ImperialGallon", "USQuart", "USPint", "USFluidOunce"],
       "quantities": {
         "vector0": {
           "base": "Volume",
@@ -245,7 +245,7 @@
       "symbol": "L T⁻¹",
       "dimensionalFormula": { "length": 1, "time": -1 },
       "availableUnits": [
-        "MetersPerSecond", "KilometersPerHour", "MilesPerHour"
+        "MetersPerSecond", "KilometersPerHour", "MilesPerHour", "FeetPerSecond", "Knot"
       ],
       "quantities": {
         "vector0": {
@@ -283,7 +283,7 @@
       "name": "Acceleration",
       "symbol": "L T⁻²",
       "dimensionalFormula": { "length": 1, "time": -2 },
-      "availableUnits": ["MetersPerSecondSquared"],
+      "availableUnits": ["MetersPerSecondSquared", "StandardGravity"],
       "quantities": {
         "vector0": {
           "base": "AccelerationMagnitude",
@@ -354,7 +354,7 @@
       "name": "Frequency",
       "symbol": "T⁻¹",
       "dimensionalFormula": { "time": -1 },
-      "availableUnits": ["Hertz"],
+      "availableUnits": ["Hertz", "Kilohertz", "Megahertz"],
       "quantities": {
         "vector0": {
           "base": "Frequency",
@@ -378,7 +378,7 @@
       "name": "RadioactiveActivity",
       "symbol": "T⁻¹",
       "dimensionalFormula": { "time": -1 },
-      "availableUnits": ["Becquerel"],
+      "availableUnits": ["Becquerel", "Curie"],
       "quantities": {
         "vector0": { "base": "RadioactiveActivity" }
       },
@@ -391,7 +391,7 @@
       "name": "AngularDisplacement",
       "symbol": "1",
       "dimensionalFormula": {},
-      "availableUnits": ["Radian", "Degree"],
+      "availableUnits": ["Radian", "Degree", "Gradian", "Revolution", "Milliradian"],
       "quantities": {
         "vector0": {
           "base": "Angle",
@@ -527,7 +527,7 @@
       "name": "Force",
       "symbol": "M L T⁻²",
       "dimensionalFormula": { "mass": 1, "length": 1, "time": -2 },
-      "availableUnits": ["Newton"],
+      "availableUnits": ["Newton", "Kilonewton", "Dyne", "PoundForce"],
       "quantities": {
         "vector0": {
           "base": "ForceMagnitude",
@@ -590,7 +590,7 @@
       "name": "Pressure",
       "symbol": "M L⁻¹ T⁻²",
       "dimensionalFormula": { "mass": 1, "length": -1, "time": -2 },
-      "availableUnits": ["Pascal", "Bar", "Atmosphere", "Psi"],
+      "availableUnits": ["Pascal", "Kilopascal", "Bar", "Atmosphere", "Psi", "Torr"],
       "quantities": {
         "vector0": {
           "base": "Pressure",
@@ -615,7 +615,7 @@
       "name": "Energy",
       "symbol": "M L² T⁻²",
       "dimensionalFormula": { "mass": 1, "length": 2, "time": -2 },
-      "availableUnits": ["Joule", "ElectronVolt", "Calorie", "KilowattHour"],
+      "availableUnits": ["Joule", "Kilojoule", "ElectronVolt", "Calorie", "Kilocalorie", "KilowattHour", "WattHour", "Erg", "Btu"],
       "quantities": {
         "vector0": {
           "base": "Energy",
@@ -640,7 +640,7 @@
       "name": "Power",
       "symbol": "M L² T⁻³",
       "dimensionalFormula": { "mass": 1, "length": 2, "time": -3 },
-      "availableUnits": ["Watt", "Horsepower"],
+      "availableUnits": ["Watt", "Kilowatt", "Megawatt", "Horsepower"],
       "quantities": {
         "vector0": {
           "base": "Power",
@@ -663,7 +663,7 @@
       "name": "AbsorbedDose",
       "symbol": "L² T⁻²",
       "dimensionalFormula": { "length": 2, "time": -2 },
-      "availableUnits": ["Gray"],
+      "availableUnits": ["Gray", "Rad"],
       "quantities": {
         "vector0": { "base": "AbsorbedDose" }
       },
@@ -676,7 +676,7 @@
       "name": "EquivalentDose",
       "symbol": "L² T⁻²",
       "dimensionalFormula": { "length": 2, "time": -2 },
-      "availableUnits": ["Sievert"],
+      "availableUnits": ["Sievert", "Rem"],
       "quantities": {
         "vector0": { "base": "EquivalentDose" }
       },
@@ -689,7 +689,7 @@
       "name": "Density",
       "symbol": "M L⁻³",
       "dimensionalFormula": { "mass": 1, "length": -3 },
-      "availableUnits": ["KilogramPerCubicMeter"],
+      "availableUnits": ["KilogramPerCubicMeter", "GramPerCubicCentimeter", "GramPerLiter"],
       "quantities": {
         "vector0": { "base": "Density" }
       },
@@ -704,7 +704,7 @@
       "name": "ElectricCharge",
       "symbol": "I T",
       "dimensionalFormula": { "electricCurrent": 1, "time": 1 },
-      "availableUnits": ["Coulomb"],
+      "availableUnits": ["Coulomb", "AmpereHour"],
       "quantities": {
         "vector0": { "base": "ChargeMagnitude" },
         "vector1": { "base": "Charge" }
@@ -722,7 +722,7 @@
       "dimensionalFormula": {
         "mass": 1, "length": 2, "time": -3, "electricCurrent": -1
       },
-      "availableUnits": ["Volt"],
+      "availableUnits": ["Volt", "Kilovolt"],
       "quantities": {
         "vector0": {
           "base": "VoltageMagnitude",
@@ -770,7 +770,7 @@
       "dimensionalFormula": {
         "mass": 1, "length": 2, "time": -3, "electricCurrent": -2
       },
-      "availableUnits": ["Ohm"],
+      "availableUnits": ["Ohm", "Kilohm", "Megohm"],
       "quantities": {
         "vector0": { "base": "Resistance" }
       },
@@ -787,7 +787,7 @@
       "dimensionalFormula": {
         "mass": -1, "length": -2, "time": 4, "electricCurrent": 2
       },
-      "availableUnits": ["Farad"],
+      "availableUnits": ["Farad", "Microfarad", "Nanofarad", "Picofarad"],
       "quantities": {
         "vector0": { "base": "Capacitance" }
       },
@@ -817,7 +817,7 @@
       "name": "Illuminance",
       "symbol": "J L⁻²",
       "dimensionalFormula": { "luminousIntensity": 1, "length": -2 },
-      "availableUnits": ["Lux"],
+      "availableUnits": ["Lux", "FootCandle"],
       "quantities": {
         "vector0": {
           "base": "Illuminance",
@@ -850,7 +850,7 @@
       "name": "Concentration",
       "symbol": "N L⁻³",
       "dimensionalFormula": { "amountOfSubstance": 1, "length": -3 },
-      "availableUnits": ["Molar"],
+      "availableUnits": ["Molar", "Millimolar", "Micromolar"],
       "quantities": {
         "vector0": { "base": "Concentration" }
       },
@@ -966,7 +966,7 @@
       "name": "DynamicViscosity",
       "symbol": "M L⁻¹ T⁻¹",
       "dimensionalFormula": { "mass": 1, "length": -1, "time": -1 },
-      "availableUnits": ["PascalSecond", "Poise"],
+      "availableUnits": ["PascalSecond", "Poise", "Centipoise"],
       "quantities": {
         "vector0": { "base": "DynamicViscosity" }
       },
@@ -1011,7 +1011,7 @@
       "name": "SurfaceTension",
       "symbol": "M T⁻²",
       "dimensionalFormula": { "mass": 1, "time": -2 },
-      "availableUnits": ["NewtonPerMeter"],
+      "availableUnits": ["NewtonPerMeter", "DynePerCentimeter"],
       "quantities": {
         "vector0": { "base": "SurfaceTension" }
       },
@@ -1026,7 +1026,7 @@
       "name": "MolarMass",
       "symbol": "M N⁻¹",
       "dimensionalFormula": { "mass": 1, "amountOfSubstance": -1 },
-      "availableUnits": ["KilogramPerMole", "GramPerMole"],
+      "availableUnits": ["KilogramPerMole", "GramPerMole", "Dalton"],
       "quantities": {
         "vector0": { "base": "MolarMass" }
       },
@@ -1041,7 +1041,7 @@
       "name": "CatalyticActivity",
       "symbol": "N T⁻¹",
       "dimensionalFormula": { "amountOfSubstance": 1, "time": -1 },
-      "availableUnits": ["Katal"],
+      "availableUnits": ["Katal", "EnzymeUnit"],
       "quantities": {
         "vector0": {
           "base": "CatalyticActivity",
@@ -1076,7 +1076,7 @@
       "name": "MolarEnergy",
       "symbol": "M L² T⁻² N⁻¹",
       "dimensionalFormula": { "mass": 1, "length": 2, "time": -2, "amountOfSubstance": -1 },
-      "availableUnits": ["JoulePerMole", "KilojoulePerMole"],
+      "availableUnits": ["JoulePerMole", "KilojoulePerMole", "CaloriePerMole"],
       "quantities": {
         "vector0": {
           "base": "MolarEnergy",
@@ -1198,7 +1198,7 @@
       "name": "Exposure",
       "symbol": "M⁻¹ T I",
       "dimensionalFormula": { "mass": -1, "time": 1, "electricCurrent": 1 },
-      "availableUnits": ["CoulombPerKilogram"],
+      "availableUnits": ["CoulombPerKilogram", "Roentgen"],
       "quantities": {
         "vector0": { "base": "Exposure" }
       },

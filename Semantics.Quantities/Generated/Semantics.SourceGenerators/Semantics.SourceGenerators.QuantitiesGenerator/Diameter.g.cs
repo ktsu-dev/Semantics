@@ -99,6 +99,13 @@ public record Diameter<T> : PhysicalQuantity<Diameter<T>, T>, IVector0<Diameter<
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Diameter<T> FromMiles(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)), nameof(value)));
 /// <summary>
+	/// Creates a new Diameter from a value in NauticalMile.
+	/// </summary>
+	/// <param name="value">The value in NauticalMile.</param>
+	/// <returns>A new Diameter instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Diameter<T> FromNauticalMiles(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.NauticalMileToMeters)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Length unit) fail at compile time.
 	/// </summary>

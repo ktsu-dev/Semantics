@@ -88,6 +88,12 @@ public record Offset<T> : PhysicalQuantity<Offset<T>, T>, IVector1<Offset<T>, T>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromMiles(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)));
 /// <summary>
+	/// Creates a new Offset from a value in NauticalMile.
+	/// </summary>
+	/// <param name="value">The value in NauticalMile.</param>
+	/// <returns>A new Offset instance.</returns>
+	public static Offset<T> FromNauticalMiles(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.NauticalMileToMeters)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Length unit) fail at compile time.
 	/// </summary>

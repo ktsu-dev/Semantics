@@ -29,6 +29,20 @@ public record SamplingRate<T> : PhysicalQuantity<SamplingRate<T>, T>, IVector0<S
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SamplingRate<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new SamplingRate from a value in Kilohertz.
+	/// </summary>
+	/// <param name="value">The value in Kilohertz.</param>
+	/// <returns>A new SamplingRate instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SamplingRate<T> FromKilohertz(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+/// <summary>
+	/// Creates a new SamplingRate from a value in Megahertz.
+	/// </summary>
+	/// <param name="value">The value in Megahertz.</param>
+	/// <returns>A new SamplingRate instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SamplingRate<T> FromMegahertz(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Frequency unit) fail at compile time.
 	/// </summary>

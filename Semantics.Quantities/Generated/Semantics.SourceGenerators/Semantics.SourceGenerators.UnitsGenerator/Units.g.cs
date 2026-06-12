@@ -933,6 +933,678 @@ public sealed record Degree : IUnit, IDimensionlessUnit, IAngularDisplacementUni
 };
 
 /// <summary>
+/// Nautical mile - 1852 meters, used in navigation.
+/// </summary>
+public sealed record NauticalMile : IUnit, ILengthUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "NauticalMile";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "nmi";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Length;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => NauticalMileToMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public NauticalMile() { }
+
+};
+
+/// <summary>
+/// Stone - Imperial unit of mass (14 pounds).
+/// </summary>
+public sealed record Stone : IUnit, IMassUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Stone";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "st";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Mass;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => StoneToKilograms;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Stone() { }
+
+};
+
+/// <summary>
+/// Short ton - US customary unit of mass (2000 pounds).
+/// </summary>
+public sealed record ShortTon : IUnit, IMassUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "ShortTon";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "ton";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.USCustomary;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Mass;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => ShortTonToKilograms;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public ShortTon() { }
+
+};
+
+/// <summary>
+/// Atomic mass unit - 1/12 the mass of a carbon-12 atom.
+/// </summary>
+public sealed record AtomicMassUnit : IUnit, IMassUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "AtomicMassUnit";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "u";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Atomic;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Mass;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => AtomicMassUnitToKilograms;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public AtomicMassUnit() { }
+
+};
+
+/// <summary>
+/// Week - 7 days.
+/// </summary>
+public sealed record Week : IUnit, ITimeUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Week";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "wk";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Time;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => WeekToSeconds;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Week() { }
+
+};
+
+/// <summary>
+/// Nanosecond - 1e-9 seconds.
+/// </summary>
+public sealed record Nanosecond : IUnit, ITimeUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Nanosecond";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "ns";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Time;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Nano;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Nanosecond() { }
+
+};
+
+/// <summary>
+/// Square kilometer - 1e6 square meters.
+/// </summary>
+public sealed record SquareKilometer : IUnit, IAreaUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "SquareKilometer";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "km²";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Area;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => SquareKilometerToSquareMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public SquareKilometer() { }
+
+};
+
+/// <summary>
+/// Square centimeter - 1e-4 square meters.
+/// </summary>
+public sealed record SquareCentimeter : IUnit, IAreaUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "SquareCentimeter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "cm²";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Area;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => SquareCentimeterToSquareMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public SquareCentimeter() { }
+
+};
+
+/// <summary>
+/// Square mile - Imperial unit of area.
+/// </summary>
+public sealed record SquareMile : IUnit, IAreaUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "SquareMile";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "mi²";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Area;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => SquareMileToSquareMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public SquareMile() { }
+
+};
+
+/// <summary>
+/// Hectare - metric unit of area (10000 m²).
+/// </summary>
+public sealed record Hectare : IUnit, IAreaUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Hectare";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "ha";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Metric;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Area;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => HectareToSquareMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Hectare() { }
+
+};
+
+/// <summary>
+/// Acre - Imperial unit of area.
+/// </summary>
+public sealed record Acre : IUnit, IAreaUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Acre";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "ac";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Area;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => AcreToSquareMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Acre() { }
+
+};
+
+/// <summary>
+/// Cubic centimeter - 1e-6 cubic meters.
+/// </summary>
+public sealed record CubicCentimeter : IUnit, IVolumeUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "CubicCentimeter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "cm³";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Volume;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => CubicCentimeterToCubicMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public CubicCentimeter() { }
+
+};
+
+/// <summary>
+/// Cubic foot - Imperial unit of volume.
+/// </summary>
+public sealed record CubicFoot : IUnit, IVolumeUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "CubicFoot";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "ft³";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Volume;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => CubicFootToCubicMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public CubicFoot() { }
+
+};
+
+/// <summary>
+/// Cubic inch - Imperial unit of volume.
+/// </summary>
+public sealed record CubicInch : IUnit, IVolumeUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "CubicInch";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "in³";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Volume;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => CubicInchToCubicMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public CubicInch() { }
+
+};
+
+/// <summary>
+/// Imperial gallon - British unit of volume.
+/// </summary>
+public sealed record ImperialGallon : IUnit, IVolumeUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "ImperialGallon";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "imp gal";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Volume;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => ImperialGallonToCubicMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public ImperialGallon() { }
+
+};
+
+/// <summary>
+/// US liquid quart - US customary unit of volume.
+/// </summary>
+public sealed record USQuart : IUnit, IVolumeUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "USQuart";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "qt";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.USCustomary;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Volume;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => USQuartToCubicMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public USQuart() { }
+
+};
+
+/// <summary>
+/// US liquid pint - US customary unit of volume.
+/// </summary>
+public sealed record USPint : IUnit, IVolumeUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "USPint";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "pt";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.USCustomary;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Volume;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => USPintToCubicMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public USPint() { }
+
+};
+
+/// <summary>
+/// US fluid ounce - US customary unit of volume.
+/// </summary>
+public sealed record USFluidOunce : IUnit, IVolumeUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "USFluidOunce";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "fl oz";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.USCustomary;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Volume;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => USFluidOunceToCubicMeters;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public USFluidOunce() { }
+
+};
+
+/// <summary>
+/// Gradian - 1/400 of a full circle (π/200 rad).
+/// </summary>
+public sealed record Gradian : IUnit, IDimensionlessUnit, IAngularDisplacementUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Gradian";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "grad";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => GradianToRadians;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Gradian() { }
+
+};
+
+/// <summary>
+/// Revolution - one full circle (2π rad).
+/// </summary>
+public sealed record Revolution : IUnit, IDimensionlessUnit, IAngularDisplacementUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Revolution";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "rev";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => RevolutionToRadians;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Revolution() { }
+
+};
+
+/// <summary>
+/// Milliradian - 0.001 radians.
+/// </summary>
+public sealed record Milliradian : IUnit, IDimensionlessUnit, IAngularDisplacementUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Milliradian";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "mrad";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Milli;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Milliradian() { }
+
+};
+
+/// <summary>
+/// Parts per million - 1e-6 dimensionless ratio.
+/// </summary>
+public sealed record PartsPerMillion : IUnit, IDimensionlessUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "PartsPerMillion";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "ppm";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => PartsPerMillionToRatio;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public PartsPerMillion() { }
+
+};
+
+/// <summary>
+/// Parts per billion - 1e-9 dimensionless ratio.
+/// </summary>
+public sealed record PartsPerBillion : IUnit, IDimensionlessUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "PartsPerBillion";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "ppb";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => PartsPerBillionToRatio;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public PartsPerBillion() { }
+
+};
+
+/// <summary>
+/// Percent by weight - mass fraction expressed as a percentage.
+/// </summary>
+public sealed record PercentByWeight : IUnit, IDimensionlessUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "PercentByWeight";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "% w/w";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => PercentByWeightToRatio;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public PercentByWeight() { }
+
+};
+
+/// <summary>
 /// Newton - SI derived unit of force.
 /// </summary>
 public sealed record Newton : IUnit, IForceUnit
@@ -1549,6 +2221,426 @@ public sealed record MetersPerSecondQuartic : IUnit, ISnapUnit
 };
 
 /// <summary>
+/// Feet per second - Imperial unit of velocity.
+/// </summary>
+public sealed record FeetPerSecond : IUnit, IVelocityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "FeetPerSecond";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "ft/s";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Velocity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => FeetPerSecondToMetersPerSecond;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public FeetPerSecond() { }
+
+};
+
+/// <summary>
+/// Knot - one nautical mile per hour.
+/// </summary>
+public sealed record Knot : IUnit, IVelocityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Knot";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kn";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Velocity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => KnotToMetersPerSecond;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Knot() { }
+
+};
+
+/// <summary>
+/// Standard gravity - acceleration of free fall at Earth's surface.
+/// </summary>
+public sealed record StandardGravity : IUnit, IAccelerationUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "StandardGravity";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "g";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Acceleration;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => StandardGravityToMetersPerSecondSquared;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public StandardGravity() { }
+
+};
+
+/// <summary>
+/// Kilonewton - 1000 newtons.
+/// </summary>
+public sealed record Kilonewton : IUnit, IForceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Kilonewton";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kN";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Force;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Kilo;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Kilonewton() { }
+
+};
+
+/// <summary>
+/// Dyne - CGS unit of force.
+/// </summary>
+public sealed record Dyne : IUnit, IForceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Dyne";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "dyn";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.CGS;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Force;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => DyneToNewtons;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Dyne() { }
+
+};
+
+/// <summary>
+/// Pound-force - Imperial unit of force.
+/// </summary>
+public sealed record PoundForce : IUnit, IForceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "PoundForce";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "lbf";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Force;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => PoundForceToNewtons;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public PoundForce() { }
+
+};
+
+/// <summary>
+/// Kilopascal - 1000 pascals.
+/// </summary>
+public sealed record Kilopascal : IUnit, IPressureUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Kilopascal";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kPa";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Pressure;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Kilo;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Kilopascal() { }
+
+};
+
+/// <summary>
+/// Torr - 1/760 of a standard atmosphere.
+/// </summary>
+public sealed record Torr : IUnit, IPressureUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Torr";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "Torr";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Pressure;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => TorrToPascals;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Torr() { }
+
+};
+
+/// <summary>
+/// Kilojoule - 1000 joules.
+/// </summary>
+public sealed record Kilojoule : IUnit, IEnergyUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Kilojoule";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kJ";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Energy;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Kilo;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Kilojoule() { }
+
+};
+
+/// <summary>
+/// Kilocalorie - 1000 thermochemical calories.
+/// </summary>
+public sealed record Kilocalorie : IUnit, IEnergyUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Kilocalorie";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kcal";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Energy;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => KilocalorieToJoules;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Kilocalorie() { }
+
+};
+
+/// <summary>
+/// Watt-hour - 3600 joules.
+/// </summary>
+public sealed record WattHour : IUnit, IEnergyUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "WattHour";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "Wh";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Energy;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => WattHourToJoules;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public WattHour() { }
+
+};
+
+/// <summary>
+/// Erg - CGS unit of energy.
+/// </summary>
+public sealed record Erg : IUnit, IEnergyUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Erg";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "erg";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.CGS;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Energy;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => ErgToJoules;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Erg() { }
+
+};
+
+/// <summary>
+/// British thermal unit (IT) - Imperial unit of energy.
+/// </summary>
+public sealed record Btu : IUnit, IEnergyUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Btu";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "BTU";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Energy;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => BtuToJoules;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Btu() { }
+
+};
+
+/// <summary>
+/// Kilowatt - 1000 watts.
+/// </summary>
+public sealed record Kilowatt : IUnit, IPowerUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Kilowatt";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kW";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Power;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Kilo;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Kilowatt() { }
+
+};
+
+/// <summary>
+/// Megawatt - 1e6 watts.
+/// </summary>
+public sealed record Megawatt : IUnit, IPowerUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Megawatt";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "MW";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Power;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Mega;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Megawatt() { }
+
+};
+
+/// <summary>
 /// Kelvin - SI base unit of thermodynamic temperature.
 /// </summary>
 public sealed record Kelvin : IUnit, ITemperatureUnit
@@ -1769,6 +2861,34 @@ public sealed record PerKelvin : IUnit, IThermalExpansionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PerKelvin() { }
+
+};
+
+/// <summary>
+/// Rankine - absolute temperature scale with Fahrenheit-sized degrees.
+/// </summary>
+public sealed record Rankine : IUnit, ITemperatureUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Rankine";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "°R";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Temperature;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => FahrenheitScale;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Rankine() { }
 
 };
 
@@ -2081,6 +3201,258 @@ public sealed record Henry : IUnit, IInductanceUnit
 };
 
 /// <summary>
+/// Milliampere - 0.001 amperes.
+/// </summary>
+public sealed record Milliampere : IUnit, IElectricCurrentUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Milliampere";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "mA";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricCurrent;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Milli;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Milliampere() { }
+
+};
+
+/// <summary>
+/// Kiloampere - 1000 amperes.
+/// </summary>
+public sealed record Kiloampere : IUnit, IElectricCurrentUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Kiloampere";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kA";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricCurrent;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Kilo;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Kiloampere() { }
+
+};
+
+/// <summary>
+/// Kilovolt - 1000 volts.
+/// </summary>
+public sealed record Kilovolt : IUnit, IElectricPotentialUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Kilovolt";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kV";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricPotential;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Kilo;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Kilovolt() { }
+
+};
+
+/// <summary>
+/// Kilohm - 1000 ohms.
+/// </summary>
+public sealed record Kilohm : IUnit, IElectricResistanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Kilohm";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kΩ";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricResistance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Kilo;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Kilohm() { }
+
+};
+
+/// <summary>
+/// Megohm - 1e6 ohms.
+/// </summary>
+public sealed record Megohm : IUnit, IElectricResistanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Megohm";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "MΩ";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricResistance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Mega;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Megohm() { }
+
+};
+
+/// <summary>
+/// Microfarad - 1e-6 farads.
+/// </summary>
+public sealed record Microfarad : IUnit, IElectricCapacitanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Microfarad";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "μF";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricCapacitance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Micro;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Microfarad() { }
+
+};
+
+/// <summary>
+/// Nanofarad - 1e-9 farads.
+/// </summary>
+public sealed record Nanofarad : IUnit, IElectricCapacitanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Nanofarad";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "nF";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricCapacitance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Nano;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Nanofarad() { }
+
+};
+
+/// <summary>
+/// Picofarad - 1e-12 farads.
+/// </summary>
+public sealed record Picofarad : IUnit, IElectricCapacitanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Picofarad";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "pF";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricCapacitance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Pico;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Picofarad() { }
+
+};
+
+/// <summary>
+/// Ampere-hour - 3600 coulombs of electric charge.
+/// </summary>
+public sealed record AmpereHour : IUnit, IElectricChargeUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "AmpereHour";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "Ah";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricCharge;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => AmpereHourToCoulombs;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public AmpereHour() { }
+
+};
+
+/// <summary>
 /// Radians per second - SI derived unit of angular velocity.
 /// </summary>
 public sealed record RadiansPerSecond : IUnit, IAngularVelocityUnit
@@ -2221,6 +3593,62 @@ public sealed record Hertz : IUnit, IFrequencyUnit
 };
 
 /// <summary>
+/// Kilohertz - 1000 hertz.
+/// </summary>
+public sealed record Kilohertz : IUnit, IFrequencyUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Kilohertz";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kHz";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Frequency;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Kilo;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Kilohertz() { }
+
+};
+
+/// <summary>
+/// Megahertz - 1e6 hertz.
+/// </summary>
+public sealed record Megahertz : IUnit, IFrequencyUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Megahertz";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "MHz";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Frequency;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Mega;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Megahertz() { }
+
+};
+
+/// <summary>
 /// Candela - SI base unit of luminous intensity.
 /// </summary>
 public sealed record Candela : IUnit, ILuminousIntensityUnit
@@ -2329,6 +3757,62 @@ public sealed record Diopter : IUnit, IOpticalPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Diopter() { }
+
+};
+
+/// <summary>
+/// Millicandela - 0.001 candelas.
+/// </summary>
+public sealed record Millicandela : IUnit, ILuminousIntensityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Millicandela";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "mcd";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.LuminousIntensity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Milli;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Millicandela() { }
+
+};
+
+/// <summary>
+/// Foot-candle - Imperial unit of illuminance (lumen per square foot).
+/// </summary>
+public sealed record FootCandle : IUnit, IIlluminanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "FootCandle";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "fc";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Illuminance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => FootCandleToLux;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public FootCandle() { }
 
 };
 
@@ -2473,6 +3957,118 @@ public sealed record CoulombPerKilogram : IUnit, IExposureUnit
 };
 
 /// <summary>
+/// Curie - traditional unit of radioactive activity.
+/// </summary>
+public sealed record Curie : IUnit, IRadioactiveActivityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Curie";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "Ci";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.RadioactiveActivity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => CurieToBecquerels;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Curie() { }
+
+};
+
+/// <summary>
+/// Rad - traditional unit of absorbed dose (0.01 Gy).
+/// </summary>
+public sealed record Rad : IUnit, IAbsorbedDoseUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Rad";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "rad";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.AbsorbedDose;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => RadToGrays;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Rad() { }
+
+};
+
+/// <summary>
+/// Rem - traditional unit of equivalent dose (0.01 Sv).
+/// </summary>
+public sealed record Rem : IUnit, IEquivalentDoseUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Rem";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "rem";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.EquivalentDose;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => RemToSieverts;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Rem() { }
+
+};
+
+/// <summary>
+/// Roentgen - traditional unit of ionizing radiation exposure.
+/// </summary>
+public sealed record Roentgen : IUnit, IExposureUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Roentgen";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "R";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Exposure;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => RoentgenToCoulombsPerKilogram;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Roentgen() { }
+
+};
+
+/// <summary>
 /// Kilogram per cubic meter - SI derived unit of density.
 /// </summary>
 public sealed record KilogramPerCubicMeter : IUnit, IDensityUnit
@@ -2497,6 +4093,62 @@ public sealed record KilogramPerCubicMeter : IUnit, IDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramPerCubicMeter() { }
+
+};
+
+/// <summary>
+/// Gram per cubic centimeter - 1000 kg/m³.
+/// </summary>
+public sealed record GramPerCubicCentimeter : IUnit, IDensityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "GramPerCubicCentimeter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "g/cm³";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Density;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => GramPerCubicCentimeterToKilogramPerCubicMeter;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public GramPerCubicCentimeter() { }
+
+};
+
+/// <summary>
+/// Gram per liter - equal to one kilogram per cubic meter.
+/// </summary>
+public sealed record GramPerLiter : IUnit, IDensityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "GramPerLiter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "g/L";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Density;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => GramPerLiterToKilogramPerCubicMeter;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public GramPerLiter() { }
 
 };
 
@@ -2553,6 +4205,118 @@ public sealed record Molar : IUnit, IConcentrationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Molar() { }
+
+};
+
+/// <summary>
+/// Kilomole - 1000 moles.
+/// </summary>
+public sealed record Kilomole : IUnit, IAmountOfSubstanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Kilomole";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "kmol";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.AmountOfSubstance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Kilo;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Kilomole() { }
+
+};
+
+/// <summary>
+/// Millimole - 0.001 moles.
+/// </summary>
+public sealed record Millimole : IUnit, IAmountOfSubstanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Millimole";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "mmol";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.AmountOfSubstance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Milli;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Millimole() { }
+
+};
+
+/// <summary>
+/// Millimolar - 0.001 moles per liter (1 mol/m³).
+/// </summary>
+public sealed record Millimolar : IUnit, IConcentrationUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Millimolar";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "mM";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Concentration;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MillimolarToMolePerCubicMeter;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Millimolar() { }
+
+};
+
+/// <summary>
+/// Micromolar - 1e-6 moles per liter (0.001 mol/m³).
+/// </summary>
+public sealed record Micromolar : IUnit, IConcentrationUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Micromolar";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "μM";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Concentration;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MicromolarToMolePerCubicMeter;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Micromolar() { }
 
 };
 
@@ -2781,6 +4545,62 @@ public sealed record NewtonPerMeter : IUnit, ISurfaceTensionUnit
 };
 
 /// <summary>
+/// Centipoise - 0.001 pascal seconds (viscosity of water at 20°C ≈ 1 cP).
+/// </summary>
+public sealed record Centipoise : IUnit, IDynamicViscosityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Centipoise";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "cP";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.CGS;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.DynamicViscosity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => CentipoiseToPascalSecond;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Centipoise() { }
+
+};
+
+/// <summary>
+/// Dyne per centimeter - CGS unit of surface tension.
+/// </summary>
+public sealed record DynePerCentimeter : IUnit, ISurfaceTensionUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "DynePerCentimeter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "dyn/cm";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.CGS;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.SurfaceTension;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => DynePerCentimeterToNewtonPerMeter;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public DynePerCentimeter() { }
+
+};
+
+/// <summary>
 /// Kilogram per mole - SI derived unit of molar mass.
 /// </summary>
 public sealed record KilogramPerMole : IUnit, IMolarMassUnit
@@ -2949,6 +4769,90 @@ public sealed record KilojoulePerMole : IUnit, IMolarEnergyUnit
 };
 
 /// <summary>
+/// Calorie per mole - thermochemical calorie per mole.
+/// </summary>
+public sealed record CaloriePerMole : IUnit, IMolarEnergyUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "CaloriePerMole";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "cal/mol";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.MolarEnergy;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => CaloriePerMoleToJoulePerMole;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public CaloriePerMole() { }
+
+};
+
+/// <summary>
+/// Enzyme unit - one micromole of substrate per minute.
+/// </summary>
+public sealed record EnzymeUnit : IUnit, ICatalyticActivityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "EnzymeUnit";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "U";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.CatalyticActivity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => EnzymeUnitToKatals;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public EnzymeUnit() { }
+
+};
+
+/// <summary>
+/// Dalton - molar mass numerically equal to one gram per mole.
+/// </summary>
+public sealed record Dalton : IUnit, IMolarMassUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Dalton";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "Da";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Atomic;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.MolarMass;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => GramPerMoleToKilogramPerMole;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Dalton() { }
+
+};
+
+/// <summary>
 /// Watt per square meter - SI derived unit of irradiance and sound intensity.
 /// </summary>
 public sealed record WattPerSquareMeter : IUnit, IIrradianceUnit
@@ -3009,14 +4913,23 @@ public sealed record PascalSecondPerMeter : IUnit, IAcousticImpedanceUnit
 /// types accept these on their typed <c>In(...)</c> methods.
 /// </summary>
 public static class Units{
+	/// <summary>Singleton <c>Acre</c> instance.</summary>
+	public static readonly Acre Acre = new Acre();
+
 	/// <summary>Singleton <c>Ampere</c> instance.</summary>
 	public static readonly Ampere Ampere = new Ampere();
+
+	/// <summary>Singleton <c>AmpereHour</c> instance.</summary>
+	public static readonly AmpereHour AmpereHour = new AmpereHour();
 
 	/// <summary>Singleton <c>Angstrom</c> instance.</summary>
 	public static readonly Angstrom Angstrom = new Angstrom();
 
 	/// <summary>Singleton <c>Atmosphere</c> instance.</summary>
 	public static readonly Atmosphere Atmosphere = new Atmosphere();
+
+	/// <summary>Singleton <c>AtomicMassUnit</c> instance.</summary>
+	public static readonly AtomicMassUnit AtomicMassUnit = new AtomicMassUnit();
 
 	/// <summary>Singleton <c>Bar</c> instance.</summary>
 	public static readonly Bar Bar = new Bar();
@@ -3027,8 +4940,14 @@ public static class Units{
 	/// <summary>Singleton <c>Becquerel</c> instance.</summary>
 	public static readonly Becquerel Becquerel = new Becquerel();
 
+	/// <summary>Singleton <c>Btu</c> instance.</summary>
+	public static readonly Btu Btu = new Btu();
+
 	/// <summary>Singleton <c>Calorie</c> instance.</summary>
 	public static readonly Calorie Calorie = new Calorie();
+
+	/// <summary>Singleton <c>CaloriePerMole</c> instance.</summary>
+	public static readonly CaloriePerMole CaloriePerMole = new CaloriePerMole();
 
 	/// <summary>Singleton <c>Candela</c> instance.</summary>
 	public static readonly Candela Candela = new Candela();
@@ -3039,17 +4958,35 @@ public static class Units{
 	/// <summary>Singleton <c>Centimeter</c> instance.</summary>
 	public static readonly Centimeter Centimeter = new Centimeter();
 
+	/// <summary>Singleton <c>Centipoise</c> instance.</summary>
+	public static readonly Centipoise Centipoise = new Centipoise();
+
 	/// <summary>Singleton <c>Coulomb</c> instance.</summary>
 	public static readonly Coulomb Coulomb = new Coulomb();
 
 	/// <summary>Singleton <c>CoulombPerKilogram</c> instance.</summary>
 	public static readonly CoulombPerKilogram CoulombPerKilogram = new CoulombPerKilogram();
 
+	/// <summary>Singleton <c>CubicCentimeter</c> instance.</summary>
+	public static readonly CubicCentimeter CubicCentimeter = new CubicCentimeter();
+
+	/// <summary>Singleton <c>CubicFoot</c> instance.</summary>
+	public static readonly CubicFoot CubicFoot = new CubicFoot();
+
+	/// <summary>Singleton <c>CubicInch</c> instance.</summary>
+	public static readonly CubicInch CubicInch = new CubicInch();
+
 	/// <summary>Singleton <c>CubicMeter</c> instance.</summary>
 	public static readonly CubicMeter CubicMeter = new CubicMeter();
 
 	/// <summary>Singleton <c>CubicMeterPerSecond</c> instance.</summary>
 	public static readonly CubicMeterPerSecond CubicMeterPerSecond = new CubicMeterPerSecond();
+
+	/// <summary>Singleton <c>Curie</c> instance.</summary>
+	public static readonly Curie Curie = new Curie();
+
+	/// <summary>Singleton <c>Dalton</c> instance.</summary>
+	public static readonly Dalton Dalton = new Dalton();
 
 	/// <summary>Singleton <c>Day</c> instance.</summary>
 	public static readonly Day Day = new Day();
@@ -3063,8 +5000,20 @@ public static class Units{
 	/// <summary>Singleton <c>Diopter</c> instance.</summary>
 	public static readonly Diopter Diopter = new Diopter();
 
+	/// <summary>Singleton <c>Dyne</c> instance.</summary>
+	public static readonly Dyne Dyne = new Dyne();
+
+	/// <summary>Singleton <c>DynePerCentimeter</c> instance.</summary>
+	public static readonly DynePerCentimeter DynePerCentimeter = new DynePerCentimeter();
+
 	/// <summary>Singleton <c>ElectronVolt</c> instance.</summary>
 	public static readonly ElectronVolt ElectronVolt = new ElectronVolt();
+
+	/// <summary>Singleton <c>EnzymeUnit</c> instance.</summary>
+	public static readonly EnzymeUnit EnzymeUnit = new EnzymeUnit();
+
+	/// <summary>Singleton <c>Erg</c> instance.</summary>
+	public static readonly Erg Erg = new Erg();
 
 	/// <summary>Singleton <c>Fahrenheit</c> instance.</summary>
 	public static readonly Fahrenheit Fahrenheit = new Fahrenheit();
@@ -3072,8 +5021,14 @@ public static class Units{
 	/// <summary>Singleton <c>Farad</c> instance.</summary>
 	public static readonly Farad Farad = new Farad();
 
+	/// <summary>Singleton <c>FeetPerSecond</c> instance.</summary>
+	public static readonly FeetPerSecond FeetPerSecond = new FeetPerSecond();
+
 	/// <summary>Singleton <c>Foot</c> instance.</summary>
 	public static readonly Foot Foot = new Foot();
+
+	/// <summary>Singleton <c>FootCandle</c> instance.</summary>
+	public static readonly FootCandle FootCandle = new FootCandle();
 
 	/// <summary>Singleton <c>Gallon</c> instance.</summary>
 	public static readonly Gallon Gallon = new Gallon();
@@ -3081,14 +5036,26 @@ public static class Units{
 	/// <summary>Singleton <c>Gauss</c> instance.</summary>
 	public static readonly Gauss Gauss = new Gauss();
 
+	/// <summary>Singleton <c>Gradian</c> instance.</summary>
+	public static readonly Gradian Gradian = new Gradian();
+
 	/// <summary>Singleton <c>Gram</c> instance.</summary>
 	public static readonly Gram Gram = new Gram();
+
+	/// <summary>Singleton <c>GramPerCubicCentimeter</c> instance.</summary>
+	public static readonly GramPerCubicCentimeter GramPerCubicCentimeter = new GramPerCubicCentimeter();
+
+	/// <summary>Singleton <c>GramPerLiter</c> instance.</summary>
+	public static readonly GramPerLiter GramPerLiter = new GramPerLiter();
 
 	/// <summary>Singleton <c>GramPerMole</c> instance.</summary>
 	public static readonly GramPerMole GramPerMole = new GramPerMole();
 
 	/// <summary>Singleton <c>Gray</c> instance.</summary>
 	public static readonly Gray Gray = new Gray();
+
+	/// <summary>Singleton <c>Hectare</c> instance.</summary>
+	public static readonly Hectare Hectare = new Hectare();
 
 	/// <summary>Singleton <c>Henry</c> instance.</summary>
 	public static readonly Henry Henry = new Henry();
@@ -3101,6 +5068,9 @@ public static class Units{
 
 	/// <summary>Singleton <c>Hour</c> instance.</summary>
 	public static readonly Hour Hour = new Hour();
+
+	/// <summary>Singleton <c>ImperialGallon</c> instance.</summary>
+	public static readonly ImperialGallon ImperialGallon = new ImperialGallon();
 
 	/// <summary>Singleton <c>Inch</c> instance.</summary>
 	public static readonly Inch Inch = new Inch();
@@ -3123,6 +5093,12 @@ public static class Units{
 	/// <summary>Singleton <c>Kelvin</c> instance.</summary>
 	public static readonly Kelvin Kelvin = new Kelvin();
 
+	/// <summary>Singleton <c>Kiloampere</c> instance.</summary>
+	public static readonly Kiloampere Kiloampere = new Kiloampere();
+
+	/// <summary>Singleton <c>Kilocalorie</c> instance.</summary>
+	public static readonly Kilocalorie Kilocalorie = new Kilocalorie();
+
 	/// <summary>Singleton <c>Kilogram</c> instance.</summary>
 	public static readonly Kilogram Kilogram = new Kilogram();
 
@@ -3141,6 +5117,15 @@ public static class Units{
 	/// <summary>Singleton <c>KilogramPerSecond</c> instance.</summary>
 	public static readonly KilogramPerSecond KilogramPerSecond = new KilogramPerSecond();
 
+	/// <summary>Singleton <c>Kilohertz</c> instance.</summary>
+	public static readonly Kilohertz Kilohertz = new Kilohertz();
+
+	/// <summary>Singleton <c>Kilohm</c> instance.</summary>
+	public static readonly Kilohm Kilohm = new Kilohm();
+
+	/// <summary>Singleton <c>Kilojoule</c> instance.</summary>
+	public static readonly Kilojoule Kilojoule = new Kilojoule();
+
 	/// <summary>Singleton <c>KilojoulePerMole</c> instance.</summary>
 	public static readonly KilojoulePerMole KilojoulePerMole = new KilojoulePerMole();
 
@@ -3150,8 +5135,26 @@ public static class Units{
 	/// <summary>Singleton <c>KilometersPerHour</c> instance.</summary>
 	public static readonly KilometersPerHour KilometersPerHour = new KilometersPerHour();
 
+	/// <summary>Singleton <c>Kilomole</c> instance.</summary>
+	public static readonly Kilomole Kilomole = new Kilomole();
+
+	/// <summary>Singleton <c>Kilonewton</c> instance.</summary>
+	public static readonly Kilonewton Kilonewton = new Kilonewton();
+
+	/// <summary>Singleton <c>Kilopascal</c> instance.</summary>
+	public static readonly Kilopascal Kilopascal = new Kilopascal();
+
+	/// <summary>Singleton <c>Kilovolt</c> instance.</summary>
+	public static readonly Kilovolt Kilovolt = new Kilovolt();
+
+	/// <summary>Singleton <c>Kilowatt</c> instance.</summary>
+	public static readonly Kilowatt Kilowatt = new Kilowatt();
+
 	/// <summary>Singleton <c>KilowattHour</c> instance.</summary>
 	public static readonly KilowattHour KilowattHour = new KilowattHour();
+
+	/// <summary>Singleton <c>Knot</c> instance.</summary>
+	public static readonly Knot Knot = new Knot();
 
 	/// <summary>Singleton <c>Liter</c> instance.</summary>
 	public static readonly Liter Liter = new Liter();
@@ -3164,6 +5167,15 @@ public static class Units{
 
 	/// <summary>Singleton <c>Lux</c> instance.</summary>
 	public static readonly Lux Lux = new Lux();
+
+	/// <summary>Singleton <c>Megahertz</c> instance.</summary>
+	public static readonly Megahertz Megahertz = new Megahertz();
+
+	/// <summary>Singleton <c>Megawatt</c> instance.</summary>
+	public static readonly Megawatt Megawatt = new Megawatt();
+
+	/// <summary>Singleton <c>Megohm</c> instance.</summary>
+	public static readonly Megohm Megohm = new Megohm();
 
 	/// <summary>Singleton <c>Meter</c> instance.</summary>
 	public static readonly Meter Meter = new Meter();
@@ -3180,8 +5192,14 @@ public static class Units{
 	/// <summary>Singleton <c>MetersPerSecondSquared</c> instance.</summary>
 	public static readonly MetersPerSecondSquared MetersPerSecondSquared = new MetersPerSecondSquared();
 
+	/// <summary>Singleton <c>Microfarad</c> instance.</summary>
+	public static readonly Microfarad Microfarad = new Microfarad();
+
 	/// <summary>Singleton <c>Micrometer</c> instance.</summary>
 	public static readonly Micrometer Micrometer = new Micrometer();
+
+	/// <summary>Singleton <c>Micromolar</c> instance.</summary>
+	public static readonly Micromolar Micromolar = new Micromolar();
 
 	/// <summary>Singleton <c>Microsecond</c> instance.</summary>
 	public static readonly Microsecond Microsecond = new Microsecond();
@@ -3192,11 +5210,26 @@ public static class Units{
 	/// <summary>Singleton <c>MilesPerHour</c> instance.</summary>
 	public static readonly MilesPerHour MilesPerHour = new MilesPerHour();
 
+	/// <summary>Singleton <c>Milliampere</c> instance.</summary>
+	public static readonly Milliampere Milliampere = new Milliampere();
+
+	/// <summary>Singleton <c>Millicandela</c> instance.</summary>
+	public static readonly Millicandela Millicandela = new Millicandela();
+
 	/// <summary>Singleton <c>Milliliter</c> instance.</summary>
 	public static readonly Milliliter Milliliter = new Milliliter();
 
 	/// <summary>Singleton <c>Millimeter</c> instance.</summary>
 	public static readonly Millimeter Millimeter = new Millimeter();
+
+	/// <summary>Singleton <c>Millimolar</c> instance.</summary>
+	public static readonly Millimolar Millimolar = new Millimolar();
+
+	/// <summary>Singleton <c>Millimole</c> instance.</summary>
+	public static readonly Millimole Millimole = new Millimole();
+
+	/// <summary>Singleton <c>Milliradian</c> instance.</summary>
+	public static readonly Milliradian Milliradian = new Milliradian();
 
 	/// <summary>Singleton <c>Millisecond</c> instance.</summary>
 	public static readonly Millisecond Millisecond = new Millisecond();
@@ -3213,8 +5246,17 @@ public static class Units{
 	/// <summary>Singleton <c>MolePerCubicMeterSecond</c> instance.</summary>
 	public static readonly MolePerCubicMeterSecond MolePerCubicMeterSecond = new MolePerCubicMeterSecond();
 
+	/// <summary>Singleton <c>Nanofarad</c> instance.</summary>
+	public static readonly Nanofarad Nanofarad = new Nanofarad();
+
 	/// <summary>Singleton <c>Nanometer</c> instance.</summary>
 	public static readonly Nanometer Nanometer = new Nanometer();
+
+	/// <summary>Singleton <c>Nanosecond</c> instance.</summary>
+	public static readonly Nanosecond Nanosecond = new Nanosecond();
+
+	/// <summary>Singleton <c>NauticalMile</c> instance.</summary>
+	public static readonly NauticalMile NauticalMile = new NauticalMile();
 
 	/// <summary>Singleton <c>Newton</c> instance.</summary>
 	public static readonly Newton Newton = new Newton();
@@ -3234,6 +5276,12 @@ public static class Units{
 	/// <summary>Singleton <c>Ounce</c> instance.</summary>
 	public static readonly Ounce Ounce = new Ounce();
 
+	/// <summary>Singleton <c>PartsPerBillion</c> instance.</summary>
+	public static readonly PartsPerBillion PartsPerBillion = new PartsPerBillion();
+
+	/// <summary>Singleton <c>PartsPerMillion</c> instance.</summary>
+	public static readonly PartsPerMillion PartsPerMillion = new PartsPerMillion();
+
 	/// <summary>Singleton <c>Pascal</c> instance.</summary>
 	public static readonly Pascal Pascal = new Pascal();
 
@@ -3246,6 +5294,12 @@ public static class Units{
 	/// <summary>Singleton <c>PerKelvin</c> instance.</summary>
 	public static readonly PerKelvin PerKelvin = new PerKelvin();
 
+	/// <summary>Singleton <c>PercentByWeight</c> instance.</summary>
+	public static readonly PercentByWeight PercentByWeight = new PercentByWeight();
+
+	/// <summary>Singleton <c>Picofarad</c> instance.</summary>
+	public static readonly Picofarad Picofarad = new Picofarad();
+
 	/// <summary>Singleton <c>Poise</c> instance.</summary>
 	public static readonly Poise Poise = new Poise();
 
@@ -3255,8 +5309,14 @@ public static class Units{
 	/// <summary>Singleton <c>PoundFoot</c> instance.</summary>
 	public static readonly PoundFoot PoundFoot = new PoundFoot();
 
+	/// <summary>Singleton <c>PoundForce</c> instance.</summary>
+	public static readonly PoundForce PoundForce = new PoundForce();
+
 	/// <summary>Singleton <c>Psi</c> instance.</summary>
 	public static readonly Psi Psi = new Psi();
+
+	/// <summary>Singleton <c>Rad</c> instance.</summary>
+	public static readonly Rad Rad = new Rad();
 
 	/// <summary>Singleton <c>Radian</c> instance.</summary>
 	public static readonly Radian Radian = new Radian();
@@ -3270,11 +5330,26 @@ public static class Units{
 	/// <summary>Singleton <c>RadiansPerSecondSquared</c> instance.</summary>
 	public static readonly RadiansPerSecondSquared RadiansPerSecondSquared = new RadiansPerSecondSquared();
 
+	/// <summary>Singleton <c>Rankine</c> instance.</summary>
+	public static readonly Rankine Rankine = new Rankine();
+
+	/// <summary>Singleton <c>Rem</c> instance.</summary>
+	public static readonly Rem Rem = new Rem();
+
+	/// <summary>Singleton <c>Revolution</c> instance.</summary>
+	public static readonly Revolution Revolution = new Revolution();
+
 	/// <summary>Singleton <c>RevolutionsPerMinute</c> instance.</summary>
 	public static readonly RevolutionsPerMinute RevolutionsPerMinute = new RevolutionsPerMinute();
 
+	/// <summary>Singleton <c>Roentgen</c> instance.</summary>
+	public static readonly Roentgen Roentgen = new Roentgen();
+
 	/// <summary>Singleton <c>Second</c> instance.</summary>
 	public static readonly Second Second = new Second();
+
+	/// <summary>Singleton <c>ShortTon</c> instance.</summary>
+	public static readonly ShortTon ShortTon = new ShortTon();
 
 	/// <summary>Singleton <c>Siemens</c> instance.</summary>
 	public static readonly Siemens Siemens = new Siemens();
@@ -3282,11 +5357,17 @@ public static class Units{
 	/// <summary>Singleton <c>Sievert</c> instance.</summary>
 	public static readonly Sievert Sievert = new Sievert();
 
+	/// <summary>Singleton <c>SquareCentimeter</c> instance.</summary>
+	public static readonly SquareCentimeter SquareCentimeter = new SquareCentimeter();
+
 	/// <summary>Singleton <c>SquareFoot</c> instance.</summary>
 	public static readonly SquareFoot SquareFoot = new SquareFoot();
 
 	/// <summary>Singleton <c>SquareInch</c> instance.</summary>
 	public static readonly SquareInch SquareInch = new SquareInch();
+
+	/// <summary>Singleton <c>SquareKilometer</c> instance.</summary>
+	public static readonly SquareKilometer SquareKilometer = new SquareKilometer();
 
 	/// <summary>Singleton <c>SquareMeter</c> instance.</summary>
 	public static readonly SquareMeter SquareMeter = new SquareMeter();
@@ -3294,14 +5375,35 @@ public static class Units{
 	/// <summary>Singleton <c>SquareMeterPerSecond</c> instance.</summary>
 	public static readonly SquareMeterPerSecond SquareMeterPerSecond = new SquareMeterPerSecond();
 
+	/// <summary>Singleton <c>SquareMile</c> instance.</summary>
+	public static readonly SquareMile SquareMile = new SquareMile();
+
+	/// <summary>Singleton <c>StandardGravity</c> instance.</summary>
+	public static readonly StandardGravity StandardGravity = new StandardGravity();
+
 	/// <summary>Singleton <c>Stokes</c> instance.</summary>
 	public static readonly Stokes Stokes = new Stokes();
+
+	/// <summary>Singleton <c>Stone</c> instance.</summary>
+	public static readonly Stone Stone = new Stone();
 
 	/// <summary>Singleton <c>Tesla</c> instance.</summary>
 	public static readonly Tesla Tesla = new Tesla();
 
 	/// <summary>Singleton <c>Ton</c> instance.</summary>
 	public static readonly Ton Ton = new Ton();
+
+	/// <summary>Singleton <c>Torr</c> instance.</summary>
+	public static readonly Torr Torr = new Torr();
+
+	/// <summary>Singleton <c>USFluidOunce</c> instance.</summary>
+	public static readonly USFluidOunce USFluidOunce = new USFluidOunce();
+
+	/// <summary>Singleton <c>USPint</c> instance.</summary>
+	public static readonly USPint USPint = new USPint();
+
+	/// <summary>Singleton <c>USQuart</c> instance.</summary>
+	public static readonly USQuart USQuart = new USQuart();
 
 	/// <summary>Singleton <c>Volt</c> instance.</summary>
 	public static readonly Volt Volt = new Volt();
@@ -3311,6 +5413,9 @@ public static class Units{
 
 	/// <summary>Singleton <c>Watt</c> instance.</summary>
 	public static readonly Watt Watt = new Watt();
+
+	/// <summary>Singleton <c>WattHour</c> instance.</summary>
+	public static readonly WattHour WattHour = new WattHour();
 
 	/// <summary>Singleton <c>WattPerMeterKelvin</c> instance.</summary>
 	public static readonly WattPerMeterKelvin WattPerMeterKelvin = new WattPerMeterKelvin();
@@ -3323,6 +5428,9 @@ public static class Units{
 
 	/// <summary>Singleton <c>Weber</c> instance.</summary>
 	public static readonly Weber Weber = new Weber();
+
+	/// <summary>Singleton <c>Week</c> instance.</summary>
+	public static readonly Week Week = new Week();
 
 	/// <summary>Singleton <c>Yard</c> instance.</summary>
 	public static readonly Yard Yard = new Yard();

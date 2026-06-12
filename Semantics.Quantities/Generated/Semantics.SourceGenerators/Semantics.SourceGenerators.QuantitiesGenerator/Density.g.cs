@@ -28,6 +28,20 @@ public record Density<T> : PhysicalQuantity<Density<T>, T>, IVector0<Density<T>,
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Density<T> FromKilogramPerCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Density{T}"/> from a value in GramPerCubicCentimeter.
+	/// </summary>
+	/// <param name="value">The value in GramPerCubicCentimeter.</param>
+	/// <returns>A new <see cref="Density{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Density<T> FromGramPerCubicCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GramPerCubicCentimeterToKilogramPerCubicMeter)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Density{T}"/> from a value in GramPerLiter.
+	/// </summary>
+	/// <param name="value">The value in GramPerLiter.</param>
+	/// <returns>A new <see cref="Density{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Density<T> FromGramPerLiter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GramPerLiterToKilogramPerCubicMeter)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Density unit) fail at compile time.
 	/// </summary>

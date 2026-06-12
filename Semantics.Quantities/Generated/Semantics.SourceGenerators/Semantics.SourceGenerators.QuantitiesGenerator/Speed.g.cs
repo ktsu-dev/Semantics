@@ -42,6 +42,20 @@ public record Speed<T> : PhysicalQuantity<Speed<T>, T>, IVector0<Speed<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Speed<T> FromMilesPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)), nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Speed{T}"/> from a value in FeetPerSecond.
+	/// </summary>
+	/// <param name="value">The value in FeetPerSecond.</param>
+	/// <returns>A new <see cref="Speed{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Speed<T> FromFeetPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FeetPerSecondToMetersPerSecond)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Speed{T}"/> from a value in Knot.
+	/// </summary>
+	/// <param name="value">The value in Knot.</param>
+	/// <returns>A new <see cref="Speed{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Speed<T> FromKnots(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KnotToMetersPerSecond)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Velocity unit) fail at compile time.
 	/// </summary>

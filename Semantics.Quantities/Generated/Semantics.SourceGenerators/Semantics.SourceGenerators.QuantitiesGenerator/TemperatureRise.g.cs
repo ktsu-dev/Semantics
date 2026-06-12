@@ -40,6 +40,12 @@ public record TemperatureRise<T> : PhysicalQuantity<TemperatureRise<T>, T>, IVec
 	/// <returns>A new TemperatureRise instance.</returns>
 	public static TemperatureRise<T> FromFahrenheit(T value) => Create(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)));
 /// <summary>
+	/// Creates a new TemperatureRise from a value in Rankine.
+	/// </summary>
+	/// <param name="value">The value in Rankine.</param>
+	/// <returns>A new TemperatureRise instance.</returns>
+	public static TemperatureRise<T> FromRankine(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Temperature unit) fail at compile time.
 	/// </summary>

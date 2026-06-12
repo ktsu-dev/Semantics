@@ -28,6 +28,13 @@ public record AccelerationMagnitude<T> : PhysicalQuantity<AccelerationMagnitude<
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AccelerationMagnitude<T> FromMetersPerSecondSquared(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="AccelerationMagnitude{T}"/> from a value in StandardGravity.
+	/// </summary>
+	/// <param name="value">The value in StandardGravity.</param>
+	/// <returns>A new <see cref="AccelerationMagnitude{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AccelerationMagnitude<T> FromStandardGravity(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.StandardGravityToMetersPerSecondSquared)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Acceleration unit) fail at compile time.
 	/// </summary>

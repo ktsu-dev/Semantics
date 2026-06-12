@@ -25,6 +25,9 @@ internal static class ConversionConstants{
 	/// <summary>Angstrom to meter conversion: 1e-10 m/Å (exact by definition)</summary>
 	internal const double AngstromToMeters = 1e-10;
 
+	/// <summary>Nautical mile to meter conversion: 1852 m/nmi (exact by definition)</summary>
+	internal const double NauticalMileToMeters = 1852;
+
 	/// <summary>Pound mass to kilogram: 0.453592 kg/lb (exact)</summary>
 	internal const double PoundMassToKilogram = 0.453592;
 
@@ -37,11 +40,41 @@ internal static class ConversionConstants{
 	/// <summary>Metric ton to kilogram conversion: 1000 kg/t (exact by definition)</summary>
 	internal const double TonToKilograms = 1000;
 
+	/// <summary>Stone to kilogram conversion: 6.35029318 kg/st (14 lb, exact)</summary>
+	internal const double StoneToKilograms = 6.35029318;
+
+	/// <summary>Short ton to kilogram conversion: 907.18474 kg/ton (2000 lb, exact)</summary>
+	internal const double ShortTonToKilograms = 907.18474;
+
+	/// <summary>Atomic mass unit to kilogram: 1.66053906660e-27 kg/u (2018 CODATA)</summary>
+	internal const double AtomicMassUnitToKilograms = 1.66053906660e-27;
+
 	/// <summary>Liter to cubic meter conversion: 0.001 m³/L (exact by definition)</summary>
 	internal const double LiterToCubicMeters = 0.001;
 
 	/// <summary>US gallon to cubic meter conversion: 0.003785411784 m³/gal (exact)</summary>
 	internal const double GallonToCubicMeters = 0.003785411784;
+
+	/// <summary>Cubic centimeter to cubic meter: 1e-6 m³/cm³ (exact by definition)</summary>
+	internal const double CubicCentimeterToCubicMeters = 1e-6;
+
+	/// <summary>Cubic foot to cubic meter: 0.028316846592 m³/ft³ (exact)</summary>
+	internal const double CubicFootToCubicMeters = 0.028316846592;
+
+	/// <summary>Cubic inch to cubic meter: 1.6387064e-5 m³/in³ (exact)</summary>
+	internal const double CubicInchToCubicMeters = 1.6387064e-5;
+
+	/// <summary>Imperial gallon to cubic meter: 0.00454609 m³/imp gal (exact by definition)</summary>
+	internal const double ImperialGallonToCubicMeters = 0.00454609;
+
+	/// <summary>US liquid quart to cubic meter: 0.000946352946 m³/qt (exact)</summary>
+	internal const double USQuartToCubicMeters = 0.000946352946;
+
+	/// <summary>US liquid pint to cubic meter: 0.000473176473 m³/pt (exact)</summary>
+	internal const double USPintToCubicMeters = 0.000473176473;
+
+	/// <summary>US fluid ounce to cubic meter: 2.95735295625e-5 m³/fl oz (exact)</summary>
+	internal const double USFluidOunceToCubicMeters = 2.95735295625e-5;
 
 	/// <summary>Minute to second conversion: 60 s/min (exact)</summary>
 	internal const double MinuteToSeconds = 60;
@@ -55,17 +88,26 @@ internal static class ConversionConstants{
 	/// <summary>Year to second conversion: 31557600 s/year (365.25 days, exact)</summary>
 	internal const double YearToSeconds = 31557600;
 
+	/// <summary>Week to second conversion: 604800 s/wk (exact)</summary>
+	internal const double WeekToSeconds = 604800;
+
 	/// <summary>Celsius to Kelvin temperature offset: 273.15 K (exact by definition)</summary>
 	internal const double CelsiusToKelvinOffset = 273.15;
 
-	/// <summary>Fahrenheit degree scale factor: 9/5 = 1.8 (exact)</summary>
-	internal const double FahrenheitScale = 1.8;
+	/// <summary>Fahrenheit-to-Kelvin degree scale factor: 5/9 (exact)</summary>
+	internal const double FahrenheitScale = 0.5555555555555556;
 
-	/// <summary>Fahrenheit to Kelvin absolute offset: -459.67 K (exact)</summary>
-	internal const double FahrenheitToKelvinOffset = -459.67;
+	/// <summary>Fahrenheit to Kelvin affine offset: 459.67 × 5/9 ≈ 255.372 K (exact)</summary>
+	internal const double FahrenheitToKelvinOffset = 255.37222222222223;
 
 	/// <summary>Degree to radian conversion: π/180 rad/° (exact)</summary>
 	internal const double DegreeToRadians = 0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983;
+
+	/// <summary>Gradian to radian conversion: π/200 rad/grad (exact)</summary>
+	internal const double GradianToRadians = 0.015707963267948966;
+
+	/// <summary>Revolution to radian conversion: 2π rad/rev (exact)</summary>
+	internal const double RevolutionToRadians = 6.283185307179586;
 
 	/// <summary>Calorie to joule conversion: 4.184 J/cal (exact, thermochemical calorie)</summary>
 	internal const double CalorieToJoules = 4.184;
@@ -79,6 +121,18 @@ internal static class ConversionConstants{
 	/// <summary>Electron volt to joule conversion: 1.602176634e-19 J/eV (exact, based on elementary charge)</summary>
 	internal const double ElectronVoltToJoules = 1.602176634e-19;
 
+	/// <summary>Kilocalorie to joule conversion: 4184 J/kcal (exact, thermochemical)</summary>
+	internal const double KilocalorieToJoules = 4184;
+
+	/// <summary>Watt-hour to joule conversion: 3600 J/Wh (exact)</summary>
+	internal const double WattHourToJoules = 3600;
+
+	/// <summary>Erg to joule conversion: 1e-7 J/erg (exact by definition)</summary>
+	internal const double ErgToJoules = 1e-7;
+
+	/// <summary>British thermal unit (IT) to joule conversion: 1055.05585262 J/BTU (exact)</summary>
+	internal const double BtuToJoules = 1055.05585262;
+
 	/// <summary>Bar to pascal conversion: 100000 Pa/bar (exact by definition)</summary>
 	internal const double BarToPascals = 100000;
 
@@ -87,6 +141,9 @@ internal static class ConversionConstants{
 
 	/// <summary>PSI to pascal conversion: 6894.757293168361 Pa/psi (exact)</summary>
 	internal const double PsiToPascals = 6894.757293168361;
+
+	/// <summary>Torr to pascal conversion: 101325/760 ≈ 133.322 Pa/Torr (exact)</summary>
+	internal const double TorrToPascals = 133.32236842105263;
 
 	/// <summary>Square foot to square meter conversion: 0.09290304 m²/ft² (exact)</summary>
 	internal const double SquareFootToSquareMeters = 0.09290304;
@@ -97,11 +154,32 @@ internal static class ConversionConstants{
 	/// <summary>Barn to square meter conversion: 1e-28 m² (exact by definition)</summary>
 	internal const double BarnToSquareMeters = 1e-28;
 
+	/// <summary>Square kilometer to square meter: 1e6 m²/km² (exact by definition)</summary>
+	internal const double SquareKilometerToSquareMeters = 1e6;
+
+	/// <summary>Square centimeter to square meter: 1e-4 m²/cm² (exact by definition)</summary>
+	internal const double SquareCentimeterToSquareMeters = 1e-4;
+
+	/// <summary>Square mile to square meter: 2589988.110336 m²/mi² (exact)</summary>
+	internal const double SquareMileToSquareMeters = 2589988.110336;
+
+	/// <summary>Hectare to square meter: 10000 m²/ha (exact by definition)</summary>
+	internal const double HectareToSquareMeters = 10000;
+
+	/// <summary>Acre to square meter: 4046.8564224 m²/ac (exact)</summary>
+	internal const double AcreToSquareMeters = 4046.8564224;
+
 	/// <summary>Kilometers per hour to meters per second conversion: 0.2777777777777778 m/s per km/h (exact)</summary>
 	internal const double KilometersPerHourToMetersPerSecond = 0.2777777777777778;
 
 	/// <summary>Miles per hour to meters per second conversion: 0.44704 m/s per mph (exact)</summary>
 	internal const double MilesPerHourToMetersPerSecond = 0.44704;
+
+	/// <summary>Feet per second to meters per second: 0.3048 m/s per ft/s (exact)</summary>
+	internal const double FeetPerSecondToMetersPerSecond = 0.3048;
+
+	/// <summary>Knot to meters per second: 1852/3600 ≈ 0.514444 m/s per kn (exact)</summary>
+	internal const double KnotToMetersPerSecond = 0.5144444444444445;
 
 	/// <summary>RPM to rad/s conversion: π/30 rad/s per rpm (exact)</summary>
 	internal const double RevolutionsPerMinuteToRadiansPerSecond = 0.10471975511965977;
@@ -112,6 +190,12 @@ internal static class ConversionConstants{
 	/// <summary>Molar to cubic meter concentration conversion: 1000.0 mol/m³ per mol/L (exact)</summary>
 	internal const double MolarToCubicMeter = 1000.0;
 
+	/// <summary>Millimolar to mole per cubic meter: 1 mol/m³ per mM (exact)</summary>
+	internal const double MillimolarToMolePerCubicMeter = 1.0;
+
+	/// <summary>Micromolar to mole per cubic meter: 0.001 mol/m³ per μM (exact)</summary>
+	internal const double MicromolarToMolePerCubicMeter = 0.001;
+
 	/// <summary>Stokes to square meter per second: 1e-4 m²/s per St (exact by definition)</summary>
 	internal const double StokesToSquareMeterPerSecond = 1e-4;
 
@@ -121,14 +205,68 @@ internal static class ConversionConstants{
 	/// <summary>Liter per second to cubic meter per second: 0.001 m³/s per L/s (exact by definition)</summary>
 	internal const double LiterPerSecondToCubicMeterPerSecond = 0.001;
 
+	/// <summary>Centipoise to pascal second: 0.001 Pa·s per cP (exact by definition)</summary>
+	internal const double CentipoiseToPascalSecond = 0.001;
+
+	/// <summary>Dyne per centimeter to newton per meter: 0.001 N/m per dyn/cm (exact)</summary>
+	internal const double DynePerCentimeterToNewtonPerMeter = 0.001;
+
+	/// <summary>Gram per cubic centimeter to kilogram per cubic meter: 1000 kg/m³ per g/cm³ (exact)</summary>
+	internal const double GramPerCubicCentimeterToKilogramPerCubicMeter = 1000;
+
+	/// <summary>Gram per liter to kilogram per cubic meter: 1 kg/m³ per g/L (exact)</summary>
+	internal const double GramPerLiterToKilogramPerCubicMeter = 1.0;
+
 	/// <summary>Gauss to Tesla: 1e-4 T per G (exact by definition)</summary>
 	internal const double GaussToTesla = 1e-4;
+
+	/// <summary>Ampere-hour to coulomb conversion: 3600 C/Ah (exact)</summary>
+	internal const double AmpereHourToCoulombs = 3600;
 
 	/// <summary>Gram per mole to kilogram per mole: 0.001 kg/mol per g/mol (exact by definition)</summary>
 	internal const double GramPerMoleToKilogramPerMole = 0.001;
 
 	/// <summary>Kilojoule per mole to joule per mole: 1000 J/mol per kJ/mol (exact by definition)</summary>
 	internal const double KilojoulePerMoleToJoulePerMole = 1000;
+
+	/// <summary>Calorie per mole to joule per mole: 4.184 J/mol per cal/mol (exact, thermochemical)</summary>
+	internal const double CaloriePerMoleToJoulePerMole = 4.184;
+
+	/// <summary>Enzyme unit (1 μmol/min) to katal: 1/6e7 ≈ 1.6667e-8 kat/U (exact)</summary>
+	internal const double EnzymeUnitToKatals = 1.6666666666666667e-8;
+
+	/// <summary>Standard gravity to meters per second squared: 9.80665 m/s² per g (exact by definition)</summary>
+	internal const double StandardGravityToMetersPerSecondSquared = 9.80665;
+
+	/// <summary>Dyne to newton conversion: 1e-5 N/dyn (exact by definition)</summary>
+	internal const double DyneToNewtons = 1e-5;
+
+	/// <summary>Pound-force to newton conversion: 4.4482216152605 N/lbf (exact)</summary>
+	internal const double PoundForceToNewtons = 4.4482216152605;
+
+	/// <summary>Curie to becquerel conversion: 3.7e10 Bq/Ci (exact by definition)</summary>
+	internal const double CurieToBecquerels = 3.7e10;
+
+	/// <summary>Rad to gray conversion: 0.01 Gy/rad (exact by definition)</summary>
+	internal const double RadToGrays = 0.01;
+
+	/// <summary>Rem to sievert conversion: 0.01 Sv/rem (exact by definition)</summary>
+	internal const double RemToSieverts = 0.01;
+
+	/// <summary>Roentgen to coulomb per kilogram: 2.58e-4 C/kg per R (exact by definition)</summary>
+	internal const double RoentgenToCoulombsPerKilogram = 2.58e-4;
+
+	/// <summary>Foot-candle to lux conversion: 1/0.09290304 ≈ 10.7639 lx/fc (exact)</summary>
+	internal const double FootCandleToLux = 10.763910416709722;
+
+	/// <summary>Parts per million to ratio: 1e-6 (exact by definition)</summary>
+	internal const double PartsPerMillionToRatio = 1e-6;
+
+	/// <summary>Parts per billion to ratio: 1e-9 (exact by definition)</summary>
+	internal const double PartsPerBillionToRatio = 1e-9;
+
+	/// <summary>Percent by weight to mass-fraction ratio: 0.01 (exact by definition)</summary>
+	internal const double PercentByWeightToRatio = 0.01;
 
 };
 

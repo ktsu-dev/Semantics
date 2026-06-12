@@ -27,6 +27,18 @@ public record Current1D<T> : PhysicalQuantity<Current1D<T>, T>, IVector1<Current
 	/// <returns>A new <see cref="Current1D{T}"/> instance.</returns>
 	public static Current1D<T> FromAmperes(T value) => Create(value);
 /// <summary>
+	/// Creates a new <see cref="Current1D{T}"/> from a value in Milliampere.
+	/// </summary>
+	/// <param name="value">The value in Milliampere.</param>
+	/// <returns>A new <see cref="Current1D{T}"/> instance.</returns>
+	public static Current1D<T> FromMilliamperes(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+/// <summary>
+	/// Creates a new <see cref="Current1D{T}"/> from a value in Kiloampere.
+	/// </summary>
+	/// <param name="value">The value in Kiloampere.</param>
+	/// <returns>A new <see cref="Current1D{T}"/> instance.</returns>
+	public static Current1D<T> FromKiloamperes(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricCurrent unit) fail at compile time.
 	/// </summary>

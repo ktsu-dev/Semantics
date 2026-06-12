@@ -39,6 +39,42 @@ public record SignedRatio<T> : PhysicalQuantity<SignedRatio<T>, T>, IVector1<Sig
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
 /// <summary>
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Gradian.
+	/// </summary>
+	/// <param name="value">The value in Gradian.</param>
+	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
+	public static SignedRatio<T> FromGradians(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
+/// <summary>
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Revolution.
+	/// </summary>
+	/// <param name="value">The value in Revolution.</param>
+	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
+	public static SignedRatio<T> FromRevolutions(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
+/// <summary>
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Milliradian.
+	/// </summary>
+	/// <param name="value">The value in Milliradian.</param>
+	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
+	public static SignedRatio<T> FromMilliradians(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+/// <summary>
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PartsPerMillion.
+	/// </summary>
+	/// <param name="value">The value in PartsPerMillion.</param>
+	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
+	public static SignedRatio<T> FromPartsPerMillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartsPerMillionToRatio)));
+/// <summary>
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PartsPerBillion.
+	/// </summary>
+	/// <param name="value">The value in PartsPerBillion.</param>
+	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
+	public static SignedRatio<T> FromPartsPerBillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartsPerBillionToRatio)));
+/// <summary>
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PercentByWeight.
+	/// </summary>
+	/// <param name="value">The value in PercentByWeight.</param>
+	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
+	public static SignedRatio<T> FromPercentByWeight(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentByWeightToRatio)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Dimensionless unit) fail at compile time.
 	/// </summary>

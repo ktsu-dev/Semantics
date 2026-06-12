@@ -56,6 +56,27 @@ public record Mass<T> : PhysicalQuantity<Mass<T>, T>, IVector0<Mass<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Mass<T> FromOunces(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.OunceToKilograms)), nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Mass{T}"/> from a value in Stone.
+	/// </summary>
+	/// <param name="value">The value in Stone.</param>
+	/// <returns>A new <see cref="Mass{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Mass<T> FromStone(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.StoneToKilograms)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Mass{T}"/> from a value in ShortTon.
+	/// </summary>
+	/// <param name="value">The value in ShortTon.</param>
+	/// <returns>A new <see cref="Mass{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Mass<T> FromShortTons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ShortTonToKilograms)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Mass{T}"/> from a value in AtomicMassUnit.
+	/// </summary>
+	/// <param name="value">The value in AtomicMassUnit.</param>
+	/// <returns>A new <see cref="Mass{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Mass<T> FromAtomicMassUnits(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtomicMassUnitToKilograms)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Mass unit) fail at compile time.
 	/// </summary>
