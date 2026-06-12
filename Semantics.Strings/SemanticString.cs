@@ -9,6 +9,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -557,8 +558,9 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		Ensure.NotNull(value);
 
 		Type typeOfTDest = typeof(TDest);
-		TDest newInstance = (TDest)Activator.CreateInstance(type: typeOfTDest)!;
-		typeOfTDest.GetProperty(name: nameof(WeakString))!.SetValue(obj: newInstance, value: newInstance.MakeCanonical(value));
+		TDest newInstance = (TDest)Ensure.NotNull(Activator.CreateInstance(type: typeOfTDest));
+		PropertyInfo weakStringProperty = Ensure.NotNull(typeOfTDest.GetProperty(name: nameof(WeakString)));
+		weakStringProperty.SetValue(obj: newInstance, value: newInstance.MakeCanonical(value));
 		return newInstance;
 	}
 

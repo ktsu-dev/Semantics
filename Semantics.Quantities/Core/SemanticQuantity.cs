@@ -67,7 +67,7 @@ public record SemanticQuantity<TSelf, TStorage>
 	{
 		Ensure.NotNull(self);
 		Ensure.NotNull(other);
-		return Create<TResult>(self.Quantity * other.Quantity)!;
+		return Create<TResult>(self.Quantity * other.Quantity);
 	}
 
 	/// <summary>
@@ -81,7 +81,7 @@ public record SemanticQuantity<TSelf, TStorage>
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
 		Ensure.NotNull(self);
-		return Create<TResult>(self.Quantity * other)!;
+		return Create<TResult>(self.Quantity * other);
 	}
 
 	/// <summary>
@@ -96,7 +96,7 @@ public record SemanticQuantity<TSelf, TStorage>
 	{
 		Ensure.NotNull(self);
 		Ensure.NotNull(other);
-		return Create<TResult>(self.Quantity / other.Quantity)!;
+		return Create<TResult>(self.Quantity / other.Quantity);
 	}
 
 	/// <summary>
@@ -110,7 +110,7 @@ public record SemanticQuantity<TSelf, TStorage>
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
 		Ensure.NotNull(self);
-		return Create<TResult>(self.Quantity / other)!;
+		return Create<TResult>(self.Quantity / other);
 	}
 
 	/// <summary>
@@ -142,7 +142,7 @@ public record SemanticQuantity<TSelf, TStorage>
 	{
 		Ensure.NotNull(self);
 		Ensure.NotNull(other);
-		return Create<TResult>(self.Quantity + other.Quantity)!;
+		return Create<TResult>(self.Quantity + other.Quantity);
 	}
 
 	/// <summary>
@@ -157,7 +157,7 @@ public record SemanticQuantity<TSelf, TStorage>
 	{
 		Ensure.NotNull(self);
 		Ensure.NotNull(other);
-		return Create<TResult>(self.Quantity - other.Quantity)!;
+		return Create<TResult>(self.Quantity - other.Quantity);
 	}
 
 	/// <summary>
@@ -170,7 +170,7 @@ public record SemanticQuantity<TSelf, TStorage>
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
 		Ensure.NotNull(self);
-		return Create<TResult>(-self.Quantity)!;
+		return Create<TResult>(-self.Quantity);
 	}
 
 	/// <inheritdoc/>
