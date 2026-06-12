@@ -162,3 +162,4 @@ This file is the entry point. For deeper material:
 - `docs/complete-library-guide.md` — user-facing guide to all components.
 - `docs/validation-reference.md` — list of validation attributes.
 - `docs/advanced-usage.md` — advanced patterns for strings/paths.
+- `docs/migration-guide-2.0.md` — 1.x → 2.0 upgrade guide (renames, namespace moves, behavioral changes).
