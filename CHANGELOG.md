@@ -2,6 +2,7 @@
 
 Changes since v1.0.0:
 
+- Fix IDE0370 build errors from .NET 10 SDK analyzer ([@Claude](https://github.com/Claude))
 - Add audio-engineering quantities and normalized parameter tapers ([@Claude](https://github.com/Claude))
 - Add ktsu.RoundTripStringJsonConverter package reference and update SemanticString to use its JsonConverter ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor validation strategy null checks to use Ensure.NotNull for consistency ([@matt-edmondson](https://github.com/matt-edmondson))
