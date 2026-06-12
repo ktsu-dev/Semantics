@@ -18,6 +18,9 @@ public record Offset<T> : PhysicalQuantity<Offset<T>, T>, IVector1<Offset<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Offset<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Length;
+
 	/// <summary>
 	/// Creates a new Offset from a value in Meter.
 	/// </summary>
@@ -84,6 +87,13 @@ public record Offset<T> : PhysicalQuantity<Offset<T>, T>, IVector1<Offset<T>, T>
 	/// <param name="value">The value in Mile.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromMiles(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Length unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ILengthUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Displacement1D.</summary>
 	public static implicit operator Displacement1D<T>(Offset<T> value) => Displacement1D<T>.Create(value.Value);
 /// <summary>Explicit conversion from Displacement1D.</summary>

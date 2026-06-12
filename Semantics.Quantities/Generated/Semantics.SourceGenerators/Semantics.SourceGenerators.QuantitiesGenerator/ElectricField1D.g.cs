@@ -17,12 +17,22 @@ public record ElectricField1D<T> : PhysicalQuantity<ElectricField1D<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static ElectricField1D<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.ElectricField;
+
 	/// <summary>
 	/// Creates a new <see cref="ElectricField1D{T}"/> from a value in VoltPerMeter.
 	/// </summary>
 	/// <param name="value">The value in VoltPerMeter.</param>
 	/// <returns>A new <see cref="ElectricField1D{T}"/> instance.</returns>
 	public static ElectricField1D<T> FromVoltPerMeter(T value) => Create(value);
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-ElectricField unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IElectricFieldUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="ElectricFieldMagnitude{T}"/>.
 	/// </summary>

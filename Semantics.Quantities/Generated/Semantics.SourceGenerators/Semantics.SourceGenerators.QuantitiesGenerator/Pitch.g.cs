@@ -18,6 +18,9 @@ public record Pitch<T> : PhysicalQuantity<Pitch<T>, T>, IVector0<Pitch<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Pitch<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Frequency;
+
 	/// <summary>
 	/// Creates a new Pitch from a value in Hertz.
 	/// </summary>
@@ -25,6 +28,13 @@ public record Pitch<T> : PhysicalQuantity<Pitch<T>, T>, IVector0<Pitch<T>, T>
 	/// <returns>A new Pitch instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Pitch<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Frequency unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IFrequencyUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(Pitch<T> value) => Frequency<T>.Create(value.Value);
 /// <summary>Explicit conversion from Frequency.</summary>

@@ -17,12 +17,22 @@ public record Acceleration1D<T> : PhysicalQuantity<Acceleration1D<T>, T>, IVecto
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Acceleration1D<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Acceleration;
+
 	/// <summary>
 	/// Creates a new <see cref="Acceleration1D{T}"/> from a value in MetersPerSecondSquared.
 	/// </summary>
 	/// <param name="value">The value in MetersPerSecondSquared.</param>
 	/// <returns>A new <see cref="Acceleration1D{T}"/> instance.</returns>
 	public static Acceleration1D<T> FromMetersPerSecondSquared(T value) => Create(value);
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Acceleration unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IAccelerationUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="AccelerationMagnitude{T}"/>.
 	/// </summary>

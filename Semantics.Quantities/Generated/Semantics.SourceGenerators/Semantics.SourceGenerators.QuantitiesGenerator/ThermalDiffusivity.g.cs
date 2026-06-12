@@ -18,6 +18,9 @@ public record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static ThermalDiffusivity<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.KinematicViscosity;
+
 	/// <summary>
 	/// Creates a new ThermalDiffusivity from a value in SquareMeterPerSecond.
 	/// </summary>
@@ -32,6 +35,13 @@ public record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity<T>, T>
 	/// <returns>A new ThermalDiffusivity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ThermalDiffusivity<T> FromStokes(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.StokesToSquareMeterPerSecond)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-KinematicViscosity unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IKinematicViscosityUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to KinematicViscosity.</summary>
 	public static implicit operator KinematicViscosity<T>(ThermalDiffusivity<T> value) => KinematicViscosity<T>.Create(value.Value);
 /// <summary>Explicit conversion from KinematicViscosity.</summary>

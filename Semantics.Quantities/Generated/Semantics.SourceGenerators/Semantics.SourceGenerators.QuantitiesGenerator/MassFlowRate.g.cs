@@ -17,6 +17,9 @@ public record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>, IVector0<M
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static MassFlowRate<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.MassFlowRate;
+
 	/// <summary>
 	/// Creates a new <see cref="MassFlowRate{T}"/> from a value in KilogramPerSecond.
 	/// </summary>
@@ -24,6 +27,13 @@ public record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>, IVector0<M
 	/// <returns>A new <see cref="MassFlowRate{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MassFlowRate<T> FromKilogramPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-MassFlowRate unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IMassFlowRateUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two MassFlowRate values, returning the absolute difference as a non-negative MassFlowRate.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

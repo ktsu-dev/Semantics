@@ -17,6 +17,9 @@ public record AngularSpeed<T> : PhysicalQuantity<AngularSpeed<T>, T>, IVector0<A
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static AngularSpeed<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.AngularVelocity;
+
 	/// <summary>
 	/// Creates a new <see cref="AngularSpeed{T}"/> from a value in RadiansPerSecond.
 	/// </summary>
@@ -31,6 +34,13 @@ public record AngularSpeed<T> : PhysicalQuantity<AngularSpeed<T>, T>, IVector0<A
 	/// <returns>A new <see cref="AngularSpeed{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AngularSpeed<T> FromRevolutionsPerMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionsPerMinuteToRadiansPerSecond)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-AngularVelocity unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IAngularVelocityUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two AngularSpeed values, returning the absolute difference as a non-negative AngularSpeed.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

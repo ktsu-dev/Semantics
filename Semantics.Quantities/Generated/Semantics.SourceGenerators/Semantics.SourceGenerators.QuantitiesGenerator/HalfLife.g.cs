@@ -18,6 +18,9 @@ public record HalfLife<T> : PhysicalQuantity<HalfLife<T>, T>, IVector0<HalfLife<
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static HalfLife<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Time;
+
 	/// <summary>
 	/// Creates a new HalfLife from a value in Second.
 	/// </summary>
@@ -67,6 +70,13 @@ public record HalfLife<T> : PhysicalQuantity<HalfLife<T>, T>, IVector0<HalfLife<
 	/// <returns>A new HalfLife instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HalfLife<T> FromYears(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Time unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ITimeUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(HalfLife<T> value) => Duration<T>.Create(value.Value);
 /// <summary>Explicit conversion from Duration.</summary>

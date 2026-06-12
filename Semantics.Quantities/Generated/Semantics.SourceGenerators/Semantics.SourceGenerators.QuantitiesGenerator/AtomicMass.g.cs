@@ -18,6 +18,9 @@ public record AtomicMass<T> : PhysicalQuantity<AtomicMass<T>, T>, IVector0<Atomi
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static AtomicMass<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Mass;
+
 	/// <summary>
 	/// Creates a new AtomicMass from a value in Kilogram.
 	/// </summary>
@@ -53,6 +56,13 @@ public record AtomicMass<T> : PhysicalQuantity<AtomicMass<T>, T>, IVector0<Atomi
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AtomicMass<T> FromOunces(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.OunceToKilograms)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Mass unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IMassUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Mass.</summary>
 	public static implicit operator Mass<T>(AtomicMass<T> value) => Mass<T>.Create(value.Value);
 /// <summary>Explicit conversion from Mass.</summary>

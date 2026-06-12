@@ -18,6 +18,9 @@ public record Admittance<T> : PhysicalQuantity<Admittance<T>, T>, IVector0<Admit
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Admittance<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.ElectricConductance;
+
 	/// <summary>
 	/// Creates a new Admittance from a value in Siemens.
 	/// </summary>
@@ -25,6 +28,13 @@ public record Admittance<T> : PhysicalQuantity<Admittance<T>, T>, IVector0<Admit
 	/// <returns>A new Admittance instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Admittance<T> FromSiemens(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-ElectricConductance unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IElectricConductanceUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Conductance.</summary>
 	public static implicit operator Conductance<T>(Admittance<T> value) => Conductance<T>.Create(value.Value);
 /// <summary>Explicit conversion from Conductance.</summary>

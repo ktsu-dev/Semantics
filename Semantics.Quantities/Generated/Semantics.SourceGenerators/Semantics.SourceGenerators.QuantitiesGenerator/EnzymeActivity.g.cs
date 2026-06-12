@@ -18,6 +18,9 @@ public record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>, IVecto
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static EnzymeActivity<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.CatalyticActivity;
+
 	/// <summary>
 	/// Creates a new EnzymeActivity from a value in Katal.
 	/// </summary>
@@ -25,6 +28,13 @@ public record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>, IVecto
 	/// <returns>A new EnzymeActivity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static EnzymeActivity<T> FromKatals(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-CatalyticActivity unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ICatalyticActivityUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to CatalyticActivity.</summary>
 	public static implicit operator CatalyticActivity<T>(EnzymeActivity<T> value) => CatalyticActivity<T>.Create(value.Value);
 /// <summary>Explicit conversion from CatalyticActivity.</summary>

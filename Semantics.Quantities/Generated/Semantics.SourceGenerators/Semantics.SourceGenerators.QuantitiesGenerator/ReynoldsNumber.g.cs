@@ -18,6 +18,9 @@ public record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>, IVecto
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static ReynoldsNumber<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+
 	/// <summary>
 	/// Creates a new ReynoldsNumber from a value in Dimensionless.
 	/// </summary>
@@ -39,6 +42,13 @@ public record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>, IVecto
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromDegrees(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Dimensionless unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IDimensionlessUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Ratio.</summary>
 	public static implicit operator Ratio<T>(ReynoldsNumber<T> value) => Ratio<T>.Create(value.Value);
 /// <summary>Explicit conversion from Ratio.</summary>

@@ -17,6 +17,9 @@ public record SignedAngle<T> : PhysicalQuantity<SignedAngle<T>, T>, IVector1<Sig
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static SignedAngle<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.AngularDisplacement;
+
 	/// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Radian.
 	/// </summary>
@@ -29,6 +32,13 @@ public record SignedAngle<T> : PhysicalQuantity<SignedAngle<T>, T>, IVector1<Sig
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
 	public static SignedAngle<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-AngularDisplacement unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IAngularDisplacementUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Angle{T}"/>.
 	/// </summary>

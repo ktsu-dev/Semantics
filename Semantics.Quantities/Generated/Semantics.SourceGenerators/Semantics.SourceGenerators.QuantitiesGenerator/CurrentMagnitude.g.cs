@@ -17,6 +17,9 @@ public record CurrentMagnitude<T> : PhysicalQuantity<CurrentMagnitude<T>, T>, IV
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static CurrentMagnitude<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.ElectricCurrent;
+
 	/// <summary>
 	/// Creates a new <see cref="CurrentMagnitude{T}"/> from a value in Ampere.
 	/// </summary>
@@ -24,6 +27,13 @@ public record CurrentMagnitude<T> : PhysicalQuantity<CurrentMagnitude<T>, T>, IV
 	/// <returns>A new <see cref="CurrentMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static CurrentMagnitude<T> FromAmperes(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-ElectricCurrent unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IElectricCurrentUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two CurrentMagnitude values, returning the absolute difference as a non-negative CurrentMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

@@ -70,4 +70,28 @@ public abstract record PhysicalQuantity<TSelf, T>
 
 		return Equals(Dimension, other.Dimension) && Value.Equals(other.Value);
 	}
+
+	/// <summary>
+	/// Determines whether one quantity is less than another of the same type.
+	/// </summary>
+	public static bool operator <(PhysicalQuantity<TSelf, T>? left, PhysicalQuantity<TSelf, T>? right) =>
+		left is null ? right is not null : left.CompareTo(right) < 0;
+
+	/// <summary>
+	/// Determines whether one quantity is less than or equal to another of the same type.
+	/// </summary>
+	public static bool operator <=(PhysicalQuantity<TSelf, T>? left, PhysicalQuantity<TSelf, T>? right) =>
+		left is null || left.CompareTo(right) <= 0;
+
+	/// <summary>
+	/// Determines whether one quantity is greater than another of the same type.
+	/// </summary>
+	public static bool operator >(PhysicalQuantity<TSelf, T>? left, PhysicalQuantity<TSelf, T>? right) =>
+		left is not null && left.CompareTo(right) > 0;
+
+	/// <summary>
+	/// Determines whether one quantity is greater than or equal to another of the same type.
+	/// </summary>
+	public static bool operator >=(PhysicalQuantity<TSelf, T>? left, PhysicalQuantity<TSelf, T>? right) =>
+		left is null ? right is null : left.CompareTo(right) >= 0;
 }

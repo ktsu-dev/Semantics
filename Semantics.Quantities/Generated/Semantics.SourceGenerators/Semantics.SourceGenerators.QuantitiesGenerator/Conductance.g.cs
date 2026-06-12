@@ -17,6 +17,9 @@ public record Conductance<T> : PhysicalQuantity<Conductance<T>, T>, IVector0<Con
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Conductance<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.ElectricConductance;
+
 	/// <summary>
 	/// Creates a new <see cref="Conductance{T}"/> from a value in Siemens.
 	/// </summary>
@@ -24,6 +27,13 @@ public record Conductance<T> : PhysicalQuantity<Conductance<T>, T>, IVector0<Con
 	/// <returns>A new <see cref="Conductance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Conductance<T> FromSiemens(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-ElectricConductance unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IElectricConductanceUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two Conductance values, returning the absolute difference as a non-negative Conductance.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

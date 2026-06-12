@@ -18,6 +18,9 @@ public record Friction<T> : PhysicalQuantity<Friction<T>, T>, IVector0<Friction<
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Friction<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Force;
+
 	/// <summary>
 	/// Creates a new Friction from a value in Newton.
 	/// </summary>
@@ -25,6 +28,13 @@ public record Friction<T> : PhysicalQuantity<Friction<T>, T>, IVector0<Friction<
 	/// <returns>A new Friction instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Friction<T> FromNewtons(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Force unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IForceUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Friction<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>

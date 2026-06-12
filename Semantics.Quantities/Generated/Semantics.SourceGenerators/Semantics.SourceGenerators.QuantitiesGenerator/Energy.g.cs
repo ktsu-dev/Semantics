@@ -17,6 +17,9 @@ public record Energy<T> : PhysicalQuantity<Energy<T>, T>, IVector0<Energy<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Energy<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Energy;
+
 	/// <summary>
 	/// Creates a new <see cref="Energy{T}"/> from a value in Joule.
 	/// </summary>
@@ -45,6 +48,13 @@ public record Energy<T> : PhysicalQuantity<Energy<T>, T>, IVector0<Energy<T>, T>
 	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Energy<T> FromKilowattHours(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Energy unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IEnergyUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two Energy values, returning the absolute difference as a non-negative Energy.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

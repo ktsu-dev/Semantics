@@ -17,6 +17,9 @@ public record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<Duration<
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Duration<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Time;
+
 	/// <summary>
 	/// Creates a new <see cref="Duration{T}"/> from a value in Second.
 	/// </summary>
@@ -66,6 +69,13 @@ public record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<Duration<
 	/// <returns>A new <see cref="Duration{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Duration<T> FromYears(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Time unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ITimeUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two Duration values, returning the absolute difference as a non-negative Duration.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

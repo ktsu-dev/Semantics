@@ -18,6 +18,9 @@ public record HeatFlowRate<T> : PhysicalQuantity<HeatFlowRate<T>, T>, IVector0<H
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static HeatFlowRate<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Power;
+
 	/// <summary>
 	/// Creates a new HeatFlowRate from a value in Watt.
 	/// </summary>
@@ -32,6 +35,13 @@ public record HeatFlowRate<T> : PhysicalQuantity<HeatFlowRate<T>, T>, IVector0<H
 	/// <returns>A new HeatFlowRate instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HeatFlowRate<T> FromHorsepower(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HorsepowerToWatts)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Power unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IPowerUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Power.</summary>
 	public static implicit operator Power<T>(HeatFlowRate<T> value) => Power<T>.Create(value.Value);
 /// <summary>Explicit conversion from Power.</summary>

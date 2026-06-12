@@ -18,6 +18,9 @@ public record Luminance<T> : PhysicalQuantity<Luminance<T>, T>, IVector0<Luminan
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Luminance<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Illuminance;
+
 	/// <summary>
 	/// Creates a new Luminance from a value in Lux.
 	/// </summary>
@@ -25,6 +28,13 @@ public record Luminance<T> : PhysicalQuantity<Luminance<T>, T>, IVector0<Luminan
 	/// <returns>A new Luminance instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Luminance<T> FromLux(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Illuminance unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IIlluminanceUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Illuminance.</summary>
 	public static implicit operator Illuminance<T>(Luminance<T> value) => Illuminance<T>.Create(value.Value);
 /// <summary>Explicit conversion from Illuminance.</summary>

@@ -18,6 +18,9 @@ public record Heading<T> : PhysicalQuantity<Heading<T>, T>, IVector1<Heading<T>,
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Heading<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.AngularDisplacement;
+
 	/// <summary>
 	/// Creates a new Heading from a value in Radian.
 	/// </summary>
@@ -30,6 +33,13 @@ public record Heading<T> : PhysicalQuantity<Heading<T>, T>, IVector1<Heading<T>,
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new Heading instance.</returns>
 	public static Heading<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-AngularDisplacement unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IAngularDisplacementUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to SignedAngle.</summary>
 	public static implicit operator SignedAngle<T>(Heading<T> value) => SignedAngle<T>.Create(value.Value);
 /// <summary>Explicit conversion from SignedAngle.</summary>

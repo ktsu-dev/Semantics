@@ -17,12 +17,22 @@ public record Momentum1D<T> : PhysicalQuantity<Momentum1D<T>, T>, IVector1<Momen
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Momentum1D<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Momentum;
+
 	/// <summary>
 	/// Creates a new <see cref="Momentum1D{T}"/> from a value in NewtonSecond.
 	/// </summary>
 	/// <param name="value">The value in NewtonSecond.</param>
 	/// <returns>A new <see cref="Momentum1D{T}"/> instance.</returns>
 	public static Momentum1D<T> FromNewtonSeconds(T value) => Create(value);
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Momentum unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IMomentumUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="MomentumMagnitude{T}"/>.
 	/// </summary>

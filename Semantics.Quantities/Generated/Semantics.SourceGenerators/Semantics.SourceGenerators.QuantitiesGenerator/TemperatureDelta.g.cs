@@ -17,6 +17,9 @@ public record TemperatureDelta<T> : PhysicalQuantity<TemperatureDelta<T>, T>, IV
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static TemperatureDelta<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Temperature;
+
 	/// <summary>
 	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Kelvin.
 	/// </summary>
@@ -35,6 +38,13 @@ public record TemperatureDelta<T> : PhysicalQuantity<TemperatureDelta<T>, T>, IV
 	/// <param name="value">The value in Fahrenheit.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
 	public static TemperatureDelta<T> FromFahrenheit(T value) => Create(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Temperature unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ITemperatureUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Temperature{T}"/>.
 	/// </summary>

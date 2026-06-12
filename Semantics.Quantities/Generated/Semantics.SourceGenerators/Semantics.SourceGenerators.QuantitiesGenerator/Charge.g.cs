@@ -17,12 +17,22 @@ public record Charge<T> : PhysicalQuantity<Charge<T>, T>, IVector1<Charge<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Charge<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.ElectricCharge;
+
 	/// <summary>
 	/// Creates a new <see cref="Charge{T}"/> from a value in Coulomb.
 	/// </summary>
 	/// <param name="value">The value in Coulomb.</param>
 	/// <returns>A new <see cref="Charge{T}"/> instance.</returns>
 	public static Charge<T> FromCoulombs(T value) => Create(value);
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-ElectricCharge unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IElectricChargeUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="ChargeMagnitude{T}"/>.
 	/// </summary>

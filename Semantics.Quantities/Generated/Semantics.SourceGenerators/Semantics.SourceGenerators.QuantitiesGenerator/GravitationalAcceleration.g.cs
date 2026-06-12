@@ -18,6 +18,9 @@ public record GravitationalAcceleration<T> : PhysicalQuantity<GravitationalAccel
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static GravitationalAcceleration<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Acceleration;
+
 	/// <summary>
 	/// Creates a new GravitationalAcceleration from a value in MetersPerSecondSquared.
 	/// </summary>
@@ -25,6 +28,13 @@ public record GravitationalAcceleration<T> : PhysicalQuantity<GravitationalAccel
 	/// <returns>A new GravitationalAcceleration instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static GravitationalAcceleration<T> FromMetersPerSecondSquared(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Acceleration unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IAccelerationUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to AccelerationMagnitude.</summary>
 	public static implicit operator AccelerationMagnitude<T>(GravitationalAcceleration<T> value) => AccelerationMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from AccelerationMagnitude.</summary>
