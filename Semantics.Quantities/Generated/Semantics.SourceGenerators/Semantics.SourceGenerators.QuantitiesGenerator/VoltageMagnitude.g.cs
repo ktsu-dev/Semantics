@@ -78,5 +78,13 @@ public record VoltageMagnitude<T> : PhysicalQuantity<VoltageMagnitude<T>, T>, IV
 	/// Multiplies VoltageMagnitude by Duration to produce MagneticFlux.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MagneticFlux<T> operator *(VoltageMagnitude<T> left, Duration<T> right) => Multiply<MagneticFlux<T>>(left, right);
+/// <summary>
+	/// Divides VoltageMagnitude by Pressure to produce Sensitivity.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Sensitivity<T> operator /(VoltageMagnitude<T> left, Pressure<T> right) => Divide<Sensitivity<T>>(left, right);
+/// <summary>
+	/// Divides VoltageMagnitude by Sensitivity to produce Pressure.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Pressure<T> operator /(VoltageMagnitude<T> left, Sensitivity<T> right) => Divide<Pressure<T>>(left, right);
 };
 

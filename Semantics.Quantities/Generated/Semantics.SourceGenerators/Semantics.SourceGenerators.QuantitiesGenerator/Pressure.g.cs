@@ -82,5 +82,9 @@ public record Pressure<T> : PhysicalQuantity<Pressure<T>, T>, IVector0<Pressure<
 	/// Multiplies Pressure by Volume to produce Energy.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Energy<T> operator *(Pressure<T> left, Volume<T> right) => Multiply<Energy<T>>(left, right);
+/// <summary>
+	/// Multiplies Pressure by Sensitivity to produce VoltageMagnitude.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static VoltageMagnitude<T> operator *(Pressure<T> left, Sensitivity<T> right) => Multiply<VoltageMagnitude<T>>(left, right);
 };
 

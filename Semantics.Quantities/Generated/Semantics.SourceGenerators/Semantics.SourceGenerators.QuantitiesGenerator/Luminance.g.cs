@@ -8,8 +8,7 @@ namespace ktsu.Semantics.Quantities;
 using System.Numerics;
 
 /// <summary>
-/// Luminous intensity per unit area of a surface.
-/// Semantic overload of <see cref="Illuminance{T}"/>.
+/// Magnitude (Vector0) quantity for the Luminance dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
 public record Luminance<T> : PhysicalQuantity<Luminance<T>, T>, IVector0<Luminance<T>, T>
@@ -19,36 +18,44 @@ public record Luminance<T> : PhysicalQuantity<Luminance<T>, T>, IVector0<Luminan
 	public static Luminance<T> Zero => Create(T.Zero);
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	public override DimensionInfo Dimension => PhysicalDimensions.Illuminance;
+	public override DimensionInfo Dimension => PhysicalDimensions.Luminance;
 
 	/// <summary>
-	/// Creates a new Luminance from a value in Lux.
+	/// Creates a new <see cref="Luminance{T}"/> from a value in CandelaPerSquareMeter.
 	/// </summary>
-	/// <param name="value">The value in Lux.</param>
-	/// <returns>A new Luminance instance.</returns>
+	/// <param name="value">The value in CandelaPerSquareMeter.</param>
+	/// <returns>A new <see cref="Luminance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Luminance<T> FromLux(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Luminance<T> FromCandelaPerSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Creates a new Luminance from a value in FootCandle.
+	/// Creates a new <see cref="Luminance{T}"/> from a value in Nit.
 	/// </summary>
-	/// <param name="value">The value in FootCandle.</param>
-	/// <returns>A new Luminance instance.</returns>
+	/// <param name="value">The value in Nit.</param>
+	/// <returns>A new <see cref="Luminance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Luminance<T> FromFootCandles(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FootCandleToLux)), nameof(value)));
+	public static Luminance<T> FromNits(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Luminance{T}"/> from a value in FootLambert.
+	/// </summary>
+	/// <param name="value">The value in FootLambert.</param>
+	/// <returns>A new <see cref="Luminance{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Luminance<T> FromFootLamberts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FootLambertToCandelaPerSquareMeter)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
-	/// Cross-dimension calls (e.g. passing a non-Illuminance unit) fail at compile time.
+	/// Cross-dimension calls (e.g. passing a non-Luminance unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
-	public T In(global::ktsu.Semantics.Quantities.IIlluminanceUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Illuminance.</summary>
-	public static implicit operator Illuminance<T>(Luminance<T> value) => Illuminance<T>.Create(value.Value);
-/// <summary>Explicit conversion from Illuminance.</summary>
-	public static explicit operator Luminance<T>(Illuminance<T> value) => Create(value.Value);
-/// <summary>Creates a Luminance from a Illuminance value.</summary>
-	public static Luminance<T> From(Illuminance<T> value) => Create(value.Value);
-/// <summary>Subtracts two Luminance values, returning the absolute difference as a non-negative Luminance.</summary>
+	public T In(global::ktsu.Semantics.Quantities.ILuminanceUnit unit) => unit.FromBase(Value);
+/// <summary>
+	/// Subtracts two Luminance values, returning the absolute difference as a non-negative Luminance.
+	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
+	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Luminance<T> operator -(Luminance<T> left, Luminance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+/// <summary>
+	/// Multiplies Luminance by Area to produce LuminousIntensity.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static LuminousIntensity<T> operator *(Luminance<T> left, Area<T> right) => Multiply<LuminousIntensity<T>>(left, right);
 };
 

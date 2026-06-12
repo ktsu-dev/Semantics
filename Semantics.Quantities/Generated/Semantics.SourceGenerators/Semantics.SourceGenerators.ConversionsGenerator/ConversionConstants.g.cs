@@ -259,6 +259,9 @@ internal static class ConversionConstants{
 	/// <summary>Foot-candle to lux conversion: 1/0.09290304 ≈ 10.7639 lx/fc (exact)</summary>
 	internal const double FootCandleToLux = 10.763910416709722;
 
+	/// <summary>Foot-lambert to candela per square meter: 1/(π·0.09290304) ≈ 3.4263 cd/m² per fL (exact)</summary>
+	internal const double FootLambertToCandelaPerSquareMeter = 3.4262590996353905;
+
 	/// <summary>Parts per million to ratio: 1e-6 (exact by definition)</summary>
 	internal const double PartsPerMillionToRatio = 1e-6;
 

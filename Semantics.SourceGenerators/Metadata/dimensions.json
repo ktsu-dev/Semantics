@@ -12,10 +12,18 @@
             { "name": "RefractiveIndex", "description": "Ratio of speed of light in vacuum to speed in a medium." },
             { "name": "ReynoldsNumber", "description": "Ratio of inertial to viscous forces in fluid flow." },
             { "name": "SpecificGravity", "description": "Ratio of a substance's density to a reference density." },
-            { "name": "MachNumber", "description": "Ratio of flow velocity to local speed of sound." }
+            { "name": "MachNumber", "description": "Ratio of flow velocity to local speed of sound." },
+            { "name": "SoundAbsorption", "description": "Fraction of incident sound energy absorbed by a surface." },
+            { "name": "NoiseReductionCoefficient", "description": "Average sound absorption across standard frequencies." },
+            { "name": "SoundTransmissionClass", "description": "Single-number rating of airborne sound insulation." }
           ]
         },
-        "vector1": { "base": "SignedRatio" }
+        "vector1": {
+          "base": "SignedRatio",
+          "overloads": [
+            { "name": "ReflectionCoefficient", "description": "Signed ratio of reflected to incident wave amplitude." }
+          ]
+        }
       },
       "integrals": [],
       "derivatives": [],
@@ -211,7 +219,7 @@
       "name": "NuclearCrossSection",
       "symbol": "L²",
       "dimensionalFormula": { "length": 2 },
-      "availableUnits": ["Barn"],
+      "availableUnits": ["SquareMeter", "Barn"],
       "quantities": {
         "vector0": { "base": "NuclearCrossSection" }
       },
@@ -600,7 +608,8 @@
             { "name": "GaugePressure", "description": "Pressure relative to atmospheric pressure." },
             { "name": "BulkModulus", "description": "Resistance of a substance to uniform compression." },
             { "name": "YoungsModulus", "description": "Ratio of stress to strain in a material." },
-            { "name": "ShearModulus", "description": "Ratio of shear stress to shear strain." }
+            { "name": "ShearModulus", "description": "Ratio of shear stress to shear strain." },
+            { "name": "SoundPressure", "description": "RMS pressure deviation caused by a sound wave." }
           ]
         }
       },
@@ -645,7 +654,8 @@
         "vector0": {
           "base": "Power",
           "overloads": [
-            { "name": "HeatFlowRate", "description": "Rate of heat energy transfer." }
+            { "name": "HeatFlowRate", "description": "Rate of heat energy transfer." },
+            { "name": "SoundPower", "description": "Acoustic energy emitted by a source per unit time." }
           ]
         }
       },
@@ -758,7 +768,8 @@
         "vector3": { "base": "ElectricField3D" }
       },
       "integrals": [
-        { "other": "Length", "result": "ElectricPotential" }
+        { "other": "Length", "result": "ElectricPotential" },
+        { "other": "Area", "result": "ElectricFlux" }
       ],
       "derivatives": [],
       "dotProducts": [],
@@ -772,7 +783,12 @@
       },
       "availableUnits": ["Ohm", "Kilohm", "Megohm"],
       "quantities": {
-        "vector0": { "base": "Resistance" }
+        "vector0": {
+          "base": "Resistance",
+          "overloads": [
+            { "name": "Impedance", "description": "Magnitude of total opposition to alternating current." }
+          ]
+        }
       },
       "integrals": [
         { "other": "ElectricCurrent", "result": "ElectricPotential" }
@@ -819,12 +835,7 @@
       "dimensionalFormula": { "luminousIntensity": 1, "length": -2 },
       "availableUnits": ["Lux", "FootCandle"],
       "quantities": {
-        "vector0": {
-          "base": "Illuminance",
-          "overloads": [
-            { "name": "Luminance", "description": "Luminous intensity per unit area of a surface." }
-          ]
-        }
+        "vector0": { "base": "Illuminance" }
       },
       "integrals": [
         { "other": "Area", "result": "LuminousFlux" }
@@ -850,7 +861,7 @@
       "name": "Concentration",
       "symbol": "N L⁻³",
       "dimensionalFormula": { "amountOfSubstance": 1, "length": -3 },
-      "availableUnits": ["Molar", "Millimolar", "Micromolar"],
+      "availableUnits": ["MolePerCubicMeter", "Molar", "Millimolar", "Micromolar"],
       "quantities": {
         "vector0": { "base": "Concentration" }
       },
@@ -1201,6 +1212,158 @@
       "availableUnits": ["CoulombPerKilogram", "Roentgen"],
       "quantities": {
         "vector0": { "base": "Exposure" }
+      },
+      "integrals": [],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "Permittivity",
+      "symbol": "M⁻¹ L⁻³ T⁴ I²",
+      "dimensionalFormula": {
+        "mass": -1, "length": -3, "time": 4, "electricCurrent": 2
+      },
+      "availableUnits": ["FaradPerMeter"],
+      "quantities": {
+        "vector0": { "base": "Permittivity" }
+      },
+      "integrals": [],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "ElectricConductivity",
+      "symbol": "M⁻¹ L⁻³ T³ I²",
+      "dimensionalFormula": {
+        "mass": -1, "length": -3, "time": 3, "electricCurrent": 2
+      },
+      "availableUnits": ["SiemensPerMeter"],
+      "quantities": {
+        "vector0": { "base": "ElectricConductivity" }
+      },
+      "integrals": [],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "ElectricFlux",
+      "symbol": "M L³ T⁻³ I⁻¹",
+      "dimensionalFormula": {
+        "mass": 1, "length": 3, "time": -3, "electricCurrent": -1
+      },
+      "availableUnits": ["VoltMeter"],
+      "quantities": {
+        "vector0": { "base": "ElectricFlux" }
+      },
+      "integrals": [],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "ElectricPowerDensity",
+      "symbol": "M L⁻¹ T⁻³",
+      "dimensionalFormula": {
+        "mass": 1, "length": -1, "time": -3
+      },
+      "availableUnits": ["WattPerCubicMeter"],
+      "quantities": {
+        "vector0": { "base": "ElectricPowerDensity" }
+      },
+      "integrals": [
+        { "other": "Volume", "result": "Power" }
+      ],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "Sensitivity",
+      "symbol": "M⁻¹ L⁻¹ T² I",
+      "dimensionalFormula": {
+        "mass": -1, "length": -1, "time": 2, "electricCurrent": 1
+      },
+      "availableUnits": ["VoltPerPascal"],
+      "quantities": {
+        "vector0": { "base": "Sensitivity" }
+      },
+      "integrals": [
+        { "other": "Pressure", "result": "ElectricPotential" }
+      ],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "ThermalResistance",
+      "symbol": "Θ M⁻¹ L⁻² T³",
+      "dimensionalFormula": {
+        "temperature": 1, "mass": -1, "length": -2, "time": 3
+      },
+      "availableUnits": ["KelvinPerWatt"],
+      "quantities": {
+        "vector0": { "base": "ThermalResistance" }
+      },
+      "integrals": [],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "RateConstant",
+      "symbol": "T⁻¹",
+      "dimensionalFormula": {
+        "time": -1
+      },
+      "availableUnits": ["PerSecond"],
+      "quantities": {
+        "vector0": { "base": "RateConstant" }
+      },
+      "integrals": [],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "Luminance",
+      "symbol": "J L⁻²",
+      "dimensionalFormula": {
+        "luminousIntensity": 1, "length": -2
+      },
+      "availableUnits": ["CandelaPerSquareMeter", "Nit", "FootLambert"],
+      "quantities": {
+        "vector0": { "base": "Luminance" }
+      },
+      "integrals": [
+        { "other": "Area", "result": "LuminousIntensity" }
+      ],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "Loudness",
+      "symbol": "1",
+      "dimensionalFormula": {},
+      "availableUnits": ["Sone"],
+      "quantities": {
+        "vector0": { "base": "Loudness" }
+      },
+      "integrals": [],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "Sharpness",
+      "symbol": "1",
+      "dimensionalFormula": {},
+      "availableUnits": ["Acum"],
+      "quantities": {
+        "vector0": { "base": "Sharpness" }
       },
       "integrals": [],
       "derivatives": [],

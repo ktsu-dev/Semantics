@@ -742,6 +742,13 @@
           "system": "SIDerived",
           "magnitude": "Mega",
           "factoryName": "Megawatts"
+        },
+        {
+          "name": "WattPerCubicMeter",
+          "symbol": "W/m³",
+          "description": "Watt per cubic meter - SI unit of volumetric power density.",
+          "system": "SIDerived",
+          "factoryName": "WattPerCubicMeter"
         }
       ]
     },
@@ -815,6 +822,13 @@
           "system": "Imperial",
           "conversionFactor": "FahrenheitScale",
           "factoryName": "Rankine"
+        },
+        {
+          "name": "KelvinPerWatt",
+          "symbol": "K/W",
+          "description": "Kelvin per watt - SI unit of absolute thermal resistance.",
+          "system": "SIDerived",
+          "factoryName": "KelvinPerWatt"
         }
       ]
     },
@@ -971,6 +985,34 @@
           "system": "SIDerived",
           "conversionFactor": "AmpereHourToCoulombs",
           "factoryName": "AmpereHours"
+        },
+        {
+          "name": "VoltMeter",
+          "symbol": "V·m",
+          "description": "Volt meter - SI unit of electric flux.",
+          "system": "SIDerived",
+          "factoryName": "VoltMeters"
+        },
+        {
+          "name": "FaradPerMeter",
+          "symbol": "F/m",
+          "description": "Farad per meter - SI unit of permittivity.",
+          "system": "SIDerived",
+          "factoryName": "FaradPerMeter"
+        },
+        {
+          "name": "SiemensPerMeter",
+          "symbol": "S/m",
+          "description": "Siemens per meter - SI unit of electrical conductivity.",
+          "system": "SIDerived",
+          "factoryName": "SiemensPerMeter"
+        },
+        {
+          "name": "VoltPerPascal",
+          "symbol": "V/Pa",
+          "description": "Volt per pascal - SI unit of transducer sensitivity.",
+          "system": "SIDerived",
+          "factoryName": "VoltPerPascal"
         }
       ]
     },
@@ -1035,6 +1077,20 @@
           "system": "SIDerived",
           "magnitude": "Mega",
           "factoryName": "Megahertz"
+        },
+        {
+          "name": "Sone",
+          "symbol": "sone",
+          "description": "Sone - psychoacoustic unit of perceived loudness.",
+          "system": "Other",
+          "factoryName": "Sones"
+        },
+        {
+          "name": "Acum",
+          "symbol": "acum",
+          "description": "Acum - psychoacoustic unit of perceived sharpness.",
+          "system": "Other",
+          "factoryName": "Acum"
         }
       ]
     },
@@ -1085,6 +1141,28 @@
           "system": "Imperial",
           "conversionFactor": "FootCandleToLux",
           "factoryName": "FootCandles"
+        },
+        {
+          "name": "CandelaPerSquareMeter",
+          "symbol": "cd/m²",
+          "description": "Candela per square meter - SI unit of luminance.",
+          "system": "SIDerived",
+          "factoryName": "CandelaPerSquareMeter"
+        },
+        {
+          "name": "Nit",
+          "symbol": "nt",
+          "description": "Nit - common name for one candela per square meter.",
+          "system": "SIDerived",
+          "factoryName": "Nits"
+        },
+        {
+          "name": "FootLambert",
+          "symbol": "fL",
+          "description": "Foot-lambert - Imperial unit of luminance (1/π candela per square foot).",
+          "system": "Imperial",
+          "conversionFactor": "FootLambertToCandelaPerSquareMeter",
+          "factoryName": "FootLamberts"
         }
       ]
     },
@@ -1201,6 +1279,13 @@
           "description": "Mole - SI base unit of amount of substance.",
           "system": "SIBase",
           "factoryName": "Moles"
+        },
+        {
+          "name": "MolePerCubicMeter",
+          "symbol": "mol/m³",
+          "description": "Mole per cubic meter - SI base unit of concentration.",
+          "system": "SIDerived",
+          "factoryName": "MolePerCubicMeter"
         },
         {
           "name": "Molar",
@@ -1396,6 +1481,13 @@
           "system": "Atomic",
           "conversionFactor": "GramPerMoleToKilogramPerMole",
           "factoryName": "Daltons"
+        },
+        {
+          "name": "PerSecond",
+          "symbol": "s⁻¹",
+          "description": "Per second - SI unit of a first-order rate constant.",
+          "system": "SIDerived",
+          "factoryName": "PerSecond"
         }
       ]
     },
