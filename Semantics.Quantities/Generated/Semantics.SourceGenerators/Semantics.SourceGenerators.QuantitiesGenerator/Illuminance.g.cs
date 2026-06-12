@@ -28,6 +28,13 @@ public record Illuminance<T> : PhysicalQuantity<Illuminance<T>, T>, IVector0<Ill
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Illuminance<T> FromLux(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Illuminance{T}"/> from a value in FootCandle.
+	/// </summary>
+	/// <param name="value">The value in FootCandle.</param>
+	/// <returns>A new <see cref="Illuminance{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Illuminance<T> FromFootCandles(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FootCandleToLux)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Illuminance unit) fail at compile time.
 	/// </summary>

@@ -43,12 +43,61 @@ public record Capacity<T> : PhysicalQuantity<Capacity<T>, T>, IVector0<Capacity<
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromMilliliters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
+	/// Creates a new Capacity from a value in CubicCentimeter.
+	/// </summary>
+	/// <param name="value">The value in CubicCentimeter.</param>
+	/// <returns>A new Capacity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Capacity<T> FromCubicCentimeters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicCentimeterToCubicMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Capacity from a value in CubicFoot.
+	/// </summary>
+	/// <param name="value">The value in CubicFoot.</param>
+	/// <returns>A new Capacity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Capacity<T> FromCubicFeet(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicFootToCubicMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Capacity from a value in CubicInch.
+	/// </summary>
+	/// <param name="value">The value in CubicInch.</param>
+	/// <returns>A new Capacity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Capacity<T> FromCubicInches(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicInchToCubicMeters)), nameof(value)));
+/// <summary>
 	/// Creates a new Capacity from a value in Gallon.
 	/// </summary>
 	/// <param name="value">The value in Gallon.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromGallons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GallonToCubicMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Capacity from a value in ImperialGallon.
+	/// </summary>
+	/// <param name="value">The value in ImperialGallon.</param>
+	/// <returns>A new Capacity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Capacity<T> FromImperialGallons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ImperialGallonToCubicMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Capacity from a value in USQuart.
+	/// </summary>
+	/// <param name="value">The value in USQuart.</param>
+	/// <returns>A new Capacity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Capacity<T> FromUSQuarts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USQuartToCubicMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Capacity from a value in USPint.
+	/// </summary>
+	/// <param name="value">The value in USPint.</param>
+	/// <returns>A new Capacity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Capacity<T> FromUSPints(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USPintToCubicMeters)), nameof(value)));
+/// <summary>
+	/// Creates a new Capacity from a value in USFluidOunce.
+	/// </summary>
+	/// <param name="value">The value in USFluidOunce.</param>
+	/// <returns>A new Capacity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Capacity<T> FromUSFluidOunces(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USFluidOunceToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Volume unit) fail at compile time.

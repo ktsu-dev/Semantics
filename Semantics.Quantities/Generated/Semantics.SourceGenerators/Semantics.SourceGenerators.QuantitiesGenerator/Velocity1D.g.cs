@@ -39,6 +39,18 @@ public record Velocity1D<T> : PhysicalQuantity<Velocity1D<T>, T>, IVector1<Veloc
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
 	public static Velocity1D<T> FromMilesPerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)));
 /// <summary>
+	/// Creates a new <see cref="Velocity1D{T}"/> from a value in FeetPerSecond.
+	/// </summary>
+	/// <param name="value">The value in FeetPerSecond.</param>
+	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
+	public static Velocity1D<T> FromFeetPerSecond(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FeetPerSecondToMetersPerSecond)));
+/// <summary>
+	/// Creates a new <see cref="Velocity1D{T}"/> from a value in Knot.
+	/// </summary>
+	/// <param name="value">The value in Knot.</param>
+	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
+	public static Velocity1D<T> FromKnots(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.KnotToMetersPerSecond)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Velocity unit) fail at compile time.
 	/// </summary>

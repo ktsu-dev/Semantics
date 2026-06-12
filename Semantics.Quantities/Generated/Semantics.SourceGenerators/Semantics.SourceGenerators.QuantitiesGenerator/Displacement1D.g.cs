@@ -87,6 +87,12 @@ public record Displacement1D<T> : PhysicalQuantity<Displacement1D<T>, T>, IVecto
 	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
 	public static Displacement1D<T> FromMiles(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)));
 /// <summary>
+	/// Creates a new <see cref="Displacement1D{T}"/> from a value in NauticalMile.
+	/// </summary>
+	/// <param name="value">The value in NauticalMile.</param>
+	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
+	public static Displacement1D<T> FromNauticalMiles(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.NauticalMileToMeters)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Length unit) fail at compile time.
 	/// </summary>

@@ -29,6 +29,13 @@ public record EMF<T> : PhysicalQuantity<EMF<T>, T>, IVector0<EMF<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static EMF<T> FromVolts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new EMF from a value in Kilovolt.
+	/// </summary>
+	/// <param name="value">The value in Kilovolt.</param>
+	/// <returns>A new EMF instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static EMF<T> FromKilovolts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricPotential unit) fail at compile time.
 	/// </summary>

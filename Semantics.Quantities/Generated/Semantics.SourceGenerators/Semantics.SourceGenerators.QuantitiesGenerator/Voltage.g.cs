@@ -27,6 +27,12 @@ public record Voltage<T> : PhysicalQuantity<Voltage<T>, T>, IVector1<Voltage<T>,
 	/// <returns>A new <see cref="Voltage{T}"/> instance.</returns>
 	public static Voltage<T> FromVolts(T value) => Create(value);
 /// <summary>
+	/// Creates a new <see cref="Voltage{T}"/> from a value in Kilovolt.
+	/// </summary>
+	/// <param name="value">The value in Kilovolt.</param>
+	/// <returns>A new <see cref="Voltage{T}"/> instance.</returns>
+	public static Voltage<T> FromKilovolts(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricPotential unit) fail at compile time.
 	/// </summary>

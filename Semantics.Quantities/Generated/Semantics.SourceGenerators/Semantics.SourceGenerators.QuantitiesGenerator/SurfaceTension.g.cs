@@ -28,6 +28,13 @@ public record SurfaceTension<T> : PhysicalQuantity<SurfaceTension<T>, T>, IVecto
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SurfaceTension<T> FromNewtonPerMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="SurfaceTension{T}"/> from a value in DynePerCentimeter.
+	/// </summary>
+	/// <param name="value">The value in DynePerCentimeter.</param>
+	/// <returns>A new <see cref="SurfaceTension{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SurfaceTension<T> FromDynePerCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DynePerCentimeterToNewtonPerMeter)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-SurfaceTension unit) fail at compile time.
 	/// </summary>

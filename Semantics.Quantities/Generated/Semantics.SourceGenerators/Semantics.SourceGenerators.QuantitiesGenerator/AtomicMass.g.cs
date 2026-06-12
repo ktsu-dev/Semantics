@@ -57,6 +57,27 @@ public record AtomicMass<T> : PhysicalQuantity<AtomicMass<T>, T>, IVector0<Atomi
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AtomicMass<T> FromOunces(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.OunceToKilograms)), nameof(value)));
 /// <summary>
+	/// Creates a new AtomicMass from a value in Stone.
+	/// </summary>
+	/// <param name="value">The value in Stone.</param>
+	/// <returns>A new AtomicMass instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AtomicMass<T> FromStone(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.StoneToKilograms)), nameof(value)));
+/// <summary>
+	/// Creates a new AtomicMass from a value in ShortTon.
+	/// </summary>
+	/// <param name="value">The value in ShortTon.</param>
+	/// <returns>A new AtomicMass instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AtomicMass<T> FromShortTons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ShortTonToKilograms)), nameof(value)));
+/// <summary>
+	/// Creates a new AtomicMass from a value in AtomicMassUnit.
+	/// </summary>
+	/// <param name="value">The value in AtomicMassUnit.</param>
+	/// <returns>A new AtomicMass instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AtomicMass<T> FromAtomicMassUnits(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtomicMassUnitToKilograms)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Mass unit) fail at compile time.
 	/// </summary>

@@ -28,6 +28,20 @@ public record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T>, T>, 
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AmountOfSubstance<T> FromMoles(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="AmountOfSubstance{T}"/> from a value in Kilomole.
+	/// </summary>
+	/// <param name="value">The value in Kilomole.</param>
+	/// <returns>A new <see cref="AmountOfSubstance{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AmountOfSubstance<T> FromKilomoles(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="AmountOfSubstance{T}"/> from a value in Millimole.
+	/// </summary>
+	/// <param name="value">The value in Millimole.</param>
+	/// <returns>A new <see cref="AmountOfSubstance{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static AmountOfSubstance<T> FromMillimoles(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AmountOfSubstance unit) fail at compile time.
 	/// </summary>

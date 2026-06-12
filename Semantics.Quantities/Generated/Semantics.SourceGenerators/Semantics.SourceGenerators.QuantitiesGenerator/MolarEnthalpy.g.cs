@@ -36,6 +36,13 @@ public record MolarEnthalpy<T> : PhysicalQuantity<MolarEnthalpy<T>, T>, IVector0
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MolarEnthalpy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilojoulePerMoleToJoulePerMole)), nameof(value)));
 /// <summary>
+	/// Creates a new MolarEnthalpy from a value in CaloriePerMole.
+	/// </summary>
+	/// <param name="value">The value in CaloriePerMole.</param>
+	/// <returns>A new MolarEnthalpy instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MolarEnthalpy<T> FromCaloriesPerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CaloriePerMoleToJoulePerMole)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-MolarEnergy unit) fail at compile time.
 	/// </summary>

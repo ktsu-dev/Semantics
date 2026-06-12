@@ -28,6 +28,11 @@
           "name": "AngstromToMeters",
           "description": "Angstrom to meter conversion: 1e-10 m/Å (exact by definition)",
           "value": "1e-10"
+        },
+        {
+          "name": "NauticalMileToMeters",
+          "description": "Nautical mile to meter conversion: 1852 m/nmi (exact by definition)",
+          "value": "1852"
         }
       ]
     },
@@ -54,6 +59,21 @@
           "name": "TonToKilograms",
           "description": "Metric ton to kilogram conversion: 1000 kg/t (exact by definition)",
           "value": "1000"
+        },
+        {
+          "name": "StoneToKilograms",
+          "description": "Stone to kilogram conversion: 6.35029318 kg/st (14 lb, exact)",
+          "value": "6.35029318"
+        },
+        {
+          "name": "ShortTonToKilograms",
+          "description": "Short ton to kilogram conversion: 907.18474 kg/ton (2000 lb, exact)",
+          "value": "907.18474"
+        },
+        {
+          "name": "AtomicMassUnitToKilograms",
+          "description": "Atomic mass unit to kilogram: 1.66053906660e-27 kg/u (2018 CODATA)",
+          "value": "1.66053906660e-27"
         }
       ]
     },
@@ -70,6 +90,41 @@
           "name": "GallonToCubicMeters",
           "description": "US gallon to cubic meter conversion: 0.003785411784 m³/gal (exact)",
           "value": "0.003785411784"
+        },
+        {
+          "name": "CubicCentimeterToCubicMeters",
+          "description": "Cubic centimeter to cubic meter: 1e-6 m³/cm³ (exact by definition)",
+          "value": "1e-6"
+        },
+        {
+          "name": "CubicFootToCubicMeters",
+          "description": "Cubic foot to cubic meter: 0.028316846592 m³/ft³ (exact)",
+          "value": "0.028316846592"
+        },
+        {
+          "name": "CubicInchToCubicMeters",
+          "description": "Cubic inch to cubic meter: 1.6387064e-5 m³/in³ (exact)",
+          "value": "1.6387064e-5"
+        },
+        {
+          "name": "ImperialGallonToCubicMeters",
+          "description": "Imperial gallon to cubic meter: 0.00454609 m³/imp gal (exact by definition)",
+          "value": "0.00454609"
+        },
+        {
+          "name": "USQuartToCubicMeters",
+          "description": "US liquid quart to cubic meter: 0.000946352946 m³/qt (exact)",
+          "value": "0.000946352946"
+        },
+        {
+          "name": "USPintToCubicMeters",
+          "description": "US liquid pint to cubic meter: 0.000473176473 m³/pt (exact)",
+          "value": "0.000473176473"
+        },
+        {
+          "name": "USFluidOunceToCubicMeters",
+          "description": "US fluid ounce to cubic meter: 2.95735295625e-5 m³/fl oz (exact)",
+          "value": "2.95735295625e-5"
         }
       ]
     },
@@ -96,6 +151,11 @@
           "name": "YearToSeconds",
           "description": "Year to second conversion: 31557600 s/year (365.25 days, exact)",
           "value": "31557600"
+        },
+        {
+          "name": "WeekToSeconds",
+          "description": "Week to second conversion: 604800 s/wk (exact)",
+          "value": "604800"
         }
       ]
     },
@@ -110,13 +170,13 @@
         },
         {
           "name": "FahrenheitScale",
-          "description": "Fahrenheit degree scale factor: 9/5 = 1.8 (exact)",
-          "value": "1.8"
+          "description": "Fahrenheit-to-Kelvin degree scale factor: 5/9 (exact)",
+          "value": "0.5555555555555556"
         },
         {
           "name": "FahrenheitToKelvinOffset",
-          "description": "Fahrenheit to Kelvin absolute offset: -459.67 K (exact)",
-          "value": "-459.67"
+          "description": "Fahrenheit to Kelvin affine offset: 459.67 × 5/9 ≈ 255.372 K (exact)",
+          "value": "255.37222222222223"
         }
       ]
     },
@@ -128,6 +188,16 @@
           "name": "DegreeToRadians",
           "description": "Degree to radian conversion: π/180 rad/° (exact)",
           "value": "0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983"
+        },
+        {
+          "name": "GradianToRadians",
+          "description": "Gradian to radian conversion: π/200 rad/grad (exact)",
+          "value": "0.015707963267948966"
+        },
+        {
+          "name": "RevolutionToRadians",
+          "description": "Revolution to radian conversion: 2π rad/rev (exact)",
+          "value": "6.283185307179586"
         }
       ]
     },
@@ -154,6 +224,26 @@
           "name": "ElectronVoltToJoules",
           "description": "Electron volt to joule conversion: 1.602176634e-19 J/eV (exact, based on elementary charge)",
           "value": "1.602176634e-19"
+        },
+        {
+          "name": "KilocalorieToJoules",
+          "description": "Kilocalorie to joule conversion: 4184 J/kcal (exact, thermochemical)",
+          "value": "4184"
+        },
+        {
+          "name": "WattHourToJoules",
+          "description": "Watt-hour to joule conversion: 3600 J/Wh (exact)",
+          "value": "3600"
+        },
+        {
+          "name": "ErgToJoules",
+          "description": "Erg to joule conversion: 1e-7 J/erg (exact by definition)",
+          "value": "1e-7"
+        },
+        {
+          "name": "BtuToJoules",
+          "description": "British thermal unit (IT) to joule conversion: 1055.05585262 J/BTU (exact)",
+          "value": "1055.05585262"
         }
       ]
     },
@@ -175,6 +265,11 @@
           "name": "PsiToPascals",
           "description": "PSI to pascal conversion: 6894.757293168361 Pa/psi (exact)",
           "value": "6894.757293168361"
+        },
+        {
+          "name": "TorrToPascals",
+          "description": "Torr to pascal conversion: 101325/760 ≈ 133.322 Pa/Torr (exact)",
+          "value": "133.32236842105263"
         }
       ]
     },
@@ -196,6 +291,31 @@
           "name": "BarnToSquareMeters",
           "description": "Barn to square meter conversion: 1e-28 m² (exact by definition)",
           "value": "1e-28"
+        },
+        {
+          "name": "SquareKilometerToSquareMeters",
+          "description": "Square kilometer to square meter: 1e6 m²/km² (exact by definition)",
+          "value": "1e6"
+        },
+        {
+          "name": "SquareCentimeterToSquareMeters",
+          "description": "Square centimeter to square meter: 1e-4 m²/cm² (exact by definition)",
+          "value": "1e-4"
+        },
+        {
+          "name": "SquareMileToSquareMeters",
+          "description": "Square mile to square meter: 2589988.110336 m²/mi² (exact)",
+          "value": "2589988.110336"
+        },
+        {
+          "name": "HectareToSquareMeters",
+          "description": "Hectare to square meter: 10000 m²/ha (exact by definition)",
+          "value": "10000"
+        },
+        {
+          "name": "AcreToSquareMeters",
+          "description": "Acre to square meter: 4046.8564224 m²/ac (exact)",
+          "value": "4046.8564224"
         }
       ]
     },
@@ -212,6 +332,16 @@
           "name": "MilesPerHourToMetersPerSecond",
           "description": "Miles per hour to meters per second conversion: 0.44704 m/s per mph (exact)",
           "value": "0.44704"
+        },
+        {
+          "name": "FeetPerSecondToMetersPerSecond",
+          "description": "Feet per second to meters per second: 0.3048 m/s per ft/s (exact)",
+          "value": "0.3048"
+        },
+        {
+          "name": "KnotToMetersPerSecond",
+          "description": "Knot to meters per second: 1852/3600 ≈ 0.514444 m/s per kn (exact)",
+          "value": "0.5144444444444445"
         }
       ]
     },
@@ -245,6 +375,16 @@
           "name": "MolarToCubicMeter",
           "description": "Molar to cubic meter concentration conversion: 1000.0 mol/m³ per mol/L (exact)",
           "value": "1000.0"
+        },
+        {
+          "name": "MillimolarToMolePerCubicMeter",
+          "description": "Millimolar to mole per cubic meter: 1 mol/m³ per mM (exact)",
+          "value": "1.0"
+        },
+        {
+          "name": "MicromolarToMolePerCubicMeter",
+          "description": "Micromolar to mole per cubic meter: 0.001 mol/m³ per μM (exact)",
+          "value": "0.001"
         }
       ]
     },
@@ -266,6 +406,26 @@
           "name": "LiterPerSecondToCubicMeterPerSecond",
           "description": "Liter per second to cubic meter per second: 0.001 m³/s per L/s (exact by definition)",
           "value": "0.001"
+        },
+        {
+          "name": "CentipoiseToPascalSecond",
+          "description": "Centipoise to pascal second: 0.001 Pa·s per cP (exact by definition)",
+          "value": "0.001"
+        },
+        {
+          "name": "DynePerCentimeterToNewtonPerMeter",
+          "description": "Dyne per centimeter to newton per meter: 0.001 N/m per dyn/cm (exact)",
+          "value": "0.001"
+        },
+        {
+          "name": "GramPerCubicCentimeterToKilogramPerCubicMeter",
+          "description": "Gram per cubic centimeter to kilogram per cubic meter: 1000 kg/m³ per g/cm³ (exact)",
+          "value": "1000"
+        },
+        {
+          "name": "GramPerLiterToKilogramPerCubicMeter",
+          "description": "Gram per liter to kilogram per cubic meter: 1 kg/m³ per g/L (exact)",
+          "value": "1.0"
         }
       ]
     },
@@ -277,6 +437,11 @@
           "name": "GaussToTesla",
           "description": "Gauss to Tesla: 1e-4 T per G (exact by definition)",
           "value": "1e-4"
+        },
+        {
+          "name": "AmpereHourToCoulombs",
+          "description": "Ampere-hour to coulomb conversion: 3600 C/Ah (exact)",
+          "value": "3600"
         }
       ]
     },
@@ -293,6 +458,101 @@
           "name": "KilojoulePerMoleToJoulePerMole",
           "description": "Kilojoule per mole to joule per mole: 1000 J/mol per kJ/mol (exact by definition)",
           "value": "1000"
+        },
+        {
+          "name": "CaloriePerMoleToJoulePerMole",
+          "description": "Calorie per mole to joule per mole: 4.184 J/mol per cal/mol (exact, thermochemical)",
+          "value": "4.184"
+        },
+        {
+          "name": "EnzymeUnitToKatals",
+          "description": "Enzyme unit (1 μmol/min) to katal: 1/6e7 ≈ 1.6667e-8 kat/U (exact)",
+          "value": "1.6666666666666667e-8"
+        }
+      ]
+    },
+    {
+      "category": "Acceleration",
+      "description": "Acceleration unit conversion factors",
+      "factors": [
+        {
+          "name": "StandardGravityToMetersPerSecondSquared",
+          "description": "Standard gravity to meters per second squared: 9.80665 m/s² per g (exact by definition)",
+          "value": "9.80665"
+        }
+      ]
+    },
+    {
+      "category": "Force",
+      "description": "Force unit conversion factors",
+      "factors": [
+        {
+          "name": "DyneToNewtons",
+          "description": "Dyne to newton conversion: 1e-5 N/dyn (exact by definition)",
+          "value": "1e-5"
+        },
+        {
+          "name": "PoundForceToNewtons",
+          "description": "Pound-force to newton conversion: 4.4482216152605 N/lbf (exact)",
+          "value": "4.4482216152605"
+        }
+      ]
+    },
+    {
+      "category": "Radiation",
+      "description": "Radiological unit conversion factors",
+      "factors": [
+        {
+          "name": "CurieToBecquerels",
+          "description": "Curie to becquerel conversion: 3.7e10 Bq/Ci (exact by definition)",
+          "value": "3.7e10"
+        },
+        {
+          "name": "RadToGrays",
+          "description": "Rad to gray conversion: 0.01 Gy/rad (exact by definition)",
+          "value": "0.01"
+        },
+        {
+          "name": "RemToSieverts",
+          "description": "Rem to sievert conversion: 0.01 Sv/rem (exact by definition)",
+          "value": "0.01"
+        },
+        {
+          "name": "RoentgenToCoulombsPerKilogram",
+          "description": "Roentgen to coulomb per kilogram: 2.58e-4 C/kg per R (exact by definition)",
+          "value": "2.58e-4"
+        }
+      ]
+    },
+    {
+      "category": "Photometry",
+      "description": "Photometric unit conversion factors",
+      "factors": [
+        {
+          "name": "FootCandleToLux",
+          "description": "Foot-candle to lux conversion: 1/0.09290304 ≈ 10.7639 lx/fc (exact)",
+          "value": "10.763910416709722"
+        }
+      ]
+    },
+    {
+      "category": "Ratio",
+      "description": "Dimensionless ratio conversion factors",
+      "factors": [
+        {
+          "name": "PartsPerMillionToRatio",
+          "description": "Parts per million to ratio: 1e-6 (exact by definition)",
+          "value": "1e-6"
+        },
+        {
+          "name": "PartsPerBillionToRatio",
+          "description": "Parts per billion to ratio: 1e-9 (exact by definition)",
+          "value": "1e-9"
+        },
+        {
+          "name": "PercentByWeightToRatio",
+          "description": "Percent by weight to mass-fraction ratio: 0.01 (exact by definition)",
+          "value": "0.01"
         }
       ]
     }

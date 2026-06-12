@@ -29,6 +29,20 @@ public record HeatFlowRate<T> : PhysicalQuantity<HeatFlowRate<T>, T>, IVector0<H
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HeatFlowRate<T> FromWatts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new HeatFlowRate from a value in Kilowatt.
+	/// </summary>
+	/// <param name="value">The value in Kilowatt.</param>
+	/// <returns>A new HeatFlowRate instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static HeatFlowRate<T> FromKilowatts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+/// <summary>
+	/// Creates a new HeatFlowRate from a value in Megawatt.
+	/// </summary>
+	/// <param name="value">The value in Megawatt.</param>
+	/// <returns>A new HeatFlowRate instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static HeatFlowRate<T> FromMegawatts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
+/// <summary>
 	/// Creates a new HeatFlowRate from a value in Horsepower.
 	/// </summary>
 	/// <param name="value">The value in Horsepower.</param>

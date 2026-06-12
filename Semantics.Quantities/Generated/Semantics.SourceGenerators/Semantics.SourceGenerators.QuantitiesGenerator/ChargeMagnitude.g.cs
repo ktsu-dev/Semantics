@@ -28,6 +28,13 @@ public record ChargeMagnitude<T> : PhysicalQuantity<ChargeMagnitude<T>, T>, IVec
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ChargeMagnitude<T> FromCoulombs(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="ChargeMagnitude{T}"/> from a value in AmpereHour.
+	/// </summary>
+	/// <param name="value">The value in AmpereHour.</param>
+	/// <returns>A new <see cref="ChargeMagnitude{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static ChargeMagnitude<T> FromAmpereHours(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AmpereHourToCoulombs)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricCharge unit) fail at compile time.
 	/// </summary>

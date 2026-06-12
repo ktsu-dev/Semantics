@@ -35,6 +35,27 @@ public record Angle<T> : PhysicalQuantity<Angle<T>, T>, IVector0<Angle<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Angle<T> FromDegrees(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Angle{T}"/> from a value in Gradian.
+	/// </summary>
+	/// <param name="value">The value in Gradian.</param>
+	/// <returns>A new <see cref="Angle{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Angle<T> FromGradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Angle{T}"/> from a value in Revolution.
+	/// </summary>
+	/// <param name="value">The value in Revolution.</param>
+	/// <returns>A new <see cref="Angle{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Angle<T> FromRevolutions(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Angle{T}"/> from a value in Milliradian.
+	/// </summary>
+	/// <param name="value">The value in Milliradian.</param>
+	/// <returns>A new <see cref="Angle{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Angle<T> FromMilliradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularDisplacement unit) fail at compile time.
 	/// </summary>

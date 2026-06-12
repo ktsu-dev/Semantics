@@ -27,6 +27,12 @@ public record Acceleration1D<T> : PhysicalQuantity<Acceleration1D<T>, T>, IVecto
 	/// <returns>A new <see cref="Acceleration1D{T}"/> instance.</returns>
 	public static Acceleration1D<T> FromMetersPerSecondSquared(T value) => Create(value);
 /// <summary>
+	/// Creates a new <see cref="Acceleration1D{T}"/> from a value in StandardGravity.
+	/// </summary>
+	/// <param name="value">The value in StandardGravity.</param>
+	/// <returns>A new <see cref="Acceleration1D{T}"/> instance.</returns>
+	public static Acceleration1D<T> FromStandardGravity(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.StandardGravityToMetersPerSecondSquared)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Acceleration unit) fail at compile time.
 	/// </summary>

@@ -28,6 +28,20 @@ public record Power<T> : PhysicalQuantity<Power<T>, T>, IVector0<Power<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Power<T> FromWatts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
+	/// Creates a new <see cref="Power{T}"/> from a value in Kilowatt.
+	/// </summary>
+	/// <param name="value">The value in Kilowatt.</param>
+	/// <returns>A new <see cref="Power{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Power<T> FromKilowatts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Power{T}"/> from a value in Megawatt.
+	/// </summary>
+	/// <param name="value">The value in Megawatt.</param>
+	/// <returns>A new <see cref="Power{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Power<T> FromMegawatts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
+/// <summary>
 	/// Creates a new <see cref="Power{T}"/> from a value in Horsepower.
 	/// </summary>
 	/// <param name="value">The value in Horsepower.</param>

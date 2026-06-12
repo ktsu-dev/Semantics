@@ -34,6 +34,24 @@ public record Heading<T> : PhysicalQuantity<Heading<T>, T>, IVector1<Heading<T>,
 	/// <returns>A new Heading instance.</returns>
 	public static Heading<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
 /// <summary>
+	/// Creates a new Heading from a value in Gradian.
+	/// </summary>
+	/// <param name="value">The value in Gradian.</param>
+	/// <returns>A new Heading instance.</returns>
+	public static Heading<T> FromGradians(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
+/// <summary>
+	/// Creates a new Heading from a value in Revolution.
+	/// </summary>
+	/// <param name="value">The value in Revolution.</param>
+	/// <returns>A new Heading instance.</returns>
+	public static Heading<T> FromRevolutions(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
+/// <summary>
+	/// Creates a new Heading from a value in Milliradian.
+	/// </summary>
+	/// <param name="value">The value in Milliradian.</param>
+	/// <returns>A new Heading instance.</returns>
+	public static Heading<T> FromMilliradians(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularDisplacement unit) fail at compile time.
 	/// </summary>
