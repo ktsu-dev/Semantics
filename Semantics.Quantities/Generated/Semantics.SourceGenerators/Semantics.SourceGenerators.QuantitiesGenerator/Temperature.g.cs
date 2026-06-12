@@ -17,6 +17,9 @@ public record Temperature<T> : PhysicalQuantity<Temperature<T>, T>, IVector0<Tem
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Temperature<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Temperature;
+
 	/// <summary>
 	/// Creates a new <see cref="Temperature{T}"/> from a value in Kelvin.
 	/// </summary>
@@ -38,6 +41,13 @@ public record Temperature<T> : PhysicalQuantity<Temperature<T>, T>, IVector0<Tem
 	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Temperature<T> FromFahrenheit(T value) => Create(Vector0Guards.EnsureNonNegative(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Temperature unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ITemperatureUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two Temperature values, returning the absolute difference as a non-negative Temperature.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

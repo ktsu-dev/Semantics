@@ -18,6 +18,9 @@ public record GroundSpeed<T> : PhysicalQuantity<GroundSpeed<T>, T>, IVector0<Gro
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static GroundSpeed<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Velocity;
+
 	/// <summary>
 	/// Creates a new GroundSpeed from a value in MetersPerSecond.
 	/// </summary>
@@ -39,6 +42,13 @@ public record GroundSpeed<T> : PhysicalQuantity<GroundSpeed<T>, T>, IVector0<Gro
 	/// <returns>A new GroundSpeed instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static GroundSpeed<T> FromMilesPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Velocity unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IVelocityUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Speed.</summary>
 	public static implicit operator Speed<T>(GroundSpeed<T> value) => Speed<T>.Create(value.Value);
 /// <summary>Explicit conversion from Speed.</summary>

@@ -17,12 +17,22 @@ public record Voltage<T> : PhysicalQuantity<Voltage<T>, T>, IVector1<Voltage<T>,
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Voltage<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.ElectricPotential;
+
 	/// <summary>
 	/// Creates a new <see cref="Voltage{T}"/> from a value in Volt.
 	/// </summary>
 	/// <param name="value">The value in Volt.</param>
 	/// <returns>A new <see cref="Voltage{T}"/> instance.</returns>
 	public static Voltage<T> FromVolts(T value) => Create(value);
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-ElectricPotential unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IElectricPotentialUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="VoltageMagnitude{T}"/>.
 	/// </summary>

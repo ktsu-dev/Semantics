@@ -17,6 +17,9 @@ public record JerkMagnitude<T> : PhysicalQuantity<JerkMagnitude<T>, T>, IVector0
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static JerkMagnitude<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Jerk;
+
 	/// <summary>
 	/// Creates a new <see cref="JerkMagnitude{T}"/> from a value in MetersPerSecondCubed.
 	/// </summary>
@@ -24,6 +27,13 @@ public record JerkMagnitude<T> : PhysicalQuantity<JerkMagnitude<T>, T>, IVector0
 	/// <returns>A new <see cref="JerkMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static JerkMagnitude<T> FromMetersPerSecondCubed(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Jerk unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IJerkUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two JerkMagnitude values, returning the absolute difference as a non-negative JerkMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

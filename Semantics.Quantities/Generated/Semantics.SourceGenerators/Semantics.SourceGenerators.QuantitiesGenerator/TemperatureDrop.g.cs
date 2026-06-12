@@ -18,6 +18,9 @@ public record TemperatureDrop<T> : PhysicalQuantity<TemperatureDrop<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static TemperatureDrop<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Temperature;
+
 	/// <summary>
 	/// Creates a new TemperatureDrop from a value in Kelvin.
 	/// </summary>
@@ -36,6 +39,13 @@ public record TemperatureDrop<T> : PhysicalQuantity<TemperatureDrop<T>, T>, IVec
 	/// <param name="value">The value in Fahrenheit.</param>
 	/// <returns>A new TemperatureDrop instance.</returns>
 	public static TemperatureDrop<T> FromFahrenheit(T value) => Create(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Temperature unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ITemperatureUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to TemperatureDelta.</summary>
 	public static implicit operator TemperatureDelta<T>(TemperatureDrop<T> value) => TemperatureDelta<T>.Create(value.Value);
 /// <summary>Explicit conversion from TemperatureDelta.</summary>

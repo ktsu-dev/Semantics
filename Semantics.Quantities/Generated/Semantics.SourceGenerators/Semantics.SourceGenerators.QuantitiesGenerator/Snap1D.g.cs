@@ -17,12 +17,22 @@ public record Snap1D<T> : PhysicalQuantity<Snap1D<T>, T>, IVector1<Snap1D<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Snap1D<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Snap;
+
 	/// <summary>
 	/// Creates a new <see cref="Snap1D{T}"/> from a value in MetersPerSecondQuartic.
 	/// </summary>
 	/// <param name="value">The value in MetersPerSecondQuartic.</param>
 	/// <returns>A new <see cref="Snap1D{T}"/> instance.</returns>
 	public static Snap1D<T> FromMetersPerSecondQuartic(T value) => Create(value);
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Snap unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ISnapUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="SnapMagnitude{T}"/>.
 	/// </summary>

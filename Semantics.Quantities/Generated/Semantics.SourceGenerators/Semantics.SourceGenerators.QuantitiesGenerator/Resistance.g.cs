@@ -17,6 +17,9 @@ public record Resistance<T> : PhysicalQuantity<Resistance<T>, T>, IVector0<Resis
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Resistance<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.ElectricResistance;
+
 	/// <summary>
 	/// Creates a new <see cref="Resistance{T}"/> from a value in Ohm.
 	/// </summary>
@@ -24,6 +27,13 @@ public record Resistance<T> : PhysicalQuantity<Resistance<T>, T>, IVector0<Resis
 	/// <returns>A new <see cref="Resistance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Resistance<T> FromOhms(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-ElectricResistance unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IElectricResistanceUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two Resistance values, returning the absolute difference as a non-negative Resistance.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

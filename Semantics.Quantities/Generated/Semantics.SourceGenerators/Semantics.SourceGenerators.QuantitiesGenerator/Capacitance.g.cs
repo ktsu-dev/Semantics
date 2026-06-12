@@ -17,6 +17,9 @@ public record Capacitance<T> : PhysicalQuantity<Capacitance<T>, T>, IVector0<Cap
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Capacitance<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.ElectricCapacitance;
+
 	/// <summary>
 	/// Creates a new <see cref="Capacitance{T}"/> from a value in Farad.
 	/// </summary>
@@ -24,6 +27,13 @@ public record Capacitance<T> : PhysicalQuantity<Capacitance<T>, T>, IVector0<Cap
 	/// <returns>A new <see cref="Capacitance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacitance<T> FromFarads(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-ElectricCapacitance unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IElectricCapacitanceUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two Capacitance values, returning the absolute difference as a non-negative Capacitance.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

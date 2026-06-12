@@ -18,6 +18,9 @@ public record EMF<T> : PhysicalQuantity<EMF<T>, T>, IVector0<EMF<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static EMF<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.ElectricPotential;
+
 	/// <summary>
 	/// Creates a new EMF from a value in Volt.
 	/// </summary>
@@ -25,6 +28,13 @@ public record EMF<T> : PhysicalQuantity<EMF<T>, T>, IVector0<EMF<T>, T>
 	/// <returns>A new EMF instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static EMF<T> FromVolts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-ElectricPotential unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IElectricPotentialUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to VoltageMagnitude.</summary>
 	public static implicit operator VoltageMagnitude<T>(EMF<T> value) => VoltageMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from VoltageMagnitude.</summary>

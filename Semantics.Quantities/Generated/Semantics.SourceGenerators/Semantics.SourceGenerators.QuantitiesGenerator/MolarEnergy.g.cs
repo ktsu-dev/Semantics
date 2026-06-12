@@ -17,6 +17,9 @@ public record MolarEnergy<T> : PhysicalQuantity<MolarEnergy<T>, T>, IVector0<Mol
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static MolarEnergy<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.MolarEnergy;
+
 	/// <summary>
 	/// Creates a new <see cref="MolarEnergy{T}"/> from a value in JoulePerMole.
 	/// </summary>
@@ -31,6 +34,13 @@ public record MolarEnergy<T> : PhysicalQuantity<MolarEnergy<T>, T>, IVector0<Mol
 	/// <returns>A new <see cref="MolarEnergy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MolarEnergy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilojoulePerMoleToJoulePerMole)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-MolarEnergy unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IMolarEnergyUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two MolarEnergy values, returning the absolute difference as a non-negative MolarEnergy.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

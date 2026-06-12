@@ -17,6 +17,9 @@ public record Volume<T> : PhysicalQuantity<Volume<T>, T>, IVector0<Volume<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Volume<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Volume;
+
 	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in CubicMeter.
 	/// </summary>
@@ -45,6 +48,13 @@ public record Volume<T> : PhysicalQuantity<Volume<T>, T>, IVector0<Volume<T>, T>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromGallons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GallonToCubicMeters)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Volume unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IVolumeUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two Volume values, returning the absolute difference as a non-negative Volume.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

@@ -18,6 +18,9 @@ public record Tension<T> : PhysicalQuantity<Tension<T>, T>, IVector0<Tension<T>,
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Tension<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Force;
+
 	/// <summary>
 	/// Creates a new Tension from a value in Newton.
 	/// </summary>
@@ -25,6 +28,13 @@ public record Tension<T> : PhysicalQuantity<Tension<T>, T>, IVector0<Tension<T>,
 	/// <returns>A new Tension instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Tension<T> FromNewtons(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Force unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IForceUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Tension<T> value) => ForceMagnitude<T>.Create(value.Value);
 /// <summary>Explicit conversion from ForceMagnitude.</summary>

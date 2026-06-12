@@ -18,6 +18,9 @@ public record PotentialEnergy<T> : PhysicalQuantity<PotentialEnergy<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static PotentialEnergy<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Energy;
+
 	/// <summary>
 	/// Creates a new PotentialEnergy from a value in Joule.
 	/// </summary>
@@ -46,6 +49,13 @@ public record PotentialEnergy<T> : PhysicalQuantity<PotentialEnergy<T>, T>, IVec
 	/// <returns>A new PotentialEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static PotentialEnergy<T> FromKilowattHours(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Energy unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IEnergyUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Energy.</summary>
 	public static implicit operator Energy<T>(PotentialEnergy<T> value) => Energy<T>.Create(value.Value);
 /// <summary>Explicit conversion from Energy.</summary>

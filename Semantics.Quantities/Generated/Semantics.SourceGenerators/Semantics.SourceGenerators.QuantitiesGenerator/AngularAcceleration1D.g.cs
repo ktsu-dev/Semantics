@@ -17,12 +17,22 @@ public record AngularAcceleration1D<T> : PhysicalQuantity<AngularAcceleration1D<
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static AngularAcceleration1D<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.AngularAcceleration;
+
 	/// <summary>
 	/// Creates a new <see cref="AngularAcceleration1D{T}"/> from a value in RadiansPerSecondSquared.
 	/// </summary>
 	/// <param name="value">The value in RadiansPerSecondSquared.</param>
 	/// <returns>A new <see cref="AngularAcceleration1D{T}"/> instance.</returns>
 	public static AngularAcceleration1D<T> FromRadiansPerSecondSquared(T value) => Create(value);
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-AngularAcceleration unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IAngularAccelerationUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="AngularAccelerationMagnitude{T}"/>.
 	/// </summary>

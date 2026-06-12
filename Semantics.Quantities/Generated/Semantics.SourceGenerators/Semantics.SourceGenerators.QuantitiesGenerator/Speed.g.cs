@@ -17,6 +17,9 @@ public record Speed<T> : PhysicalQuantity<Speed<T>, T>, IVector0<Speed<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Speed<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Velocity;
+
 	/// <summary>
 	/// Creates a new <see cref="Speed{T}"/> from a value in MetersPerSecond.
 	/// </summary>
@@ -39,6 +42,13 @@ public record Speed<T> : PhysicalQuantity<Speed<T>, T>, IVector0<Speed<T>, T>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Speed<T> FromMilesPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)), nameof(value)));
 /// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Velocity unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IVelocityUnit unit) => unit.FromBase(Value);
+/// <summary>
 	/// Subtracts two Speed values, returning the absolute difference as a non-negative Speed.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
@@ -59,6 +69,14 @@ public record Speed<T> : PhysicalQuantity<Speed<T>, T>, IVector0<Speed<T>, T>
 	/// Divides Speed by AccelerationMagnitude to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Duration<T> operator /(Speed<T> left, AccelerationMagnitude<T> right) => Divide<Duration<T>>(left, right);
+/// <summary>
+	/// Divides Speed by Length to produce Frequency.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Frequency<T> operator /(Speed<T> left, Length<T> right) => Divide<Frequency<T>>(left, right);
+/// <summary>
+	/// Divides Speed by Frequency to produce Length.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Length<T> operator /(Speed<T> left, Frequency<T> right) => Divide<Length<T>>(left, right);
 /// <summary>
 	/// Multiplies Speed by ForceMagnitude to produce Power.
 	/// </summary>

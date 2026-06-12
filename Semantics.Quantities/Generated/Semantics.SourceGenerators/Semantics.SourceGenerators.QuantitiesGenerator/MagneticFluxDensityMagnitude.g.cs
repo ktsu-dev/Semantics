@@ -17,6 +17,9 @@ public record MagneticFluxDensityMagnitude<T> : PhysicalQuantity<MagneticFluxDen
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static MagneticFluxDensityMagnitude<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.MagneticFluxDensity;
+
 	/// <summary>
 	/// Creates a new <see cref="MagneticFluxDensityMagnitude{T}"/> from a value in Tesla.
 	/// </summary>
@@ -31,6 +34,13 @@ public record MagneticFluxDensityMagnitude<T> : PhysicalQuantity<MagneticFluxDen
 	/// <returns>A new <see cref="MagneticFluxDensityMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MagneticFluxDensityMagnitude<T> FromGauss(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GaussToTesla)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-MagneticFluxDensity unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IMagneticFluxDensityUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two MagneticFluxDensityMagnitude values, returning the absolute difference as a non-negative MagneticFluxDensityMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

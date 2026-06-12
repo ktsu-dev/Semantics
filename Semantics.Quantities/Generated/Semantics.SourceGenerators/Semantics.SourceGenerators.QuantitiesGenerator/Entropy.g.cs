@@ -17,6 +17,9 @@ public record Entropy<T> : PhysicalQuantity<Entropy<T>, T>, IVector0<Entropy<T>,
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Entropy<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Entropy;
+
 	/// <summary>
 	/// Creates a new <see cref="Entropy{T}"/> from a value in JoulePerKelvin.
 	/// </summary>
@@ -24,6 +27,13 @@ public record Entropy<T> : PhysicalQuantity<Entropy<T>, T>, IVector0<Entropy<T>,
 	/// <returns>A new <see cref="Entropy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Entropy<T> FromJoulePerKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Entropy unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IEntropyUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two Entropy values, returning the absolute difference as a non-negative Entropy.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

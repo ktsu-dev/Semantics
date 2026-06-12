@@ -18,6 +18,9 @@ public record CrossSectionalArea<T> : PhysicalQuantity<CrossSectionalArea<T>, T>
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static CrossSectionalArea<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Area;
+
 	/// <summary>
 	/// Creates a new CrossSectionalArea from a value in SquareMeter.
 	/// </summary>
@@ -39,6 +42,13 @@ public record CrossSectionalArea<T> : PhysicalQuantity<CrossSectionalArea<T>, T>
 	/// <returns>A new CrossSectionalArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static CrossSectionalArea<T> FromSquareInches(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Area unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IAreaUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to Area.</summary>
 	public static implicit operator Area<T>(CrossSectionalArea<T> value) => Area<T>.Create(value.Value);
 /// <summary>Explicit conversion from Area.</summary>

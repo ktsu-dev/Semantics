@@ -17,6 +17,9 @@ public record Pressure<T> : PhysicalQuantity<Pressure<T>, T>, IVector0<Pressure<
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Pressure<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Pressure;
+
 	/// <summary>
 	/// Creates a new <see cref="Pressure{T}"/> from a value in Pascal.
 	/// </summary>
@@ -45,6 +48,13 @@ public record Pressure<T> : PhysicalQuantity<Pressure<T>, T>, IVector0<Pressure<
 	/// <returns>A new <see cref="Pressure{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Pressure<T> FromPsi(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PsiToPascals)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Pressure unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IPressureUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two Pressure values, returning the absolute difference as a non-negative Pressure.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

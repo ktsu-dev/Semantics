@@ -17,6 +17,9 @@ public record SpecificHeat<T> : PhysicalQuantity<SpecificHeat<T>, T>, IVector0<S
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static SpecificHeat<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.SpecificHeat;
+
 	/// <summary>
 	/// Creates a new <see cref="SpecificHeat{T}"/> from a value in JoulePerKilogramKelvin.
 	/// </summary>
@@ -24,6 +27,13 @@ public record SpecificHeat<T> : PhysicalQuantity<SpecificHeat<T>, T>, IVector0<S
 	/// <returns>A new <see cref="SpecificHeat{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SpecificHeat<T> FromJoulePerKilogramKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-SpecificHeat unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ISpecificHeatUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two SpecificHeat values, returning the absolute difference as a non-negative SpecificHeat.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

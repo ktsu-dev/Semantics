@@ -17,6 +17,9 @@ public record AngularVelocity1D<T> : PhysicalQuantity<AngularVelocity1D<T>, T>, 
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static AngularVelocity1D<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.AngularVelocity;
+
 	/// <summary>
 	/// Creates a new <see cref="AngularVelocity1D{T}"/> from a value in RadiansPerSecond.
 	/// </summary>
@@ -29,6 +32,13 @@ public record AngularVelocity1D<T> : PhysicalQuantity<AngularVelocity1D<T>, T>, 
 	/// <param name="value">The value in RevolutionsPerMinute.</param>
 	/// <returns>A new <see cref="AngularVelocity1D{T}"/> instance.</returns>
 	public static AngularVelocity1D<T> FromRevolutionsPerMinute(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionsPerMinuteToRadiansPerSecond)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-AngularVelocity unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IAngularVelocityUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="AngularSpeed{T}"/>.
 	/// </summary>

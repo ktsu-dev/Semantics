@@ -17,12 +17,22 @@ public record AngularMomentum1D<T> : PhysicalQuantity<AngularMomentum1D<T>, T>, 
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static AngularMomentum1D<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.AngularMomentum;
+
 	/// <summary>
 	/// Creates a new <see cref="AngularMomentum1D{T}"/> from a value in KilogramMeterSquaredPerSecond.
 	/// </summary>
 	/// <param name="value">The value in KilogramMeterSquaredPerSecond.</param>
 	/// <returns>A new <see cref="AngularMomentum1D{T}"/> instance.</returns>
 	public static AngularMomentum1D<T> FromKilogramMeterSquaredPerSecond(T value) => Create(value);
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-AngularMomentum unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IAngularMomentumUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="AngularMomentumMagnitude{T}"/>.
 	/// </summary>

@@ -17,6 +17,9 @@ public record VoltageMagnitude<T> : PhysicalQuantity<VoltageMagnitude<T>, T>, IV
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static VoltageMagnitude<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.ElectricPotential;
+
 	/// <summary>
 	/// Creates a new <see cref="VoltageMagnitude{T}"/> from a value in Volt.
 	/// </summary>
@@ -24,6 +27,13 @@ public record VoltageMagnitude<T> : PhysicalQuantity<VoltageMagnitude<T>, T>, IV
 	/// <returns>A new <see cref="VoltageMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static VoltageMagnitude<T> FromVolts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-ElectricPotential unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IElectricPotentialUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two VoltageMagnitude values, returning the absolute difference as a non-negative VoltageMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

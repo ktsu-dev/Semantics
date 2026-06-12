@@ -17,6 +17,9 @@ public record Displacement1D<T> : PhysicalQuantity<Displacement1D<T>, T>, IVecto
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Displacement1D<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Length;
+
 	/// <summary>
 	/// Creates a new <see cref="Displacement1D{T}"/> from a value in Meter.
 	/// </summary>
@@ -83,6 +86,13 @@ public record Displacement1D<T> : PhysicalQuantity<Displacement1D<T>, T>, IVecto
 	/// <param name="value">The value in Mile.</param>
 	/// <returns>A new <see cref="Displacement1D{T}"/> instance.</returns>
 	public static Displacement1D<T> FromMiles(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Length unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ILengthUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Length{T}"/>.
 	/// </summary>

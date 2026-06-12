@@ -18,6 +18,9 @@ public record SpecificEntropy<T> : PhysicalQuantity<SpecificEntropy<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static SpecificEntropy<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.SpecificHeat;
+
 	/// <summary>
 	/// Creates a new SpecificEntropy from a value in JoulePerKilogramKelvin.
 	/// </summary>
@@ -25,6 +28,13 @@ public record SpecificEntropy<T> : PhysicalQuantity<SpecificEntropy<T>, T>, IVec
 	/// <returns>A new SpecificEntropy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SpecificEntropy<T> FromJoulePerKilogramKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-SpecificHeat unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ISpecificHeatUnit unit) => unit.FromBase(Value);
 /// <summary>Implicit conversion to SpecificHeat.</summary>
 	public static implicit operator SpecificHeat<T>(SpecificEntropy<T> value) => SpecificHeat<T>.Create(value.Value);
 /// <summary>Explicit conversion from SpecificHeat.</summary>

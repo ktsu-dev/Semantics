@@ -17,6 +17,9 @@ public record TorqueMagnitude<T> : PhysicalQuantity<TorqueMagnitude<T>, T>, IVec
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static TorqueMagnitude<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.Torque;
+
 	/// <summary>
 	/// Creates a new <see cref="TorqueMagnitude{T}"/> from a value in NewtonMeter.
 	/// </summary>
@@ -31,6 +34,13 @@ public record TorqueMagnitude<T> : PhysicalQuantity<TorqueMagnitude<T>, T>, IVec
 	/// <returns>A new <see cref="TorqueMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static TorqueMagnitude<T> FromPoundFeet(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundFootToNewtonMeters)), nameof(value)));
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-Torque unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.ITorqueUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Subtracts two TorqueMagnitude values, returning the absolute difference as a non-negative TorqueMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).

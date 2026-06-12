@@ -17,12 +17,22 @@ public record AngularJerk1D<T> : PhysicalQuantity<AngularJerk1D<T>, T>, IVector1
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static AngularJerk1D<T> Zero => Create(T.Zero);
 
+	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
+	public override DimensionInfo Dimension => PhysicalDimensions.AngularJerk;
+
 	/// <summary>
 	/// Creates a new <see cref="AngularJerk1D{T}"/> from a value in RadiansPerSecondCubed.
 	/// </summary>
 	/// <param name="value">The value in RadiansPerSecondCubed.</param>
 	/// <returns>A new <see cref="AngularJerk1D{T}"/> instance.</returns>
 	public static AngularJerk1D<T> FromRadiansPerSecondCubed(T value) => Create(value);
+/// <summary>
+	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
+	/// Cross-dimension calls (e.g. passing a non-AngularJerk unit) fail at compile time.
+	/// </summary>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
+	public T In(global::ktsu.Semantics.Quantities.IAngularJerkUnit unit) => unit.FromBase(Value);
 /// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="AngularJerkMagnitude{T}"/>.
 	/// </summary>
