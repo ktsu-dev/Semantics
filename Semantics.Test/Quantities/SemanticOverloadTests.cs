@@ -118,17 +118,14 @@ public sealed class SemanticOverloadTests
 
 	// ----------------- V0 overload subtraction
 	// Locked in #52: V0 - V0 returns the same V0 of T.Abs(a - b).
-	// Generator currently emits a Force1D-returning subtraction for Weight - Weight,
-	// which violates that rule. The current behaviour is documented here so the fix
-	// in #52 can replace this test with the correct shape.
 
 	[TestMethod]
-	public void Weight_Minus_Weight_Currently_Returns_Force1D_PendingFix52()
+	public void Weight_Minus_Weight_Returns_Absolute_Weight()
 	{
 		Weight<double> a = Weight<double>.FromNewtons(100.0);
 		Weight<double> b = Weight<double>.FromNewtons(150.0);
-		Force1D<double> diff = a - b; // current generator behaviour; #52 plans Weight of |a - b|.
-		Assert.AreEqual(-50.0, diff.Value, Tolerance);
+		Weight<double> diff = a - b;
+		Assert.AreEqual(50.0, diff.Value, Tolerance);
 	}
 
 	// ----------------- Storage-type genericity sanity

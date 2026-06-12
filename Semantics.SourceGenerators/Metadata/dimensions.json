@@ -367,7 +367,8 @@
         }
       },
       "integrals": [
-        { "other": "Time", "result": "Dimensionless" }
+        { "other": "Time", "result": "Dimensionless" },
+        { "other": "Length", "result": "Velocity" }
       ],
       "derivatives": [],
       "dotProducts": [],
