@@ -56,7 +56,7 @@ public static class PhysicalDimensions{
 	public static readonly DimensionInfo Density = new("Density", "M L⁻³", new Dictionary<string, int> { ["mass"] = 1, ["length"] = -3 }, new List<string> { "Density" });
 
 	/// <summary>Physical dimension: Dimensionless</summary>
-	public static readonly DimensionInfo Dimensionless = new("Dimensionless", "1", new Dictionary<string, int>(), new List<string> { "Ratio", "RefractiveIndex", "ReynoldsNumber", "SpecificGravity", "MachNumber", "SignedRatio" });
+	public static readonly DimensionInfo Dimensionless = new("Dimensionless", "1", new Dictionary<string, int>(), new List<string> { "Ratio", "RefractiveIndex", "ReynoldsNumber", "SpecificGravity", "MachNumber", "SoundAbsorption", "NoiseReductionCoefficient", "SoundTransmissionClass", "SignedRatio", "ReflectionCoefficient" });
 
 	/// <summary>Physical dimension: DynamicViscosity</summary>
 	public static readonly DimensionInfo DynamicViscosity = new("DynamicViscosity", "M L⁻¹ T⁻¹", new Dictionary<string, int> { ["mass"] = 1, ["length"] = -1, ["time"] = -1 }, new List<string> { "DynamicViscosity" });
@@ -70,17 +70,26 @@ public static class PhysicalDimensions{
 	/// <summary>Physical dimension: ElectricConductance</summary>
 	public static readonly DimensionInfo ElectricConductance = new("ElectricConductance", "M⁻¹ L⁻² T³ I²", new Dictionary<string, int> { ["mass"] = -1, ["length"] = -2, ["time"] = 3, ["electricCurrent"] = 2 }, new List<string> { "Conductance", "Admittance" });
 
+	/// <summary>Physical dimension: ElectricConductivity</summary>
+	public static readonly DimensionInfo ElectricConductivity = new("ElectricConductivity", "M⁻¹ L⁻³ T³ I²", new Dictionary<string, int> { ["mass"] = -1, ["length"] = -3, ["time"] = 3, ["electricCurrent"] = 2 }, new List<string> { "ElectricConductivity" });
+
 	/// <summary>Physical dimension: ElectricCurrent</summary>
 	public static readonly DimensionInfo ElectricCurrent = new("ElectricCurrent", "I", new Dictionary<string, int> { ["electricCurrent"] = 1 }, new List<string> { "CurrentMagnitude", "Current1D", "Current3D" });
 
 	/// <summary>Physical dimension: ElectricField</summary>
 	public static readonly DimensionInfo ElectricField = new("ElectricField", "M L T⁻³ I⁻¹", new Dictionary<string, int> { ["mass"] = 1, ["length"] = 1, ["time"] = -3, ["electricCurrent"] = -1 }, new List<string> { "ElectricFieldMagnitude", "ElectricField1D", "ElectricField2D", "ElectricField3D" });
 
+	/// <summary>Physical dimension: ElectricFlux</summary>
+	public static readonly DimensionInfo ElectricFlux = new("ElectricFlux", "M L³ T⁻³ I⁻¹", new Dictionary<string, int> { ["mass"] = 1, ["length"] = 3, ["time"] = -3, ["electricCurrent"] = -1 }, new List<string> { "ElectricFlux" });
+
 	/// <summary>Physical dimension: ElectricPotential</summary>
 	public static readonly DimensionInfo ElectricPotential = new("ElectricPotential", "M L² T⁻³ I⁻¹", new Dictionary<string, int> { ["mass"] = 1, ["length"] = 2, ["time"] = -3, ["electricCurrent"] = -1 }, new List<string> { "VoltageMagnitude", "EMF", "VoltageDrop", "Voltage" });
 
+	/// <summary>Physical dimension: ElectricPowerDensity</summary>
+	public static readonly DimensionInfo ElectricPowerDensity = new("ElectricPowerDensity", "M L⁻¹ T⁻³", new Dictionary<string, int> { ["mass"] = 1, ["length"] = -1, ["time"] = -3 }, new List<string> { "ElectricPowerDensity" });
+
 	/// <summary>Physical dimension: ElectricResistance</summary>
-	public static readonly DimensionInfo ElectricResistance = new("ElectricResistance", "M L² T⁻³ I⁻²", new Dictionary<string, int> { ["mass"] = 1, ["length"] = 2, ["time"] = -3, ["electricCurrent"] = -2 }, new List<string> { "Resistance" });
+	public static readonly DimensionInfo ElectricResistance = new("ElectricResistance", "M L² T⁻³ I⁻²", new Dictionary<string, int> { ["mass"] = 1, ["length"] = 2, ["time"] = -3, ["electricCurrent"] = -2 }, new List<string> { "Resistance", "Impedance" });
 
 	/// <summary>Physical dimension: Energy</summary>
 	public static readonly DimensionInfo Energy = new("Energy", "M L² T⁻²", new Dictionary<string, int> { ["mass"] = 1, ["length"] = 2, ["time"] = -2 }, new List<string> { "Energy", "Work", "Heat", "KineticEnergy", "PotentialEnergy", "ThermalEnergy" });
@@ -104,7 +113,7 @@ public static class PhysicalDimensions{
 	public static readonly DimensionInfo HeatTransferCoefficient = new("HeatTransferCoefficient", "M T⁻³ Θ⁻¹", new Dictionary<string, int> { ["mass"] = 1, ["time"] = -3, ["temperature"] = -1 }, new List<string> { "HeatTransferCoefficient" });
 
 	/// <summary>Physical dimension: Illuminance</summary>
-	public static readonly DimensionInfo Illuminance = new("Illuminance", "J L⁻²", new Dictionary<string, int> { ["luminousIntensity"] = 1, ["length"] = -2 }, new List<string> { "Illuminance", "Luminance" });
+	public static readonly DimensionInfo Illuminance = new("Illuminance", "J L⁻²", new Dictionary<string, int> { ["luminousIntensity"] = 1, ["length"] = -2 }, new List<string> { "Illuminance" });
 
 	/// <summary>Physical dimension: Inductance</summary>
 	public static readonly DimensionInfo Inductance = new("Inductance", "M L² T⁻² I⁻²", new Dictionary<string, int> { ["mass"] = 1, ["length"] = 2, ["time"] = -2, ["electricCurrent"] = -2 }, new List<string> { "Inductance" });
@@ -120,6 +129,12 @@ public static class PhysicalDimensions{
 
 	/// <summary>Physical dimension: Length</summary>
 	public static readonly DimensionInfo Length = new("Length", "L", new Dictionary<string, int> { ["length"] = 1 }, new List<string> { "Length", "Width", "Height", "Depth", "Radius", "Diameter", "Distance", "Altitude", "Wavelength", "Thickness", "Perimeter", "Displacement1D", "Offset", "Displacement2D", "Displacement3D", "Position3D", "Translation3D", "Displacement4D" });
+
+	/// <summary>Physical dimension: Loudness</summary>
+	public static readonly DimensionInfo Loudness = new("Loudness", "1", new Dictionary<string, int>(), new List<string> { "Loudness" });
+
+	/// <summary>Physical dimension: Luminance</summary>
+	public static readonly DimensionInfo Luminance = new("Luminance", "J L⁻²", new Dictionary<string, int> { ["luminousIntensity"] = 1, ["length"] = -2 }, new List<string> { "Luminance" });
 
 	/// <summary>Physical dimension: LuminousFlux</summary>
 	public static readonly DimensionInfo LuminousFlux = new("LuminousFlux", "J", new Dictionary<string, int> { ["luminousIntensity"] = 1 }, new List<string> { "LuminousFlux" });
@@ -157,17 +172,29 @@ public static class PhysicalDimensions{
 	/// <summary>Physical dimension: OpticalPower</summary>
 	public static readonly DimensionInfo OpticalPower = new("OpticalPower", "L⁻¹", new Dictionary<string, int> { ["length"] = -1 }, new List<string> { "OpticalPower" });
 
+	/// <summary>Physical dimension: Permittivity</summary>
+	public static readonly DimensionInfo Permittivity = new("Permittivity", "M⁻¹ L⁻³ T⁴ I²", new Dictionary<string, int> { ["mass"] = -1, ["length"] = -3, ["time"] = 4, ["electricCurrent"] = 2 }, new List<string> { "Permittivity" });
+
 	/// <summary>Physical dimension: Power</summary>
-	public static readonly DimensionInfo Power = new("Power", "M L² T⁻³", new Dictionary<string, int> { ["mass"] = 1, ["length"] = 2, ["time"] = -3 }, new List<string> { "Power", "HeatFlowRate" });
+	public static readonly DimensionInfo Power = new("Power", "M L² T⁻³", new Dictionary<string, int> { ["mass"] = 1, ["length"] = 2, ["time"] = -3 }, new List<string> { "Power", "HeatFlowRate", "SoundPower" });
 
 	/// <summary>Physical dimension: Pressure</summary>
-	public static readonly DimensionInfo Pressure = new("Pressure", "M L⁻¹ T⁻²", new Dictionary<string, int> { ["mass"] = 1, ["length"] = -1, ["time"] = -2 }, new List<string> { "Pressure", "Stress", "AtmosphericPressure", "GaugePressure", "BulkModulus", "YoungsModulus", "ShearModulus" });
+	public static readonly DimensionInfo Pressure = new("Pressure", "M L⁻¹ T⁻²", new Dictionary<string, int> { ["mass"] = 1, ["length"] = -1, ["time"] = -2 }, new List<string> { "Pressure", "Stress", "AtmosphericPressure", "GaugePressure", "BulkModulus", "YoungsModulus", "ShearModulus", "SoundPressure" });
 
 	/// <summary>Physical dimension: RadioactiveActivity</summary>
 	public static readonly DimensionInfo RadioactiveActivity = new("RadioactiveActivity", "T⁻¹", new Dictionary<string, int> { ["time"] = -1 }, new List<string> { "RadioactiveActivity" });
 
+	/// <summary>Physical dimension: RateConstant</summary>
+	public static readonly DimensionInfo RateConstant = new("RateConstant", "T⁻¹", new Dictionary<string, int> { ["time"] = -1 }, new List<string> { "RateConstant" });
+
 	/// <summary>Physical dimension: ReactionRate</summary>
 	public static readonly DimensionInfo ReactionRate = new("ReactionRate", "N L⁻³ T⁻¹", new Dictionary<string, int> { ["amountOfSubstance"] = 1, ["length"] = -3, ["time"] = -1 }, new List<string> { "ReactionRate" });
+
+	/// <summary>Physical dimension: Sensitivity</summary>
+	public static readonly DimensionInfo Sensitivity = new("Sensitivity", "M⁻¹ L⁻¹ T² I", new Dictionary<string, int> { ["mass"] = -1, ["length"] = -1, ["time"] = 2, ["electricCurrent"] = 1 }, new List<string> { "Sensitivity" });
+
+	/// <summary>Physical dimension: Sharpness</summary>
+	public static readonly DimensionInfo Sharpness = new("Sharpness", "1", new Dictionary<string, int>(), new List<string> { "Sharpness" });
 
 	/// <summary>Physical dimension: Snap</summary>
 	public static readonly DimensionInfo Snap = new("Snap", "L T⁻⁴", new Dictionary<string, int> { ["length"] = 1, ["time"] = -4 }, new List<string> { "SnapMagnitude", "Snap1D", "Snap2D", "Snap3D", "Snap4D" });
@@ -187,6 +214,9 @@ public static class PhysicalDimensions{
 	/// <summary>Physical dimension: ThermalExpansion</summary>
 	public static readonly DimensionInfo ThermalExpansion = new("ThermalExpansion", "Θ⁻¹", new Dictionary<string, int> { ["temperature"] = -1 }, new List<string> { "ThermalExpansionCoefficient" });
 
+	/// <summary>Physical dimension: ThermalResistance</summary>
+	public static readonly DimensionInfo ThermalResistance = new("ThermalResistance", "Θ M⁻¹ L⁻² T³", new Dictionary<string, int> { ["temperature"] = 1, ["mass"] = -1, ["length"] = -2, ["time"] = 3 }, new List<string> { "ThermalResistance" });
+
 	/// <summary>Physical dimension: Time</summary>
 	public static readonly DimensionInfo Time = new("Time", "T", new Dictionary<string, int> { ["time"] = 1 }, new List<string> { "Duration", "Period", "HalfLife", "TimeConstant", "Latency", "ReverberationTime", "DecayTime" });
 
@@ -203,7 +233,7 @@ public static class PhysicalDimensions{
 	public static readonly DimensionInfo VolumetricFlowRate = new("VolumetricFlowRate", "L³ T⁻¹", new Dictionary<string, int> { ["length"] = 3, ["time"] = -1 }, new List<string> { "VolumetricFlowRate" });
 
 	/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>
-	public static IReadOnlySet<DimensionInfo> All = new HashSet<DimensionInfo>([ AbsorbedDose, Acceleration, AcousticImpedance, AmountOfSubstance, AngularAcceleration, AngularDisplacement, AngularJerk, AngularMomentum, AngularVelocity, Area, CatalyticActivity, Concentration, Density, Dimensionless, DynamicViscosity, ElectricCapacitance, ElectricCharge, ElectricConductance, ElectricCurrent, ElectricField, ElectricPotential, ElectricResistance, Energy, Entropy, EquivalentDose, Exposure, Force, Frequency, HeatTransferCoefficient, Illuminance, Inductance, Irradiance, Jerk, KinematicViscosity, Length, LuminousFlux, LuminousIntensity, MagneticFlux, MagneticFluxDensity, Mass, MassFlowRate, MolarEnergy, MolarMass, MomentOfInertia, Momentum, NuclearCrossSection, OpticalPower, Power, Pressure, RadioactiveActivity, ReactionRate, Snap, SpecificHeat, SurfaceTension, Temperature, ThermalConductivity, ThermalExpansion, Time, Torque, Velocity, Volume, VolumetricFlowRate ]);
+	public static IReadOnlySet<DimensionInfo> All = new HashSet<DimensionInfo>([ AbsorbedDose, Acceleration, AcousticImpedance, AmountOfSubstance, AngularAcceleration, AngularDisplacement, AngularJerk, AngularMomentum, AngularVelocity, Area, CatalyticActivity, Concentration, Density, Dimensionless, DynamicViscosity, ElectricCapacitance, ElectricCharge, ElectricConductance, ElectricConductivity, ElectricCurrent, ElectricField, ElectricFlux, ElectricPotential, ElectricPowerDensity, ElectricResistance, Energy, Entropy, EquivalentDose, Exposure, Force, Frequency, HeatTransferCoefficient, Illuminance, Inductance, Irradiance, Jerk, KinematicViscosity, Length, Loudness, Luminance, LuminousFlux, LuminousIntensity, MagneticFlux, MagneticFluxDensity, Mass, MassFlowRate, MolarEnergy, MolarMass, MomentOfInertia, Momentum, NuclearCrossSection, OpticalPower, Permittivity, Power, Pressure, RadioactiveActivity, RateConstant, ReactionRate, Sensitivity, Sharpness, Snap, SpecificHeat, SurfaceTension, Temperature, ThermalConductivity, ThermalExpansion, ThermalResistance, Time, Torque, Velocity, Volume, VolumetricFlowRate ]);
 
 };
 
@@ -334,6 +364,13 @@ public interface IElectricConductanceUnit : IUnit
 { }
 
 /// <summary>
+/// Marker interface implemented by every unit of the <c>ElectricConductivity</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface IElectricConductivityUnit : IUnit
+{ }
+
+/// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricCurrent</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
@@ -348,10 +385,24 @@ public interface IElectricFieldUnit : IUnit
 { }
 
 /// <summary>
+/// Marker interface implemented by every unit of the <c>ElectricFlux</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface IElectricFluxUnit : IUnit
+{ }
+
+/// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricPotential</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricPotentialUnit : IUnit
+{ }
+
+/// <summary>
+/// Marker interface implemented by every unit of the <c>ElectricPowerDensity</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface IElectricPowerDensityUnit : IUnit
 { }
 
 /// <summary>
@@ -453,6 +504,20 @@ public interface ILengthUnit : IUnit
 { }
 
 /// <summary>
+/// Marker interface implemented by every unit of the <c>Loudness</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface ILoudnessUnit : IUnit
+{ }
+
+/// <summary>
+/// Marker interface implemented by every unit of the <c>Luminance</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface ILuminanceUnit : IUnit
+{ }
+
+/// <summary>
 /// Marker interface implemented by every unit of the <c>LuminousFlux</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
@@ -537,6 +602,13 @@ public interface IOpticalPowerUnit : IUnit
 { }
 
 /// <summary>
+/// Marker interface implemented by every unit of the <c>Permittivity</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface IPermittivityUnit : IUnit
+{ }
+
+/// <summary>
 /// Marker interface implemented by every unit of the <c>Power</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
@@ -558,10 +630,31 @@ public interface IRadioactiveActivityUnit : IUnit
 { }
 
 /// <summary>
+/// Marker interface implemented by every unit of the <c>RateConstant</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface IRateConstantUnit : IUnit
+{ }
+
+/// <summary>
 /// Marker interface implemented by every unit of the <c>ReactionRate</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IReactionRateUnit : IUnit
+{ }
+
+/// <summary>
+/// Marker interface implemented by every unit of the <c>Sensitivity</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface ISensitivityUnit : IUnit
+{ }
+
+/// <summary>
+/// Marker interface implemented by every unit of the <c>Sharpness</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface ISharpnessUnit : IUnit
 { }
 
 /// <summary>
@@ -604,6 +697,13 @@ public interface IThermalConductivityUnit : IUnit
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IThermalExpansionUnit : IUnit
+{ }
+
+/// <summary>
+/// Marker interface implemented by every unit of the <c>ThermalResistance</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface IThermalResistanceUnit : IUnit
 { }
 
 /// <summary>

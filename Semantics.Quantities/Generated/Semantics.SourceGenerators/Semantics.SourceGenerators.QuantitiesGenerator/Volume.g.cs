@@ -137,5 +137,9 @@ public record Volume<T> : PhysicalQuantity<Volume<T>, T>, IVector0<Volume<T>, T>
 	/// Divides Volume by VolumetricFlowRate to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Duration<T> operator /(Volume<T> left, VolumetricFlowRate<T> right) => Divide<Duration<T>>(left, right);
+/// <summary>
+	/// Multiplies Volume by ElectricPowerDensity to produce Power.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Power<T> operator *(Volume<T> left, ElectricPowerDensity<T> right) => Multiply<Power<T>>(left, right);
 };
 

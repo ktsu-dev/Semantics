@@ -655,7 +655,7 @@ public sealed record Microsecond : IUnit, ITimeUnit
 /// <summary>
 /// Square meter - SI derived unit of area.
 /// </summary>
-public sealed record SquareMeter : IUnit, IAreaUnit
+public sealed record SquareMeter : IUnit, IAreaUnit, INuclearCrossSectionUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
 	public string Name => "SquareMeter";
@@ -2641,6 +2641,34 @@ public sealed record Megawatt : IUnit, IPowerUnit
 };
 
 /// <summary>
+/// Watt per cubic meter - SI unit of volumetric power density.
+/// </summary>
+public sealed record WattPerCubicMeter : IUnit, IElectricPowerDensityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "WattPerCubicMeter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "W/m³";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricPowerDensity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public WattPerCubicMeter() { }
+
+};
+
+/// <summary>
 /// Kelvin - SI base unit of thermodynamic temperature.
 /// </summary>
 public sealed record Kelvin : IUnit, ITemperatureUnit
@@ -2889,6 +2917,34 @@ public sealed record Rankine : IUnit, ITemperatureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Rankine() { }
+
+};
+
+/// <summary>
+/// Kelvin per watt - SI unit of absolute thermal resistance.
+/// </summary>
+public sealed record KelvinPerWatt : IUnit, IThermalResistanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "KelvinPerWatt";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "K/W";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ThermalResistance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public KelvinPerWatt() { }
 
 };
 
@@ -3453,6 +3509,118 @@ public sealed record AmpereHour : IUnit, IElectricChargeUnit
 };
 
 /// <summary>
+/// Volt meter - SI unit of electric flux.
+/// </summary>
+public sealed record VoltMeter : IUnit, IElectricFluxUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "VoltMeter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "V·m";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricFlux;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public VoltMeter() { }
+
+};
+
+/// <summary>
+/// Farad per meter - SI unit of permittivity.
+/// </summary>
+public sealed record FaradPerMeter : IUnit, IPermittivityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "FaradPerMeter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "F/m";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Permittivity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public FaradPerMeter() { }
+
+};
+
+/// <summary>
+/// Siemens per meter - SI unit of electrical conductivity.
+/// </summary>
+public sealed record SiemensPerMeter : IUnit, IElectricConductivityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "SiemensPerMeter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "S/m";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricConductivity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public SiemensPerMeter() { }
+
+};
+
+/// <summary>
+/// Volt per pascal - SI unit of transducer sensitivity.
+/// </summary>
+public sealed record VoltPerPascal : IUnit, ISensitivityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "VoltPerPascal";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "V/Pa";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Sensitivity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public VoltPerPascal() { }
+
+};
+
+/// <summary>
 /// Radians per second - SI derived unit of angular velocity.
 /// </summary>
 public sealed record RadiansPerSecond : IUnit, IAngularVelocityUnit
@@ -3649,6 +3817,62 @@ public sealed record Megahertz : IUnit, IFrequencyUnit
 };
 
 /// <summary>
+/// Sone - psychoacoustic unit of perceived loudness.
+/// </summary>
+public sealed record Sone : IUnit, ILoudnessUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Sone";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "sone";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Loudness;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Sone() { }
+
+};
+
+/// <summary>
+/// Acum - psychoacoustic unit of perceived sharpness.
+/// </summary>
+public sealed record Acum : IUnit, ISharpnessUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Acum";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "acum";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Sharpness;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Acum() { }
+
+};
+
+/// <summary>
 /// Candela - SI base unit of luminous intensity.
 /// </summary>
 public sealed record Candela : IUnit, ILuminousIntensityUnit
@@ -3813,6 +4037,90 @@ public sealed record FootCandle : IUnit, IIlluminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public FootCandle() { }
+
+};
+
+/// <summary>
+/// Candela per square meter - SI unit of luminance.
+/// </summary>
+public sealed record CandelaPerSquareMeter : IUnit, ILuminanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "CandelaPerSquareMeter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "cd/m²";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Luminance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public CandelaPerSquareMeter() { }
+
+};
+
+/// <summary>
+/// Nit - common name for one candela per square meter.
+/// </summary>
+public sealed record Nit : IUnit, ILuminanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Nit";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "nt";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Luminance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Nit() { }
+
+};
+
+/// <summary>
+/// Foot-lambert - Imperial unit of luminance (1/π candela per square foot).
+/// </summary>
+public sealed record FootLambert : IUnit, ILuminanceUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "FootLambert";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "fL";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Imperial;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Luminance;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => FootLambertToCandelaPerSquareMeter;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public FootLambert() { }
 
 };
 
@@ -4177,6 +4485,34 @@ public sealed record Mole : IUnit, IAmountOfSubstanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Mole() { }
+
+};
+
+/// <summary>
+/// Mole per cubic meter - SI base unit of concentration.
+/// </summary>
+public sealed record MolePerCubicMeter : IUnit, IConcentrationUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "MolePerCubicMeter";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "mol/m³";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Concentration;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public MolePerCubicMeter() { }
 
 };
 
@@ -4853,6 +5189,34 @@ public sealed record Dalton : IUnit, IMolarMassUnit
 };
 
 /// <summary>
+/// Per second - SI unit of a first-order rate constant.
+/// </summary>
+public sealed record PerSecond : IUnit, IRateConstantUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "PerSecond";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "s⁻¹";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.RateConstant;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public PerSecond() { }
+
+};
+
+/// <summary>
 /// Watt per square meter - SI derived unit of irradiance and sound intensity.
 /// </summary>
 public sealed record WattPerSquareMeter : IUnit, IIrradianceUnit
@@ -4916,6 +5280,9 @@ public static class Units{
 	/// <summary>Singleton <c>Acre</c> instance.</summary>
 	public static readonly Acre Acre = new Acre();
 
+	/// <summary>Singleton <c>Acum</c> instance.</summary>
+	public static readonly Acum Acum = new Acum();
+
 	/// <summary>Singleton <c>Ampere</c> instance.</summary>
 	public static readonly Ampere Ampere = new Ampere();
 
@@ -4951,6 +5318,9 @@ public static class Units{
 
 	/// <summary>Singleton <c>Candela</c> instance.</summary>
 	public static readonly Candela Candela = new Candela();
+
+	/// <summary>Singleton <c>CandelaPerSquareMeter</c> instance.</summary>
+	public static readonly CandelaPerSquareMeter CandelaPerSquareMeter = new CandelaPerSquareMeter();
 
 	/// <summary>Singleton <c>Celsius</c> instance.</summary>
 	public static readonly Celsius Celsius = new Celsius();
@@ -5021,6 +5391,9 @@ public static class Units{
 	/// <summary>Singleton <c>Farad</c> instance.</summary>
 	public static readonly Farad Farad = new Farad();
 
+	/// <summary>Singleton <c>FaradPerMeter</c> instance.</summary>
+	public static readonly FaradPerMeter FaradPerMeter = new FaradPerMeter();
+
 	/// <summary>Singleton <c>FeetPerSecond</c> instance.</summary>
 	public static readonly FeetPerSecond FeetPerSecond = new FeetPerSecond();
 
@@ -5029,6 +5402,9 @@ public static class Units{
 
 	/// <summary>Singleton <c>FootCandle</c> instance.</summary>
 	public static readonly FootCandle FootCandle = new FootCandle();
+
+	/// <summary>Singleton <c>FootLambert</c> instance.</summary>
+	public static readonly FootLambert FootLambert = new FootLambert();
 
 	/// <summary>Singleton <c>Gallon</c> instance.</summary>
 	public static readonly Gallon Gallon = new Gallon();
@@ -5092,6 +5468,9 @@ public static class Units{
 
 	/// <summary>Singleton <c>Kelvin</c> instance.</summary>
 	public static readonly Kelvin Kelvin = new Kelvin();
+
+	/// <summary>Singleton <c>KelvinPerWatt</c> instance.</summary>
+	public static readonly KelvinPerWatt KelvinPerWatt = new KelvinPerWatt();
 
 	/// <summary>Singleton <c>Kiloampere</c> instance.</summary>
 	public static readonly Kiloampere Kiloampere = new Kiloampere();
@@ -5243,6 +5622,9 @@ public static class Units{
 	/// <summary>Singleton <c>Mole</c> instance.</summary>
 	public static readonly Mole Mole = new Mole();
 
+	/// <summary>Singleton <c>MolePerCubicMeter</c> instance.</summary>
+	public static readonly MolePerCubicMeter MolePerCubicMeter = new MolePerCubicMeter();
+
 	/// <summary>Singleton <c>MolePerCubicMeterSecond</c> instance.</summary>
 	public static readonly MolePerCubicMeterSecond MolePerCubicMeterSecond = new MolePerCubicMeterSecond();
 
@@ -5270,6 +5652,9 @@ public static class Units{
 	/// <summary>Singleton <c>NewtonSecond</c> instance.</summary>
 	public static readonly NewtonSecond NewtonSecond = new NewtonSecond();
 
+	/// <summary>Singleton <c>Nit</c> instance.</summary>
+	public static readonly Nit Nit = new Nit();
+
 	/// <summary>Singleton <c>Ohm</c> instance.</summary>
 	public static readonly Ohm Ohm = new Ohm();
 
@@ -5293,6 +5678,9 @@ public static class Units{
 
 	/// <summary>Singleton <c>PerKelvin</c> instance.</summary>
 	public static readonly PerKelvin PerKelvin = new PerKelvin();
+
+	/// <summary>Singleton <c>PerSecond</c> instance.</summary>
+	public static readonly PerSecond PerSecond = new PerSecond();
 
 	/// <summary>Singleton <c>PercentByWeight</c> instance.</summary>
 	public static readonly PercentByWeight PercentByWeight = new PercentByWeight();
@@ -5354,8 +5742,14 @@ public static class Units{
 	/// <summary>Singleton <c>Siemens</c> instance.</summary>
 	public static readonly Siemens Siemens = new Siemens();
 
+	/// <summary>Singleton <c>SiemensPerMeter</c> instance.</summary>
+	public static readonly SiemensPerMeter SiemensPerMeter = new SiemensPerMeter();
+
 	/// <summary>Singleton <c>Sievert</c> instance.</summary>
 	public static readonly Sievert Sievert = new Sievert();
+
+	/// <summary>Singleton <c>Sone</c> instance.</summary>
+	public static readonly Sone Sone = new Sone();
 
 	/// <summary>Singleton <c>SquareCentimeter</c> instance.</summary>
 	public static readonly SquareCentimeter SquareCentimeter = new SquareCentimeter();
@@ -5408,14 +5802,23 @@ public static class Units{
 	/// <summary>Singleton <c>Volt</c> instance.</summary>
 	public static readonly Volt Volt = new Volt();
 
+	/// <summary>Singleton <c>VoltMeter</c> instance.</summary>
+	public static readonly VoltMeter VoltMeter = new VoltMeter();
+
 	/// <summary>Singleton <c>VoltPerMeter</c> instance.</summary>
 	public static readonly VoltPerMeter VoltPerMeter = new VoltPerMeter();
+
+	/// <summary>Singleton <c>VoltPerPascal</c> instance.</summary>
+	public static readonly VoltPerPascal VoltPerPascal = new VoltPerPascal();
 
 	/// <summary>Singleton <c>Watt</c> instance.</summary>
 	public static readonly Watt Watt = new Watt();
 
 	/// <summary>Singleton <c>WattHour</c> instance.</summary>
 	public static readonly WattHour WattHour = new WattHour();
+
+	/// <summary>Singleton <c>WattPerCubicMeter</c> instance.</summary>
+	public static readonly WattPerCubicMeter WattPerCubicMeter = new WattPerCubicMeter();
 
 	/// <summary>Singleton <c>WattPerMeterKelvin</c> instance.</summary>
 	public static readonly WattPerMeterKelvin WattPerMeterKelvin = new WattPerMeterKelvin();

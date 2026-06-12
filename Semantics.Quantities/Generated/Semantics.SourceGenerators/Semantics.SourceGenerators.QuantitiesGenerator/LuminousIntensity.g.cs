@@ -46,5 +46,13 @@ public record LuminousIntensity<T> : PhysicalQuantity<LuminousIntensity<T>, T>, 
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static LuminousIntensity<T> operator -(LuminousIntensity<T> left, LuminousIntensity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+/// <summary>
+	/// Divides LuminousIntensity by Area to produce Luminance.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Luminance<T> operator /(LuminousIntensity<T> left, Area<T> right) => Divide<Luminance<T>>(left, right);
+/// <summary>
+	/// Divides LuminousIntensity by Luminance to produce Area.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Area<T> operator /(LuminousIntensity<T> left, Luminance<T> right) => Divide<Area<T>>(left, right);
 };
 

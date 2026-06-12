@@ -43,5 +43,9 @@ public record ElectricFieldMagnitude<T> : PhysicalQuantity<ElectricFieldMagnitud
 	/// Multiplies ElectricFieldMagnitude by Length to produce VoltageMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static VoltageMagnitude<T> operator *(ElectricFieldMagnitude<T> left, Length<T> right) => Multiply<VoltageMagnitude<T>>(left, right);
+/// <summary>
+	/// Multiplies ElectricFieldMagnitude by Area to produce ElectricFlux.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ElectricFlux<T> operator *(ElectricFieldMagnitude<T> left, Area<T> right) => Multiply<ElectricFlux<T>>(left, right);
 };
 

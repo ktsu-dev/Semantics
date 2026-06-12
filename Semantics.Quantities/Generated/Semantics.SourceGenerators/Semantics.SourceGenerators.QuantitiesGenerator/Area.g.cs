@@ -101,6 +101,10 @@ public record Area<T> : PhysicalQuantity<Area<T>, T>, IVector0<Area<T>, T>
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ForceMagnitude<T> operator *(Area<T> left, Pressure<T> right) => Multiply<ForceMagnitude<T>>(left, right);
 /// <summary>
+	/// Multiplies Area by ElectricFieldMagnitude to produce ElectricFlux.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ElectricFlux<T> operator *(Area<T> left, ElectricFieldMagnitude<T> right) => Multiply<ElectricFlux<T>>(left, right);
+/// <summary>
 	/// Multiplies Area by Illuminance to produce LuminousFlux.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static LuminousFlux<T> operator *(Area<T> left, Illuminance<T> right) => Multiply<LuminousFlux<T>>(left, right);
@@ -112,5 +116,9 @@ public record Area<T> : PhysicalQuantity<Area<T>, T>, IVector0<Area<T>, T>
 	/// Multiplies Area by Irradiance to produce Power.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Power<T> operator *(Area<T> left, Irradiance<T> right) => Multiply<Power<T>>(left, right);
+/// <summary>
+	/// Multiplies Area by Luminance to produce LuminousIntensity.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static LuminousIntensity<T> operator *(Area<T> left, Luminance<T> right) => Multiply<LuminousIntensity<T>>(left, right);
 };
 

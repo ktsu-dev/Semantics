@@ -88,5 +88,13 @@ public record Power<T> : PhysicalQuantity<Power<T>, T>, IVector0<Power<T>, T>
 	/// Divides Power by Irradiance to produce Area.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Area<T> operator /(Power<T> left, Irradiance<T> right) => Divide<Area<T>>(left, right);
+/// <summary>
+	/// Divides Power by Volume to produce ElectricPowerDensity.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ElectricPowerDensity<T> operator /(Power<T> left, Volume<T> right) => Divide<ElectricPowerDensity<T>>(left, right);
+/// <summary>
+	/// Divides Power by ElectricPowerDensity to produce Volume.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Volume<T> operator /(Power<T> left, ElectricPowerDensity<T> right) => Divide<Volume<T>>(left, right);
 };
 

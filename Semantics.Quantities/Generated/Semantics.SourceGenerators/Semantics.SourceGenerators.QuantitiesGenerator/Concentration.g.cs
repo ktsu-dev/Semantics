@@ -21,12 +21,19 @@ public record Concentration<T> : PhysicalQuantity<Concentration<T>, T>, IVector0
 	public override DimensionInfo Dimension => PhysicalDimensions.Concentration;
 
 	/// <summary>
+	/// Creates a new <see cref="Concentration{T}"/> from a value in MolePerCubicMeter.
+	/// </summary>
+	/// <param name="value">The value in MolePerCubicMeter.</param>
+	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Concentration<T> FromMolePerCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+/// <summary>
 	/// Creates a new <see cref="Concentration{T}"/> from a value in Molar.
 	/// </summary>
 	/// <param name="value">The value in Molar.</param>
 	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Concentration<T> FromMolars(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Concentration<T> FromMolars(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MolarToCubicMeter)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Concentration{T}"/> from a value in Millimolar.
 	/// </summary>
