@@ -56,7 +56,7 @@ public static class PhysicalDimensions{
 	public static readonly DimensionInfo Density = new("Density", "M L⁻³", new Dictionary<string, int> { ["mass"] = 1, ["length"] = -3 }, new List<string> { "Density" });
 
 	/// <summary>Physical dimension: Dimensionless</summary>
-	public static readonly DimensionInfo Dimensionless = new("Dimensionless", "1", new Dictionary<string, int>(), new List<string> { "Ratio", "RefractiveIndex", "ReynoldsNumber", "SpecificGravity", "MachNumber", "SoundAbsorption", "NoiseReductionCoefficient", "SoundTransmissionClass", "SignedRatio", "ReflectionCoefficient" });
+	public static readonly DimensionInfo Dimensionless = new("Dimensionless", "1", new Dictionary<string, int>(), new List<string> { "Ratio", "RefractiveIndex", "ReynoldsNumber", "SpecificGravity", "MachNumber", "SoundAbsorption", "NoiseReductionCoefficient", "SoundTransmissionClass", "Gain", "SignedRatio", "ReflectionCoefficient" });
 
 	/// <summary>Physical dimension: DynamicViscosity</summary>
 	public static readonly DimensionInfo DynamicViscosity = new("DynamicViscosity", "M L⁻¹ T⁻¹", new Dictionary<string, int> { ["mass"] = 1, ["length"] = -1, ["time"] = -1 }, new List<string> { "DynamicViscosity" });

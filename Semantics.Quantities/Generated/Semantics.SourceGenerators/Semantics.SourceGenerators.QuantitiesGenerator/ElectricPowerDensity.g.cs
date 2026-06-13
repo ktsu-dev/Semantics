@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ElectricPowerDensity dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ElectricPowerDensity<T> : PhysicalQuantity<ElectricPowerDensity<T>, T>, IVector0<ElectricPowerDensity<T>, T>
+public partial record ElectricPowerDensity<T> : PhysicalQuantity<ElectricPowerDensity<T>, T>, IVector0<ElectricPowerDensity<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

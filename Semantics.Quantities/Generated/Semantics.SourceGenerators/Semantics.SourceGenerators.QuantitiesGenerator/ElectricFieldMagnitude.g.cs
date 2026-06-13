@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ElectricField dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ElectricFieldMagnitude<T> : PhysicalQuantity<ElectricFieldMagnitude<T>, T>, IVector0<ElectricFieldMagnitude<T>, T>
+public partial record ElectricFieldMagnitude<T> : PhysicalQuantity<ElectricFieldMagnitude<T>, T>, IVector0<ElectricFieldMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

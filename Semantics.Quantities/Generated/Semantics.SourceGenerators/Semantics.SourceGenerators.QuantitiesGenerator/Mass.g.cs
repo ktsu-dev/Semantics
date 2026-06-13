@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Mass dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Mass<T> : PhysicalQuantity<Mass<T>, T>, IVector0<Mass<T>, T>
+public partial record Mass<T> : PhysicalQuantity<Mass<T>, T>, IVector0<Mass<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

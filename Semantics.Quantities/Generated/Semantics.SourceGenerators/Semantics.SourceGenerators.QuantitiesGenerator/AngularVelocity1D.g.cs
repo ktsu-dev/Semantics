@@ -11,7 +11,7 @@ using System.Numerics;
 /// Signed one-dimensional (Vector1) quantity for the AngularVelocity dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record AngularVelocity1D<T> : PhysicalQuantity<AngularVelocity1D<T>, T>, IVector1<AngularVelocity1D<T>, T>
+public partial record AngularVelocity1D<T> : PhysicalQuantity<AngularVelocity1D<T>, T>, IVector1<AngularVelocity1D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ElectricConductivity dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ElectricConductivity<T> : PhysicalQuantity<ElectricConductivity<T>, T>, IVector0<ElectricConductivity<T>, T>
+public partial record ElectricConductivity<T> : PhysicalQuantity<ElectricConductivity<T>, T>, IVector0<ElectricConductivity<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

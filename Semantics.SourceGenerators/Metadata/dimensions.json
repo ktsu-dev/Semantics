@@ -4,7 +4,7 @@
       "name": "Dimensionless",
       "symbol": "1",
       "dimensionalFormula": {},
-      "availableUnits": ["Dimensionless", "Radian", "Degree", "Gradian", "Revolution", "Milliradian", "PartsPerMillion", "PartsPerBillion", "PercentByWeight"],
+      "availableUnits": ["Dimensionless", "Radian", "Degree", "Gradian", "Revolution", "Milliradian", "Percent", "PartsPerMillion", "PartsPerBillion", "PercentByWeight"],
       "quantities": {
         "vector0": {
           "base": "Ratio",
@@ -15,7 +15,8 @@
             { "name": "MachNumber", "description": "Ratio of flow velocity to local speed of sound." },
             { "name": "SoundAbsorption", "description": "Fraction of incident sound energy absorbed by a surface." },
             { "name": "NoiseReductionCoefficient", "description": "Average sound absorption across standard frequencies." },
-            { "name": "SoundTransmissionClass", "description": "Single-number rating of airborne sound insulation." }
+            { "name": "SoundTransmissionClass", "description": "Single-number rating of airborne sound insulation." },
+            { "name": "Gain", "description": "Linear amplitude factor applied to a signal (1 = unity)." }
           ]
         },
         "vector1": {

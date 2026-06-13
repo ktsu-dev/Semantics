@@ -11,7 +11,7 @@ using System.Numerics;
 /// Signed one-dimensional (Vector1) quantity for the ElectricCurrent dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Current1D<T> : PhysicalQuantity<Current1D<T>, T>, IVector1<Current1D<T>, T>
+public partial record Current1D<T> : PhysicalQuantity<Current1D<T>, T>, IVector1<Current1D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

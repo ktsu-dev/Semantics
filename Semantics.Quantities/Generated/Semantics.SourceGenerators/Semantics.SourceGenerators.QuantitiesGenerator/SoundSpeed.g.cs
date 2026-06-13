@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Speed{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record SoundSpeed<T> : PhysicalQuantity<SoundSpeed<T>, T>, IVector0<SoundSpeed<T>, T>
+public partial record SoundSpeed<T> : PhysicalQuantity<SoundSpeed<T>, T>, IVector0<SoundSpeed<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Area dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Area<T> : PhysicalQuantity<Area<T>, T>, IVector0<Area<T>, T>
+public partial record Area<T> : PhysicalQuantity<Area<T>, T>, IVector0<Area<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

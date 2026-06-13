@@ -1521,6 +1521,34 @@ public sealed record Milliradian : IUnit, IDimensionlessUnit, IAngularDisplaceme
 };
 
 /// <summary>
+/// Percent - one hundredth of unity.
+/// </summary>
+public sealed record Percent : IUnit, IDimensionlessUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "Percent";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "%";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.Other;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => PercentToRatio;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public Percent() { }
+
+};
+
+/// <summary>
 /// Parts per million - 1e-6 dimensionless ratio.
 /// </summary>
 public sealed record PartsPerMillion : IUnit, IDimensionlessUnit
@@ -5681,6 +5709,9 @@ public static class Units{
 
 	/// <summary>Singleton <c>PerSecond</c> instance.</summary>
 	public static readonly PerSecond PerSecond = new PerSecond();
+
+	/// <summary>Singleton <c>Percent</c> instance.</summary>
+	public static readonly Percent Percent = new Percent();
 
 	/// <summary>Singleton <c>PercentByWeight</c> instance.</summary>
 	public static readonly PercentByWeight PercentByWeight = new PercentByWeight();

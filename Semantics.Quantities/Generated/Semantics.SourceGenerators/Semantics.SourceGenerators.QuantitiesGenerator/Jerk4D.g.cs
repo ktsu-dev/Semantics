@@ -15,7 +15,7 @@ using System.Numerics;
 /// 4D vector representation of Jerk.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public record Jerk4D<T> : IVector4<Jerk4D<T>, T>
+public partial record Jerk4D<T> : IVector4<Jerk4D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

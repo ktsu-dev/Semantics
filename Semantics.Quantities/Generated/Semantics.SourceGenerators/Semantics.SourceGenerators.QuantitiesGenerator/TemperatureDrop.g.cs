@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="TemperatureDelta{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record TemperatureDrop<T> : PhysicalQuantity<TemperatureDrop<T>, T>, IVector1<TemperatureDrop<T>, T>
+public partial record TemperatureDrop<T> : PhysicalQuantity<TemperatureDrop<T>, T>, IVector1<TemperatureDrop<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

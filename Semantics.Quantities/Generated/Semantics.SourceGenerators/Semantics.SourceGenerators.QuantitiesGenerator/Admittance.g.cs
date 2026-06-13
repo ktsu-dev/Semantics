@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Conductance{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Admittance<T> : PhysicalQuantity<Admittance<T>, T>, IVector0<Admittance<T>, T>
+public partial record Admittance<T> : PhysicalQuantity<Admittance<T>, T>, IVector0<Admittance<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

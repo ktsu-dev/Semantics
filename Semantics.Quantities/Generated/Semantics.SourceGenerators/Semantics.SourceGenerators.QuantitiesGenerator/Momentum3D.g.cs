@@ -15,7 +15,7 @@ using System.Numerics;
 /// 3D vector representation of Momentum.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public record Momentum3D<T> : IVector3<Momentum3D<T>, T>
+public partial record Momentum3D<T> : IVector3<Momentum3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

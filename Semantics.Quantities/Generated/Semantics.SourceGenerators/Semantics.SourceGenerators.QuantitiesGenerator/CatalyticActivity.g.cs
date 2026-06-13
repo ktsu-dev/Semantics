@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the CatalyticActivity dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record CatalyticActivity<T> : PhysicalQuantity<CatalyticActivity<T>, T>, IVector0<CatalyticActivity<T>, T>
+public partial record CatalyticActivity<T> : PhysicalQuantity<CatalyticActivity<T>, T>, IVector0<CatalyticActivity<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

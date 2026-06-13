@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="SignedAngle{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Rotation<T> : PhysicalQuantity<Rotation<T>, T>, IVector1<Rotation<T>, T>
+public partial record Rotation<T> : PhysicalQuantity<Rotation<T>, T>, IVector1<Rotation<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

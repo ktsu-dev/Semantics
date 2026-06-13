@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ElectricPotential dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record VoltageMagnitude<T> : PhysicalQuantity<VoltageMagnitude<T>, T>, IVector0<VoltageMagnitude<T>, T>
+public partial record VoltageMagnitude<T> : PhysicalQuantity<VoltageMagnitude<T>, T>, IVector0<VoltageMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

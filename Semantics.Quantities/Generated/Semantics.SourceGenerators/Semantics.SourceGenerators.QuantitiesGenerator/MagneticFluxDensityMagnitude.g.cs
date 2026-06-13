@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the MagneticFluxDensity dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record MagneticFluxDensityMagnitude<T> : PhysicalQuantity<MagneticFluxDensityMagnitude<T>, T>, IVector0<MagneticFluxDensityMagnitude<T>, T>
+public partial record MagneticFluxDensityMagnitude<T> : PhysicalQuantity<MagneticFluxDensityMagnitude<T>, T>, IVector0<MagneticFluxDensityMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

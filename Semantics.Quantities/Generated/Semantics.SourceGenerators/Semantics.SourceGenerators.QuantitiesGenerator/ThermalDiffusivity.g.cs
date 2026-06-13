@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="KinematicViscosity{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity<T>, T>, IVector0<ThermalDiffusivity<T>, T>
+public partial record ThermalDiffusivity<T> : PhysicalQuantity<ThermalDiffusivity<T>, T>, IVector0<ThermalDiffusivity<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

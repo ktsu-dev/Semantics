@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ElectricCapacitance dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Capacitance<T> : PhysicalQuantity<Capacitance<T>, T>, IVector0<Capacitance<T>, T>
+public partial record Capacitance<T> : PhysicalQuantity<Capacitance<T>, T>, IVector0<Capacitance<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

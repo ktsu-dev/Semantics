@@ -15,7 +15,7 @@ using System.Numerics;
 /// Wind velocity vector in 3D space.
 /// Semantic overload of <see cref="Velocity3D{T}"/>.
 /// </summary>
-public record WindVelocity3D<T> : IVector3<WindVelocity3D<T>, T>
+public partial record WindVelocity3D<T> : IVector3<WindVelocity3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

@@ -430,6 +430,14 @@
           "factoryName": "Milliradians"
         },
         {
+          "name": "Percent",
+          "symbol": "%",
+          "description": "Percent - one hundredth of unity.",
+          "system": "Other",
+          "conversionFactor": "PercentToRatio",
+          "factoryName": "Percent"
+        },
+        {
           "name": "PartsPerMillion",
           "symbol": "ppm",
           "description": "Parts per million - 1e-6 dimensionless ratio.",

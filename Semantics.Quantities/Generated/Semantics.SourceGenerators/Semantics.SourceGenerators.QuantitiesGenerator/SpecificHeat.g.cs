@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the SpecificHeat dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record SpecificHeat<T> : PhysicalQuantity<SpecificHeat<T>, T>, IVector0<SpecificHeat<T>, T>
+public partial record SpecificHeat<T> : PhysicalQuantity<SpecificHeat<T>, T>, IVector0<SpecificHeat<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Length{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Altitude<T> : PhysicalQuantity<Altitude<T>, T>, IVector0<Altitude<T>, T>
+public partial record Altitude<T> : PhysicalQuantity<Altitude<T>, T>, IVector0<Altitude<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

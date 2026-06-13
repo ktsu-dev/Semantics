@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Ratio{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record SoundAbsorption<T> : PhysicalQuantity<SoundAbsorption<T>, T>, IVector0<SoundAbsorption<T>, T>
+public partial record SoundAbsorption<T> : PhysicalQuantity<SoundAbsorption<T>, T>, IVector0<SoundAbsorption<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>
@@ -63,6 +63,13 @@ public record SoundAbsorption<T> : PhysicalQuantity<SoundAbsorption<T>, T>, IVec
 	/// <returns>A new SoundAbsorption instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SoundAbsorption<T> FromMilliradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
+	/// Creates a new SoundAbsorption from a value in Percent.
+	/// </summary>
+	/// <param name="value">The value in Percent.</param>
+	/// <returns>A new SoundAbsorption instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SoundAbsorption<T> FromPercent(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundAbsorption from a value in PartsPerMillion.
 	/// </summary>

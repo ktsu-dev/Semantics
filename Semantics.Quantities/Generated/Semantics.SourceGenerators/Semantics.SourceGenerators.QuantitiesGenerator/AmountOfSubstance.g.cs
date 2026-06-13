@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the AmountOfSubstance dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T>, T>, IVector0<AmountOfSubstance<T>, T>
+public partial record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<T>, T>, IVector0<AmountOfSubstance<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

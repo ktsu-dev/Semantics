@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="SignedRatio{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ReflectionCoefficient<T> : PhysicalQuantity<ReflectionCoefficient<T>, T>, IVector1<ReflectionCoefficient<T>, T>
+public partial record ReflectionCoefficient<T> : PhysicalQuantity<ReflectionCoefficient<T>, T>, IVector1<ReflectionCoefficient<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>
@@ -57,6 +57,12 @@ public record ReflectionCoefficient<T> : PhysicalQuantity<ReflectionCoefficient<
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromMilliradians(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+/// <summary>
+	/// Creates a new ReflectionCoefficient from a value in Percent.
+	/// </summary>
+	/// <param name="value">The value in Percent.</param>
+	/// <returns>A new ReflectionCoefficient instance.</returns>
+	public static ReflectionCoefficient<T> FromPercent(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)));
 /// <summary>
 	/// Creates a new ReflectionCoefficient from a value in PartsPerMillion.
 	/// </summary>

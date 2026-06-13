@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ElectricCharge dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ChargeMagnitude<T> : PhysicalQuantity<ChargeMagnitude<T>, T>, IVector0<ChargeMagnitude<T>, T>
+public partial record ChargeMagnitude<T> : PhysicalQuantity<ChargeMagnitude<T>, T>, IVector0<ChargeMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

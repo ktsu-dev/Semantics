@@ -11,7 +11,7 @@ using System.Numerics;
 /// Signed one-dimensional (Vector1) quantity for the Torque dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Torque1D<T> : PhysicalQuantity<Torque1D<T>, T>, IVector1<Torque1D<T>, T>
+public partial record Torque1D<T> : PhysicalQuantity<Torque1D<T>, T>, IVector1<Torque1D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

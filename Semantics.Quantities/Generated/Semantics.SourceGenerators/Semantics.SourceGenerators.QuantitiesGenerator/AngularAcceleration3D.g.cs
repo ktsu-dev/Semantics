@@ -15,7 +15,7 @@ using System.Numerics;
 /// 3D vector representation of AngularAcceleration.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public record AngularAcceleration3D<T> : IVector3<AngularAcceleration3D<T>, T>
+public partial record AngularAcceleration3D<T> : IVector3<AngularAcceleration3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

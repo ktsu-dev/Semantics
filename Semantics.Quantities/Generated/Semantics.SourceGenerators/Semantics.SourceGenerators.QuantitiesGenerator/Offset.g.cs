@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Displacement1D{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Offset<T> : PhysicalQuantity<Offset<T>, T>, IVector1<Offset<T>, T>
+public partial record Offset<T> : PhysicalQuantity<Offset<T>, T>, IVector1<Offset<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

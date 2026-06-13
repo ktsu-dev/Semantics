@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Entropy{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>, IVector0<HeatCapacity<T>, T>
+public partial record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>, IVector0<HeatCapacity<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

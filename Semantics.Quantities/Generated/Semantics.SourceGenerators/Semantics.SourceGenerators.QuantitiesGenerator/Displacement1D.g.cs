@@ -11,7 +11,7 @@ using System.Numerics;
 /// Signed one-dimensional (Vector1) quantity for the Length dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Displacement1D<T> : PhysicalQuantity<Displacement1D<T>, T>, IVector1<Displacement1D<T>, T>
+public partial record Displacement1D<T> : PhysicalQuantity<Displacement1D<T>, T>, IVector1<Displacement1D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

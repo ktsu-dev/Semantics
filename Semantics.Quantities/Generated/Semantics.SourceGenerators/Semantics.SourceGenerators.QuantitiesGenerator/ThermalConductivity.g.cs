@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ThermalConductivity dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ThermalConductivity<T> : PhysicalQuantity<ThermalConductivity<T>, T>, IVector0<ThermalConductivity<T>, T>
+public partial record ThermalConductivity<T> : PhysicalQuantity<ThermalConductivity<T>, T>, IVector0<ThermalConductivity<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

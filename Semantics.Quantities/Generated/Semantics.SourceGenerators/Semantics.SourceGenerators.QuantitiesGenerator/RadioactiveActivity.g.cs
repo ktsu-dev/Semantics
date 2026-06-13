@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the RadioactiveActivity dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record RadioactiveActivity<T> : PhysicalQuantity<RadioactiveActivity<T>, T>, IVector0<RadioactiveActivity<T>, T>
+public partial record RadioactiveActivity<T> : PhysicalQuantity<RadioactiveActivity<T>, T>, IVector0<RadioactiveActivity<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

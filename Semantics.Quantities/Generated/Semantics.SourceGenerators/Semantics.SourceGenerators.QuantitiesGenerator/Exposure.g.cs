@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Exposure dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Exposure<T> : PhysicalQuantity<Exposure<T>, T>, IVector0<Exposure<T>, T>
+public partial record Exposure<T> : PhysicalQuantity<Exposure<T>, T>, IVector0<Exposure<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the OpticalPower dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record OpticalPower<T> : PhysicalQuantity<OpticalPower<T>, T>, IVector0<OpticalPower<T>, T>
+public partial record OpticalPower<T> : PhysicalQuantity<OpticalPower<T>, T>, IVector0<OpticalPower<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

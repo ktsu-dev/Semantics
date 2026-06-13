@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ThermalExpansion dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ThermalExpansionCoefficient<T> : PhysicalQuantity<ThermalExpansionCoefficient<T>, T>, IVector0<ThermalExpansionCoefficient<T>, T>
+public partial record ThermalExpansionCoefficient<T> : PhysicalQuantity<ThermalExpansionCoefficient<T>, T>, IVector0<ThermalExpansionCoefficient<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

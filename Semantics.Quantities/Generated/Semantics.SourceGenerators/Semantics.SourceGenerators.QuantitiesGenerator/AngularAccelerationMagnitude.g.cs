@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the AngularAcceleration dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record AngularAccelerationMagnitude<T> : PhysicalQuantity<AngularAccelerationMagnitude<T>, T>, IVector0<AngularAccelerationMagnitude<T>, T>
+public partial record AngularAccelerationMagnitude<T> : PhysicalQuantity<AngularAccelerationMagnitude<T>, T>, IVector0<AngularAccelerationMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

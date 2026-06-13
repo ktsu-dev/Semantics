@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Pressure dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Pressure<T> : PhysicalQuantity<Pressure<T>, T>, IVector0<Pressure<T>, T>
+public partial record Pressure<T> : PhysicalQuantity<Pressure<T>, T>, IVector0<Pressure<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

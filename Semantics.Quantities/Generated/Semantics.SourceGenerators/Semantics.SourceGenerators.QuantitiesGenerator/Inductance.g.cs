@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Inductance dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Inductance<T> : PhysicalQuantity<Inductance<T>, T>, IVector0<Inductance<T>, T>
+public partial record Inductance<T> : PhysicalQuantity<Inductance<T>, T>, IVector0<Inductance<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

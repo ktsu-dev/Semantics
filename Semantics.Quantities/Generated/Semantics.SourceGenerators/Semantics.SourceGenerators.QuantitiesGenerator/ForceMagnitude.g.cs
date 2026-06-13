@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Force dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ForceMagnitude<T> : PhysicalQuantity<ForceMagnitude<T>, T>, IVector0<ForceMagnitude<T>, T>
+public partial record ForceMagnitude<T> : PhysicalQuantity<ForceMagnitude<T>, T>, IVector0<ForceMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

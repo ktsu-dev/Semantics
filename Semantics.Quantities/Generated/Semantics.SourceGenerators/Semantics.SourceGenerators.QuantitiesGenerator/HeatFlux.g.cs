@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Irradiance{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record HeatFlux<T> : PhysicalQuantity<HeatFlux<T>, T>, IVector0<HeatFlux<T>, T>
+public partial record HeatFlux<T> : PhysicalQuantity<HeatFlux<T>, T>, IVector0<HeatFlux<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

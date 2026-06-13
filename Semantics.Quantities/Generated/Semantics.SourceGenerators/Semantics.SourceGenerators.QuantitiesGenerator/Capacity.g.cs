@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Volume{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Capacity<T> : PhysicalQuantity<Capacity<T>, T>, IVector0<Capacity<T>, T>
+public partial record Capacity<T> : PhysicalQuantity<Capacity<T>, T>, IVector0<Capacity<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

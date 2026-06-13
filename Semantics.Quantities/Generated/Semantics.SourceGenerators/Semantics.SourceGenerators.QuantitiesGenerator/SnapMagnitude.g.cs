@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Snap dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record SnapMagnitude<T> : PhysicalQuantity<SnapMagnitude<T>, T>, IVector0<SnapMagnitude<T>, T>
+public partial record SnapMagnitude<T> : PhysicalQuantity<SnapMagnitude<T>, T>, IVector0<SnapMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

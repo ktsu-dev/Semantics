@@ -11,7 +11,7 @@ using System.Numerics;
 /// Signed one-dimensional (Vector1) quantity for the Dimensionless dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record SignedRatio<T> : PhysicalQuantity<SignedRatio<T>, T>, IVector1<SignedRatio<T>, T>
+public partial record SignedRatio<T> : PhysicalQuantity<SignedRatio<T>, T>, IVector1<SignedRatio<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>
@@ -56,6 +56,12 @@ public record SignedRatio<T> : PhysicalQuantity<SignedRatio<T>, T>, IVector1<Sig
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromMilliradians(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+/// <summary>
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Percent.
+	/// </summary>
+	/// <param name="value">The value in Percent.</param>
+	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
+	public static SignedRatio<T> FromPercent(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)));
 /// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PartsPerMillion.
 	/// </summary>

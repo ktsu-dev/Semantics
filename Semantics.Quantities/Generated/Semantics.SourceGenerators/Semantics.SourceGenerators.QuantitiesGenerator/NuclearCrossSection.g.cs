@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the NuclearCrossSection dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record NuclearCrossSection<T> : PhysicalQuantity<NuclearCrossSection<T>, T>, IVector0<NuclearCrossSection<T>, T>
+public partial record NuclearCrossSection<T> : PhysicalQuantity<NuclearCrossSection<T>, T>, IVector0<NuclearCrossSection<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

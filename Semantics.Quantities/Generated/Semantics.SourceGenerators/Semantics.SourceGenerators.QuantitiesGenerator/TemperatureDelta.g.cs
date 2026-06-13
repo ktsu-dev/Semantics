@@ -11,7 +11,7 @@ using System.Numerics;
 /// Signed one-dimensional (Vector1) quantity for the Temperature dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record TemperatureDelta<T> : PhysicalQuantity<TemperatureDelta<T>, T>, IVector1<TemperatureDelta<T>, T>
+public partial record TemperatureDelta<T> : PhysicalQuantity<TemperatureDelta<T>, T>, IVector1<TemperatureDelta<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

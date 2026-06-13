@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Angle{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ApertureAngle<T> : PhysicalQuantity<ApertureAngle<T>, T>, IVector0<ApertureAngle<T>, T>
+public partial record ApertureAngle<T> : PhysicalQuantity<ApertureAngle<T>, T>, IVector0<ApertureAngle<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>
