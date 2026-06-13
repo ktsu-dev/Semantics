@@ -4,7 +4,7 @@
       "name": "Dimensionless",
       "symbol": "1",
       "dimensionalFormula": {},
-      "availableUnits": ["Dimensionless", "Radian", "Degree", "Gradian", "Revolution", "Milliradian", "Percent", "PartsPerMillion", "PartsPerBillion", "PercentByWeight"],
+      "availableUnits": ["Dimensionless", "Radian", "Degree", "Gradian", "Revolution", "Milliradian", "Percent", "PartPerMillion", "PartPerBillion", "PercentByWeight"],
       "quantities": {
         "vector0": {
           "base": "Ratio",
@@ -256,7 +256,7 @@
       "symbol": "L T⁻¹",
       "dimensionalFormula": { "length": 1, "time": -1 },
       "availableUnits": [
-        "MetersPerSecond", "KilometersPerHour", "MilesPerHour", "FeetPerSecond", "Knot"
+        "MeterPerSecond", "KilometerPerHour", "MilePerHour", "FootPerSecond", "Knot"
       ],
       "quantities": {
         "vector0": {
@@ -294,7 +294,7 @@
       "name": "Acceleration",
       "symbol": "L T⁻²",
       "dimensionalFormula": { "length": 1, "time": -2 },
-      "availableUnits": ["MetersPerSecondSquared", "StandardGravity"],
+      "availableUnits": ["MeterPerSecondSquared", "StandardGravity"],
       "quantities": {
         "vector0": {
           "base": "AccelerationMagnitude",
@@ -325,7 +325,7 @@
       "name": "Jerk",
       "symbol": "L T⁻³",
       "dimensionalFormula": { "length": 1, "time": -3 },
-      "availableUnits": ["MetersPerSecondCubed"],
+      "availableUnits": ["MeterPerSecondCubed"],
       "quantities": {
         "vector0": { "base": "JerkMagnitude" },
         "vector1": { "base": "Jerk1D" },
@@ -346,7 +346,7 @@
       "name": "Snap",
       "symbol": "L T⁻⁴",
       "dimensionalFormula": { "length": 1, "time": -4 },
-      "availableUnits": ["MetersPerSecondQuartic"],
+      "availableUnits": ["MeterPerSecondQuartic"],
       "quantities": {
         "vector0": { "base": "SnapMagnitude" },
         "vector1": { "base": "Snap1D" },
@@ -433,7 +433,7 @@
       "name": "AngularVelocity",
       "symbol": "T⁻¹",
       "dimensionalFormula": { "time": -1 },
-      "availableUnits": ["RadiansPerSecond", "RevolutionsPerMinute"],
+      "availableUnits": ["RadianPerSecond", "RevolutionPerMinute"],
       "quantities": {
         "vector0": { "base": "AngularSpeed" },
         "vector1": { "base": "AngularVelocity1D" },
@@ -452,7 +452,7 @@
       "name": "AngularAcceleration",
       "symbol": "T⁻²",
       "dimensionalFormula": { "time": -2 },
-      "availableUnits": ["RadiansPerSecondSquared"],
+      "availableUnits": ["RadianPerSecondSquared"],
       "quantities": {
         "vector0": { "base": "AngularAccelerationMagnitude" },
         "vector1": { "base": "AngularAcceleration1D" },
@@ -471,7 +471,7 @@
       "name": "AngularJerk",
       "symbol": "T⁻³",
       "dimensionalFormula": { "time": -3 },
-      "availableUnits": ["RadiansPerSecondCubed"],
+      "availableUnits": ["RadianPerSecondCubed"],
       "quantities": {
         "vector0": { "base": "AngularJerkMagnitude" },
         "vector1": { "base": "AngularJerk1D" },

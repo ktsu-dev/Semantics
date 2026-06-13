@@ -283,7 +283,7 @@ Unlike strings and paths — which are hand-authored — every physics quantity 
 | File | Contents |
 |---|---|
 | `dimensions.json` | Every physical dimension, the vector forms it supports (`Vector0`..`Vector4`), its `availableUnits`, semantic overloads (e.g. `Weight` over `ForceMagnitude`), and cross-dimensional relationships (`integrals`, `derivatives`, `dotProducts`, `crossProducts`). |
-| `units.json` | Unit declarations with `factoryName` (plural) and a base-unit conversion expression. |
+| `units.json` | Unit declarations (singular-lemma `name`, used verbatim as the `From{Name}` factory suffix) and a base-unit conversion expression. |
 | `magnitudes.json` | SI magnitude prefixes for unit derivations. |
 | `conversions.json` | Conversion factors between non-SI units and the SI base. |
 | `domains.json` | Domain grouping for `PhysicalConstants` (e.g. `Fundamental`, `Chemistry`, `AngularMechanics`). |

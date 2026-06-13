@@ -22,8 +22,8 @@ public class EVMotorAnalysis
     public static void AnalyzeMotorPerformance()
     {
         // Motor specifications (Electrical domain)
-        var batteryVoltage = ElectricPotential<double>.FromVolts(400.0);    // 400V battery pack
-        var motorCurrent = ElectricCurrent<double>.FromAmperes(300.0);      // 300A peak current
+        var batteryVoltage = ElectricPotential<double>.FromVolt(400.0);    // 400V battery pack
+        var motorCurrent = ElectricCurrent<double>.FromAmpere(300.0);      // 300A peak current
         var motorEfficiency = 0.95;                                        // 95% efficiency
         
         // Calculate electrical power
@@ -31,7 +31,7 @@ public class EVMotorAnalysis
         
         // Mechanical output (Mechanical domain)
         var mechanicalPower = Power<double>.Create(electricalPower.Value * motorEfficiency); // 114 kW
-        var wheelRadius = Length<double>.FromMeters(0.35);                  // 35cm wheel radius
+        var wheelRadius = Length<double>.FromMeter(0.35);                  // 35cm wheel radius
         var gearRatio = 10.0;                                              // 10:1 reduction
         
         // Calculate torque and speed
@@ -46,9 +46,9 @@ public class EVMotorAnalysis
         
         // Thermal analysis (Thermal domain)
         var powerLoss = Power<double>.Create(electricalPower.Value * (1 - motorEfficiency)); // 6 kW loss
-        var motorMass = Mass<double>.FromKilograms(50.0);                   // 50 kg motor
+        var motorMass = Mass<double>.FromKilogram(50.0);                   // 50 kg motor
         var specificHeat = SpecificHeat<double>.FromJoulesPerKilogramKelvin(900.0); // Aluminum
-        var operatingTime = Time<double>.FromMinutes(10.0);                 // 10 minutes
+        var operatingTime = Time<double>.FromMinute(10.0);                 // 10 minutes
         
         // Temperature rise calculation
         var energyLoss = Energy<double>.Create(powerLoss.Value * operatingTime.Value);
@@ -58,7 +58,7 @@ public class EVMotorAnalysis
         Console.WriteLine($"  Electrical Power: {electricalPower.In(Units.Kilowatt):F1} kW");
         Console.WriteLine($"  Mechanical Power: {mechanicalPower.In(Units.Kilowatt):F1} kW");
         Console.WriteLine($"  Motor Torque: {motorTorque.In(Units.NewtonMeter):F0} N⋅m");
-        Console.WriteLine($"  Vehicle Speed: {vehicleSpeed.In(Units.KilometersPerHour):F1} km/h");
+        Console.WriteLine($"  Vehicle Speed: {vehicleSpeed.In(Units.KilometerPerHour):F1} km/h");
         Console.WriteLine($"  Temperature Rise: {tempRise.Value:F1} K");
     }
 }
@@ -79,7 +79,7 @@ public class OpticalFiberSystem
             laserWavelength);
             
         var laserPower = Power<double>.FromMilliwatts(10.0);                // 10 mW optical power
-        var fiberLength = Length<double>.FromKilometers(100.0);             // 100 km fiber
+        var fiberLength = Length<double>.FromKilometer(100.0);             // 100 km fiber
         var attenuationCoeff = 0.2; // 0.2 dB/km at 1550 nm
         
         // Calculate optical power after fiber transmission
@@ -89,8 +89,8 @@ public class OpticalFiberSystem
         
         // Electrical domain - Photodiode characteristics
         var responsivity = 1.0; // 1.0 A/W responsivity
-        var photoCurrent = ElectricCurrent<double>.FromAmperes(receivedPower.In(Units.Watt) * responsivity);
-        var loadResistance = ElectricResistance<double>.FromOhms(50.0);     // 50Ω load
+        var photoCurrent = ElectricCurrent<double>.FromAmpere(receivedPower.In(Units.Watt) * responsivity);
+        var loadResistance = ElectricResistance<double>.FromOhm(50.0);     // 50Ω load
         var signalVoltage = photoCurrent * loadResistance;                  // V = I × R
         
         // Thermal domain - Laser thermal management
@@ -130,8 +130,8 @@ public class ReactorPhysics
         
         // Neutron flux and cross-sections
         var neutronFlux = 1e14; // neutrons/(cm²·s)
-        var fissionCrossSection = NuclearCrossSection<double>.FromBarns(582.0);     // U-235 thermal fission
-        var absorptionCrossSection = NuclearCrossSection<double>.FromBarns(99.0);   // U-238 absorption
+        var fissionCrossSection = NuclearCrossSection<double>.FromBarn(582.0);     // U-235 thermal fission
+        var absorptionCrossSection = NuclearCrossSection<double>.FromBarn(99.0);   // U-238 absorption
         
         // Thermal domain - Heat removal
         var coolantInletTemp = Temperature<double>.FromCelsius(290.0);              // PWR inlet temp
@@ -143,7 +143,7 @@ public class ReactorPhysics
             thermalPower.Value / (waterSpecificHeat.Value * tempRise.Value));
         
         // Fluid dynamics domain - Coolant flow
-        var pipeRadius = Length<double>.FromCentimeters(15.0);                      // 30 cm diameter
+        var pipeRadius = Length<double>.FromCentimeter(15.0);                      // 30 cm diameter
         var pipeArea = Area<double>.Create(Math.PI * Math.Pow(pipeRadius.Value, 2));
         var waterDensity = Density<double>.FromKilogramsPerCubicMeter(750.0);       // Hot water density
         
@@ -152,14 +152,14 @@ public class ReactorPhysics
         var flowVelocity = Velocity<double>.Create(volumetricFlowRate.Value / pipeArea.Value);
         
         // Reynolds number for flow characterization
-        var waterViscosity = DynamicViscosity<double>.FromPascalSeconds(0.0003);    // Hot water viscosity
+        var waterViscosity = DynamicViscosity<double>.FromPascalSecond(0.0003);    // Hot water viscosity
         var reynolds = ReynoldsNumber<double>.FromFluidProperties(
             waterDensity, flowVelocity, Length<double>.Create(2 * pipeRadius.Value), waterViscosity);
         
         Console.WriteLine($"Nuclear Reactor Analysis:");
         Console.WriteLine($"  Thermal Power: {thermalPower.In(Units.Megawatt):F0} MW");
         Console.WriteLine($"  Required Flow Rate: {requiredMassFlowRate.Value:F0} kg/s");
-        Console.WriteLine($"  Coolant Velocity: {flowVelocity.In(Units.MetersPerSecond):F1} m/s");
+        Console.WriteLine($"  Coolant Velocity: {flowVelocity.In(Units.MeterPerSecond):F1} m/s");
         Console.WriteLine($"  Reynolds Number: {reynolds.Value:E2}");
         Console.WriteLine($"  Flow Regime: {(reynolds.Value > 4000 ? "Turbulent" : "Laminar")}");
     }
@@ -175,16 +175,16 @@ public class AcousticLab
     public static void AnalyzeSoundMeasurement()
     {
         // Acoustic domain - Sound measurement
-        var soundPressure = SoundPressure<double>.FromPascals(0.1);                 // 0.1 Pa RMS
+        var soundPressure = SoundPressure<double>.FromPascal(0.1);                 // 0.1 Pa RMS
         var frequency = Frequency<double>.FromHertz(1000.0);                        // 1 kHz tone
-        var measurementDistance = Length<double>.FromMeters(1.0);                   // 1 meter distance
+        var measurementDistance = Length<double>.FromMeter(1.0);                   // 1 meter distance
         
         // Calculate sound pressure level
         var spl = SoundPressureLevel<double>.FromSoundPressure(soundPressure);      // dB SPL
         
         // Air properties for acoustic calculations
         var airDensity = Density<double>.FromKilogramsPerCubicMeter(1.225);         // Standard air
-        var soundSpeed = SoundSpeed<double>.FromMetersPerSecond(343.0);             // Sound speed in air
+        var soundSpeed = SoundSpeed<double>.FromMeterPerSecond(343.0);             // Sound speed in air
         var acousticImpedance = AcousticImpedance<double>.FromDensityAndSoundSpeed(airDensity, soundSpeed);
         
         // Calculate acoustic intensity and power
@@ -196,8 +196,8 @@ public class AcousticLab
         var wavelength = Wavelength<double>.FromSpeedAndFrequency(soundSpeed, frequency);
         
         // Mechanical domain - Vibration source
-        var speakerMass = Mass<double>.FromGrams(50.0);                             // 50g speaker cone
-        var displacement = Length<double>.FromMillimeters(1.0);                     // 1mm peak displacement
+        var speakerMass = Mass<double>.FromGram(50.0);                             // 50g speaker cone
+        var displacement = Length<double>.FromMillimeter(1.0);                     // 1mm peak displacement
         var angularFreq = 2 * Math.PI * frequency.Value;
         var peakVelocity = Velocity<double>.Create(angularFreq * displacement.Value);
         var peakAcceleration = Acceleration<double>.Create(angularFreq * peakVelocity.Value);
@@ -207,7 +207,7 @@ public class AcousticLab
         var mechanicalPower = Power<double>.Create(mechanicalForce.Value * peakVelocity.Value / 2); // RMS
         
         // Electrical domain - Amplifier requirements
-        var speakerImpedance = ElectricResistance<double>.FromOhms(8.0);            // 8Ω speaker
+        var speakerImpedance = ElectricResistance<double>.FromOhm(8.0);            // 8Ω speaker
         var efficiency = 0.05; // 5% electro-acoustic efficiency
         var electricalPower = Power<double>.Create(mechanicalPower.Value / efficiency);
         var driveCurrent = ElectricCurrent<double>.Create(Math.Sqrt(electricalPower.Value / speakerImpedance.Value));
@@ -250,11 +250,11 @@ public class ChemicalProcess
         
         // Enzyme activity for bioreactor
         var enzymeActivity = EnzymeActivity<double>.FromKatalPerLiter(0.5);          // 0.5 kat/L
-        var substrateAmount = AmountOfSubstance<double>.FromMoles(10.0);             // 10 mol substrate
+        var substrateAmount = AmountOfSubstance<double>.FromMole(10.0);             // 10 mol substrate
         
         // Thermal domain - Heat management
-        var reactionHeat = Energy<double>.FromKilojoules(150.0);                     // 150 kJ reaction enthalpy
-        var reactorMass = Mass<double>.FromKilograms(500.0);                        // 500 kg reactor contents
+        var reactionHeat = Energy<double>.FromKilojoule(150.0);                     // 150 kJ reaction enthalpy
+        var reactorMass = Mass<double>.FromKilogram(500.0);                        // 500 kg reactor contents
         var specificHeat = SpecificHeat<double>.FromJoulesPerKilogramKelvin(3500.0); // Solution specific heat
         
         var adiabaticTempRise = Temperature<double>.Create(
@@ -262,7 +262,7 @@ public class ChemicalProcess
         
         // Heat transfer coefficient for cooling
         var heatTransferCoeff = HeatTransferCoefficient<double>.FromWattsPerSquareMeterKelvin(1000.0);
-        var coolingArea = Area<double>.FromSquareMeters(20.0);                      // 20 m² cooling surface
+        var coolingArea = Area<double>.FromSquareMeter(20.0);                      // 20 m² cooling surface
         var coolantTemp = Temperature<double>.FromCelsius(20.0);                    // 20°C coolant
         var tempDifference = reactionTemp - coolantTemp;
         
@@ -271,8 +271,8 @@ public class ChemicalProcess
         
         // Fluid dynamics domain - Mixing and flow
         var stirrerSpeed = AngularVelocity<double>.FromRPM(200.0);                  // 200 RPM stirrer
-        var impellerDiameter = Length<double>.FromCentimeters(30.0);                // 30 cm impeller
-        var fluidViscosity = DynamicViscosity<double>.FromPascalSeconds(0.001);     // Water-like viscosity
+        var impellerDiameter = Length<double>.FromCentimeter(30.0);                // 30 cm impeller
+        var fluidViscosity = DynamicViscosity<double>.FromPascalSecond(0.001);     // Water-like viscosity
         var fluidDensity = Density<double>.FromKilogramsPerCubicMeter(1100.0);      // Solution density
         
         // Power number calculation for mixing
@@ -307,34 +307,34 @@ public class EnvironmentalMonitoring
     public static void AnalyzeAirQuality()
     {
         // Chemical domain - Pollutant concentrations
-        var no2Concentration = Concentration<double>.FromPartsPerMillion(0.05);     // 50 ppb NO₂
+        var no2Concentration = Concentration<double>.FromPartPerMillion(0.05);     // 50 ppb NO₂
         var so2Concentration = Concentration<double>.FromMilligramsPerCubicMeter(10.0); // 10 mg/m³ SO₂
-        var coConcentration = Concentration<double>.FromPartsPerMillion(1.0);       // 1 ppm CO
+        var coConcentration = Concentration<double>.FromPartPerMillion(1.0);       // 1 ppm CO
         
         // Convert PPM to molar concentrations at STP
         var airDensity = Density<double>.FromKilogramsPerCubicMeter(1.225);         // Standard air density
         var standardTemp = Temperature<double>.FromCelsius(25.0);
-        var standardPressure = Pressure<double>.FromPascals(101325.0);
+        var standardPressure = Pressure<double>.FromPascal(101325.0);
         
         // Molar volume at standard conditions
         var gasConstant = PhysicalConstants.Generic.GasConstant<double>();
         var molarVolume = Volume<double>.Create(gasConstant * standardTemp.Value / standardPressure.Value);
         
         // Fluid dynamics domain - Atmospheric dispersion
-        var windSpeed = Velocity<double>.FromMetersPerSecond(5.0);                  // 5 m/s wind
-        var mixingHeight = Length<double>.FromMeters(1000.0);                       // 1 km mixing layer
-        var roughnessLength = Length<double>.FromCentimeters(10.0);                 // Urban roughness
+        var windSpeed = Velocity<double>.FromMeterPerSecond(5.0);                  // 5 m/s wind
+        var mixingHeight = Length<double>.FromMeter(1000.0);                       // 1 km mixing layer
+        var roughnessLength = Length<double>.FromCentimeter(10.0);                 // Urban roughness
         
         // Calculate atmospheric stability parameters
-        var airViscosity = DynamicViscosity<double>.FromPascalSeconds(1.825e-5);    // Air kinematic viscosity
-        var charakteristicLength = Length<double>.FromKilometers(1.0);              // 1 km scale
+        var airViscosity = DynamicViscosity<double>.FromPascalSecond(1.825e-5);    // Air kinematic viscosity
+        var charakteristicLength = Length<double>.FromKilometer(1.0);              // 1 km scale
         
         var atmosphericReynolds = ReynoldsNumber<double>.FromFluidProperties(
             airDensity, windSpeed, charakteristicLength, airViscosity);
         
         // Dispersion coefficients (simplified Gaussian model)
-        var horizontalDispersion = Length<double>.FromMeters(100.0);                // σy
-        var verticalDispersion = Length<double>.FromMeters(50.0);                   // σz
+        var horizontalDispersion = Length<double>.FromMeter(100.0);                // σy
+        var verticalDispersion = Length<double>.FromMeter(50.0);                   // σz
         
         // Thermal domain - Temperature effects
         var surfaceTemp = Temperature<double>.FromCelsius(25.0);                    // Surface temperature
@@ -347,13 +347,13 @@ public class EnvironmentalMonitoring
         
         // Convective heat flux
         var convectiveHeatFlux = HeatTransferCoefficient<double>.FromWattsPerSquareMeterKelvin(10.0);
-        var surfaceArea = Area<double>.FromSquareKilometers(1.0);                   // 1 km² area
+        var surfaceArea = Area<double>.FromSquareKilometer(1.0);                   // 1 km² area
         var heatFlux = Power<double>.Create(
             convectiveHeatFlux.Value * surfaceArea.Value * Math.Abs(surfaceTemp - ambientTemp).Value);
         
         Console.WriteLine($"Environmental Monitoring Analysis:");
-        Console.WriteLine($"  NO₂ Concentration: {no2Concentration.InPartsPerMillion():F2} ppm");
-        Console.WriteLine($"  Wind Speed: {windSpeed.In(Units.MetersPerSecond):F1} m/s");
+        Console.WriteLine($"  NO₂ Concentration: {no2Concentration.InPartPerMillion():F2} ppm");
+        Console.WriteLine($"  Wind Speed: {windSpeed.In(Units.MeterPerSecond):F1} m/s");
         Console.WriteLine($"  Atmospheric Reynolds: {atmosphericReynolds.Value:E2}");
         Console.WriteLine($"  Temperature Gradient: {tempGradient * 1000:F2} K/km");
         Console.WriteLine($"  Surface Heat Flux: {heatFlux.In(Units.Megawatt):F1} MW");
@@ -374,8 +374,8 @@ public class PlasmaPhysics
     {
         // Electrical domain - Plasma electrical properties
         var electronDensity = 1e20; // electrons/m³
-        var electronTemp = Temperature<double>.FromElectronVolts(10.0);              // 10 eV electron temperature
-        var ionTemp = Temperature<double>.FromElectronVolts(5.0);                    // 5 eV ion temperature
+        var electronTemp = Temperature<double>.FromElectronVolt(10.0);              // 10 eV electron temperature
+        var ionTemp = Temperature<double>.FromElectronVolt(5.0);                    // 5 eV ion temperature
         
         var plasmaConductivity = ElectricConductivity<double>.FromSiemensPerMeter(1e6); // High conductivity
         var magneticField = 2.0; // 2 Tesla magnetic field
@@ -387,11 +387,11 @@ public class PlasmaPhysics
         
         var plasmaFrequency = Math.Sqrt(electronDensity * Math.Pow(elementaryCharge, 2) / 
                                       (electronMass * permittivity));
-        var plasmaFreq = Frequency<double>.FromRadiansPerSecond(plasmaFrequency);
+        var plasmaFreq = Frequency<double>.FromRadianPerSecond(plasmaFrequency);
         
         // Optical domain - Plasma radiation
         var bremsstrahlung = 1e13; // W/m³ volume emission rate
-        var plasmaVolume = Volume<double>.FromCubicMeters(1.0);                      // 1 m³ plasma volume
+        var plasmaVolume = Volume<double>.FromCubicMeter(1.0);                      // 1 m³ plasma volume
         var radiatedPower = Power<double>.Create(bremsstrahlung * plasmaVolume.Value);
         
         // Characteristic radiation wavelength
@@ -406,7 +406,7 @@ public class PlasmaPhysics
         // Nuclear domain - Fusion reactions
         var deuteriumDensity = 5e19; // D nuclei/m³
         var tritiumDensity = 5e19; // T nuclei/m³
-        var fusionCrossSection = NuclearCrossSection<double>.FromBarns(5.0);         // D-T fusion cross section
+        var fusionCrossSection = NuclearCrossSection<double>.FromBarn(5.0);         // D-T fusion cross section
         var averageVelocity = Math.Sqrt(3 * kBoltzmann * ionTemp.InKelvin() / 
                                       (2.5 * PhysicalConstants.Generic.AtomicMassUnit<double>())); // D-T average
         
@@ -416,7 +416,7 @@ public class PlasmaPhysics
         // Thermal domain - Heat balance
         var specificHeat = SpecificHeat<double>.FromJoulesPerKilogramKelvin(5200.0); // Plasma specific heat
         var plasmaDensity = Density<double>.FromKilogramsPerCubicMeter(1e-6);        // Low density plasma
-        var confinementTime = Time<double>.FromSeconds(1.0);                        // 1 second confinement
+        var confinementTime = Time<double>.FromSecond(1.0);                        // 1 second confinement
         
         var thermalEnergy = Energy<double>.Create(
             plasmaDensity.Value * plasmaVolume.Value * specificHeat.Value * electronTemp.InKelvin());

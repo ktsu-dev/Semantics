@@ -21,11 +21,11 @@ public partial record Jerk1D<T> : PhysicalQuantity<Jerk1D<T>, T>, IVector1<Jerk1
 	public override DimensionInfo Dimension => PhysicalDimensions.Jerk;
 
 	/// <summary>
-	/// Creates a new <see cref="Jerk1D{T}"/> from a value in MetersPerSecondCubed.
+	/// Creates a new <see cref="Jerk1D{T}"/> from a value in MeterPerSecondCubed.
 	/// </summary>
-	/// <param name="value">The value in MetersPerSecondCubed.</param>
+	/// <param name="value">The value in MeterPerSecondCubed.</param>
 	/// <returns>A new <see cref="Jerk1D{T}"/> instance.</returns>
-	public static Jerk1D<T> FromMetersPerSecondCubed(T value) => Create(value);
+	public static Jerk1D<T> FromMeterPerSecondCubed(T value) => Create(value);
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Jerk unit) fail at compile time.

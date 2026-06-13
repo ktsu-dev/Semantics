@@ -25,25 +25,25 @@ public partial record Force1D<T> : PhysicalQuantity<Force1D<T>, T>, IVector1<For
 	/// </summary>
 	/// <param name="value">The value in Newton.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
-	public static Force1D<T> FromNewtons(T value) => Create(value);
+	public static Force1D<T> FromNewton(T value) => Create(value);
 /// <summary>
 	/// Creates a new <see cref="Force1D{T}"/> from a value in Kilonewton.
 	/// </summary>
 	/// <param name="value">The value in Kilonewton.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
-	public static Force1D<T> FromKilonewtons(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
+	public static Force1D<T> FromKilonewton(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
 /// <summary>
 	/// Creates a new <see cref="Force1D{T}"/> from a value in Dyne.
 	/// </summary>
 	/// <param name="value">The value in Dyne.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
-	public static Force1D<T> FromDynes(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DyneToNewtons)));
+	public static Force1D<T> FromDyne(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DyneToNewtons)));
 /// <summary>
 	/// Creates a new <see cref="Force1D{T}"/> from a value in PoundForce.
 	/// </summary>
 	/// <param name="value">The value in PoundForce.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
-	public static Force1D<T> FromPoundsForce(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PoundForceToNewtons)));
+	public static Force1D<T> FromPoundForce(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PoundForceToNewtons)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Force unit) fail at compile time.

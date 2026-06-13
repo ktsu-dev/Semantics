@@ -1551,10 +1551,10 @@ public sealed record Percent : IUnit, IDimensionlessUnit
 /// <summary>
 /// Parts per million - 1e-6 dimensionless ratio.
 /// </summary>
-public sealed record PartsPerMillion : IUnit, IDimensionlessUnit
+public sealed record PartPerMillion : IUnit, IDimensionlessUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "PartsPerMillion";
+	public string Name => "PartPerMillion";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "ppm";
@@ -1566,23 +1566,23 @@ public sealed record PartsPerMillion : IUnit, IDimensionlessUnit
 	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
-	public double ToBaseFactor => PartsPerMillionToRatio;
+	public double ToBaseFactor => PartPerMillionToRatio;
 
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public PartsPerMillion() { }
+	public PartPerMillion() { }
 
 };
 
 /// <summary>
 /// Parts per billion - 1e-9 dimensionless ratio.
 /// </summary>
-public sealed record PartsPerBillion : IUnit, IDimensionlessUnit
+public sealed record PartPerBillion : IUnit, IDimensionlessUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "PartsPerBillion";
+	public string Name => "PartPerBillion";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "ppb";
@@ -1594,13 +1594,13 @@ public sealed record PartsPerBillion : IUnit, IDimensionlessUnit
 	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
-	public double ToBaseFactor => PartsPerBillionToRatio;
+	public double ToBaseFactor => PartPerBillionToRatio;
 
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public PartsPerBillion() { }
+	public PartPerBillion() { }
 
 };
 
@@ -1691,10 +1691,10 @@ public sealed record Pascal : IUnit, IPressureUnit
 /// <summary>
 /// Meters per second - SI derived unit of velocity.
 /// </summary>
-public sealed record MetersPerSecond : IUnit, IVelocityUnit
+public sealed record MeterPerSecond : IUnit, IVelocityUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "MetersPerSecond";
+	public string Name => "MeterPerSecond";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "m/s";
@@ -1712,17 +1712,17 @@ public sealed record MetersPerSecond : IUnit, IVelocityUnit
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public MetersPerSecond() { }
+	public MeterPerSecond() { }
 
 };
 
 /// <summary>
 /// Meters per second squared - SI derived unit of acceleration.
 /// </summary>
-public sealed record MetersPerSecondSquared : IUnit, IAccelerationUnit
+public sealed record MeterPerSecondSquared : IUnit, IAccelerationUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "MetersPerSecondSquared";
+	public string Name => "MeterPerSecondSquared";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "m/s²";
@@ -1740,7 +1740,7 @@ public sealed record MetersPerSecondSquared : IUnit, IAccelerationUnit
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public MetersPerSecondSquared() { }
+	public MeterPerSecondSquared() { }
 
 };
 
@@ -1831,10 +1831,10 @@ public sealed record Psi : IUnit, IPressureUnit
 /// <summary>
 /// Kilometers per hour - Common unit of velocity.
 /// </summary>
-public sealed record KilometersPerHour : IUnit, IVelocityUnit
+public sealed record KilometerPerHour : IUnit, IVelocityUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "KilometersPerHour";
+	public string Name => "KilometerPerHour";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "km/h";
@@ -1846,23 +1846,23 @@ public sealed record KilometersPerHour : IUnit, IVelocityUnit
 	public DimensionInfo Dimension => PhysicalDimensions.Velocity;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
-	public double ToBaseFactor => KilometersPerHourToMetersPerSecond;
+	public double ToBaseFactor => KilometerPerHourToMeterPerSecond;
 
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public KilometersPerHour() { }
+	public KilometerPerHour() { }
 
 };
 
 /// <summary>
 /// Miles per hour - Imperial unit of velocity.
 /// </summary>
-public sealed record MilesPerHour : IUnit, IVelocityUnit
+public sealed record MilePerHour : IUnit, IVelocityUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "MilesPerHour";
+	public string Name => "MilePerHour";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "mph";
@@ -1874,13 +1874,13 @@ public sealed record MilesPerHour : IUnit, IVelocityUnit
 	public DimensionInfo Dimension => PhysicalDimensions.Velocity;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
-	public double ToBaseFactor => MilesPerHourToMetersPerSecond;
+	public double ToBaseFactor => MilePerHourToMeterPerSecond;
 
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public MilesPerHour() { }
+	public MilePerHour() { }
 
 };
 
@@ -2195,10 +2195,10 @@ public sealed record KilogramMeterSquaredPerSecond : IUnit, IAngularMomentumUnit
 /// <summary>
 /// Meters per second cubed - SI derived unit of jerk.
 /// </summary>
-public sealed record MetersPerSecondCubed : IUnit, IJerkUnit
+public sealed record MeterPerSecondCubed : IUnit, IJerkUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "MetersPerSecondCubed";
+	public string Name => "MeterPerSecondCubed";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "m/s³";
@@ -2216,17 +2216,17 @@ public sealed record MetersPerSecondCubed : IUnit, IJerkUnit
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public MetersPerSecondCubed() { }
+	public MeterPerSecondCubed() { }
 
 };
 
 /// <summary>
 /// Meters per second to the fourth - SI derived unit of snap.
 /// </summary>
-public sealed record MetersPerSecondQuartic : IUnit, ISnapUnit
+public sealed record MeterPerSecondQuartic : IUnit, ISnapUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "MetersPerSecondQuartic";
+	public string Name => "MeterPerSecondQuartic";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "m/s⁴";
@@ -2244,17 +2244,17 @@ public sealed record MetersPerSecondQuartic : IUnit, ISnapUnit
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public MetersPerSecondQuartic() { }
+	public MeterPerSecondQuartic() { }
 
 };
 
 /// <summary>
 /// Feet per second - Imperial unit of velocity.
 /// </summary>
-public sealed record FeetPerSecond : IUnit, IVelocityUnit
+public sealed record FootPerSecond : IUnit, IVelocityUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "FeetPerSecond";
+	public string Name => "FootPerSecond";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "ft/s";
@@ -2266,13 +2266,13 @@ public sealed record FeetPerSecond : IUnit, IVelocityUnit
 	public DimensionInfo Dimension => PhysicalDimensions.Velocity;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
-	public double ToBaseFactor => FeetPerSecondToMetersPerSecond;
+	public double ToBaseFactor => FootPerSecondToMeterPerSecond;
 
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public FeetPerSecond() { }
+	public FootPerSecond() { }
 
 };
 
@@ -2294,7 +2294,7 @@ public sealed record Knot : IUnit, IVelocityUnit
 	public DimensionInfo Dimension => PhysicalDimensions.Velocity;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
-	public double ToBaseFactor => KnotToMetersPerSecond;
+	public double ToBaseFactor => KnotToMeterPerSecond;
 
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
 	public double ToBaseOffset => 0d;
@@ -2322,7 +2322,7 @@ public sealed record StandardGravity : IUnit, IAccelerationUnit
 	public DimensionInfo Dimension => PhysicalDimensions.Acceleration;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
-	public double ToBaseFactor => StandardGravityToMetersPerSecondSquared;
+	public double ToBaseFactor => StandardGravityToMeterPerSecondSquared;
 
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
 	public double ToBaseOffset => 0d;
@@ -3651,10 +3651,10 @@ public sealed record VoltPerPascal : IUnit, ISensitivityUnit
 /// <summary>
 /// Radians per second - SI derived unit of angular velocity.
 /// </summary>
-public sealed record RadiansPerSecond : IUnit, IAngularVelocityUnit
+public sealed record RadianPerSecond : IUnit, IAngularVelocityUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "RadiansPerSecond";
+	public string Name => "RadianPerSecond";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "rad/s";
@@ -3672,17 +3672,17 @@ public sealed record RadiansPerSecond : IUnit, IAngularVelocityUnit
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public RadiansPerSecond() { }
+	public RadianPerSecond() { }
 
 };
 
 /// <summary>
 /// Revolutions per minute - Common unit of angular velocity.
 /// </summary>
-public sealed record RevolutionsPerMinute : IUnit, IAngularVelocityUnit
+public sealed record RevolutionPerMinute : IUnit, IAngularVelocityUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "RevolutionsPerMinute";
+	public string Name => "RevolutionPerMinute";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "rpm";
@@ -3694,23 +3694,23 @@ public sealed record RevolutionsPerMinute : IUnit, IAngularVelocityUnit
 	public DimensionInfo Dimension => PhysicalDimensions.AngularVelocity;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
-	public double ToBaseFactor => RevolutionsPerMinuteToRadiansPerSecond;
+	public double ToBaseFactor => RevolutionPerMinuteToRadianPerSecond;
 
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public RevolutionsPerMinute() { }
+	public RevolutionPerMinute() { }
 
 };
 
 /// <summary>
 /// Radians per second squared - SI derived unit of angular acceleration.
 /// </summary>
-public sealed record RadiansPerSecondSquared : IUnit, IAngularAccelerationUnit
+public sealed record RadianPerSecondSquared : IUnit, IAngularAccelerationUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "RadiansPerSecondSquared";
+	public string Name => "RadianPerSecondSquared";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "rad/s²";
@@ -3728,17 +3728,17 @@ public sealed record RadiansPerSecondSquared : IUnit, IAngularAccelerationUnit
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public RadiansPerSecondSquared() { }
+	public RadianPerSecondSquared() { }
 
 };
 
 /// <summary>
 /// Radians per second cubed - SI derived unit of angular jerk.
 /// </summary>
-public sealed record RadiansPerSecondCubed : IUnit, IAngularJerkUnit
+public sealed record RadianPerSecondCubed : IUnit, IAngularJerkUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
-	public string Name => "RadiansPerSecondCubed";
+	public string Name => "RadianPerSecondCubed";
 
 	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
 	public string Symbol => "rad/s³";
@@ -3756,7 +3756,7 @@ public sealed record RadiansPerSecondCubed : IUnit, IAngularJerkUnit
 	public double ToBaseOffset => 0d;
 
 	/// <summary>Initializes a new instance of the unit.</summary>
-	public RadiansPerSecondCubed() { }
+	public RadianPerSecondCubed() { }
 
 };
 
@@ -5422,8 +5422,8 @@ public static class Units{
 	/// <summary>Singleton <c>FaradPerMeter</c> instance.</summary>
 	public static readonly FaradPerMeter FaradPerMeter = new FaradPerMeter();
 
-	/// <summary>Singleton <c>FeetPerSecond</c> instance.</summary>
-	public static readonly FeetPerSecond FeetPerSecond = new FeetPerSecond();
+	/// <summary>Singleton <c>FootPerSecond</c> instance.</summary>
+	public static readonly FootPerSecond FootPerSecond = new FootPerSecond();
 
 	/// <summary>Singleton <c>Foot</c> instance.</summary>
 	public static readonly Foot Foot = new Foot();
@@ -5539,8 +5539,8 @@ public static class Units{
 	/// <summary>Singleton <c>Kilometer</c> instance.</summary>
 	public static readonly Kilometer Kilometer = new Kilometer();
 
-	/// <summary>Singleton <c>KilometersPerHour</c> instance.</summary>
-	public static readonly KilometersPerHour KilometersPerHour = new KilometersPerHour();
+	/// <summary>Singleton <c>KilometerPerHour</c> instance.</summary>
+	public static readonly KilometerPerHour KilometerPerHour = new KilometerPerHour();
 
 	/// <summary>Singleton <c>Kilomole</c> instance.</summary>
 	public static readonly Kilomole Kilomole = new Kilomole();
@@ -5587,17 +5587,17 @@ public static class Units{
 	/// <summary>Singleton <c>Meter</c> instance.</summary>
 	public static readonly Meter Meter = new Meter();
 
-	/// <summary>Singleton <c>MetersPerSecond</c> instance.</summary>
-	public static readonly MetersPerSecond MetersPerSecond = new MetersPerSecond();
+	/// <summary>Singleton <c>MeterPerSecond</c> instance.</summary>
+	public static readonly MeterPerSecond MeterPerSecond = new MeterPerSecond();
 
-	/// <summary>Singleton <c>MetersPerSecondCubed</c> instance.</summary>
-	public static readonly MetersPerSecondCubed MetersPerSecondCubed = new MetersPerSecondCubed();
+	/// <summary>Singleton <c>MeterPerSecondCubed</c> instance.</summary>
+	public static readonly MeterPerSecondCubed MeterPerSecondCubed = new MeterPerSecondCubed();
 
-	/// <summary>Singleton <c>MetersPerSecondQuartic</c> instance.</summary>
-	public static readonly MetersPerSecondQuartic MetersPerSecondQuartic = new MetersPerSecondQuartic();
+	/// <summary>Singleton <c>MeterPerSecondQuartic</c> instance.</summary>
+	public static readonly MeterPerSecondQuartic MeterPerSecondQuartic = new MeterPerSecondQuartic();
 
-	/// <summary>Singleton <c>MetersPerSecondSquared</c> instance.</summary>
-	public static readonly MetersPerSecondSquared MetersPerSecondSquared = new MetersPerSecondSquared();
+	/// <summary>Singleton <c>MeterPerSecondSquared</c> instance.</summary>
+	public static readonly MeterPerSecondSquared MeterPerSecondSquared = new MeterPerSecondSquared();
 
 	/// <summary>Singleton <c>Microfarad</c> instance.</summary>
 	public static readonly Microfarad Microfarad = new Microfarad();
@@ -5614,8 +5614,8 @@ public static class Units{
 	/// <summary>Singleton <c>Mile</c> instance.</summary>
 	public static readonly Mile Mile = new Mile();
 
-	/// <summary>Singleton <c>MilesPerHour</c> instance.</summary>
-	public static readonly MilesPerHour MilesPerHour = new MilesPerHour();
+	/// <summary>Singleton <c>MilePerHour</c> instance.</summary>
+	public static readonly MilePerHour MilePerHour = new MilePerHour();
 
 	/// <summary>Singleton <c>Milliampere</c> instance.</summary>
 	public static readonly Milliampere Milliampere = new Milliampere();
@@ -5689,11 +5689,11 @@ public static class Units{
 	/// <summary>Singleton <c>Ounce</c> instance.</summary>
 	public static readonly Ounce Ounce = new Ounce();
 
-	/// <summary>Singleton <c>PartsPerBillion</c> instance.</summary>
-	public static readonly PartsPerBillion PartsPerBillion = new PartsPerBillion();
+	/// <summary>Singleton <c>PartPerBillion</c> instance.</summary>
+	public static readonly PartPerBillion PartPerBillion = new PartPerBillion();
 
-	/// <summary>Singleton <c>PartsPerMillion</c> instance.</summary>
-	public static readonly PartsPerMillion PartsPerMillion = new PartsPerMillion();
+	/// <summary>Singleton <c>PartPerMillion</c> instance.</summary>
+	public static readonly PartPerMillion PartPerMillion = new PartPerMillion();
 
 	/// <summary>Singleton <c>Pascal</c> instance.</summary>
 	public static readonly Pascal Pascal = new Pascal();
@@ -5740,14 +5740,14 @@ public static class Units{
 	/// <summary>Singleton <c>Radian</c> instance.</summary>
 	public static readonly Radian Radian = new Radian();
 
-	/// <summary>Singleton <c>RadiansPerSecond</c> instance.</summary>
-	public static readonly RadiansPerSecond RadiansPerSecond = new RadiansPerSecond();
+	/// <summary>Singleton <c>RadianPerSecond</c> instance.</summary>
+	public static readonly RadianPerSecond RadianPerSecond = new RadianPerSecond();
 
-	/// <summary>Singleton <c>RadiansPerSecondCubed</c> instance.</summary>
-	public static readonly RadiansPerSecondCubed RadiansPerSecondCubed = new RadiansPerSecondCubed();
+	/// <summary>Singleton <c>RadianPerSecondCubed</c> instance.</summary>
+	public static readonly RadianPerSecondCubed RadianPerSecondCubed = new RadianPerSecondCubed();
 
-	/// <summary>Singleton <c>RadiansPerSecondSquared</c> instance.</summary>
-	public static readonly RadiansPerSecondSquared RadiansPerSecondSquared = new RadiansPerSecondSquared();
+	/// <summary>Singleton <c>RadianPerSecondSquared</c> instance.</summary>
+	public static readonly RadianPerSecondSquared RadianPerSecondSquared = new RadianPerSecondSquared();
 
 	/// <summary>Singleton <c>Rankine</c> instance.</summary>
 	public static readonly Rankine Rankine = new Rankine();
@@ -5758,8 +5758,8 @@ public static class Units{
 	/// <summary>Singleton <c>Revolution</c> instance.</summary>
 	public static readonly Revolution Revolution = new Revolution();
 
-	/// <summary>Singleton <c>RevolutionsPerMinute</c> instance.</summary>
-	public static readonly RevolutionsPerMinute RevolutionsPerMinute = new RevolutionsPerMinute();
+	/// <summary>Singleton <c>RevolutionPerMinute</c> instance.</summary>
+	public static readonly RevolutionPerMinute RevolutionPerMinute = new RevolutionPerMinute();
 
 	/// <summary>Singleton <c>Roentgen</c> instance.</summary>
 	public static readonly Roentgen Roentgen = new Roentgen();

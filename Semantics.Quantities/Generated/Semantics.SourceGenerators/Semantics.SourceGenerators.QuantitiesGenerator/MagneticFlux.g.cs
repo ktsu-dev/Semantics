@@ -26,7 +26,7 @@ public partial record MagneticFlux<T> : PhysicalQuantity<MagneticFlux<T>, T>, IV
 	/// <param name="value">The value in Weber.</param>
 	/// <returns>A new <see cref="MagneticFlux{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MagneticFlux<T> FromWebers(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static MagneticFlux<T> FromWeber(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-MagneticFlux unit) fail at compile time.

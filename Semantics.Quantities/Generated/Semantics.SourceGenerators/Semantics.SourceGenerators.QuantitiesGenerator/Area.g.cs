@@ -26,56 +26,56 @@ public partial record Area<T> : PhysicalQuantity<Area<T>, T>, IVector0<Area<T>, 
 	/// <param name="value">The value in SquareMeter.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Area<T> FromSquareMeters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Area<T> FromSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareKilometer.
 	/// </summary>
 	/// <param name="value">The value in SquareKilometer.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Area<T> FromSquareKilometers(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareKilometerToSquareMeters)), nameof(value)));
+	public static Area<T> FromSquareKilometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareKilometerToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareCentimeter.
 	/// </summary>
 	/// <param name="value">The value in SquareCentimeter.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Area<T> FromSquareCentimeters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareCentimeterToSquareMeters)), nameof(value)));
+	public static Area<T> FromSquareCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareCentimeterToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareFoot.
 	/// </summary>
 	/// <param name="value">The value in SquareFoot.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Area<T> FromSquareFeet(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
+	public static Area<T> FromSquareFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareInch.
 	/// </summary>
 	/// <param name="value">The value in SquareInch.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Area<T> FromSquareInches(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
+	public static Area<T> FromSquareInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareMile.
 	/// </summary>
 	/// <param name="value">The value in SquareMile.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Area<T> FromSquareMiles(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareMileToSquareMeters)), nameof(value)));
+	public static Area<T> FromSquareMile(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareMileToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in Hectare.
 	/// </summary>
 	/// <param name="value">The value in Hectare.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Area<T> FromHectares(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HectareToSquareMeters)), nameof(value)));
+	public static Area<T> FromHectare(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HectareToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in Acre.
 	/// </summary>
 	/// <param name="value">The value in Acre.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Area<T> FromAcres(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AcreToSquareMeters)), nameof(value)));
+	public static Area<T> FromAcre(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AcreToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Area unit) fail at compile time.

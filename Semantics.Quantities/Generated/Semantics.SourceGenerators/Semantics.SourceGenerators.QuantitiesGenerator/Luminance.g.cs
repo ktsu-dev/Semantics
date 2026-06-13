@@ -33,14 +33,14 @@ public partial record Luminance<T> : PhysicalQuantity<Luminance<T>, T>, IVector0
 	/// <param name="value">The value in Nit.</param>
 	/// <returns>A new <see cref="Luminance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Luminance<T> FromNits(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Luminance<T> FromNit(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Luminance{T}"/> from a value in FootLambert.
 	/// </summary>
 	/// <param name="value">The value in FootLambert.</param>
 	/// <returns>A new <see cref="Luminance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Luminance<T> FromFootLamberts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FootLambertToCandelaPerSquareMeter)), nameof(value)));
+	public static Luminance<T> FromFootLambert(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FootLambertToCandelaPerSquareMeter)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Luminance unit) fail at compile time.

@@ -26,77 +26,77 @@ public partial record Volume<T> : PhysicalQuantity<Volume<T>, T>, IVector0<Volum
 	/// <param name="value">The value in CubicMeter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromCubicMeters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Volume<T> FromCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in Liter.
 	/// </summary>
 	/// <param name="value">The value in Liter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromLiters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterToCubicMeters)), nameof(value)));
+	public static Volume<T> FromLiter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in Milliliter.
 	/// </summary>
 	/// <param name="value">The value in Milliliter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromMilliliters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static Volume<T> FromMilliliter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in CubicCentimeter.
 	/// </summary>
 	/// <param name="value">The value in CubicCentimeter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromCubicCentimeters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicCentimeterToCubicMeters)), nameof(value)));
+	public static Volume<T> FromCubicCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicCentimeterToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in CubicFoot.
 	/// </summary>
 	/// <param name="value">The value in CubicFoot.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromCubicFeet(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicFootToCubicMeters)), nameof(value)));
+	public static Volume<T> FromCubicFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicFootToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in CubicInch.
 	/// </summary>
 	/// <param name="value">The value in CubicInch.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromCubicInches(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicInchToCubicMeters)), nameof(value)));
+	public static Volume<T> FromCubicInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicInchToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in Gallon.
 	/// </summary>
 	/// <param name="value">The value in Gallon.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromGallons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GallonToCubicMeters)), nameof(value)));
+	public static Volume<T> FromGallon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GallonToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in ImperialGallon.
 	/// </summary>
 	/// <param name="value">The value in ImperialGallon.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromImperialGallons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ImperialGallonToCubicMeters)), nameof(value)));
+	public static Volume<T> FromImperialGallon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ImperialGallonToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in USQuart.
 	/// </summary>
 	/// <param name="value">The value in USQuart.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromUSQuarts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USQuartToCubicMeters)), nameof(value)));
+	public static Volume<T> FromUSQuart(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USQuartToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in USPint.
 	/// </summary>
 	/// <param name="value">The value in USPint.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromUSPints(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USPintToCubicMeters)), nameof(value)));
+	public static Volume<T> FromUSPint(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USPintToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in USFluidOunce.
 	/// </summary>
 	/// <param name="value">The value in USFluidOunce.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromUSFluidOunces(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USFluidOunceToCubicMeters)), nameof(value)));
+	public static Volume<T> FromUSFluidOunce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USFluidOunceToCubicMeters)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Volume unit) fail at compile time.

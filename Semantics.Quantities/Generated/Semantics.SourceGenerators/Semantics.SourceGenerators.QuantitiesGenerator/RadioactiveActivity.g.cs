@@ -26,14 +26,14 @@ public partial record RadioactiveActivity<T> : PhysicalQuantity<RadioactiveActiv
 	/// <param name="value">The value in Becquerel.</param>
 	/// <returns>A new <see cref="RadioactiveActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static RadioactiveActivity<T> FromBecquerels(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static RadioactiveActivity<T> FromBecquerel(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="RadioactiveActivity{T}"/> from a value in Curie.
 	/// </summary>
 	/// <param name="value">The value in Curie.</param>
 	/// <returns>A new <see cref="RadioactiveActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static RadioactiveActivity<T> FromCuries(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CurieToBecquerels)), nameof(value)));
+	public static RadioactiveActivity<T> FromCurie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CurieToBecquerels)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-RadioactiveActivity unit) fail at compile time.

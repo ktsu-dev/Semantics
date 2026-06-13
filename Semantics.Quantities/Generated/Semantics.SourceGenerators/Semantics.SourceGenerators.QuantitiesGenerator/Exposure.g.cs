@@ -33,7 +33,7 @@ public partial record Exposure<T> : PhysicalQuantity<Exposure<T>, T>, IVector0<E
 	/// <param name="value">The value in Roentgen.</param>
 	/// <returns>A new <see cref="Exposure{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Exposure<T> FromRoentgens(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RoentgenToCoulombsPerKilogram)), nameof(value)));
+	public static Exposure<T> FromRoentgen(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RoentgenToCoulombsPerKilogram)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Exposure unit) fail at compile time.

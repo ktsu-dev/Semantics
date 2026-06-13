@@ -15,7 +15,7 @@ public sealed class AcousticOperatorTests
 	{
 		// Semantic overloads widen implicitly to their base, so the
 		// Speed / Length => Frequency operator applies to acoustic types.
-		Speed<double> speed = SoundSpeed<double>.FromMetersPerSecond(343.0);
+		Speed<double> speed = SoundSpeed<double>.FromMeterPerSecond(343.0);
 		Wavelength<double> wavelength = Wavelength<double>.Create(0.343);
 
 		Frequency<double> f1 = speed / wavelength;
@@ -27,7 +27,7 @@ public sealed class AcousticOperatorTests
 	[TestMethod]
 	public void Wavelength_From_Speed_DividedBy_Frequency()
 	{
-		Speed<double> speed = SoundSpeed<double>.FromMetersPerSecond(343.0);
+		Speed<double> speed = SoundSpeed<double>.FromMeterPerSecond(343.0);
 		Frequency<double> frequency = Frequency<double>.FromHertz(1000.0);
 
 		Length<double> wavelength = speed / frequency;

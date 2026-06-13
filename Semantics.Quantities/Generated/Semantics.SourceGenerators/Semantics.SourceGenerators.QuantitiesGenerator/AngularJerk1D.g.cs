@@ -21,11 +21,11 @@ public partial record AngularJerk1D<T> : PhysicalQuantity<AngularJerk1D<T>, T>, 
 	public override DimensionInfo Dimension => PhysicalDimensions.AngularJerk;
 
 	/// <summary>
-	/// Creates a new <see cref="AngularJerk1D{T}"/> from a value in RadiansPerSecondCubed.
+	/// Creates a new <see cref="AngularJerk1D{T}"/> from a value in RadianPerSecondCubed.
 	/// </summary>
-	/// <param name="value">The value in RadiansPerSecondCubed.</param>
+	/// <param name="value">The value in RadianPerSecondCubed.</param>
 	/// <returns>A new <see cref="AngularJerk1D{T}"/> instance.</returns>
-	public static AngularJerk1D<T> FromRadiansPerSecondCubed(T value) => Create(value);
+	public static AngularJerk1D<T> FromRadianPerSecondCubed(T value) => Create(value);
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularJerk unit) fail at compile time.

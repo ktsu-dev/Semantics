@@ -21,12 +21,12 @@ public partial record SnapMagnitude<T> : PhysicalQuantity<SnapMagnitude<T>, T>, 
 	public override DimensionInfo Dimension => PhysicalDimensions.Snap;
 
 	/// <summary>
-	/// Creates a new <see cref="SnapMagnitude{T}"/> from a value in MetersPerSecondQuartic.
+	/// Creates a new <see cref="SnapMagnitude{T}"/> from a value in MeterPerSecondQuartic.
 	/// </summary>
-	/// <param name="value">The value in MetersPerSecondQuartic.</param>
+	/// <param name="value">The value in MeterPerSecondQuartic.</param>
 	/// <returns>A new <see cref="SnapMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SnapMagnitude<T> FromMetersPerSecondQuartic(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static SnapMagnitude<T> FromMeterPerSecondQuartic(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Snap unit) fail at compile time.

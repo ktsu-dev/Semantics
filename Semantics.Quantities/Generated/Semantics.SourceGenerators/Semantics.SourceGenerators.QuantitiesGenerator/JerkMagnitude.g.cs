@@ -21,12 +21,12 @@ public partial record JerkMagnitude<T> : PhysicalQuantity<JerkMagnitude<T>, T>, 
 	public override DimensionInfo Dimension => PhysicalDimensions.Jerk;
 
 	/// <summary>
-	/// Creates a new <see cref="JerkMagnitude{T}"/> from a value in MetersPerSecondCubed.
+	/// Creates a new <see cref="JerkMagnitude{T}"/> from a value in MeterPerSecondCubed.
 	/// </summary>
-	/// <param name="value">The value in MetersPerSecondCubed.</param>
+	/// <param name="value">The value in MeterPerSecondCubed.</param>
 	/// <returns>A new <see cref="JerkMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static JerkMagnitude<T> FromMetersPerSecondCubed(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static JerkMagnitude<T> FromMeterPerSecondCubed(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Jerk unit) fail at compile time.

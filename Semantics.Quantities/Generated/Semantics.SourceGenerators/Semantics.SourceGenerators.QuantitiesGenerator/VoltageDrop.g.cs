@@ -27,14 +27,14 @@ public partial record VoltageDrop<T> : PhysicalQuantity<VoltageDrop<T>, T>, IVec
 	/// <param name="value">The value in Volt.</param>
 	/// <returns>A new VoltageDrop instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static VoltageDrop<T> FromVolts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static VoltageDrop<T> FromVolt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new VoltageDrop from a value in Kilovolt.
 	/// </summary>
 	/// <param name="value">The value in Kilovolt.</param>
 	/// <returns>A new VoltageDrop instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static VoltageDrop<T> FromKilovolts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static VoltageDrop<T> FromKilovolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricPotential unit) fail at compile time.

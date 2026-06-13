@@ -148,8 +148,8 @@ public sealed class VectorQuantityTests
 	[TestMethod]
 	public void Mass_Plus_Mass_Returns_Mass()
 	{
-		Mass<double> a = Mass<double>.FromKilograms(3.0);
-		Mass<double> b = Mass<double>.FromKilograms(5.0);
+		Mass<double> a = Mass<double>.FromKilogram(3.0);
+		Mass<double> b = Mass<double>.FromKilogram(5.0);
 		Mass<double> sum = a + b;
 		Assert.AreEqual(8.0, sum.Value, Tolerance);
 		Assert.IsInstanceOfType<Mass<double>>(sum);
@@ -158,8 +158,8 @@ public sealed class VectorQuantityTests
 	[TestMethod]
 	public void Speed_Plus_Speed_Returns_Speed()
 	{
-		Speed<double> a = Speed<double>.FromMetersPerSecond(3.0);
-		Speed<double> b = Speed<double>.FromMetersPerSecond(5.0);
+		Speed<double> a = Speed<double>.FromMeterPerSecond(3.0);
+		Speed<double> b = Speed<double>.FromMeterPerSecond(5.0);
 		Speed<double> sum = a + b;
 		Assert.AreEqual(8.0, sum.Value, Tolerance);
 	}
@@ -173,8 +173,8 @@ public sealed class VectorQuantityTests
 	[Ignore("Locked in #52: V0 - V0 should return the same V0 of T.Abs(a - b). Generator currently emits unsigned subtraction.")]
 	public void Mass_Minus_Mass_Returns_Absolute_Difference_Pending52()
 	{
-		Mass<double> a = Mass<double>.FromKilograms(3.0);
-		Mass<double> b = Mass<double>.FromKilograms(5.0);
+		Mass<double> a = Mass<double>.FromKilogram(3.0);
+		Mass<double> b = Mass<double>.FromKilogram(5.0);
 		Mass<double> diff = a - b;
 		Assert.AreEqual(2.0, diff.Value, Tolerance);
 	}
@@ -188,7 +188,7 @@ public sealed class VectorQuantityTests
 	public void Speed_From_Negative_Throws_Pending50()
 	{
 		_ = Assert.ThrowsExactly<System.ArgumentException>(
-			() => Speed<double>.FromMetersPerSecond(-1.0));
+			() => Speed<double>.FromMeterPerSecond(-1.0));
 	}
 
 	[TestMethod]
@@ -196,7 +196,7 @@ public sealed class VectorQuantityTests
 	public void Mass_From_Negative_Throws_Pending50()
 	{
 		_ = Assert.ThrowsExactly<System.ArgumentException>(
-			() => Mass<double>.FromKilograms(-1.0));
+			() => Mass<double>.FromKilogram(-1.0));
 	}
 
 	// -------------------------------------------------- Magnitude on V1
@@ -205,7 +205,7 @@ public sealed class VectorQuantityTests
 	[TestMethod]
 	public void Velocity1D_Magnitude_Of_Negative_Is_Positive_Speed()
 	{
-		Velocity1D<double> v = Velocity1D<double>.FromMetersPerSecond(-3.5);
+		Velocity1D<double> v = Velocity1D<double>.FromMeterPerSecond(-3.5);
 		Speed<double> s = v.Magnitude();
 		Assert.AreEqual(3.5, s.Value, Tolerance);
 	}

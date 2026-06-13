@@ -41,7 +41,7 @@ public partial record ActivationEnergy<T> : PhysicalQuantity<ActivationEnergy<T>
 	/// <param name="value">The value in CaloriePerMole.</param>
 	/// <returns>A new ActivationEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ActivationEnergy<T> FromCaloriesPerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CaloriePerMoleToJoulePerMole)), nameof(value)));
+	public static ActivationEnergy<T> FromCaloriePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CaloriePerMoleToJoulePerMole)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-MolarEnergy unit) fail at compile time.

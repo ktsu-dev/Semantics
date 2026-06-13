@@ -26,7 +26,7 @@ public partial record MomentumMagnitude<T> : PhysicalQuantity<MomentumMagnitude<
 	/// <param name="value">The value in NewtonSecond.</param>
 	/// <returns>A new <see cref="MomentumMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MomentumMagnitude<T> FromNewtonSeconds(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static MomentumMagnitude<T> FromNewtonSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Momentum unit) fail at compile time.

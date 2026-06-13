@@ -82,7 +82,7 @@ Every VectorN (N >= 1) has a corresponding Vector0 that represents its magnitude
 Velocity3D<double> v = Velocity3D.Create(3.0, 4.0, 0.0);
 Speed<double> s = v.Magnitude();  // returns Speed with value 5.0
 
-Force1D<double> f = Force1D.FromNewtons(-9.8);
+Force1D<double> f = Force1D.FromNewton(-9.8);
 ForceMagnitude<double> m = f.Magnitude();  // returns 9.8 (always non-negative)
 ```
 
@@ -93,12 +93,12 @@ This is a fundamental structural relationship, not a convenience method. The mag
 Vector0 quantities enforce non-negativity as a type-level invariant:
 
 ```csharp
-Speed<double> s = Speed.FromMetersPerSecond(5.0);   // OK
-Speed<double> s = Speed.FromMetersPerSecond(-1.0);   // throws: magnitude cannot be negative
+Speed<double> s = Speed.FromMeterPerSecond(5.0);   // OK
+Speed<double> s = Speed.FromMeterPerSecond(-1.0);   // throws: magnitude cannot be negative
 
 // Arithmetic respects the invariant
-Speed<double> a = Speed.FromMetersPerSecond(3.0);
-Speed<double> b = Speed.FromMetersPerSecond(5.0);
+Speed<double> a = Speed.FromMeterPerSecond(3.0);
+Speed<double> b = Speed.FromMeterPerSecond(5.0);
 Speed<double> sum = a + b;    // 8.0 - OK
 Speed<double> diff = b - a;   // 2.0 - OK; subtraction returns the same V0 of |a - b|
 ```
@@ -106,8 +106,8 @@ Speed<double> diff = b - a;   // 2.0 - OK; subtraction returns the same V0 of |a
 **Decision (locked)**: `V0 - V0` returns the same V0 of `T.Abs(a - b)`. Magnitude subtraction stays a magnitude — non-negative, same dimension, same overload type. If the consumer needs the signed difference, they must convert to the V1 form explicitly:
 
 ```csharp
-Velocity1D<double> aSigned = Velocity1D.FromMetersPerSecond(a.Value);
-Velocity1D<double> bSigned = Velocity1D.FromMetersPerSecond(b.Value);
+Velocity1D<double> aSigned = Velocity1D.FromMeterPerSecond(a.Value);
+Velocity1D<double> bSigned = Velocity1D.FromMeterPerSecond(b.Value);
 Velocity1D<double> signed = aSigned - bSigned;   // -2.0
 ```
 
@@ -118,7 +118,7 @@ This rule is enforced by the generator; tests assert it for every V0 dimension.
 Vector1 quantities are signed values along a single axis:
 
 ```csharp
-Velocity1D<double> v = Velocity1D.FromMetersPerSecond(-3.0);  // negative = moving backward
+Velocity1D<double> v = Velocity1D.FromMeterPerSecond(-3.0);  // negative = moving backward
 Speed<double> s = v.Magnitude();  // 3.0, always non-negative
 
 // Negation is natural
@@ -355,8 +355,8 @@ Semantic overloads participate in cross-dimensional operations through implicit 
 
 ```csharp
 // User writes:
-Weight w = Weight.FromNewtons(9.8);       // V0 overload of ForceMagnitude
-Height h = Height.FromMeters(10.0);       // V0 overload of Length
+Weight w = Weight.FromNewton(9.8);       // V0 overload of ForceMagnitude
+Height h = Height.FromMeter(10.0);       // V0 overload of Length
 Energy e = w * h;                         // How does this work?
 
 // Resolution:
@@ -540,7 +540,7 @@ This section consolidates all the schema changes into a single reference. The cu
   "name": "Velocity",
   "symbol": "L T⁻¹",
   "dimensionalFormula": { "length": 1, "time": -1 },
-  "availableUnits": ["MetersPerSecond", "KilometersPerHour", "MilesPerHour"],
+  "availableUnits": ["MeterPerSecond", "KilometerPerHour", "MilePerHour"],
   "quantities": {
     "vector0": { "base": "Speed" },
     "vector1": { "base": "Velocity1D" },
@@ -716,9 +716,9 @@ public record Speed<T> : IVector0<Speed<T>, T>
     public static Speed<T> Zero => new() { Value = T.Zero };
 
     // Factory methods (from availableUnits)
-    public static Speed<T> FromMetersPerSecond(T value) => new() { Value = value };
-    public static Speed<T> FromKilometersPerHour(T value) => new() { Value = value * ... };
-    public static Speed<T> FromMilesPerHour(T value) => new() { Value = value * ... };
+    public static Speed<T> FromMeterPerSecond(T value) => new() { Value = value };
+    public static Speed<T> FromKilometerPerHour(T value) => new() { Value = value * ... };
+    public static Speed<T> FromMilePerHour(T value) => new() { Value = value * ... };
 
     // Same-dimension arithmetic
     public static Speed<T> operator +(Speed<T> left, Speed<T> right) => ...;
@@ -741,7 +741,7 @@ public record Velocity1D<T> : IVector1<Velocity1D<T>, T>
     public static Velocity1D<T> Zero => ...;
 
     // Factory methods (shared units)
-    public static Velocity1D<T> FromMetersPerSecond(T value) => ...;
+    public static Velocity1D<T> FromMeterPerSecond(T value) => ...;
 
     // Same-dimension arithmetic (includes subtraction and negation)
     public static Velocity1D<T> operator +(Velocity1D<T> left, Velocity1D<T> right) => ...;
@@ -750,7 +750,7 @@ public record Velocity1D<T> : IVector1<Velocity1D<T>, T>
     public static Velocity1D<T> operator *(Velocity1D<T> left, T right) => ...;
 
     // Magnitude extraction → returns V0 base of same dimension
-    public Speed<T> Magnitude() => Speed<T>.FromMetersPerSecond(T.Abs(Value));
+    public Speed<T> Magnitude() => Speed<T>.FromMeterPerSecond(T.Abs(Value));
 
     // Dot product methods (from dotProducts)
     // Cross-dimension operators (from integrals/derivatives)
@@ -798,7 +798,7 @@ public record Width<T> : IVector0<Width<T>, T>
     public static Width<T> Zero => ...;
 
     // Factory methods (same units as base)
-    public static Width<T> FromMeters(T value) => ...;
+    public static Width<T> FromMeter(T value) => ...;
 
     // Same-overload arithmetic (preserves Width type)
     public static Width<T> operator +(Width<T> left, Width<T> right) => ...;
@@ -999,7 +999,7 @@ Length<T>        (base - Vector0 of Length dimension)
 An overload IS-A base. A `Width<T>` is always a valid `Length<T>`.
 
 ```csharp
-Width<double> w = Width.FromMeters(5.0);
+Width<double> w = Width.FromMeter(5.0);
 Length<double> l = w;  // implicit - every Width is a Length
 ```
 
@@ -1008,7 +1008,7 @@ Length<double> l = w;  // implicit - every Width is a Length
 Not every Length is a Width. The user asserts the semantic meaning.
 
 ```csharp
-Length<double> l = Length.FromMeters(5.0);
+Length<double> l = Length.FromMeter(5.0);
 Width<double> w = l.As<Width<double>>();   // explicit - asserting "this length is a width"
 // or:
 Width<double> w = Width.From(l);           // factory-style explicit conversion
@@ -1019,19 +1019,19 @@ Width<double> w = Width.From(l);           // factory-style explicit conversion
 When you mix different semantic names of the same dimension, the result loses the specific semantic and falls back to the base.
 
 ```csharp
-Width<double> w = Width.FromMeters(3.0);
-Height<double> h = Height.FromMeters(4.0);
+Width<double> w = Width.FromMeter(3.0);
+Height<double> h = Height.FromMeter(4.0);
 Length<double> sum = w + h;  // Width + Height = Length (base type)
 
-Width<double> w2 = Width.FromMeters(2.0);
+Width<double> w2 = Width.FromMeter(2.0);
 Width<double> sum2 = w + w2;  // Width + Width = Width (same overload preserved)
 ```
 
 **4. Operations within the same overload preserve the overload type.**
 
 ```csharp
-Width<double> w1 = Width.FromMeters(3.0);
-Width<double> w2 = Width.FromMeters(2.0);
+Width<double> w1 = Width.FromMeter(3.0);
+Width<double> w2 = Width.FromMeter(2.0);
 Width<double> sum = w1 + w2;    // Width + Width = Width
 Width<double> scaled = w1 * 2;  // Width * scalar = Width
 ```
@@ -1039,8 +1039,8 @@ Width<double> scaled = w1 * 2;  // Width * scalar = Width
 **5. Cross-dimensional operations use the base types for their results.**
 
 ```csharp
-Width<double> w = Width.FromMeters(3.0);
-Height<double> h = Height.FromMeters(4.0);
+Width<double> w = Width.FromMeter(3.0);
+Height<double> h = Height.FromMeter(4.0);
 Area<double> a = w * h;  // Width * Height = Area (dimensional relationship uses bases)
 ```
 
@@ -1049,7 +1049,7 @@ Area<double> a = w * h;  // Width * Height = Area (dimensional relationship uses
 ```csharp
 // Radius enforces non-negative (already guaranteed by Vector0) but Diameter
 // has a structural relationship:
-Diameter<double> d = Diameter.FromMeters(10.0);
+Diameter<double> d = Diameter.FromMeter(10.0);
 Radius<double> r = d.ToRadius();  // r.Value == 5.0 (semantic conversion with logic)
 ```
 

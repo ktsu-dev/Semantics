@@ -27,21 +27,21 @@ public partial record SoundPower<T> : PhysicalQuantity<SoundPower<T>, T>, IVecto
 	/// <param name="value">The value in Watt.</param>
 	/// <returns>A new SoundPower instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPower<T> FromWatts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static SoundPower<T> FromWatt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new SoundPower from a value in Kilowatt.
 	/// </summary>
 	/// <param name="value">The value in Kilowatt.</param>
 	/// <returns>A new SoundPower instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPower<T> FromKilowatts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static SoundPower<T> FromKilowatt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundPower from a value in Megawatt.
 	/// </summary>
 	/// <param name="value">The value in Megawatt.</param>
 	/// <returns>A new SoundPower instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPower<T> FromMegawatts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
+	public static SoundPower<T> FromMegawatt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundPower from a value in Horsepower.
 	/// </summary>

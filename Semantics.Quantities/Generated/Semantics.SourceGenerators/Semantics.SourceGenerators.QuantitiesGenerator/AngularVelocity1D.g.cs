@@ -21,17 +21,17 @@ public partial record AngularVelocity1D<T> : PhysicalQuantity<AngularVelocity1D<
 	public override DimensionInfo Dimension => PhysicalDimensions.AngularVelocity;
 
 	/// <summary>
-	/// Creates a new <see cref="AngularVelocity1D{T}"/> from a value in RadiansPerSecond.
+	/// Creates a new <see cref="AngularVelocity1D{T}"/> from a value in RadianPerSecond.
 	/// </summary>
-	/// <param name="value">The value in RadiansPerSecond.</param>
+	/// <param name="value">The value in RadianPerSecond.</param>
 	/// <returns>A new <see cref="AngularVelocity1D{T}"/> instance.</returns>
-	public static AngularVelocity1D<T> FromRadiansPerSecond(T value) => Create(value);
+	public static AngularVelocity1D<T> FromRadianPerSecond(T value) => Create(value);
 /// <summary>
-	/// Creates a new <see cref="AngularVelocity1D{T}"/> from a value in RevolutionsPerMinute.
+	/// Creates a new <see cref="AngularVelocity1D{T}"/> from a value in RevolutionPerMinute.
 	/// </summary>
-	/// <param name="value">The value in RevolutionsPerMinute.</param>
+	/// <param name="value">The value in RevolutionPerMinute.</param>
 	/// <returns>A new <see cref="AngularVelocity1D{T}"/> instance.</returns>
-	public static AngularVelocity1D<T> FromRevolutionsPerMinute(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionsPerMinuteToRadiansPerSecond)));
+	public static AngularVelocity1D<T> FromRevolutionPerMinute(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionPerMinuteToRadianPerSecond)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularVelocity unit) fail at compile time.

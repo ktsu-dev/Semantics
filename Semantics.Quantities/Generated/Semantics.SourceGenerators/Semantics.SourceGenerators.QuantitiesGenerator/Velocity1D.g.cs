@@ -21,35 +21,35 @@ public partial record Velocity1D<T> : PhysicalQuantity<Velocity1D<T>, T>, IVecto
 	public override DimensionInfo Dimension => PhysicalDimensions.Velocity;
 
 	/// <summary>
-	/// Creates a new <see cref="Velocity1D{T}"/> from a value in MetersPerSecond.
+	/// Creates a new <see cref="Velocity1D{T}"/> from a value in MeterPerSecond.
 	/// </summary>
-	/// <param name="value">The value in MetersPerSecond.</param>
+	/// <param name="value">The value in MeterPerSecond.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
-	public static Velocity1D<T> FromMetersPerSecond(T value) => Create(value);
+	public static Velocity1D<T> FromMeterPerSecond(T value) => Create(value);
 /// <summary>
-	/// Creates a new <see cref="Velocity1D{T}"/> from a value in KilometersPerHour.
+	/// Creates a new <see cref="Velocity1D{T}"/> from a value in KilometerPerHour.
 	/// </summary>
-	/// <param name="value">The value in KilometersPerHour.</param>
+	/// <param name="value">The value in KilometerPerHour.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
-	public static Velocity1D<T> FromKilometersPerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.KilometersPerHourToMetersPerSecond)));
+	public static Velocity1D<T> FromKilometerPerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.KilometerPerHourToMeterPerSecond)));
 /// <summary>
-	/// Creates a new <see cref="Velocity1D{T}"/> from a value in MilesPerHour.
+	/// Creates a new <see cref="Velocity1D{T}"/> from a value in MilePerHour.
 	/// </summary>
-	/// <param name="value">The value in MilesPerHour.</param>
+	/// <param name="value">The value in MilePerHour.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
-	public static Velocity1D<T> FromMilesPerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MilesPerHourToMetersPerSecond)));
+	public static Velocity1D<T> FromMilePerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MilePerHourToMeterPerSecond)));
 /// <summary>
-	/// Creates a new <see cref="Velocity1D{T}"/> from a value in FeetPerSecond.
+	/// Creates a new <see cref="Velocity1D{T}"/> from a value in FootPerSecond.
 	/// </summary>
-	/// <param name="value">The value in FeetPerSecond.</param>
+	/// <param name="value">The value in FootPerSecond.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
-	public static Velocity1D<T> FromFeetPerSecond(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FeetPerSecondToMetersPerSecond)));
+	public static Velocity1D<T> FromFootPerSecond(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FootPerSecondToMeterPerSecond)));
 /// <summary>
 	/// Creates a new <see cref="Velocity1D{T}"/> from a value in Knot.
 	/// </summary>
 	/// <param name="value">The value in Knot.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
-	public static Velocity1D<T> FromKnots(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.KnotToMetersPerSecond)));
+	public static Velocity1D<T> FromKnot(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.KnotToMeterPerSecond)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Velocity unit) fail at compile time.

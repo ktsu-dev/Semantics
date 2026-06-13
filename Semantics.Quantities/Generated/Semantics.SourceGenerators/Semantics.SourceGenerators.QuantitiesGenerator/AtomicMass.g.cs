@@ -27,35 +27,35 @@ public partial record AtomicMass<T> : PhysicalQuantity<AtomicMass<T>, T>, IVecto
 	/// <param name="value">The value in Kilogram.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromKilograms(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static AtomicMass<T> FromKilogram(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new AtomicMass from a value in Gram.
 	/// </summary>
 	/// <param name="value">The value in Gram.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromGrams(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static AtomicMass<T> FromGram(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new AtomicMass from a value in Ton.
 	/// </summary>
 	/// <param name="value">The value in Ton.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromTons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.TonToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromTon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.TonToKilograms)), nameof(value)));
 /// <summary>
 	/// Creates a new AtomicMass from a value in Pound.
 	/// </summary>
 	/// <param name="value">The value in Pound.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromPounds(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromPound(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundToKilograms)), nameof(value)));
 /// <summary>
 	/// Creates a new AtomicMass from a value in Ounce.
 	/// </summary>
 	/// <param name="value">The value in Ounce.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromOunces(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.OunceToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromOunce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.OunceToKilograms)), nameof(value)));
 /// <summary>
 	/// Creates a new AtomicMass from a value in Stone.
 	/// </summary>
@@ -69,14 +69,14 @@ public partial record AtomicMass<T> : PhysicalQuantity<AtomicMass<T>, T>, IVecto
 	/// <param name="value">The value in ShortTon.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromShortTons(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ShortTonToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromShortTon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ShortTonToKilograms)), nameof(value)));
 /// <summary>
 	/// Creates a new AtomicMass from a value in AtomicMassUnit.
 	/// </summary>
 	/// <param name="value">The value in AtomicMassUnit.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromAtomicMassUnits(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtomicMassUnitToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromAtomicMassUnit(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtomicMassUnitToKilograms)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Mass unit) fail at compile time.

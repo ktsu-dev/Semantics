@@ -32,31 +32,31 @@ public partial record ReflectionCoefficient<T> : PhysicalQuantity<ReflectionCoef
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromRadians(T value) => Create(value);
+	public static ReflectionCoefficient<T> FromRadian(T value) => Create(value);
 /// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static ReflectionCoefficient<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
 /// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromGradians(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
+	public static ReflectionCoefficient<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
 /// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromRevolutions(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
+	public static ReflectionCoefficient<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
 /// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromMilliradians(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+	public static ReflectionCoefficient<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
 /// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Percent.
 	/// </summary>
@@ -64,17 +64,17 @@ public partial record ReflectionCoefficient<T> : PhysicalQuantity<ReflectionCoef
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromPercent(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)));
 /// <summary>
-	/// Creates a new ReflectionCoefficient from a value in PartsPerMillion.
+	/// Creates a new ReflectionCoefficient from a value in PartPerMillion.
 	/// </summary>
-	/// <param name="value">The value in PartsPerMillion.</param>
+	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromPartsPerMillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartsPerMillionToRatio)));
+	public static ReflectionCoefficient<T> FromPartPerMillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)));
 /// <summary>
-	/// Creates a new ReflectionCoefficient from a value in PartsPerBillion.
+	/// Creates a new ReflectionCoefficient from a value in PartPerBillion.
 	/// </summary>
-	/// <param name="value">The value in PartsPerBillion.</param>
+	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromPartsPerBillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartsPerBillionToRatio)));
+	public static ReflectionCoefficient<T> FromPartPerBillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)));
 /// <summary>
 	/// Creates a new ReflectionCoefficient from a value in PercentByWeight.
 	/// </summary>

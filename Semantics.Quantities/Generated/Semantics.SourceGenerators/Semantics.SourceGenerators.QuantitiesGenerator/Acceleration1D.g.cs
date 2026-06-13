@@ -21,17 +21,17 @@ public partial record Acceleration1D<T> : PhysicalQuantity<Acceleration1D<T>, T>
 	public override DimensionInfo Dimension => PhysicalDimensions.Acceleration;
 
 	/// <summary>
-	/// Creates a new <see cref="Acceleration1D{T}"/> from a value in MetersPerSecondSquared.
+	/// Creates a new <see cref="Acceleration1D{T}"/> from a value in MeterPerSecondSquared.
 	/// </summary>
-	/// <param name="value">The value in MetersPerSecondSquared.</param>
+	/// <param name="value">The value in MeterPerSecondSquared.</param>
 	/// <returns>A new <see cref="Acceleration1D{T}"/> instance.</returns>
-	public static Acceleration1D<T> FromMetersPerSecondSquared(T value) => Create(value);
+	public static Acceleration1D<T> FromMeterPerSecondSquared(T value) => Create(value);
 /// <summary>
 	/// Creates a new <see cref="Acceleration1D{T}"/> from a value in StandardGravity.
 	/// </summary>
 	/// <param name="value">The value in StandardGravity.</param>
 	/// <returns>A new <see cref="Acceleration1D{T}"/> instance.</returns>
-	public static Acceleration1D<T> FromStandardGravity(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.StandardGravityToMetersPerSecondSquared)));
+	public static Acceleration1D<T> FromStandardGravity(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.StandardGravityToMeterPerSecondSquared)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Acceleration unit) fail at compile time.

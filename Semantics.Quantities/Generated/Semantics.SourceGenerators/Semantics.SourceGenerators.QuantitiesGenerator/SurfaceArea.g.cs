@@ -27,56 +27,56 @@ public partial record SurfaceArea<T> : PhysicalQuantity<SurfaceArea<T>, T>, IVec
 	/// <param name="value">The value in SquareMeter.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromSquareMeters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static SurfaceArea<T> FromSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new SurfaceArea from a value in SquareKilometer.
 	/// </summary>
 	/// <param name="value">The value in SquareKilometer.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromSquareKilometers(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareKilometerToSquareMeters)), nameof(value)));
+	public static SurfaceArea<T> FromSquareKilometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareKilometerToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new SurfaceArea from a value in SquareCentimeter.
 	/// </summary>
 	/// <param name="value">The value in SquareCentimeter.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromSquareCentimeters(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareCentimeterToSquareMeters)), nameof(value)));
+	public static SurfaceArea<T> FromSquareCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareCentimeterToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new SurfaceArea from a value in SquareFoot.
 	/// </summary>
 	/// <param name="value">The value in SquareFoot.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromSquareFeet(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
+	public static SurfaceArea<T> FromSquareFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new SurfaceArea from a value in SquareInch.
 	/// </summary>
 	/// <param name="value">The value in SquareInch.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromSquareInches(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
+	public static SurfaceArea<T> FromSquareInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new SurfaceArea from a value in SquareMile.
 	/// </summary>
 	/// <param name="value">The value in SquareMile.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromSquareMiles(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareMileToSquareMeters)), nameof(value)));
+	public static SurfaceArea<T> FromSquareMile(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareMileToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new SurfaceArea from a value in Hectare.
 	/// </summary>
 	/// <param name="value">The value in Hectare.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromHectares(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HectareToSquareMeters)), nameof(value)));
+	public static SurfaceArea<T> FromHectare(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HectareToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Creates a new SurfaceArea from a value in Acre.
 	/// </summary>
 	/// <param name="value">The value in Acre.</param>
 	/// <returns>A new SurfaceArea instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceArea<T> FromAcres(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AcreToSquareMeters)), nameof(value)));
+	public static SurfaceArea<T> FromAcre(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AcreToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Area unit) fail at compile time.
