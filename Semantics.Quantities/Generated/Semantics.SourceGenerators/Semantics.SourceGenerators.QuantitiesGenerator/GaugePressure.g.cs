@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Pressure{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record GaugePressure<T> : PhysicalQuantity<GaugePressure<T>, T>, IVector0<GaugePressure<T>, T>
+public partial record GaugePressure<T> : PhysicalQuantity<GaugePressure<T>, T>, IVector0<GaugePressure<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Momentum dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record MomentumMagnitude<T> : PhysicalQuantity<MomentumMagnitude<T>, T>, IVector0<MomentumMagnitude<T>, T>
+public partial record MomentumMagnitude<T> : PhysicalQuantity<MomentumMagnitude<T>, T>, IVector0<MomentumMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

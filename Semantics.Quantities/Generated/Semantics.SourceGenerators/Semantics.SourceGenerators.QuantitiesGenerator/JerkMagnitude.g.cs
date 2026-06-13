@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Jerk dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record JerkMagnitude<T> : PhysicalQuantity<JerkMagnitude<T>, T>, IVector0<JerkMagnitude<T>, T>
+public partial record JerkMagnitude<T> : PhysicalQuantity<JerkMagnitude<T>, T>, IVector0<JerkMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

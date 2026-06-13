@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Velocity dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Speed<T> : PhysicalQuantity<Speed<T>, T>, IVector0<Speed<T>, T>
+public partial record Speed<T> : PhysicalQuantity<Speed<T>, T>, IVector0<Speed<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

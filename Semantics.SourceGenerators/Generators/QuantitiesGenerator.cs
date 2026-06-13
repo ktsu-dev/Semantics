@@ -812,7 +812,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				"/// </summary>",
 				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
 			],
-			Keywords = ["public", "record"],
+			Keywords = ["public", "partial", "record"],
 			Name = fullType,
 			BaseClass = $"PhysicalQuantity<{fullType}, T>",
 			Interfaces = [$"IVector0<{fullType}, T>"],
@@ -906,7 +906,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				"/// </summary>",
 				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
 			],
-			Keywords = ["public", "record"],
+			Keywords = ["public", "partial", "record"],
 			Name = fullType,
 			BaseClass = $"PhysicalQuantity<{fullType}, T>",
 			Interfaces = [$"IVector1<{fullType}, T>"],
@@ -1001,7 +1001,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		cb.WriteLine($"/// {dims}D vector representation of {dim.Name}.");
 		cb.WriteLine("/// </summary>");
 		cb.WriteLine("/// <typeparam name=\"T\">The numeric component type.</typeparam>");
-		cb.WriteLine($"public record {fullType} : {interfaceName}");
+		cb.WriteLine($"public partial record {fullType} : {interfaceName}");
 		cb.WriteLine("\twhere T : struct, INumber<T>");
 
 		using (new ScopeWithTrailingSemicolon(cb))
@@ -1090,7 +1090,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 					"/// </summary>",
 					"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
 				],
-				Keywords = ["public", "record"],
+				Keywords = ["public", "partial", "record"],
 				Name = fullType,
 				BaseClass = $"PhysicalQuantity<{fullType}, T>",
 				Interfaces = [interfaceName],
@@ -1266,7 +1266,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		cb.WriteLine($"/// {overload.Description}");
 		cb.WriteLine($"/// Semantic overload of <see cref=\"{baseTypeName}{{T}}\"/>.");
 		cb.WriteLine("/// </summary>");
-		cb.WriteLine($"public record {fullType} : {interfaceName}");
+		cb.WriteLine($"public partial record {fullType} : {interfaceName}");
 		cb.WriteLine("\twhere T : struct, INumber<T>");
 
 		using (new ScopeWithTrailingSemicolon(cb))

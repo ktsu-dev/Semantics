@@ -11,7 +11,7 @@ using System.Numerics;
 /// Signed one-dimensional (Vector1) quantity for the AngularMomentum dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record AngularMomentum1D<T> : PhysicalQuantity<AngularMomentum1D<T>, T>, IVector1<AngularMomentum1D<T>, T>
+public partial record AngularMomentum1D<T> : PhysicalQuantity<AngularMomentum1D<T>, T>, IVector1<AngularMomentum1D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="VoltageMagnitude{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record EMF<T> : PhysicalQuantity<EMF<T>, T>, IVector0<EMF<T>, T>
+public partial record EMF<T> : PhysicalQuantity<EMF<T>, T>, IVector0<EMF<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

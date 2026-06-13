@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Mass{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record AtomicMass<T> : PhysicalQuantity<AtomicMass<T>, T>, IVector0<AtomicMass<T>, T>
+public partial record AtomicMass<T> : PhysicalQuantity<AtomicMass<T>, T>, IVector0<AtomicMass<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

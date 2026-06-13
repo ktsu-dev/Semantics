@@ -11,7 +11,7 @@ using System.Numerics;
 /// Signed one-dimensional (Vector1) quantity for the Snap dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Snap1D<T> : PhysicalQuantity<Snap1D<T>, T>, IVector1<Snap1D<T>, T>
+public partial record Snap1D<T> : PhysicalQuantity<Snap1D<T>, T>, IVector1<Snap1D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

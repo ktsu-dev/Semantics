@@ -11,7 +11,7 @@ using System.Numerics;
 /// Signed one-dimensional (Vector1) quantity for the ElectricCharge dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Charge<T> : PhysicalQuantity<Charge<T>, T>, IVector1<Charge<T>, T>
+public partial record Charge<T> : PhysicalQuantity<Charge<T>, T>, IVector1<Charge<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

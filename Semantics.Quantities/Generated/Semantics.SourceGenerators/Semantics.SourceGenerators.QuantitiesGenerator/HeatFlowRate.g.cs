@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Power{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record HeatFlowRate<T> : PhysicalQuantity<HeatFlowRate<T>, T>, IVector0<HeatFlowRate<T>, T>
+public partial record HeatFlowRate<T> : PhysicalQuantity<HeatFlowRate<T>, T>, IVector0<HeatFlowRate<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

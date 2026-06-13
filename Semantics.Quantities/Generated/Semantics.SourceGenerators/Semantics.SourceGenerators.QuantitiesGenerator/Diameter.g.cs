@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Length{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Diameter<T> : PhysicalQuantity<Diameter<T>, T>, IVector0<Diameter<T>, T>
+public partial record Diameter<T> : PhysicalQuantity<Diameter<T>, T>, IVector0<Diameter<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

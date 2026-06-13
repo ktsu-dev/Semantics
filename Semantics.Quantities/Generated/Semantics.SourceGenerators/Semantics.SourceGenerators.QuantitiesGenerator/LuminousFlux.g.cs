@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the LuminousFlux dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record LuminousFlux<T> : PhysicalQuantity<LuminousFlux<T>, T>, IVector0<LuminousFlux<T>, T>
+public partial record LuminousFlux<T> : PhysicalQuantity<LuminousFlux<T>, T>, IVector0<LuminousFlux<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

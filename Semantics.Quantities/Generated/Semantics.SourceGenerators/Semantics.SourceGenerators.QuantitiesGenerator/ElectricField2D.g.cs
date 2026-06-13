@@ -15,7 +15,7 @@ using System.Numerics;
 /// 2D vector representation of ElectricField.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public record ElectricField2D<T> : IVector2<ElectricField2D<T>, T>
+public partial record ElectricField2D<T> : IVector2<ElectricField2D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

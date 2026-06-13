@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Frequency{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Bandwidth<T> : PhysicalQuantity<Bandwidth<T>, T>, IVector0<Bandwidth<T>, T>
+public partial record Bandwidth<T> : PhysicalQuantity<Bandwidth<T>, T>, IVector0<Bandwidth<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

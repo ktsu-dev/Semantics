@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Pressure{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record BulkModulus<T> : PhysicalQuantity<BulkModulus<T>, T>, IVector0<BulkModulus<T>, T>
+public partial record BulkModulus<T> : PhysicalQuantity<BulkModulus<T>, T>, IVector0<BulkModulus<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

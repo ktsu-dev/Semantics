@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Ratio{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record MachNumber<T> : PhysicalQuantity<MachNumber<T>, T>, IVector0<MachNumber<T>, T>
+public partial record MachNumber<T> : PhysicalQuantity<MachNumber<T>, T>, IVector0<MachNumber<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>
@@ -63,6 +63,13 @@ public record MachNumber<T> : PhysicalQuantity<MachNumber<T>, T>, IVector0<MachN
 	/// <returns>A new MachNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MachNumber<T> FromMilliradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
+	/// Creates a new MachNumber from a value in Percent.
+	/// </summary>
+	/// <param name="value">The value in Percent.</param>
+	/// <returns>A new MachNumber instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static MachNumber<T> FromPercent(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)), nameof(value)));
 /// <summary>
 	/// Creates a new MachNumber from a value in PartsPerMillion.
 	/// </summary>

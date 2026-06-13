@@ -15,7 +15,7 @@ using System.Numerics;
 /// 3D vector representation of Snap.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public record Snap3D<T> : IVector3<Snap3D<T>, T>
+public partial record Snap3D<T> : IVector3<Snap3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

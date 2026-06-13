@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ElectricFlux dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ElectricFlux<T> : PhysicalQuantity<ElectricFlux<T>, T>, IVector0<ElectricFlux<T>, T>
+public partial record ElectricFlux<T> : PhysicalQuantity<ElectricFlux<T>, T>, IVector0<ElectricFlux<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

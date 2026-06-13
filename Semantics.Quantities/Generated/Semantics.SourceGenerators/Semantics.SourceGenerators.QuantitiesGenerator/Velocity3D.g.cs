@@ -15,7 +15,7 @@ using System.Numerics;
 /// 3D vector representation of Velocity.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public record Velocity3D<T> : IVector3<Velocity3D<T>, T>
+public partial record Velocity3D<T> : IVector3<Velocity3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

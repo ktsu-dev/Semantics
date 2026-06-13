@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Power{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record SoundPower<T> : PhysicalQuantity<SoundPower<T>, T>, IVector0<SoundPower<T>, T>
+public partial record SoundPower<T> : PhysicalQuantity<SoundPower<T>, T>, IVector0<SoundPower<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

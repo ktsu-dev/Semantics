@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Length dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Length<T> : PhysicalQuantity<Length<T>, T>, IVector0<Length<T>, T>
+public partial record Length<T> : PhysicalQuantity<Length<T>, T>, IVector0<Length<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

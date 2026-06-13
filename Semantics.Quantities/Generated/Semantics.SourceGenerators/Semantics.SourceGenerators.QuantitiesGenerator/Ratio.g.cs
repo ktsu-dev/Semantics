@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Dimensionless dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Ratio<T> : PhysicalQuantity<Ratio<T>, T>, IVector0<Ratio<T>, T>
+public partial record Ratio<T> : PhysicalQuantity<Ratio<T>, T>, IVector0<Ratio<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>
@@ -62,6 +62,13 @@ public record Ratio<T> : PhysicalQuantity<Ratio<T>, T>, IVector0<Ratio<T>, T>
 	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Ratio<T> FromMilliradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+/// <summary>
+	/// Creates a new <see cref="Ratio{T}"/> from a value in Percent.
+	/// </summary>
+	/// <param name="value">The value in Percent.</param>
+	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static Ratio<T> FromPercent(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)), nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="Ratio{T}"/> from a value in PartsPerMillion.
 	/// </summary>

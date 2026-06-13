@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ThermalResistance dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T>, T>, IVector0<ThermalResistance<T>, T>
+public partial record ThermalResistance<T> : PhysicalQuantity<ThermalResistance<T>, T>, IVector0<ThermalResistance<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

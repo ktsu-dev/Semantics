@@ -15,7 +15,7 @@ using System.Numerics;
 /// Location in 3D space relative to an origin.
 /// Semantic overload of <see cref="Displacement3D{T}"/>.
 /// </summary>
-public record Position3D<T> : IVector3<Position3D<T>, T>
+public partial record Position3D<T> : IVector3<Position3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

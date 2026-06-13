@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Length{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Wavelength<T> : PhysicalQuantity<Wavelength<T>, T>, IVector0<Wavelength<T>, T>
+public partial record Wavelength<T> : PhysicalQuantity<Wavelength<T>, T>, IVector0<Wavelength<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

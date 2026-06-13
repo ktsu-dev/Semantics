@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="CatalyticActivity{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>, IVector0<EnzymeActivity<T>, T>
+public partial record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>, IVector0<EnzymeActivity<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

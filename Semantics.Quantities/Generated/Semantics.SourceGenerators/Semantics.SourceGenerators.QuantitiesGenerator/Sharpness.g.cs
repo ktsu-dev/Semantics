@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Sharpness dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Sharpness<T> : PhysicalQuantity<Sharpness<T>, T>, IVector0<Sharpness<T>, T>
+public partial record Sharpness<T> : PhysicalQuantity<Sharpness<T>, T>, IVector0<Sharpness<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

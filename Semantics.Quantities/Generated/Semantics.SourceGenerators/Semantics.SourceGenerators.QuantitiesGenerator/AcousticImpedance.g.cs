@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the AcousticImpedance dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record AcousticImpedance<T> : PhysicalQuantity<AcousticImpedance<T>, T>, IVector0<AcousticImpedance<T>, T>
+public partial record AcousticImpedance<T> : PhysicalQuantity<AcousticImpedance<T>, T>, IVector0<AcousticImpedance<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

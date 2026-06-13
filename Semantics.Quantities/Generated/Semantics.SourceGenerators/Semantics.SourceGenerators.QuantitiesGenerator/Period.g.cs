@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Duration{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Period<T> : PhysicalQuantity<Period<T>, T>, IVector0<Period<T>, T>
+public partial record Period<T> : PhysicalQuantity<Period<T>, T>, IVector0<Period<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

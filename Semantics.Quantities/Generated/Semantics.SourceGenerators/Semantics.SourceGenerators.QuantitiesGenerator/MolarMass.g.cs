@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the MolarMass dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record MolarMass<T> : PhysicalQuantity<MolarMass<T>, T>, IVector0<MolarMass<T>, T>
+public partial record MolarMass<T> : PhysicalQuantity<MolarMass<T>, T>, IVector0<MolarMass<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

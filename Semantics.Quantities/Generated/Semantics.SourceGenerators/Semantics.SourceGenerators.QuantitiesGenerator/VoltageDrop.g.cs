@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="VoltageMagnitude{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record VoltageDrop<T> : PhysicalQuantity<VoltageDrop<T>, T>, IVector0<VoltageDrop<T>, T>
+public partial record VoltageDrop<T> : PhysicalQuantity<VoltageDrop<T>, T>, IVector0<VoltageDrop<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

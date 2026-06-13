@@ -545,6 +545,11 @@
       "description": "Dimensionless ratio conversion factors",
       "factors": [
         {
+          "name": "PercentToRatio",
+          "description": "Percent to ratio: 0.01 (exact by definition)",
+          "value": "0.01"
+        },
+        {
           "name": "PartsPerMillionToRatio",
           "description": "Parts per million to ratio: 1e-6 (exact by definition)",
           "value": "1e-6"

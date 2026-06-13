@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="MolarEnergy{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record MolarEnthalpy<T> : PhysicalQuantity<MolarEnthalpy<T>, T>, IVector0<MolarEnthalpy<T>, T>
+public partial record MolarEnthalpy<T> : PhysicalQuantity<MolarEnthalpy<T>, T>, IVector0<MolarEnthalpy<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

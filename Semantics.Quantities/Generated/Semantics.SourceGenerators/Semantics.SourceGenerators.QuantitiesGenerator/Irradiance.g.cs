@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Irradiance dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Irradiance<T> : PhysicalQuantity<Irradiance<T>, T>, IVector0<Irradiance<T>, T>
+public partial record Irradiance<T> : PhysicalQuantity<Irradiance<T>, T>, IVector0<Irradiance<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

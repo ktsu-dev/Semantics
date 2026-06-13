@@ -15,6 +15,7 @@ For the *why* (the unified vector model), see `docs/strategy-unified-vector-quan
 | `PrecisionGenerator` | `StorageTypes.g.cs` | The set of `INumber<T>` storage types the library opts into (`double`, `float`, `decimal`, …). |
 | `PhysicalConstantsGenerator` | `PhysicalConstants.g.cs` | `PhysicalConstants.Generic.X<T>()` and `PhysicalConstants.Conversion.X<T>()` accessors backed by `PreciseNumber`. |
 | `QuantitiesGenerator` | one `*.g.cs` file per emitted type | Vector0/V1/V2/V3/V4 bases, semantic overloads, factories, operators, magnitude extraction, dot/cross products. |
+| `LogarithmicScalesGenerator` | one `*.g.cs` file per logarithmic scale | Decibel levels, pitch intervals, and pH from `logarithmic.json`: standalone `readonly partial record struct`s with linear-quantity conversions, log-space arithmetic, and comparisons. |
 
 Outputs land under `Semantics.Quantities/Generated/Semantics.SourceGenerators/<GeneratorName>/`. Generated files are **committed** so that the project compiles without first running the generator.
 
@@ -118,6 +119,45 @@ For example, declaring `Force × Distance = Work`:
    ```
 2. The generator emits both `Force * Length => Energy` and `Energy / Length => Force`. No second declaration needed.
 3. For vector forms, declare on `dotProducts` or `crossProducts` — these are emitted on the matching vector forms only.
+
+## End-to-end: adding a logarithmic scale
+
+Logarithmic quantities (decibel levels, pitch intervals, pH) don't obey linear
+arithmetic, so they are **not** dimensions. They live in
+`Semantics.SourceGenerators/Metadata/logarithmic.json` and are emitted by
+`LogarithmicScalesGenerator` as standalone `readonly partial record struct`s
+around `scale = multiplier · log_base(linear / reference)`:
+
+```jsonc
+{
+  "name": "SoundPressureLevel",
+  "description": "Represents a sound pressure level (SPL) in decibels…",
+  "displayFormat": "{0} dB SPL",        // ToString template
+  "scalarFactory": "FromDecibels",       // raw-value factory name
+  "arithmetic": true,                    // emit log-space + and -
+  "conversions": [
+    {
+      "linear": "SoundPressure",         // generated linear counterpart
+      "multiplier": "20",                // 20 = field, 10 = power, 1200 = cents…
+      "logBase": "10",                   // optional, defaults to 10
+      "reference": { "constant": "ReferenceSoundPressure" }, // or { "value": "1000" }
+      "fromName": "FromSoundPressure",   // optional, defaults to From{Linear}
+      "toName": "ToSoundPressure"        // optional, defaults to To{Linear}
+    }
+  ]
+}
+```
+
+Each conversion generates `From{Linear}({Linear}<T>)` and `To{Linear}()`
+methods; the core always gets the scalar factory, `CompareTo`, comparison
+operators, and `ToString`. Bespoke members that don't fit the schema —
+named constants (`PH.Neutral`, `Semitones.Octave`), cross-scale conversions
+(`Cents`↔`Semitones`), raw-`T` conveniences (`Decibels.FromAmplitude(T)`) —
+go in a hand-written `partial` next to the generated core (see
+`Semantics.Quantities/AudioEngineering/` and `Acoustics/`).
+
+SEM005 flags missing or duplicate scale names and conversions with no linear
+type.
 
 ## Validation, diagnostics, and gotchas
 

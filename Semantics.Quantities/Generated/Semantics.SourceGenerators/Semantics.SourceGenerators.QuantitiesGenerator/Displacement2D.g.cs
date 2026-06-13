@@ -15,7 +15,7 @@ using System.Numerics;
 /// 2D vector representation of Length.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public record Displacement2D<T> : IVector2<Displacement2D<T>, T>
+public partial record Displacement2D<T> : IVector2<Displacement2D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

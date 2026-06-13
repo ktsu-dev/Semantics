@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Area{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record CrossSectionalArea<T> : PhysicalQuantity<CrossSectionalArea<T>, T>, IVector0<CrossSectionalArea<T>, T>
+public partial record CrossSectionalArea<T> : PhysicalQuantity<CrossSectionalArea<T>, T>, IVector0<CrossSectionalArea<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

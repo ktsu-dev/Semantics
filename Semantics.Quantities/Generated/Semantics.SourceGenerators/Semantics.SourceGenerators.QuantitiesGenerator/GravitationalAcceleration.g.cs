@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="AccelerationMagnitude{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record GravitationalAcceleration<T> : PhysicalQuantity<GravitationalAcceleration<T>, T>, IVector0<GravitationalAcceleration<T>, T>
+public partial record GravitationalAcceleration<T> : PhysicalQuantity<GravitationalAcceleration<T>, T>, IVector0<GravitationalAcceleration<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

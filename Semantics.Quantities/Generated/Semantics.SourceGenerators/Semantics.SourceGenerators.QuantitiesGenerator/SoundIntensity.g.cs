@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="Irradiance{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record SoundIntensity<T> : PhysicalQuantity<SoundIntensity<T>, T>, IVector0<SoundIntensity<T>, T>
+public partial record SoundIntensity<T> : PhysicalQuantity<SoundIntensity<T>, T>, IVector0<SoundIntensity<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

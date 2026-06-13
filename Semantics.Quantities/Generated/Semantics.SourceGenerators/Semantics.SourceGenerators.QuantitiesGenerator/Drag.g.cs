@@ -12,7 +12,7 @@ using System.Numerics;
 /// Semantic overload of <see cref="ForceMagnitude{T}"/>.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Drag<T> : PhysicalQuantity<Drag<T>, T>, IVector0<Drag<T>, T>
+public partial record Drag<T> : PhysicalQuantity<Drag<T>, T>, IVector0<Drag<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

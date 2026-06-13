@@ -262,6 +262,9 @@ internal static class ConversionConstants{
 	/// <summary>Foot-lambert to candela per square meter: 1/(π·0.09290304) ≈ 3.4263 cd/m² per fL (exact)</summary>
 	internal const double FootLambertToCandelaPerSquareMeter = 3.4262590996353905;
 
+	/// <summary>Percent to ratio: 0.01 (exact by definition)</summary>
+	internal const double PercentToRatio = 0.01;
+
 	/// <summary>Parts per million to ratio: 1e-6 (exact by definition)</summary>
 	internal const double PartsPerMillionToRatio = 1e-6;
 

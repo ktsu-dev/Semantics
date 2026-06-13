@@ -15,7 +15,7 @@ using System.Numerics;
 /// Gravitational acceleration field in 3D.
 /// Semantic overload of <see cref="Acceleration3D{T}"/>.
 /// </summary>
-public record GravitationalField3D<T> : IVector3<GravitationalField3D<T>, T>
+public partial record GravitationalField3D<T> : IVector3<GravitationalField3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

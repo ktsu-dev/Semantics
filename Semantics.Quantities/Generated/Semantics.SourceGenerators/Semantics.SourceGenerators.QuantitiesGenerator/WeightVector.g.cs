@@ -15,7 +15,7 @@ using System.Numerics;
 /// Gravitational force vector.
 /// Semantic overload of <see cref="Force3D{T}"/>.
 /// </summary>
-public record WeightVector<T> : IVector3<WeightVector<T>, T>
+public partial record WeightVector<T> : IVector3<WeightVector<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

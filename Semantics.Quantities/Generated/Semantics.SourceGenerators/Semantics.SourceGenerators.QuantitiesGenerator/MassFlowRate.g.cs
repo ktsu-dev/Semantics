@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the MassFlowRate dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>, IVector0<MassFlowRate<T>, T>
+public partial record MassFlowRate<T> : PhysicalQuantity<MassFlowRate<T>, T>, IVector0<MassFlowRate<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

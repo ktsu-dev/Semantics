@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Frequency dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record Frequency<T> : PhysicalQuantity<Frequency<T>, T>, IVector0<Frequency<T>, T>
+public partial record Frequency<T> : PhysicalQuantity<Frequency<T>, T>, IVector0<Frequency<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>

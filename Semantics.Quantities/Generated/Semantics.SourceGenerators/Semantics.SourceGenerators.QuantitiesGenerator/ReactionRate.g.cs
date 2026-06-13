@@ -11,7 +11,7 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ReactionRate dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>, IVector0<ReactionRate<T>, T>
+public partial record ReactionRate<T> : PhysicalQuantity<ReactionRate<T>, T>, IVector0<ReactionRate<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets a quantity with value zero.</summary>
