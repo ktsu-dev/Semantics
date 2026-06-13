@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Quantities;
 
 using System.Globalization;
 using System.Numerics;
@@ -39,7 +39,11 @@ public readonly record struct Percent<T>(T Value) : IComparable<Percent<T>>
 	/// </summary>
 	/// <param name="ratio">The ratio to convert.</param>
 	/// <returns>A new <see cref="Percent{T}"/>.</returns>
-	public static Percent<T> FromRatio(Ratio<T> ratio) => ratio.ToPercent();
+	public static Percent<T> FromRatio(Ratio<T> ratio)
+	{
+		ArgumentNullException.ThrowIfNull(ratio);
+		return FromFraction(ratio.Value);
+	}
 
 	/// <summary>
 	/// Converts this percentage to a fraction in the range <c>[0, 1]</c> (50% → 0.5).
@@ -51,7 +55,7 @@ public readonly record struct Percent<T>(T Value) : IComparable<Percent<T>>
 	/// Converts this percentage to a ratio (100% → 1).
 	/// </summary>
 	/// <returns>The equivalent <see cref="Ratio{T}"/>.</returns>
-	public Ratio<T> ToRatio() => new(ToFraction());
+	public Ratio<T> ToRatio() => Ratio<T>.Create(ToFraction());
 
 	/// <inheritdoc/>
 	public int CompareTo(Percent<T> other) => Value.CompareTo(other.Value);

@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Test;
 
+using ktsu.Semantics.Quantities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -74,9 +75,20 @@ public class AudioEngineeringTests
 	[TestMethod]
 	public void RatioPercent_RoundTrip()
 	{
-		Assert.AreEqual(50.0, Ratio<double>.Create(0.5).ToPercent().Value, Tolerance);
+		Assert.AreEqual(50.0, Percent<double>.FromRatio(Ratio<double>.Create(0.5)).Value, Tolerance);
 		Assert.AreEqual(0.5, Percent<double>.Create(50.0).ToRatio().Value, Tolerance);
 		Assert.AreEqual(0.25, Percent<double>.FromFraction(0.25).ToFraction(), Tolerance);
+	}
+
+	[TestMethod]
+	public void Ratio_Arithmetic_Comes_From_The_Generator()
+	{
+		// The audio-specific Ratio struct is gone; the generated Dimensionless
+		// Ratio supplies the arithmetic.
+		Ratio<double> mix = Ratio<double>.Create(0.5) * Ratio<double>.Create(0.5);
+		Assert.AreEqual(0.25, mix.Value, Tolerance);
+		// Same-type division yields the raw storage ratio, as for every quantity.
+		Assert.AreEqual(2.0, Ratio<double>.Create(1.0) / Ratio<double>.Create(0.5), Tolerance);
 	}
 
 	[TestMethod]

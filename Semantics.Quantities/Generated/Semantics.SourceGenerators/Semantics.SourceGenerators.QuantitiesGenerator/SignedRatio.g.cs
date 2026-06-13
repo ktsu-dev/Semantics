@@ -86,5 +86,13 @@ public record SignedRatio<T> : PhysicalQuantity<SignedRatio<T>, T>, IVector1<Sig
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public Ratio<T> Magnitude() => Ratio<T>.Create(T.Abs(Value));
+/// <summary>
+	/// Multiplies SignedRatio by Ratio to produce SignedRatio.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedRatio<T> operator *(SignedRatio<T> left, Ratio<T> right) => Multiply<SignedRatio<T>>(left, right);
+/// <summary>
+	/// Divides SignedRatio by Ratio to produce SignedRatio.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedRatio<T> operator /(SignedRatio<T> left, Ratio<T> right) => Divide<SignedRatio<T>>(left, right);
 };
 

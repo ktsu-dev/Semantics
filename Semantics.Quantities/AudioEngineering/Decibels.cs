@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Quantities;
 
 using System.Globalization;
 using System.Numerics;
@@ -84,7 +84,7 @@ public readonly record struct Decibels<T>(T Value) : IComparable<Decibels<T>>
 	{
 		double db = double.CreateChecked(Value);
 		double linear = Math.Pow(10.0, db / 10.0);
-		return new(T.CreateChecked(linear));
+		return Ratio<T>.Create(T.CreateChecked(linear));
 	}
 
 	/// <summary>Adds two decibel levels (cascading two stages multiplies their linear gains).</summary>

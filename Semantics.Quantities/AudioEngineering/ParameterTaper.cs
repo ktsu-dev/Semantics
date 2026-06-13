@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Quantities;
 
 /// <summary>
 /// Describes how a <see cref="NormalizedParameter{T}"/> maps a host-normalized position in

@@ -15,10 +15,10 @@ For the architecture behind these changes see
 
 ## Quick checklist
 
-1. Update the namespace: quantities moved from `ktsu.Semantics` to
-   `ktsu.Semantics.Quantities` (unit singletons live in
-   `ktsu.Semantics.Quantities.Units`). The audio-engineering types
-   (`Decibels`, `Gain`, `NormalizedParameter`, …) remain in `ktsu.Semantics`.
+1. Update the namespace: quantities — including the audio-engineering types
+   (`Decibels`, `Gain`, `NormalizedParameter`, …) — moved from
+   `ktsu.Semantics` to `ktsu.Semantics.Quantities` (unit singletons live in
+   `ktsu.Semantics.Quantities.Units`).
 2. Rename vector-capable quantities to their explicit form — `Force<double>`
    becomes `ForceMagnitude<double>` (or `Force1D`/`Force2D`/`Force3D` if you
    were tracking sign or direction). The full table is below.
@@ -38,7 +38,7 @@ For the architecture behind these changes see
 |---|---|
 | `ktsu.Semantics` (quantity types) | `ktsu.Semantics.Quantities` |
 | `ktsu.Semantics` (unit registry) | `ktsu.Semantics.Quantities.Units` |
-| `ktsu.Semantics` (audio engineering: `Decibels`, `Gain`, `Cents`, `Semitones`, `Percent`, `QFactor`, `Ratio` (audio), `NormalizedParameter`, `ParameterTaper`) | unchanged |
+| `ktsu.Semantics` (audio engineering: `Decibels`, `Gain`, `Cents`, `Semitones`, `Percent`, `QFactor`, `NormalizedParameter`, `ParameterTaper`) | `ktsu.Semantics.Quantities` |
 | `ktsu.Semantics.Strings`, `ktsu.Semantics.Paths` | unchanged |
 
 ## Quantity type renames
@@ -204,14 +204,16 @@ different dimensions throws `ArgumentException`; equality across dimensions is
 | `MolesPerSecond` unit on `ReactionRate` | none — `ReactionRate` is volumetric (mol/(m³·s)); the 1.x unit was mislabelled |
 | `PhysicalConstants.Conversion.*` | conversions are baked into factories; raw factors live in `conversions.json` |
 | `SoundPressureLevel.AWeighted()` / `EquivalentLevel` | none (1.x implementations were placeholders) |
+| audio-engineering `Ratio<T>` | the generated `Ratio<T>` (Dimensionless V0; non-negative, `Ratio × Ratio` generated, same-type `/` yields the storage value); percentage bridging lives on `Percent<T>.FromRatio`/`ToRatio` |
 
 ## What didn't change
 
 - `Semantics.Strings` and `Semantics.Paths` — same namespaces, same types;
   2.0 only adds validation attributes.
 - The audio-engineering types added late in 1.x (`Decibels`, `Gain`,
-  `NormalizedParameter`, `ParameterTaper`, …) ship unchanged in
-  `ktsu.Semantics`.
+  `NormalizedParameter`, `ParameterTaper`, …) keep their APIs, but move to
+  `ktsu.Semantics.Quantities` and exchange ratios through the generated
+  `Ratio<T>`.
 - Target frameworks: `net7.0` through `net10.0`.
 - Quantities remain generic over the numeric storage type
   (`where T : struct, INumber<T>`).
