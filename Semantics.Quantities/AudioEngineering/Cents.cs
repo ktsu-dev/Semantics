@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Quantities;
 
 using System.Globalization;
 using System.Numerics;
@@ -43,6 +43,7 @@ public readonly record struct Cents<T>(T Value) : IComparable<Cents<T>>
 	/// <returns>A new <see cref="Cents{T}"/>.</returns>
 	public static Cents<T> FromFrequencyRatio(Ratio<T> ratio)
 	{
+		ArgumentNullException.ThrowIfNull(ratio);
 		double r = double.CreateChecked(ratio.Value);
 		double cents = 1200.0 * Math.Log2(r);
 		return new(T.CreateChecked(cents));
@@ -62,7 +63,7 @@ public readonly record struct Cents<T>(T Value) : IComparable<Cents<T>>
 	{
 		double cents = double.CreateChecked(Value);
 		double ratio = Math.Pow(2.0, cents / 1200.0);
-		return new(T.CreateChecked(ratio));
+		return Ratio<T>.Create(T.CreateChecked(ratio));
 	}
 
 	/// <summary>Adds two intervals.</summary>

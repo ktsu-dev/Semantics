@@ -96,6 +96,14 @@ public record Ratio<T> : PhysicalQuantity<Ratio<T>, T>, IVector0<Ratio<T>, T>
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Ratio<T> operator -(Ratio<T> left, Ratio<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 /// <summary>
+	/// Multiplies Ratio by Ratio to produce Ratio.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Ratio<T> operator *(Ratio<T> left, Ratio<T> right) => Multiply<Ratio<T>>(left, right);
+/// <summary>
+	/// Multiplies Ratio by SignedRatio to produce SignedRatio.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedRatio<T> operator *(Ratio<T> left, SignedRatio<T> right) => Multiply<SignedRatio<T>>(left, right);
+/// <summary>
 	/// Divides Ratio by Duration to produce Frequency.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Frequency<T> operator /(Ratio<T> left, Duration<T> right) => Divide<Frequency<T>>(left, right);

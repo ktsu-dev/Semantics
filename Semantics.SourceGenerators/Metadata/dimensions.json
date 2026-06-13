@@ -25,7 +25,9 @@
           ]
         }
       },
-      "integrals": [],
+      "integrals": [
+        { "other": "Dimensionless", "result": "Dimensionless" }
+      ],
       "derivatives": [],
       "dotProducts": [],
       "crossProducts": []

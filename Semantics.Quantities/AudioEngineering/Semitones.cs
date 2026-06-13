@@ -2,7 +2,7 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
-namespace ktsu.Semantics;
+namespace ktsu.Semantics.Quantities;
 
 using System.Globalization;
 using System.Numerics;
@@ -47,6 +47,7 @@ public readonly record struct Semitones<T>(T Value) : IComparable<Semitones<T>>
 	/// <returns>A new <see cref="Semitones{T}"/>.</returns>
 	public static Semitones<T> FromFrequencyRatio(Ratio<T> ratio)
 	{
+		ArgumentNullException.ThrowIfNull(ratio);
 		double r = double.CreateChecked(ratio.Value);
 		double semitones = 12.0 * Math.Log2(r);
 		return new(T.CreateChecked(semitones));
@@ -66,7 +67,7 @@ public readonly record struct Semitones<T>(T Value) : IComparable<Semitones<T>>
 	{
 		double semitones = double.CreateChecked(Value);
 		double ratio = Math.Pow(2.0, semitones / 12.0);
-		return new(T.CreateChecked(ratio));
+		return Ratio<T>.Create(T.CreateChecked(ratio));
 	}
 
 	/// <summary>Adds two intervals.</summary>
