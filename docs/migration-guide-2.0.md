@@ -139,11 +139,12 @@ double k  = temperature.In(Units.Celsius);
 `Units` (in `ktsu.Semantics.Quantities.Units`) exposes a generated singleton
 per unit; `Unit`, `BootstrapUnit`, and `BootstrapUnits` no longer exist.
 
-## Logarithmic scales are companion types
+## Logarithmic scales are generated companion types
 
 Decibel and pH scales don't obey linear arithmetic, so they are no longer
-`PhysicalQuantity` dimensions. Each is a self-contained
-`readonly record struct` that converts to and from its linear counterpart:
+`PhysicalQuantity` dimensions. Each is a standalone `readonly record struct`
+generated from `logarithmic.json` (with bespoke members like `PH.Neutral` in
+hand-written partials), converting to and from its linear counterpart:
 
 | 1.x type | 2.0 companion | Linear counterpart |
 |---|---|---|
@@ -204,16 +205,20 @@ different dimensions throws `ArgumentException`; equality across dimensions is
 | `MolesPerSecond` unit on `ReactionRate` | none — `ReactionRate` is volumetric (mol/(m³·s)); the 1.x unit was mislabelled |
 | `PhysicalConstants.Conversion.*` | conversions are baked into factories; raw factors live in `conversions.json` |
 | `SoundPressureLevel.AWeighted()` / `EquivalentLevel` | none (1.x implementations were placeholders) |
-| audio-engineering `Ratio<T>` | the generated `Ratio<T>` (Dimensionless V0; non-negative, `Ratio × Ratio` generated, same-type `/` yields the storage value); percentage bridging lives on `Percent<T>.FromRatio`/`ToRatio` |
+| audio-engineering `Ratio<T>` | the generated `Ratio<T>` (Dimensionless V0; non-negative, `Ratio × Ratio` generated, same-type `/` yields the storage value) |
+| audio-engineering `Percent<T>` | the `Percent` **unit** on the Dimensionless dimension: `Ratio<T>.FromPercent(50)` and `ratio.In(Units.Percent)` |
+| audio-engineering `Gain<T>` record struct | `Gain<T>` is now a generated semantic overload of `Ratio` (a record class, non-negative, widens implicitly to `Ratio`); `Unity`, `Silence`, the `Decibels` conversions, and `*` live in a partial |
 
 ## What didn't change
 
 - `Semantics.Strings` and `Semantics.Paths` — same namespaces, same types;
   2.0 only adds validation attributes.
 - The audio-engineering types added late in 1.x (`Decibels`, `Gain`,
-  `NormalizedParameter`, `ParameterTaper`, …) keep their APIs, but move to
-  `ktsu.Semantics.Quantities` and exchange ratios through the generated
-  `Ratio<T>`.
+  `Cents`, `Semitones`, `NormalizedParameter`, `ParameterTaper`, `QFactor`)
+  keep their APIs, but move to `ktsu.Semantics.Quantities`, exchange ratios
+  through the generated `Ratio<T>`, and (for the logarithmic ones) are
+  generated from `logarithmic.json`. `Percent` became a unit and `Gain` a
+  generated `Ratio` overload — see the removed-APIs table.
 - Target frameworks: `net7.0` through `net10.0`.
 - Quantities remain generic over the numeric storage type
   (`where T : struct, INumber<T>`).
