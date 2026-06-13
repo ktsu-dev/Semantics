@@ -26,7 +26,7 @@ public partial record Loudness<T> : PhysicalQuantity<Loudness<T>, T>, IVector0<L
 	/// <param name="value">The value in Sone.</param>
 	/// <returns>A new <see cref="Loudness{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Loudness<T> FromSones(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Loudness<T> FromSone(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Loudness unit) fail at compile time.

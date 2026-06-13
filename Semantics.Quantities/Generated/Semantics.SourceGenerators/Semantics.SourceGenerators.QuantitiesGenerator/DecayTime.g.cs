@@ -27,63 +27,63 @@ public partial record DecayTime<T> : PhysicalQuantity<DecayTime<T>, T>, IVector0
 	/// <param name="value">The value in Second.</param>
 	/// <returns>A new DecayTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DecayTime<T> FromSeconds(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static DecayTime<T> FromSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new DecayTime from a value in Millisecond.
 	/// </summary>
 	/// <param name="value">The value in Millisecond.</param>
 	/// <returns>A new DecayTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DecayTime<T> FromMilliseconds(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static DecayTime<T> FromMillisecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new DecayTime from a value in Microsecond.
 	/// </summary>
 	/// <param name="value">The value in Microsecond.</param>
 	/// <returns>A new DecayTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DecayTime<T> FromMicroseconds(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+	public static DecayTime<T> FromMicrosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
 /// <summary>
 	/// Creates a new DecayTime from a value in Minute.
 	/// </summary>
 	/// <param name="value">The value in Minute.</param>
 	/// <returns>A new DecayTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DecayTime<T> FromMinutes(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
+	public static DecayTime<T> FromMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new DecayTime from a value in Hour.
 	/// </summary>
 	/// <param name="value">The value in Hour.</param>
 	/// <returns>A new DecayTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DecayTime<T> FromHours(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
+	public static DecayTime<T> FromHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new DecayTime from a value in Day.
 	/// </summary>
 	/// <param name="value">The value in Day.</param>
 	/// <returns>A new DecayTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DecayTime<T> FromDays(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
+	public static DecayTime<T> FromDay(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new DecayTime from a value in Year.
 	/// </summary>
 	/// <param name="value">The value in Year.</param>
 	/// <returns>A new DecayTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DecayTime<T> FromYears(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
+	public static DecayTime<T> FromYear(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new DecayTime from a value in Week.
 	/// </summary>
 	/// <param name="value">The value in Week.</param>
 	/// <returns>A new DecayTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DecayTime<T> FromWeeks(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.WeekToSeconds)), nameof(value)));
+	public static DecayTime<T> FromWeek(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.WeekToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new DecayTime from a value in Nanosecond.
 	/// </summary>
 	/// <param name="value">The value in Nanosecond.</param>
 	/// <returns>A new DecayTime instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DecayTime<T> FromNanoseconds(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
+	public static DecayTime<T> FromNanosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Time unit) fail at compile time.

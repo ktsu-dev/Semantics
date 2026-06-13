@@ -27,28 +27,28 @@ public partial record SoundPressure<T> : PhysicalQuantity<SoundPressure<T>, T>, 
 	/// <param name="value">The value in Pascal.</param>
 	/// <returns>A new SoundPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPressure<T> FromPascals(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static SoundPressure<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new SoundPressure from a value in Kilopascal.
 	/// </summary>
 	/// <param name="value">The value in Kilopascal.</param>
 	/// <returns>A new SoundPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPressure<T> FromKilopascals(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static SoundPressure<T> FromKilopascal(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundPressure from a value in Bar.
 	/// </summary>
 	/// <param name="value">The value in Bar.</param>
 	/// <returns>A new SoundPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPressure<T> FromBars(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
+	public static SoundPressure<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundPressure from a value in Atmosphere.
 	/// </summary>
 	/// <param name="value">The value in Atmosphere.</param>
 	/// <returns>A new SoundPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPressure<T> FromAtmospheres(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
+	public static SoundPressure<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundPressure from a value in Psi.
 	/// </summary>

@@ -22,11 +22,11 @@ public sealed class QuantityBackfillTests
 	[TestMethod]
 	public void Luminance_Factories_And_Intensity_Relationship()
 	{
-		Luminance<double> nit = Luminance<double>.FromNits(100.0);
+		Luminance<double> nit = Luminance<double>.FromNit(100.0);
 		Assert.AreEqual(100.0, nit.Value, Tolerance);
-		Assert.AreEqual(3.4262590996353905, Luminance<double>.FromFootLamberts(1.0).Value, 1e-9);
+		Assert.AreEqual(3.4262590996353905, Luminance<double>.FromFootLambert(1.0).Value, 1e-9);
 
-		LuminousIntensity<double> intensity = nit * Area<double>.FromSquareMeters(2.0);
+		LuminousIntensity<double> intensity = nit * Area<double>.FromSquareMeter(2.0);
 		Assert.AreEqual(200.0, intensity.Value, Tolerance);
 	}
 
@@ -41,7 +41,7 @@ public sealed class QuantityBackfillTests
 	public void ElectricFlux_From_Field_Times_Area()
 	{
 		ElectricFieldMagnitude<double> field = ElectricFieldMagnitude<double>.FromVoltPerMeter(100.0);
-		ElectricFlux<double> flux = field * Area<double>.FromSquareMeters(0.5);
+		ElectricFlux<double> flux = field * Area<double>.FromSquareMeter(0.5);
 		Assert.AreEqual(50.0, flux.Value, Tolerance);
 	}
 
@@ -49,7 +49,7 @@ public sealed class QuantityBackfillTests
 	public void ElectricPowerDensity_Times_Volume_Is_Power()
 	{
 		ElectricPowerDensity<double> density = ElectricPowerDensity<double>.FromWattPerCubicMeter(250.0);
-		Power<double> power = density * Volume<double>.FromCubicMeters(4.0);
+		Power<double> power = density * Volume<double>.FromCubicMeter(4.0);
 		Assert.AreEqual(1000.0, power.Value, Tolerance);
 	}
 
@@ -58,7 +58,7 @@ public sealed class QuantityBackfillTests
 	{
 		// A 50 mV/Pa microphone at 1 Pa (94 dB SPL) produces 50 mV.
 		Sensitivity<double> mic = Sensitivity<double>.FromVoltPerPascal(0.05);
-		VoltageMagnitude<double> output = mic * Pressure<double>.FromPascals(1.0);
+		VoltageMagnitude<double> output = mic * Pressure<double>.FromPascal(1.0);
 		Assert.AreEqual(0.05, output.Value, Tolerance);
 	}
 
@@ -72,7 +72,7 @@ public sealed class QuantityBackfillTests
 	[TestMethod]
 	public void Loudness_And_Sharpness_Factories()
 	{
-		Assert.AreEqual(2.0, Loudness<double>.FromSones(2.0).Value, Tolerance);
+		Assert.AreEqual(2.0, Loudness<double>.FromSone(2.0).Value, Tolerance);
 		Assert.AreEqual(1.5, Sharpness<double>.FromAcum(1.5).Value, Tolerance);
 	}
 
@@ -81,22 +81,22 @@ public sealed class QuantityBackfillTests
 	[TestMethod]
 	public void Impedance_Widens_To_Resistance()
 	{
-		Impedance<double> z = Impedance<double>.FromOhms(8.0);
+		Impedance<double> z = Impedance<double>.FromOhm(8.0);
 		Resistance<double> r = z;
 		Assert.AreEqual(8.0, r.Value, Tolerance);
 
 		// Ohm's law applies through the overload: V = I·Z.
-		VoltageMagnitude<double> v = CurrentMagnitude<double>.FromAmperes(2.0) * z;
+		VoltageMagnitude<double> v = CurrentMagnitude<double>.FromAmpere(2.0) * z;
 		Assert.AreEqual(16.0, v.Value, Tolerance);
 	}
 
 	[TestMethod]
 	public void SoundPressure_And_SoundPower_Widen_To_Bases()
 	{
-		Pressure<double> p = SoundPressure<double>.FromPascals(0.2);
+		Pressure<double> p = SoundPressure<double>.FromPascal(0.2);
 		Assert.AreEqual(0.2, p.Value, Tolerance);
 
-		Power<double> w = SoundPower<double>.FromWatts(0.01);
+		Power<double> w = SoundPower<double>.FromWatt(0.01);
 		Assert.AreEqual(0.01, w.Value, Tolerance);
 	}
 
@@ -125,7 +125,7 @@ public sealed class QuantityBackfillTests
 	public void SoundPressureLevel_From_Pressure_And_Back()
 	{
 		// 0.02 Pa is 1000× the 20 µPa reference: 20·log10(1000) = 60 dB.
-		SoundPressureLevel<double> spl = SoundPressureLevel<double>.FromSoundPressure(SoundPressure<double>.FromPascals(0.02));
+		SoundPressureLevel<double> spl = SoundPressureLevel<double>.FromSoundPressure(SoundPressure<double>.FromPascal(0.02));
 		Assert.AreEqual(60.0, spl.Value, 1e-9);
 
 		SoundPressure<double> back = spl.ToSoundPressure();
@@ -143,7 +143,7 @@ public sealed class QuantityBackfillTests
 	[TestMethod]
 	public void SoundPowerLevel_From_Power_And_Back()
 	{
-		SoundPowerLevel<double> swl = SoundPowerLevel<double>.FromSoundPower(SoundPower<double>.FromWatts(1e-3));
+		SoundPowerLevel<double> swl = SoundPowerLevel<double>.FromSoundPower(SoundPower<double>.FromWatt(1e-3));
 		Assert.AreEqual(90.0, swl.Value, 1e-9);
 		Assert.AreEqual(1e-3, swl.ToSoundPower().Value, 1e-12);
 	}
@@ -161,11 +161,11 @@ public sealed class QuantityBackfillTests
 	public void PH_From_Concentration_And_Back()
 	{
 		// Pure water: [H+] = 1e-7 mol/L.
-		PH<double> ph = PH<double>.FromHydrogenConcentration(Concentration<double>.FromMolars(1e-7));
+		PH<double> ph = PH<double>.FromHydrogenConcentration(Concentration<double>.FromMolar(1e-7));
 		Assert.AreEqual(7.0, ph.Value, 1e-9);
 
 		Concentration<double> back = ph.ToHydrogenConcentration();
-		Assert.AreEqual(Concentration<double>.FromMolars(1e-7).Value, back.Value, 1e-12);
+		Assert.AreEqual(Concentration<double>.FromMolar(1e-7).Value, back.Value, 1e-12);
 	}
 
 	[TestMethod]

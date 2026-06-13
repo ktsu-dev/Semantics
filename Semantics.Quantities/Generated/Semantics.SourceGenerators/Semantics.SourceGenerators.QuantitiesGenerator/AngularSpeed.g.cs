@@ -21,19 +21,19 @@ public partial record AngularSpeed<T> : PhysicalQuantity<AngularSpeed<T>, T>, IV
 	public override DimensionInfo Dimension => PhysicalDimensions.AngularVelocity;
 
 	/// <summary>
-	/// Creates a new <see cref="AngularSpeed{T}"/> from a value in RadiansPerSecond.
+	/// Creates a new <see cref="AngularSpeed{T}"/> from a value in RadianPerSecond.
 	/// </summary>
-	/// <param name="value">The value in RadiansPerSecond.</param>
+	/// <param name="value">The value in RadianPerSecond.</param>
 	/// <returns>A new <see cref="AngularSpeed{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AngularSpeed<T> FromRadiansPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static AngularSpeed<T> FromRadianPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
-	/// Creates a new <see cref="AngularSpeed{T}"/> from a value in RevolutionsPerMinute.
+	/// Creates a new <see cref="AngularSpeed{T}"/> from a value in RevolutionPerMinute.
 	/// </summary>
-	/// <param name="value">The value in RevolutionsPerMinute.</param>
+	/// <param name="value">The value in RevolutionPerMinute.</param>
 	/// <returns>A new <see cref="AngularSpeed{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AngularSpeed<T> FromRevolutionsPerMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionsPerMinuteToRadiansPerSecond)), nameof(value)));
+	public static AngularSpeed<T> FromRevolutionPerMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionPerMinuteToRadianPerSecond)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularVelocity unit) fail at compile time.

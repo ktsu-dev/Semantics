@@ -13,8 +13,8 @@ In physics, `Force × Length` can represent two different quantities:
 using ktsu.Semantics;
 
 // Create quantities
-var force = Force<double>.FromNewtons(10.0);        // 10 N
-var displacement = Length<double>.FromMeters(5.0);   // 5 m
+var force = Force<double>.FromNewton(10.0);        // 10 N
+var displacement = Length<double>.FromMeter(5.0);   // 5 m
 
 // Calculate work/energy using operator (force parallel to displacement)
 var workDone = force * displacement;                 // 50 J
@@ -26,8 +26,8 @@ Console.WriteLine($"Work done: {workDone.In(Units.Joule)} J");
 ### Torque Calculations (Use `CalculateTorque()` Method)
 ```csharp
 // Create quantities
-var force = Force<double>.FromNewtons(10.0);        // 10 N
-var momentArm = Length<double>.FromMeters(0.5);     // 0.5 m
+var force = Force<double>.FromNewton(10.0);        // 10 N
+var momentArm = Length<double>.FromMeter(0.5);     // 0.5 m
 
 // Calculate torque using explicit method (force perpendicular to moment arm)
 var torque = force.CalculateTorque(momentArm);       // 5 N·m
@@ -40,8 +40,8 @@ Console.WriteLine($"Torque: {torque.In(Units.NewtonMeter)} N·m");
 
 ### Kinetic Energy (KE = ½mv²)
 ```csharp
-var mass = Mass<double>.FromKilograms(2.0);          // 2 kg
-var velocity = Velocity<double>.FromMetersPerSecond(10.0); // 10 m/s
+var mass = Mass<double>.FromKilogram(2.0);          // 2 kg
+var velocity = Velocity<double>.FromMeterPerSecond(10.0); // 10 m/s
 
 // Calculate kinetic energy using fractional constant
 var kineticEnergy = Energy<double>.FromKineticEnergy(mass, velocity); // 100 J
@@ -52,8 +52,8 @@ var calculatedVelocity = Energy<double>.GetVelocityFromKineticEnergy(kineticEner
 
 ### Ideal Gas Law (PV = nRT)
 ```csharp
-var pressure = Pressure<double>.FromPascals(101325.0);    // 1 atm
-var volume = Volume<double>.FromCubicMeters(0.0224);      // 22.4 L
+var pressure = Pressure<double>.FromPascal(101325.0);    // 1 atm
+var volume = Volume<double>.FromCubicMeter(0.0224);      // 22.4 L
 var temperature = Temperature<double>.FromKelvin(273.15);  // 0°C
 
 // Calculate amount of substance using gas constant
@@ -77,9 +77,9 @@ var calculatedFrequency = Frequency<double>.FromPhotonEnergy(photonEnergy);
 ### Reynolds Number (Re = ρvL/μ)
 ```csharp
 var density = Density<double>.FromKilogramsPerCubicMeter(1.225);        // Air density
-var velocity = Velocity<double>.FromMetersPerSecond(10.0);              // 10 m/s
-var length = Length<double>.FromMeters(1.0);                           // 1 m characteristic length
-var viscosity = DynamicViscosity<double>.FromPascalSeconds(1.825e-5);   // Air viscosity
+var velocity = Velocity<double>.FromMeterPerSecond(10.0);              // 10 m/s
+var length = Length<double>.FromMeter(1.0);                           // 1 m characteristic length
+var viscosity = DynamicViscosity<double>.FromPascalSecond(1.825e-5);   // Air viscosity
 
 // Calculate Reynolds number
 var reynolds = ReynoldsNumber<double>.FromFluidProperties(density, velocity, length, viscosity);
@@ -94,7 +94,7 @@ var regime = reynolds.GetPipeFlowRegime(); // "Laminar", "Transitional", or "Tur
 ### Acoustic Impedance (Z = ρc)
 ```csharp
 var density = Density<double>.FromKilogramsPerCubicMeter(1.225);        // Air density
-var soundSpeed = SoundSpeed<double>.FromMetersPerSecond(343.0);         // Sound speed in air
+var soundSpeed = SoundSpeed<double>.FromMeterPerSecond(343.0);         // Sound speed in air
 
 // Calculate acoustic impedance
 var impedance = AcousticImpedance<double>.FromDensityAndSoundSpeed(density, soundSpeed);
@@ -107,8 +107,8 @@ var standardImpedance = AcousticImpedance<double>.ForStandardAir();
 
 ### Newton's Laws
 ```csharp
-var mass = Mass<double>.FromKilograms(10.0);                    // 10 kg
-var acceleration = Acceleration<double>.FromMetersPerSecondSquared(9.8); // 9.8 m/s²
+var mass = Mass<double>.FromKilogram(10.0);                    // 10 kg
+var acceleration = Acceleration<double>.FromMeterPerSecondSquared(9.8); // 9.8 m/s²
 
 // F = ma
 var force = mass * acceleration;                                // 98 N
@@ -122,9 +122,9 @@ var calculatedMass = force / acceleration;                      // 10 kg
 
 ### Power Relationships
 ```csharp
-var force = Force<double>.FromNewtons(100.0);                   // 100 N
-var velocity = Velocity<double>.FromMetersPerSecond(5.0);       // 5 m/s
-var time = Time<double>.FromSeconds(10.0);                      // 10 s
+var force = Force<double>.FromNewton(100.0);                   // 100 N
+var velocity = Velocity<double>.FromMeterPerSecond(5.0);       // 5 m/s
+var time = Time<double>.FromSecond(10.0);                      // 10 s
 
 // P = F·v
 var mechanicalPower = force * velocity;                         // 500 W
@@ -135,9 +135,9 @@ var energy = mechanicalPower * time;                            // 5000 J
 
 ### Electrical Relationships
 ```csharp
-var current = ElectricCurrent<double>.FromAmperes(2.0);         // 2 A
-var resistance = ElectricResistance<double>.FromOhms(10.0);     // 10 Ω
-var time = Time<double>.FromSeconds(60.0);                      // 1 minute
+var current = ElectricCurrent<double>.FromAmpere(2.0);         // 2 A
+var resistance = ElectricResistance<double>.FromOhm(10.0);     // 10 Ω
+var time = Time<double>.FromSecond(60.0);                      // 1 minute
 
 // V = I·R (Ohm's law)
 var voltage = current * resistance;                             // 20 V

@@ -26,14 +26,14 @@ public partial record NuclearCrossSection<T> : PhysicalQuantity<NuclearCrossSect
 	/// <param name="value">The value in SquareMeter.</param>
 	/// <returns>A new <see cref="NuclearCrossSection{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static NuclearCrossSection<T> FromSquareMeters(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static NuclearCrossSection<T> FromSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="NuclearCrossSection{T}"/> from a value in Barn.
 	/// </summary>
 	/// <param name="value">The value in Barn.</param>
 	/// <returns>A new <see cref="NuclearCrossSection{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static NuclearCrossSection<T> FromBarns(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarnToSquareMeters)), nameof(value)));
+	public static NuclearCrossSection<T> FromBarn(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarnToSquareMeters)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-NuclearCrossSection unit) fail at compile time.

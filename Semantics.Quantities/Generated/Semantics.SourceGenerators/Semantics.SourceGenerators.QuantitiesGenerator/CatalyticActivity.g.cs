@@ -26,14 +26,14 @@ public partial record CatalyticActivity<T> : PhysicalQuantity<CatalyticActivity<
 	/// <param name="value">The value in Katal.</param>
 	/// <returns>A new <see cref="CatalyticActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static CatalyticActivity<T> FromKatals(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static CatalyticActivity<T> FromKatal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="CatalyticActivity{T}"/> from a value in EnzymeUnit.
 	/// </summary>
 	/// <param name="value">The value in EnzymeUnit.</param>
 	/// <returns>A new <see cref="CatalyticActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static CatalyticActivity<T> FromEnzymeUnits(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.EnzymeUnitToKatals)), nameof(value)));
+	public static CatalyticActivity<T> FromEnzymeUnit(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.EnzymeUnitToKatals)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-CatalyticActivity unit) fail at compile time.

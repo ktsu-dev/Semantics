@@ -34,35 +34,35 @@ public partial record Gain<T> : PhysicalQuantity<Gain<T>, T>, IVector0<Gain<T>, 
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Gain<T> FromRadians(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Gain<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new Gain from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Gain<T> FromDegrees(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
+	public static Gain<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>
 	/// Creates a new Gain from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Gain<T> FromGradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
+	public static Gain<T> FromGradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
 /// <summary>
 	/// Creates a new Gain from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Gain<T> FromRevolutions(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
+	public static Gain<T> FromRevolution(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
 /// <summary>
 	/// Creates a new Gain from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Gain<T> FromMilliradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static Gain<T> FromMilliradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new Gain from a value in Percent.
 	/// </summary>
@@ -71,19 +71,19 @@ public partial record Gain<T> : PhysicalQuantity<Gain<T>, T>, IVector0<Gain<T>, 
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromPercent(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)), nameof(value)));
 /// <summary>
-	/// Creates a new Gain from a value in PartsPerMillion.
+	/// Creates a new Gain from a value in PartPerMillion.
 	/// </summary>
-	/// <param name="value">The value in PartsPerMillion.</param>
+	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Gain<T> FromPartsPerMillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartsPerMillionToRatio)), nameof(value)));
+	public static Gain<T> FromPartPerMillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)), nameof(value)));
 /// <summary>
-	/// Creates a new Gain from a value in PartsPerBillion.
+	/// Creates a new Gain from a value in PartPerBillion.
 	/// </summary>
-	/// <param name="value">The value in PartsPerBillion.</param>
+	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Gain<T> FromPartsPerBillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartsPerBillionToRatio)), nameof(value)));
+	public static Gain<T> FromPartPerBillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)), nameof(value)));
 /// <summary>
 	/// Creates a new Gain from a value in PercentByWeight.
 	/// </summary>

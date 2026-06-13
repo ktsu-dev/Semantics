@@ -26,14 +26,14 @@ public partial record LuminousIntensity<T> : PhysicalQuantity<LuminousIntensity<
 	/// <param name="value">The value in Candela.</param>
 	/// <returns>A new <see cref="LuminousIntensity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static LuminousIntensity<T> FromCandelas(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static LuminousIntensity<T> FromCandela(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="LuminousIntensity{T}"/> from a value in Millicandela.
 	/// </summary>
 	/// <param name="value">The value in Millicandela.</param>
 	/// <returns>A new <see cref="LuminousIntensity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static LuminousIntensity<T> FromMillicandelas(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static LuminousIntensity<T> FromMillicandela(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-LuminousIntensity unit) fail at compile time.

@@ -25,13 +25,13 @@ public partial record Charge<T> : PhysicalQuantity<Charge<T>, T>, IVector1<Charg
 	/// </summary>
 	/// <param name="value">The value in Coulomb.</param>
 	/// <returns>A new <see cref="Charge{T}"/> instance.</returns>
-	public static Charge<T> FromCoulombs(T value) => Create(value);
+	public static Charge<T> FromCoulomb(T value) => Create(value);
 /// <summary>
 	/// Creates a new <see cref="Charge{T}"/> from a value in AmpereHour.
 	/// </summary>
 	/// <param name="value">The value in AmpereHour.</param>
 	/// <returns>A new <see cref="Charge{T}"/> instance.</returns>
-	public static Charge<T> FromAmpereHours(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.AmpereHourToCoulombs)));
+	public static Charge<T> FromAmpereHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.AmpereHourToCoulombs)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricCharge unit) fail at compile time.

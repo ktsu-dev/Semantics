@@ -25,31 +25,31 @@ public partial record SignedAngle<T> : PhysicalQuantity<SignedAngle<T>, T>, IVec
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromRadians(T value) => Create(value);
+	public static SignedAngle<T> FromRadian(T value) => Create(value);
 /// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static SignedAngle<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
 /// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromGradians(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
+	public static SignedAngle<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
 /// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromRevolutions(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
+	public static SignedAngle<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
 /// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromMilliradians(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+	public static SignedAngle<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularDisplacement unit) fail at compile time.

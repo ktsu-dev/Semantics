@@ -21,12 +21,12 @@ public partial record AngularJerkMagnitude<T> : PhysicalQuantity<AngularJerkMagn
 	public override DimensionInfo Dimension => PhysicalDimensions.AngularJerk;
 
 	/// <summary>
-	/// Creates a new <see cref="AngularJerkMagnitude{T}"/> from a value in RadiansPerSecondCubed.
+	/// Creates a new <see cref="AngularJerkMagnitude{T}"/> from a value in RadianPerSecondCubed.
 	/// </summary>
-	/// <param name="value">The value in RadiansPerSecondCubed.</param>
+	/// <param name="value">The value in RadianPerSecondCubed.</param>
 	/// <returns>A new <see cref="AngularJerkMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AngularJerkMagnitude<T> FromRadiansPerSecondCubed(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static AngularJerkMagnitude<T> FromRadianPerSecondCubed(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularJerk unit) fail at compile time.

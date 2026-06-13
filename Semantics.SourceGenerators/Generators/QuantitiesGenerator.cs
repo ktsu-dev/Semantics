@@ -652,15 +652,11 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				? $" => Create(Vector0Guards.{guardMethod}({conversionExpr}, nameof(value)));"
 				: $" => Create({conversionExpr});";
 
-			// Issue #49: factory names use the plural form. Prefer an explicit FactoryName from
-			// units.json (covers irregular plurals like Foot→Feet, mass nouns like Hertz, and
-			// already-plural compounds like MetersPerSecond). Fall back to "{Name}s" for units
-			// that haven't been migrated yet — wrong for those edge cases but produces a build
-			// rather than a hard failure.
-			string factorySuffix = unitMap.TryGetValue(unitName, out UnitDefinition? unitDef)
-				&& !string.IsNullOrEmpty(unitDef?.FactoryName)
-					? unitDef!.FactoryName
-					: unitName + "s";
+			// Issue #49: factory names are the unit's singular lemma — the unit name verbatim
+			// (e.g. From{Meter}, From{Kilogram}, From{MeterPerSecond}). units.json carries the
+			// singular lemma for every unit including compounds, so the generator never has to
+			// know English pluralisation: the rule is purely mechanical, From{Name}.
+			string factorySuffix = unitName;
 
 			List<string> comments =
 			[

@@ -21,12 +21,12 @@ public partial record AngularAccelerationMagnitude<T> : PhysicalQuantity<Angular
 	public override DimensionInfo Dimension => PhysicalDimensions.AngularAcceleration;
 
 	/// <summary>
-	/// Creates a new <see cref="AngularAccelerationMagnitude{T}"/> from a value in RadiansPerSecondSquared.
+	/// Creates a new <see cref="AngularAccelerationMagnitude{T}"/> from a value in RadianPerSecondSquared.
 	/// </summary>
-	/// <param name="value">The value in RadiansPerSecondSquared.</param>
+	/// <param name="value">The value in RadianPerSecondSquared.</param>
 	/// <returns>A new <see cref="AngularAccelerationMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AngularAccelerationMagnitude<T> FromRadiansPerSecondSquared(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static AngularAccelerationMagnitude<T> FromRadianPerSecondSquared(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularAcceleration unit) fail at compile time.

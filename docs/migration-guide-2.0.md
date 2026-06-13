@@ -106,22 +106,27 @@ serialized raw values, these are the places to audit:
 
 | Quantity | 1.x storage | 2.0 storage |
 |---|---|---|
-| `Concentration` | mol/L | mol/m³ (`FromMolars(1)` now stores `1000`) |
-| `NuclearCrossSection` | barn | m² (`FromBarns(1)` now stores `1e-28`) |
+| `Concentration` | mol/L | mol/m³ (`FromMolar(1)` now stores `1000`) |
+| `NuclearCrossSection` | barn | m² (`FromBarn(1)` now stores `1e-28`) |
 | `MolarMass` via `Dalton` | 1.66×10⁻²⁷ (a per-particle mass — wrong) | 10⁻³ kg/mol (1 Da ≡ 1 g/mol) |
 
 `Temperature.FromFahrenheit` was inverted in early 2.0 previews and computed
 the K→F transform; it now correctly maps 32 °F → 273.15 K, and `Rankine` is
 supported.
 
-### Factory naming is plural
+### Factory naming is the singular lemma
 
-`From{Unit}` factories use the plural unit form: `Length.FromMeters(…)`,
-`Mass.FromKilograms(…)`, `Energy.FromBtus(…)`, `Speed.FromKnots(…)`. Mass
-nouns stay invariant (`Frequency.FromHertz`, `Temperature.FromCelsius`), and
-"Per" compounds keep the singular form
-(`ThermalResistance.FromKelvinPerWatt`,
-`Density.FromGramPerCubicCentimeter`).
+`From{Unit}` factories use the singular unit name verbatim:
+`Length.FromMeter(…)`, `Mass.FromKilogram(…)`, `Energy.FromBtu(…)`,
+`Speed.FromKnot(…)`. Compounds are singular throughout, including the leading
+noun: `Speed.FromMeterPerSecond(…)`, `Acceleration.FromMeterPerSecondSquared(…)`,
+`AngularVelocity.FromRevolutionPerMinute(…)`. The rule is mechanical —
+`From{Name}`, where `Name` is the unit's `name` in `units.json` — so the
+generator never has to know English pluralisation.
+
+If you are upgrading from an earlier 2.0 preview that used plural factory
+names, rename call sites by dropping the plural: `FromMeters` → `FromMeter`,
+`FromMetersPerSecond` → `FromMeterPerSecond`, `FromFeet` → `FromFoot`.
 
 ### Unit conversion is `In(unit)`
 
@@ -130,7 +135,7 @@ SI storage is the dimension-typed `In` method, which fails at compile time for
 a unit of the wrong dimension:
 
 ```csharp
-Length<double> l = Length<double>.FromMeters(10_000);
+Length<double> l = Length<double>.FromMeter(10_000);
 double km = l.In(Units.Kilometer);       // 10.0
 double k  = temperature.In(Units.Celsius);
 // l.In(Units.Kilogram) — does not compile
@@ -156,10 +161,10 @@ hand-written partials), converting to and from its linear counterpart:
 
 ```csharp
 SoundPressureLevel<double> spl =
-    SoundPressureLevel<double>.FromSoundPressure(SoundPressure<double>.FromPascals(0.02)); // 60 dB
+    SoundPressureLevel<double>.FromSoundPressure(SoundPressure<double>.FromPascal(0.02)); // 60 dB
 SoundPressure<double> p = spl.ToSoundPressure();
 
-PH<double> ph = PH<double>.FromHydrogenConcentration(Concentration<double>.FromMolars(1e-7)); // pH 7
+PH<double> ph = PH<double>.FromHydrogenConcentration(Concentration<double>.FromMolar(1e-7)); // pH 7
 ```
 
 Dropped with no replacement: `SoundPressureLevel.AWeighted()` (the 1.x

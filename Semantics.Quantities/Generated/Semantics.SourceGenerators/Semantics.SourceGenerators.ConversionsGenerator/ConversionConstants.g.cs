@@ -170,19 +170,19 @@ internal static class ConversionConstants{
 	internal const double AcreToSquareMeters = 4046.8564224;
 
 	/// <summary>Kilometers per hour to meters per second conversion: 0.2777777777777778 m/s per km/h (exact)</summary>
-	internal const double KilometersPerHourToMetersPerSecond = 0.2777777777777778;
+	internal const double KilometerPerHourToMeterPerSecond = 0.2777777777777778;
 
 	/// <summary>Miles per hour to meters per second conversion: 0.44704 m/s per mph (exact)</summary>
-	internal const double MilesPerHourToMetersPerSecond = 0.44704;
+	internal const double MilePerHourToMeterPerSecond = 0.44704;
 
 	/// <summary>Feet per second to meters per second: 0.3048 m/s per ft/s (exact)</summary>
-	internal const double FeetPerSecondToMetersPerSecond = 0.3048;
+	internal const double FootPerSecondToMeterPerSecond = 0.3048;
 
 	/// <summary>Knot to meters per second: 1852/3600 ≈ 0.514444 m/s per kn (exact)</summary>
-	internal const double KnotToMetersPerSecond = 0.5144444444444445;
+	internal const double KnotToMeterPerSecond = 0.5144444444444445;
 
 	/// <summary>RPM to rad/s conversion: π/30 rad/s per rpm (exact)</summary>
-	internal const double RevolutionsPerMinuteToRadiansPerSecond = 0.10471975511965977;
+	internal const double RevolutionPerMinuteToRadianPerSecond = 0.10471975511965977;
 
 	/// <summary>Pound-foot to Newton-meter conversion: 1.3558179483314004 N⋅m per lb⋅ft (exact)</summary>
 	internal const double PoundFootToNewtonMeters = 1.3558179483314004;
@@ -236,7 +236,7 @@ internal static class ConversionConstants{
 	internal const double EnzymeUnitToKatals = 1.6666666666666667e-8;
 
 	/// <summary>Standard gravity to meters per second squared: 9.80665 m/s² per g (exact by definition)</summary>
-	internal const double StandardGravityToMetersPerSecondSquared = 9.80665;
+	internal const double StandardGravityToMeterPerSecondSquared = 9.80665;
 
 	/// <summary>Dyne to newton conversion: 1e-5 N/dyn (exact by definition)</summary>
 	internal const double DyneToNewtons = 1e-5;
@@ -266,10 +266,10 @@ internal static class ConversionConstants{
 	internal const double PercentToRatio = 0.01;
 
 	/// <summary>Parts per million to ratio: 1e-6 (exact by definition)</summary>
-	internal const double PartsPerMillionToRatio = 1e-6;
+	internal const double PartPerMillionToRatio = 1e-6;
 
 	/// <summary>Parts per billion to ratio: 1e-9 (exact by definition)</summary>
-	internal const double PartsPerBillionToRatio = 1e-9;
+	internal const double PartPerBillionToRatio = 1e-9;
 
 	/// <summary>Percent by weight to mass-fraction ratio: 0.01 (exact by definition)</summary>
 	internal const double PercentByWeightToRatio = 0.01;

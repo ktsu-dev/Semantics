@@ -27,63 +27,63 @@ public partial record Period<T> : PhysicalQuantity<Period<T>, T>, IVector0<Perio
 	/// <param name="value">The value in Second.</param>
 	/// <returns>A new Period instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Period<T> FromSeconds(T value) => Create(Vector0Guards.EnsurePositive(value, nameof(value)));
+	public static Period<T> FromSecond(T value) => Create(Vector0Guards.EnsurePositive(value, nameof(value)));
 /// <summary>
 	/// Creates a new Period from a value in Millisecond.
 	/// </summary>
 	/// <param name="value">The value in Millisecond.</param>
 	/// <returns>A new Period instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Period<T> FromMilliseconds(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static Period<T> FromMillisecond(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new Period from a value in Microsecond.
 	/// </summary>
 	/// <param name="value">The value in Microsecond.</param>
 	/// <returns>A new Period instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Period<T> FromMicroseconds(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+	public static Period<T> FromMicrosecond(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
 /// <summary>
 	/// Creates a new Period from a value in Minute.
 	/// </summary>
 	/// <param name="value">The value in Minute.</param>
 	/// <returns>A new Period instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Period<T> FromMinutes(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
+	public static Period<T> FromMinute(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new Period from a value in Hour.
 	/// </summary>
 	/// <param name="value">The value in Hour.</param>
 	/// <returns>A new Period instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Period<T> FromHours(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
+	public static Period<T> FromHour(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new Period from a value in Day.
 	/// </summary>
 	/// <param name="value">The value in Day.</param>
 	/// <returns>A new Period instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Period<T> FromDays(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
+	public static Period<T> FromDay(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new Period from a value in Year.
 	/// </summary>
 	/// <param name="value">The value in Year.</param>
 	/// <returns>A new Period instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Period<T> FromYears(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
+	public static Period<T> FromYear(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new Period from a value in Week.
 	/// </summary>
 	/// <param name="value">The value in Week.</param>
 	/// <returns>A new Period instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Period<T> FromWeeks(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.WeekToSeconds)), nameof(value)));
+	public static Period<T> FromWeek(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(Units.ConversionConstants.WeekToSeconds)), nameof(value)));
 /// <summary>
 	/// Creates a new Period from a value in Nanosecond.
 	/// </summary>
 	/// <param name="value">The value in Nanosecond.</param>
 	/// <returns>A new Period instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Period<T> FromNanoseconds(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
+	public static Period<T> FromNanosecond(T value) => Create(Vector0Guards.EnsurePositive((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Time unit) fail at compile time.

@@ -31,31 +31,31 @@ public partial record SignedRatio<T> : PhysicalQuantity<SignedRatio<T>, T>, IVec
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
-	public static SignedRatio<T> FromRadians(T value) => Create(value);
+	public static SignedRatio<T> FromRadian(T value) => Create(value);
 /// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
-	public static SignedRatio<T> FromDegrees(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static SignedRatio<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
 /// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
-	public static SignedRatio<T> FromGradians(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
+	public static SignedRatio<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
 /// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
-	public static SignedRatio<T> FromRevolutions(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
+	public static SignedRatio<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
 /// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
-	public static SignedRatio<T> FromMilliradians(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+	public static SignedRatio<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
 /// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Percent.
 	/// </summary>
@@ -63,17 +63,17 @@ public partial record SignedRatio<T> : PhysicalQuantity<SignedRatio<T>, T>, IVec
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromPercent(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)));
 /// <summary>
-	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PartsPerMillion.
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PartPerMillion.
 	/// </summary>
-	/// <param name="value">The value in PartsPerMillion.</param>
+	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
-	public static SignedRatio<T> FromPartsPerMillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartsPerMillionToRatio)));
+	public static SignedRatio<T> FromPartPerMillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)));
 /// <summary>
-	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PartsPerBillion.
+	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PartPerBillion.
 	/// </summary>
-	/// <param name="value">The value in PartsPerBillion.</param>
+	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
-	public static SignedRatio<T> FromPartsPerBillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartsPerBillionToRatio)));
+	public static SignedRatio<T> FromPartPerBillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)));
 /// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PercentByWeight.
 	/// </summary>

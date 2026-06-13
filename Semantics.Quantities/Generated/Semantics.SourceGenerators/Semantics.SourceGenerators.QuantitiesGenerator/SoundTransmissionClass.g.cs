@@ -34,35 +34,35 @@ public partial record SoundTransmissionClass<T> : PhysicalQuantity<SoundTransmis
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new SoundTransmissionClass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundTransmissionClass<T> FromRadians(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static SoundTransmissionClass<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new SoundTransmissionClass from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new SoundTransmissionClass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundTransmissionClass<T> FromDegrees(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
+	public static SoundTransmissionClass<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundTransmissionClass from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new SoundTransmissionClass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundTransmissionClass<T> FromGradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
+	public static SoundTransmissionClass<T> FromGradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundTransmissionClass from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new SoundTransmissionClass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundTransmissionClass<T> FromRevolutions(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
+	public static SoundTransmissionClass<T> FromRevolution(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundTransmissionClass from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new SoundTransmissionClass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundTransmissionClass<T> FromMilliradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static SoundTransmissionClass<T> FromMilliradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundTransmissionClass from a value in Percent.
 	/// </summary>
@@ -71,19 +71,19 @@ public partial record SoundTransmissionClass<T> : PhysicalQuantity<SoundTransmis
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SoundTransmissionClass<T> FromPercent(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)), nameof(value)));
 /// <summary>
-	/// Creates a new SoundTransmissionClass from a value in PartsPerMillion.
+	/// Creates a new SoundTransmissionClass from a value in PartPerMillion.
 	/// </summary>
-	/// <param name="value">The value in PartsPerMillion.</param>
+	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new SoundTransmissionClass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundTransmissionClass<T> FromPartsPerMillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartsPerMillionToRatio)), nameof(value)));
+	public static SoundTransmissionClass<T> FromPartPerMillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)), nameof(value)));
 /// <summary>
-	/// Creates a new SoundTransmissionClass from a value in PartsPerBillion.
+	/// Creates a new SoundTransmissionClass from a value in PartPerBillion.
 	/// </summary>
-	/// <param name="value">The value in PartsPerBillion.</param>
+	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new SoundTransmissionClass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundTransmissionClass<T> FromPartsPerBillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartsPerBillionToRatio)), nameof(value)));
+	public static SoundTransmissionClass<T> FromPartPerBillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)), nameof(value)));
 /// <summary>
 	/// Creates a new SoundTransmissionClass from a value in PercentByWeight.
 	/// </summary>

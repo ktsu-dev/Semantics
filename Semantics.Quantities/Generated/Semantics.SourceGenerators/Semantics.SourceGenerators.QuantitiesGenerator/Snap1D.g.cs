@@ -21,11 +21,11 @@ public partial record Snap1D<T> : PhysicalQuantity<Snap1D<T>, T>, IVector1<Snap1
 	public override DimensionInfo Dimension => PhysicalDimensions.Snap;
 
 	/// <summary>
-	/// Creates a new <see cref="Snap1D{T}"/> from a value in MetersPerSecondQuartic.
+	/// Creates a new <see cref="Snap1D{T}"/> from a value in MeterPerSecondQuartic.
 	/// </summary>
-	/// <param name="value">The value in MetersPerSecondQuartic.</param>
+	/// <param name="value">The value in MeterPerSecondQuartic.</param>
 	/// <returns>A new <see cref="Snap1D{T}"/> instance.</returns>
-	public static Snap1D<T> FromMetersPerSecondQuartic(T value) => Create(value);
+	public static Snap1D<T> FromMeterPerSecondQuartic(T value) => Create(value);
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Snap unit) fail at compile time.

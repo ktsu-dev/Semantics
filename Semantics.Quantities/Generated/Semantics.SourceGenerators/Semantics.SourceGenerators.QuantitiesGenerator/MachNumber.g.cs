@@ -34,35 +34,35 @@ public partial record MachNumber<T> : PhysicalQuantity<MachNumber<T>, T>, IVecto
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new MachNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MachNumber<T> FromRadians(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static MachNumber<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new MachNumber from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new MachNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MachNumber<T> FromDegrees(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
+	public static MachNumber<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
 /// <summary>
 	/// Creates a new MachNumber from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new MachNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MachNumber<T> FromGradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
+	public static MachNumber<T> FromGradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
 /// <summary>
 	/// Creates a new MachNumber from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new MachNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MachNumber<T> FromRevolutions(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
+	public static MachNumber<T> FromRevolution(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
 /// <summary>
 	/// Creates a new MachNumber from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new MachNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MachNumber<T> FromMilliradians(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static MachNumber<T> FromMilliradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
 /// <summary>
 	/// Creates a new MachNumber from a value in Percent.
 	/// </summary>
@@ -71,19 +71,19 @@ public partial record MachNumber<T> : PhysicalQuantity<MachNumber<T>, T>, IVecto
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MachNumber<T> FromPercent(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)), nameof(value)));
 /// <summary>
-	/// Creates a new MachNumber from a value in PartsPerMillion.
+	/// Creates a new MachNumber from a value in PartPerMillion.
 	/// </summary>
-	/// <param name="value">The value in PartsPerMillion.</param>
+	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new MachNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MachNumber<T> FromPartsPerMillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartsPerMillionToRatio)), nameof(value)));
+	public static MachNumber<T> FromPartPerMillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)), nameof(value)));
 /// <summary>
-	/// Creates a new MachNumber from a value in PartsPerBillion.
+	/// Creates a new MachNumber from a value in PartPerBillion.
 	/// </summary>
-	/// <param name="value">The value in PartsPerBillion.</param>
+	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new MachNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MachNumber<T> FromPartsPerBillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartsPerBillionToRatio)), nameof(value)));
+	public static MachNumber<T> FromPartPerBillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)), nameof(value)));
 /// <summary>
 	/// Creates a new MachNumber from a value in PercentByWeight.
 	/// </summary>

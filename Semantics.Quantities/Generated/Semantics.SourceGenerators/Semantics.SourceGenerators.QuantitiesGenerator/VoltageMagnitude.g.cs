@@ -26,14 +26,14 @@ public partial record VoltageMagnitude<T> : PhysicalQuantity<VoltageMagnitude<T>
 	/// <param name="value">The value in Volt.</param>
 	/// <returns>A new <see cref="VoltageMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static VoltageMagnitude<T> FromVolts(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static VoltageMagnitude<T> FromVolt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Creates a new <see cref="VoltageMagnitude{T}"/> from a value in Kilovolt.
 	/// </summary>
 	/// <param name="value">The value in Kilovolt.</param>
 	/// <returns>A new <see cref="VoltageMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static VoltageMagnitude<T> FromKilovolts(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static VoltageMagnitude<T> FromKilovolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricPotential unit) fail at compile time.

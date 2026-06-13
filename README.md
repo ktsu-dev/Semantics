@@ -99,18 +99,18 @@ Every quantity is a vector. Direction-space dimensionality is part of the type:
 ```csharp
 using ktsu.Semantics.Quantities;
 
-// V0 magnitudes — From{Unit} factories use the plural form (#49)
-var speed    = Speed<double>.FromMetersPerSecond(15.0);
-var mass     = Mass<double>.FromKilograms(10.0);
-var distance = Distance<double>.FromMeters(5.0);
+// V0 magnitudes — From{Unit} factories use the singular lemma (#49)
+var speed    = Speed<double>.FromMeterPerSecond(15.0);
+var mass     = Mass<double>.FromKilogram(10.0);
+var distance = Distance<double>.FromMeter(5.0);
 
 // V3 directional — object-initializer syntax (X/Y/Z components)
 var force3d  = new Force3D<double> { X = 0.0, Y = 0.0, Z = -9.8 };
 var disp3d   = new Displacement3D<double> { X = 3.0, Y = 4.0, Z = 0.0 };
 
 // Operators flow from dimensions.json
-var work     = ForceMagnitude<double>.FromNewtons(10.0) * distance;    // F·d = Energy
-var power    = work / Duration<double>.FromSeconds(2.0);               // W/t = Power
+var work     = ForceMagnitude<double>.FromNewton(10.0) * distance;    // F·d = Energy
+var power    = work / Duration<double>.FromSecond(2.0);               // W/t = Power
 
 // Vector ops
 var workDot  = force3d.Dot(disp3d);                                    // Energy
@@ -118,8 +118,8 @@ var torque   = force3d.Cross(disp3d);                                  // Torque
 var mag      = disp3d.Magnitude();                                     // Length (always >= 0)
 
 // Construction-time invariants (#50, #51)
-// Speed.FromMetersPerSecond(-1.0)        // ArgumentException — V0 must be non-negative
-// Wavelength<double>.FromMeters(0.0)     // ArgumentException — strict-positive overload
+// Speed.FromMeterPerSecond(-1.0)        // ArgumentException — V0 must be non-negative
+// Wavelength<double>.FromMeter(0.0)     // ArgumentException — strict-positive overload
 
 // Type safety
 // var nope = force3d + speed;            // ❌ compiler error
@@ -128,11 +128,11 @@ var mag      = disp3d.Magnitude();                                     // Length
 Semantic overloads (e.g. `Weight` over `ForceMagnitude`, `Diameter` ↔ `Radius`):
 
 ```csharp
-var raw    = ForceMagnitude<double>.FromNewtons(686.0);
+var raw    = ForceMagnitude<double>.FromNewton(686.0);
 var weight = Weight<double>.From(raw);   // explicit narrow
 ForceMagnitude<double> back = weight;    // implicit widen
 
-var radius   = Radius<double>.FromMeters(2.0);
+var radius   = Radius<double>.FromMeter(2.0);
 var diameter = radius.ToDiameter();       // 4 m via metadata-defined relationship
 ```
 

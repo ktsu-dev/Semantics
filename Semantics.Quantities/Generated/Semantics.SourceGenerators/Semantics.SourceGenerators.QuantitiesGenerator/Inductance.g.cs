@@ -26,7 +26,7 @@ public partial record Inductance<T> : PhysicalQuantity<Inductance<T>, T>, IVecto
 	/// <param name="value">The value in Henry.</param>
 	/// <returns>A new <see cref="Inductance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Inductance<T> FromHenries(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
+	public static Inductance<T> FromHenry(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 /// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Inductance unit) fail at compile time.

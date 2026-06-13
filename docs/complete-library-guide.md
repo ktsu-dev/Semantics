@@ -143,14 +143,14 @@ The model and its rationale live in `strategy-unified-vector-quantities.md`. Rul
 
 ```csharp
 // Vector0 — magnitudes (non-negative)
-var speed     = Speed<double>.FromMetersPerSecond(15.0);
-var mass      = Mass<double>.FromKilograms(10.0);
-var distance  = Distance<double>.FromMeters(5.0);
-var energy    = Energy<double>.FromJoules(1_000.0);
+var speed     = Speed<double>.FromMeterPerSecond(15.0);
+var mass      = Mass<double>.FromKilogram(10.0);
+var distance  = Distance<double>.FromMeter(5.0);
+var energy    = Energy<double>.FromJoule(1_000.0);
 
 // Vector1 — signed scalar
-var v1        = Velocity1D<double>.FromMetersPerSecond(-3.5);
-var temp      = Temperature<double>.FromKelvins(300.0);
+var v1        = Velocity1D<double>.FromMeterPerSecond(-3.5);
+var temp      = Temperature<double>.FromKelvin(300.0);
 
 // Vector3 — directional (object-initializer with X/Y/Z components)
 var force3d   = new Force3D<double>        { X = 0.0, Y = 0.0, Z = -9.8 };
@@ -163,9 +163,9 @@ Cross-dimensional operators are declared in `dimensions.json` and emitted automa
 
 ```csharp
 // V0 × V0 (magnitudes)
-var force      = mass * AccelerationMagnitude<double>.FromMetersPerSecondSquared(9.8); // Mass × Accel = Force
-var work       = ForceMagnitude<double>.FromNewtons(10.0) * distance;                  // F·d = Energy
-var power      = work / Duration<double>.FromSeconds(2.0);                             // W/t = Power
+var force      = mass * AccelerationMagnitude<double>.FromMeterPerSecondSquared(9.8); // Mass × Accel = Force
+var work       = ForceMagnitude<double>.FromNewton(10.0) * distance;                  // F·d = Energy
+var power      = work / Duration<double>.FromSecond(2.0);                             // W/t = Power
 
 // Vector ops
 var workScalar = force3d.Dot(disp3d);                          // Energy (V0)
@@ -183,7 +183,7 @@ Several dimensions declare narrower-named overloads with implicit widening:
 ```csharp
 var w   = Weight<double>.From(force);                   // Weight is a ForceMagnitude
 var fm  = ForceMagnitude<double>.From(w);               // implicit widening also OK
-var d   = Distance<double>.FromMeters(10.0);
+var d   = Distance<double>.FromMeter(10.0);
 var rad = Radius<double>.From(d);
 var dia = rad.ToDiameter();                             // 20m via metadata-defined relationship
 ```

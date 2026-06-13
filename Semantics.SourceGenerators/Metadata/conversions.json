@@ -324,22 +324,22 @@
       "description": "Velocity unit conversion factors",
       "factors": [
         {
-          "name": "KilometersPerHourToMetersPerSecond",
+          "name": "KilometerPerHourToMeterPerSecond",
           "description": "Kilometers per hour to meters per second conversion: 0.2777777777777778 m/s per km/h (exact)",
           "value": "0.2777777777777778"
         },
         {
-          "name": "MilesPerHourToMetersPerSecond",
+          "name": "MilePerHourToMeterPerSecond",
           "description": "Miles per hour to meters per second conversion: 0.44704 m/s per mph (exact)",
           "value": "0.44704"
         },
         {
-          "name": "FeetPerSecondToMetersPerSecond",
+          "name": "FootPerSecondToMeterPerSecond",
           "description": "Feet per second to meters per second: 0.3048 m/s per ft/s (exact)",
           "value": "0.3048"
         },
         {
-          "name": "KnotToMetersPerSecond",
+          "name": "KnotToMeterPerSecond",
           "description": "Knot to meters per second: 1852/3600 ≈ 0.514444 m/s per kn (exact)",
           "value": "0.5144444444444445"
         }
@@ -350,7 +350,7 @@
       "description": "Angular velocity unit conversion factors",
       "factors": [
         {
-          "name": "RevolutionsPerMinuteToRadiansPerSecond",
+          "name": "RevolutionPerMinuteToRadianPerSecond",
           "description": "RPM to rad/s conversion: π/30 rad/s per rpm (exact)",
           "value": "0.10471975511965977"
         }
@@ -476,7 +476,7 @@
       "description": "Acceleration unit conversion factors",
       "factors": [
         {
-          "name": "StandardGravityToMetersPerSecondSquared",
+          "name": "StandardGravityToMeterPerSecondSquared",
           "description": "Standard gravity to meters per second squared: 9.80665 m/s² per g (exact by definition)",
           "value": "9.80665"
         }
@@ -550,12 +550,12 @@
           "value": "0.01"
         },
         {
-          "name": "PartsPerMillionToRatio",
+          "name": "PartPerMillionToRatio",
           "description": "Parts per million to ratio: 1e-6 (exact by definition)",
           "value": "1e-6"
         },
         {
-          "name": "PartsPerBillionToRatio",
+          "name": "PartPerBillionToRatio",
           "description": "Parts per billion to ratio: 1e-9 (exact by definition)",
           "value": "1e-9"
         },
