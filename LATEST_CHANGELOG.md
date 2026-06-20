@@ -2,8 +2,5 @@
 
 Changes since v1.1.1:
 
-- Bump Polyfill from 10.8.1 to 10.10.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump the ktsu group with 8 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Update ktsu.Sdk versions to 2.10.1 ([@matt-edmondson](https://github.com/matt-edmondson))
 
