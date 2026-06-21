@@ -2,6 +2,7 @@
 
 Changes since v1.1.1:
 
+- Update ktsu.Sdk versions to 2.10.2 ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update ktsu.Sdk versions to 2.10.1 ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v1.1.1 (patch)
