@@ -10,7 +10,6 @@ using System.Numerics;
 /// Bespoke members of <see cref="DirectionalityIndex{T}"/>; the logarithmic core
 /// is generated from <c>logarithmic.json</c>.
 /// </summary>
-/// <typeparam name="T">The floating-point storage type.</typeparam>
 public readonly partial record struct DirectionalityIndex<T>
 	where T : struct, INumber<T>
 {

@@ -17,9 +17,15 @@ using System;
 /// </remarks>
 public sealed class UnitConversionException : ArgumentException
 {
+	/// <summary>Initializes a new instance of the <see cref="UnitConversionException"/> class.</summary>
 	public UnitConversionException() { }
 
+	/// <summary>Initializes a new instance of the <see cref="UnitConversionException"/> class with a message.</summary>
+	/// <param name="message">The message that describes the conversion error.</param>
 	public UnitConversionException(string message) : base(message) { }
 
+	/// <summary>Initializes a new instance of the <see cref="UnitConversionException"/> class with a message and inner exception.</summary>
+	/// <param name="message">The message that describes the conversion error.</param>
+	/// <param name="inner">The exception that caused this exception.</param>
 	public UnitConversionException(string message, Exception inner) : base(message, inner) { }
 }

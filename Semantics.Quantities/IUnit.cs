@@ -28,28 +28,28 @@ using System.Numerics;
 public interface IUnit
 {
 	/// <summary>Gets the full name of the unit (e.g. <c>"Kilometer"</c>).</summary>
-	string Name { get; }
+	public string Name { get; }
 
 	/// <summary>Gets the unit's symbol/abbreviation (e.g. <c>"km"</c>).</summary>
-	string Symbol { get; }
+	public string Symbol { get; }
 
 	/// <summary>Gets the unit system this unit belongs to.</summary>
-	UnitSystem System { get; }
+	public UnitSystem System { get; }
 
 	/// <summary>Gets the dimension this unit measures.</summary>
-	DimensionInfo Dimension { get; }
+	public DimensionInfo Dimension { get; }
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
-	double ToBaseFactor { get; }
+	public double ToBaseFactor { get; }
 
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
-	double ToBaseOffset { get; }
+	public double ToBaseOffset { get; }
 
 	/// <summary>Converts a value expressed in this unit to the dimension's SI base unit.</summary>
-	T ToBase<T>(T value) where T : struct, INumber<T>
+	public T ToBase<T>(T value) where T : struct, INumber<T>
 		=> (value * T.CreateChecked(ToBaseFactor)) + T.CreateChecked(ToBaseOffset);
 
 	/// <summary>Converts a value expressed in the dimension's SI base unit to this unit.</summary>
-	T FromBase<T>(T baseValue) where T : struct, INumber<T>
+	public T FromBase<T>(T baseValue) where T : struct, INumber<T>
 		=> (baseValue - T.CreateChecked(ToBaseOffset)) / T.CreateChecked(ToBaseFactor);
 }

@@ -25,11 +25,11 @@ public interface IPhysicalQuantity<T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>
-	T Value { get; }
+	public T Value { get; }
 
 	/// <summary>Gets whether this quantity satisfies structural physical constraints (finite, non-NaN).</summary>
-	bool IsPhysicallyValid { get; }
+	public bool IsPhysicallyValid { get; }
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	DimensionInfo Dimension { get; }
+	public DimensionInfo Dimension { get; }
 }

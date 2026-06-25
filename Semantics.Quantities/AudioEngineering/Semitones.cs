@@ -10,7 +10,6 @@ using System.Numerics;
 /// Bespoke members of <see cref="Semitones{T}"/>; the logarithmic core (including the
 /// frequency-<see cref="Ratio{T}"/> conversions) is generated from <c>logarithmic.json</c>.
 /// </summary>
-/// <typeparam name="T">The floating-point storage type.</typeparam>
 public readonly partial record struct Semitones<T>
 	where T : struct, INumber<T>
 {
