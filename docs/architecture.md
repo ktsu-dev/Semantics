@@ -1,10 +1,10 @@
 # Architecture Guide
 
-This document covers the architecture of the **semantic strings, paths, and validation** subsystems. The physics quantities subsystem is metadata-driven and is documented separately:
+This document covers the architecture of the **semantic strings, paths, and validation** subsystems. The semantic quantities subsystem is metadata-driven and is documented separately:
 
 -   [`docs/strategy-unified-vector-quantities.md`](strategy-unified-vector-quantities.md) — the unified `IVector0..IVector4` model.
 -   [`docs/physics-generator.md`](physics-generator.md) — `dimensions.json` schema and the source-generator pipeline.
--   The [Physics Quantities: Metadata-Driven Generation](#physics-quantities-metadata-driven-generation) section below provides a short orientation and links into those documents.
+-   The [Semantic Quantities: Metadata-Driven Generation](#semantic-quantities-metadata-driven-generation) section below provides a short orientation and links into those documents.
 
 ## Table of Contents
 
@@ -14,12 +14,12 @@ This document covers the architecture of the **semantic strings, paths, and vali
 -   [Design Patterns](#design-patterns)
 -   [Class Hierarchy](#class-hierarchy)
 -   [Validation System](#validation-system)
--   [Physics Quantities: Metadata-Driven Generation](#physics-quantities-metadata-driven-generation)
+-   [Semantic Quantities: Metadata-Driven Generation](#semantic-quantities-metadata-driven-generation)
 -   [Testing Strategy](#testing-strategy)
 
 ## Overview
 
-The Semantics library is built around three pillars — **semantic strings**, **semantic paths**, and **physics quantities** — sharing a single philosophy: replace primitive obsession with strongly-typed, self-validating domain models. Strings and paths use a hand-authored attribute → strategy → rule → factory pipeline (described in this document). Physics quantities are emitted at compile time by a Roslyn incremental generator from declarative metadata (described in [Physics Quantities: Metadata-Driven Generation](#physics-quantities-metadata-driven-generation)). All three subsystems target `net10.0`, `net9.0`, `net8.0`, `net7.0`.
+The Semantics library is built around three pillars — **semantic strings**, **semantic paths**, and **semantic quantities** — sharing a single philosophy: replace primitive obsession with strongly-typed, self-validating domain models. Strings and paths use a hand-authored attribute → strategy → rule → factory pipeline (described in this document). Semantic quantities are emitted at compile time by a Roslyn incremental generator from declarative metadata (described in [Semantic Quantities: Metadata-Driven Generation](#semantic-quantities-metadata-driven-generation)). Strings and paths target `net8.0`–`net10.0` plus `netstandard2.0`/`netstandard2.1`; semantic quantities target `net8.0`–`net10.0`.
 
 ## SOLID Principles Implementation
 
@@ -276,9 +276,9 @@ User Creates Semantic String
    Return Valid Object or Throw Exception
 ```
 
-## Physics Quantities: Metadata-Driven Generation
+## Semantic Quantities: Metadata-Driven Generation
 
-Unlike strings and paths — which are hand-authored — every physics quantity type, factory, operator, and constant is emitted by a Roslyn incremental generator. The single source of truth is `Semantics.SourceGenerators/Metadata/`:
+Unlike strings and paths — which are hand-authored — every semantic quantity type, factory, operator, and constant is emitted by a Roslyn incremental generator. The single source of truth is `Semantics.SourceGenerators/Metadata/`:
 
 | File | Contents |
 |---|---|

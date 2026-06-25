@@ -1,6 +1,6 @@
-# Physics Quantities by Domain
+# Semantic Quantities by Domain
 
-A user-facing tour of the physics quantities currently declared in `Semantics.SourceGenerators/Metadata/dimensions.json` (62 dimensions, plus 83 semantic overloads). The architecture lives in `strategy-unified-vector-quantities.md`; this document just shows what's available and how it groups by physics area.
+A user-facing tour of the semantic quantities currently declared in `Semantics.SourceGenerators/Metadata/dimensions.json` (62 dimensions, plus 83 semantic overloads). The architecture lives in `strategy-unified-vector-quantities.md`; this document just shows what's available and how it groups by physics area.
 
 > The dimension set evolves with the metadata. If a dimension is here but you can't find a generated type, run `dotnet build` and look under `Semantics.Quantities/Generated/Semantics.SourceGenerators/Semantics.SourceGenerators.QuantitiesGenerator/`.
 

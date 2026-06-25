@@ -4,7 +4,7 @@ ktsu.Semantics is a .NET library for replacing primitive obsession with strongly
 
 - **Semantic Strings** — type-safe string wrappers with attribute-driven validation.
 - **Semantic Paths** — polymorphic file system path types with rich operations.
-- **Physics Quantities** — a metadata-generated, type-safe physics system built on a unified vector model.
+- **Semantic Quantities** — a metadata-generated, type-safe physics system built on a unified vector model.
 
 All three share a runtime philosophy: validate at construction time, fail fast with `ArgumentException`, and never let an invalid value into the type.
 
@@ -13,7 +13,7 @@ All three share a runtime philosophy: validate at construction time, fail fast w
 | Topic | Doc |
 |---|---|
 | Architecture (strings/paths/validation) | `architecture.md` |
-| Architecture (physics quantities) | `strategy-unified-vector-quantities.md` |
+| Architecture (semantic quantities) | `strategy-unified-vector-quantities.md` |
 | Source-generator workflow | `physics-generator.md` |
 | Validation attribute reference | `validation-reference.md` |
 | Advanced patterns | `advanced-usage.md` |
@@ -114,7 +114,7 @@ var absolutes = all.OfType<IAbsolutePath>().ToList();
 - `AsAbsolute(baseDirectory)` — using a specific base.
 - `AsRelative(baseDirectory)` — relative against a base.
 
-## Physics quantities
+## Semantic quantities
 
 The physics system is **metadata-driven**: the source of truth is `Semantics.SourceGenerators/Metadata/dimensions.json`, and the Roslyn generator emits one record per quantity into `Semantics.Quantities/Generated/`.
 

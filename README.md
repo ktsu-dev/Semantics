@@ -1,16 +1,20 @@
 # ktsu.Semantics
 
-[![NuGet Version](https://img.shields.io/nuget/v/ktsu.Semantics.svg)](https://www.nuget.org/packages/ktsu.Semantics/)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/ktsu.Semantics.svg)](https://www.nuget.org/packages/ktsu.Semantics/)
-[![Build Status](https://github.com/ktsu-dev/Semantics/workflows/CI/badge.svg)](https://github.com/ktsu-dev/Semantics/actions)
+[![License](https://img.shields.io/github/license/ktsu-dev/Semantics.svg?label=License&logo=nuget)](LICENSE.md)
+[![NuGet Version](https://img.shields.io/nuget/v/ktsu.Semantics?label=Stable&logo=nuget)](https://nuget.org/packages/ktsu.Semantics)
+[![NuGet Version](https://img.shields.io/nuget/vpre/ktsu.Semantics?label=Latest&logo=nuget)](https://nuget.org/packages/ktsu.Semantics)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/ktsu.Semantics?label=Downloads&logo=nuget)](https://nuget.org/packages/ktsu.Semantics)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ktsu-dev/Semantics?label=Commits&logo=github)](https://github.com/ktsu-dev/Semantics/commits/main)
+[![GitHub contributors](https://img.shields.io/github/contributors/ktsu-dev/Semantics?label=Contributors&logo=github)](https://github.com/ktsu-dev/Semantics/graphs/contributors)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ktsu-dev/Semantics/dotnet.yml?label=Build&logo=github)](https://github.com/ktsu-dev/Semantics/actions)
 
 A .NET library for replacing primitive obsession with strongly-typed, self-validating domain models. Three pillars:
 
 - **Semantic Strings** — type-safe wrappers like `EmailAddress`, `UserId`, `BlogSlug` with attribute-driven validation.
 - **Semantic Paths** — polymorphic `IPath` hierarchy for files, directories, absolute, relative, and combinations.
-- **Physics Quantities** — a metadata-generated, type-safe physics system with a unified `IVector0..IVector4` model covering 62 physical dimensions and ~195 generated types.
+- **Semantic Quantities** — a metadata-generated, type-safe quantity system with a unified `IVector0..IVector4` model covering 60+ physical dimensions and 200+ generated types. Optional per-storage-type alias packages let you write `Mass` instead of `Mass<double>`.
 
-Targets `net10.0`, `net9.0`, `net8.0`, `net7.0`.
+Targets `net8.0`–`net10.0`. Semantic Strings and Paths additionally target `netstandard2.0`/`netstandard2.1`; Semantic Quantities is `net8.0`+ (it requires `INumber<T>`).
 
 ## Install
 
@@ -84,7 +88,7 @@ var absolutes = all.OfType<IAbsolutePath>().ToList();
 
 Conversions: `AsAbsolute()`, `AsAbsolute(baseDirectory)`, `AsRelative(baseDirectory)`.
 
-## Physics quantities
+## Semantic quantities
 
 Every quantity is a vector. Direction-space dimensionality is part of the type:
 
@@ -147,6 +151,25 @@ PhysicalConstants.Chemistry.GasConstant;       // 8.31446... J/(mol·K)
 var c = PhysicalConstants.Generic.SpeedOfLight<double>();
 var R = PhysicalConstants.Generic.GasConstant<decimal>();
 ```
+
+### Storage-type alias packages
+
+Every quantity is generic over its storage type (`Mass<double>`, `Speed<float>`, …). If a project uses one storage type throughout, reference a satellite package and drop the generic argument entirely:
+
+```xml
+<PackageReference Include="ktsu.Semantics.Quantities.Double" Version="x.y.z" />
+```
+
+```csharp
+using ktsu.Semantics.Quantities;
+
+// No <double> anywhere — the package injects global-using aliases for every quantity.
+Mass mass = Mass.FromKilogram(10.0);
+Speed speed = Speed.FromMeterPerSecond(15.0);
+Mass total = mass + Mass.FromKilogram(2.0);   // still a Mass<double>, full identity
+```
+
+The aliases are real `Mass<double>` (etc.), so they interoperate with the whole API with no conversion. Packages exist for `Double`, `Float`, and `Decimal` — reference exactly one per project to pick the storage type. The alias lists are generated from the quantity catalogue (`scripts/Generate-AliasProps.ps1`) and validated in CI.
 
 The unified vector model and its rationale: [`docs/strategy-unified-vector-quantities.md`](docs/strategy-unified-vector-quantities.md).
 A per-domain tour: [`docs/physics-domains-guide.md`](docs/physics-domains-guide.md).

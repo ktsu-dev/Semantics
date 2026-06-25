@@ -17,7 +17,7 @@ For the architecture (attribute → strategy → rule → factory pipeline), see
 | [Path](#path) | `Semantics.Paths/Validation/Attributes/Path/` | 10 |
 | [Strategies](#strategies) | `Semantics.Strings/Validation/Strategies/` | 2 |
 
-There is **no** quantity validation in this list — physics quantities enforce their own invariants at the type level (see `strategy-unified-vector-quantities.md`).
+There is **no** quantity validation in this list — semantic quantities enforce their own invariants at the type level (see `strategy-unified-vector-quantities.md`).
 
 ## Text
 
