@@ -214,6 +214,10 @@ different dimensions throws `ArgumentException`; equality across dimensions is
 | audio-engineering `Percent<T>` | the `Percent` **unit** on the Dimensionless dimension: `Ratio<T>.FromPercent(50)` and `ratio.In(Units.Percent)` |
 | audio-engineering `Gain<T>` record struct | `Gain<T>` is now a generated semantic overload of `Ratio` (a record class, non-negative, widens implicitly to `Ratio`); `Unity`, `Silence`, the `Decibels` conversions, and `*` live in a partial |
 
+## Target frameworks
+
+The out-of-support runtimes `net5.0`, `net6.0`, and `net7.0` were dropped — `System.Text.Json` 10 (and friends) no longer ship assets for them. `ktsu.Semantics.Quantities` now targets `net8.0`–`net10.0` (it requires `INumber<T>`, so it has no `netstandard` target). `Semantics.Strings` and `Semantics.Paths` target `net8.0`–`net10.0` plus `netstandard2.0`/`netstandard2.1`, so consumers on older runtimes still resolve via `netstandard`.
+
 ## What didn't change
 
 - `Semantics.Strings` and `Semantics.Paths` — same namespaces, same types;
@@ -224,7 +228,6 @@ different dimensions throws `ArgumentException`; equality across dimensions is
   through the generated `Ratio<T>`, and (for the logarithmic ones) are
   generated from `logarithmic.json`. `Percent` became a unit and `Gain` a
   generated `Ratio` overload — see the removed-APIs table.
-- Target frameworks: `net7.0` through `net10.0`.
 - Quantities remain generic over the numeric storage type
   (`where T : struct, INumber<T>`).
 - `UnitSystem` and `UnitConversionException` keep their names and meaning.

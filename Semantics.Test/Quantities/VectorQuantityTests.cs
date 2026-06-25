@@ -165,13 +165,11 @@ public sealed class VectorQuantityTests
 	}
 
 	// ------------------------------------------------------------- V0 - V0
-	// Locked design decision in #52: V0 - V0 should return the same V0 of T.Abs(a - b).
-	// Generator currently emits unsigned subtraction via the SemanticQuantity base, which
-	// can produce a negative magnitude. Tracked as a follow-up.
+	// #52: V0 - V0 returns the same V0 of T.Abs(a - b). The generated derived operator
+	// wins overload resolution over PhysicalQuantity's plain (signable) subtraction.
 
 	[TestMethod]
-	[Ignore("Locked in #52: V0 - V0 should return the same V0 of T.Abs(a - b). Generator currently emits unsigned subtraction.")]
-	public void Mass_Minus_Mass_Returns_Absolute_Difference_Pending52()
+	public void Mass_Minus_Mass_Returns_Absolute_Difference()
 	{
 		Mass<double> a = Mass<double>.FromKilogram(3.0);
 		Mass<double> b = Mass<double>.FromKilogram(5.0);
@@ -180,20 +178,18 @@ public sealed class VectorQuantityTests
 	}
 
 	// ---------------------------------------------------- V0 non-negativity
-	// Tracked in #50: factories on Vector0 quantities should reject negative inputs
-	// with ArgumentException. The current generator does not emit guards.
+	// #50: factories on Vector0 quantities reject negative inputs with ArgumentException
+	// via Vector0Guards.EnsureNonNegative (the guard runs after unit conversion).
 
 	[TestMethod]
-	[Ignore("Tracked in #50: V0 factories should reject negative inputs.")]
-	public void Speed_From_Negative_Throws_Pending50()
+	public void Speed_From_Negative_Throws()
 	{
 		_ = Assert.ThrowsExactly<System.ArgumentException>(
 			() => Speed<double>.FromMeterPerSecond(-1.0));
 	}
 
 	[TestMethod]
-	[Ignore("Tracked in #50: V0 factories should reject negative inputs.")]
-	public void Mass_From_Negative_Throws_Pending50()
+	public void Mass_From_Negative_Throws()
 	{
 		_ = Assert.ThrowsExactly<System.ArgumentException>(
 			() => Mass<double>.FromKilogram(-1.0));
