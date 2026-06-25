@@ -1,8 +1,11 @@
 name: Verify Generated Files
 
-# Source-generator output under Semantics.Quantities/Generated/ is committed to the
-# repo (EmitCompilerGeneratedFiles=true). This job rebuilds and fails if the committed
-# files are stale, so a generated file can never drift from its generator.
+# Two kinds of generated artifacts are committed to this repo:
+#   1. Source-generator output under Semantics.Quantities/Generated/ (EmitCompilerGeneratedFiles=true).
+#   2. The storage-type alias props under Semantics.Quantities.<T>/buildTransitive/, produced by
+#      scripts/Generate-AliasProps.ps1 from the quantity catalogue.
+# This job rebuilds and regenerates both, then fails if anything drifts from its source — so a
+# committed generated file or alias-props file can never go stale.
 #
 # NOTE: this is a standalone workflow on purpose — dotnet.yml is centrally synced from a
 # shared template across ktsu repos, so a step added there would be overwritten. If this
@@ -39,10 +42,14 @@ jobs:
       - name: Build (regenerates source-generator output into Generated/)
         run: dotnet build Semantics.Quantities/Semantics.Quantities.csproj -c Release
 
-      - name: Fail if generated files are stale
+      - name: Regenerate storage-type alias props
+        shell: pwsh
+        run: ./scripts/Generate-AliasProps.ps1
+
+      - name: Fail if generated files or alias props are stale
         shell: bash
         run: |
-          if ! git diff --exit-code -- 'Semantics.Quantities/Generated/'; then
-            echo "::error::Generated files are out of date. Run 'dotnet build Semantics.Quantities/Semantics.Quantities.csproj' and commit the changes under Semantics.Quantities/Generated/."
+          if ! git diff --exit-code; then
+            echo "::error::Committed generated files or alias props are out of date. Run 'dotnet build Semantics.Quantities/Semantics.Quantities.csproj -c Release' then 'pwsh scripts/Generate-AliasProps.ps1', and commit the changes."
             exit 1
           fi
