@@ -5422,9 +5422,6 @@ public static class Units{
 	/// <summary>Singleton <c>FaradPerMeter</c> instance.</summary>
 	public static readonly FaradPerMeter FaradPerMeter = new FaradPerMeter();
 
-	/// <summary>Singleton <c>FootPerSecond</c> instance.</summary>
-	public static readonly FootPerSecond FootPerSecond = new FootPerSecond();
-
 	/// <summary>Singleton <c>Foot</c> instance.</summary>
 	public static readonly Foot Foot = new Foot();
 
@@ -5433,6 +5430,9 @@ public static class Units{
 
 	/// <summary>Singleton <c>FootLambert</c> instance.</summary>
 	public static readonly FootLambert FootLambert = new FootLambert();
+
+	/// <summary>Singleton <c>FootPerSecond</c> instance.</summary>
+	public static readonly FootPerSecond FootPerSecond = new FootPerSecond();
 
 	/// <summary>Singleton <c>Gallon</c> instance.</summary>
 	public static readonly Gallon Gallon = new Gallon();

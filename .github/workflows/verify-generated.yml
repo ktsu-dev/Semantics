@@ -1,0 +1,48 @@
+name: Verify Generated Files
+
+# Source-generator output under Semantics.Quantities/Generated/ is committed to the
+# repo (EmitCompilerGeneratedFiles=true). This job rebuilds and fails if the committed
+# files are stale, so a generated file can never drift from its generator.
+#
+# NOTE: this is a standalone workflow on purpose — dotnet.yml is centrally synced from a
+# shared template across ktsu repos, so a step added there would be overwritten. If this
+# check belongs in the shared KtsuBuild pipeline long-term, move it there and delete this.
+
+on:
+  pull_request:
+    paths-ignore: ["**.md"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-generated-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-generated:
+    name: Generated files up to date
+    # windows-latest so git's autocrlf matches the committed CRLF line endings and the
+    # diff doesn't flag end-of-line differences.
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build (regenerates source-generator output into Generated/)
+        run: dotnet build Semantics.Quantities/Semantics.Quantities.csproj -c Release
+
+      - name: Fail if generated files are stale
+        shell: bash
+        run: |
+          if ! git diff --exit-code -- 'Semantics.Quantities/Generated/'; then
+            echo "::error::Generated files are out of date. Run 'dotnet build Semantics.Quantities/Semantics.Quantities.csproj' and commit the changes under Semantics.Quantities/Generated/."
+            exit 1
+          fi
