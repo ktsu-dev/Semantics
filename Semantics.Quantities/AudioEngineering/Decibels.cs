@@ -11,7 +11,6 @@ using System.Numerics;
 /// <see cref="Gain{T}"/> and power-<see cref="Ratio{T}"/> conversions) is generated
 /// from <c>logarithmic.json</c>.
 /// </summary>
-/// <typeparam name="T">The floating-point storage type.</typeparam>
 public readonly partial record struct Decibels<T>
 	where T : struct, INumber<T>
 {

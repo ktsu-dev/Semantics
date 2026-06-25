@@ -9,7 +9,6 @@ using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using ktsu.Semantics.Strings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 public record MySemanticString : SemanticString<MySemanticString> { }

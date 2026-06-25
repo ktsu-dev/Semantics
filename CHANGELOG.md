@@ -1,7 +1,32 @@
+## v1.1.2
+
+Changes since v1.1.2:
+
+
+## v1.1.2 (patch)
+
+Changes since v1.1.1:
+
+- Add System.Text.Json package reference to project files ([@matt-edmondson](https://github.com/matt-edmondson))
+- Update ktsu.Sdk versions to 2.10.2 ([@matt-edmondson](https://github.com/matt-edmondson))
+- Update ktsu.Sdk versions to 2.10.1 ([@matt-edmondson](https://github.com/matt-edmondson))
+
+## v1.1.1 (patch)
+
+Changes since v1.1.0:
+
+- Sync .github\workflows\update-sdks.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .github\dependabot.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .gitignore ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .gitattributes ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
+
 ## v1.1.0 (minor)
 
 Changes since v1.0.0:
 
+- Fix IDE0370 build errors from .NET 10 SDK analyzer ([@Claude](https://github.com/Claude))
 - Add audio-engineering quantities and normalized parameter tapers ([@Claude](https://github.com/Claude))
 - Add ktsu.RoundTripStringJsonConverter package reference and update SemanticString to use its JsonConverter ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor validation strategy null checks to use Ensure.NotNull for consistency ([@matt-edmondson](https://github.com/matt-edmondson))

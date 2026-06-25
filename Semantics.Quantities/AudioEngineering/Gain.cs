@@ -17,7 +17,6 @@ using System.Numerics;
 /// using the amplitude (field) convention <c>dB = 20·log10(gain)</c>. As a Vector0
 /// magnitude, gain is non-negative — polarity inversion is a separate concern.
 /// </remarks>
-/// <typeparam name="T">The numeric storage type.</typeparam>
 public partial record Gain<T>
 	where T : struct, INumber<T>
 {
