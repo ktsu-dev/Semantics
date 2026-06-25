@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Polyfill" PrivateAssets="all" />
     <PackageReference Include="ktsu.RoundTripStringJsonConverter" />
+    <PackageReference Include="System.Text.Json" />
     <PackageReference Include="System.Memory" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
   </ItemGroup>
   <ItemGroup>
