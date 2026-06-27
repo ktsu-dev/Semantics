@@ -4,6 +4,11 @@
   <PropertyGroup>
     <TargetFrameworks>net10.0;net9.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
     <NoWarn>$(NoWarn);CA1716;CA1866;CA2249;IDE0057</NoWarn>
+    <!-- This library intentionally exposes a different public surface per TFM (Span-based APIs on
+         netstandard2.1/net, Polyfill shims like DefaultInterpolatedStringHandler on older TFMs).
+         ktsu.Sdk 2.11.0 enables strict ApiCompat package validation, whose compatible-frameworks
+         check (CP0006/CP0014/CP0016) cannot accept those by-design differences. Disable it. -->
+    <EnablePackageValidation>false</EnablePackageValidation>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Polyfill" PrivateAssets="all" />

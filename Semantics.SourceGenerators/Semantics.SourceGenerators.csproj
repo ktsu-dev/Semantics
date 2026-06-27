@@ -9,6 +9,10 @@
     <IsRoslynComponent>true</IsRoslynComponent>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- Build-time-only generator. Its output is compiled into ktsu.Semantics.Quantities; it is not
+         a standalone NuGet package (never published). Plain Microsoft.NET.Sdk defaults IsPackable
+         true, so the pipeline tried to pack an empty package (NU5017). Exclude it from packing. -->
+    <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
