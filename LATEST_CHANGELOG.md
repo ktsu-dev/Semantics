@@ -2,6 +2,7 @@
 
 Changes since v1.0.0:
 
+- Revert "Update pack supressions" ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update pack supressions ([@matt-edmondson](https://github.com/matt-edmondson))
 - release: ktsu.Semantics 2.0.0 — unified vector quantities [major] ([@matt-edmondson](https://github.com/matt-edmondson))
 - fix: drop unreferenced SourceLink package versions (KTSU0005 under ktsu.Sdk 2.11.0) ([@matt-edmondson](https://github.com/matt-edmondson))
