@@ -138,7 +138,7 @@ public class LogarithmicScalesGenerator : GeneratorBase<LogarithmicMetadata>
 		string toName = string.IsNullOrWhiteSpace(conversion.ToName) ? $"To{linear}" : conversion.ToName!;
 		string multiplier = ToDoubleLiteral(conversion.Multiplier);
 		string logBase = ToDoubleLiteral(conversion.LogBase);
-		string referenceExpr = BuildReferenceExpression(conversion.Reference);
+		string? referenceExpr = BuildReferenceExpression(conversion.Reference);
 
 		// scale = multiplier · log_base(linear / reference)
 		string ratioExpr = referenceExpr == null ? "linearValue" : "linearValue / reference";
