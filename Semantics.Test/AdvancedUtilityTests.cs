@@ -4,9 +4,9 @@
 
 namespace ktsu.Semantics.Test;
 
+using ktsu.Semantics.Paths;
 using System.Collections.Concurrent;
 using System.Text;
-using ktsu.Semantics.Paths;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]

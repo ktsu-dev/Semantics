@@ -1,0 +1,55 @@
+name: Verify Generated Files
+
+# Two kinds of generated artifacts are committed to this repo:
+#   1. Source-generator output under Semantics.Quantities/Generated/ (EmitCompilerGeneratedFiles=true).
+#   2. The storage-type alias props under Semantics.Quantities.<T>/buildTransitive/, produced by
+#      scripts/Generate-AliasProps.ps1 from the quantity catalogue.
+# This job rebuilds and regenerates both, then fails if anything drifts from its source — so a
+# committed generated file or alias-props file can never go stale.
+#
+# NOTE: this is a standalone workflow on purpose — dotnet.yml is centrally synced from a
+# shared template across ktsu repos, so a step added there would be overwritten. If this
+# check belongs in the shared KtsuBuild pipeline long-term, move it there and delete this.
+
+on:
+  pull_request:
+    paths-ignore: ["**.md"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-generated-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-generated:
+    name: Generated files up to date
+    # windows-latest so git's autocrlf matches the committed CRLF line endings and the
+    # diff doesn't flag end-of-line differences.
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build (regenerates source-generator output into Generated/)
+        run: dotnet build Semantics.Quantities/Semantics.Quantities.csproj -c Release
+
+      - name: Regenerate storage-type alias props
+        shell: pwsh
+        run: ./scripts/Generate-AliasProps.ps1
+
+      - name: Fail if generated files or alias props are stale
+        shell: bash
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::Committed generated files or alias props are out of date. Run 'dotnet build Semantics.Quantities/Semantics.Quantities.csproj -c Release' then 'pwsh scripts/Generate-AliasProps.ps1', and commit the changes."
+            exit 1
+          fi

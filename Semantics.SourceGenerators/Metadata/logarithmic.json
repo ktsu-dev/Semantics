@@ -1,0 +1,156 @@
+{
+  "logarithmicScales": [
+    {
+      "name": "Decibels",
+      "description": "Represents a logarithmic level in decibels (dB).",
+      "remarks": "Decibels express ratios on a logarithmic scale. Amplitude/field quantities use dB = 20·log10(ratio); power quantities use dB = 10·log10(ratio). A level of 0 dB is unity.",
+      "displayFormat": "{0} dB",
+      "scalarFactory": "Create",
+      "arithmetic": true,
+      "conversions": [
+        {
+          "linear": "Gain",
+          "multiplier": "20",
+          "fromName": "FromGain",
+          "toName": "ToAmplitude",
+          "fromSummary": "Creates a level from an amplitude gain using dB = 20·log10(gain).",
+          "toSummary": "Converts this level to a linear amplitude gain using gain = 10^(dB/20)."
+        },
+        {
+          "linear": "Ratio",
+          "multiplier": "10",
+          "fromName": "FromPowerRatio",
+          "toName": "ToPower",
+          "fromSummary": "Creates a level from a linear power ratio using dB = 10·log10(ratio).",
+          "toSummary": "Converts this level to a linear power ratio using ratio = 10^(dB/10)."
+        }
+      ]
+    },
+    {
+      "name": "Cents",
+      "description": "Represents a musical pitch interval in cents (1/100 of an equal-tempered semitone).",
+      "remarks": "An octave is 1200 cents: cents = 1200·log2(frequencyRatio).",
+      "displayFormat": "{0} ct",
+      "scalarFactory": "Create",
+      "arithmetic": true,
+      "conversions": [
+        {
+          "linear": "Ratio",
+          "multiplier": "1200",
+          "logBase": "2",
+          "fromName": "FromFrequencyRatio",
+          "toName": "ToFrequencyRatio",
+          "fromSummary": "Creates an interval from a frequency ratio using cents = 1200·log2(ratio).",
+          "toSummary": "Converts this interval to a frequency ratio using ratio = 2^(cents/1200)."
+        }
+      ]
+    },
+    {
+      "name": "Semitones",
+      "description": "Represents a musical pitch interval in equal-tempered semitones.",
+      "remarks": "An octave is 12 semitones: semitones = 12·log2(frequencyRatio).",
+      "displayFormat": "{0} st",
+      "scalarFactory": "Create",
+      "arithmetic": true,
+      "conversions": [
+        {
+          "linear": "Ratio",
+          "multiplier": "12",
+          "logBase": "2",
+          "fromName": "FromFrequencyRatio",
+          "toName": "ToFrequencyRatio",
+          "fromSummary": "Creates an interval from a frequency ratio using semitones = 12·log2(ratio).",
+          "toSummary": "Converts this interval to a frequency ratio using ratio = 2^(semitones/12)."
+        }
+      ]
+    },
+    {
+      "name": "SoundPressureLevel",
+      "description": "Represents a sound pressure level (SPL) in decibels relative to the 20 µPa threshold of hearing.",
+      "remarks": "SPL is a logarithmic field quantity: SPL = 20·log10(p / p₀) with p₀ = 20 µPa.",
+      "displayFormat": "{0} dB SPL",
+      "scalarFactory": "FromDecibels",
+      "arithmetic": true,
+      "conversions": [
+        {
+          "linear": "SoundPressure",
+          "multiplier": "20",
+          "reference": { "constant": "ReferenceSoundPressure" },
+          "fromSummary": "Creates a level from a linear sound pressure using SPL = 20·log10(p / p₀).",
+          "toSummary": "Converts this level to the equivalent linear sound pressure using p = p₀·10^(SPL/20)."
+        }
+      ]
+    },
+    {
+      "name": "SoundIntensityLevel",
+      "description": "Represents a sound intensity level (SIL) in decibels relative to the 10⁻¹² W/m² threshold of hearing.",
+      "remarks": "SIL is a logarithmic power quantity: SIL = 10·log10(I / I₀) with I₀ = 10⁻¹² W/m².",
+      "displayFormat": "{0} dB SIL",
+      "scalarFactory": "FromDecibels",
+      "arithmetic": true,
+      "conversions": [
+        {
+          "linear": "SoundIntensity",
+          "multiplier": "10",
+          "reference": { "constant": "ReferenceSoundIntensity" },
+          "fromSummary": "Creates a level from a linear sound intensity using SIL = 10·log10(I / I₀).",
+          "toSummary": "Converts this level to the equivalent linear sound intensity using I = I₀·10^(SIL/10)."
+        }
+      ]
+    },
+    {
+      "name": "SoundPowerLevel",
+      "description": "Represents a sound power level (SWL) in decibels relative to the 10⁻¹² W reference sound power.",
+      "remarks": "SWL is a logarithmic power quantity: SWL = 10·log10(P / P₀) with P₀ = 10⁻¹² W.",
+      "displayFormat": "{0} dB SWL",
+      "scalarFactory": "FromDecibels",
+      "arithmetic": true,
+      "conversions": [
+        {
+          "linear": "SoundPower",
+          "multiplier": "10",
+          "reference": { "constant": "ReferenceSoundPower" },
+          "fromSummary": "Creates a level from a linear sound power using SWL = 10·log10(P / P₀).",
+          "toSummary": "Converts this level to the equivalent linear sound power using P = P₀·10^(SWL/10)."
+        }
+      ]
+    },
+    {
+      "name": "DirectionalityIndex",
+      "description": "Represents a directivity index (DI) in decibels — how much more intense a source or receiver is on-axis than its spherical average.",
+      "remarks": "DI = 10·log10(I_axis / I_average).",
+      "displayFormat": "{0} dB",
+      "scalarFactory": "FromDecibels",
+      "arithmetic": false,
+      "conversions": [
+        {
+          "linear": "Ratio",
+          "multiplier": "10",
+          "fromName": "FromIntensityRatio",
+          "toName": "ToIntensityRatio",
+          "fromSummary": "Creates an index from the linear on-axis-to-average intensity ratio using DI = 10·log10(ratio).",
+          "toSummary": "Converts this index to the linear intensity ratio using ratio = 10^(DI/10)."
+        }
+      ]
+    },
+    {
+      "name": "PH",
+      "description": "Represents acidity on the pH scale: pH = −log10([H⁺]) with the hydrogen-ion activity in mol/L.",
+      "remarks": "pH is a logarithmic scale over the linear Concentration quantity (stored in the SI base mol/m³; 1 mol/L = 1000 mol/m³).",
+      "displayFormat": "pH {0}",
+      "scalarFactory": "Create",
+      "arithmetic": false,
+      "conversions": [
+        {
+          "linear": "Concentration",
+          "multiplier": "-1",
+          "reference": { "value": "1000" },
+          "fromName": "FromHydrogenConcentration",
+          "toName": "ToHydrogenConcentration",
+          "fromSummary": "Creates a pH from a hydrogen-ion concentration using pH = −log10([H⁺] in mol/L).",
+          "toSummary": "Converts this pH to the equivalent hydrogen-ion concentration using [H⁺] = 10^(−pH) mol/L."
+        }
+      ]
+    }
+  ]
+}

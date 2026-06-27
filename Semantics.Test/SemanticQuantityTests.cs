@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Test;
 
+using ktsu.Semantics.Quantities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]

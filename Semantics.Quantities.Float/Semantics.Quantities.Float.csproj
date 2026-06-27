@@ -1,0 +1,24 @@
+<Project>
+  <Sdk Name="Microsoft.NET.Sdk" />
+  <Sdk Name="ktsu.Sdk" />
+
+  <PropertyGroup>
+    <!-- Matches Semantics.Quantities (which requires INumber<T>, so net8.0+). -->
+    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+    <!-- Props-only package: no compiled assembly, just the buildTransitive aliases. -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <Description>Storage-type aliases for ktsu.Semantics.Quantities. Reference this package to write `Mass` instead of `Mass&lt;float&gt;` (and every other quantity) bound to float, project-wide. Use one storage-type alias package per project.</Description>
+    <!-- NU5128: a dependencies-only package legitimately has no lib/ assemblies. -->
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="buildTransitive\ktsu.Semantics.Quantities.Float.props" Pack="true" PackagePath="buildTransitive\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Packs as a NuGet dependency on the matching ktsu.Semantics.Quantities version. -->
+    <ProjectReference Include="..\Semantics.Quantities\Semantics.Quantities.csproj" />
+  </ItemGroup>
+
+</Project>

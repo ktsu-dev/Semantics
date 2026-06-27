@@ -4,6 +4,8 @@
 
 namespace ktsu.Semantics.Test;
 
+using ktsu.Semantics.Quantities;
+using ktsu.Semantics.Quantities.Units;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
@@ -74,9 +76,47 @@ public class AudioEngineeringTests
 	[TestMethod]
 	public void RatioPercent_RoundTrip()
 	{
-		Assert.AreEqual(50.0, Ratio<double>.Create(0.5).ToPercent().Value, Tolerance);
-		Assert.AreEqual(0.5, Percent<double>.Create(50.0).ToRatio().Value, Tolerance);
-		Assert.AreEqual(0.25, Percent<double>.FromFraction(0.25).ToFraction(), Tolerance);
+		// Percent is a unit of the Dimensionless dimension, not a separate type.
+		Assert.AreEqual(0.5, Ratio<double>.FromPercent(50.0).Value, Tolerance);
+		Assert.AreEqual(50.0, Ratio<double>.Create(0.5).In(Units.Percent), Tolerance);
+		Assert.AreEqual(0.25, Ratio<double>.FromPercent(25.0).Value, Tolerance);
+	}
+
+	[TestMethod]
+	public void Gain_Is_A_Generated_Ratio_Overload()
+	{
+		// Gain widens implicitly to the generated Ratio and is V0 (non-negative
+		// through the guarded From{Unit} factories).
+		Gain<double> gain = Gain<double>.Create(2.0);
+		Ratio<double> asRatio = gain;
+		Assert.AreEqual(2.0, asRatio.Value, Tolerance);
+		Assert.ThrowsExactly<ArgumentException>(() => Gain<double>.FromDimensionless(-1.0));
+	}
+
+	[TestMethod]
+	public void Gain_Cascading_Multiplies()
+	{
+		Gain<double> total = Gain<double>.Create(2.0) * Gain<double>.Create(0.5);
+		Assert.AreEqual(1.0, total.Value, Tolerance);
+		Assert.AreEqual(Gain<double>.Unity.Value, total.Value, Tolerance);
+	}
+
+	[TestMethod]
+	public void Decibels_FromPowerRatio_Takes_The_Generated_Ratio()
+	{
+		Decibels<double> db = Decibels<double>.FromPowerRatio(Ratio<double>.Create(100.0));
+		Assert.AreEqual(20.0, db.Value, Tolerance);
+	}
+
+	[TestMethod]
+	public void Ratio_Arithmetic_Comes_From_The_Generator()
+	{
+		// The audio-specific Ratio struct is gone; the generated Dimensionless
+		// Ratio supplies the arithmetic.
+		Ratio<double> mix = Ratio<double>.Create(0.5) * Ratio<double>.Create(0.5);
+		Assert.AreEqual(0.25, mix.Value, Tolerance);
+		// Same-type division yields the raw storage ratio, as for every quantity.
+		Assert.AreEqual(2.0, Ratio<double>.Create(1.0) / Ratio<double>.Create(0.5), Tolerance);
 	}
 
 	[TestMethod]

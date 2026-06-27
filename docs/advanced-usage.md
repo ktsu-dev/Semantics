@@ -80,10 +80,15 @@ public class BusinessRuleValidationStrategy : IValidationStrategy
     }
 }
 
-// Use custom strategies with validation attributes
-[ValidateWith(typeof(BusinessRuleValidationStrategy))]
-[IsNotEmpty, IsEmail] // Critical validations
-[IsCompanyEmail, IsInternalDomain] // Non-critical validations
+// To wire a custom strategy in, register it via ValidationStrategyFactory
+// at startup and reference it from your validation pipeline:
+//
+//   ValidationStrategyFactory.Register<BusinessEmail>(
+//       new BusinessRuleValidationStrategy());
+//
+// Strategies are keyed by the semantic-string type that owns them.
+[HasNonWhitespaceContent, IsEmailAddress]
+[IsCompanyEmail, IsInternalDomain]   // your own custom attributes
 public sealed record BusinessEmail : SemanticString<BusinessEmail> { }
 ```
 
@@ -123,7 +128,7 @@ public sealed record ProductCode : SemanticString<ProductCode> { }
 // Usage with automatic validation
 var factory = new SemanticStringFactory<ProductCode>();
 var validCode = factory.Create("A12345");   // ✅ Valid
-// factory.Create("123ABC");                 // ❌ Throws FormatException
+// factory.Create("123ABC");                 // ❌ Throws ArgumentException
 ```
 
 ## Contract Validation and LSP Compliance
@@ -153,9 +158,9 @@ public class SemanticStringValidator<T> where T : SemanticString<T>
 [Test]
 public void EmailAddress_ShouldSatisfySemanticStringContracts()
 {
-    var email1 = EmailAddress.FromString<EmailAddress>("user@example.com");
-    var email2 = EmailAddress.FromString<EmailAddress>("admin@example.com");
-    var email3 = EmailAddress.FromString<EmailAddress>("test@example.com");
+    var email1 = EmailAddress.Create("user@example.com");
+    var email2 = EmailAddress.Create("admin@example.com");
+    var email3 = EmailAddress.Create("test@example.com");
 
     var validator = new SemanticStringValidator<EmailAddress>();
     Assert.IsTrue(validator.ValidateImplementation(email1, email2, email3));
@@ -190,12 +195,11 @@ public sealed record ExistingAbsolutePath : SemanticPath<ExistingAbsolutePath> {
 
 // Require ANY validation attribute to pass
 [ValidateAny]
-[IsEmail, IsUrl]
+[IsEmailAddress, IsUri]
 public sealed record ContactInfo : SemanticString<ContactInfo> { }
 
-// Custom validation strategy (shown earlier)
-[ValidateWith(typeof(BusinessRuleValidationStrategy))]
-[IsNotEmpty, IsEmail]
+// Custom strategies plug in via ValidationStrategyFactory.Register<T>()
+[HasNonWhitespaceContent, IsEmailAddress]
 public sealed record StrictBusinessEmail : SemanticString<StrictBusinessEmail> { }
 ```
 
@@ -204,8 +208,8 @@ public sealed record StrictBusinessEmail : SemanticString<StrictBusinessEmail> {
 Specialized operations for working with file system paths:
 
 ```csharp
-var from = AbsolutePath.FromString<AbsolutePath>(@"C:\Projects\App");
-var to = AbsolutePath.FromString<AbsolutePath>(@"C:\Projects\Lib\Utils.cs");
+var from = AbsolutePath.Create(@"C:\Projects\App");
+var to = AbsolutePath.Create(@"C:\Projects\Lib\Utils.cs");
 
 // Create relative path between two absolute paths
 var relativePath = RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(from, to);
@@ -221,7 +225,7 @@ Console.WriteLine(filePath.FileExtension);   // .json
 Console.WriteLine(filePath.DirectoryPath);   // C:\temp
 
 // Check file system properties
-var absolutePath = AbsolutePath.FromString<AbsolutePath>(@"C:\Projects\MyApp");
+var absolutePath = AbsolutePath.Create(@"C:\Projects\MyApp");
 Console.WriteLine(absolutePath.Exists);      // True/False
 Console.WriteLine(absolutePath.IsDirectory); // True/False
 ```

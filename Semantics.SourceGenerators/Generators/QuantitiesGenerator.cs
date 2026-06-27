@@ -1,0 +1,1659 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
+namespace Semantics.SourceGenerators;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using ktsu.CodeBlocker;
+using Microsoft.CodeAnalysis;
+using Semantics.SourceGenerators.Models;
+using Semantics.SourceGenerators.Templates;
+
+/// <summary>
+/// Source generator that creates quantity types from the unified vector schema in dimensions.json.
+/// Uses a two-phase approach: first collects all cross-dimensional operators globally,
+/// then generates each type with its assigned operators.
+/// </summary>
+[Generator]
+public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
+{
+	private static readonly DiagnosticDescriptor UnknownDimensionReference = new(
+		id: "SEM001",
+		title: "Unknown dimension reference in physics relationship",
+		messageFormat: "Dimension '{0}' references unknown dimension '{1}' in {2}; the operator will not be generated. Check spelling and that the referenced dimension exists in dimensions.json.",
+		category: "Semantics.SourceGenerators",
+		defaultSeverity: DiagnosticSeverity.Warning,
+		isEnabledByDefault: true);
+
+	private static readonly DiagnosticDescriptor MetadataValidationFailed = new(
+		id: "SEM002",
+		title: "dimensions.json metadata validation failed",
+		messageFormat: "dimensions.json validation issue: {0}",
+		category: "Semantics.SourceGenerators",
+		defaultSeverity: DiagnosticSeverity.Warning,
+		isEnabledByDefault: true);
+
+	private static readonly DiagnosticDescriptor RelationshipFormMissing = new(
+		id: "SEM003",
+		title: "Relationship requires a vector form not declared on a participating dimension",
+		messageFormat: "Relationship in dimension '{0}' ({1}) explicitly requests form V{2}, but '{3}' does not declare that form. The operator will not be generated.",
+		category: "Semantics.SourceGenerators",
+		defaultSeverity: DiagnosticSeverity.Warning,
+		isEnabledByDefault: true);
+
+	private static readonly DiagnosticDescriptor UnknownUnitReference = new(
+		id: "SEM004",
+		title: "dimensions.json references a unit not declared in units.json",
+		messageFormat: "Unit '{0}' (referenced by dimension '{1}'.availableUnits) is not declared in units.json; the generated From{0} factory will use an identity conversion. Add the unit to units.json or fix the spelling.",
+		category: "Semantics.SourceGenerators",
+		defaultSeverity: DiagnosticSeverity.Warning,
+		isEnabledByDefault: true);
+
+	public QuantitiesGenerator() : base("dimensions.json") { }
+
+	/// <summary>
+	/// Holds the metadata that drives quantity emission. Combined from dimensions.json and
+	/// units.json so factory methods can apply per-unit conversion factors. Plain class
+	/// (not a positional record) because the netstandard2.0 source-generator target lacks
+	/// <c>System.Runtime.CompilerServices.IsExternalInit</c>.
+	/// </summary>
+	private sealed class CombinedMetadata
+	{
+		public DimensionsMetadata Dimensions { get; }
+		public UnitsMetadata Units { get; }
+
+		public CombinedMetadata(DimensionsMetadata dimensions, UnitsMetadata units)
+		{
+			Dimensions = dimensions;
+			Units = units;
+		}
+	}
+
+	/// <summary>
+	/// Override to load both dimensions.json and units.json. The base class only loads a single
+	/// metadata file; we need both because per-unit conversion factors are required to emit
+	/// <c>From{Unit}</c> factories that aren't the SI base unit.
+	/// </summary>
+	public override void Initialize(IncrementalGeneratorInitializationContext context)
+	{
+		IncrementalValueProvider<DimensionsMetadata?> dimensionsProvider = LoadJson<DimensionsMetadata>(context, "dimensions.json");
+		IncrementalValueProvider<UnitsMetadata?> unitsProvider = LoadJson<UnitsMetadata>(context, "units.json");
+		IncrementalValueProvider<CombinedMetadata?> combined = dimensionsProvider.Combine(unitsProvider).Select(static (pair, _) =>
+			pair.Left == null ? null : new CombinedMetadata(pair.Left, pair.Right ?? new UnitsMetadata()));
+
+		context.RegisterSourceOutput(combined, (ctx, metadata) =>
+		{
+			if (metadata == null)
+			{
+				return;
+			}
+
+			using CodeBlocker codeBlocker = CodeBlocker.Create();
+			GenerateInner(ctx, metadata.Dimensions, metadata.Units, codeBlocker);
+		});
+	}
+
+	private static IncrementalValueProvider<TMeta?> LoadJson<TMeta>(IncrementalGeneratorInitializationContext context, string filename)
+		where TMeta : class
+	{
+		return context.AdditionalTextsProvider
+			.Where(file => file.Path.EndsWith(filename, StringComparison.InvariantCulture))
+			.Select((file, ct) => file.GetText(ct)?.ToString() ?? "")
+			.Where(content => !string.IsNullOrEmpty(content))
+			.Select((content, _) =>
+			{
+				try
+				{
+					return JsonSerializer.Deserialize<TMeta>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+				}
+				catch (JsonException)
+				{
+					return null;
+				}
+			})
+			.Where(m => m != null)
+			.Collect()
+			.Select((arr, _) => arr.FirstOrDefault());
+	}
+
+	/// <summary>
+	/// The legacy abstract <see cref="GeneratorBase{T}.Generate"/> entry point is unused: the
+	/// overridden <see cref="Initialize"/> handles registration and calls
+	/// <see cref="GenerateInner"/> directly. This shim exists to satisfy the abstract contract.
+	/// </summary>
+	protected override void Generate(SourceProductionContext context, DimensionsMetadata metadata, CodeBlocker codeBlocker)
+		=> GenerateInner(context, metadata, new UnitsMetadata(), codeBlocker);
+
+	private void GenerateInner(SourceProductionContext context, DimensionsMetadata metadata, UnitsMetadata units, CodeBlocker codeBlocker)
+	{
+		if (metadata.PhysicalDimensions == null || metadata.PhysicalDimensions.Count == 0)
+		{
+			return;
+		}
+
+		// Issue #60: surface schema-level metadata problems as diagnostics so they
+		// show up in the build log instead of crashing mid-emit.
+		List<string> validationIssues = metadata.Validate();
+		foreach (string issue in validationIssues)
+		{
+			context.ReportDiagnostic(Diagnostic.Create(
+				MetadataValidationFailed,
+				Location.None,
+				issue));
+		}
+
+		Dictionary<string, UnitDefinition> unitMap = BuildUnitMap(units);
+
+		// Issue #58/#48 follow-up: surface dimensions.json availableUnits entries that
+		// don't exist in units.json. The generator's BuildToBaseExpression silently falls
+		// back to identity conversion in that case, which is wrong for any non-base unit
+		// — a typo (e.g. "Kilometres" vs "Kilometers") would silently produce a factory
+		// with no scale factor. SEM004 catches that at build time.
+		ReportUnknownUnitReferences(context, metadata, unitMap);
+
+		// Phase A: Build maps and collect operators
+		Dictionary<string, PhysicalDimension> dimensionMap = BuildDimensionMap(metadata);
+		Dictionary<string, int> typeFormMap = BuildTypeFormMap(metadata);
+		List<OperatorInfo> allOperators = CollectAllOperators(context, metadata, dimensionMap);
+		List<ProductInfo> allProducts = CollectAllProducts(context, metadata, dimensionMap);
+		Dictionary<string, List<OperatorInfo>> operatorsByOwner = GroupBy(allOperators, o => o.OwnerTypeName);
+		Dictionary<string, List<ProductInfo>> productsByOwner = GroupBy(allProducts, p => p.SelfTypeName);
+
+		// Phase B: Generate types
+		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
+		{
+			if (dim.Quantities.Vector0 != null)
+			{
+				EmitV0BaseType(context, dim, operatorsByOwner, typeFormMap, unitMap);
+			}
+
+			if (dim.Quantities.Vector1 != null)
+			{
+				EmitV1BaseType(context, dim, operatorsByOwner, typeFormMap, unitMap);
+			}
+
+			int[] vectorDims = [2, 3, 4];
+			foreach (int d in vectorDims)
+			{
+				VectorFormDefinition? form = GetFormDef(dim, d);
+				if (form != null)
+				{
+					EmitVectorType(context, dim, d, form, operatorsByOwner, productsByOwner, typeFormMap);
+				}
+			}
+
+			// Emit semantic overloads for all vector forms
+			int[] allForms = [0, 1, 2, 3, 4];
+			foreach (int f in allForms)
+			{
+				VectorFormDefinition? form = GetFormDef(dim, f);
+				if (form != null)
+				{
+					foreach (OverloadDefinition overload in form.Overloads)
+					{
+						EmitOverloadType(context, dim, f, form.Base, overload, typeFormMap, unitMap);
+					}
+				}
+			}
+		}
+	}
+
+	#region Phase A: Map Building and Operator Collection
+
+	private static Dictionary<string, PhysicalDimension> BuildDimensionMap(DimensionsMetadata metadata)
+	{
+		Dictionary<string, PhysicalDimension> map = [];
+		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
+		{
+			map[dim.Name] = dim;
+		}
+
+		return map;
+	}
+
+	private static Dictionary<string, int> BuildTypeFormMap(DimensionsMetadata metadata)
+	{
+		Dictionary<string, int> map = [];
+		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
+		{
+			int[] forms = [0, 1, 2, 3, 4];
+			foreach (int f in forms)
+			{
+				VectorFormDefinition? form = GetFormDef(dim, f);
+				if (form != null)
+				{
+					map[form.Base] = f;
+					foreach (OverloadDefinition overload in form.Overloads)
+					{
+						map[overload.Name] = f;
+					}
+				}
+			}
+		}
+
+		return map;
+	}
+
+	private static List<OperatorInfo> CollectAllOperators(SourceProductionContext context, DimensionsMetadata metadata, Dictionary<string, PhysicalDimension> dimMap)
+	{
+		HashSet<string> seen = [];
+		List<OperatorInfo> result = [];
+
+		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
+		{
+			// Process integrals: Self * Other = Result
+			foreach (RelationshipDefinition integral in dim.Integrals)
+			{
+				if (!dimMap.TryGetValue(integral.Other, out PhysicalDimension? otherDim))
+				{
+					ReportUnknownReference(context, dim.Name, integral.Other, $"integrals[{integral.Other} -> {integral.Result}].other");
+					continue;
+				}
+
+				if (!dimMap.TryGetValue(integral.Result, out PhysicalDimension? resultDim))
+				{
+					ReportUnknownReference(context, dim.Name, integral.Result, $"integrals[{integral.Other} -> {integral.Result}].result");
+					continue;
+				}
+
+				// V0(Other) is the scalar multiplier
+				string? v0Other = otherDim.Quantities.Vector0?.Base;
+				if (v0Other == null)
+				{
+					continue;
+				}
+
+				// For integrals the "Other" multiplier is V0 only; the form propagates
+				// between Self and Result, so SEM003 should fire if either Self or
+				// Result is missing a declared form. (V0-only Other was already
+				// rejected above via the v0Other null check.)
+				int[] forms = ResolveForms(
+					context,
+					integral,
+					[0, 1, 2, 3, 4],
+					dim,
+					resultDim,
+					$"integrals[{integral.Other} -> {integral.Result}]");
+				foreach (int vn in forms)
+				{
+					string? selfType = GetBaseTypeName(dim, vn);
+					string? resultType = GetBaseTypeName(resultDim, vn);
+					if (selfType == null || resultType == null)
+					{
+						continue;
+					}
+
+					// Forward: VN(Self) * V0(Other) => VN(Result)
+					AddOp(result, seen, "*", selfType, v0Other, resultType, selfType);
+					// Commutative: V0(Other) * VN(Self) => VN(Result)
+					AddOp(result, seen, "*", v0Other, selfType, resultType, v0Other);
+					// Inverse: VN(Result) / V0(Other) => VN(Self)
+					AddOp(result, seen, "/", resultType, v0Other, selfType, resultType);
+					// Inverse: VN(Result) / VN(Self) => V0(Other) -- only if VN == V0
+					if (vn == 0)
+					{
+						AddOp(result, seen, "/", resultType, selfType, v0Other, resultType);
+					}
+				}
+			}
+
+			// Process derivatives: Self / Other = Result
+			foreach (RelationshipDefinition derivative in dim.Derivatives)
+			{
+				if (!dimMap.TryGetValue(derivative.Other, out PhysicalDimension? otherDim))
+				{
+					ReportUnknownReference(context, dim.Name, derivative.Other, $"derivatives[{derivative.Other} -> {derivative.Result}].other");
+					continue;
+				}
+
+				if (!dimMap.TryGetValue(derivative.Result, out PhysicalDimension? resultDim))
+				{
+					ReportUnknownReference(context, dim.Name, derivative.Result, $"derivatives[{derivative.Other} -> {derivative.Result}].result");
+					continue;
+				}
+
+				string? v0Other = otherDim.Quantities.Vector0?.Base;
+				if (v0Other == null)
+				{
+					continue;
+				}
+
+				int[] forms = ResolveForms(
+					context,
+					derivative,
+					[0, 1, 2, 3, 4],
+					dim,
+					resultDim,
+					$"derivatives[{derivative.Other} -> {derivative.Result}]");
+				foreach (int vn in forms)
+				{
+					string? selfType = GetBaseTypeName(dim, vn);
+					string? resultType = GetBaseTypeName(resultDim, vn);
+					if (selfType == null || resultType == null)
+					{
+						continue;
+					}
+
+					// Forward: VN(Self) / V0(Other) => VN(Result)
+					AddOp(result, seen, "/", selfType, v0Other, resultType, selfType);
+					// Inverse integral: VN(Result) * V0(Other) => VN(Self)
+					AddOp(result, seen, "*", resultType, v0Other, selfType, resultType);
+					// Commutative inverse: V0(Other) * VN(Result) => VN(Self)
+					AddOp(result, seen, "*", v0Other, resultType, selfType, v0Other);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	private static List<ProductInfo> CollectAllProducts(SourceProductionContext context, DimensionsMetadata metadata, Dictionary<string, PhysicalDimension> dimMap)
+	{
+		HashSet<string> seen = [];
+		List<ProductInfo> result = [];
+
+		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
+		{
+			// Dot products: VN(Self) . VN(Other) => V0(Result)
+			foreach (RelationshipDefinition dot in dim.DotProducts)
+			{
+				if (!dimMap.TryGetValue(dot.Other, out PhysicalDimension? otherDim))
+				{
+					ReportUnknownReference(context, dim.Name, dot.Other, $"dotProducts[{dot.Other} -> {dot.Result}].other");
+					continue;
+				}
+
+				if (!dimMap.TryGetValue(dot.Result, out PhysicalDimension? resultDim))
+				{
+					ReportUnknownReference(context, dim.Name, dot.Result, $"dotProducts[{dot.Other} -> {dot.Result}].result");
+					continue;
+				}
+
+				string? v0Result = resultDim.Quantities.Vector0?.Base;
+				if (v0Result == null)
+				{
+					continue;
+				}
+
+				// Dot product is undefined for V0; default forms are V1+.
+				int[] forms = ResolveForms(
+					context,
+					dot,
+					[1, 2, 3, 4],
+					dim,
+					otherDim,
+					$"dotProducts[{dot.Other} -> {dot.Result}]");
+				foreach (int vn in forms)
+				{
+					string? selfType = GetBaseTypeName(dim, vn);
+					string? otherType = GetBaseTypeName(otherDim, vn);
+					if (selfType == null || otherType == null)
+					{
+						continue;
+					}
+
+					string key = $"Dot:{selfType}:{otherType}:{v0Result}";
+					if (seen.Add(key))
+					{
+						result.Add(new ProductInfo("Dot", selfType, otherType, v0Result, vn));
+					}
+				}
+			}
+
+			// Cross products: V3(Self) x V3(Other) => V3(Result)
+			foreach (RelationshipDefinition cross in dim.CrossProducts)
+			{
+				if (!dimMap.TryGetValue(cross.Other, out PhysicalDimension? otherDim))
+				{
+					ReportUnknownReference(context, dim.Name, cross.Other, $"crossProducts[{cross.Other} -> {cross.Result}].other");
+					continue;
+				}
+
+				if (!dimMap.TryGetValue(cross.Result, out PhysicalDimension? resultDim))
+				{
+					ReportUnknownReference(context, dim.Name, cross.Result, $"crossProducts[{cross.Other} -> {cross.Result}].result");
+					continue;
+				}
+
+				// Cross product is intrinsically 3D. Default to V3 only; explicit Forms
+				// other than [3] are accepted but the operator emit below only handles V3.
+				// Pass resultDim so SEM003 surfaces when the declared form is missing on
+				// the result type too (e.g. Force × Length → Torque at V2: Torque has no V2).
+				int[] forms = ResolveForms(
+					context,
+					cross,
+					[3],
+					dim,
+					otherDim,
+					$"crossProducts[{cross.Other} -> {cross.Result}]",
+					resultDim);
+				if (Array.IndexOf(forms, 3) < 0)
+				{
+					continue;
+				}
+
+				string? selfV3 = GetBaseTypeName(dim, 3);
+				string? otherV3 = GetBaseTypeName(otherDim, 3);
+				string? resultV3 = GetBaseTypeName(resultDim, 3);
+				if (selfV3 == null || otherV3 == null || resultV3 == null)
+				{
+					continue;
+				}
+
+				string key = $"Cross:{selfV3}:{otherV3}:{resultV3}";
+				if (seen.Add(key))
+				{
+					result.Add(new ProductInfo("Cross", selfV3, otherV3, resultV3, 3));
+				}
+			}
+		}
+
+		return result;
+	}
+
+	private static void AddOp(List<OperatorInfo> list, HashSet<string> seen, string op, string left, string right, string ret, string owner)
+	{
+		// Skip self-division (base class already handles TSelf / TSelf => TStorage)
+		if (op == "/" && left == right)
+		{
+			return;
+		}
+
+		string key = $"{op}:{left}:{right}:{ret}";
+		if (seen.Add(key))
+		{
+			list.Add(new OperatorInfo(op, left, right, ret, owner));
+		}
+	}
+
+	private static void ReportUnknownReference(SourceProductionContext context, string owningDimension, string unknownReference, string fieldPath)
+	{
+		context.ReportDiagnostic(Diagnostic.Create(
+			UnknownDimensionReference,
+			Location.None,
+			owningDimension,
+			unknownReference,
+			fieldPath));
+	}
+
+	/// <summary>
+	/// Resolves the forms at which a relationship should emit operators. When the metadata
+	/// declares <see cref="RelationshipDefinition.Forms"/> explicitly, that list wins and
+	/// any form missing from one of the participating dimensions is reported as
+	/// <c>SEM003</c>. When the list is empty, returns <paramref name="defaultForms"/>
+	/// (which the caller filters silently — preserving the legacy behaviour for relationships
+	/// that haven't opted into form-specific declarations).
+	/// </summary>
+	private static int[] ResolveForms(
+		SourceProductionContext context,
+		RelationshipDefinition rel,
+		int[] defaultForms,
+		PhysicalDimension dim,
+		PhysicalDimension otherDim,
+		string fieldPath,
+		PhysicalDimension? resultDim = null)
+	{
+		if (rel.Forms.Count == 0)
+		{
+			return defaultForms;
+		}
+
+		List<int> kept = [];
+		foreach (int form in rel.Forms)
+		{
+			if (form < 0 || form > 4)
+			{
+				continue;
+			}
+
+			if (GetBaseTypeName(dim, form) == null)
+			{
+				ReportFormMissing(context, dim.Name, fieldPath, form, dim.Name);
+				continue;
+			}
+
+			if (GetBaseTypeName(otherDim, form) == null)
+			{
+				ReportFormMissing(context, dim.Name, fieldPath, form, otherDim.Name);
+				continue;
+			}
+
+			if (resultDim != null && GetBaseTypeName(resultDim, form) == null)
+			{
+				ReportFormMissing(context, dim.Name, fieldPath, form, resultDim.Name);
+				continue;
+			}
+
+			kept.Add(form);
+		}
+
+		return [.. kept];
+	}
+
+	private static void ReportFormMissing(SourceProductionContext context, string owningDimension, string fieldPath, int form, string offendingDimension)
+	{
+		context.ReportDiagnostic(Diagnostic.Create(
+			RelationshipFormMissing,
+			Location.None,
+			owningDimension,
+			fieldPath,
+			form,
+			offendingDimension));
+	}
+
+	private static Dictionary<string, UnitDefinition> BuildUnitMap(UnitsMetadata units)
+	{
+		Dictionary<string, UnitDefinition> map = [];
+		if (units.UnitCategories == null)
+		{
+			return map;
+		}
+
+		foreach (UnitCategory cat in units.UnitCategories)
+		{
+			foreach (UnitDefinition unit in cat.Units)
+			{
+				map[unit.Name] = unit;
+			}
+		}
+
+		return map;
+	}
+
+	/// <summary>
+	/// Walks every <c>availableUnits</c> entry across the dimensions metadata and emits
+	/// <c>SEM004</c> for any unit name that doesn't appear in <paramref name="unitMap"/>.
+	/// Deduplicates by (unit, dimension) so a typo on a unit shared by many dimensions
+	/// reports once per offending dimension instead of per-form/overload.
+	/// </summary>
+	private static void ReportUnknownUnitReferences(
+		SourceProductionContext context,
+		DimensionsMetadata metadata,
+		Dictionary<string, UnitDefinition> unitMap)
+	{
+		// If units.json wasn't loaded the map is empty; treating every unit as "unknown"
+		// would flood the build log. The CombinedMetadata loader already supplies a
+		// non-null UnitsMetadata even when units.json is missing — check for that case
+		// and bail rather than report a useless wall of warnings.
+		if (unitMap.Count == 0)
+		{
+			return;
+		}
+
+		HashSet<string> seen = [];
+		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
+		{
+			foreach (string unitName in dim.AvailableUnits)
+			{
+				if (string.IsNullOrEmpty(unitName) || unitMap.ContainsKey(unitName))
+				{
+					continue;
+				}
+
+				string key = $"{dim.Name}::{unitName}";
+				if (!seen.Add(key))
+				{
+					continue;
+				}
+
+				context.ReportDiagnostic(Diagnostic.Create(
+					UnknownUnitReference,
+					Location.None,
+					unitName,
+					dim.Name));
+			}
+		}
+	}
+
+	/// <summary>
+	/// Emits one <c>From{Unit}</c> static factory per entry in <paramref name="availableUnits"/>.
+	/// The first unit is treated as the SI base unit (no conversion). Subsequent units use the
+	/// conversion factor / magnitude / offset declared in <paramref name="unitMap"/>.
+	/// When <paramref name="applyV0Guard"/> is true, the converted value is wrapped with
+	/// <c>Vector0Guards.EnsureNonNegative</c> so a negative input — including one that becomes
+	/// negative after a unit conversion (e.g. <c>FromCelsius(-300)</c>) — throws
+	/// <see cref="System.ArgumentException"/>. This locks in the V0 non-negativity invariant
+	/// from #50 across every per-unit factory introduced for #48.
+	/// When <paramref name="strictPositive"/> is also true (V0 overloads with
+	/// <c>physicalConstraints.minExclusive: "0"</c> per #51) the guard is upgraded to
+	/// <c>Vector0Guards.EnsurePositive</c>, which rejects zero as well as negative values.
+	/// <paramref name="strictPositive"/> is ignored when <paramref name="applyV0Guard"/> is false.
+	/// </summary>
+	private static void AddUnitFactories(
+		ClassTemplate cls,
+		List<string> availableUnits,
+		Dictionary<string, UnitDefinition> unitMap,
+		string typeName,
+		string fullType,
+		string crefForComment,
+		bool applyV0Guard,
+		bool strictPositive = false)
+	{
+		if (availableUnits == null || availableUnits.Count == 0)
+		{
+			return;
+		}
+
+		string guardMethod = strictPositive ? "EnsurePositive" : "EnsureNonNegative";
+
+		string baseUnit = availableUnits[0];
+		foreach (string unitName in availableUnits)
+		{
+			bool isBase = unitName == baseUnit;
+			string conversionExpr = isBase
+				? "value"
+				: BuildToBaseExpression(unitName, unitMap);
+
+			string body = applyV0Guard
+				? $" => Create(Vector0Guards.{guardMethod}({conversionExpr}, nameof(value)));"
+				: $" => Create({conversionExpr});";
+
+			// Issue #49: factory names are the unit's singular lemma — the unit name verbatim
+			// (e.g. From{Meter}, From{Kilogram}, From{MeterPerSecond}). units.json carries the
+			// singular lemma for every unit including compounds, so the generator never has to
+			// know English pluralisation: the rule is purely mechanical, From{Name}.
+			string factorySuffix = unitName;
+
+			List<string> comments =
+			[
+				"/// <summary>",
+				$"/// Creates a new {crefForComment} from a value in {unitName}.",
+				"/// </summary>",
+				$"/// <param name=\"value\">The value in {unitName}.</param>",
+				$"/// <returns>A new {crefForComment} instance.</returns>",
+			];
+			if (applyV0Guard)
+			{
+				comments.Add("/// <exception cref=\"System.ArgumentException\">Thrown when the resulting magnitude would be negative.</exception>");
+			}
+
+			cls.Members.Add(new MethodTemplate()
+			{
+				Comments = comments,
+				Keywords = ["public", "static", fullType],
+				Name = $"From{factorySuffix}",
+				Parameters = [new ParameterTemplate { Type = "T", Name = "value" }],
+				BodyFactory = (b) => b.Write(body),
+			});
+		}
+	}
+
+	/// <summary>
+	/// Builds the C# expression converting <c>value</c> in <paramref name="unitName"/> to the SI
+	/// base unit. Honours magnitude (<c>Kilo</c>, <c>Centi</c>, …), conversionFactor (lookup in
+	/// <see cref="ConversionConstants"/>), and offset (additive, after scaling).
+	/// </summary>
+	private static string BuildToBaseExpression(string unitName, Dictionary<string, UnitDefinition> unitMap)
+	{
+		// If we don't have unit metadata, fall back to identity. The dimensions.json author is
+		// responsible for keeping availableUnits in sync with units.json; if a unit is missing,
+		// the emitted factory passes the value through unchanged so the build still succeeds.
+		// (A future SEM00x diagnostic could surface this gap.)
+		if (!unitMap.TryGetValue(unitName, out UnitDefinition? unit) || unit == null)
+		{
+			return "value";
+		}
+
+		string scaled = "value";
+		bool hasMagnitude = !string.IsNullOrEmpty(unit.Magnitude) && unit.Magnitude != "1";
+		bool hasFactor = !string.IsNullOrEmpty(unit.ConversionFactor) && unit.ConversionFactor != "1";
+
+		if (hasMagnitude)
+		{
+			scaled = $"(value * T.CreateChecked(MetricMagnitudes.{unit.Magnitude}))";
+		}
+		else if (hasFactor)
+		{
+			scaled = $"(value * T.CreateChecked(Units.ConversionConstants.{unit.ConversionFactor}))";
+		}
+
+		bool hasOffset = !string.IsNullOrEmpty(unit.Offset) && unit.Offset != "0";
+		if (hasOffset)
+		{
+			scaled = $"({scaled} + T.CreateChecked(Units.ConversionConstants.{unit.Offset}))";
+		}
+
+		return scaled;
+	}
+
+	/// <summary>
+	/// Adds the per-quantity surface required by <see cref="ktsu.Semantics.Quantities.IPhysicalQuantity{T}"/>
+	/// (#59): a <c>Dimension</c> override returning <c>PhysicalDimensions.{dim}</c>, plus a
+	/// typed <c>In(I{dim}Unit)</c> method that converts the stored SI-base value into the
+	/// caller's unit. Emitted for V0 and V1 (scalar-storage) types only; vector V2+ types
+	/// have per-component conversion needs and are deferred.
+	/// </summary>
+	private static void AddDimensionAndInMembers(ClassTemplate cls, PhysicalDimension dim)
+	{
+		cls.Members.Add(new FieldTemplate()
+		{
+			Comments = [$"/// <summary>Gets the physical dimension this quantity belongs to.</summary>"],
+			Keywords = ["public", "override", "DimensionInfo"],
+			Name = $"Dimension => PhysicalDimensions.{dim.Name}",
+		});
+
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments =
+			[
+				"/// <summary>",
+				$"/// Converts this quantity's SI-base value to the value in <paramref name=\"unit\"/>.",
+				"/// Cross-dimension calls (e.g. passing a non-" + dim.Name + " unit) fail at compile time.",
+				"/// </summary>",
+				"/// <param name=\"unit\">The dimensionally-compatible target unit.</param>",
+				"/// <returns>The value expressed in <paramref name=\"unit\"/>.</returns>",
+			],
+			Keywords = ["public", "T"],
+			Name = "In",
+			Parameters =
+			[
+				new ParameterTemplate { Type = $"global::ktsu.Semantics.Quantities.I{dim.Name}Unit", Name = "unit" },
+			],
+			BodyFactory = (body) => body.Write(" => unit.FromBase(Value);"),
+		});
+	}
+
+	private static Dictionary<string, List<T>> GroupBy<T>(List<T> items, Func<T, string> keySelector)
+	{
+		Dictionary<string, List<T>> groups = [];
+		foreach (T item in items)
+		{
+			string key = keySelector(item);
+			if (!groups.TryGetValue(key, out List<T>? group))
+			{
+				group = [];
+				groups[key] = group;
+			}
+
+			group.Add(item);
+		}
+
+		return groups;
+	}
+
+	#endregion
+
+	#region Phase B: Type Generation
+
+	private void EmitV0BaseType(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
+		Dictionary<string, int> typeFormMap,
+		Dictionary<string, UnitDefinition> unitMap)
+	{
+		VectorFormDefinition v0 = dim.Quantities.Vector0!;
+		string typeName = v0.Base;
+		string fullType = $"{typeName}<T>";
+
+		using CodeBlocker cb = CodeBlocker.Create();
+
+		SourceFileTemplate sourceFile = new()
+		{
+			FileName = $"{typeName}.g.cs",
+			Namespace = "ktsu.Semantics.Quantities",
+			Usings = ["System.Numerics"],
+		};
+
+		ClassTemplate cls = new()
+		{
+			Comments =
+			[
+				"/// <summary>",
+				$"/// Magnitude (Vector0) quantity for the {dim.Name} dimension.",
+				"/// </summary>",
+				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
+			],
+			Keywords = ["public", "partial", "record"],
+			Name = fullType,
+			BaseClass = $"PhysicalQuantity<{fullType}, T>",
+			Interfaces = [$"IVector0<{fullType}, T>"],
+			Constraints = ["where T : struct, INumber<T>"],
+		};
+
+		// Zero property (satisfies IVector0)
+		cls.Members.Add(new FieldTemplate()
+		{
+			Comments = ["/// <summary>Gets a quantity with value zero.</summary>"],
+			Keywords = ["public", "static", fullType],
+			Name = "Zero => Create(T.Zero)",
+		});
+
+		// Factory methods for every available unit (#48). The V0 non-negativity invariant from
+		// #50 is enforced by AddUnitFactories — for non-base units the guard runs *after* the
+		// conversion, so an input that is non-negative in its source unit but negative in the
+		// SI base unit (e.g. -300 °C → -26.85 K) still throws.
+		AddUnitFactories(
+			cls,
+			dim.AvailableUnits,
+			unitMap,
+			typeName,
+			fullType,
+			"<see cref=\"" + typeName + "{T}\"/>",
+			applyV0Guard: true);
+
+		// Dimension override + typed In() (#59).
+		AddDimensionAndInMembers(cls, dim);
+
+		// V0 - V0 returns the same V0 of T.Abs(left - right) (locked decision in #52).
+		// We emit this on every V0 base type so the derived operator wins overload resolution
+		// over PhysicalQuantity's plain subtraction (which can produce a negative magnitude
+		// and would trip the non-negativity guard from #50).
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments =
+			[
+				"/// <summary>",
+				$"/// Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.",
+				"/// Magnitude subtraction stays a magnitude (per the unified-vector model).",
+				"/// </summary>",
+			],
+			Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
+			Keywords = ["public", "static", fullType],
+			Name = "operator -",
+			Parameters =
+			[
+				new ParameterTemplate { Type = fullType, Name = "left" },
+				new ParameterTemplate { Type = fullType, Name = "right" },
+			],
+			BodyFactory = (body) => body.Write(" => Create(T.Abs(left.Quantity - right.Quantity));"),
+		});
+
+		// Cross-dimensional operators
+		EmitScalarOperators(cls, typeName, operatorsByOwner, typeFormMap);
+
+
+		sourceFile.Classes.Add(cls);
+		WriteSourceFileTo(cb, sourceFile);
+		context.AddSource(sourceFile.FileName, cb.ToString());
+	}
+
+	private void EmitV1BaseType(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
+		Dictionary<string, int> typeFormMap,
+		Dictionary<string, UnitDefinition> unitMap)
+	{
+		VectorFormDefinition v1 = dim.Quantities.Vector1!;
+		string typeName = v1.Base;
+		string fullType = $"{typeName}<T>";
+		string? v0TypeName = dim.Quantities.Vector0?.Base;
+
+		using CodeBlocker cb = CodeBlocker.Create();
+
+		SourceFileTemplate sourceFile = new()
+		{
+			FileName = $"{typeName}.g.cs",
+			Namespace = "ktsu.Semantics.Quantities",
+			Usings = ["System.Numerics"],
+		};
+
+		ClassTemplate cls = new()
+		{
+			Comments =
+			[
+				"/// <summary>",
+				$"/// Signed one-dimensional (Vector1) quantity for the {dim.Name} dimension.",
+				"/// </summary>",
+				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
+			],
+			Keywords = ["public", "partial", "record"],
+			Name = fullType,
+			BaseClass = $"PhysicalQuantity<{fullType}, T>",
+			Interfaces = [$"IVector1<{fullType}, T>"],
+			Constraints = ["where T : struct, INumber<T>"],
+		};
+
+		// Zero property (satisfies IVector1)
+		cls.Members.Add(new FieldTemplate()
+		{
+			Comments = ["/// <summary>Gets a quantity with value zero.</summary>"],
+			Keywords = ["public", "static", fullType],
+			Name = "Zero => Create(T.Zero)",
+		});
+
+		// Factory methods for every available unit.
+		// V1 quantities are signed; no V0 non-negativity guard.
+		AddUnitFactories(
+			cls,
+			dim.AvailableUnits,
+			unitMap,
+			typeName,
+			fullType,
+			"<see cref=\"" + typeName + "{T}\"/>",
+			applyV0Guard: false);
+
+		// Dimension override + typed In() (#59).
+		AddDimensionAndInMembers(cls, dim);
+
+		// Magnitude method returning V0 base
+		if (v0TypeName != null)
+		{
+			cls.Members.Add(new MethodTemplate()
+			{
+				Comments =
+				[
+					"/// <summary>",
+					$"/// Gets the magnitude of this quantity as a <see cref=\"{v0TypeName}{{T}}\"/>.",
+					"/// </summary>",
+					$"/// <returns>The non-negative magnitude.</returns>",
+				],
+				Keywords = ["public", $"{v0TypeName}<T>"],
+				Name = "Magnitude",
+				Parameters = [],
+				BodyFactory = (body) => body.Write($" => {v0TypeName}<T>.Create(T.Abs(Value));"),
+			});
+		}
+
+		// Cross-dimensional operators
+		EmitScalarOperators(cls, typeName, operatorsByOwner, typeFormMap);
+
+		sourceFile.Classes.Add(cls);
+		WriteSourceFileTo(cb, sourceFile);
+		context.AddSource(sourceFile.FileName, cb.ToString());
+	}
+
+	private void EmitVectorType(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		int dims,
+		VectorFormDefinition form,
+		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
+		Dictionary<string, List<ProductInfo>> productsByOwner,
+		Dictionary<string, int> typeFormMap)
+	{
+		string[] components = dims switch
+		{
+			2 => ["X", "Y"],
+			3 => ["X", "Y", "Z"],
+			4 => ["X", "Y", "Z", "W"],
+			_ => throw new ArgumentOutOfRangeException(nameof(dims)),
+		};
+
+		string typeName = form.Base;
+		string fullType = $"{typeName}<T>";
+		string interfaceName = $"IVector{dims}<{fullType}, T>";
+		string? v0TypeName = dim.Quantities.Vector0?.Base;
+
+		using CodeBlocker cb = CodeBlocker.Create();
+
+		WriteHeaderTo(cb);
+		cb.WriteLine("#pragma warning disable IDE0040 // Accessibility modifiers required");
+		cb.WriteLine("#pragma warning disable CA2225 // Operator overloads have named alternates");
+		cb.NewLine();
+
+		cb.WriteLine("namespace ktsu.Semantics.Quantities;");
+		cb.NewLine();
+		cb.WriteLine("using System;");
+		cb.WriteLine("using System.Numerics;");
+		cb.NewLine();
+
+		cb.WriteLine("/// <summary>");
+		cb.WriteLine($"/// {dims}D vector representation of {dim.Name}.");
+		cb.WriteLine("/// </summary>");
+		cb.WriteLine("/// <typeparam name=\"T\">The numeric component type.</typeparam>");
+		cb.WriteLine($"public partial record {fullType} : {interfaceName}");
+		cb.WriteLine("\twhere T : struct, INumber<T>");
+
+		using (new ScopeWithTrailingSemicolon(cb))
+		{
+			WriteVectorComponentProperties(cb, components);
+			WriteVectorStaticProperties(cb, fullType, components);
+
+			// Typed Magnitude() method returning V0 base
+			if (v0TypeName != null)
+			{
+				cb.WriteLine($"/// <summary>Gets the magnitude as a <see cref=\"{v0TypeName}{{T}}\"/>.</summary>");
+				cb.WriteLine($"public {v0TypeName}<T> Magnitude() => {v0TypeName}<T>.Create(Length());");
+				cb.NewLine();
+			}
+
+			WriteVectorMethods(cb, fullType, components, dims);
+			WriteVectorOperators(cb, fullType, components);
+
+			// Cross-dimensional operators (inlined for VN types)
+			EmitVectorCrossDimOperators(cb, typeName, fullType, components, operatorsByOwner, typeFormMap);
+
+			// Typed dot product methods
+			if (productsByOwner.TryGetValue(typeName, out List<ProductInfo>? products))
+			{
+				foreach (ProductInfo prod in products)
+				{
+					if (prod.Method == "Dot")
+					{
+						string dotExpr = string.Join(" + ", components.Select(c => $"({c} * other.{c})"));
+						cb.WriteLine($"/// <summary>Typed dot product: {typeName} . {prod.OtherTypeName} = {prod.ReturnTypeName}.</summary>");
+						cb.WriteLine($"public {prod.ReturnTypeName}<T> Dot({prod.OtherTypeName}<T> other) => {prod.ReturnTypeName}<T>.Create({dotExpr});");
+						cb.NewLine();
+					}
+					else if (prod.Method == "Cross" && dims == 3)
+					{
+						cb.WriteLine($"/// <summary>Typed cross product: {typeName} x {prod.OtherTypeName} = {prod.ReturnTypeName}.</summary>");
+						cb.WriteLine($"public {prod.ReturnTypeName}<T> Cross({prod.OtherTypeName}<T> other)");
+						using (new Scope(cb))
+						{
+							cb.WriteLine($"return new() {{ X = (Y * other.Z) - (Z * other.Y), Y = (Z * other.X) - (X * other.Z), Z = (X * other.Y) - (Y * other.X) }};");
+						}
+
+						cb.NewLine();
+					}
+				}
+			}
+		}
+
+		context.AddSource($"{typeName}.g.cs", cb.ToString());
+	}
+
+	private void EmitOverloadType(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		int vectorForm,
+		string baseTypeName,
+		OverloadDefinition overload,
+		Dictionary<string, int> typeFormMap,
+		Dictionary<string, UnitDefinition> unitMap)
+	{
+		string typeName = overload.Name;
+		string fullType = $"{typeName}<T>";
+		string baseFullType = $"{baseTypeName}<T>";
+
+		// V0/V1 overloads inherit from PhysicalQuantity
+		if (vectorForm <= 1)
+		{
+			using CodeBlocker cb = CodeBlocker.Create();
+
+			string interfaceName = vectorForm == 0 ? $"IVector0<{fullType}, T>" : $"IVector1<{fullType}, T>";
+
+			SourceFileTemplate sourceFile = new()
+			{
+				FileName = $"{typeName}.g.cs",
+				Namespace = "ktsu.Semantics.Quantities",
+				Usings = ["System.Numerics"],
+			};
+
+			ClassTemplate cls = new()
+			{
+				Comments =
+				[
+					"/// <summary>",
+					$"/// {overload.Description}",
+					$"/// Semantic overload of <see cref=\"{baseTypeName}{{T}}\"/>.",
+					"/// </summary>",
+					"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
+				],
+				Keywords = ["public", "partial", "record"],
+				Name = fullType,
+				BaseClass = $"PhysicalQuantity<{fullType}, T>",
+				Interfaces = [interfaceName],
+				Constraints = ["where T : struct, INumber<T>"],
+			};
+
+			// Zero property
+			cls.Members.Add(new FieldTemplate()
+			{
+				Comments = ["/// <summary>Gets a quantity with value zero.</summary>"],
+				Keywords = ["public", "static", fullType],
+				Name = "Zero => Create(T.Zero)",
+			});
+
+			// Factory methods for every available unit (#48); overloads inherit the dimension's
+			// units. V0 overloads enforce the same non-negativity invariant as their V0 base
+			// type (#50). V0 overloads that declare physicalConstraints.minExclusive in
+			// dimensions.json (#51, e.g. Wavelength, Period, HalfLife) get the stricter
+			// EnsurePositive guard so a zero input is rejected too. V1 overloads accept
+			// any sign.
+			bool strictPositive = vectorForm == 0
+				&& overload.PhysicalConstraints?.MinExclusive == "0";
+			AddUnitFactories(
+				cls,
+				dim.AvailableUnits,
+				unitMap,
+				typeName,
+				fullType,
+				typeName,
+				applyV0Guard: vectorForm == 0,
+				strictPositive: strictPositive);
+
+			// Dimension override + typed In() (#59).
+			AddDimensionAndInMembers(cls, dim);
+
+			// Implicit widening to base type
+			cls.Members.Add(new MethodTemplate()
+			{
+				Comments = [$"/// <summary>Implicit conversion to {baseTypeName}.</summary>"],
+				Keywords = ["public", "static", "implicit", "operator"],
+				Name = baseFullType,
+				Parameters = [new ParameterTemplate { Type = fullType, Name = "value" }],
+				BodyFactory = (body) => body.Write($" => {baseFullType}.Create(value.Value);"),
+			});
+
+			// Explicit narrowing from base type
+			cls.Members.Add(new MethodTemplate()
+			{
+				Comments = [$"/// <summary>Explicit conversion from {baseTypeName}.</summary>"],
+				Keywords = ["public", "static", "explicit", "operator"],
+				Name = fullType,
+				Parameters = [new ParameterTemplate { Type = baseFullType, Name = "value" }],
+				BodyFactory = (body) => body.Write($" => Create(value.Value);"),
+			});
+
+			// Factory-style narrowing from base
+			cls.Members.Add(new MethodTemplate()
+			{
+				Comments = [$"/// <summary>Creates a {typeName} from a {baseTypeName} value.</summary>"],
+				Keywords = ["public", "static", fullType],
+				Name = "From",
+				Parameters = [new ParameterTemplate { Type = baseFullType, Name = "value" }],
+				BodyFactory = (body) => body.Write(" => Create(value.Value);"),
+			});
+
+			// V0 overload subtraction returns the same V0 of T.Abs(left - right) (locked
+			// in #52). The overload-typed operator hides the base PhysicalQuantity's plain
+			// subtraction so overloads stay in their own type and the magnitude invariant
+			// is preserved.
+			if (vectorForm == 0)
+			{
+				cls.Members.Add(new MethodTemplate()
+				{
+					Comments = [$"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.</summary>"],
+					Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
+					Keywords = ["public", "static", fullType],
+					Name = "operator -",
+					Parameters =
+					[
+						new ParameterTemplate { Type = fullType, Name = "left" },
+						new ParameterTemplate { Type = fullType, Name = "right" },
+					],
+					BodyFactory = (body) => body.Write(" => Create(T.Abs(left.Quantity - right.Quantity));"),
+				});
+			}
+
+			// Relationship methods (e.g., Diameter.ToRadius(), Diameter.FromRadius())
+			foreach (KeyValuePair<string, string> rel in overload.Relationships)
+			{
+				// rel.Key is like "toRadius" or "fromRadius", rel.Value is the C# expression
+				string methodName = char.ToUpperInvariant(rel.Key[0]) + rel.Key.Substring(1);
+
+				if (methodName.StartsWith("To", StringComparison.Ordinal))
+				{
+					// Instance method: e.g., ToRadius() returns Radius<T>
+					string targetName = methodName.Substring(2);
+					string targetType = $"{targetName}<T>";
+					string expr = rel.Value; // uses "Value" referring to this instance
+					cls.Members.Add(new MethodTemplate()
+					{
+						Comments = [$"/// <summary>Converts this {typeName} to a {targetName}.</summary>"],
+						Keywords = ["public", targetType],
+						Name = methodName,
+						Parameters = [],
+						BodyFactory = (body) => body.Write($" => {targetType}.Create({expr});"),
+					});
+				}
+				else if (methodName.StartsWith("From", StringComparison.Ordinal))
+				{
+					// Static factory: e.g., FromRadius(Radius<T> value) returns this type
+					string sourceName = methodName.Substring(4);
+					string sourceType = $"{sourceName}<T>";
+					// Replace "Value" with "source.Value" since this is a static method
+					string expr = rel.Value.Replace("Value", "source.Value");
+					cls.Members.Add(new MethodTemplate()
+					{
+						Comments = [$"/// <summary>Creates a {typeName} from a {sourceName} value.</summary>"],
+						Keywords = ["public", "static", fullType],
+						Name = methodName,
+						Parameters = [new ParameterTemplate { Type = sourceType, Name = "source" }],
+						BodyFactory = (body) => body.Write($" => Create({expr});"),
+					});
+				}
+			}
+
+			sourceFile.Classes.Add(cls);
+			WriteSourceFileTo(cb, sourceFile);
+			context.AddSource(sourceFile.FileName, cb.ToString());
+		}
+		else
+		{
+			// V2/3/4 overloads: these are more complex, generate as standalone records
+			// For now, V2+ overloads are rare and can be added later
+			// The strategy document shows them mainly for V3 (Position3D, Translation3D)
+			EmitVectorOverloadType(context, dim, vectorForm, baseTypeName, overload);
+		}
+	}
+
+	private void EmitVectorOverloadType(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		int dims,
+		string baseTypeName,
+		OverloadDefinition overload)
+	{
+		string[] components = dims switch
+		{
+			2 => ["X", "Y"],
+			3 => ["X", "Y", "Z"],
+			4 => ["X", "Y", "Z", "W"],
+			_ => throw new ArgumentOutOfRangeException(nameof(dims)),
+		};
+
+		string typeName = overload.Name;
+		string fullType = $"{typeName}<T>";
+		string baseFullType = $"{baseTypeName}<T>";
+		string interfaceName = $"IVector{dims}<{fullType}, T>";
+
+		using CodeBlocker cb = CodeBlocker.Create();
+
+		WriteHeaderTo(cb);
+		cb.WriteLine("#pragma warning disable IDE0040 // Accessibility modifiers required");
+		cb.WriteLine("#pragma warning disable CA2225 // Operator overloads have named alternates");
+		cb.NewLine();
+
+		cb.WriteLine("namespace ktsu.Semantics.Quantities;");
+		cb.NewLine();
+		cb.WriteLine("using System;");
+		cb.WriteLine("using System.Numerics;");
+		cb.NewLine();
+
+		cb.WriteLine("/// <summary>");
+		cb.WriteLine($"/// {overload.Description}");
+		cb.WriteLine($"/// Semantic overload of <see cref=\"{baseTypeName}{{T}}\"/>.");
+		cb.WriteLine("/// </summary>");
+		cb.WriteLine($"public partial record {fullType} : {interfaceName}");
+		cb.WriteLine("\twhere T : struct, INumber<T>");
+
+		using (new ScopeWithTrailingSemicolon(cb))
+		{
+			WriteVectorComponentProperties(cb, components);
+			WriteVectorStaticProperties(cb, fullType, components);
+			WriteVectorMethods(cb, fullType, components, dims);
+			WriteVectorOperators(cb, fullType, components);
+
+			// Implicit widening to base
+			string baseInit = string.Join(", ", components.Select(c => $"{c} = value.{c}"));
+			cb.WriteLine($"/// <summary>Implicit conversion to {baseTypeName}.</summary>");
+			cb.WriteLine($"public static implicit operator {baseFullType}({fullType} value) => new() {{ {baseInit} }};");
+			cb.NewLine();
+
+			// Explicit narrowing from base
+			cb.WriteLine($"/// <summary>Explicit conversion from {baseTypeName}.</summary>");
+			cb.WriteLine($"public static explicit operator {fullType}({baseFullType} value) => new() {{ {baseInit} }};");
+			cb.NewLine();
+		}
+
+		context.AddSource($"{typeName}.g.cs", cb.ToString());
+	}
+
+	#endregion
+
+	#region Operator Emission Helpers
+
+	private static void EmitScalarOperators(
+		ClassTemplate cls,
+		string ownerTypeName,
+		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
+		Dictionary<string, int> typeFormMap)
+	{
+		if (!operatorsByOwner.TryGetValue(ownerTypeName, out List<OperatorInfo>? ops))
+		{
+			return;
+		}
+
+		foreach (OperatorInfo op in ops)
+		{
+			int leftForm = GetFormOrDefault(typeFormMap, op.LeftTypeName);
+			int rightForm = GetFormOrDefault(typeFormMap, op.RightTypeName);
+
+			// For V0/V1 owner types, use Multiply/Divide helpers when both operands are V0/V1
+			if (leftForm <= 1 && rightForm <= 1)
+			{
+				string helperName = op.Op == "*" ? "Multiply" : "Divide";
+				cls.Members.Add(new MethodTemplate()
+				{
+					Comments =
+					[
+						"/// <summary>",
+						$"/// {(op.Op == "*" ? "Multiplies" : "Divides")} {op.LeftTypeName} {(op.Op == "*" ? "by" : "by")} {op.RightTypeName} to produce {op.ReturnTypeName}.",
+						"/// </summary>",
+					],
+					Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
+					Keywords = ["public", "static", $"{op.ReturnTypeName}<T>"],
+					Name = $"operator {op.Op}",
+					Parameters =
+					[
+						new ParameterTemplate { Type = $"{op.LeftTypeName}<T>", Name = "left" },
+						new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = "right" },
+					],
+					BodyFactory = (body) => body.Write($" => {helperName}<{op.ReturnTypeName}<T>>(left, right);"),
+				});
+			}
+			else
+			{
+				// One operand is V2+ (VN type, multi-component)
+				// The owner is V0/V1, the other operand is VN
+				// Generate inline: left.Value {op} right.X, etc. OR left.X {op} right.Value, etc.
+				EmitInlineCrossDimOp(cls, op, typeFormMap);
+			}
+		}
+	}
+
+	private static void EmitInlineCrossDimOp(
+		ClassTemplate cls,
+		OperatorInfo op,
+		Dictionary<string, int> typeFormMap)
+	{
+		int leftForm = GetFormOrDefault(typeFormMap, op.LeftTypeName);
+		int rightForm = GetFormOrDefault(typeFormMap, op.RightTypeName);
+		int resultForm = GetFormOrDefault(typeFormMap, op.ReturnTypeName);
+
+		string[] resultComponents = resultForm switch
+		{
+			2 => ["X", "Y"],
+			3 => ["X", "Y", "Z"],
+			4 => ["X", "Y", "Z", "W"],
+			_ => [],
+		};
+
+		if (resultComponents.Length == 0)
+		{
+			return;
+		}
+
+		string bodyExpr;
+		if (leftForm >= 2 && rightForm <= 1)
+		{
+			// VN op V0: component-wise with right.Value
+			string initExpr = string.Join(", ", resultComponents.Select(c => $"{c} = left.{c} {op.Op} right.Value"));
+			bodyExpr = $" => new() {{ {initExpr} }};";
+		}
+		else if (leftForm <= 1 && rightForm >= 2)
+		{
+			// V0 op VN: component-wise with left.Value
+			if (op.Op == "*")
+			{
+				string initExpr = string.Join(", ", resultComponents.Select(c => $"{c} = left.Value {op.Op} right.{c}"));
+				bodyExpr = $" => new() {{ {initExpr} }};";
+			}
+			else
+			{
+				// V0 / VN doesn't make physical sense, skip
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments =
+			[
+				"/// <summary>",
+				$"/// {(op.Op == "*" ? "Multiplies" : "Divides")} {op.LeftTypeName} {(op.Op == "*" ? "by" : "by")} {op.RightTypeName} to produce {op.ReturnTypeName}.",
+				"/// </summary>",
+			],
+			Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
+			Keywords = ["public", "static", $"{op.ReturnTypeName}<T>"],
+			Name = $"operator {op.Op}",
+			Parameters =
+			[
+				new ParameterTemplate { Type = $"{op.LeftTypeName}<T>", Name = "left" },
+				new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = "right" },
+			],
+			BodyFactory = (body) => body.Write(bodyExpr),
+		});
+	}
+
+	private static void EmitVectorCrossDimOperators(
+		CodeBlocker cb,
+		string ownerTypeName,
+		string ownerFullType,
+		string[] components,
+		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
+		Dictionary<string, int> typeFormMap)
+	{
+		if (!operatorsByOwner.TryGetValue(ownerTypeName, out List<OperatorInfo>? ops))
+		{
+			return;
+		}
+
+		foreach (OperatorInfo op in ops)
+		{
+			int leftForm = GetFormOrDefault(typeFormMap, op.LeftTypeName);
+			int rightForm = GetFormOrDefault(typeFormMap, op.RightTypeName);
+			int resultForm = GetFormOrDefault(typeFormMap, op.ReturnTypeName);
+
+			string[] resultComponents = resultForm switch
+			{
+				2 => ["X", "Y"],
+				3 => ["X", "Y", "Z"],
+				4 => ["X", "Y", "Z", "W"],
+				_ => [],
+			};
+
+			if (leftForm >= 2 && rightForm <= 1)
+			{
+				// VN * V0 or VN / V0 => VN result
+				string initExpr = string.Join(", ", resultComponents.Select(c => $"{c} = left.{c} {op.Op} right.Value"));
+				cb.WriteLine($"/// <summary>{op.LeftTypeName} {op.Op} {op.RightTypeName} = {op.ReturnTypeName}.</summary>");
+				cb.WriteLine($"public static {op.ReturnTypeName}<T> operator {op.Op}({op.LeftTypeName}<T> left, {op.RightTypeName}<T> right) => new() {{ {initExpr} }};");
+				cb.NewLine();
+			}
+			else if (leftForm <= 1 && rightForm >= 2 && op.Op == "*")
+			{
+				// V0 * VN => VN result (commutative multiplication)
+				string initExpr = string.Join(", ", resultComponents.Select(c => $"{c} = left.Value * right.{c}"));
+				cb.WriteLine($"/// <summary>{op.LeftTypeName} {op.Op} {op.RightTypeName} = {op.ReturnTypeName}.</summary>");
+				cb.WriteLine($"public static {op.ReturnTypeName}<T> operator {op.Op}({op.LeftTypeName}<T> left, {op.RightTypeName}<T> right) => new() {{ {initExpr} }};");
+				cb.NewLine();
+			}
+			else if (leftForm <= 1 && rightForm <= 1)
+			{
+				// Both V0/V1 - use Multiply/Divide. But wait, this owner is a VN type.
+				// This shouldn't happen because VN types don't get V0*V0 operators assigned.
+				// Skip.
+			}
+		}
+	}
+
+	#endregion
+
+	#region Vector Generation Helpers (reused from original)
+
+	private static void WriteVectorComponentProperties(CodeBlocker cb, string[] components)
+	{
+		foreach (string comp in components)
+		{
+			cb.WriteLine($"/// <summary>Gets the {comp} component.</summary>");
+			cb.WriteLine($"public T {comp} {{ get; init; }}");
+			cb.NewLine();
+		}
+	}
+
+	private static void WriteVectorStaticProperties(CodeBlocker cb, string fullType, string[] components)
+	{
+		string zeroInit = string.Join(", ", components.Select(c => $"{c} = T.Zero"));
+		cb.WriteLine("/// <summary>Gets a vector with all components set to zero.</summary>");
+		cb.WriteLine($"public static {fullType} Zero => new() {{ {zeroInit} }};");
+		cb.NewLine();
+
+		string oneInit = string.Join(", ", components.Select(c => $"{c} = T.One"));
+		cb.WriteLine("/// <summary>Gets a vector with all components set to one.</summary>");
+		cb.WriteLine($"public static {fullType} One => new() {{ {oneInit} }};");
+		cb.NewLine();
+
+		foreach (string comp in components)
+		{
+			string unitInit = string.Join(", ", components.Select(c => $"{c} = {(c == comp ? "T.One" : "T.Zero")}"));
+			cb.WriteLine($"/// <summary>Gets the unit vector for the {comp}-axis.</summary>");
+			cb.WriteLine($"public static {fullType} Unit{comp} => new() {{ {unitInit} }};");
+			cb.NewLine();
+		}
+	}
+
+	private static void WriteVectorMethods(CodeBlocker cb, string fullType, string[] components, int dims)
+	{
+		string sumOfSquares = string.Join(" + ", components.Select(c => $"({c} * {c})"));
+
+		cb.WriteLine("/// <summary>Calculates the length of the vector.</summary>");
+		cb.WriteLine("public T Length()");
+		using (new Scope(cb))
+		{
+			cb.WriteLine($"T sum = {sumOfSquares};");
+			cb.WriteLine("double asDouble = double.CreateChecked(sum);");
+			cb.WriteLine("return T.CreateChecked(Math.Sqrt(asDouble));");
+		}
+
+		cb.NewLine();
+
+		cb.WriteLine("/// <summary>Calculates the squared length of the vector.</summary>");
+		cb.WriteLine($"public T LengthSquared() => {sumOfSquares};");
+		cb.NewLine();
+
+		string dotExpr = string.Join(" + ", components.Select(c => $"({c} * other.{c})"));
+		cb.WriteLine("/// <summary>Calculates the dot product of two vectors.</summary>");
+		cb.WriteLine($"public T Dot({fullType} other) => {dotExpr};");
+		cb.NewLine();
+
+		if (dims == 3)
+		{
+			cb.WriteLine("/// <summary>Calculates the cross product of two vectors.</summary>");
+			cb.WriteLine($"public {fullType} Cross({fullType} other)");
+			using (new Scope(cb))
+			{
+				cb.WriteLine($"return new() {{ X = (Y * other.Z) - (Z * other.Y), Y = (Z * other.X) - (X * other.Z), Z = (X * other.Y) - (Y * other.X) }};");
+			}
+
+			cb.NewLine();
+		}
+
+		cb.WriteLine("/// <summary>Calculates the distance between two vectors.</summary>");
+		cb.WriteLine($"public T Distance({fullType} other)");
+		using (new Scope(cb))
+		{
+			foreach (string comp in components)
+			{
+				cb.WriteLine($"T d{comp} = {comp} - other.{comp};");
+			}
+
+			string distSum = string.Join(" + ", components.Select(c => $"(d{c} * d{c})"));
+			cb.WriteLine($"T sum = {distSum};");
+			cb.WriteLine("double asDouble = double.CreateChecked(sum);");
+			cb.WriteLine("return T.CreateChecked(Math.Sqrt(asDouble));");
+		}
+
+		cb.NewLine();
+
+		cb.WriteLine("/// <summary>Calculates the squared distance between two vectors.</summary>");
+		cb.WriteLine($"public T DistanceSquared({fullType} other)");
+		using (new Scope(cb))
+		{
+			foreach (string comp in components)
+			{
+				cb.WriteLine($"T d{comp} = {comp} - other.{comp};");
+			}
+
+			string distSqSum = string.Join(" + ", components.Select(c => $"(d{c} * d{c})"));
+			cb.WriteLine($"return {distSqSum};");
+		}
+
+		cb.NewLine();
+
+		cb.WriteLine("/// <summary>Returns a normalized version of the vector.</summary>");
+		cb.WriteLine($"public {fullType} Normalize()");
+		using (new Scope(cb))
+		{
+			cb.WriteLine("T len = Length();");
+			string normInit = string.Join(", ", components.Select(c => $"{c} = {c} / len"));
+			cb.WriteLine($"return new() {{ {normInit} }};");
+		}
+
+		cb.NewLine();
+	}
+
+	private static void WriteVectorOperators(CodeBlocker cb, string fullType, string[] components)
+	{
+		string addInit = string.Join(", ", components.Select(c => $"{c} = left.{c} + right.{c}"));
+		cb.WriteLine("/// <summary>Adds two vectors.</summary>");
+		cb.WriteLine($"public static {fullType} operator +({fullType} left, {fullType} right) => new() {{ {addInit} }};");
+		cb.NewLine();
+
+		string subInit = string.Join(", ", components.Select(c => $"{c} = left.{c} - right.{c}"));
+		cb.WriteLine("/// <summary>Subtracts two vectors.</summary>");
+		cb.WriteLine($"public static {fullType} operator -({fullType} left, {fullType} right) => new() {{ {subInit} }};");
+		cb.NewLine();
+
+		string mulInit = string.Join(", ", components.Select(c => $"{c} = vector.{c} * scalar"));
+		cb.WriteLine("/// <summary>Multiplies a vector by a scalar.</summary>");
+		cb.WriteLine($"public static {fullType} operator *({fullType} vector, T scalar) => new() {{ {mulInit} }};");
+		cb.NewLine();
+
+		string mulRevInit = string.Join(", ", components.Select(c => $"{c} = scalar * vector.{c}"));
+		cb.WriteLine("/// <summary>Multiplies a scalar by a vector.</summary>");
+		cb.WriteLine($"public static {fullType} operator *(T scalar, {fullType} vector) => new() {{ {mulRevInit} }};");
+		cb.NewLine();
+
+		string divInit = string.Join(", ", components.Select(c => $"{c} = vector.{c} / scalar"));
+		cb.WriteLine("/// <summary>Divides a vector by a scalar.</summary>");
+		cb.WriteLine($"public static {fullType} operator /({fullType} vector, T scalar) => new() {{ {divInit} }};");
+		cb.NewLine();
+
+		string negInit = string.Join(", ", components.Select(c => $"{c} = -vector.{c}"));
+		cb.WriteLine("/// <summary>Negates a vector.</summary>");
+		cb.WriteLine($"public static {fullType} operator -({fullType} vector) => new() {{ {negInit} }};");
+	}
+
+	#endregion
+
+	#region Helper Methods
+
+	private static VectorFormDefinition? GetFormDef(PhysicalDimension dim, int form) => form switch
+	{
+		0 => dim.Quantities.Vector0,
+		1 => dim.Quantities.Vector1,
+		2 => dim.Quantities.Vector2,
+		3 => dim.Quantities.Vector3,
+		4 => dim.Quantities.Vector4,
+		_ => null,
+	};
+
+	private static string? GetBaseTypeName(PhysicalDimension dim, int form) => GetFormDef(dim, form)?.Base;
+
+	private static int GetFormOrDefault(Dictionary<string, int> map, string key)
+	{
+		if (map.TryGetValue(key, out int value))
+		{
+			return value;
+		}
+
+		return -1;
+	}
+
+	#endregion
+
+	#region Internal Types
+
+	private sealed class OperatorInfo(string op, string leftTypeName, string rightTypeName, string returnTypeName, string ownerTypeName)
+	{
+		public string Op { get; } = op;
+		public string LeftTypeName { get; } = leftTypeName;
+		public string RightTypeName { get; } = rightTypeName;
+		public string ReturnTypeName { get; } = returnTypeName;
+		public string OwnerTypeName { get; } = ownerTypeName;
+	}
+
+	private sealed class ProductInfo(string method, string selfTypeName, string otherTypeName, string returnTypeName, int vectorForm)
+	{
+		public string Method { get; } = method;
+		public string SelfTypeName { get; } = selfTypeName;
+		public string OtherTypeName { get; } = otherTypeName;
+		public string ReturnTypeName { get; } = returnTypeName;
+		public int VectorForm { get; } = vectorForm;
+	}
+
+	#endregion
+}

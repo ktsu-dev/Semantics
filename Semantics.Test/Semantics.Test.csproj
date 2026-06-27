@@ -1,5 +1,5 @@
-﻿<Project>
-  <Sdk Name="MStest.Sdk" />
+<Project>
+  <Sdk Name="MSTest.Sdk" />
   <Sdk Name="ktsu.Sdk" />
 
   <PropertyGroup>

@@ -47,7 +47,7 @@ If you're new to the Semantics library, start with [Getting Started](getting-sta
 ✅ **LINQ Support** - Natural collection operations  
 ✅ **Performance** - Span-based operations and minimal allocations  
 ✅ **Enterprise Integration** - ASP.NET Core and dependency injection  
-✅ **Physics Quantities** - 82 quantities across 8 scientific domains  
+✅ **Semantic Quantities** - 82 quantities across 8 scientific domains  
 ✅ **Cross-Domain Physics** - Real-world engineering calculations  
 ✅ **Physical Constants** - Type-safe access to fundamental constants  
 ✅ **Unit Conversions** - Automatic dimensional analysis and safety
