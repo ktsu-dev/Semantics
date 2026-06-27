@@ -15,6 +15,10 @@
     <PackageReference Include="Polyfill" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../Semantics.SourceGenerators/Semantics.SourceGenerators.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <ItemGroup>
     <AdditionalFiles Include="../Semantics.SourceGenerators/Metadata/*.json" />
   </ItemGroup>
   <ItemGroup>
