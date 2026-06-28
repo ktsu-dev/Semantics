@@ -197,16 +197,24 @@ Chord cmaj7 = Chord.Parse("Cmaj7#11");
 IReadOnlyList<int> tones = cmaj7.ChordTones();        // 0,4,7,11,18
 IReadOnlyList<Pitch> voicing = Chord.Parse("C/G").Voice(4); // G3, C4, E4, G4
 
-// Roman-numeral function within a key
-Key cMajor = Key.Create(PitchClass.Create(0), Mode.Major);
-string fn = cMajor.RomanNumeralOf(Chord.Parse("Dm7")); // "ii7"
+// Inversions and transposition
+IReadOnlyList<Pitch> firstInv = Chord.Parse("C").Voice(4, 1);   // E4, G4, C5
+Chord dmaj7 = Chord.Parse("Cmaj7").Transpose(2);                // up a tone
 
-// Rational durations and time signatures (exact for tuplets)
-Duration tripletEighth = Duration.Create(1, 12);       // three fill a quarter
+// Roman-numeral function within a key — and back again
+Key cMajor = Key.Create(PitchClass.Create(0), Mode.Major);
+string fn   = cMajor.RomanNumeralOf(Chord.Parse("Dm7"));        // "ii7"
+Chord ii    = cMajor.ChordFromRomanNumeral("ii7");              // Dm7
+
+// Rational durations, time signatures (exact for tuplets), and real time
+Duration tripletEighth = Duration.Create(1, 12);               // three fill a quarter
 Duration barOf7_8 = TimeSignature.Create(7, 8).BarDuration;
+Note a4 = Note.Create(Pitch.FromName("A4"), Duration.Half, Velocity.Forte);
+double seconds = a4.Seconds(Tempo.Create(120));                // 1.0
+double hz = a4.Pitch.FrequencyHz;                              // 440.0
 ```
 
-The chord parser covers triads, sixths, sevenths (including half-diminished `m7b5` and minor-major `mmaj7`), extensions and altered tensions (`9`/`11`/`13`, `b9`/`#9`/`#11`/`b13`), suspensions, power chords, omit voicings (`no3`/`no5`), and slash bass.
+The chord parser covers triads, sixths, sevenths (including half-diminished `m7b5` and minor-major `mmaj7`), extensions and altered tensions (`9`/`11`/`13`, `b9`/`#9`/`#11`/`b13`), suspensions, power chords, omit voicings (`no3`/`no5`), and slash bass. Beyond the value types there are score primitives (`Note`, `Rest`, `Velocity`, `Tempo`) that convert rhythm to real time, equal-tempered `Pitch`↔frequency (A440), chord inversions, `Transpose` on `Chord`/`Scale`/`Key`, and roman-numeral parsing as the inverse of `RomanNumeralOf`.
 
 ## Dependency injection
 
