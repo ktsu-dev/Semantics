@@ -35,10 +35,20 @@ public class ScaleTests
 	}
 
 	[TestMethod]
-	public void DegreeOf_ChromaticIsNearestLowerDegreeRaised()
+	public void DegreeOf_ChromaticPrefersFlatOfUpperDegree()
 	{
-		ScaleDegree cSharp = CMajor.DegreeOf(PitchClass.Create(1)); // C# = degree 1 sharp
-		Assert.AreEqual(1, cSharp.Degree);
-		Assert.AreEqual(1, cSharp.Alteration);
+		// Db/C# (pitch class 1) sits between degrees 1 and 2; convention spells it flat-2.
+		ScaleDegree flatTwo = CMajor.DegreeOf(PitchClass.Create(1));
+		Assert.AreEqual(2, flatTwo.Degree);
+		Assert.AreEqual(-1, flatTwo.Alteration);
+	}
+
+	[TestMethod]
+	public void DegreeOf_SharpFourIsCloserToFourthRaised()
+	{
+		// F# (pitch class 6) is equidistant from 4 and 5; the tie prefers the flat (♭V).
+		ScaleDegree tritone = CMajor.DegreeOf(PitchClass.Create(6));
+		Assert.AreEqual(5, tritone.Degree);
+		Assert.AreEqual(-1, tritone.Alteration);
 	}
 }

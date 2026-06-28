@@ -4,6 +4,7 @@
 
 namespace ktsu.Semantics.Music;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,8 +49,9 @@ public sealed record Scale
 	/// <summary>Resolves a pitch class to a diatonic degree plus chromatic alteration.</summary>
 	/// <param name="pitchClass">The pitch class to resolve.</param>
 	/// <returns>
-	/// The 1-based degree with alteration 0 for exact members; otherwise the nearest lower
-	/// diatonic degree with a positive (sharp) alteration.
+	/// The 1-based degree with alteration 0 for exact members; otherwise the nearest diatonic
+	/// degree with a chromatic alteration, preferring the flat (upper degree lowered) on a tie
+	/// so chromatic roots spell conventionally (e.g. ♭II, ♭III, ♭VI, ♭VII).
 	/// </returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="pitchClass"/> is null.</exception>
 	public ScaleDegree DegreeOf(PitchClass pitchClass)
@@ -66,18 +68,35 @@ public sealed record Scale
 			}
 		}
 
-		// Not diatonic: attach to the nearest lower diatonic offset, raised.
-		int bestDegree = 1;
-		int bestAlteration = semitone - offsets[0];
+		// Chromatic: spell against the lower neighbour (raised/sharp) or the upper
+		// neighbour (lowered/flat), whichever is closer; tie prefers the flat.
+		int lowerIndex = -1;
 		for (int i = 0; i < offsets.Count; i++)
 		{
-			if (offsets[i] < semitone && (semitone - offsets[i]) <= bestAlteration)
+			if (offsets[i] < semitone)
 			{
-				bestDegree = i + 1;
-				bestAlteration = semitone - offsets[i];
+				lowerIndex = i;
 			}
 		}
 
-		return new ScaleDegree(bestDegree, bestAlteration);
+		int upperIndex = -1;
+		for (int i = offsets.Count - 1; i >= 0; i--)
+		{
+			if (offsets[i] > semitone)
+			{
+				upperIndex = i;
+			}
+		}
+
+		// Wrap around the octave when there is no neighbour on one side.
+		int sharpDegree = lowerIndex >= 0 ? lowerIndex + 1 : offsets.Count;
+		int sharpAlteration = semitone - (lowerIndex >= 0 ? offsets[lowerIndex] : offsets[^1] - 12);
+
+		int flatDegree = upperIndex >= 0 ? upperIndex + 1 : 1;
+		int flatAlteration = semitone - (upperIndex >= 0 ? offsets[upperIndex] : offsets[0] + 12);
+
+		return Math.Abs(flatAlteration) <= Math.Abs(sharpAlteration)
+			? new ScaleDegree(flatDegree, flatAlteration)
+			: new ScaleDegree(sharpDegree, sharpAlteration);
 	}
 }
