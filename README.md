@@ -8,13 +8,14 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/ktsu-dev/Semantics?label=Contributors&logo=github)](https://github.com/ktsu-dev/Semantics/graphs/contributors)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ktsu-dev/Semantics/dotnet.yml?label=Build&logo=github)](https://github.com/ktsu-dev/Semantics/actions)
 
-A .NET library for replacing primitive obsession with strongly-typed, self-validating domain models. Three pillars:
+A .NET library for replacing primitive obsession with strongly-typed, self-validating domain models. Four pillars:
 
 - **Semantic Strings** — type-safe wrappers like `EmailAddress`, `UserId`, `BlogSlug` with attribute-driven validation.
 - **Semantic Paths** — polymorphic `IPath` hierarchy for files, directories, absolute, relative, and combinations.
 - **Semantic Quantities** — a metadata-generated, type-safe quantity system with a unified `IVector0..IVector4` model covering 60+ physical dimensions and 200+ generated types. Optional per-storage-type alias packages let you write `Mass` instead of `Mass<double>`.
+- **Semantic Music** — immutable musical value types: `PitchClass`, `Pitch`, `Interval`, `Mode`/`Scale`, `Chord`, `Key`, rational `Duration`, and `TimeSignature`, with chord-symbol parsing and voicing.
 
-Targets `net8.0`–`net10.0`. Semantic Strings and Paths additionally target `netstandard2.0`/`netstandard2.1`; Semantic Quantities is `net8.0`+ (it requires `INumber<T>`).
+Targets `net8.0`–`net10.0`. Semantic Strings, Paths, and Music additionally target `netstandard2.0`/`netstandard2.1`; Semantic Quantities is `net8.0`+ (it requires `INumber<T>`).
 
 ## Install
 
@@ -174,6 +175,38 @@ The aliases are real `Mass<double>` (etc.), so they interoperate with the whole 
 The unified vector model and its rationale: [`docs/strategy-unified-vector-quantities.md`](docs/strategy-unified-vector-quantities.md).
 A per-domain tour: [`docs/physics-domains-guide.md`](docs/physics-domains-guide.md).
 How the source generator turns `dimensions.json` into types: [`docs/physics-generator.md`](docs/physics-generator.md).
+
+## Semantic music
+
+Immutable, validated musical value types under `ktsu.Semantics.Music`. Pure logic, no I/O. The pitch convention is MIDI 60 = C4.
+
+```csharp
+using ktsu.Semantics.Music;
+
+// Pitches and intervals
+Pitch middleC = Pitch.FromName("C4");          // MIDI 60
+Pitch g4      = middleC.Transpose(7);          // a perfect fifth up
+Interval fifth = Interval.Between(middleC, g4); // +7 semitones
+
+// Scales and modes (diatonic, jazz, symmetric, pentatonic, blues)
+Scale dDorian = Scale.Create(PitchClass.Create(2), Mode.Dorian);
+bool hasF = dDorian.Contains(PitchClass.Create(5));   // true
+
+// Chord-symbol parsing → tones and voicings
+Chord cmaj7 = Chord.Parse("Cmaj7#11");
+IReadOnlyList<int> tones = cmaj7.ChordTones();        // 0,4,7,11,18
+IReadOnlyList<Pitch> voicing = Chord.Parse("C/G").Voice(4); // G3, C4, E4, G4
+
+// Roman-numeral function within a key
+Key cMajor = Key.Create(PitchClass.Create(0), Mode.Major);
+string fn = cMajor.RomanNumeralOf(Chord.Parse("Dm7")); // "ii7"
+
+// Rational durations and time signatures (exact for tuplets)
+Duration tripletEighth = Duration.Create(1, 12);       // three fill a quarter
+Duration barOf7_8 = TimeSignature.Create(7, 8).BarDuration;
+```
+
+The chord parser covers triads, sixths, sevenths (including half-diminished `m7b5` and minor-major `mmaj7`), extensions and altered tensions (`9`/`11`/`13`, `b9`/`#9`/`#11`/`b13`), suspensions, power chords, omit voicings (`no3`/`no5`), and slash bass.
 
 ## Dependency injection
 
