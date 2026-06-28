@@ -20,6 +20,9 @@ public sealed record Interval
 	/// <summary>Gets the interval reduced to within one octave, preserving direction.</summary>
 	public Interval Folded => Create(Direction * (Math.Abs(Semitones) % 12));
 
+	/// <summary>Gets the interval size in cents (100 cents per equal-tempered semitone).</summary>
+	public double Cents => Semitones * 100.0;
+
 	/// <summary>Creates an interval of the given signed semitone size.</summary>
 	/// <param name="semitones">The signed semitone size.</param>
 	/// <returns>A new interval.</returns>

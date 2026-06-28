@@ -81,4 +81,27 @@ public sealed record Pitch
 	/// <param name="semitones">The signed semitone offset.</param>
 	/// <returns>The transposed pitch.</returns>
 	public Pitch Transpose(int semitones) => Create(Midi + semitones);
+
+	/// <summary>The reference tuning: A4 (MIDI 69) in hertz.</summary>
+	public const double ConcertPitchHz = 440.0;
+
+	/// <summary>Gets the fundamental frequency in hertz, using 12-tone equal temperament at A4 = 440 Hz.</summary>
+	public double FrequencyHz => ConcertPitchHz * Math.Pow(2.0, (Midi - 69) / 12.0);
+
+	/// <summary>Returns the pitch whose equal-tempered frequency is nearest to the given frequency.</summary>
+	/// <param name="hertz">The frequency in hertz; must be positive.</param>
+	/// <returns>The nearest pitch.</returns>
+	/// <exception cref="ArgumentOutOfRangeException">
+	/// Thrown when <paramref name="hertz"/> is not positive or maps outside the MIDI range 0..127.
+	/// </exception>
+	public static Pitch FromFrequency(double hertz)
+	{
+		if (hertz <= 0.0 || double.IsNaN(hertz))
+		{
+			throw new ArgumentOutOfRangeException(nameof(hertz), hertz, "Frequency must be positive.");
+		}
+
+		int midi = (int)Math.Round(69 + (12.0 * Math.Log(hertz / ConcertPitchHz, 2.0)), MidpointRounding.AwayFromZero);
+		return Create(midi);
+	}
 }

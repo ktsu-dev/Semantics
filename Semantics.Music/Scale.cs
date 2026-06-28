@@ -35,6 +35,11 @@ public sealed record Scale
 		return new() { Root = root, Mode = mode };
 	}
 
+	/// <summary>Returns the scale transposed by a number of semitones (the mode is unchanged).</summary>
+	/// <param name="semitones">The signed semitone offset.</param>
+	/// <returns>The transposed scale.</returns>
+	public Scale Transpose(int semitones) => Create(PitchClass.Create(Root.Value + semitones), Mode);
+
 	/// <summary>Returns whether the given pitch class is a member of the scale.</summary>
 	/// <param name="pitchClass">The pitch class to test.</param>
 	/// <returns><see langword="true"/> if it is a scale member.</returns>

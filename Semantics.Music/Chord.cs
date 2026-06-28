@@ -338,13 +338,44 @@ public sealed record Chord
 		return [.. offsets];
 	}
 
-	/// <summary>Voices the chord as concrete pitches with the root at the given octave.</summary>
+	/// <summary>Returns the chord transposed by a number of semitones (root and any slash bass move together).</summary>
+	/// <param name="semitones">The signed semitone offset.</param>
+	/// <returns>The transposed chord, preserving quality, seventh, sixth, tensions, and omissions.</returns>
+	public Chord Transpose(int semitones) => this with
+	{
+		Root = PitchClass.Create(Root.Value + semitones),
+		Bass = Bass is null ? null : PitchClass.Create(Bass.Value + semitones),
+	};
+
+	/// <summary>Voices the chord in root position with the root at the given octave.</summary>
 	/// <param name="octave">The octave for the root (e.g. 4 places the root at C4 for a C chord).</param>
 	/// <returns>The pitches, lowest first; a slash bass (if any) sounds one octave below the root.</returns>
-	public IReadOnlyList<Pitch> Voice(int octave)
+	public IReadOnlyList<Pitch> Voice(int octave) => Voice(octave, 0);
+
+	/// <summary>Voices the chord at the given octave and inversion.</summary>
+	/// <param name="octave">The octave for the root (e.g. 4 places the root at C4 for a C chord).</param>
+	/// <param name="inversion">
+	/// The inversion: 0 root position, 1 first inversion, and so on. Each step raises the next-lowest
+	/// chord tone by an octave; the value wraps modulo the number of chord tones.
+	/// </param>
+	/// <returns>The pitches, lowest first; a slash bass (if any) sounds one octave below the root.</returns>
+	public IReadOnlyList<Pitch> Voice(int octave, int inversion)
 	{
+		List<int> tones = [.. ChordTones()];
+		int count = tones.Count;
+		if (count > 0)
+		{
+			int rotation = ((inversion % count) + count) % count;
+			for (int i = 0; i < rotation; i++)
+			{
+				tones[i] += 12;
+			}
+
+			tones.Sort();
+		}
+
 		Pitch rootPitch = Pitch.FromName(Root.Name + octave.ToString(CultureInfo.InvariantCulture));
-		List<Pitch> pitches = [.. ChordTones().Select(offset => rootPitch.Transpose(offset))];
+		List<Pitch> pitches = [.. tones.Select(offset => rootPitch.Transpose(offset))];
 
 		if (Bass is not null)
 		{
