@@ -36,6 +36,11 @@ public sealed record Key
 		return new() { Tonic = tonic, Mode = mode };
 	}
 
+	/// <summary>Returns the key transposed by a number of semitones (the mode is unchanged).</summary>
+	/// <param name="semitones">The signed semitone offset.</param>
+	/// <returns>The transposed key.</returns>
+	public Key Transpose(int semitones) => Create(PitchClass.Create(Tonic.Value + semitones), Mode);
+
 	/// <summary>Resolves a pitch class to its scale-degree function in this key.</summary>
 	/// <param name="root">The pitch class to resolve.</param>
 	/// <returns>The scale degree with any chromatic alteration.</returns>
@@ -75,6 +80,97 @@ public sealed record Key
 
 		_ = sb.Append(QualitySuffix(chord));
 		return sb.ToString();
+	}
+
+	/// <summary>Parses a roman-numeral function relative to this key back into a concrete chord.</summary>
+	/// <param name="numeral">
+	/// A roman numeral such as "Imaj7", "ii7", "V7", "bII", or "vii°7": an optional accidental prefix
+	/// (b/♭ or #/♯), the degree numeral (upper-case major, lower-case minor), then a quality suffix.
+	/// </param>
+	/// <returns>The chord rooted at the resolved scale degree.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="numeral"/> is null.</exception>
+	/// <exception cref="FormatException">Thrown when the numeral cannot be parsed.</exception>
+	public Chord ChordFromRomanNumeral(string numeral)
+	{
+		Ensure.NotNull(numeral);
+		string text = numeral.Trim();
+		if (text.Length == 0)
+		{
+			throw new FormatException("Roman numeral is empty.");
+		}
+
+		int index = 0;
+		int alteration = 0;
+		while (index < text.Length && (text[index] is 'b' or '#' or '♭' or '♯'))
+		{
+			alteration += text[index] is '#' or '♯' ? 1 : -1;
+			index++;
+		}
+
+		(int degree, int length, bool upper) = ParseNumeral(text, index);
+		if (length == 0)
+		{
+			throw new FormatException($"Invalid roman numeral in '{numeral}'.");
+		}
+
+		index += length;
+
+		System.Collections.Generic.IReadOnlyList<PitchClass> pitchClasses = Scale.PitchClasses;
+		if (degree > pitchClasses.Count)
+		{
+			throw new FormatException($"Degree {degree} is out of range for this key.");
+		}
+
+		PitchClass root = PitchClass.Create(pitchClasses[degree - 1].Value + alteration);
+
+		// Normalise the suffix into a chord-symbol body, mapping °/+ onto dim/aug and
+		// supplying a leading "m" for lower-case (minor) numerals.
+		string suffix = text[index..];
+		string quality;
+		if (suffix.StartsWith('°'))
+		{
+			quality = "dim";
+			suffix = suffix[1..];
+		}
+		else if (suffix.StartsWith("dim", StringComparison.Ordinal))
+		{
+			quality = "dim";
+			suffix = suffix[3..];
+		}
+		else if (suffix.StartsWith('+'))
+		{
+			quality = "aug";
+			suffix = suffix[1..];
+		}
+		else if (suffix.StartsWith("aug", StringComparison.Ordinal))
+		{
+			quality = "aug";
+			suffix = suffix[3..];
+		}
+		else
+		{
+			quality = upper ? string.Empty : "m";
+		}
+
+		return Chord.Parse(root.Name + quality + suffix);
+	}
+
+	private static (int Degree, int Length, bool Upper) ParseNumeral(string text, int start)
+	{
+		string[] numerals = ["vii", "vi", "iv", "iii", "ii", "i", "v"];
+		int[] degrees = [7, 6, 4, 3, 2, 1, 5];
+		string lower = text.ToLowerInvariant();
+
+		for (int i = 0; i < numerals.Length; i++)
+		{
+			string token = numerals[i];
+			if (start + token.Length <= lower.Length && lower.Substring(start, token.Length) == token)
+			{
+				return (degrees[i], token.Length, char.IsUpper(text[start]));
+			}
+		}
+
+		return (0, 0, false);
 	}
 
 	private static string QualitySuffix(Chord chord)
