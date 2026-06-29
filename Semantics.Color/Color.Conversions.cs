@@ -122,6 +122,26 @@ public readonly partial record struct Color
 	/// <returns>The linear-RGB color.</returns>
 	public static Color FromOklch(Oklch oklch, double a = 1.0) => oklch.ToOklab().ToColor(a);
 
+	/// <summary>Converts this linear color to <see cref="Hsl"/> (via sRGB).</summary>
+	/// <returns>The HSL equivalent.</returns>
+	public Hsl ToHsl() => Hsl.FromSrgb(ToSrgb());
+
+	/// <summary>Creates a linear color from an <see cref="Hsl"/> value (via sRGB).</summary>
+	/// <param name="hsl">The HSL color.</param>
+	/// <param name="a">Straight alpha (default 1.0).</param>
+	/// <returns>The linear-RGB color.</returns>
+	public static Color FromHsl(Hsl hsl, double a = 1.0) => FromSrgb(hsl.ToSrgb(), a);
+
+	/// <summary>Converts this linear color to <see cref="Hsv"/> (via sRGB).</summary>
+	/// <returns>The HSV equivalent.</returns>
+	public Hsv ToHsv() => Hsv.FromSrgb(ToSrgb());
+
+	/// <summary>Creates a linear color from an <see cref="Hsv"/> value (via sRGB).</summary>
+	/// <param name="hsv">The HSV color.</param>
+	/// <param name="a">Straight alpha (default 1.0).</param>
+	/// <returns>The linear-RGB color.</returns>
+	public static Color FromHsv(Hsv hsv, double a = 1.0) => FromSrgb(hsv.ToSrgb(), a);
+
 	private static byte ToByte(double channel)
 	{
 		double scaled = Math.Round(Clamp01(channel) * 255.0);
