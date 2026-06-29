@@ -5,7 +5,6 @@
 namespace ktsu.Semantics.Color;
 
 using System;
-using System.Globalization;
 using System.Numerics;
 
 public readonly partial record struct Color
@@ -100,7 +99,7 @@ public readonly partial record struct Color
 	}
 
 	private static byte ParseByte(string hex, int index) =>
-		byte.Parse(hex.AsSpan(index, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+		Convert.ToByte(hex.Substring(index, 2), 16);
 
 	/// <summary>Converts this linear color to <see cref="Oklab"/>.</summary>
 	/// <returns>The Oklab equivalent.</returns>
