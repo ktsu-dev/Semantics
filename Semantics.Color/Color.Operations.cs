@@ -5,6 +5,7 @@
 namespace ktsu.Semantics.Color;
 
 using System;
+using System.Collections.Generic;
 
 public readonly partial record struct Color
 {
@@ -100,5 +101,71 @@ public readonly partial record struct Color
 
 		Color Candidate(Oklab source, double lightness) =>
 			FromOklab(new Oklab(lightness, source.A, source.B), alpha).Clamp();
+	}
+
+	/// <summary>Computes the perceptual (Oklab Euclidean) distance to another color.</summary>
+	/// <param name="other">The other color.</param>
+	/// <returns>The Oklab distance.</returns>
+	public double DistanceTo(Color other)
+	{
+		Oklab a = ToOklab();
+		Oklab b = other.ToOklab();
+		double dl = a.L - b.L;
+		double da = a.A - b.A;
+		double db = a.B - b.B;
+		return Math.Sqrt((dl * dl) + (da * da) + (db * db));
+	}
+
+	/// <summary>Mixes this color with another in Oklab space (perceptually uniform).</summary>
+	/// <param name="other">The other color.</param>
+	/// <param name="t">The interpolation factor, 0 = this, 1 = other.</param>
+	/// <returns>The mixed color.</returns>
+	public Color MixOklab(Color other, double t)
+	{
+		Oklab a = ToOklab();
+		Oklab b = other.ToOklab();
+		double inv = 1.0 - t;
+		Oklab mixed = new(
+			(a.L * inv) + (b.L * t),
+			(a.A * inv) + (b.A * t),
+			(a.B * inv) + (b.B * t));
+		return FromOklab(mixed, (A * inv) + (other.A * t));
+	}
+
+	/// <summary>Linearly interpolates this color with another in linear-RGB space.</summary>
+	/// <param name="other">The other color.</param>
+	/// <param name="t">The interpolation factor, 0 = this, 1 = other.</param>
+	/// <returns>The interpolated color.</returns>
+	public Color Lerp(Color other, double t)
+	{
+		double inv = 1.0 - t;
+		return new Color(
+			(R * inv) + (other.R * t),
+			(G * inv) + (other.G * t),
+			(B * inv) + (other.B * t),
+			(A * inv) + (other.A * t));
+	}
+
+	/// <summary>Builds a perceptually-uniform (Oklab) gradient from this color to another.</summary>
+	/// <param name="to">The end color.</param>
+	/// <param name="steps">The number of colors to produce (at least 2).</param>
+	/// <returns>The gradient, inclusive of both endpoints.</returns>
+	/// <exception cref="ArgumentException">Thrown when <paramref name="steps"/> is less than 2.</exception>
+	public IReadOnlyList<Color> Gradient(Color to, int steps)
+	{
+		if (steps < 2)
+		{
+			throw new ArgumentException("A gradient needs at least 2 steps.", nameof(steps));
+		}
+
+		Color[] result = new Color[steps];
+		result[0] = this;
+		result[steps - 1] = to;
+		for (int i = 1; i < steps - 1; i++)
+		{
+			result[i] = MixOklab(to, i / (double)(steps - 1));
+		}
+
+		return result;
 	}
 }
