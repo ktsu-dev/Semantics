@@ -1,11 +1,16 @@
-## v2.2.0 (minor)
+## v2.3.0 (minor)
 
-Changes since v2.1.0:
+Changes since v2.2.0:
 
-- docs: cover Semantics.Music score primitives, frequency, inversions, roman parsing ([@matt-edmondson](https://github.com/matt-edmondson))
-- [minor] feat(music): score primitives, frequency bridge, inversions/transpose, roman-numeral parsing ([@matt-edmondson](https://github.com/matt-edmondson))
-- feat(music): parse roman numerals back into chords (inverse of RomanNumeralOf) ([@matt-edmondson](https://github.com/matt-edmondson))
-- feat(music): add chord inversions and Transpose on Chord/Scale/Key ([@matt-edmondson](https://github.com/matt-edmondson))
-- feat(music): add Pitch<->frequency (A440) and interval cents ([@matt-edmondson](https://github.com/matt-edmondson))
-- feat(music): add score primitives (Velocity, Tempo, Note, Rest) with real-time conversion ([@matt-edmondson](https://github.com/matt-edmondson))
+- docs(color): correct Oklab round-trip tolerance note in plan ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(color): add NamedColors and gamma-regression tests ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(color): add Oklab mix, lerp, distance, and gradient ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(color): add WCAG luminance, contrast, and accessibility adjustment ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(color): add HSL and HSV conversions ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(color): add Oklab and Oklch perceptual spaces ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(color): add hex and byte conversions (sRGB-interpreted) ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(color): add Srgb space and gamma-correct sRGB<->linear boundary ([@matt-edmondson](https://github.com/matt-edmondson))
+- docs(color): add semantic-domains roadmap, Semantics.Color spec and plan ([@matt-edmondson](https://github.com/matt-edmondson))
+- style(color): strip UTF-8 BOM and add final newline (editorconfig) ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(color): scaffold Semantics.Color with canonical linear Color type ([@matt-edmondson](https://github.com/matt-edmondson))
 
