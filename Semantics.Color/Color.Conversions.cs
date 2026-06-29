@@ -102,6 +102,26 @@ public readonly partial record struct Color
 	private static byte ParseByte(string hex, int index) =>
 		byte.Parse(hex.AsSpan(index, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 
+	/// <summary>Converts this linear color to <see cref="Oklab"/>.</summary>
+	/// <returns>The Oklab equivalent.</returns>
+	public Oklab ToOklab() => Oklab.FromColor(this);
+
+	/// <summary>Creates a linear color from an <see cref="Oklab"/> value.</summary>
+	/// <param name="oklab">The Oklab color.</param>
+	/// <param name="a">Straight alpha (default 1.0).</param>
+	/// <returns>The linear-RGB color.</returns>
+	public static Color FromOklab(Oklab oklab, double a = 1.0) => oklab.ToColor(a);
+
+	/// <summary>Converts this linear color to <see cref="Oklch"/>.</summary>
+	/// <returns>The Oklch equivalent.</returns>
+	public Oklch ToOklch() => Oklab.FromColor(this).ToOklch();
+
+	/// <summary>Creates a linear color from an <see cref="Oklch"/> value.</summary>
+	/// <param name="oklch">The Oklch color.</param>
+	/// <param name="a">Straight alpha (default 1.0).</param>
+	/// <returns>The linear-RGB color.</returns>
+	public static Color FromOklch(Oklch oklch, double a = 1.0) => oklch.ToOklab().ToColor(a);
+
 	private static byte ToByte(double channel)
 	{
 		double scaled = Math.Round(Clamp01(channel) * 255.0);
