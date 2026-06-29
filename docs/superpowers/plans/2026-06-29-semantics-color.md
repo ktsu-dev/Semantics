@@ -1718,4 +1718,4 @@ git commit -m "feat(color): add NamedColors and gamma-regression tests"
 
 - `dotnet test` uses the Microsoft.Testing.Platform runner (MSTest.Sdk). The `--filter "FullyQualifiedName~..."` syntax matches by substring; a `|` separates alternatives.
 - After Task 1, every subsequent task's targeted test run also recompiles the whole library, so a break in any partial surfaces immediately.
-- If a round-trip test fails by a hair above tolerance on a specific TFM, do not loosen the tolerance — investigate; the conversions are exact-by-construction and should round-trip to ~1e-9 in `double`.
+- Round-trip tolerances: sRGB↔linear and HSL/HSV↔sRGB conversions are exact-by-construction and round-trip to ~1e-9 in `double`. **Oklab/Oklch are NOT** — the published Ottosson forward and inverse matrices are independently-rounded 10-significant-digit constants that do not invert to exact identity, so Oklab round-trips carry ~1e-7 error; use a `1e-6` tolerance there (this was corrected during implementation; the original `1e-9` note was a spec error). If a non-Oklab round-trip drifts above ~1e-9, investigate rather than loosen — it indicates a transcription bug.
