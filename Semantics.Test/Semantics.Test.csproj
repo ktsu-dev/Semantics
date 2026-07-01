@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Semantics.Quantities\Semantics.Quantities.csproj" />
     <ProjectReference Include="..\Semantics.Music\Semantics.Music.csproj" />
     <ProjectReference Include="..\Semantics.Color\Semantics.Color.csproj" />
+    <ProjectReference Include="..\Semantics.Strings.Identifiers\Semantics.Strings.Identifiers.csproj" />
   </ItemGroup>
 
 </Project>
