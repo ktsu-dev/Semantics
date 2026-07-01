@@ -145,8 +145,10 @@ Each class covers:
   `ArgumentException` (IBAN/ISBN/CreditCard).
 - **Structural invalid** — wrong length, illegal characters, wrong segment count (JWT) throw
   `ArgumentException`.
-- **`As<T>` round-trip** — converting from a plain `SemanticString` or between compatible types
-  preserves the value.
+- **`As<T>` round-trip** — a single representative self-conversion round-trip (on `Uuid`) confirms
+  `As<T>` re-validates and preserves the value. A cross-type `As<Source, Target>` test is intentionally
+  omitted from the roster: it needs a second in-package type that accepts the same value, which the
+  identifier set does not provide, and the framework itself already covers general `As<T>` behavior.
 
 Reference vectors (real, well-known): `Uuid` — `123e4567-e89b-12d3-a456-426614174000` and nil
 `00000000-0000-0000-0000-000000000000`; `Ulid` — `01ARZ3NDEKTSV4RRFFQ69G5FAV`; `Iban` —
