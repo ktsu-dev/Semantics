@@ -13,7 +13,7 @@ A .NET library for replacing primitive obsession with strongly-typed, self-valid
 - **Semantic Strings** — type-safe wrappers like `EmailAddress`, `UserId`, `BlogSlug` with attribute-driven validation, plus a batteries-included `Semantics.Strings.Identifiers` package (`Uuid`, `Ulid`, `Iban`, `Isbn`, `CreditCardNumber`, `JwtToken`).
 - **Semantic Paths** — polymorphic `IPath` hierarchy for files, directories, absolute, relative, and combinations.
 - **Semantic Quantities** — a metadata-generated, type-safe quantity system with a unified `IVector0..IVector4` model covering 60+ physical dimensions and 200+ generated types. Optional per-storage-type alias packages let you write `Mass` instead of `Mass<double>`.
-- **Semantic Music** — immutable musical value types: `PitchClass`, `Pitch`, `Interval`, `Mode`/`Scale`, `Chord`, `Key`, rational `Duration`, and `TimeSignature`, with chord-symbol parsing and voicing.
+- **Semantic Music** — immutable musical value types: `PitchClass`, `Pitch`, `Interval`, `Mode`/`Scale`, `Chord`, `Key`, rational `Duration`, and `TimeSignature`, with chord-symbol parsing and voicing, plus a harmonic/structural **analysis** layer (progressions, cadences, key inference, sections, forms).
 
 Targets `net8.0`–`net10.0`. Semantic Strings, Paths, and Music additionally target `netstandard2.0`/`netstandard2.1`; Semantic Quantities is `net8.0`+ (it requires `INumber<T>`).
 
@@ -233,6 +233,34 @@ double hz = a4.Pitch.FrequencyHz;                              // 440.0
 ```
 
 The chord parser covers triads, sixths, sevenths (including half-diminished `m7b5` and minor-major `mmaj7`), extensions and altered tensions (`9`/`11`/`13`, `b9`/`#9`/`#11`/`b13`), suspensions, power chords, omit voicings (`no3`/`no5`), and slash bass. Beyond the value types there are score primitives (`Note`, `Rest`, `Velocity`, `Tempo`) that convert rhythm to real time, equal-tempered `Pitch`↔frequency (A440), chord inversions, `Transpose` on `Chord`/`Scale`/`Key`, and roman-numeral parsing as the inverse of `RomanNumeralOf`.
+
+### Analysis: progressions, sections, and forms
+
+Above the single-event types is an analysis layer that models harmony nested inside structure. A `Progression` is an ordered chord sequence with bar-based harmonic rhythm; it computes roman numerals, functional roles, cadences, an inferred key, and chromatic classifications. `Section`s group progressions into labelled units, an `Arrangement` orders them into a piece, and `Form` extracts the structural letter-pattern and names it.
+
+```csharp
+using ktsu.Semantics.Music;
+
+// A chord progression with bar-based harmonic rhythm ("|" = barline)
+Progression prog = Progression.Parse("Dm7 | G7 | Cmaj7");
+Key key = prog.InferKey()!;                                     // C major (quality-weighted fit)
+
+IReadOnlyList<string> roman = prog.RomanNumerals(key);          // "ii7", "V7", "Imaj7"
+IReadOnlyList<HarmonicFunction> fns = prog.Functions(key);      // Predominant, Dominant, Tonic
+IReadOnlyList<CadenceInstance> cadences = prog.Cadences(key);   // Authentic (V→I) at the resolution
+
+// Chromatic analysis: secondary dominants, borrowed chords, Neapolitan
+IReadOnlyList<ChromaticAnalysis> chromatic =
+    Progression.Parse("C | D7 | G7 | C").ChromaticChords(key);  // D7 → "V/V" (SecondaryDominant)
+
+// Structure: sections → arrangement → form
+Section verse  = Section.Create(SectionType.Verse,  Progression.Parse("C | Am | F | G"));
+Section bridge = Section.Create(SectionType.Bridge, Progression.Parse("F | G | Em | Am"));
+Arrangement song = Arrangement.Create(key, [verse, verse, bridge, verse]);
+Form form = song.Form;                                          // Pattern "AABA", Name ThirtyTwoBarAABA
+```
+
+Cadences are classified by scale-degree motion (authentic, plagal, half, deceptive); key inference is quality-weighted so it distinguishes a key from its relative/parallel neighbours; `Form` recognizes named forms including AABA, ternary, binary, rondo, strophic, and the 12-bar blues progression template.
 
 ## Dependency injection
 
