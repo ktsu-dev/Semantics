@@ -15,10 +15,8 @@ public class ProgressionTests
 		ChordEvent chordEvent = ChordEvent.Create(Chord.Parse("Cmaj7"), Duration.Half);
 		Assert.AreEqual(0, chordEvent.Chord.Root.Value);
 		Assert.AreEqual(Duration.Half, chordEvent.Duration);
-#pragma warning disable CA1859 // Intentionally testing interface contract via IMusicalEvent reference
-		IMusicalEvent asEvent = chordEvent;
-#pragma warning restore CA1859
-		Assert.AreEqual(Duration.Half, asEvent.Duration);
+		static Duration DurationOf(IMusicalEvent musicalEvent) => musicalEvent.Duration;
+		Assert.AreEqual(Duration.Half, DurationOf(chordEvent));
 	}
 
 	[TestMethod]
