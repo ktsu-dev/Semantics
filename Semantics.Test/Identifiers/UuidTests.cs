@@ -55,4 +55,13 @@ public sealed class UuidTests
 		Assert.IsFalse(created);
 		Assert.IsNull(result);
 	}
+
+	[TestMethod]
+	public void As_RoundTrip_PreservesValue()
+	{
+		Uuid uuid = Uuid.Create("123e4567-e89b-12d3-a456-426614174000");
+		Uuid roundTripped = uuid.As<Uuid>();
+		Assert.AreEqual(uuid, roundTripped);
+		Assert.AreEqual(uuid.WeakString, roundTripped.WeakString);
+	}
 }
