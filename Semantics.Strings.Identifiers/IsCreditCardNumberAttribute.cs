@@ -65,4 +65,4 @@ public sealed class IsCreditCardNumberAttribute : NativeSemanticStringValidation
 			return (sum % 10) == 0;
 		}
 	}
-}
+}
