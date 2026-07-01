@@ -15,7 +15,7 @@ Reference spec: `docs/superpowers/specs/2026-07-01-concrete-semantic-strings-des
 Every task's requirements implicitly include this section.
 
 - **TFMs (package):** `net10.0;net9.0;net8.0;netstandard2.0;netstandard2.1`. **TFM (test project):** `net10.0` only.
-- **Namespace:** all new production files use `namespace ktsu.Semantics.Strings.Identifiers;` (file-scoped) and add `using ktsu.Semantics.Strings;` to reach the base types. Test files use `namespace ktsu.Semantics.Test.Identifiers;` (repo convention: `ktsu.Semantics.Test.<Area>`), omit the MSTest `using` (it is a global using from `MSTest.Sdk`), and add `using System;` where a `System` type (e.g. `ArgumentException`) is used.
+- **Namespace:** all new production files use `namespace ktsu.Semantics.Strings.Identifiers;` (file-scoped) and add `using ktsu.Semantics.Strings;` to reach the base types. Test files use `namespace ktsu.Semantics.Test.Identifiers;` (repo convention: `ktsu.Semantics.Test.<Area>`) with a single `using ktsu.Semantics.Strings.Identifiers;`. Do **not** add `using System;` or `using Microsoft.VisualStudio.TestTools.UnitTesting;` — both are global usings in the test project (`MSTest.Sdk`), so `System`, `ArgumentException`, `[TestClass]`, `[TestMethod]`, and `Assert` are already in scope; an explicit import trips IDE0005 (unused using), which is a warning-as-error. (Verified against `Semantics.Test/Identifiers/UuidTests.cs`, Task 2.)
 - **File header (verbatim, every `.cs` file):**
   ```csharp
   // Copyright (c) ktsu.dev
@@ -36,6 +36,8 @@ Every task's requirements implicitly include this section.
 - **Regex rules:** anchored patterns, always pass `RegexOptions.None, TimeSpan.FromSeconds(1)` (matches `RegexMatchAttribute`).
 - **Empty-string rule:** identifier attributes reject `""` — do **not** add an `if (string.IsNullOrEmpty(value)) return Success();` guard. Each format/structural/checksum check already fails on empty, so `X.Create("")` throws `ArgumentException`.
 - **Factory surface (inherited, do not redefine):** `X.Create(string)` throws `ArgumentException` on invalid; `X.TryCreate(string, out X?)` returns `bool`; `X.Create(string)` applies `MakeCanonical` then validates. Records get value equality for free.
+- **Assert helper:** this repo's MSTest uses `Assert.ThrowsExactly<ArgumentException>(() => ...)` (not `ThrowsException`). `Create` throws exactly `ArgumentException` for invalid non-null input, so `ThrowsExactly` is correct.
+- **`MakeCanonical` guard:** every `MakeCanonical(string input)` override must call `Ensure.NotNull(input);` as its first statement (satisfies CA1062; `Ensure` comes from Polyfill and needs no `using`), then `return` the normalized value — hence a block body, not an expression body. Types with no normalization (`JwtToken`) omit the override entirely.
 - **Build/test commands:**
   - Build package: `dotnet build Semantics.Strings.Identifiers/Semantics.Strings.Identifiers.csproj`
   - Run one test class: `dotnet test Semantics.Test/Semantics.Test.csproj --filter "FullyQualifiedName~<ClassName>"`
@@ -141,8 +143,6 @@ git commit -m "chore(strings): scaffold Semantics.Strings.Identifiers package"
 
 namespace ktsu.Semantics.Test.Identifiers;
 
-using System;
-
 using ktsu.Semantics.Strings.Identifiers;
 
 [TestClass]
@@ -172,19 +172,19 @@ public sealed class UuidTests
 	[TestMethod]
 	public void Create_MissingSegment_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Uuid.Create("123e4567-e89b-12d3-a456"));
+		Assert.ThrowsExactly<ArgumentException>(() => Uuid.Create("123e4567-e89b-12d3-a456"));
 	}
 
 	[TestMethod]
 	public void Create_NonHexCharacter_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Uuid.Create("123e4567-e89b-12d3-a456-42661417400g"));
+		Assert.ThrowsExactly<ArgumentException>(() => Uuid.Create("123e4567-e89b-12d3-a456-42661417400g"));
 	}
 
 	[TestMethod]
 	public void Create_Empty_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Uuid.Create(string.Empty));
+		Assert.ThrowsExactly<ArgumentException>(() => Uuid.Create(string.Empty));
 	}
 
 	[TestMethod]
@@ -304,8 +304,6 @@ git commit -m "feat(strings): add Uuid identifier type"
 
 namespace ktsu.Semantics.Test.Identifiers;
 
-using System;
-
 using ktsu.Semantics.Strings.Identifiers;
 
 [TestClass]
@@ -328,25 +326,25 @@ public sealed class UlidTests
 	[TestMethod]
 	public void Create_WrongLength_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Ulid.Create("01ARZ3NDEKTSV4RRFFQ69G5FA"));
+		Assert.ThrowsExactly<ArgumentException>(() => Ulid.Create("01ARZ3NDEKTSV4RRFFQ69G5FA"));
 	}
 
 	[TestMethod]
 	public void Create_ExcludedLetterI_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Ulid.Create("01ARZ3NDEKTSV4RRFFQ69G5FAI"));
+		Assert.ThrowsExactly<ArgumentException>(() => Ulid.Create("01ARZ3NDEKTSV4RRFFQ69G5FAI"));
 	}
 
 	[TestMethod]
 	public void Create_TimestampOverflow_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Ulid.Create("81ARZ3NDEKTSV4RRFFQ69G5FAV"));
+		Assert.ThrowsExactly<ArgumentException>(() => Ulid.Create("81ARZ3NDEKTSV4RRFFQ69G5FAV"));
 	}
 
 	[TestMethod]
 	public void Create_Empty_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Ulid.Create(string.Empty));
+		Assert.ThrowsExactly<ArgumentException>(() => Ulid.Create(string.Empty));
 	}
 }
 ```
@@ -418,7 +416,11 @@ public sealed record Ulid : SemanticString<Ulid>
 	/// <summary>Normalizes the input by trimming and uppercasing.</summary>
 	/// <param name="input">The raw input string.</param>
 	/// <returns>The canonical ULID string.</returns>
-	protected override string MakeCanonical(string input) => input.Trim().ToUpperInvariant();
+	protected override string MakeCanonical(string input)
+	{
+		Ensure.NotNull(input);
+		return input.Trim().ToUpperInvariant();
+	}
 }
 ```
 
@@ -457,8 +459,6 @@ git commit -m "feat(strings): add Ulid identifier type"
 
 namespace ktsu.Semantics.Test.Identifiers;
 
-using System;
-
 using ktsu.Semantics.Strings.Identifiers;
 
 [TestClass]
@@ -481,25 +481,25 @@ public sealed class CreditCardNumberTests
 	[TestMethod]
 	public void Create_FailingLuhn_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => CreditCardNumber.Create("4111111111111112"));
+		Assert.ThrowsExactly<ArgumentException>(() => CreditCardNumber.Create("4111111111111112"));
 	}
 
 	[TestMethod]
 	public void Create_TooShort_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => CreditCardNumber.Create("411111111111"));
+		Assert.ThrowsExactly<ArgumentException>(() => CreditCardNumber.Create("411111111111"));
 	}
 
 	[TestMethod]
 	public void Create_NonDigit_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => CreditCardNumber.Create("4111a11111111111"));
+		Assert.ThrowsExactly<ArgumentException>(() => CreditCardNumber.Create("4111a11111111111"));
 	}
 
 	[TestMethod]
 	public void Create_Empty_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => CreditCardNumber.Create(string.Empty));
+		Assert.ThrowsExactly<ArgumentException>(() => CreditCardNumber.Create(string.Empty));
 	}
 }
 ```
@@ -606,8 +606,11 @@ public sealed record CreditCardNumber : SemanticString<CreditCardNumber>
 	/// <summary>Normalizes the input by stripping spaces and hyphens.</summary>
 	/// <param name="input">The raw input string.</param>
 	/// <returns>The digit-only canonical form.</returns>
-	protected override string MakeCanonical(string input) =>
-		input.Replace(" ", string.Empty).Replace("-", string.Empty);
+	protected override string MakeCanonical(string input)
+	{
+		Ensure.NotNull(input);
+		return input.Replace(" ", string.Empty).Replace("-", string.Empty);
+	}
 }
 ```
 
@@ -646,8 +649,6 @@ git commit -m "feat(strings): add CreditCardNumber identifier type"
 
 namespace ktsu.Semantics.Test.Identifiers;
 
-using System;
-
 using ktsu.Semantics.Strings.Identifiers;
 
 [TestClass]
@@ -677,25 +678,25 @@ public sealed class IsbnTests
 	[TestMethod]
 	public void Create_BadIsbn10CheckDigit_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Isbn.Create("0-306-40615-3"));
+		Assert.ThrowsExactly<ArgumentException>(() => Isbn.Create("0-306-40615-3"));
 	}
 
 	[TestMethod]
 	public void Create_BadIsbn13CheckDigit_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Isbn.Create("978-0-306-40615-8"));
+		Assert.ThrowsExactly<ArgumentException>(() => Isbn.Create("978-0-306-40615-8"));
 	}
 
 	[TestMethod]
 	public void Create_WrongLength_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Isbn.Create("123456789012"));
+		Assert.ThrowsExactly<ArgumentException>(() => Isbn.Create("123456789012"));
 	}
 
 	[TestMethod]
 	public void Create_Empty_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Isbn.Create(string.Empty));
+		Assert.ThrowsExactly<ArgumentException>(() => Isbn.Create(string.Empty));
 	}
 }
 ```
@@ -819,8 +820,11 @@ public sealed record Isbn : SemanticString<Isbn>
 	/// <summary>Normalizes the input by stripping hyphens/spaces and uppercasing.</summary>
 	/// <param name="input">The raw input string.</param>
 	/// <returns>The canonical ISBN string.</returns>
-	protected override string MakeCanonical(string input) =>
-		input.Replace("-", string.Empty).Replace(" ", string.Empty).ToUpperInvariant();
+	protected override string MakeCanonical(string input)
+	{
+		Ensure.NotNull(input);
+		return input.Replace("-", string.Empty).Replace(" ", string.Empty).ToUpperInvariant();
+	}
 }
 ```
 
@@ -859,8 +863,6 @@ git commit -m "feat(strings): add Isbn identifier type"
 
 namespace ktsu.Semantics.Test.Identifiers;
 
-using System;
-
 using ktsu.Semantics.Strings.Identifiers;
 
 [TestClass]
@@ -883,25 +885,25 @@ public sealed class IbanTests
 	[TestMethod]
 	public void Create_BadChecksum_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Iban.Create("GB82WEST12345698765431"));
+		Assert.ThrowsExactly<ArgumentException>(() => Iban.Create("GB82WEST12345698765431"));
 	}
 
 	[TestMethod]
 	public void Create_BadStructure_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Iban.Create("1234WEST12345698765432"));
+		Assert.ThrowsExactly<ArgumentException>(() => Iban.Create("1234WEST12345698765432"));
 	}
 
 	[TestMethod]
 	public void Create_TooShort_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Iban.Create("GB82WEST1234"));
+		Assert.ThrowsExactly<ArgumentException>(() => Iban.Create("GB82WEST1234"));
 	}
 
 	[TestMethod]
 	public void Create_Empty_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => Iban.Create(string.Empty));
+		Assert.ThrowsExactly<ArgumentException>(() => Iban.Create(string.Empty));
 	}
 }
 ```
@@ -1004,8 +1006,11 @@ public sealed record Iban : SemanticString<Iban>
 	/// <summary>Normalizes the input by stripping spaces and uppercasing.</summary>
 	/// <param name="input">The raw input string.</param>
 	/// <returns>The canonical IBAN string.</returns>
-	protected override string MakeCanonical(string input) =>
-		input.Replace(" ", string.Empty).ToUpperInvariant();
+	protected override string MakeCanonical(string input)
+	{
+		Ensure.NotNull(input);
+		return input.Replace(" ", string.Empty).ToUpperInvariant();
+	}
 }
 ```
 
@@ -1044,8 +1049,6 @@ git commit -m "feat(strings): add Iban identifier type"
 
 namespace ktsu.Semantics.Test.Identifiers;
 
-using System;
-
 using ktsu.Semantics.Strings.Identifiers;
 
 [TestClass]
@@ -1076,32 +1079,32 @@ public sealed class JwtTokenTests
 	[TestMethod]
 	public void Create_TwoSegments_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => JwtToken.Create("header.payload"));
+		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create("header.payload"));
 	}
 
 	[TestMethod]
 	public void Create_EmptyHeader_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => JwtToken.Create(".eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig"));
+		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create(".eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig"));
 	}
 
 	[TestMethod]
 	public void Create_HeaderNotJsonObject_Throws()
 	{
 		// "WyJhIl0" is base64url for the JSON array ["a"], which is valid JSON but not an object.
-		Assert.ThrowsException<ArgumentException>(() => JwtToken.Create("WyJhIl0.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig"));
+		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create("WyJhIl0.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig"));
 	}
 
 	[TestMethod]
 	public void Create_HeaderNotBase64Url_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => JwtToken.Create("not*base64.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig"));
+		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create("not*base64.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig"));
 	}
 
 	[TestMethod]
 	public void Create_Empty_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => JwtToken.Create(string.Empty));
+		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create(string.Empty));
 	}
 }
 ```
