@@ -49,4 +49,37 @@ public class ProgressionTests
 		ChordEvent[] empty = [];
 		_ = Assert.ThrowsExactly<ArgumentException>(() => Progression.Create(empty));
 	}
+
+	[TestMethod]
+	public void Parse_OneChordPerBar_FillsWholeBars()
+	{
+		Progression progression = Progression.Parse("Dm7 | G7 | Cmaj7");
+		Assert.AreEqual(3, progression.Chords.Count);
+		Assert.AreEqual(Duration.Whole, progression.Chords[0].Duration);
+		Assert.AreEqual(3.0, progression.TotalBars, 1e-9);
+	}
+
+	[TestMethod]
+	public void Parse_TwoChordsPerBar_SplitBarEvenly()
+	{
+		Progression progression = Progression.Parse("C G | Am F");
+		Assert.AreEqual(4, progression.Chords.Count);
+		Assert.AreEqual(Duration.Half, progression.Chords[0].Duration);
+		Assert.AreEqual(2.0, progression.TotalBars, 1e-9);
+	}
+
+	[TestMethod]
+	public void Parse_ToleratesLeadingAndTrailingBarlines()
+	{
+		Progression progression = Progression.Parse("| C | G |");
+		Assert.AreEqual(2, progression.Chords.Count);
+	}
+
+	[TestMethod]
+	public void Parse_RejectsEmptyBar() =>
+		_ = Assert.ThrowsExactly<FormatException>(() => Progression.Parse("C || G"));
+
+	[TestMethod]
+	public void Parse_RejectsEmptyText() =>
+		_ = Assert.ThrowsExactly<FormatException>(() => Progression.Parse("   "));
 }
