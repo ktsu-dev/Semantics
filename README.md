@@ -10,7 +10,7 @@
 
 A .NET library for replacing primitive obsession with strongly-typed, self-validating domain models. Four pillars:
 
-- **Semantic Strings** — type-safe wrappers like `EmailAddress`, `UserId`, `BlogSlug` with attribute-driven validation.
+- **Semantic Strings** — type-safe wrappers like `EmailAddress`, `UserId`, `BlogSlug` with attribute-driven validation, plus a batteries-included `Semantics.Strings.Identifiers` package (`Uuid`, `Ulid`, `Iban`, `Isbn`, `CreditCardNumber`, `JwtToken`).
 - **Semantic Paths** — polymorphic `IPath` hierarchy for files, directories, absolute, relative, and combinations.
 - **Semantic Quantities** — a metadata-generated, type-safe quantity system with a unified `IVector0..IVector4` model covering 60+ physical dimensions and 200+ generated types. Optional per-storage-type alias packages let you write `Mass` instead of `Mass<double>`.
 - **Semantic Music** — immutable musical value types: `PitchClass`, `Pitch`, `Interval`, `Mode`/`Scale`, `Chord`, `Key`, rational `Duration`, and `TimeSignature`, with chord-symbol parsing and voicing.
@@ -63,6 +63,24 @@ public sealed record ContactMethod : SemanticString<ContactMethod> { }
 ```
 
 The full attribute catalogue (text, format, casing, first-class .NET types, paths) lives in [`docs/validation-reference.md`](docs/validation-reference.md).
+
+### Batteries-included identifiers
+
+Defining your own types (as above) is the framework's core use, but the `ktsu.Semantics.Strings.Identifiers` package ships ready-made identifier types so common cases need no boilerplate:
+
+```csharp
+using ktsu.Semantics.Strings.Identifiers;
+
+Uuid id   = Uuid.Create("123E4567-E89B-12D3-A456-426614174000"); // canonicalised to lowercase
+Ulid ulid = Ulid.Create("01ARZ3NDEKTSV4RRFFQ69G5FAV");
+CreditCardNumber card = CreditCardNumber.Create("4111 1111 1111 1111"); // separators stripped, Luhn-checked
+Isbn isbn = Isbn.Create("978-0-306-40615-7");                     // ISBN-10 or ISBN-13, check-digit validated
+Iban iban = Iban.Create("GB82 WEST 1234 5698 7654 32");           // whitespace stripped, mod-97 validated
+
+Uuid.Create("not-a-uuid"); // ❌ throws ArgumentException
+```
+
+Each type normalises on creation and validates with real check-digit maths where applicable (`Iban`, `Isbn`, `CreditCardNumber`) or structural/format rules (`Uuid`, `Ulid`, `JwtToken`). Validation is pragmatic with documented limits rather than RFC-exhaustive — for example, `JwtToken` checks the three-segment structure and that the header and payload decode to JSON objects, but does **not** verify the signature.
 
 ## Semantic paths
 
