@@ -20,6 +20,9 @@ public sealed record Arrangement
 	/// <summary>Gets the total length of the arrangement in bars.</summary>
 	public double TotalBars => Sections.Sum(section => section.Bars);
 
+	/// <summary>Gets the structural form of the arrangement.</summary>
+	public Form Form => Form.Of(this);
+
 	/// <summary>Creates an arrangement.</summary>
 	/// <param name="key">The home key.</param>
 	/// <param name="sections">The sections in performance order; must be non-empty.</param>
