@@ -153,8 +153,12 @@ public sealed record KeyMatch { public Key Key { get; } public double Score { ge
 ```
 
 Scores every candidate `Key` — 12 tonics × {major (`Mode.Major`), natural minor (`Mode.Aeolian`)} — by
-the fraction of chords whose root is diatonic to that key (ties broken by preferring a tonic-rooted
-first/last chord, then major over minor). `InferKeys()` returns matches ranked by descending score;
+a **quality-weighted** diatonic fit: each chord contributes 1.0 when its root is diatonic *and* its
+triad quality matches the diatonic triad built on that scale degree, 0.5 when the root is diatonic but
+the quality differs (or the chord has no comparable third), and 0.0 when the root is not in the scale.
+Root-only scoring cannot separate a key from its relative/parallel neighbours (which share the same
+chord roots), so quality-weighting is required; ties are then broken by preferring a tonic-rooted
+first/last chord, then major over minor. `InferKeys()` returns matches ranked by descending score;
 `InferKey()` returns the single best (or `null` for a degenerate all-chromatic input).
 
 **Chromatic identification**

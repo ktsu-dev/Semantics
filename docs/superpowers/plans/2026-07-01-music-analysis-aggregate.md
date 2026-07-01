@@ -768,7 +768,7 @@ Expected: solution builds clean across all targets; all tests pass.
 - Test: `Semantics.Test/Music/KeyInferenceTests.cs`
 
 **Interfaces:**
-- Consumes: `Key.Create(PitchClass, Mode)`, `Key.Scale`, `Scale.Contains(PitchClass)`, `Key.Tonic`, `Key.Mode`, `Mode.Major`, `Mode.Aeolian`, `PitchClass.Create(int)`.
+- Consumes: `Key.Create(PitchClass, Mode)`, `Key.Scale`, `Scale.Contains(PitchClass)`, `Scale.PitchClasses`, `Key.Tonic`, `Key.Mode`, `Mode.Major`, `Mode.Aeolian`, `PitchClass.Create(int)`, `PitchClass.Value`, `Chord.Root`, `Chord.Quality`, `ChordQuality` (`Major`/`Minor`/`Diminished`/`Augmented`).
 - Produces:
   - `KeyMatch.Create(Key key, double score) -> KeyMatch`; properties `Key Key`, `double Score`.
   - `Progression.InferKeys() -> IReadOnlyList<KeyMatch>` (ranked, best first)
@@ -839,7 +839,7 @@ public sealed record KeyMatch
 	/// <summary>Gets the candidate key.</summary>
 	public Key Key { get; private init; } = Key.Create(PitchClass.Create(0), Mode.Major);
 
-	/// <summary>Gets the fit score in 0..1: the fraction of chords whose root is diatonic to the key.</summary>
+	/// <summary>Gets the quality-weighted diatonic-fit score in 0..1 (1.0 = every chord is diatonic with matching triad quality).</summary>
 	public double Score { get; private init; }
 
 	/// <summary>Creates a key match.</summary>
@@ -868,7 +868,7 @@ using System.Linq;
 
 public sealed partial record Progression
 {
-	/// <summary>Ranks candidate keys (12 tonics in major and natural minor) by diatonic fit.</summary>
+	/// <summary>Ranks candidate keys (12 tonics in major and natural minor) by quality-weighted diatonic fit.</summary>
 	/// <returns>All 24 candidates, best first; ties break toward a tonic-rooted last then first chord, then major.</returns>
 	public IReadOnlyList<KeyMatch> InferKeys()
 	{
@@ -880,9 +880,13 @@ public sealed partial record Progression
 			for (int tonic = 0; tonic < 12; tonic++)
 			{
 				Key key = Key.Create(PitchClass.Create(tonic), mode);
-				Scale scale = key.Scale;
-				int diatonic = Chords.Count(chordEvent => scale.Contains(chordEvent.Chord.Root));
-				matches.Add(KeyMatch.Create(key, (double)diatonic / Chords.Count));
+				double total = 0.0;
+				foreach (ChordEvent chordEvent in Chords)
+				{
+					total += ScoreChord(key, chordEvent.Chord);
+				}
+
+				matches.Add(KeyMatch.Create(key, total / Chords.Count));
 			}
 		}
 
@@ -895,6 +899,62 @@ public sealed partial record Progression
 				.ThenByDescending(match => match.Key.Mode == Mode.Major)
 				.ThenBy(match => match.Key.Tonic.Value),
 		];
+	}
+
+	// Scores one chord's fit to a key: 1.0 when its root is diatonic AND its triad quality matches the
+	// diatonic triad at that degree, 0.5 when the root is diatonic but the quality differs (or has no
+	// comparable third), 0.0 when the root is not in the scale. Quality-weighting is what distinguishes
+	// a key from its relative/parallel neighbours, which share the same chord roots.
+	private static double ScoreChord(Key key, Chord chord)
+	{
+		Scale scale = key.Scale;
+		if (!scale.Contains(chord.Root))
+		{
+			return 0.0;
+		}
+
+		ChordQuality? diatonic = DiatonicTriadQuality(scale, chord.Root);
+		bool comparable = chord.Quality is ChordQuality.Major or ChordQuality.Minor
+			or ChordQuality.Diminished or ChordQuality.Augmented;
+		if (!comparable || diatonic is null)
+		{
+			return 1.0;
+		}
+
+		return chord.Quality == diatonic.Value ? 1.0 : 0.5;
+	}
+
+	// Returns the diatonic triad quality built on a scale degree by stacking scale thirds, or null when
+	// the third/fifth do not form a recognised triad.
+	private static ChordQuality? DiatonicTriadQuality(Scale scale, PitchClass root)
+	{
+		IReadOnlyList<PitchClass> pitchClasses = scale.PitchClasses;
+		int index = -1;
+		for (int i = 0; i < pitchClasses.Count; i++)
+		{
+			if (pitchClasses[i].Value == root.Value)
+			{
+				index = i;
+				break;
+			}
+		}
+
+		if (index < 0)
+		{
+			return null;
+		}
+
+		int count = pitchClasses.Count;
+		int third = ((((pitchClasses[(index + 2) % count].Value - root.Value) % 12) + 12) % 12);
+		int fifth = ((((pitchClasses[(index + 4) % count].Value - root.Value) % 12) + 12) % 12);
+		return (third, fifth) switch
+		{
+			(4, 7) => ChordQuality.Major,
+			(3, 7) => ChordQuality.Minor,
+			(3, 6) => ChordQuality.Diminished,
+			(4, 8) => ChordQuality.Augmented,
+			_ => null,
+		};
 	}
 
 	/// <summary>Returns the single best-fitting key, or null when no chord root is diatonic to any candidate.</summary>
