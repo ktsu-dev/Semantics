@@ -37,6 +37,7 @@ Every task's requirements implicitly include this section.
 - **Empty-string rule:** identifier attributes reject `""` — do **not** add an `if (string.IsNullOrEmpty(value)) return Success();` guard. Each format/structural/checksum check already fails on empty, so `X.Create("")` throws `ArgumentException`.
 - **Factory surface (inherited, do not redefine):** `X.Create(string)` throws `ArgumentException` on invalid; `X.TryCreate(string, out X?)` returns `bool`; `X.Create(string)` applies `MakeCanonical` then validates. Records get value equality for free.
 - **Assert helper:** this repo's MSTest uses `Assert.ThrowsExactly<ArgumentException>(() => ...)` (not `ThrowsException`). `Create` throws exactly `ArgumentException` for invalid non-null input, so `ThrowsExactly` is correct.
+- **Pattern matching (IDE0078 is a warning-as-error):** write range/or comparisons on a single expression as C# patterns, not chained relational operators — `x is < a or > b`, `c is >= '0' and <= '9'`, `n is > 9`. Simple equality to a constant stays as `==` (e.g. `(sum % 10) == 0`, `value.Length == 10`). The code blocks below already use the pattern form; keep it.
 - **`MakeCanonical` guard:** every `MakeCanonical(string input)` override must call `Ensure.NotNull(input);` as its first statement (satisfies CA1062; `Ensure` comes from Polyfill and needs no `using`), then `return` the normalized value — hence a block body, not an expression body. Types with no normalization (`JwtToken`) omit the override entirely.
 - **Build/test commands:**
   - Build package: `dotnet build Semantics.Strings.Identifiers/Semantics.Strings.Identifiers.csproj`
@@ -756,7 +757,7 @@ public sealed class IsIsbnAttribute : NativeSemanticStringValidationAttribute
 			{
 				char c = s[i];
 				int d;
-				if (c >= '0' && c <= '9')
+				if (c is >= '0' and <= '9')
 				{
 					d = c - '0';
 				}
@@ -781,7 +782,7 @@ public sealed class IsIsbnAttribute : NativeSemanticStringValidationAttribute
 			for (int i = 0; i < 13; i++)
 			{
 				char c = s[i];
-				if (c < '0' || c > '9')
+				if (c is < '0' or > '9')
 				{
 					return false;
 				}
@@ -946,7 +947,7 @@ public sealed class IsIbanAttribute : NativeSemanticStringValidationAttribute
 
 		protected override ValidationResult ValidateValue(string value)
 		{
-			if (value.Length < 15 || value.Length > 34)
+			if (value.Length is < 15 or > 34)
 			{
 				return ValidationResult.Failure("An IBAN must have between 15 and 34 characters.");
 			}
@@ -967,7 +968,7 @@ public sealed class IsIbanAttribute : NativeSemanticStringValidationAttribute
 			int remainder = 0;
 			foreach (char c in rearranged)
 			{
-				if (c >= '0' && c <= '9')
+				if (c is >= '0' and <= '9')
 				{
 					remainder = ((remainder * 10) + (c - '0')) % 97;
 				}
