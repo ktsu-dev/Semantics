@@ -82,4 +82,17 @@ public class ProgressionTests
 	[TestMethod]
 	public void Parse_RejectsEmptyText() =>
 		_ = Assert.ThrowsExactly<FormatException>(() => Progression.Parse("   "));
+
+	[TestMethod]
+	public void Progression_TotalBars_RespectsNonFourFourTimeSignature()
+	{
+		Progression waltz = Progression.Create(
+			[
+				ChordEvent.Create(Chord.Parse("C"), Duration.Quarter),
+				ChordEvent.Create(Chord.Parse("F"), Duration.Quarter),
+				ChordEvent.Create(Chord.Parse("G"), Duration.Quarter),
+			],
+			TimeSignature.Create(3, 4));
+		Assert.AreEqual(1.0, waltz.TotalBars, 1e-9);
+	}
 }

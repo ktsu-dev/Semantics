@@ -36,4 +36,8 @@ public class CadenceTests
 			Progression.Parse("C | Am").Cadences(CMajor);
 		Assert.AreEqual(0, cadences.Count);
 	}
+
+	[TestMethod]
+	public void CadenceInstance_Create_RejectsNegativeIndex() =>
+		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => CadenceInstance.Create(-1, Cadence.Authentic));
 }

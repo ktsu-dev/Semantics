@@ -72,7 +72,7 @@ public sealed record Form
 			throw new FormatException("Form pattern is empty.");
 		}
 
-		if (!pattern.All(char.IsUpper))
+		if (!pattern.All(c => c is >= 'A' and <= 'Z'))
 		{
 			throw new FormatException($"Form pattern '{pattern}' must contain only upper-case letters.");
 		}

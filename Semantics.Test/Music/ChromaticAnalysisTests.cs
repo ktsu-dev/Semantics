@@ -47,5 +47,10 @@ public class ChromaticAnalysisTests
 		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> analyses =
 			Progression.Parse("C | Fm | C").ChromaticChords(CMajor);
 		Assert.AreEqual(ChromaticKind.BorrowedChord, analyses[0].Kind);
+		Assert.AreEqual("from parallel minor", analyses[0].Detail);
 	}
+
+	[TestMethod]
+	public void ChromaticAnalysis_Create_RejectsNegativeIndex() =>
+		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ChromaticAnalysis.Create(-1, ChromaticKind.Chromatic, null));
 }

@@ -35,10 +35,13 @@ public sealed partial record Progression
 		return result;
 	}
 
+	private static bool AllTonesInScale(Chord chord, Scale scale) =>
+		chord.ChordTones().All(offset => scale.Contains(PitchClass.Create(chord.Root.Value + offset)));
+
 	private static bool IsDiatonic(Key key, Chord chord)
 	{
 		Scale scale = key.Scale;
-		return chord.ChordTones().All(offset => scale.Contains(PitchClass.Create(chord.Root.Value + offset)));
+		return AllTonesInScale(chord, scale);
 	}
 
 	private static (ChromaticKind Kind, string? Detail) ClassifyChromatic(Key key, Chord chord)
@@ -66,7 +69,7 @@ public sealed partial record Progression
 		// Borrowed: diatonic to the parallel mode of the same tonic.
 		Mode parallelMode = key.Mode == Mode.Major ? Mode.Aeolian : Mode.Major;
 		Scale parallel = Scale.Create(key.Tonic, parallelMode);
-		if (chord.ChordTones().All(offset => parallel.Contains(PitchClass.Create(chord.Root.Value + offset))))
+		if (AllTonesInScale(chord, parallel))
 		{
 			string source = parallelMode == Mode.Aeolian ? "parallel minor" : "parallel major";
 			return (ChromaticKind.BorrowedChord, "from " + source);
