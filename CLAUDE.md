@@ -20,6 +20,7 @@ Tests use MSTest. Generator output is emitted to `Semantics.Quantities/Generated
 | Project | Responsibility |
 |---|---|
 | `Semantics.Strings` | Strongly-typed string wrappers (`SemanticString<T>`) and validation attributes/strategies. |
+| `Semantics.Strings.Identifiers` | Concrete identifier string types (`Uuid`, `Ulid`, `Iban`, `Isbn`, `CreditCardNumber`, `JwtToken`) built on the `Semantics.Strings` framework. |
 | `Semantics.Paths` | Polymorphic file system path types (`IPath`, `IFilePath`, `IDirectoryPath`, …). |
 | `Semantics.Quantities` | Hand-written runtime types (`PhysicalQuantity<TSelf, T>`, `IVector0`..`IVector4`, `UnitSystem`) plus generator output under `Generated/`. |
 | `Semantics.SourceGenerators` | Roslyn incremental generators that emit quantity types, units, conversions, magnitudes, physical constants, and storage-type helpers from metadata. |
