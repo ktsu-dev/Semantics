@@ -51,9 +51,14 @@ From `Semantics.Strings/SemanticString.cs`:
   `ValidationAdapter` returning `ValidationResult`). This is the extension point the Identifiers package
   builds on.
 
-Established attribute convention: a `ValidationAdapter` returns `ValidationResult.Success()` for a
-null/empty value (empty-string guarding is the factory's job, not the format rule's). New attributes
-follow the same convention.
+Important: `Create` does **not** reject empty strings — `IsValid()` only checks the underlying string
+is non-null, then defers to the validation attributes. Some existing framework attributes (e.g.
+`IsEmailAddress`) return `Success()` on empty so they compose with a separate length rule; that means
+`EmailAddress.Create("")` currently succeeds. For identifiers an empty string is **never** a valid
+value, so the new attributes deliberately do **not** adopt that convention: their format / structural /
+checksum checks reject empty naturally (an anchored regex or a segment/length check fails on `""`), so
+`Uuid.Create("")` throws `ArgumentException`. Each identifier type carries exactly one such attribute
+as its sole validator.
 
 ## Package & project
 
@@ -115,8 +120,9 @@ Six attributes in the Identifiers package, namespace `ktsu.Semantics.Strings.Ide
   payload (padding restored, `-_` → `+/`), and confirms each decodes to a JSON object via
   `System.Text.Json` (`JsonDocument.Parse` with `RootElement.ValueKind == JsonValueKind.Object`). It
   does **not** decode or verify the signature segment.
-- Every adapter returns `ValidationResult.Success()` on null/empty (framework convention) and a
-  specific `ValidationResult.Failure(message)` otherwise. Failure messages name the rule that failed
+- Every adapter rejects empty/`""` (empty is never a valid identifier — the format, structural, or
+  checksum check fails on it, so no empty→`Success()` guard is added) and returns a specific
+  `ValidationResult.Failure(message)` on any failure. Failure messages name the rule that failed
   (e.g. "The value must be a valid IBAN (mod-97 checksum failed).").
 
 Rationale for package-local attributes: these are domain-specific and only meaningful next to the
