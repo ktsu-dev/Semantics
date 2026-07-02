@@ -26,12 +26,12 @@ public class PitchTests
 	}
 
 	[TestMethod]
-	public void FromName_ParsesSharpsAndFlats()
+	public void Parse_ParsesSharpsAndFlats()
 	{
-		Assert.AreEqual(60, Pitch.FromName("C4").Midi);
-		Assert.AreEqual(61, Pitch.FromName("C#4").Midi);
-		Assert.AreEqual(61, Pitch.FromName("Db4").Midi);
-		Assert.AreEqual(58, Pitch.FromName("Bb3").Midi);
+		Assert.AreEqual(60, Pitch.Parse("C4").Midi);
+		Assert.AreEqual(61, Pitch.Parse("C#4").Midi);
+		Assert.AreEqual(61, Pitch.Parse("Db4").Midi);
+		Assert.AreEqual(58, Pitch.Parse("Bb3").Midi);
 	}
 
 	[TestMethod]
@@ -39,5 +39,24 @@ public class PitchTests
 	{
 		Assert.AreEqual(67, Pitch.Create(60).Transpose(7).Midi);
 		Assert.AreEqual(53, Pitch.Create(60).Transpose(-7).Midi);
+	}
+
+	[TestMethod]
+	public void TypedCreateMatchesParse() =>
+		Assert.AreEqual(Pitch.Parse("C#4"), Pitch.Create(NoteLetter.C, Accidental.Sharp, 4));
+
+	[TestMethod]
+	public void ToStringRoundTrips()
+	{
+		Pitch p = Pitch.Parse("F#3");
+		Assert.AreEqual("F#3", p.ToString());
+		Assert.AreEqual(p, Pitch.Parse(p.ToString()));
+	}
+
+	[TestMethod]
+	public void TryParseFailsOnBadOctave()
+	{
+		Assert.IsFalse(Pitch.TryParse("Cx", out Pitch? result));
+		Assert.IsNull(result);
 	}
 }

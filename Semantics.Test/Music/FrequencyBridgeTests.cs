@@ -12,7 +12,7 @@ public class FrequencyBridgeTests
 	[TestMethod]
 	public void A4_Is440Hz()
 	{
-		Assert.AreEqual(440.0, Pitch.FromName("A4").FrequencyHz, 1e-9);
+		Assert.AreEqual(440.0, Pitch.Parse("A4").FrequencyHz, 1e-9);
 	}
 
 	[TestMethod]

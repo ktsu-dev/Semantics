@@ -374,12 +374,12 @@ public sealed record Chord
 			tones.Sort();
 		}
 
-		Pitch rootPitch = Pitch.FromName(Root.Name + octave.ToString(CultureInfo.InvariantCulture));
+		Pitch rootPitch = Pitch.Parse(Root.Name + octave.ToString(CultureInfo.InvariantCulture));
 		List<Pitch> pitches = [.. tones.Select(offset => rootPitch.Transpose(offset))];
 
 		if (Bass is not null)
 		{
-			Pitch bassPitch = Pitch.FromName(Bass.Name + (octave - 1).ToString(CultureInfo.InvariantCulture));
+			Pitch bassPitch = Pitch.Parse(Bass.Name + (octave - 1).ToString(CultureInfo.InvariantCulture));
 			pitches.Insert(0, bassPitch);
 		}
 

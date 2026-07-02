@@ -49,7 +49,7 @@ public class ScorePrimitivesTests
 	[TestMethod]
 	public void Note_BundlesPitchDurationVelocity_AndTimesInSeconds()
 	{
-		Note note = Note.Create(Pitch.FromName("A4"), Duration.Half, Velocity.Forte);
+		Note note = Note.Create(Pitch.Parse("A4"), Duration.Half, Velocity.Forte);
 		Assert.AreEqual(69, note.Pitch.Midi);
 		Assert.AreEqual(Duration.Half, note.Duration);
 		Assert.AreEqual(96, note.Velocity.Value);

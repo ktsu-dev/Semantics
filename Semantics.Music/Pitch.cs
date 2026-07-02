@@ -38,44 +38,66 @@ public sealed record Pitch
 		return new() { Midi = midi };
 	}
 
+	/// <summary>Creates a pitch from a note letter, accidental, and octave (MIDI 60 = C4).</summary>
+	/// <param name="letter">The natural note letter.</param>
+	/// <param name="accidental">The accidental.</param>
+	/// <param name="octave">The octave number.</param>
+	/// <returns>A new pitch.</returns>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when the resulting MIDI number is outside 0..127.</exception>
+	public static Pitch Create(NoteLetter letter, Accidental accidental, int octave) =>
+		Create(((octave + 1) * 12) + (int)letter + (int)accidental);
+
 	/// <summary>Parses a note name such as "C4", "F#3", or "Bb5".</summary>
-	/// <param name="name">The note name: a letter A-G, optional # or b, then an octave integer.</param>
+	/// <param name="name">A letter A-G, optional accidentals, then an octave integer.</param>
 	/// <returns>The parsed pitch.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="name"/> is null.</exception>
 	/// <exception cref="FormatException">Thrown when the name cannot be parsed.</exception>
-	public static Pitch FromName(string name)
+	public static Pitch Parse(string name)
 	{
 		Ensure.NotNull(name);
+		return TryParse(name, out Pitch? result)
+			? result
+			: throw new FormatException($"Invalid note name '{name}'.");
+	}
+
+	/// <summary>Tries to parse a note name.</summary>
+	/// <param name="name">The text to parse.</param>
+	/// <param name="result">The parsed pitch, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Pitch? result)
+	{
+		result = null;
+		if (string.IsNullOrEmpty(name))
+		{
+			return false;
+		}
 
 		int index = 0;
-		int letterPc = char.ToUpperInvariant(name[index]) switch
+		if (!Notation.TryReadNoteLetter(name![index], out NoteLetter letter))
 		{
-			'C' => 0,
-			'D' => 2,
-			'E' => 4,
-			'F' => 5,
-			'G' => 7,
-			'A' => 9,
-			'B' => 11,
-			_ => throw new FormatException($"Invalid note letter in '{name}'."),
-		};
-		index++;
-
-		int accidental = 0;
-		while (index < name.Length && (name[index] is '#' or 'b' or '♯' or '♭'))
-		{
-			accidental += name[index] is '#' or '♯' ? 1 : -1;
-			index++;
+			return false;
 		}
 
+		index++;
+		int accidental = Notation.ReadAccidentalOffset(name, ref index);
 		if (!int.TryParse(name[index..], NumberStyles.Integer, CultureInfo.InvariantCulture, out int octave))
 		{
-			throw new FormatException($"Missing or invalid octave in '{name}'.");
+			return false;
 		}
 
-		int midi = ((octave + 1) * 12) + letterPc + accidental;
-		return Create(midi);
+		int midi = ((octave + 1) * 12) + (int)letter + accidental;
+		if (midi is < 0 or > 127)
+		{
+			return false;
+		}
+
+		result = new() { Midi = midi };
+		return true;
 	}
+
+	/// <summary>Returns the canonical note name (e.g. "C4").</summary>
+	/// <returns>The note name.</returns>
+	public override string ToString() => Name;
 
 	/// <summary>Returns a pitch transposed by a number of semitones.</summary>
 	/// <param name="semitones">The signed semitone offset.</param>
