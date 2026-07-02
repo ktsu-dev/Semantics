@@ -36,6 +36,51 @@ public sealed record Key
 		return new() { Tonic = tonic, Mode = mode };
 	}
 
+	/// <summary>Parses a key "{tonic} {mode}" (e.g. "C major", "A aeolian").</summary>
+	/// <param name="text">The key text.</param>
+	/// <returns>The parsed key.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
+	/// <exception cref="FormatException">Thrown when the text cannot be parsed.</exception>
+	public static Key Parse(string text)
+	{
+		Ensure.NotNull(text);
+		return TryParse(text, out Key? result)
+			? result
+			: throw new FormatException($"Invalid key '{text}'.");
+	}
+
+	/// <summary>Tries to parse a key "{tonic} {mode}".</summary>
+	/// <param name="text">The text to parse.</param>
+	/// <param name="result">The parsed key, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? text, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Key? result)
+	{
+		result = null;
+		if (text is null)
+		{
+			return false;
+		}
+
+		int space = text.IndexOf(' ');
+		if (space <= 0 || space == text.Length - 1)
+		{
+			return false;
+		}
+
+		if (!PitchClass.TryParse(text[..space], out PitchClass? tonic)
+			|| !Mode.TryParse(text[(space + 1)..], out Mode? mode))
+		{
+			return false;
+		}
+
+		result = Create(tonic, mode);
+		return true;
+	}
+
+	/// <summary>Returns "{tonic} {mode}" (e.g. "C major").</summary>
+	/// <returns>The canonical key text.</returns>
+	public override string ToString() => $"{Tonic} {Mode}";
+
 	/// <summary>Returns the key transposed by a number of semitones (the mode is unchanged).</summary>
 	/// <param name="semitones">The signed semitone offset.</param>
 	/// <returns>The transposed key.</returns>
@@ -100,12 +145,7 @@ public sealed record Key
 		}
 
 		int index = 0;
-		int alteration = 0;
-		while (index < text.Length && (text[index] is 'b' or '#' or '♭' or '♯'))
-		{
-			alteration += text[index] is '#' or '♯' ? 1 : -1;
-			index++;
-		}
+		int alteration = Notation.ReadAccidentalOffset(text, ref index);
 
 		(int degree, int length, bool upper) = ParseNumeral(text, index);
 		if (length == 0)
