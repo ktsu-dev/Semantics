@@ -24,15 +24,33 @@ public class ModeTests
 	}
 
 	[TestMethod]
-	public void FromName_IsCaseInsensitive_AndEqualsStaticInstance()
+	public void Parse_IsCaseInsensitive_AndEqualsStaticInstance()
 	{
-		Assert.AreEqual(Mode.Lydian, Mode.FromName("LYDIAN"));
+		Assert.AreEqual(Mode.Lydian, Mode.Parse("LYDIAN"));
 	}
 
 	[TestMethod]
-	public void FromName_RejectsUnknown()
+	public void Parse_RejectsUnknown()
 	{
-		_ = Assert.ThrowsExactly<ArgumentException>(() => Mode.FromName("bebop"));
+		_ = Assert.ThrowsExactly<FormatException>(() => Mode.Parse("bebop"));
+	}
+
+	[TestMethod]
+	public void ToStringRoundTripsForAllShapes()
+	{
+		foreach (string name in new[] { "major", "dorian", "harmonic_minor", "octatonic_hw", "blues_major" })
+		{
+			Mode mode = Mode.Parse(name);
+			Assert.AreEqual(name, mode.ToString());
+			Assert.AreEqual(mode, Mode.Parse(mode.ToString()));
+		}
+	}
+
+	[TestMethod]
+	public void TryParseFailsOnUnknownMode()
+	{
+		Assert.IsFalse(Mode.TryParse("bogus", out Mode? result));
+		Assert.IsNull(result);
 	}
 
 	[TestMethod]
@@ -80,7 +98,7 @@ public class ModeTests
 	{
 		int[] expected = [0, 1, 3, 4, 6, 8, 10];
 		CollectionAssert.AreEqual(expected, Mode.Altered.Intervals.ToArray());
-		Assert.AreEqual(Mode.Altered, Mode.FromName("altered"));
+		Assert.AreEqual(Mode.Altered, Mode.Parse("altered"));
 	}
 
 	[TestMethod]
