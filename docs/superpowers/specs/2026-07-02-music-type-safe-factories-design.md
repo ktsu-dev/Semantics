@@ -1,128 +1,181 @@
-# Music type-safe factories and Parse/TryParse convention
+# Music type-safe factories, Parse/TryParse convention, and canonical round-trippable ToString
 
 Date: 2026-07-02
 Status: design approved, pending spec review
 
 ## Problem
 
-Several factory and construction paths in `Semantics.Music` accept "naked" primitives (`string`, `char`, `int`) drawn from a small fixed set, so the compiler cannot enforce valid values. The worst cases:
+Two related weaknesses in `Semantics.Music`:
 
-- Note letters `A`–`G` are parsed as `char` via a `switch` duplicated in `Pitch.FromName` and `Chord.ParseRoot`.
-- Accidentals (`#`, `b`, `♯`, `♭`) are scanned as `char` in three places (`Pitch.FromName`, `Chord.ParseRoot`, `Key.ChordFromRomanNumeral`).
-- Neither concept has a type anywhere in the project.
-
-Separately, the string entry points are named inconsistently (`FromName`, `FromPattern`) rather than following the .NET `Parse`/`TryParse`/`ToString` convention.
+1. **Naked primitives in construction.** Note letters `A`–`G` and accidentals (`#`, `b`, `♯`, `♭`) are parsed as `char` inside `Pitch.FromName` / `Chord.ParseRoot` / `Key.ChordFromRomanNumeral`, with the letter→pitch-class `switch` duplicated. Neither concept has a type, so the compiler cannot enforce valid values.
+2. **Inconsistent, non-round-tripping string surface.** String entry points are named `FromName` / `FromPattern` rather than the .NET `Parse`/`TryParse` convention, and most value types have no canonical string form at all (they inherit the record default `ToString`), so there is no `Parse(x.ToString()) == x` guarantee anywhere.
 
 This is a very new library (2.0-era, per-package split), so breaking renames are acceptable and there is no compatibility burden.
 
 ## Goals
 
-1. Introduce enums for the two concepts with no type: note letter and accidental.
-2. Add compiler-enforced construction (`Create`) alongside the existing string parsers.
-3. Rename the string entry points to `Parse`/`TryParse` and give each a `ToString` that round-trips.
-4. Remove the duplicated char-parsing logic by routing everything through the new enums.
+1. Introduce `NoteLetter` and `Accidental` enums for the two concepts with no type.
+2. Add compiler-enforced construction (`Create`) alongside the string parsers.
+3. Give **every in-scope music type** a canonical `ToString()` and a matching `Parse`/`TryParse`, with a tested **canonical-output round-trip**: `Parse(x.ToString()) == x`.
+4. Rename the string entry points to the `Parse`/`TryParse` convention (hard rename, no shims).
+5. Remove the duplicated char-parsing by routing everything through the new enums.
 
-## Non-goals (YAGNI / deferred)
+## In scope (which types get canonical ToString + Parse/TryParse)
 
-- **No `ModeName` enum.** `Mode` already exposes 30 static constant properties (`Mode.Dorian`, …); those *are* the compiler-enforced path. Adding a parallel enum duplicates them.
-- **No typed roman-numeral factory.** `Key.ChordFromRomanNumeral(string)` stays a parser. Roman numerals are compound (degree + quality + alteration) and `ScaleDegree` already structures part of it. Revisit later if wanted.
-- **No `Chord.ToString()` symbol formatter.** Reversing the chord DSL into a canonical symbol is a real, lossy feature (many symbols map to one chord). Out of scope; `Chord` only gains `TryParse`.
-- **No changes to genuinely numeric factories** (`Pitch.Create(int midi)`, `Interval.Create(int semitones)`, `TimeSignature.Create(int beats, int beatUnit)`, MIDI velocity, etc.). Those are ranges, not label sets.
+Confirmed with the user:
 
-## Design
+- **Core value types:** `PitchClass`, `Pitch`, `Interval`, `Duration`, `TimeSignature`, `Velocity`, `Tempo`, `Mode`, `Scale`, `Key`, `Chord`.
+- **Score composites:** `Note`, `Rest`, `ChordEvent`.
+- **Analysis aggregates:** `Progression`, `Section`, `Arrangement`, `Form`.
 
-### New enums (in `Semantics.Music`, own files, standard header)
+## Out of scope / non-goals
 
-Enum values are chosen so a cast does the arithmetic — no lookup table needed.
+- **Analysis result records** (`ScaleDegree`, `KeyMatch`, `CadenceInstance`, `ChromaticAnalysis`): analysis outputs, not parsed from text. No canonical `Parse`/round-trip.
+- **No `ModeName` enum.** `Mode` already exposes 30 static constant properties (`Mode.Dorian`, …) — those are the compiler-enforced path.
+- **No typed roman-numeral factory.** `Key.ChordFromRomanNumeral(string)` stays a parser (though its char-scan is refactored onto `Accidental`).
+- **No `IParsable<T>`** (net7+ only; Music targets down to netstandard2.0 and the repo avoids conditional compilation). Plain static `Parse`/`TryParse` only.
+- **No melodic-sequence aggregate.** A `Note`/`Rest`/`ChordEvent` sequence type (melodic counterpart to `Progression`) was raised as a future idea and explicitly deferred.
+- **No changes to numeric range semantics** — `Pitch.Create(int midi)`, `Interval.Create(int semitones)`, etc. keep their integer factories; the new work is additive.
+
+## New enums
+
+Enum values are chosen so a cast does the arithmetic — no lookup table.
 
 ```csharp
 /// <summary>The seven natural note letters. The underlying value is the natural pitch class.</summary>
-public enum NoteLetter
-{
-    C = 0, D = 2, E = 4, F = 5, G = 7, A = 9, B = 11,
-}
+public enum NoteLetter { C = 0, D = 2, E = 4, F = 5, G = 7, A = 9, B = 11 }
 
 /// <summary>A pitch alteration. The underlying value is the semitone offset.</summary>
-public enum Accidental
-{
-    DoubleFlat = -2, Flat = -1, Natural = 0, Sharp = 1, DoubleSharp = 2,
-}
+public enum Accidental { DoubleFlat = -2, Flat = -1, Natural = 0, Sharp = 1, DoubleSharp = 2 }
 ```
 
-With these, a pitch class is simply `(int)letter + (int)accidental`, folded mod 12.
+A pitch class is then `(int)letter + (int)accidental`, folded mod 12.
 
-### Typed factories
+## Typed factories
 
 ```csharp
-// PitchClass.cs — new overload
+// PitchClass.cs
 public static PitchClass Create(NoteLetter letter, Accidental accidental) =>
     Create((int)letter + (int)accidental);
 
-// Pitch.cs — new typed factory (keeps existing Create(int midi))
+// Pitch.cs (keeps existing Create(int midi))
 public static Pitch Create(NoteLetter letter, Accidental accidental, int octave) =>
     Create(((octave + 1) * 12) + (int)letter + (int)accidental);
 ```
 
-Chord roots do not get a dedicated big factory (the parameter list would be unwieldy). Chords remain constructable via object-initializer (`new Chord { Root = PitchClass.Create(NoteLetter.C, Accidental.Natural), Quality = ChordQuality.Major }`) — which is now fully compiler-enforced — plus `Parse` for text.
+Chords keep object-initializer + `Parse` construction (a full typed factory would have an unwieldy parameter list); the new `PitchClass` overload makes hand-built chord roots compiler-enforced.
 
-### Renames to the Parse/TryParse convention
+## Renames to the Parse/TryParse convention
 
 | Current | Becomes |
 |---|---|
-| `Pitch.FromName(string)` | `Pitch.Parse(string)` + `Pitch.TryParse(string, out Pitch)` |
-| `Mode.FromName(string)` | `Mode.Parse(string)` + `Mode.TryParse(string, out Mode)` |
-| `Form.FromPattern(string)` | `Form.Parse(string)` + `Form.TryParse(string, out Form)` |
+| `Pitch.FromName(string)` | `Pitch.Parse` + `Pitch.TryParse(string, out Pitch)` |
+| `Mode.FromName(string)` | `Mode.Parse` + `Mode.TryParse(string, out Mode)` |
+| `Form.FromPattern(string)` | `Form.Parse` + `Form.TryParse(string, out Form)` |
 | `Chord.Parse(string)` | unchanged name; add `Chord.TryParse(string, out Chord)` |
 
-`Create` = compiler-enforced construction. `Parse` = from text. `ToString` = back to text. Hard rename, no `[Obsolete]` shims.
+Hard rename, no `[Obsolete]` shims. `Create` = compiler-enforced construction; `Parse` = from text; `ToString` = back to text. Every in-scope type gets `Parse` + `TryParse`. Parse cores are factored into a private `bool TryParseCore(...)` that `Parse` (throws on false) and `TryParse` (returns the bool) both call, so `TryParse` is never throw-driven.
 
-`TryParse` is implemented by wrapping the parse logic; on failure it returns `false` and sets `out` to `null`/`default`. To avoid throw-driven `TryParse`, the parse core is refactored into a private `bool TryParseCore(...)` that both `Parse` (throws on false) and `TryParse` (returns the bool) call.
+## Canonical string forms
 
-### Internal parse routing
+### Leaf value types (single-line scalars)
 
-`Pitch.Parse` and `Chord.ParseRoot` are refactored to:
-1. Map the leading char to a `NoteLetter` (single small lookup, one place — a private helper `TryNoteLetter(char, out NoteLetter)`).
-2. Accumulate accidental chars into an `Accidental` (or directly into the int offset).
-3. Delegate to the typed `Create`.
+| Type | Canonical `ToString()` | Example | Notes |
+|---|---|---|---|
+| `PitchClass` | sharp-spelled name | `C#` | `Parse` accepts flats/double accidentals, emits sharps |
+| `Pitch` | pitch class + octave | `F#3` | keep the existing `Name` property; `ToString` returns it |
+| `Interval` | signed semitones | `7`, `-5` | the type is defined by semitones |
+| `Duration` | reduced `n/d` | `3/8` | |
+| `TimeSignature` | `beats/unit` | `6/8` | |
+| `Velocity` | integer | `96` | |
+| `Tempo` | `{bpm}bpm@{beat}` | `120bpm@1/4` | beat always encoded (invariant-culture, round-trippable `bpm`) |
+| `Mode` | canonical lower name | `harmonic_minor` | |
+| `Scale` | `{root} {mode}` | `C dorian` | single-space split |
+| `Key` | `{tonic} {mode}` | `A aeolian` | same shape as `Scale`, distinct type/`Parse` |
+| `Chord` | canonical symbol | `Cmaj7`, `C/G` | see round-trip caveat below |
+| `Form` | `Pattern` | `AABA` | already round-trips |
 
-This removes the two duplicated `C => 0, D => 2, …` switches and the three duplicated `#/b` scans.
+### Score composites (single-line scalars, context-free explicit durations)
 
-### ToString round-trip
+| Type | Canonical `ToString()` | Example |
+|---|---|---|
+| `ChordEvent` | `{chord}:{duration}` | `Cmaj7:1/4` |
+| `Note` | `{pitch}:{duration}:v{velocity}` | `C4:1/4:v80` |
+| `Rest` | `R:{duration}` | `R:1/4` |
 
-Override `ToString()` to emit the canonical notation that `Parse` accepts, so `Parse(x.ToString())` reproduces `x`:
+`:` is safe as the top separator: chord symbols use `/` (slash chords) but never `:`.
 
-- `Pitch.ToString()` → the existing `Name` (e.g. `"C4"`, `"F#3"`). `Name` property is retained.
-- `Mode.ToString()` → the canonical lower-case `Name` (e.g. `"dorian"`, `"harmonic_minor"`).
-- `Form.ToString()` → the `Pattern` (e.g. `"AABA"`).
+### Analysis aggregates (hybrid lead-sheet / chart style)
 
-`Chord` is excluded (see non-goals).
+Structure is carried by chart idioms (bracket section headers, bar lines, blank lines), not YAML-style keys.
 
-### Mode literal centralization
+**`Progression` — one line.** Time signature up front, bars separated by ` | `, chords left to right. Duration is carried by **beat slashes**: a chord sounds for one beat, and each following whole-token `/` extends it one more beat.
 
-Today the 30 canonical names appear twice: as `Shapes` dictionary keys and as string literals in the 30 static properties. Centralize so they cannot drift — e.g. each static property is defined in terms of a single source (private consts or a shared internal factory keyed off the dictionary). The public surface (30 constants + `Parse`/`TryParse`) is unchanged.
+```
+4/4  Dm7 / G7 / | Cmaj7 / / /
+```
+
+(Dm7 two beats, G7 two beats, Cmaj7 a full 4/4 bar.) All-one-beat is bare chords: `4/4  Am7 Dm7 | E7 Am7`.
+
+- A beat slash is a whole `/` token (space-delimited), so it never collides with a slash chord `C/G` or a duration `1/4`.
+- Bar lines ` | ` are cosmetic: `ToString` inserts them at bar boundaries; `Parse` derives duration from the slashes and treats `|` as validation.
+- Beat = `1/BeatUnit`. Round-trips exactly whenever each chord's duration is a whole number of beats (the normal case). Sub-beat durations use an explicit escape `Chord@n/d` (e.g. `Cmaj7@1/8`) so the format is total.
+- `Progression.ToString` owns this chart rendering; it does **not** concatenate `ChordEvent.ToString()` (which is context-free and has no time signature to count beats against).
+
+**`Section` — bracket header, then its progression.** Section type in brackets, optional quoted label, optional key in parens:
+
+```
+[Verse] "Verse 1" (C major)
+4/4  Dm7 / G7 / | Cmaj7 / / /
+```
+
+Minimal (no label, no local key): `[Intro]` then the progression line. Header grammar: `[<SectionType>]` optionally followed by ` "<label>"` then ` (<key>)`; both optional and omitted when null.
+
+**`Arrangement` — home key line, then blank-line-separated sections.**
+
+```
+A minor
+
+[Intro]
+4/4  Am / / /
+
+[Verse] "Verse 1"
+4/4  Am7 / Dm7 / | E7 / / /
+
+[Bridge] (C major)
+4/4  C / / / | G / / / | Am / / / | F / / /
+```
+
+First non-empty line is the home key (bare). Each section is a bracket header (optional `"label"` / `(key)`) followed by its one-line progression. `Parse` splits on blank lines / `[` headers.
+
+## Chord round-trip caveat
+
+`Chord.ToString()` is a canonical symbol formatter defined as the inverse of `Chord.Parse`, so `Parse(chord.ToString()) == chord` holds for any chord obtainable from `Parse` (the canonical corpus). A chord hand-built via object initializer with a field combination `Parse` cannot produce (e.g. `Augmented` quality together with a `b5`) is not guaranteed to round-trip. The formatter must emit spellings that reproduce the exact structure (e.g. a `Diminished`+`Dominant` chord spells as `m7b5`, not `dim7`, because `dim7` parses to a `Diminished` seventh). This is the highest-risk piece and is covered by enumerating a broad symbol corpus in tests.
+
+## ToString override note
+
+This overrides the auto-generated record `ToString` (e.g. `Pitch { Midi = 60 }` becomes `C4`). Audit tests and callers for reliance on the default record form before switching.
 
 ## Exception behavior (judgment call)
 
-`Parse` throws `FormatException` on unparseable text, matching the BCL `Parse` convention the rename aligns to (`int.Parse`, `DateTime.Parse`). This is treated as the most specific exception type for a format-parse failure, taking precedence over the general "prefer `ArgumentException`" guidance in CLAUDE.md (which targets argument validation, not text parsing). `null` input still throws `ArgumentNullException` via `Ensure.NotNull`. `TryParse` throws nothing and returns `false`.
+`Parse` throws `FormatException` on unparseable text, matching the BCL `Parse` convention the rename aligns to (`int.Parse`, `DateTime.Parse`); this takes precedence over CLAUDE.md's general "prefer `ArgumentException`" guidance, which targets argument validation rather than text parsing. `null` input throws `ArgumentNullException` (via `Ensure.NotNull`). `TryParse` throws nothing and returns `false`.
 
-## Blast radius
+## Internal parse routing
 
-19 call sites of `FromName`/`FromPattern` across 8 files:
+`Pitch.Parse`, `Chord.ParseRoot`, and `Key.ChordFromRomanNumeral` are refactored to map the leading char to a `NoteLetter` via one shared helper and accumulate accidental chars into an `Accidental`/int offset, then delegate to the typed `Create`. This removes the two duplicated `C => 0, D => 2, …` switches and the three duplicated `#`/`b` scans.
 
-- Production: `Chord.cs` (2 — `Pitch.FromName` inside `Voice`).
-- Tests: `PitchTests.cs` (4), `ModeTests.cs` (3), `FormTests.cs` (2), `FrequencyBridgeTests.cs` (1), `ScorePrimitivesTests.cs` (1).
-- Docs: `Semantics.Music/README.md` (3), `docs/superpowers/plans/2026-07-01-music-analysis-aggregate.md` (3).
+## Mode literal centralization
 
-All updated to the new names. README examples updated to also show the typed `Create` factories.
+The 30 canonical mode names currently appear twice (as `Shapes` dictionary keys and as string literals in the 30 static properties). Centralize so they cannot drift (single source of the name strings). Public surface (30 constants + `Parse`/`TryParse`) is unchanged.
+
+## Blast radius (renames)
+
+19 call sites of `FromName`/`FromPattern` across 8 files: `Chord.cs` (2, internal `Pitch.FromName` in `Voice`), tests (`PitchTests`, `ModeTests`, `FormTests`, `FrequencyBridgeTests`, `ScorePrimitivesTests`), and docs (`Semantics.Music/README.md`, the analysis-aggregate plan doc). All updated to the new names; README examples also show the typed `Create` factories and the canonical string forms.
 
 ## Testing
 
-- Round-trip tests: `Parse(x.ToString()) == x` for `Pitch`, `Mode`, `Form` across representative values (naturals, sharps, flats, all mode families, named + irregular form patterns).
-- Typed-factory equivalence: `Pitch.Create(NoteLetter.C, Accidental.Sharp, 4) == Pitch.Parse("C#4")`, and the `PitchClass` overload against known values.
-- `TryParse` returns `false` (no throw) for malformed input; `Parse` throws `FormatException` for the same input and `ArgumentNullException` for `null`.
-- Enum-cast invariants: `(int)NoteLetter.X` equals the natural pitch class; `(int)Accidental.Y` equals the semitone offset.
-- Existing Music tests continue to pass after the rename.
-
-## Multi-targeting note
-
-Plain static `Parse(string)` / `TryParse(string, out T)` methods only — do **not** implement `IParsable<T>` (net7+ only; Music targets down to netstandard2.0 and the repo avoids conditional compilation).
+- **Round-trip** `Parse(x.ToString()) == x` for every in-scope type across representative values: pitch classes (naturals, sharps, flats, double accidentals), pitches, intervals (0, positive, negative, > octave), durations, time signatures, velocities, tempos (default and explicit beat), all mode families, scales, keys, a broad chord symbol corpus, score composites, and aggregates (progressions with whole-beat and sub-beat durations, sections with/without label/key, multi-section arrangements including repeated sections).
+- **Typed-factory equivalence:** `Pitch.Create(NoteLetter.C, Accidental.Sharp, 4) == Pitch.Parse("C#4")`; the `PitchClass` overload against known values.
+- **Enum-cast invariants:** `(int)NoteLetter.X` equals the natural pitch class; `(int)Accidental.Y` equals the semitone offset.
+- **TryParse** returns `false` (no throw) on malformed input; `Parse` throws `FormatException` for the same input and `ArgumentNullException` for `null`.
+- Existing Music tests pass after the rename.
