@@ -5,6 +5,7 @@
 namespace ktsu.Semantics.Music;
 
 using System;
+using System.Globalization;
 
 /// <summary>
 /// A tempo in beats per minute, where one beat is a chosen note duration (quarter note by default).
@@ -53,4 +54,51 @@ public sealed record Tempo
 		Ensure.NotNull(duration);
 		return duration.AsWholeNotes / Beat.AsWholeNotes * SecondsPerBeat;
 	}
+
+	/// <summary>Parses a tempo "{bpm}bpm@{beat}" (e.g. "120bpm@1/4").</summary>
+	/// <param name="text">The tempo text.</param>
+	/// <returns>The parsed tempo.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
+	/// <exception cref="FormatException">Thrown when the text cannot be parsed.</exception>
+	public static Tempo Parse(string text)
+	{
+		Ensure.NotNull(text);
+		return TryParse(text, out Tempo? result)
+			? result
+			: throw new FormatException($"Invalid tempo '{text}'.");
+	}
+
+	/// <summary>Tries to parse a tempo "{bpm}bpm@{beat}".</summary>
+	/// <param name="text">The text to parse.</param>
+	/// <param name="result">The parsed tempo, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? text, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Tempo? result)
+	{
+		result = null;
+		if (text is null)
+		{
+			return false;
+		}
+
+		int marker = text.IndexOf("bpm@", StringComparison.Ordinal);
+		if (marker <= 0)
+		{
+			return false;
+		}
+
+		if (!double.TryParse(text[..marker], NumberStyles.Float, CultureInfo.InvariantCulture, out double bpm)
+			|| bpm <= 0.0
+			|| !Duration.TryParse(text[(marker + 4)..], out Duration? beat))
+		{
+			return false;
+		}
+
+		result = Create(bpm, beat);
+		return true;
+	}
+
+	/// <summary>Returns "{bpm}bpm@{beat}" (e.g. "120bpm@1/4").</summary>
+	/// <returns>The canonical tempo text.</returns>
+	public override string ToString() =>
+		$"{BeatsPerMinute.ToString("R", CultureInfo.InvariantCulture)}bpm@{Beat}";
 }
