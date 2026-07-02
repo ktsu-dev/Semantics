@@ -55,10 +55,11 @@ dotnet add package ktsu.Semantics.Music
 ```csharp
 using ktsu.Semantics.Music;
 
-Pitch middleC = Pitch.FromName("C4");           // MIDI 60
+Pitch middleC = Pitch.Parse("C4");              // MIDI 60
+Pitch cSharp4 = Pitch.Create(NoteLetter.C, Accidental.Sharp, octave: 4); // type-safe, no parsing
 Pitch g4 = middleC.Transpose(7);                // a perfect fifth up
 Interval fifth = Interval.Between(middleC, g4); // +7 semitones
-double hz = Pitch.FromName("A4").FrequencyHz;   // 440.0
+double hz = Pitch.Parse("A4").FrequencyHz;      // 440.0
 
 Scale dDorian = Scale.Create(PitchClass.Create(2), Mode.Dorian);
 bool hasF = dDorian.Contains(PitchClass.Create(5));   // true
@@ -76,7 +77,7 @@ Chord up = cmaj7.Transpose(2);                           // Dmaj7
 
 Tempo tempo = Tempo.Create(120.0);                       // quarter = 120 bpm
 double halfNoteSeconds = tempo.Seconds(Duration.Half);   // 1.0 s
-Note a4 = Note.Create(Pitch.FromName("A4"), Duration.Quarter, Velocity.Forte);
+Note a4 = Note.Create(Pitch.Parse("A4"), Duration.Quarter, Velocity.Forte);
 double noteSeconds = a4.Seconds(tempo);                  // 0.5 s
 ```
 
@@ -96,8 +97,9 @@ Chord five = cMajor.ChordFromRomanNumeral("V7");           // G7
 ```csharp
 using ktsu.Semantics.Music;
 
-// "|" is a barline; spaces separate chords within a bar
-Progression prog = Progression.Parse("| Dm7 | G7 | Cmaj7 | Cmaj7 |");
+// Chart style: a leading time signature, bars separated by "|", and a beat slash "/"
+// extends the preceding chord by one beat (so "Cmaj7 / / /" is a whole bar of 4/4).
+Progression prog = Progression.Parse("4/4  Dm7 / / / | G7 / / / | Cmaj7 / / / | Cmaj7 / / /");
 
 Key key = prog.InferKey()!;                                   // C major (quality-weighted fit)
 IReadOnlyList<string> roman = prog.RomanNumerals(key);        // ii7, V7, Imaj7, Imaj7
@@ -106,11 +108,11 @@ IReadOnlyList<CadenceInstance> cadences = prog.Cadences(key); // Authentic at th
 
 // Chromatic analysis: secondary dominants, borrowed chords, Neapolitan
 IReadOnlyList<ChromaticAnalysis> chromatic =
-    Progression.Parse("| C | A7 | Dm | G7 |").ChromaticChords(key); // A7 -> secondary dominant
+    Progression.Parse("4/4  C / / / | A7 / / / | Dm / / / | G7 / / /").ChromaticChords(key); // A7 -> secondary dominant
 
 // Structure: sections -> arrangement -> form
-Progression verse  = Progression.Parse("| C | G | Am | F |");
-Progression bridge = Progression.Parse("| F | C | G | C |");
+Progression verse  = Progression.Parse("4/4  C / / / | G / / / | Am / / / | F / / /");
+Progression bridge = Progression.Parse("4/4  F / / / | C / / / | G / / / | C / / /");
 Arrangement song = Arrangement.Create(key,
 [
     Section.Create(SectionType.Verse,  verse,  "Verse 1"),
@@ -121,33 +123,53 @@ Arrangement song = Arrangement.Create(key,
 Form form = song.Form;   // Pattern "AABA", Name NamedForm.ThirtyTwoBarAABA
 ```
 
+### Type-safe construction and round-trippable text
+
+```csharp
+using ktsu.Semantics.Music;
+
+// Compiler-enforced construction — no strings to mistype
+Pitch p = Pitch.Create(NoteLetter.C, Accidental.Sharp, octave: 4); // C#4
+
+// Every in-scope type has a canonical ToString() and a Parse/TryParse that inverts it
+Chord c = Chord.Parse("Cmaj7");
+Chord same = Chord.Parse(c.ToString());   // c == same
+
+// Progressions read like a lead sheet and round-trip through their chart form
+Progression prog = Progression.Parse("4/4  Dm7 / G7 / | Cmaj7 / / /");
+Progression reparsed = Progression.Parse(prog.ToString());   // prog == reparsed
+
+// TryParse never throws; Parse throws FormatException on malformed text
+bool ok = Interval.TryParse("-5", out Interval? descendingFourth);
+```
+
 ## API Reference
 
 ### Core value types
 
 | Type | Description | Key factories / members |
 |------|-------------|-------------------------|
-| `PitchClass` | One of twelve pitch classes, folded to 0..11. | `Create(int)`, `Value`, `Name` |
-| `Pitch` | MIDI pitch 0..127 (60 = C4). | `Create(int)`, `FromName(string)`, `FromFrequency(double)`, `Transpose(int)`, `FrequencyHz`, `Octave` |
-| `Interval` | Signed interval in semitones. | `Create(int)`, `Between(Pitch, Pitch)`, `Semitones`, `Cents`, `Folded` |
-| `Mode` | Scale shape by semitone offsets. | `FromName(string)`, presets (`Major`, `Dorian`, `HarmonicMinor`, `WholeTone`, `MajorPentatonic`, ...), `Intervals` |
-| `Scale` | A mode rooted at a pitch class. | `Create(PitchClass, Mode)`, `Contains`, `DegreeOf`, `Transpose` |
-| `Chord` | Chord parsed from a symbol. | `Parse(string)`, `ChordTones()`, `Voice(octave)`, `Voice(octave, inversion)`, `Transpose` |
-| `Key` | Tonic in a mode, resolves function. | `Create(PitchClass, Mode)`, `RomanNumeralOf(Chord)`, `ChordFromRomanNumeral(string)`, `FunctionOf`, `Scale` |
-| `Duration` | Exact rational fraction of a whole note. | `Create(int, int)`, presets (`Whole`..`Sixteenth`), `Dotted()`, `Add`, `Multiply`, `AsWholeNotes` |
-| `TimeSignature` | Bar and beat lengths. | `Create(int, int)`, `BarDuration`, `BeatDuration` |
-| `Note` / `Rest` / `ChordEvent` | Timed musical events (`IMusicalEvent`). | `Create(...)`, `Duration`, `Seconds(Tempo)` |
-| `Velocity` | MIDI velocity 0..127. | `Create(int)`, presets (`Piano`..`Fortissimo`) |
-| `Tempo` | Beats per minute with a beat unit. | `Create(double)`, `Seconds(Duration)`, `SecondsPerBeat` |
+| `PitchClass` | One of twelve pitch classes, folded to 0..11. | `Create(int)`, `Create(NoteLetter, Accidental)`, `Parse`/`TryParse`, `Value`, `Name` |
+| `Pitch` | MIDI pitch 0..127 (60 = C4). | `Create(int)`, `Create(NoteLetter, Accidental, int)`, `Parse`/`TryParse`, `FromFrequency(double)`, `Transpose(int)`, `FrequencyHz`, `Octave` |
+| `Interval` | Signed interval in semitones. | `Create(int)`, `Between(Pitch, Pitch)`, `Parse`/`TryParse`, `Semitones`, `Cents`, `Folded` |
+| `Mode` | Scale shape by semitone offsets. | `Parse`/`TryParse`, presets (`Major`, `Dorian`, `HarmonicMinor`, `WholeTone`, `MajorPentatonic`, ...), `Intervals` |
+| `Scale` | A mode rooted at a pitch class. | `Create(PitchClass, Mode)`, `Parse`/`TryParse`, `Contains`, `DegreeOf`, `Transpose` |
+| `Chord` | Chord parsed from a symbol. | `Parse`/`TryParse`, `ChordTones()`, `Voice(octave)`, `Voice(octave, inversion)`, `Transpose` |
+| `Key` | Tonic in a mode, resolves function. | `Create(PitchClass, Mode)`, `Parse`/`TryParse`, `RomanNumeralOf(Chord)`, `ChordFromRomanNumeral(string)`, `FunctionOf`, `Scale` |
+| `Duration` | Exact rational fraction of a whole note. | `Create(int, int)`, `Parse`/`TryParse`, presets (`Whole`..`Sixteenth`), `Dotted()`, `Add`, `Multiply`, `AsWholeNotes` |
+| `TimeSignature` | Bar and beat lengths. | `Create(int, int)`, `Parse`/`TryParse`, `BarDuration`, `BeatDuration` |
+| `Note` / `Rest` / `ChordEvent` | Timed musical events (`IMusicalEvent`). | `Create(...)`, `Parse`/`TryParse`, `Duration`, `Seconds(Tempo)` |
+| `Velocity` | MIDI velocity 0..127. | `Create(int)`, `Parse`/`TryParse`, presets (`Piano`..`Fortissimo`) |
+| `Tempo` | Beats per minute with a beat unit. | `Create(double)`, `Parse`/`TryParse`, `Seconds(Duration)`, `SecondsPerBeat` |
 
 ### Analysis layer
 
 | Type | Description | Key members |
 |------|-------------|-------------|
 | `Progression` | Chord sequence with bar-based harmonic rhythm. | `Parse(string)`, `Create(...)`, `RomanNumerals(Key)`, `Functions(Key)`, `Cadences(Key)`, `InferKey()`, `InferKeys()`, `ChromaticChords(Key)` |
-| `Section` | Labeled structural unit. | `Create(SectionType, Progression, label?, key?)`, `IsSameStructure(Section)` |
-| `Arrangement` | Sections in performance order. | `Create(Key, IEnumerable<Section>)`, `Form`, `TotalBars` |
-| `Form` | Structural pattern and its name. | `Of(Arrangement)`, `FromPattern(string)`, `Pattern`, `Name` |
+| `Section` | Labeled structural unit. | `Create(SectionType, Progression, label?, key?)`, `Parse`/`TryParse`, `IsSameStructure(Section)` |
+| `Arrangement` | Sections in performance order. | `Create(Key, IEnumerable<Section>)`, `Parse`/`TryParse`, `Form`, `TotalBars` |
+| `Form` | Structural pattern and its name. | `Of(Arrangement)`, `Parse`/`TryParse`, `Pattern`, `Name` |
 | `HarmonicFunction` | enum: Tonic, Predominant, Dominant, Chromatic. | |
 | `CadenceInstance` | A cadence at a resolution index. | `Index`, `Type` (`Cadence` enum: Authentic, Plagal, Half, Deceptive) |
 | `ChromaticAnalysis` | A non-diatonic chord classification. | `Index`, `Kind` (`ChromaticKind`), `Detail` |
