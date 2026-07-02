@@ -104,4 +104,49 @@ public sealed record Scale
 			? new ScaleDegree(flatDegree, flatAlteration)
 			: new ScaleDegree(sharpDegree, sharpAlteration);
 	}
+
+	/// <summary>Parses a scale "{root} {mode}" (e.g. "C dorian").</summary>
+	/// <param name="text">The scale text.</param>
+	/// <returns>The parsed scale.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
+	/// <exception cref="FormatException">Thrown when the text cannot be parsed.</exception>
+	public static Scale Parse(string text)
+	{
+		Ensure.NotNull(text);
+		return TryParse(text, out Scale? result)
+			? result
+			: throw new FormatException($"Invalid scale '{text}'.");
+	}
+
+	/// <summary>Tries to parse a scale "{root} {mode}".</summary>
+	/// <param name="text">The text to parse.</param>
+	/// <param name="result">The parsed scale, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? text, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Scale? result)
+	{
+		result = null;
+		if (text is null)
+		{
+			return false;
+		}
+
+		int space = text.IndexOf(' ');
+		if (space <= 0 || space == text.Length - 1)
+		{
+			return false;
+		}
+
+		if (!PitchClass.TryParse(text[..space], out PitchClass? root)
+			|| !Mode.TryParse(text[(space + 1)..], out Mode? mode))
+		{
+			return false;
+		}
+
+		result = Create(root, mode);
+		return true;
+	}
+
+	/// <summary>Returns "{root} {mode}" (e.g. "C dorian").</summary>
+	/// <returns>The canonical scale text.</returns>
+	public override string ToString() => $"{Root} {Mode}";
 }

@@ -51,4 +51,25 @@ public class ScaleTests
 		Assert.AreEqual(5, tritone.Degree);
 		Assert.AreEqual(-1, tritone.Alteration);
 	}
+
+	[TestMethod]
+	public void ToStringIsRootSpaceMode()
+	{
+		Scale s = Scale.Create(PitchClass.Create(NoteLetter.C, Accidental.Natural), Mode.Dorian);
+		Assert.AreEqual("C dorian", s.ToString());
+	}
+
+	[TestMethod]
+	public void RoundTrip()
+	{
+		Scale s = Scale.Create(PitchClass.Create(NoteLetter.F, Accidental.Sharp), Mode.HarmonicMinor);
+		Assert.AreEqual(s, Scale.Parse(s.ToString()));
+	}
+
+	[TestMethod]
+	public void TryParseFailsWithoutSpace()
+	{
+		Assert.IsFalse(Scale.TryParse("Cdorian", out Scale? result));
+		Assert.IsNull(result);
+	}
 }
