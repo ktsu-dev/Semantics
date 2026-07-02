@@ -5,6 +5,7 @@
 namespace ktsu.Semantics.Music;
 
 using System;
+using System.Globalization;
 
 /// <summary>
 /// Represents a melodic/harmonic interval measured in signed semitones.
@@ -39,4 +40,37 @@ public sealed record Interval
 		Ensure.NotNull(to);
 		return Create(to.Midi - from.Midi);
 	}
+
+	/// <summary>Parses a signed semitone count.</summary>
+	/// <param name="text">The signed integer text.</param>
+	/// <returns>The parsed interval.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
+	/// <exception cref="FormatException">Thrown when the text is not an integer.</exception>
+	public static Interval Parse(string text)
+	{
+		Ensure.NotNull(text);
+		return TryParse(text, out Interval? result)
+			? result
+			: throw new FormatException($"Invalid interval '{text}'.");
+	}
+
+	/// <summary>Tries to parse a signed semitone count.</summary>
+	/// <param name="text">The text to parse.</param>
+	/// <param name="result">The parsed interval, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? text, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Interval? result)
+	{
+		if (text is not null && int.TryParse(text, NumberStyles.Integer | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int semitones))
+		{
+			result = Create(semitones);
+			return true;
+		}
+
+		result = null;
+		return false;
+	}
+
+	/// <summary>Returns the signed semitone count.</summary>
+	/// <returns>The canonical interval text.</returns>
+	public override string ToString() => Semitones.ToString(CultureInfo.InvariantCulture);
 }
