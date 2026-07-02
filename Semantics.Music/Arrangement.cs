@@ -29,7 +29,7 @@ public sealed record Arrangement
 
 	/// <summary>Returns a hash code consistent with <see cref="Equals(Arrangement)"/>.</summary>
 	/// <returns>The hash code.</returns>
-	public override int GetHashCode() => HashCode.Combine(Key, Sections.Count);
+	public override int GetHashCode() => (Key, Sections.Count).GetHashCode();
 
 	/// <summary>Gets the total length of the arrangement in bars.</summary>
 	public double TotalBars => Sections.Sum(section => section.Bars);

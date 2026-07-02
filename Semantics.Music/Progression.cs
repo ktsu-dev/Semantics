@@ -29,7 +29,7 @@ public sealed partial record Progression
 
 	/// <summary>Returns a hash code consistent with <see cref="Equals(Progression)"/>.</summary>
 	/// <returns>The hash code.</returns>
-	public override int GetHashCode() => HashCode.Combine(TimeSignature, Chords.Count);
+	public override int GetHashCode() => (TimeSignature, Chords.Count).GetHashCode();
 
 	/// <summary>Gets the total rhythmic length as a fraction of a whole note.</summary>
 	public Duration TotalDuration =>

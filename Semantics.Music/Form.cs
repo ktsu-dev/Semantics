@@ -39,7 +39,7 @@ public sealed record Form
 
 	/// <summary>Returns a hash code consistent with <see cref="Equals(Form)"/>.</summary>
 	/// <returns>The hash code.</returns>
-	public override int GetHashCode() => HashCode.Combine(Pattern, Name);
+	public override int GetHashCode() => (Pattern, Name).GetHashCode();
 
 	/// <summary>Derives the form of an arrangement from its sections.</summary>
 	/// <param name="arrangement">The arrangement to analyze.</param>
@@ -92,7 +92,7 @@ public sealed record Form
 	public static bool TryParse(string? pattern, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Form? result)
 	{
 		result = null;
-		if (string.IsNullOrEmpty(pattern) || !pattern!.All(c => c is >= 'A' and <= 'Z'))
+		if (pattern is null || pattern.Length == 0 || !pattern.All(c => c is >= 'A' and <= 'Z'))
 		{
 			return false;
 		}
