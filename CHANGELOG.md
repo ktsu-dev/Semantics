@@ -1,6 +1,33 @@
-## v2.5.0
+## v2.5.1 (patch)
 
-No significant changes detected since v2.5.0.
+Changes since v2.5.0:
+
+- fix(music): use ValueTuple.GetHashCode instead of System.HashCode for netstandard2.0 compatibility ([@matt-edmondson](https://github.com/matt-edmondson))
+- refactor(music): split Progression.TryParse into helpers to cut cognitive complexity and remove always-true check (SonarQube S3776/S2583) ([@matt-edmondson](https://github.com/matt-edmondson))
+- docs(music): update examples and references for Parse/TryParse rename and chart-style progressions ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): chart-style Arrangement ToString + Parse/TryParse + structural equality ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): chart-style Section ToString + Parse/TryParse ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music)!: replace bar-delimited Progression.Parse with chart-style ToString/Parse/TryParse + structural equality; migrate call sites ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): rename Form.FromPattern to Parse/TryParse, canonical ToString, structural equality ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): Rest canonical ToString + Parse/TryParse ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): Note canonical ToString + Parse/TryParse ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): ChordEvent canonical ToString + Parse/TryParse ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): canonical Chord ToString, TryParse, ParseRoot via Notation ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): Key canonical ToString + Parse/TryParse; roman-numeral accidental via Notation ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): Scale canonical ToString + Parse/TryParse ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): Tempo canonical ToString + Parse/TryParse ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): Velocity canonical ToString + Parse/TryParse ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): TimeSignature canonical ToString + Parse/TryParse ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): Duration canonical ToString + Parse/TryParse ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): Interval canonical ToString + Parse/TryParse ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): rename Mode.FromName to Parse/TryParse, canonical ToString ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): typed Pitch factory, rename FromName to Parse/TryParse, canonical ToString ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): typed PitchClass factory, Parse/TryParse, canonical ToString ([@matt-edmondson](https://github.com/matt-edmondson))
+- feat(music): add NoteLetter and Accidental enums ([@matt-edmondson](https://github.com/matt-edmondson))
+- docs: implementation plan for music type-safe factories and canonical round-trip ToString ([@matt-edmondson](https://github.com/matt-edmondson))
+- docs: revise music factories spec with canonical round-trip ToString and chart-style aggregate format ([@matt-edmondson](https://github.com/matt-edmondson))
+- docs: design spec for music type-safe factories and Parse/TryParse convention ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] docs: add per-package READMEs and turn root README into a family index ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v2.5.0 (minor)
 
