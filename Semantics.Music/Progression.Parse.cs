@@ -6,61 +6,155 @@ namespace ktsu.Semantics.Music;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 public sealed partial record Progression
 {
-	/// <summary>Parses a bar-delimited chord progression in 4/4.</summary>
-	/// <param name="text">Chord symbols with <c>|</c> as a barline and spaces separating chords in a bar.</param>
+	/// <summary>Returns the chart-style progression line, e.g. "4/4  Dm7 / G7 / | Cmaj7 / / /".</summary>
+	/// <returns>The canonical progression text.</returns>
+	public override string ToString()
+	{
+		StringBuilder sb = new();
+		_ = sb.Append(TimeSignature).Append("  ");
+
+		int beatUnit = TimeSignature.BeatUnit;
+		int beatsPerBar = TimeSignature.Beats;
+		int beatCursor = 0;
+		bool first = true;
+
+		foreach (ChordEvent ev in Chords)
+		{
+			if (!first && beatCursor % beatsPerBar == 0)
+			{
+				_ = sb.Append("| ");
+			}
+
+			first = false;
+
+			double beatsExact = ev.Duration.AsWholeNotes * beatUnit;
+			int beats = (int)System.Math.Round(beatsExact);
+			bool wholeBeats = beats >= 1 && System.Math.Abs(beatsExact - beats) < 1e-9;
+
+			if (wholeBeats)
+			{
+				_ = sb.Append(ev.Chord);
+				for (int i = 1; i < beats; i++)
+				{
+					_ = sb.Append(" /");
+				}
+
+				beatCursor += beats;
+			}
+			else
+			{
+				_ = sb.Append(ev.Chord).Append('@').Append(ev.Duration);
+				beatCursor = 0; // sub-beat durations reset bar tracking (cosmetic only)
+			}
+
+			_ = sb.Append(' ');
+		}
+
+		return sb.ToString().TrimEnd();
+	}
+
+	/// <summary>Parses a chart-style progression line.</summary>
+	/// <param name="text">The progression text.</param>
 	/// <returns>The parsed progression.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
-	/// <exception cref="FormatException">Thrown when the text is empty or a bar is empty.</exception>
-	public static Progression Parse(string text) => Parse(text, TimeSignature.Create(4, 4));
-
-	/// <summary>Parses a bar-delimited chord progression with an explicit time signature.</summary>
-	/// <param name="text">Chord symbols with <c>|</c> as a barline and spaces separating chords in a bar.</param>
-	/// <param name="timeSignature">The time signature; a bar's chords split its bar duration evenly.</param>
-	/// <returns>The parsed progression.</returns>
-	/// <exception cref="ArgumentNullException">Thrown when an argument is null.</exception>
-	/// <exception cref="FormatException">Thrown when the text is empty or a bar is empty.</exception>
-	public static Progression Parse(string text, TimeSignature timeSignature)
+	/// <exception cref="FormatException">Thrown when the text cannot be parsed.</exception>
+	public static Progression Parse(string text)
 	{
 		Ensure.NotNull(text);
-		Ensure.NotNull(timeSignature);
+		return TryParse(text, out Progression? result)
+			? result
+			: throw new FormatException($"Invalid progression '{text}'.");
+	}
 
-		string trimmed = text.Trim();
-		if (trimmed.Length == 0)
+	/// <summary>Tries to parse a chart-style progression line.</summary>
+	/// <param name="text">The text to parse.</param>
+	/// <param name="result">The parsed progression, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? text, [NotNullWhen(true)] out Progression? result)
+	{
+		result = null;
+		if (string.IsNullOrWhiteSpace(text))
 		{
-			throw new FormatException("Progression is empty.");
+			return false;
 		}
 
-		// Strip one leading and one trailing barline so "| C | G |" parses cleanly.
-		if (trimmed[0] == '|')
+		string[] tokens = text!.Split((char[]?)null, System.StringSplitOptions.RemoveEmptyEntries);
+		if (tokens.Length < 2 || !TimeSignature.TryParse(tokens[0], out TimeSignature? ts))
 		{
-			trimmed = trimmed[1..];
+			return false;
 		}
 
-		if (trimmed.Length > 0 && trimmed[^1] == '|')
-		{
-			trimmed = trimmed[..^1];
-		}
-
-		Duration barDuration = timeSignature.BarDuration;
+		int beatUnit = ts.BeatUnit;
 		List<ChordEvent> events = [];
-		foreach (string bar in trimmed.Split('|'))
+		Chord? current = null;
+		int currentBeats = 0;
+		Duration? explicitDuration = null;
+
+		bool Flush()
 		{
-			string[] tokens = bar.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
-			if (tokens.Length == 0)
+			if (current is null)
 			{
-				throw new FormatException("Progression has an empty bar.");
+				return true;
 			}
 
-			Duration each = Duration.Create(barDuration.Numerator, barDuration.Denominator * tokens.Length);
-			foreach (string token in tokens)
+			Duration duration = explicitDuration ?? Duration.Create(currentBeats, beatUnit);
+			events.Add(ChordEvent.Create(current, duration));
+			current = null;
+			currentBeats = 0;
+			explicitDuration = null;
+			return true;
+		}
+
+		for (int i = 1; i < tokens.Length; i++)
+		{
+			string token = tokens[i];
+			if (token == "|")
 			{
-				events.Add(ChordEvent.Create(Chord.Parse(token), each));
+				continue;
+			}
+
+			if (token == "/")
+			{
+				if (current is null)
+				{
+					return false;
+				}
+
+				currentBeats++;
+				continue;
+			}
+
+			_ = Flush();
+			int at = token.IndexOf('@');
+			if (at >= 0)
+			{
+				if (!Chord.TryParse(token[..at], out current) || !Duration.TryParse(token[(at + 1)..], out explicitDuration))
+				{
+					return false;
+				}
+			}
+			else if (!Chord.TryParse(token, out current))
+			{
+				return false;
+			}
+			else
+			{
+				currentBeats = 1;
 			}
 		}
 
-		return Create(events, timeSignature);
+		_ = Flush();
+		if (events.Count == 0)
+		{
+			return false;
+		}
+
+		result = Create(events, ts);
+		return true;
 	}
 }

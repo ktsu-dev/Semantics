@@ -51,33 +51,33 @@ public class ProgressionTests
 	}
 
 	[TestMethod]
-	public void Parse_OneChordPerBar_FillsWholeBars()
+	public void Parse_WholeBarChords_UseBeatSlashes()
 	{
-		Progression progression = Progression.Parse("Dm7 | G7 | Cmaj7");
+		Progression progression = Progression.Parse("4/4  Dm7 / / / | G7 / / / | Cmaj7 / / /");
 		Assert.AreEqual(3, progression.Chords.Count);
 		Assert.AreEqual(Duration.Whole, progression.Chords[0].Duration);
 		Assert.AreEqual(3.0, progression.TotalBars, 1e-9);
 	}
 
 	[TestMethod]
-	public void Parse_TwoChordsPerBar_SplitBarEvenly()
+	public void Parse_TwoChordsPerBar_UseBeatSlashes()
 	{
-		Progression progression = Progression.Parse("C G | Am F");
+		Progression progression = Progression.Parse("4/4  C / Am / | F / G /");
 		Assert.AreEqual(4, progression.Chords.Count);
 		Assert.AreEqual(Duration.Half, progression.Chords[0].Duration);
 		Assert.AreEqual(2.0, progression.TotalBars, 1e-9);
 	}
 
 	[TestMethod]
-	public void Parse_ToleratesLeadingAndTrailingBarlines()
+	public void Parse_ToleratesBarlines()
 	{
-		Progression progression = Progression.Parse("| C | G |");
+		Progression progression = Progression.Parse("4/4  | C | G |");
 		Assert.AreEqual(2, progression.Chords.Count);
 	}
 
 	[TestMethod]
-	public void Parse_RejectsEmptyBar() =>
-		_ = Assert.ThrowsExactly<FormatException>(() => Progression.Parse("C || G"));
+	public void Parse_RejectsMissingTimeSignature() =>
+		_ = Assert.ThrowsExactly<FormatException>(() => Progression.Parse("C | G"));
 
 	[TestMethod]
 	public void Parse_RejectsEmptyText() =>

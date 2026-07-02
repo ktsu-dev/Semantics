@@ -12,7 +12,7 @@ public class FormTests
 	private static Key CMajor => Key.Create(PitchClass.Create(0), Mode.Major);
 
 	private static Section Section(SectionType type, string chords) =>
-		ktsu.Semantics.Music.Section.Create(type, Progression.Parse(chords));
+		ktsu.Semantics.Music.Section.Create(type, Progression.Parse("4/4  " + chords));
 
 	[TestMethod]
 	public void Of_ExtractsAABAPattern_AndNamesThirtyTwoBarForm()

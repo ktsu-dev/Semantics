@@ -12,7 +12,7 @@ public class SectionTests
 	[TestMethod]
 	public void Section_ExposesTypeProgressionAndBars()
 	{
-		Section verse = Section.Create(SectionType.Verse, Progression.Parse("C | Am | F | G"), "Verse 1");
+		Section verse = Section.Create(SectionType.Verse, Progression.Parse("4/4  C / / / | Am / / / | F / / / | G / / /"), "Verse 1");
 		Assert.AreEqual(SectionType.Verse, verse.Type);
 		Assert.AreEqual("Verse 1", verse.Label);
 		Assert.AreEqual(4.0, verse.Bars, 1e-9);
@@ -21,17 +21,17 @@ public class SectionTests
 	[TestMethod]
 	public void IsSameStructure_IgnoresLabelAndKey()
 	{
-		Section a = Section.Create(SectionType.Verse, Progression.Parse("C | Am | F | G"), "Verse 1");
-		Section b = Section.Create(SectionType.Verse, Progression.Parse("C | Am | F | G"), "Verse 2");
+		Section a = Section.Create(SectionType.Verse, Progression.Parse("4/4  C / / / | Am / / / | F / / / | G / / /"), "Verse 1");
+		Section b = Section.Create(SectionType.Verse, Progression.Parse("4/4  C / / / | Am / / / | F / / / | G / / /"), "Verse 2");
 		Assert.IsTrue(a.IsSameStructure(b));
 	}
 
 	[TestMethod]
 	public void IsSameStructure_FalseForDifferentTypeOrChords()
 	{
-		Section verse = Section.Create(SectionType.Verse, Progression.Parse("C | Am | F | G"));
-		Section chorus = Section.Create(SectionType.Chorus, Progression.Parse("C | Am | F | G"));
-		Section other = Section.Create(SectionType.Verse, Progression.Parse("F | G | C | C"));
+		Section verse = Section.Create(SectionType.Verse, Progression.Parse("4/4  C / / / | Am / / / | F / / / | G / / /"));
+		Section chorus = Section.Create(SectionType.Chorus, Progression.Parse("4/4  C / / / | Am / / / | F / / / | G / / /"));
+		Section other = Section.Create(SectionType.Verse, Progression.Parse("4/4  F / / / | G / / / | C / / / | C / / /"));
 		Assert.IsFalse(verse.IsSameStructure(chorus));
 		Assert.IsFalse(verse.IsSameStructure(other));
 	}

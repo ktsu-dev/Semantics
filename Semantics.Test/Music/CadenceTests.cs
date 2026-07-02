@@ -15,7 +15,7 @@ public class CadenceTests
 	public void Cadences_DetectsAuthentic()
 	{
 		System.Collections.Generic.IReadOnlyList<CadenceInstance> cadences =
-			Progression.Parse("G | C").Cadences(CMajor);
+			Progression.Parse("4/4  G | C").Cadences(CMajor);
 		Assert.AreEqual(1, cadences.Count);
 		Assert.AreEqual(Cadence.Authentic, cadences[0].Type);
 		Assert.AreEqual(1, cadences[0].Index);
@@ -24,16 +24,16 @@ public class CadenceTests
 	[TestMethod]
 	public void Cadences_DetectsPlagalHalfAndDeceptive()
 	{
-		Assert.AreEqual(Cadence.Plagal, Progression.Parse("F | C").Cadences(CMajor)[0].Type);
-		Assert.AreEqual(Cadence.Half, Progression.Parse("C | G").Cadences(CMajor)[0].Type);
-		Assert.AreEqual(Cadence.Deceptive, Progression.Parse("G | Am").Cadences(CMajor)[0].Type);
+		Assert.AreEqual(Cadence.Plagal, Progression.Parse("4/4  F | C").Cadences(CMajor)[0].Type);
+		Assert.AreEqual(Cadence.Half, Progression.Parse("4/4  C | G").Cadences(CMajor)[0].Type);
+		Assert.AreEqual(Cadence.Deceptive, Progression.Parse("4/4  G | Am").Cadences(CMajor)[0].Type);
 	}
 
 	[TestMethod]
 	public void Cadences_ReportsNoneForNonCadentialMotion()
 	{
 		System.Collections.Generic.IReadOnlyList<CadenceInstance> cadences =
-			Progression.Parse("C | Am").Cadences(CMajor);
+			Progression.Parse("4/4  C | Am").Cadences(CMajor);
 		Assert.AreEqual(0, cadences.Count);
 	}
 
