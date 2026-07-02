@@ -14,8 +14,8 @@ public class ArrangementTests
 	[TestMethod]
 	public void Arrangement_OrdersSectionsAndSumsBars()
 	{
-		Section verse = Section.Create(SectionType.Verse, Progression.Parse("C | Am | F | G"));
-		Section chorus = Section.Create(SectionType.Chorus, Progression.Parse("F | G | C | C"));
+		Section verse = Section.Create(SectionType.Verse, Progression.Parse("4/4  C / / / | Am / / / | F / / / | G / / /"));
+		Section chorus = Section.Create(SectionType.Chorus, Progression.Parse("4/4  F / / / | G / / / | C / / / | C / / /"));
 		Arrangement arrangement = Arrangement.Create(CMajor, [verse, chorus, verse]);
 		Assert.AreEqual(3, arrangement.Sections.Count);
 		Assert.AreEqual(12.0, arrangement.TotalBars, 1e-9);
@@ -32,5 +32,5 @@ public class ArrangementTests
 	[TestMethod]
 	public void Arrangement_RejectsNullKey() =>
 		_ = Assert.ThrowsExactly<ArgumentNullException>(
-			() => Arrangement.Create(null!, [Section.Create(SectionType.Verse, Progression.Parse("C"))]));
+			() => Arrangement.Create(null!, [Section.Create(SectionType.Verse, Progression.Parse("4/4  C / / /"))]));
 }

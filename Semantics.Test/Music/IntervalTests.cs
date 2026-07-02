@@ -34,4 +34,28 @@ public class IntervalTests
 		Assert.AreEqual(-1, Interval.Create(-3).Direction);
 		Assert.AreEqual(0, Interval.Create(0).Direction);
 	}
+
+	[TestMethod]
+	public void ToStringIsSignedSemitones()
+	{
+		Assert.AreEqual("7", Interval.Create(7).ToString());
+		Assert.AreEqual("-5", Interval.Create(-5).ToString());
+	}
+
+	[TestMethod]
+	public void RoundTrip()
+	{
+		foreach (int s in new[] { 0, 7, -5, 14 })
+		{
+			Interval i = Interval.Create(s);
+			Assert.AreEqual(i, Interval.Parse(i.ToString()));
+		}
+	}
+
+	[TestMethod]
+	public void TryParseFailsOnGarbage()
+	{
+		Assert.IsFalse(Interval.TryParse("x", out Interval? result));
+		Assert.IsNull(result);
+	}
 }

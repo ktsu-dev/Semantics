@@ -156,16 +156,36 @@ public sealed record Mode
 	/// <summary>The major blues scale (major pentatonic plus the ♭3 blue note).</summary>
 	public static Mode BluesMajor => new() { Name = "blues_major" };
 
-	/// <summary>Looks up a mode by name, case-insensitively.</summary>
+	/// <summary>Parses a mode by name, case-insensitively.</summary>
 	/// <param name="name">The mode name (e.g. "aeolian", "harmonic_minor", "octatonic_hw").</param>
 	/// <returns>The matching mode.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="name"/> is null.</exception>
-	/// <exception cref="ArgumentException">Thrown when the name is not a known mode.</exception>
-	public static Mode FromName(string name)
+	/// <exception cref="FormatException">Thrown when the name is not a known mode.</exception>
+	public static Mode Parse(string name)
 	{
 		Ensure.NotNull(name);
-		return Shapes.TryGetValue(name, out _)
-			? new() { Name = name.ToLowerInvariant() }
-			: throw new ArgumentException($"Unknown mode '{name}'.", nameof(name));
+		return TryParse(name, out Mode? result)
+			? result
+			: throw new FormatException($"Unknown mode '{name}'.");
 	}
+
+	/// <summary>Tries to parse a mode by name, case-insensitively.</summary>
+	/// <param name="name">The mode name.</param>
+	/// <param name="result">The matching mode, or null on failure.</param>
+	/// <returns><see langword="true"/> when the name is a known mode.</returns>
+	public static bool TryParse(string? name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Mode? result)
+	{
+		if (name is not null && Shapes.ContainsKey(name))
+		{
+			result = new() { Name = name.ToLowerInvariant() };
+			return true;
+		}
+
+		result = null;
+		return false;
+	}
+
+	/// <summary>Returns the canonical lower-case mode name.</summary>
+	/// <returns>The mode name.</returns>
+	public override string ToString() => Name;
 }

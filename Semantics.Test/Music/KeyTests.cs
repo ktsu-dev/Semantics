@@ -45,4 +45,25 @@ public class KeyTests
 		Assert.AreEqual(5, fifth.Degree);
 		Assert.AreEqual(0, fifth.Alteration);
 	}
+
+	[TestMethod]
+	public void ToStringIsTonicSpaceMode()
+	{
+		Key k = Key.Create(PitchClass.Create(NoteLetter.A, Accidental.Natural), Mode.Aeolian);
+		Assert.AreEqual("A aeolian", k.ToString());
+	}
+
+	[TestMethod]
+	public void RoundTrip()
+	{
+		Key k = Key.Create(PitchClass.Create(NoteLetter.E, Accidental.Flat), Mode.Major);
+		Assert.AreEqual(k, Key.Parse(k.ToString()));
+	}
+
+	[TestMethod]
+	public void TryParseFailsOnUnknownMode()
+	{
+		Assert.IsFalse(Key.TryParse("C bogus", out Key? result));
+		Assert.IsNull(result);
+	}
 }

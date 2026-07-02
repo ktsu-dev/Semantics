@@ -1,5 +1,7 @@
 # Music Analysis Aggregate Layer Implementation Plan
 
+> **Superseded (2026-07-02):** The `Pitch.FromName`, `Mode.FromName`, and `Form.FromPattern` entry points referenced below were renamed to `Parse`/`TryParse`, and the bar-delimited `Progression.Parse` format was replaced with a chart-style format, by the type-safe-factories work — see `2026-07-02-music-type-safe-factories.md`. Snippets below record the API as it was when this plan was executed.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add an analysis-oriented aggregate layer to `Semantics.Music` — `Progression` (chords + functional-harmony analysis), `Section`, `Arrangement`, and `Form` — building only on the existing primitives.

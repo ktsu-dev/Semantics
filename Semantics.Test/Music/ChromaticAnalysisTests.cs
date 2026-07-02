@@ -15,7 +15,7 @@ public class ChromaticAnalysisTests
 	public void ChromaticChords_SkipsDiatonicChords()
 	{
 		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> analyses =
-			Progression.Parse("C | Dm | G7 | C").ChromaticChords(CMajor);
+			Progression.Parse("4/4  C | Dm | G7 | C").ChromaticChords(CMajor);
 		Assert.AreEqual(0, analyses.Count);
 	}
 
@@ -24,7 +24,7 @@ public class ChromaticAnalysisTests
 	{
 		// D7 in C is V/V (resolving toward G, the dominant).
 		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> analyses =
-			Progression.Parse("C | D7 | G7 | C").ChromaticChords(CMajor);
+			Progression.Parse("4/4  C | D7 | G7 | C").ChromaticChords(CMajor);
 		Assert.AreEqual(1, analyses.Count);
 		Assert.AreEqual(ChromaticKind.SecondaryDominant, analyses[0].Kind);
 		Assert.AreEqual("V/V", analyses[0].Detail);
@@ -35,7 +35,7 @@ public class ChromaticAnalysisTests
 	public void ChromaticChords_DetectsNeapolitan()
 	{
 		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> analyses =
-			Progression.Parse("C | Db | G7").ChromaticChords(CMajor);
+			Progression.Parse("4/4  C | Db | G7").ChromaticChords(CMajor);
 		Assert.AreEqual(ChromaticKind.Neapolitan, analyses[0].Kind);
 		Assert.AreEqual("bII", analyses[0].Detail);
 	}
@@ -45,7 +45,7 @@ public class ChromaticAnalysisTests
 	{
 		// Fm in C major is iv borrowed from the parallel minor.
 		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> analyses =
-			Progression.Parse("C | Fm | C").ChromaticChords(CMajor);
+			Progression.Parse("4/4  C | Fm | C").ChromaticChords(CMajor);
 		Assert.AreEqual(ChromaticKind.BorrowedChord, analyses[0].Kind);
 		Assert.AreEqual("from parallel minor", analyses[0].Detail);
 	}

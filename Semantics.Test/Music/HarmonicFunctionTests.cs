@@ -14,7 +14,7 @@ public class HarmonicFunctionTests
 	[TestMethod]
 	public void RomanNumerals_LabelsTwoFiveOne()
 	{
-		Progression progression = Progression.Parse("Dm7 | G7 | Cmaj7");
+		Progression progression = Progression.Parse("4/4  Dm7 | G7 | Cmaj7");
 		System.Collections.Generic.IReadOnlyList<string> numerals = progression.RomanNumerals(CMajor);
 		string[] expected = ["ii7", "V7", "Imaj7"];
 		string[] actual = [.. numerals];
@@ -24,7 +24,7 @@ public class HarmonicFunctionTests
 	[TestMethod]
 	public void Functions_ClassifyDiatonicChords()
 	{
-		Progression progression = Progression.Parse("C | Dm | G | Am");
+		Progression progression = Progression.Parse("4/4  C | Dm | G | Am");
 		System.Collections.Generic.IReadOnlyList<HarmonicFunction> functions = progression.Functions(CMajor);
 		Assert.AreEqual(HarmonicFunction.Tonic, functions[0]);      // I
 		Assert.AreEqual(HarmonicFunction.Predominant, functions[1]); // ii
@@ -35,7 +35,7 @@ public class HarmonicFunctionTests
 	[TestMethod]
 	public void Functions_MarksChromaticRoot()
 	{
-		Progression progression = Progression.Parse("C | Db");
+		Progression progression = Progression.Parse("4/4  C | Db");
 		System.Collections.Generic.IReadOnlyList<HarmonicFunction> functions = progression.Functions(CMajor);
 		Assert.AreEqual(HarmonicFunction.Chromatic, functions[1]);
 	}

@@ -19,6 +19,18 @@ public sealed partial record Progression
 	/// <summary>Gets the time signature used to interpret durations as bars and beats.</summary>
 	public TimeSignature TimeSignature { get; private init; } = TimeSignature.Create(4, 4);
 
+	/// <summary>Determines structural equality: the time signature and ordered chord events all match.</summary>
+	/// <param name="other">The progression to compare.</param>
+	/// <returns><see langword="true"/> when the progressions are value-equal.</returns>
+	public bool Equals(Progression? other) =>
+		other is not null
+		&& TimeSignature == other.TimeSignature
+		&& Chords.SequenceEqual(other.Chords);
+
+	/// <summary>Returns a hash code consistent with <see cref="Equals(Progression)"/>.</summary>
+	/// <returns>The hash code.</returns>
+	public override int GetHashCode() => (TimeSignature, Chords.Count).GetHashCode();
+
 	/// <summary>Gets the total rhythmic length as a fraction of a whole note.</summary>
 	public Duration TotalDuration =>
 		Chords.Aggregate(Duration.Create(0, 1), (sum, chordEvent) => sum.Add(chordEvent.Duration));

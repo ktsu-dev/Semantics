@@ -30,4 +30,43 @@ public class PitchClassTests
 	{
 		Assert.AreEqual(PitchClass.Create(13), PitchClass.Create(1));
 	}
+
+	[TestMethod]
+	public void TypedCreateComposesLetterAndAccidental()
+	{
+		PitchClass cSharp = PitchClass.Create(NoteLetter.C, Accidental.Sharp);
+		Assert.AreEqual(1, cSharp.Value);
+	}
+
+	[TestMethod]
+	public void ToStringIsSharpSpelled()
+	{
+		Assert.AreEqual("C#", PitchClass.Create(NoteLetter.C, Accidental.Sharp).ToString());
+	}
+
+	[TestMethod]
+	public void ParseAcceptsFlatsAndNormalisesToSharp()
+	{
+		PitchClass dFlat = PitchClass.Parse("Db");
+		Assert.AreEqual(1, dFlat.Value);
+		Assert.AreEqual("C#", dFlat.ToString());
+	}
+
+	[TestMethod]
+	public void RoundTripOfCanonicalOutput()
+	{
+		PitchClass parsed = PitchClass.Parse("Db");
+		Assert.AreEqual(parsed, PitchClass.Parse(parsed.ToString()));
+	}
+
+	[TestMethod]
+	public void ParseThrowsFormatExceptionOnGarbage() =>
+		_ = Assert.ThrowsExactly<FormatException>(() => PitchClass.Parse("H"));
+
+	[TestMethod]
+	public void TryParseReturnsFalseOnGarbage()
+	{
+		Assert.IsFalse(PitchClass.TryParse("H", out PitchClass? result));
+		Assert.IsNull(result);
+	}
 }
