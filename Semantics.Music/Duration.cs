@@ -5,6 +5,7 @@
 namespace ktsu.Semantics.Music;
 
 using System;
+using System.Globalization;
 
 /// <summary>
 /// A note duration expressed as an exact rational fraction of a whole note.
@@ -73,6 +74,53 @@ public sealed record Duration
 	/// <summary>Returns this duration with a single augmentation dot (×3/2).</summary>
 	/// <returns>The dotted duration.</returns>
 	public Duration Dotted() => Create(Numerator * 3, Denominator * 2);
+
+	/// <summary>Parses a fraction "n/d".</summary>
+	/// <param name="text">The fraction text.</param>
+	/// <returns>The reduced duration.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
+	/// <exception cref="FormatException">Thrown when the text is not a valid non-zero-denominator fraction.</exception>
+	public static Duration Parse(string text)
+	{
+		Ensure.NotNull(text);
+		return TryParse(text, out Duration? result)
+			? result
+			: throw new FormatException($"Invalid duration '{text}'.");
+	}
+
+	/// <summary>Tries to parse a fraction "n/d".</summary>
+	/// <param name="text">The text to parse.</param>
+	/// <param name="result">The reduced duration, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? text, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Duration? result)
+	{
+		result = null;
+		if (text is null)
+		{
+			return false;
+		}
+
+		int slash = text.IndexOf('/');
+		if (slash <= 0 || slash == text.Length - 1)
+		{
+			return false;
+		}
+
+		if (!int.TryParse(text[..slash], NumberStyles.Integer | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int numerator)
+			|| !int.TryParse(text[(slash + 1)..], NumberStyles.Integer | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int denominator)
+			|| denominator == 0)
+		{
+			return false;
+		}
+
+		result = Create(numerator, denominator);
+		return true;
+	}
+
+	/// <summary>Returns the reduced fraction (e.g. "1/4").</summary>
+	/// <returns>The canonical duration text.</returns>
+	public override string ToString() =>
+		$"{Numerator.ToString(CultureInfo.InvariantCulture)}/{Denominator.ToString(CultureInfo.InvariantCulture)}";
 
 	private static int Gcd(int a, int b)
 	{

@@ -49,4 +49,27 @@ public class DurationTests
 	{
 		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Duration.Create(1, 0));
 	}
+
+	[TestMethod]
+	public void ToStringIsReducedFraction()
+	{
+		Assert.AreEqual("1/4", Duration.Quarter.ToString());
+		Assert.AreEqual("1/4", Duration.Create(2, 8).ToString());
+	}
+
+	[TestMethod]
+	public void RoundTripOfCanonicalOutput()
+	{
+		Duration d = Duration.Create(2, 8);
+		Assert.AreEqual(d, Duration.Parse(d.ToString()));
+	}
+
+	[TestMethod]
+	public void TryParseFailsOnMissingSlashOrZeroDenominator()
+	{
+		Assert.IsFalse(Duration.TryParse("4", out Duration? a));
+		Assert.IsNull(a);
+		Assert.IsFalse(Duration.TryParse("1/0", out Duration? b));
+		Assert.IsNull(b);
+	}
 }
