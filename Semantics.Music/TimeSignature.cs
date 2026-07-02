@@ -5,6 +5,7 @@
 namespace ktsu.Semantics.Music;
 
 using System;
+using System.Globalization;
 
 /// <summary>
 /// A musical time signature, with bar and beat lengths in whole-note fractions.
@@ -42,4 +43,51 @@ public sealed record TimeSignature
 
 		return new() { Beats = beats, BeatUnit = beatUnit };
 	}
+
+	/// <summary>Parses a time signature "beats/unit".</summary>
+	/// <param name="text">The time-signature text.</param>
+	/// <returns>The parsed time signature.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
+	/// <exception cref="FormatException">Thrown when the text is not a valid positive "beats/unit".</exception>
+	public static TimeSignature Parse(string text)
+	{
+		Ensure.NotNull(text);
+		return TryParse(text, out TimeSignature? result)
+			? result
+			: throw new FormatException($"Invalid time signature '{text}'.");
+	}
+
+	/// <summary>Tries to parse a time signature "beats/unit".</summary>
+	/// <param name="text">The text to parse.</param>
+	/// <param name="result">The parsed time signature, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? text, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out TimeSignature? result)
+	{
+		result = null;
+		if (text is null)
+		{
+			return false;
+		}
+
+		int slash = text.IndexOf('/');
+		if (slash <= 0 || slash == text.Length - 1)
+		{
+			return false;
+		}
+
+		if (!int.TryParse(text[..slash], NumberStyles.Integer, CultureInfo.InvariantCulture, out int beats)
+			|| !int.TryParse(text[(slash + 1)..], NumberStyles.Integer, CultureInfo.InvariantCulture, out int beatUnit)
+			|| beats <= 0 || beatUnit <= 0)
+		{
+			return false;
+		}
+
+		result = Create(beats, beatUnit);
+		return true;
+	}
+
+	/// <summary>Returns "beats/unit" (e.g. "4/4").</summary>
+	/// <returns>The canonical time-signature text.</returns>
+	public override string ToString() =>
+		$"{Beats.ToString(CultureInfo.InvariantCulture)}/{BeatUnit.ToString(CultureInfo.InvariantCulture)}";
 }

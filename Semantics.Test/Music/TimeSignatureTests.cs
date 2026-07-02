@@ -33,4 +33,24 @@ public class TimeSignatureTests
 		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => TimeSignature.Create(0, 4));
 		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => TimeSignature.Create(4, 0));
 	}
+
+	[TestMethod]
+	public void ToStringIsBeatsOverUnit()
+	{
+		Assert.AreEqual("6/8", TimeSignature.Create(6, 8).ToString());
+	}
+
+	[TestMethod]
+	public void RoundTrip()
+	{
+		TimeSignature ts = TimeSignature.Create(7, 8);
+		Assert.AreEqual(ts, TimeSignature.Parse(ts.ToString()));
+	}
+
+	[TestMethod]
+	public void TryParseFailsOnNonPositive()
+	{
+		Assert.IsFalse(TimeSignature.TryParse("0/4", out TimeSignature? result));
+		Assert.IsNull(result);
+	}
 }
