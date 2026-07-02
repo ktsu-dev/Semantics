@@ -43,26 +43,29 @@ public sealed record Chord
 	public static Chord Parse(string symbol)
 	{
 		Ensure.NotNull(symbol);
-		if (symbol.Length == 0)
+		return TryParse(symbol, out Chord? result)
+			? result
+			: throw new FormatException($"Invalid chord symbol '{symbol}'.");
+	}
+
+	/// <summary>Tries to parse a chord symbol.</summary>
+	/// <param name="symbol">The text to parse.</param>
+	/// <param name="result">The parsed chord, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? symbol, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Chord? result)
+	{
+		result = null;
+		if (string.IsNullOrEmpty(symbol))
 		{
-			throw new FormatException("Chord symbol is empty.");
+			return false;
 		}
 
-		// Split off a slash bass first.
-		PitchClass? bass = null;
-		string head = symbol;
-		int slash = symbol.IndexOf('/');
-		if (slash >= 0)
+		if (!TryReadRoot(symbol!, out PitchClass? bass, out string head, out int index, out PitchClass? root))
 		{
-			int bassIndex = 0;
-			bass = ParseRoot(symbol[(slash + 1)..], ref bassIndex);
-			head = symbol[..slash];
+			return false;
 		}
 
-		int index = 0;
-		PitchClass root = ParseRoot(head, ref index);
 		string body = new([.. head[index..].Where(c => c is not ('(' or ')'))]);
-
 		ChordModifiers modifiers = ConsumeModifiers(ref body);
 		ChordQuality quality = DetermineQuality(body, modifiers.FifthAlteration);
 		SeventhType seventh = DetermineSeventh(body, quality);
@@ -76,7 +79,7 @@ public sealed record Chord
 		ChordTension tensions = modifiers.Tensions;
 		ApplyExtensions(ref body, modifiers.HasAdd9, ref seventh, ref tensions);
 
-		return new Chord
+		result = new Chord
 		{
 			Root = root,
 			Quality = quality,
@@ -86,36 +89,44 @@ public sealed record Chord
 			Omissions = modifiers.Omissions,
 			Bass = bass,
 		};
+		return true;
 	}
 
-	private static PitchClass ParseRoot(string symbol, ref int index)
+	private static bool TryReadRoot(string symbol, out PitchClass? bass, out string head, out int index, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out PitchClass? root)
 	{
-		if (index >= symbol.Length)
+		bass = null;
+		head = symbol;
+		index = 0;
+		root = null;
+
+		int slash = symbol.IndexOf('/');
+		if (slash >= 0)
 		{
-			throw new FormatException($"Missing chord root in '{symbol}'.");
+			int bassIndex = 0;
+			if (!TryParseRoot(symbol[(slash + 1)..], ref bassIndex, out PitchClass? parsedBass))
+			{
+				return false;
+			}
+
+			bass = parsedBass;
+			head = symbol[..slash];
 		}
 
-		int letterPc = char.ToUpperInvariant(symbol[index]) switch
+		return TryParseRoot(head, ref index, out root);
+	}
+
+	private static bool TryParseRoot(string symbol, ref int index, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out PitchClass? root)
+	{
+		root = null;
+		if (index >= symbol.Length || !Notation.TryReadNoteLetter(symbol[index], out NoteLetter letter))
 		{
-			'C' => 0,
-			'D' => 2,
-			'E' => 4,
-			'F' => 5,
-			'G' => 7,
-			'A' => 9,
-			'B' => 11,
-			_ => throw new FormatException($"Invalid chord root in '{symbol}'."),
-		};
+			return false;
+		}
+
 		index++;
-
-		int accidental = 0;
-		while (index < symbol.Length && (symbol[index] is '#' or 'b' or '♯' or '♭'))
-		{
-			accidental += symbol[index] is '#' or '♯' ? 1 : -1;
-			index++;
-		}
-
-		return PitchClass.Create(letterPc + accidental);
+		int accidental = Notation.ReadAccidentalOffset(symbol, ref index);
+		root = PitchClass.Create((int)letter + accidental);
+		return true;
 	}
 
 	/// <summary>The fifth alteration and the upper-structure modifiers consumed from a chord body.</summary>
@@ -384,6 +395,131 @@ public sealed record Chord
 		}
 
 		return pitches;
+	}
+
+	/// <summary>Returns the canonical chord symbol. The formatter is the inverse of <see cref="Parse"/> over the parseable corpus.</summary>
+	/// <returns>The canonical chord symbol (e.g. "Cmaj7", "C/G").</returns>
+	public override string ToString()
+	{
+		System.Text.StringBuilder sb = new();
+		_ = sb.Append(Root.Name);
+		AppendQualityAndSeventh(sb);
+		AppendSixth(sb);
+		AppendTensions(sb);
+		AppendOmissions(sb);
+		if (Bass is not null)
+		{
+			_ = sb.Append('/').Append(Bass.Name);
+		}
+
+		return sb.ToString();
+	}
+
+	private void AppendQualityAndSeventh(System.Text.StringBuilder sb)
+	{
+		switch (Quality)
+		{
+			case ChordQuality.Sus2:
+				_ = sb.Append("sus2");
+				AppendPlainSeventh(sb);
+				break;
+			case ChordQuality.Sus4:
+				_ = sb.Append("sus4");
+				AppendPlainSeventh(sb);
+				break;
+			case ChordQuality.Power:
+				_ = sb.Append('5');
+				break;
+			case ChordQuality.Augmented:
+				_ = sb.Append("aug");
+				AppendPlainSeventh(sb);
+				break;
+			case ChordQuality.Minor:
+				_ = sb.Append('m');
+				AppendPlainSeventh(sb);
+				break;
+			case ChordQuality.Diminished:
+				AppendDiminished(sb);
+				break;
+			default:
+				AppendPlainSeventh(sb);
+				break;
+		}
+	}
+
+	private void AppendPlainSeventh(System.Text.StringBuilder sb) => _ = sb.Append(Seventh switch
+	{
+		SeventhType.Major => "maj7",
+		SeventhType.Dominant => "7",
+		SeventhType.Diminished => "7",
+		_ => "",
+	});
+
+	private void AppendDiminished(System.Text.StringBuilder sb) => _ = Seventh switch
+	{
+		SeventhType.Diminished => sb.Append("dim7"),
+		SeventhType.Dominant => sb.Append("m7b5"),
+		SeventhType.Major => sb.Append("dimmaj7"),
+		_ => sb.Append("dim"),
+	};
+
+	private void AppendSixth(System.Text.StringBuilder sb) => _ = Sixth switch
+	{
+		SixthType.Natural => sb.Append('6'),
+		SixthType.Flat => sb.Append("b6"),
+		_ => sb,
+	};
+
+	private void AppendTensions(System.Text.StringBuilder sb)
+	{
+		// Natural extension stack: 13 implies 9+11+13, 11 implies 9+11. A bare 9 with no
+		// seventh must be written "add9" so it does not imply a dominant seventh on reparse.
+		bool hasSeventh = Seventh != SeventhType.None;
+		if (Tensions.HasFlag(ChordTension.Thirteen))
+		{
+			_ = sb.Append("13");
+		}
+		else if (Tensions.HasFlag(ChordTension.Eleven))
+		{
+			_ = sb.Append("11");
+		}
+		else if (Tensions.HasFlag(ChordTension.Nine))
+		{
+			_ = sb.Append(hasSeventh ? "9" : "add9");
+		}
+
+		if (Tensions.HasFlag(ChordTension.FlatNine))
+		{
+			_ = sb.Append("b9");
+		}
+
+		if (Tensions.HasFlag(ChordTension.SharpNine))
+		{
+			_ = sb.Append("#9");
+		}
+
+		if (Tensions.HasFlag(ChordTension.SharpEleven))
+		{
+			_ = sb.Append("#11");
+		}
+
+		if (Tensions.HasFlag(ChordTension.FlatThirteen))
+		{
+			_ = sb.Append("b13");
+		}
+	}
+
+	private void AppendOmissions(System.Text.StringBuilder sb)
+	{
+		if (Omissions.HasFlag(ChordOmission.Third))
+		{
+			_ = sb.Append("no3");
+		}
+
+		if (Omissions.HasFlag(ChordOmission.Fifth))
+		{
+			_ = sb.Append("no5");
+		}
 	}
 
 	private void AddTension(SortedSet<int> offsets, ChordTension flag, int semitones)
