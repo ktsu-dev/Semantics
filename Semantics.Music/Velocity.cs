@@ -5,6 +5,7 @@
 namespace ktsu.Semantics.Music;
 
 using System;
+using System.Globalization;
 
 /// <summary>
 /// A MIDI note velocity (0..127), modelling dynamic intensity.
@@ -45,4 +46,39 @@ public sealed record Velocity
 
 		return new() { Value = value };
 	}
+
+	/// <summary>Parses a velocity value.</summary>
+	/// <param name="text">The integer text (0..127).</param>
+	/// <returns>The parsed velocity.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
+	/// <exception cref="FormatException">Thrown when the text is not an integer in 0..127.</exception>
+	public static Velocity Parse(string text)
+	{
+		Ensure.NotNull(text);
+		return TryParse(text, out Velocity? result)
+			? result
+			: throw new FormatException($"Invalid velocity '{text}'.");
+	}
+
+	/// <summary>Tries to parse a velocity value.</summary>
+	/// <param name="text">The text to parse.</param>
+	/// <param name="result">The parsed velocity, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? text, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Velocity? result)
+	{
+		if (text is not null
+			&& int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int value)
+			&& value is >= 0 and <= 127)
+		{
+			result = Create(value);
+			return true;
+		}
+
+		result = null;
+		return false;
+	}
+
+	/// <summary>Returns the velocity value as an integer string.</summary>
+	/// <returns>The canonical velocity text.</returns>
+	public override string ToString() => Value.ToString(CultureInfo.InvariantCulture);
 }
