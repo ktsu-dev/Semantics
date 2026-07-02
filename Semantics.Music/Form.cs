@@ -28,6 +28,19 @@ public sealed record Form
 	/// <summary>Gets the recognized named form, or null.</summary>
 	public NamedForm? Name { get; private init; }
 
+	/// <summary>Determines structural equality: the pattern, named form, and ordered letters all match.</summary>
+	/// <param name="other">The form to compare.</param>
+	/// <returns><see langword="true"/> when the forms are value-equal.</returns>
+	public bool Equals(Form? other) =>
+		other is not null
+		&& Pattern == other.Pattern
+		&& Name == other.Name
+		&& Letters.SequenceEqual(other.Letters);
+
+	/// <summary>Returns a hash code consistent with <see cref="Equals(Form)"/>.</summary>
+	/// <returns>The hash code.</returns>
+	public override int GetHashCode() => HashCode.Combine(Pattern, Name);
+
 	/// <summary>Derives the form of an arrangement from its sections.</summary>
 	/// <param name="arrangement">The arrangement to analyze.</param>
 	/// <returns>The derived form.</returns>
@@ -59,26 +72,38 @@ public sealed record Form
 		return new() { Pattern = pattern, Letters = letters, Name = name };
 	}
 
-	/// <summary>Builds a form directly from a letter-pattern string, applying letter recognition only.</summary>
-	/// <param name="pattern">A pattern of letters A-Z (e.g. "ABACA").</param>
+	/// <summary>Parses a form from a letter-pattern string.</summary>
+	/// <param name="pattern">A pattern of upper-case letters A-Z (e.g. "ABACA").</param>
 	/// <returns>The form for the pattern.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="pattern"/> is null.</exception>
-	/// <exception cref="FormatException">Thrown when the pattern is empty or contains a non-letter.</exception>
-	public static Form FromPattern(string pattern)
+	/// <exception cref="FormatException">Thrown when the pattern is empty or contains a non-upper-case-letter.</exception>
+	public static Form Parse(string pattern)
 	{
 		Ensure.NotNull(pattern);
-		if (pattern.Length == 0)
-		{
-			throw new FormatException("Form pattern is empty.");
-		}
-
-		if (!pattern.All(c => c is >= 'A' and <= 'Z'))
-		{
-			throw new FormatException($"Form pattern '{pattern}' must contain only upper-case letters.");
-		}
-
-		return new() { Pattern = pattern, Letters = [.. pattern], Name = RecognizePattern(pattern) };
+		return TryParse(pattern, out Form? result)
+			? result
+			: throw new FormatException($"Invalid form pattern '{pattern}'.");
 	}
+
+	/// <summary>Tries to parse a form from a letter-pattern string.</summary>
+	/// <param name="pattern">The text to parse.</param>
+	/// <param name="result">The parsed form, or null on failure.</param>
+	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	public static bool TryParse(string? pattern, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Form? result)
+	{
+		result = null;
+		if (string.IsNullOrEmpty(pattern) || !pattern!.All(c => c is >= 'A' and <= 'Z'))
+		{
+			return false;
+		}
+
+		result = new() { Pattern = pattern, Letters = [.. pattern], Name = RecognizePattern(pattern) };
+		return true;
+	}
+
+	/// <summary>Returns the letter-pattern (e.g. "AABA").</summary>
+	/// <returns>The canonical form text.</returns>
+	public override string ToString() => Pattern;
 
 	private static NamedForm RecognizePattern(string pattern) => pattern switch
 	{

@@ -43,14 +43,29 @@ public class FormTests
 	}
 
 	[TestMethod]
-	public void FromPattern_AppliesLetterRecognition()
+	public void Parse_AppliesLetterRecognition()
 	{
-		Form form = Form.FromPattern("ABACA");
+		Form form = Form.Parse("ABACA");
 		Assert.AreEqual(NamedForm.Rondo, form.Name);
 		Assert.AreEqual(5, form.Letters.Count);
 	}
 
 	[TestMethod]
-	public void FromPattern_RejectsNonLetters() =>
-		_ = Assert.ThrowsExactly<FormatException>(() => Form.FromPattern("A1B"));
+	public void Parse_RejectsNonLetters() =>
+		_ = Assert.ThrowsExactly<FormatException>(() => Form.Parse("A1B"));
+
+	[TestMethod]
+	public void ToStringRoundTripsPattern()
+	{
+		Form form = Form.Parse("AABA");
+		Assert.AreEqual("AABA", form.ToString());
+		Assert.AreEqual(form, Form.Parse(form.ToString()));
+	}
+
+	[TestMethod]
+	public void TryParseFailsOnLowercase()
+	{
+		Assert.IsFalse(Form.TryParse("aaba", out Form? result));
+		Assert.IsNull(result);
+	}
 }
