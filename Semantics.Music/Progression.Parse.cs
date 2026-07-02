@@ -89,26 +89,22 @@ public sealed partial record Progression
 			return false;
 		}
 
-		int beatUnit = ts.BeatUnit;
-		List<ChordEvent> events = [];
+		if (!TryReadChordEvents(tokens, ts.BeatUnit, out List<ChordEvent> events))
+		{
+			return false;
+		}
+
+		result = Create(events, ts);
+		return true;
+	}
+
+	// Reads the chord/slash/bar tokens (everything after the leading time signature) into timed events.
+	private static bool TryReadChordEvents(string[] tokens, int beatUnit, out List<ChordEvent> events)
+	{
+		events = [];
 		Chord? current = null;
 		int currentBeats = 0;
 		Duration? explicitDuration = null;
-
-		bool Flush()
-		{
-			if (current is null)
-			{
-				return true;
-			}
-
-			Duration duration = explicitDuration ?? Duration.Create(currentBeats, beatUnit);
-			events.Add(ChordEvent.Create(current, duration));
-			current = null;
-			currentBeats = 0;
-			explicitDuration = null;
-			return true;
-		}
 
 		for (int i = 1; i < tokens.Length; i++)
 		{
@@ -129,32 +125,51 @@ public sealed partial record Progression
 				continue;
 			}
 
-			_ = Flush();
-			int at = token.IndexOf('@');
-			if (at >= 0)
-			{
-				if (!Chord.TryParse(token[..at], out current) || !Duration.TryParse(token[(at + 1)..], out explicitDuration))
-				{
-					return false;
-				}
-			}
-			else if (!Chord.TryParse(token, out current))
+			FlushChord(events, ref current, ref currentBeats, ref explicitDuration, beatUnit);
+			if (!TryReadChordCell(token, out current, out explicitDuration, out currentBeats))
 			{
 				return false;
 			}
-			else
-			{
-				currentBeats = 1;
-			}
 		}
 
-		_ = Flush();
-		if (events.Count == 0)
+		FlushChord(events, ref current, ref currentBeats, ref explicitDuration, beatUnit);
+		return events.Count > 0;
+	}
+
+	// Reads one chord token, which is either a bare chord (one beat) or "chord@n/d" (an explicit duration).
+	private static bool TryReadChordCell(string token, out Chord? chord, out Duration? explicitDuration, out int beats)
+	{
+		chord = null;
+		explicitDuration = null;
+		beats = 0;
+
+		int at = token.IndexOf('@');
+		if (at >= 0)
+		{
+			return Chord.TryParse(token[..at], out chord) && Duration.TryParse(token[(at + 1)..], out explicitDuration);
+		}
+
+		if (!Chord.TryParse(token, out chord))
 		{
 			return false;
 		}
 
-		result = Create(events, ts);
+		beats = 1;
 		return true;
+	}
+
+	// Appends the pending chord (if any) as an event, then clears the running state.
+	private static void FlushChord(List<ChordEvent> events, ref Chord? current, ref int currentBeats, ref Duration? explicitDuration, int beatUnit)
+	{
+		if (current is null)
+		{
+			return;
+		}
+
+		Duration duration = explicitDuration ?? Duration.Create(currentBeats, beatUnit);
+		events.Add(ChordEvent.Create(current, duration));
+		current = null;
+		currentBeats = 0;
+		explicitDuration = null;
 	}
 }
