@@ -1,7 +1,8 @@
-## v2.7.11 (patch)
+## v2.8.0 (minor)
 
-Changes since v2.7.10:
+Changes since v2.7.0:
 
-- Bump MSTest.Sdk from 4.3.2 to 4.3.3 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump the ktsu group with 1 update ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Make the new path tests platform-agnostic ([@matt-edmondson](https://github.com/matt-edmondson))
+- Emit CRLF from the generators and re-enable package validation ([@matt-edmondson](https://github.com/matt-edmondson))
+- [minor] Compare semantic strings by value and expose path values on interfaces ([@matt-edmondson](https://github.com/matt-edmondson))
 
