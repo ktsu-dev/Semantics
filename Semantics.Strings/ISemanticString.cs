@@ -66,11 +66,21 @@ public interface ISemanticString : IComparable, IComparable<ISemanticString>, IE
 	/// whether this instance precedes, follows, or appears in the same position in the sort
 	/// order as the specified object.
 	/// </summary>
-	/// <param name="value">An object that evaluates to a string.</param>
+	/// <param name="value">A <see cref="string"/>, an <see cref="ISemanticString"/>, or <see langword="null"/>.</param>
 	/// <returns>
 	/// A 32-bit signed integer that indicates whether this instance precedes, follows, or
 	/// appears in the same position in the sort order as the <paramref name="value"/> parameter.
+	/// A <see langword="null"/> <paramref name="value"/> sorts before this instance.
 	/// </returns>
+	/// <exception cref="ArgumentException">
+	/// <paramref name="value"/> is neither a <see cref="string"/> nor an <see cref="ISemanticString"/>.
+	/// </exception>
+	/// <remarks>
+	/// Accepting <see cref="ISemanticString"/> matters for sorting: when a collection is typed as an
+	/// interface that carries no <see cref="IComparable{T}"/> (for example <c>IPath</c>), LINQ and
+	/// <see cref="System.Collections.Generic.Comparer{T}.Default"/> fall back to this non-generic overload and hand it another
+	/// semantic string instance rather than a <see cref="string"/>.
+	/// </remarks>
 	public new int CompareTo(object value);
 
 	/// <summary>

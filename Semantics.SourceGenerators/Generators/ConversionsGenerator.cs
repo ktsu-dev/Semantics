@@ -74,6 +74,6 @@ public class ConversionsGenerator : GeneratorBase<ConversionsMetadata>
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
 
-		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
+		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 }

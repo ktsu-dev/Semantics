@@ -26,7 +26,7 @@ using ktsu.Semantics.Strings;
 /// they contain valid path characters and reasonable lengths.
 /// </remarks>
 [IsPath]
-public abstract record SemanticPath<TDerived> : SemanticString<TDerived>
+public abstract record SemanticPath<TDerived> : SemanticString<TDerived>, IComparable<IPath>
 	where TDerived : SemanticPath<TDerived>
 {
 
@@ -65,6 +65,27 @@ public abstract record SemanticPath<TDerived> : SemanticString<TDerived>
 	/// Returns <see langword="false"/> if the path exists but is a directory, or if the path doesn't exist at all.
 	/// </remarks>
 	public bool IsFile => File.Exists(WeakString);
+
+	/// <summary>
+	/// Compares this path with another path by their underlying string values.
+	/// </summary>
+	/// <param name="other">The path to compare with, or <see langword="null"/>.</param>
+	/// <returns>
+	/// A 32-bit signed integer that indicates whether this path precedes, follows, or appears in the
+	/// same position in the sort order as <paramref name="other"/>. A <see langword="null"/>
+	/// <paramref name="other"/> sorts before this path.
+	/// </returns>
+	/// <remarks>
+	/// Implemented explicitly so that it does not join the overload set of the inherited
+	/// <see cref="SemanticString{TDerived}.CompareTo(ISemanticString)"/>. A public overload taking
+	/// <see cref="IPath"/> would make <c>pathA.CompareTo(pathB)</c> ambiguous for callers, because a
+	/// concrete path satisfies both parameter types and neither is more specific. Declaring
+	/// <see cref="IComparable{T}"/> of <see cref="IPath"/> is what lets
+	/// <see cref="Comparer{T}.Default"/> sort an <see cref="IPath"/> collection through the generic
+	/// comparison path instead of boxing into the non-generic
+	/// <see cref="IComparable.CompareTo(object)"/>.
+	/// </remarks>
+	int IComparable<IPath>.CompareTo(IPath? other) => WeakString.CompareTo(strB: other?.WeakString);
 
 	/// <summary>
 	/// Normalizes the path by standardizing directory separators and removing trailing separators.

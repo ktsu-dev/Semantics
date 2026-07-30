@@ -89,7 +89,13 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public char this[int index] => WeakString[index: index];
 
 	/// <inheritdoc/>
-	public int CompareTo(object? value) => WeakString.CompareTo(value: value);
+	public int CompareTo(object? value) => value switch
+	{
+		null => 1,
+		ISemanticString semanticString => WeakString.CompareTo(strB: semanticString.WeakString),
+		string stringValue => WeakString.CompareTo(strB: stringValue),
+		_ => throw new ArgumentException($"Object must be of type {nameof(String)} or {nameof(ISemanticString)}.", nameof(value)),
+	};
 	/// <inheritdoc/>
 	public int CompareTo(ISemanticString? other) => WeakString.CompareTo(strB: other?.WeakString);
 
