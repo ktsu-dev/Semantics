@@ -265,6 +265,42 @@ public class SemanticPathTests
 		Assert.IsTrue(relativePath.IsValid(), "Created relative path should be valid");
 	}
 
+	[TestMethod]
+	public void SemanticRelativePath_Make_WithDirectoryEndpoints_ShouldTreatThemAsDirectories()
+	{
+		// Arrange
+		string fromValue = OperatingSystem.IsWindows() ? "C:\\base\\folder" : "/base/folder";
+		string toValue = OperatingSystem.IsWindows() ? "C:\\base\\other" : "/base/other";
+		AbsoluteDirectoryPath from = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(fromValue);
+		AbsoluteDirectoryPath to = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(toValue);
+
+		// Act
+		RelativePath relativePath =
+			RelativePath.Make<RelativePath, AbsoluteDirectoryPath, AbsoluteDirectoryPath>(from, to);
+
+		// Assert
+		// "folder" is a directory, so the relative path must step out of it before entering "other".
+		Assert.AreEqual(Path.Combine("..", "other"), relativePath.WeakString);
+	}
+
+	[TestMethod]
+	public void SemanticRelativePath_Make_FromDirectoryToContainedFile_ShouldNotStepOutOfTheDirectory()
+	{
+		// Arrange
+		string fromValue = OperatingSystem.IsWindows() ? "C:\\base\\folder" : "/base/folder";
+		string toValue = OperatingSystem.IsWindows() ? "C:\\base\\folder\\file.txt" : "/base/folder/file.txt";
+		AbsoluteDirectoryPath from = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(fromValue);
+		AbsoluteFilePath to = AbsoluteFilePath.Create<AbsoluteFilePath>(toValue);
+
+		// Act
+		RelativePath relativePath =
+			RelativePath.Make<RelativePath, AbsoluteDirectoryPath, AbsoluteFilePath>(from, to);
+
+		// Assert
+		// The file lives inside "folder", so the relative path is just the file name.
+		Assert.AreEqual("file.txt", relativePath.WeakString);
+	}
+
 	// Additional comprehensive tests for edge cases and missing coverage
 	[TestMethod]
 	public void SemanticPath_MakeCanonical_WithRootPath_ShouldPreserveTrailingSeparator()
