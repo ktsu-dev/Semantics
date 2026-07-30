@@ -869,7 +869,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 
 		sourceFile.Classes.Add(cls);
 		WriteSourceFileTo(cb, sourceFile);
-		context.AddSource(sourceFile.FileName, cb.ToString());
+		GeneratedSource.Add(context, sourceFile.FileName, cb.ToString());
 	}
 
 	private void EmitV1BaseType(
@@ -955,7 +955,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 
 		sourceFile.Classes.Add(cls);
 		WriteSourceFileTo(cb, sourceFile);
-		context.AddSource(sourceFile.FileName, cb.ToString());
+		GeneratedSource.Add(context, sourceFile.FileName, cb.ToString());
 	}
 
 	private void EmitVectorType(
@@ -1046,7 +1046,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			}
 		}
 
-		context.AddSource($"{typeName}.g.cs", cb.ToString());
+		GeneratedSource.Add(context, $"{typeName}.g.cs", cb.ToString());
 	}
 
 	private void EmitOverloadType(
@@ -1214,7 +1214,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 
 			sourceFile.Classes.Add(cls);
 			WriteSourceFileTo(cb, sourceFile);
-			context.AddSource(sourceFile.FileName, cb.ToString());
+			GeneratedSource.Add(context, sourceFile.FileName, cb.ToString());
 		}
 		else
 		{
@@ -1284,7 +1284,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			cb.NewLine();
 		}
 
-		context.AddSource($"{typeName}.g.cs", cb.ToString());
+		GeneratedSource.Add(context, $"{typeName}.g.cs", cb.ToString());
 	}
 
 	#endregion

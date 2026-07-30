@@ -226,7 +226,7 @@ public class UnitsGenerator : GeneratorBase<UnitsMetadata>
 		sourceFileTemplate.Classes.Add(unitsCatalogue);
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
-		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
+		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 
 	/// <summary>

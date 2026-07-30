@@ -117,7 +117,7 @@ public class LogarithmicScalesGenerator : GeneratorBase<LogarithmicMetadata>
 			WriteToString(cb, scale);
 		}
 
-		context.AddSource($"{name}.g.cs", cb.ToString());
+		GeneratedSource.Add(context, $"{name}.g.cs", cb.ToString());
 	}
 
 	private static void WriteScalarFactory(CodeBlocker cb, LogarithmicScaleDefinition scale, string fullType)

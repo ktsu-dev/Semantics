@@ -133,6 +133,6 @@ public class PhysicalConstantsGenerator : GeneratorBase<DomainsMetadata>
 		sourceFileTemplate.Classes.Add(constantsClass);
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
-		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
+		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 }
