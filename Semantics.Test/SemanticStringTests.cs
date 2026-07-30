@@ -1211,6 +1211,43 @@ public class SemanticStringAdditionalTests
 	}
 
 	[TestMethod]
+	public void CompareTo_Object_WithSemanticString_ComparesUnderlyingValues()
+	{
+		object first = SemanticString<MySemanticString>.Create<MySemanticString>("apple");
+		object second = SemanticString<MySemanticString>.Create<MySemanticString>("zebra");
+		object duplicate = SemanticString<MySemanticString>.Create<MySemanticString>("apple");
+
+		Assert.IsLessThan(0, ((IComparable)first).CompareTo(second));
+		Assert.IsGreaterThan(0, ((IComparable)second).CompareTo(first));
+		Assert.AreEqual(0, ((IComparable)first).CompareTo(duplicate));
+	}
+
+	[TestMethod]
+	public void CompareTo_Object_WithUnsupportedType_ThrowsArgumentException()
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("test");
+
+		Assert.ThrowsExactly<ArgumentException>(() => semantic.CompareTo(42));
+	}
+
+	[TestMethod]
+	public void Sort_AsNonComparableInterface_OrdersByUnderlyingValue()
+	{
+		// A collection typed as an interface without IComparable<T> makes LINQ fall back to
+		// Comparer<T>.Default, which routes through the non-generic CompareTo(object).
+		List<ISemanticString> values =
+		[
+			SemanticString<MySemanticString>.Create<MySemanticString>("zebra"),
+			SemanticString<MySemanticString>.Create<MySemanticString>("apple"),
+			SemanticString<MySemanticString>.Create<MySemanticString>("mango"),
+		];
+
+		List<string> sorted = [.. values.OrderBy(v => v).Select(v => v.WeakString)];
+
+		CollectionAssert.AreEqual(new List<string> { "apple", "mango", "zebra" }, sorted);
+	}
+
+	[TestMethod]
 	public void DebuggerDisplay_ReturnsCorrectFormat()
 	{
 		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>("test");

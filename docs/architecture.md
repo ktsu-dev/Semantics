@@ -206,7 +206,7 @@ IValidationRule
 The library provides a comprehensive interface hierarchy for path types that enables polymorphism and type-safe operations:
 
 ```
-IPath (base interface for all path types)
+IPath : IComparable<IPath> (base interface for all path types; exposes WeakString)
 ├── IAbsolutePath : IPath
 ├── IRelativePath : IPath
 ├── IFilePath : IPath
@@ -216,9 +216,20 @@ IPath (base interface for all path types)
 ├── IAbsoluteDirectoryPath : IDirectoryPath, IAbsolutePath
 └── IRelativeDirectoryPath : IDirectoryPath, IRelativePath
 
-IFileName (separate hierarchy for non-path file components)
-IFileExtension (separate hierarchy for file extensions)
+IFileName (separate hierarchy for non-path file components; exposes WeakString)
+IFileExtension (separate hierarchy for file extensions; exposes WeakString)
+IDirectoryName (separate hierarchy for directory names; exposes WeakString)
 ```
+
+Every interface in these hierarchies exposes `WeakString`, so polymorphic code — most importantly the
+`IEnumerable<IPath>` returned by `GetContents()` — can read a path's value without downcasting to a
+concrete type.
+
+`IPath` also declares `IComparable<IPath>`, which lets `Comparer<IPath>.Default` sort a collection of
+paths through the generic comparison path. `SemanticPath<TDerived>` implements it **explicitly**: a
+public overload taking `IPath` would make `pathA.CompareTo(pathB)` ambiguous against the inherited
+overload taking `ISemanticString`, because a concrete path satisfies both parameter types and neither
+is more specific.
 
 **Interface Implementation Mapping:**
 
