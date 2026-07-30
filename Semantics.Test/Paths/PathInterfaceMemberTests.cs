@@ -16,20 +16,28 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance", Justification = "Reading the value through the interface is exactly what these tests cover.")]
 public class PathInterfaceMemberTests
 {
+	/// <summary>
+	/// An absolute root that is valid on every platform: <c>C:\</c> on Windows, <c>/</c> elsewhere.
+	/// </summary>
+	private static readonly string Root = Path.Combine(
+		Path.GetPathRoot(Path.GetTempPath())!,
+		nameof(PathInterfaceMemberTests));
+
+	private static string PathFor(string name) => Path.Combine(Root, name);
 	[TestMethod]
 	public void IPath_ExposesWeakString()
 	{
-		IPath path = AbsoluteFilePath.Create<AbsoluteFilePath>("/tmp/afile");
+		IPath path = AbsoluteFilePath.Create<AbsoluteFilePath>(PathFor("afile"));
 
-		Assert.AreEqual("/tmp/afile", path.WeakString);
+		Assert.AreEqual(PathFor("afile"), path.WeakString);
 	}
 
 	[TestMethod]
 	public void IAbsolutePath_ExposesWeakString()
 	{
-		IAbsolutePath path = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>("/tmp/adir");
+		IAbsolutePath path = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(PathFor("adir"));
 
-		Assert.AreEqual("/tmp/adir", path.WeakString);
+		Assert.AreEqual(PathFor("adir"), path.WeakString);
 	}
 
 	[TestMethod]
@@ -88,8 +96,8 @@ public class PathInterfaceMemberTests
 	[TestMethod]
 	public void CompareTo_BetweenConcretePaths_IsNotAmbiguous()
 	{
-		AbsoluteFilePath first = AbsoluteFilePath.Create<AbsoluteFilePath>("/tmp/afile");
-		AbsoluteFilePath second = AbsoluteFilePath.Create<AbsoluteFilePath>("/tmp/bfile");
+		AbsoluteFilePath first = AbsoluteFilePath.Create<AbsoluteFilePath>(PathFor("afile"));
+		AbsoluteFilePath second = AbsoluteFilePath.Create<AbsoluteFilePath>(PathFor("bfile"));
 
 		Assert.IsLessThan(0, first.CompareTo(second));
 	}
@@ -97,8 +105,8 @@ public class PathInterfaceMemberTests
 	[TestMethod]
 	public void CompareTo_ThroughIComparableOfIPath_ComparesByValue()
 	{
-		IComparable<IPath> first = AbsoluteFilePath.Create<AbsoluteFilePath>("/tmp/afile");
-		IPath second = AbsoluteFilePath.Create<AbsoluteFilePath>("/tmp/bfile");
+		IComparable<IPath> first = AbsoluteFilePath.Create<AbsoluteFilePath>(PathFor("afile"));
+		IPath second = AbsoluteFilePath.Create<AbsoluteFilePath>(PathFor("bfile"));
 
 		Assert.IsLessThan(0, first.CompareTo(second));
 		Assert.IsGreaterThan(0, first.CompareTo(null));
