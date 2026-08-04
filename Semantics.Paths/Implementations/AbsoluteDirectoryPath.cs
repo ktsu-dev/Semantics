@@ -18,13 +18,31 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// <summary>
 	/// Gets the parent directory of this absolute directory path.
 	/// </summary>
-	/// <value>An <see cref="AbsoluteDirectoryPath"/> representing the parent directory, or an empty path if this is a root directory.</value>
+	/// <value>
+	/// An <see cref="AbsoluteDirectoryPath"/> representing the parent directory, or this same path when it is a
+	/// root directory and therefore has no parent above it.
+	/// </value>
+	/// <remarks>
+	/// A root is its own parent, matching how the filesystem resolves <c>/..</c> to <c>/</c> and <c>C:\..</c> to
+	/// <c>C:\</c>. This keeps every value this property returns a usable absolute directory rather than an empty
+	/// path, which silently reads as "no contents" when passed to the filesystem. Use <see cref="IsRoot"/>, or
+	/// compare the parent against this path, to detect that walking upwards has finished.
+	/// </remarks>
 	public AbsoluteDirectoryPath Parent
 	{
 		get
 		{
-			return _cachedParent ??= Create<AbsoluteDirectoryPath>(
-				InternedPathStrings.InternIfCommon(Path.GetDirectoryName(WeakString) ?? InternedPathStrings.Empty));
+			if (_cachedParent is not null)
+			{
+				return _cachedParent;
+			}
+
+			string? parent = Path.GetDirectoryName(WeakString);
+			_cachedParent = string.IsNullOrEmpty(parent)
+				? this
+				: Create<AbsoluteDirectoryPath>(InternedPathStrings.InternIfCommon(parent));
+
+			return _cachedParent;
 		}
 	}
 
