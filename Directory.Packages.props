@@ -6,8 +6,8 @@
     <!-- Test packages: CodeCoverage and TrxReport versions are supplied by MSTest.Sdk;
          do not pin them here or CPM reports duplicate PackageVersion items (NU1506). -->
     <!-- Semantics runtime packages -->
-    <PackageVersion Include="ktsu.PreciseNumber" Version="1.7.23" />
-    <PackageVersion Include="ktsu.RoundTripStringJsonConverter" Version="1.0.35" />
+    <PackageVersion Include="ktsu.PreciseNumber" Version="1.7.26" />
+    <PackageVersion Include="ktsu.RoundTripStringJsonConverter" Version="1.0.37" />
     <PackageVersion Include="Polyfill" Version="11.0.1" />
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.10" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
