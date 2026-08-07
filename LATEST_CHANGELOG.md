@@ -1,7 +1,6 @@
-## v2.9.2 (patch)
+## v2.9.3 (patch)
 
-Changes since v2.9.1:
+Changes since v2.9.2:
 
-- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Bump the ktsu group with 2 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
