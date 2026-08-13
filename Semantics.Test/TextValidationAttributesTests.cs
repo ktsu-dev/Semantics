@@ -158,10 +158,14 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	public void PrefixAndSuffixAttribute_ValidString_ShouldPass()
+	public void PrefixAndSuffixAttribute_AppliedToType_ExposesConfiguredPrefixAndSuffix()
 	{
-		// This test would need a separate test string class with PrefixAndSuffixAttribute
-		Type testClass = typeof(PrefixSuffixTestString);
+		object[] attributes = typeof(PrefixSuffixTestString).GetCustomAttributes(typeof(PrefixAndSuffixAttribute), inherit: true);
+
+		Assert.HasCount(1, attributes);
+		PrefixAndSuffixAttribute attribute = (PrefixAndSuffixAttribute)attributes[0];
+		Assert.AreEqual("pre", attribute.Prefix);
+		Assert.AreEqual("suf", attribute.Suffix);
 	}
 
 	[PrefixAndSuffix("pre", "suf")]

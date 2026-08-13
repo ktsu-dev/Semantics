@@ -9,7 +9,6 @@ using System.Collections.Concurrent;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-[TestClass]
 public static class AdvancedUtilityTests
 {
 	[TestClass]
@@ -124,10 +123,10 @@ public static class AdvancedUtilityTests
 						string result = PooledStringBuilder.CombinePaths($"thread{threadId}", $"op{j}");
 						results.Add(result);
 					}
-				}, TestContext.CancellationTokenSource.Token);
+				}, TestContext.CancellationToken);
 			}
 
-			Task.WaitAll(tasks, TestContext.CancellationTokenSource.Token);
+			Task.WaitAll(tasks, TestContext.CancellationToken);
 			Assert.HasCount(threadCount * operationsPerThread, results);
 		}
 
@@ -275,10 +274,10 @@ public static class AdvancedUtilityTests
 					{
 						allEmpty.Add(InternedPathStrings.Empty);
 					}
-				}, TestContext.CancellationTokenSource.Token);
+				}, TestContext.CancellationToken);
 			}
 
-			Task.WaitAll(tasks, TestContext.CancellationTokenSource.Token);
+			Task.WaitAll(tasks, TestContext.CancellationToken);
 
 			// All instances should be the same reference
 			string firstEmpty = allEmpty.First();

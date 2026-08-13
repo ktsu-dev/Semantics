@@ -11,7 +11,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// <summary>
 /// Tests for utility classes that handle internal string operations and path parsing.
 /// </summary>
-[TestClass]
 public static class UtilityTests
 {
 	/// <summary>
