@@ -1,6 +1,4 @@
-## v2.9.14 (patch)
+## v2.9.14
 
-Changes since v2.9.13:
-
-- [patch] S4136/S4144: group overloads and drop duplicate private factories ([@matt-edmondson](https://github.com/matt-edmondson))
+No significant changes detected since v2.9.14.
 
