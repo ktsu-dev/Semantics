@@ -30,7 +30,7 @@ public class ProgressionTests
 			ChordEvent.Create(Chord.Parse("G"), Duration.Whole),
 		]);
 		Assert.AreEqual(2.0, progression.TotalBars, 1e-9);
-		Assert.AreEqual(2, progression.Chords.Count);
+		Assert.HasCount(2, progression.Chords);
 	}
 
 	[TestMethod]
@@ -52,7 +52,7 @@ public class ProgressionTests
 	public void Parse_WholeBarChords_UseBeatSlashes()
 	{
 		Progression progression = Progression.Parse("4/4  Dm7 / / / | G7 / / / | Cmaj7 / / /");
-		Assert.AreEqual(3, progression.Chords.Count);
+		Assert.HasCount(3, progression.Chords);
 		Assert.AreEqual(Duration.Whole, progression.Chords[0].Duration);
 		Assert.AreEqual(3.0, progression.TotalBars, 1e-9);
 	}
@@ -61,7 +61,7 @@ public class ProgressionTests
 	public void Parse_TwoChordsPerBar_UseBeatSlashes()
 	{
 		Progression progression = Progression.Parse("4/4  C / Am / | F / G /");
-		Assert.AreEqual(4, progression.Chords.Count);
+		Assert.HasCount(4, progression.Chords);
 		Assert.AreEqual(Duration.Half, progression.Chords[0].Duration);
 		Assert.AreEqual(2.0, progression.TotalBars, 1e-9);
 	}
@@ -70,7 +70,7 @@ public class ProgressionTests
 	public void Parse_ToleratesBarlines()
 	{
 		Progression progression = Progression.Parse("4/4  | C | G |");
-		Assert.AreEqual(2, progression.Chords.Count);
+		Assert.HasCount(2, progression.Chords);
 	}
 
 	[TestMethod]

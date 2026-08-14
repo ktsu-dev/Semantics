@@ -52,7 +52,7 @@ public class ColorAdjustmentTests
 	public void Oklch_LightnessOps_ClampedTo01_PreserveHue()
 	{
 		Oklch o = Color.FromSrgb(0.2, 0.6, 0.9).ToOklch();
-		Assert.IsTrue(o.LightenBy(0.1).L > o.L);
+		Assert.IsGreaterThan(o.L, o.LightenBy(0.1).L);
 		Assert.AreEqual(o.H, o.LightenBy(0.1).H, 1e-12);
 		Assert.AreEqual(0.0, o.DarkenBy(5.0).L, 1e-12);
 		Assert.AreEqual(1.0, o.WithLightness(2.0).L, 1e-12);
@@ -66,7 +66,7 @@ public class ColorAdjustmentTests
 		Assert.AreEqual(0.0, o.DesaturateBy(999.0).C, 1e-12);
 		Assert.AreEqual(0.0, o.ToGrayscale().C, 1e-12);
 		Assert.AreEqual(0.0, o.WithChroma(-1.0).C, 1e-12);
-		Assert.IsTrue(o.SaturateBy(0.05).C > o.C);
+		Assert.IsGreaterThan(o.C, o.SaturateBy(0.05).C);
 	}
 
 	// --- Srgb: native invert + HSL round-trip cylindrical ops ---

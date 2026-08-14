@@ -30,7 +30,7 @@ public class KeyInferenceTests
 	{
 		System.Collections.Generic.IReadOnlyList<KeyMatch> matches =
 			Progression.Parse("4/4  Dm7 | G7 | Cmaj7").InferKeys();
-		Assert.AreEqual(24, matches.Count);
-		Assert.IsTrue(matches[0].Score >= matches[1].Score);
+		Assert.HasCount(24, matches);
+		Assert.IsGreaterThanOrEqualTo(matches[1].Score, matches[0].Score);
 	}
 }

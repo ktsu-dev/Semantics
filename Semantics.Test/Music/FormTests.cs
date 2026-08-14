@@ -45,7 +45,7 @@ public class FormTests
 	{
 		Form form = Form.Parse("ABACA");
 		Assert.AreEqual(NamedForm.Rondo, form.Name);
-		Assert.AreEqual(5, form.Letters.Count);
+		Assert.HasCount(5, form.Letters);
 	}
 
 	[TestMethod]

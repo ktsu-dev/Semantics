@@ -33,7 +33,7 @@ public class OklabConversionTests
 	public void Oklch_RedHasPositiveChroma()
 	{
 		Oklch lch = Color.FromSrgb(1.0, 0.0, 0.0).ToOklch();
-		Assert.IsTrue(lch.C > 0.1, $"expected chroma > 0.1 but was {lch.C}");
+		Assert.IsGreaterThan(0.1, lch.C, $"expected chroma > 0.1 but was {lch.C}");
 	}
 
 	[TestMethod]

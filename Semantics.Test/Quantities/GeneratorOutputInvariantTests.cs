@@ -33,8 +33,9 @@ public sealed class GeneratorOutputInvariantTests
 
 		// Sanity: we should be looking at a non-trivial set, otherwise the test is silently
 		// vacuous (e.g. namespace got renamed and the filter dropped everything).
-		Assert.IsTrue(
-			generatedQuantityTypes.Count > 50,
+		Assert.IsGreaterThan(
+			50,
+			generatedQuantityTypes.Count,
 			$"Expected to find many generated quantity types (got {generatedQuantityTypes.Count}). The filter likely needs updating.");
 
 		List<string> failures = [];

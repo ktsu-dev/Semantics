@@ -503,7 +503,7 @@ public class SemanticPathInterfaceTests
 		DirectoryPath nonExistentDir = DirectoryPath.Create<DirectoryPath>("/path/that/does/not/exist");
 		IEnumerable<IPath> contents = nonExistentDir.GetContents();
 
-		Assert.IsFalse(contents.Any(), "Non-existent directory should have no contents");
+		Assert.IsEmpty(contents, "Non-existent directory should have no contents");
 	}
 
 	[TestMethod]
@@ -519,7 +519,7 @@ public class SemanticPathInterfaceTests
 			DirectoryPath dirPath = DirectoryPath.Create<DirectoryPath>(testDir);
 			IEnumerable<IPath> contents = dirPath.GetContents();
 
-			Assert.IsFalse(contents.Any(), "Empty directory should have no contents");
+			Assert.IsEmpty(contents, "Empty directory should have no contents");
 		}
 		finally
 		{

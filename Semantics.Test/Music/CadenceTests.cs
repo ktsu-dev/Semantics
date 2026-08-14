@@ -14,7 +14,7 @@ public class CadenceTests
 	{
 		System.Collections.Generic.IReadOnlyList<CadenceInstance> cadences =
 			Progression.Parse("4/4  G | C").Cadences(CMajor);
-		Assert.AreEqual(1, cadences.Count);
+		Assert.HasCount(1, cadences);
 		Assert.AreEqual(Cadence.Authentic, cadences[0].Type);
 		Assert.AreEqual(1, cadences[0].Index);
 	}
@@ -32,7 +32,7 @@ public class CadenceTests
 	{
 		System.Collections.Generic.IReadOnlyList<CadenceInstance> cadences =
 			Progression.Parse("4/4  C | Am").Cadences(CMajor);
-		Assert.AreEqual(0, cadences.Count);
+		Assert.IsEmpty(cadences);
 	}
 
 	[TestMethod]

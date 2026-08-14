@@ -15,7 +15,7 @@ public class ArrangementTests
 		Section verse = Section.Create(SectionType.Verse, Progression.Parse("4/4  C / / / | Am / / / | F / / / | G / / /"));
 		Section chorus = Section.Create(SectionType.Chorus, Progression.Parse("4/4  F / / / | G / / / | C / / / | C / / /"));
 		Arrangement arrangement = Arrangement.Create(CMajor, [verse, chorus, verse]);
-		Assert.AreEqual(3, arrangement.Sections.Count);
+		Assert.HasCount(3, arrangement.Sections);
 		Assert.AreEqual(12.0, arrangement.TotalBars, 1e-9);
 		Assert.AreEqual(SectionType.Chorus, arrangement.Sections[1].Type);
 	}

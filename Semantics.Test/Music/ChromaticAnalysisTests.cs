@@ -14,7 +14,7 @@ public class ChromaticAnalysisTests
 	{
 		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> analyses =
 			Progression.Parse("4/4  C | Dm | G7 | C").ChromaticChords(CMajor);
-		Assert.AreEqual(0, analyses.Count);
+		Assert.IsEmpty(analyses);
 	}
 
 	[TestMethod]
@@ -23,7 +23,7 @@ public class ChromaticAnalysisTests
 		// D7 in C is V/V (resolving toward G, the dominant).
 		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> analyses =
 			Progression.Parse("4/4  C | D7 | G7 | C").ChromaticChords(CMajor);
-		Assert.AreEqual(1, analyses.Count);
+		Assert.HasCount(1, analyses);
 		Assert.AreEqual(ChromaticKind.SecondaryDominant, analyses[0].Kind);
 		Assert.AreEqual("V/V", analyses[0].Detail);
 		Assert.AreEqual(1, analyses[0].Index);
