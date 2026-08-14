@@ -41,12 +41,12 @@ public class PhysicalConstantsGenerator : GeneratorBase<DomainsMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				"/// Provides fundamental physical constants used throughout the Semantics library.",
 				"/// All values are based on the 2019 redefinition of SI base units and CODATA 2018 values.",
-				"/// </summary>",
+				Emit.SummaryClose,
 			],
-			Keywords = ["public", "static", "class"],
+			Keywords = [Emit.Public, Emit.Static, "class"],
 			Name = "PhysicalConstants",
 		};
 
@@ -62,11 +62,11 @@ public class PhysicalConstantsGenerator : GeneratorBase<DomainsMetadata>
 			{
 				Comments =
 				[
-					"/// <summary>",
+					Emit.SummaryOpen,
 					$"/// {domain.Description}",
-					"/// </summary>",
+					Emit.SummaryClose,
 				],
-				Keywords = ["public", "static", "class"],
+				Keywords = [Emit.Public, Emit.Static, "class"],
 				Name = domain.Name,
 			};
 
@@ -75,7 +75,7 @@ public class PhysicalConstantsGenerator : GeneratorBase<DomainsMetadata>
 				domainClass.Members.Add(new FieldTemplate()
 				{
 					Comments = [$"/// <summary>{constant.Description}</summary>"],
-					Keywords = ["public", "static", "readonly", "PreciseNumber"],
+					Keywords = [Emit.Public, Emit.Static, "readonly", "PreciseNumber"],
 					Name = constant.Name,
 					DefaultValue = $"PreciseNumber.Parse(\"{constant.Value}\", CultureInfo.InvariantCulture)",
 				});
@@ -95,11 +95,11 @@ public class PhysicalConstantsGenerator : GeneratorBase<DomainsMetadata>
 			{
 				Comments =
 				[
-					"/// <summary>",
+					Emit.SummaryOpen,
 					"/// Helper methods to get constants as generic numeric types.",
-					"/// </summary>",
+					Emit.SummaryClose,
 				],
-				Keywords = ["public", "static", "class"],
+				Keywords = [Emit.Public, Emit.Static, "class"],
 				Name = "Generic",
 			};
 
@@ -113,7 +113,7 @@ public class PhysicalConstantsGenerator : GeneratorBase<DomainsMetadata>
 				genericClass.Members.Add(new MethodTemplate()
 				{
 					Comments = [$"/// <summary>Gets {constant.Description.ToLowerInvariant()} as type T.</summary>"],
-					Keywords = ["public", "static", "T"],
+					Keywords = [Emit.Public, Emit.Static, "T"],
 					Name = $"{constant.Name}<T>",
 					BodyFactory = (body) =>
 					{

@@ -23,7 +23,7 @@ public class LogarithmicScalesGenerator : GeneratorBase<LogarithmicMetadata>
 		id: "SEM005",
 		title: "logarithmic.json scale definition is invalid",
 		messageFormat: "logarithmic.json validation issue: {0}",
-		category: "Semantics.SourceGenerators",
+		category: Emit.DiagnosticCategory,
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true);
 
@@ -75,9 +75,9 @@ public class LogarithmicScalesGenerator : GeneratorBase<LogarithmicMetadata>
 		cb.WriteLine("using System.Numerics;");
 		cb.NewLine();
 
-		cb.WriteLine("/// <summary>");
+		cb.WriteLine(Emit.SummaryOpen);
 		cb.WriteLine($"/// {scale.Description}");
-		cb.WriteLine("/// </summary>");
+		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine("/// <remarks>");
 		if (!string.IsNullOrWhiteSpace(scale.Remarks))
 		{
@@ -120,9 +120,9 @@ public class LogarithmicScalesGenerator : GeneratorBase<LogarithmicMetadata>
 
 	private static void WriteScalarFactory(CodeBlocker cb, LogarithmicScaleDefinition scale, string fullType)
 	{
-		cb.WriteLine("/// <summary>");
+		cb.WriteLine(Emit.SummaryOpen);
 		cb.WriteLine("/// Creates a value from the raw scale number.");
-		cb.WriteLine("/// </summary>");
+		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine("/// <param name=\"value\">The raw scale value.</param>");
 		cb.WriteLine($"/// <returns>A new <see cref=\"{scale.Name}{{T}}\"/>.</returns>");
 		cb.WriteLine($"public static {fullType} {scale.ScalarFactory}(T value) => new(value);");
@@ -147,9 +147,9 @@ public class LogarithmicScalesGenerator : GeneratorBase<LogarithmicMetadata>
 			_ => $"Math.Log({ratioExpr}, {logBase})",
 		};
 
-		cb.WriteLine("/// <summary>");
+		cb.WriteLine(Emit.SummaryOpen);
 		cb.WriteLine($"/// {conversion.FromSummary ?? $"Creates a value from the linear {linear}."}");
-		cb.WriteLine("/// </summary>");
+		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine($"/// <param name=\"linear\">The linear <see cref=\"{linear}{{T}}\"/>.</param>");
 		cb.WriteLine($"/// <returns>A new <see cref=\"{scale.Name}{{T}}\"/>. A linear value of zero maps to negative infinity.</returns>");
 		cb.WriteLine($"public static {fullType} {fromName}({linear}<T> linear)");
@@ -172,9 +172,9 @@ public class LogarithmicScalesGenerator : GeneratorBase<LogarithmicMetadata>
 			? $"Math.Pow({logBase}, scaleValue / {multiplier})"
 			: $"reference * Math.Pow({logBase}, scaleValue / {multiplier})";
 
-		cb.WriteLine("/// <summary>");
+		cb.WriteLine(Emit.SummaryOpen);
 		cb.WriteLine($"/// {conversion.ToSummary ?? $"Converts this value to the linear {linear}."}");
-		cb.WriteLine("/// </summary>");
+		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine($"/// <returns>The linear <see cref=\"{linear}{{T}}\"/>.</returns>");
 		cb.WriteLine($"public {linear}<T> {toName}()");
 		using (new Scope(cb))

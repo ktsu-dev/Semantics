@@ -38,11 +38,11 @@ public class PrecisionGenerator : GeneratorBase<PrecisionMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				"/// Available storage types for numeric values in the Semantics library.",
-				"/// </summary>",
+				Emit.SummaryClose,
 			],
-			Keywords = ["public", "static", "class"],
+			Keywords = [Emit.Public, Emit.Static, "class"],
 			Name = "StorageTypes",
 		};
 
@@ -52,7 +52,7 @@ public class PrecisionGenerator : GeneratorBase<PrecisionMetadata>
 			storageClass.Members.Add(new FieldTemplate()
 			{
 				Comments = [$"/// <summary>The {storageType} storage type.</summary>"],
-				Keywords = ["public", "static", "readonly", "Type"],
+				Keywords = [Emit.Public, Emit.Static, "readonly", "Type"],
 				Name = storageType.ToUpperInvariant(),
 				DefaultValue = $"typeof({storageType})",
 			});
@@ -63,7 +63,7 @@ public class PrecisionGenerator : GeneratorBase<PrecisionMetadata>
 		storageClass.Members.Add(new FieldTemplate()
 		{
 			Comments = ["/// <summary>Gets all available storage types.</summary>"],
-			Keywords = ["public", "static", "readonly", "IReadOnlyList<Type>"],
+			Keywords = [Emit.Public, Emit.Static, "readonly", "IReadOnlyList<Type>"],
 			Name = "All",
 			DefaultValue = $"new List<Type> {{ {allTypes} }}",
 		});
@@ -73,7 +73,7 @@ public class PrecisionGenerator : GeneratorBase<PrecisionMetadata>
 		storageClass.Members.Add(new FieldTemplate()
 		{
 			Comments = ["/// <summary>Gets the names of all available storage types.</summary>"],
-			Keywords = ["public", "static", "readonly", "IReadOnlyList<string>"],
+			Keywords = [Emit.Public, Emit.Static, "readonly", "IReadOnlyList<string>"],
 			Name = "Names",
 			DefaultValue = $"new List<string> {{ {allNames} }}",
 		});

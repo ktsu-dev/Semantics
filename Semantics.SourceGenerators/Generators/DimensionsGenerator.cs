@@ -39,11 +39,11 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				"/// Dimension information record.",
-				"/// </summary>",
+				Emit.SummaryClose,
 			],
-			Keywords = ["public", "record"],
+			Keywords = [Emit.Public, "record"],
 			Name = "DimensionInfo(string Name, string Symbol, Dictionary<string, int> DimensionalFormula, List<string> Quantities)",
 		};
 		sourceFileTemplate.Classes.Add(dimensionInfoRecord);
@@ -53,11 +53,11 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				"/// Static registry of physical dimensions.",
-				"/// </summary>",
+				Emit.SummaryClose,
 			],
-			Keywords = ["public", "static", "class"],
+			Keywords = [Emit.Public, Emit.Static, "class"],
 			Name = "PhysicalDimensions",
 		};
 
@@ -109,7 +109,7 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 			dimensionsClass.Members.Add(new FieldTemplate()
 			{
 				Comments = [$"/// <summary>{description}</summary>"],
-				Keywords = ["public", "static", "readonly", "DimensionInfo"],
+				Keywords = [Emit.Public, Emit.Static, "readonly", "DimensionInfo"],
 				Name = dimension.Name,
 				DefaultValue = $"new(\"{dimension.Name}\", \"{dimension.Symbol}\", {formulaInit}, {quantitiesInit})",
 			});
@@ -120,7 +120,7 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 		dimensionsClass.Members.Add(new FieldTemplate()
 		{
 			Comments = ["/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>"],
-			Keywords = ["public", "static", "IReadOnlySet<DimensionInfo>"],
+			Keywords = [Emit.Public, Emit.Static, "IReadOnlySet<DimensionInfo>"],
 			Name = "All",
 			DefaultValue = $"new HashSet<DimensionInfo>([ {allDimensions} ])",
 		});
@@ -135,12 +135,12 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 			{
 				Comments =
 				[
-					"/// <summary>",
+					Emit.SummaryOpen,
 					$"/// Marker interface implemented by every unit of the <c>{dimension.Name}</c> dimension.",
 					"/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.",
-					"/// </summary>",
+					Emit.SummaryClose,
 				],
-				Keywords = ["public", "interface"],
+				Keywords = [Emit.Public, "interface"],
 				Name = $"I{dimension.Name}Unit",
 				Interfaces = ["IUnit"],
 			});
