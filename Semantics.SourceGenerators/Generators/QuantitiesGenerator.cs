@@ -192,7 +192,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				{
 					foreach (OverloadDefinition overload in form.Overloads)
 					{
-						EmitOverloadType(context, dim, f, form.Base, overload, typeFormMap, unitMap);
+						EmitOverloadType(context, dim, f, form.Base, overload, unitMap);
 					}
 				}
 			}
@@ -1011,7 +1011,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			WriteVectorOperators(cb, fullType, components);
 
 			// Cross-dimensional operators (inlined for VN types)
-			EmitVectorCrossDimOperators(cb, typeName, fullType, components, operatorsByOwner, typeFormMap);
+			EmitVectorCrossDimOperators(cb, typeName, operatorsByOwner, typeFormMap);
 
 			// Typed dot product methods
 			if (productsByOwner.TryGetValue(typeName, out List<ProductInfo>? products))
@@ -1049,7 +1049,6 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		int vectorForm,
 		string baseTypeName,
 		OverloadDefinition overload,
-		Dictionary<string, int> typeFormMap,
 		Dictionary<string, UnitDefinition> unitMap)
 	{
 		string typeName = overload.Name;
@@ -1214,13 +1213,12 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			// V2/3/4 overloads: these are more complex, generate as standalone records
 			// For now, V2+ overloads are rare and can be added later
 			// The strategy document shows them mainly for V3 (Position3D, Translation3D)
-			EmitVectorOverloadType(context, dim, vectorForm, baseTypeName, overload);
+			EmitVectorOverloadType(context, vectorForm, baseTypeName, overload);
 		}
 	}
 
 	private static void EmitVectorOverloadType(
 		SourceProductionContext context,
-		PhysicalDimension dim,
 		int dims,
 		string baseTypeName,
 		OverloadDefinition overload)
@@ -1404,8 +1402,6 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 	private static void EmitVectorCrossDimOperators(
 		CodeBlocker cb,
 		string ownerTypeName,
-		string ownerFullType,
-		string[] components,
 		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
 		Dictionary<string, int> typeFormMap)
 	{
