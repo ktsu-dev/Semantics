@@ -7,9 +7,11 @@ using ktsu.CodeBlocker;
 
 internal class PropertyTemplate : MemberTemplate
 {
-	public static Action<CodeBlocker> AutoGet = (sw) => sw.Write("get;");
-	public static Action<CodeBlocker> AutoSet = (sw) => sw.Write("set;");
-	public static Action<CodeBlocker> AutoInit = (sw) => sw.Write("init;");
+	// Compared by reference in WriteTo to detect auto-property shorthand, so these must stay
+	// single fixed instances; readonly enforces that without changing the comparison.
+	public static readonly Action<CodeBlocker> AutoGet = (sw) => sw.Write("get;");
+	public static readonly Action<CodeBlocker> AutoSet = (sw) => sw.Write("set;");
+	public static readonly Action<CodeBlocker> AutoInit = (sw) => sw.Write("init;");
 
 	public Action<CodeBlocker>? GetterFactory { get; set; }
 	public Action<CodeBlocker>? SetterFactory { get; set; }

@@ -43,7 +43,9 @@ public sealed class IsTimeSpanAttribute : NativeSemanticStringValidationAttribut
 				return ValidationResult.Success();
 			}
 
-			bool isValid = TimeSpan.TryParse(value, out _);
+			// CurrentCulture is stated explicitly rather than switching to InvariantCulture: it is
+			// what the provider-less overload already used, so validation behaviour is unchanged.
+			bool isValid = TimeSpan.TryParse(value, System.Globalization.CultureInfo.CurrentCulture, out _);
 			return isValid
 				? ValidationResult.Success()
 				: ValidationResult.Failure("The value must be a valid TimeSpan.");

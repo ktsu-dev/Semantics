@@ -32,9 +32,9 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
     <!-- The generator declares its dependencies PrivateAssets="all" so they do not flow to
          consumers, but the generators genuinely execute in these tests and fail with
-         FileNotFoundException without CodeBlocker present. Runtime only: taking its compile assets
-         would reintroduce the facade collision described above. -->
-    <PackageReference Include="ktsu.CodeBlocker" ExcludeAssets="compile" />
+         FileNotFoundException without CodeBlocker present. PropertyTemplateTests also needs its
+         types at compile time. -->
+    <PackageReference Include="ktsu.CodeBlocker" />
   </ItemGroup>
 
   <ItemGroup>

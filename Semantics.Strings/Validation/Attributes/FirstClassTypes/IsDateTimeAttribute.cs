@@ -43,7 +43,9 @@ public sealed class IsDateTimeAttribute : NativeSemanticStringValidationAttribut
 				return ValidationResult.Success();
 			}
 
-			bool isValid = DateTime.TryParse(value, out _);
+			// CurrentCulture is stated explicitly rather than switching to InvariantCulture: it is
+			// what the provider-less overload already used, so validation behaviour is unchanged.
+			bool isValid = DateTime.TryParse(value, System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.None, out _);
 			return isValid
 				? ValidationResult.Success()
 				: ValidationResult.Failure("The value must be a valid DateTime.");

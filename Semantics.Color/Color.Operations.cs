@@ -29,12 +29,15 @@ public readonly partial record struct Color
 	public AccessibilityLevel AccessibilityLevelAgainst(Color background, bool largeText = false)
 	{
 		double contrast = ContrastRatio(background);
-		if (contrast >= (largeText ? 4.5 : 7.0))
+		double enhancedThreshold = largeText ? 4.5 : 7.0;
+		double minimumThreshold = largeText ? 3.0 : 4.5;
+
+		if (contrast >= enhancedThreshold)
 		{
 			return AccessibilityLevel.AAA;
 		}
 
-		return contrast >= (largeText ? 3.0 : 4.5) ? AccessibilityLevel.AA : AccessibilityLevel.Fail;
+		return contrast >= minimumThreshold ? AccessibilityLevel.AA : AccessibilityLevel.Fail;
 	}
 
 	/// <summary>

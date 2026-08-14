@@ -28,6 +28,8 @@ public sealed class IsMacroCaseAttribute : NativeSemanticStringValidationAttribu
 	/// </summary>
 	private sealed class MacroCaseValidator : ValidationAdapter
 	{
+		private const string FailureMessage = "The value must be in MACRO_CASE format.";
+
 		/// <summary>
 		/// Validates that a string is in MACRO_CASE.
 		/// </summary>
@@ -41,27 +43,27 @@ public sealed class IsMacroCaseAttribute : NativeSemanticStringValidationAttribu
 			}
 
 			// Cannot start or end with underscore
-			if (value.StartsWith("_") || value.EndsWith("_"))
+			if (value.StartsWith('_') || value.EndsWith('_'))
 			{
-				return ValidationResult.Failure("The value must be in MACRO_CASE format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			// Cannot have consecutive underscores
 			if (value.Contains("__"))
 			{
-				return ValidationResult.Failure("The value must be in MACRO_CASE format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			// No spaces, hyphens, or other separators allowed (except underscores)
 			if (value.Any(c => char.IsWhiteSpace(c) || c == '-'))
 			{
-				return ValidationResult.Failure("The value must be in MACRO_CASE format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			// All characters must be uppercase letters, digits, or underscores
 			if (!value.All(c => char.IsUpper(c) || char.IsDigit(c) || c == '_'))
 			{
-				return ValidationResult.Failure("The value must be in MACRO_CASE format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			return ValidationResult.Success();

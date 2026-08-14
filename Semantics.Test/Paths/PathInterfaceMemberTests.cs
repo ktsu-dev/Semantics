@@ -109,4 +109,23 @@ public class PathInterfaceMemberTests
 		Assert.IsLessThan(0, first.CompareTo(second));
 		Assert.IsGreaterThan(0, first.CompareTo(null));
 	}
+
+	/// <summary>
+	/// The relative path types implement <see cref="IRelativePath.AsAbsolute()"/> explicitly so the
+	/// interface returns the base <see cref="AbsolutePath"/> while the public overload returns the
+	/// specific file or directory type. Only the explicit implementations are exercised here; the
+	/// public overloads are covered elsewhere.
+	/// </summary>
+	[TestMethod]
+	public void AsAbsolute_ThroughIRelativePath_ReturnsBaseAbsolutePath()
+	{
+		IRelativePath relativeFile = RelativeFilePath.Create<RelativeFilePath>(Path.Combine("sub", "afile.txt"));
+		IRelativePath relativeDirectory = RelativeDirectoryPath.Create<RelativeDirectoryPath>(Path.Combine("sub", "child"));
+
+		AbsolutePath absoluteFile = relativeFile.AsAbsolute();
+		AbsolutePath absoluteDirectory = relativeDirectory.AsAbsolute();
+
+		Assert.AreEqual(Path.GetFullPath(Path.Combine("sub", "afile.txt")), absoluteFile.WeakString);
+		Assert.AreEqual(Path.GetFullPath(Path.Combine("sub", "child")), absoluteDirectory.WeakString);
+	}
 }

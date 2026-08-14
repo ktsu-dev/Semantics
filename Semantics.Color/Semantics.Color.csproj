@@ -9,6 +9,10 @@
   <ItemGroup>
     <PackageReference Include="Polyfill" PrivateAssets="all" />
     <PackageReference Include="System.Numerics.Vectors" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+    <!-- Required by KTSU0001 (ktsu.Sdk 2.27.0+): the downlevel targets must reference the packages
+         supplying the framework types they use rather than picking them up transitively. -->
+    <PackageReference Include="System.Memory" Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
   </ItemGroup>
 
 </Project>
