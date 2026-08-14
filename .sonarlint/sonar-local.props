@@ -1,0 +1,27 @@
+<Project>
+
+  <!--
+    Local SonarCloud reproduction.
+
+    CI analyses this repository with the SonarCloud scanner, which injects the Sonar
+    analyzers into the compilation. A plain `dotnet build` does not run them, so Sonar
+    warnings are invisible locally and only surface after a push.
+
+    This file wires the same analyzers into a local build. It is NOT imported
+    automatically - point MSBuild at it explicitly:
+
+        dotnet build -p:CustomBeforeMicrosoftCommonProps=$PWD/.sonarlint/sonar-local.props
+
+    sonar-local.globalconfig (next to this file) raises the rules that CI reports but
+    that the analyzer package leaves off by default, so the local warning set matches
+    CI's. A clean run here means a clean Sonar run in CI.
+
+    Nothing in the repository imports this, so normal builds, the CI pipeline, and
+    packaging are all unaffected.
+  -->
+  <ItemGroup>
+    <PackageReference Include="SonarAnalyzer.CSharp" VersionOverride="10.18.0.131500" PrivateAssets="all" />
+    <EditorConfigFiles Include="$(MSBuildThisFileDirectory)sonar-local.globalconfig" />
+  </ItemGroup>
+
+</Project>

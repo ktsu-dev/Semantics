@@ -15,6 +15,22 @@ This is a multi-target .NET library using ktsu MSBuild SDKs. Strings and Paths t
 
 Tests use MSTest. Generator output is emitted to `Semantics.Quantities/Generated/` (committed) so the project can be inspected without first running the generator.
 
+### Reproducing SonarCloud warnings locally
+
+CI analyses this repository with the SonarCloud scanner, which injects the Sonar analyzers into the compilation. A plain `dotnet build` does **not** run them, so Sonar findings are invisible locally and only surface after a push — a ~10 minute round trip per attempt. To run the same analyzers:
+
+```bash
+dotnet build -p:CustomBeforeMicrosoftCommonProps=$PWD/.sonarlint/sonar-local.props
+```
+
+```powershell
+dotnet build -p:CustomBeforeMicrosoftCommonProps=$PWD\.sonarlint\sonar-local.props
+```
+
+The opt-in lives in `.sonarlint/sonar-local.props` (analyzer package) and `.sonarlint/sonar-local.globalconfig` (rule severities — it raises the rules CI reports that the analyzer package ships disabled, and silences the ones CI's quality profile does not report). Nothing imports these automatically, so normal builds, the CI pipeline, and packaging are unaffected.
+
+**Known limitation:** this currently only reaches `Semantics.SourceGenerators`, the one project declaring its SDK with the `<Project Sdk="...">` attribute form. The `ktsu.Sdk` projects use `<Project>` with `<Sdk Name="..." />` elements, and `CustomBeforeMicrosoftCommonProps` does not reach them. Findings in `Semantics.Strings`, `Paths`, `Music`, `Color` and `Quantities` still have to be read from SonarCloud.
+
 ## Project layout
 
 | Project | Responsibility |

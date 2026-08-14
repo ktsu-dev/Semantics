@@ -1,0 +1,24 @@
+is_global = true
+
+# Rule severities for the local SonarCloud reproduction (see sonar-local.props).
+# Applied only when building with
+#   -p:CustomBeforeMicrosoftCommonProps=$PWD/.sonarlint/sonar-local.props
+
+# CI's SonarCloud quality profile reports these, but the SonarAnalyzer NuGet package
+# ships them disabled by default. Raise them so a local run sees what CI sees.
+dotnet_diagnostic.S107.severity = warning
+dotnet_diagnostic.S1075.severity = warning
+dotnet_diagnostic.S1192.severity = warning
+dotnet_diagnostic.S1871.severity = warning
+dotnet_diagnostic.S2583.severity = warning
+dotnet_diagnostic.S2699.severity = warning
+dotnet_diagnostic.S3267.severity = warning
+dotnet_diagnostic.S3358.severity = warning
+dotnet_diagnostic.S3458.severity = warning
+dotnet_diagnostic.S3776.severity = warning
+dotnet_diagnostic.S6444.severity = warning
+
+# Enabled by default in the analyzer package but not reported by CI's quality profile.
+# Silenced so a clean local run means a clean CI run, rather than noise that would
+# train people to ignore the output.
+dotnet_diagnostic.S1481.severity = none
