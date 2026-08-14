@@ -90,8 +90,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				return;
 			}
 
-			using CodeBlocker codeBlocker = CodeBlocker.Create();
-			GenerateInner(ctx, metadata.Dimensions, metadata.Units, codeBlocker);
+			GenerateInner(ctx, metadata.Dimensions, metadata.Units);
 		});
 	}
 
@@ -124,9 +123,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 	/// <see cref="GenerateInner"/> directly. This shim exists to satisfy the abstract contract.
 	/// </summary>
 	protected override void Generate(SourceProductionContext context, DimensionsMetadata metadata, CodeBlocker codeBlocker)
-		=> GenerateInner(context, metadata, new UnitsMetadata(), codeBlocker);
+		=> GenerateInner(context, metadata, new UnitsMetadata());
 
-	private void GenerateInner(SourceProductionContext context, DimensionsMetadata metadata, UnitsMetadata units, CodeBlocker codeBlocker)
+	private void GenerateInner(SourceProductionContext context, DimensionsMetadata metadata, UnitsMetadata units)
 	{
 		if (metadata.PhysicalDimensions == null || metadata.PhysicalDimensions.Count == 0)
 		{
@@ -625,7 +624,6 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		ClassTemplate cls,
 		List<string> availableUnits,
 		Dictionary<string, UnitDefinition> unitMap,
-		string typeName,
 		string fullType,
 		string crefForComment,
 		bool applyV0Guard,
@@ -829,7 +827,6 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			cls,
 			dim.AvailableUnits,
 			unitMap,
-			typeName,
 			fullType,
 			"<see cref=\"" + typeName + "{T}\"/>",
 			applyV0Guard: true);
@@ -921,7 +918,6 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			cls,
 			dim.AvailableUnits,
 			unitMap,
-			typeName,
 			fullType,
 			"<see cref=\"" + typeName + "{T}\"/>",
 			applyV0Guard: false);
@@ -956,7 +952,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		GeneratedSource.Add(context, sourceFile.FileName, cb.ToString());
 	}
 
-	private void EmitVectorType(
+	private static void EmitVectorType(
 		SourceProductionContext context,
 		PhysicalDimension dim,
 		int dims,
@@ -1111,7 +1107,6 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				cls,
 				dim.AvailableUnits,
 				unitMap,
-				typeName,
 				fullType,
 				typeName,
 				applyV0Guard: vectorForm == 0,
@@ -1223,7 +1218,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		}
 	}
 
-	private void EmitVectorOverloadType(
+	private static void EmitVectorOverloadType(
 		SourceProductionContext context,
 		PhysicalDimension dim,
 		int dims,
@@ -1314,7 +1309,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 					Comments =
 					[
 						"/// <summary>",
-						$"/// {(op.Op == "*" ? "Multiplies" : "Divides")} {op.LeftTypeName} {(op.Op == "*" ? "by" : "by")} {op.RightTypeName} to produce {op.ReturnTypeName}.",
+						$"/// {(op.Op == "*" ? "Multiplies" : "Divides")} {op.LeftTypeName} by {op.RightTypeName} to produce {op.ReturnTypeName}.",
 						"/// </summary>",
 					],
 					Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
@@ -1391,7 +1386,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			Comments =
 			[
 				"/// <summary>",
-				$"/// {(op.Op == "*" ? "Multiplies" : "Divides")} {op.LeftTypeName} {(op.Op == "*" ? "by" : "by")} {op.RightTypeName} to produce {op.ReturnTypeName}.",
+				$"/// {(op.Op == "*" ? "Multiplies" : "Divides")} {op.LeftTypeName} by {op.RightTypeName} to produce {op.ReturnTypeName}.",
 				"/// </summary>",
 			],
 			Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],

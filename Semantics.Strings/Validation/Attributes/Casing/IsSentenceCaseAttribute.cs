@@ -41,9 +41,13 @@ public sealed class IsSentenceCaseAttribute : NativeSemanticStringValidationAttr
 				return ValidationResult.Success();
 			}
 
-			// Find the first letter in the string
-			char? firstLetter = value.FirstOrDefault(char.IsLetter);
-			if (firstLetter.HasValue && !char.IsUpper(firstLetter.Value))
+			// Find the first letter, if the value has one at all. FirstOrDefault over a string
+			// yields char rather than char?, so it returns '\0' when no letter is present; '\0' is
+			// not a letter, so it is an unambiguous "none" sentinel. The previous code assigned
+			// this to a char?, whose HasValue was therefore always true, so a letterless value such
+			// as "123" reached the uppercase check and was rejected even though "" is accepted.
+			char firstLetter = value.FirstOrDefault(char.IsLetter);
+			if (firstLetter != '\0' && !char.IsUpper(firstLetter))
 			{
 				return ValidationResult.Failure(FailureMessage);
 			}

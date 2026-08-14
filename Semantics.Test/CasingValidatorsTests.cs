@@ -129,6 +129,20 @@ public sealed class CasingValidatorsTests
 		AssertRejects<SentenceCaseString>("hello world", "123 hello");
 	}
 
+	/// <summary>
+	/// A value containing no letters has no case to check, so it is vacuously sentence case — the
+	/// same reasoning that makes the empty string valid.
+	/// </summary>
+	[TestMethod]
+	public void SentenceCase_ValueWithoutLetters_IsValid()
+	{
+		SentenceCaseString digits = SemanticString<SentenceCaseString>.Create<SentenceCaseString>("123");
+		Assert.AreEqual("123", digits.WeakString);
+
+		SentenceCaseString punctuation = SemanticString<SentenceCaseString>.Create<SentenceCaseString>("42 - 7 = 35");
+		Assert.AreEqual("42 - 7 = 35", punctuation.WeakString);
+	}
+
 	private static void AssertRejects<TString>(params string[] values)
 		where TString : SemanticString<TString>
 	{
