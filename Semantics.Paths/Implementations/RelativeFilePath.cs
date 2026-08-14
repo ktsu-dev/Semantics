@@ -75,16 +75,6 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	}
 
 	/// <summary>
-	/// Explicitly implements IRelativePath.AsAbsolute() to return the base AbsolutePath type.
-	/// </summary>
-	/// <returns>An <see cref="AbsolutePath"/> representing this absolute path.</returns>
-	AbsolutePath IRelativePath.AsAbsolute()
-	{
-		string absolutePath = Path.GetFullPath(WeakString);
-		return AbsolutePath.Create<AbsolutePath>(absolutePath);
-	}
-
-	/// <summary>
 	/// Converts this relative file path to an absolute file path using the specified base directory.
 	/// </summary>
 	/// <param name="baseDirectory">The base directory to resolve this relative path against.</param>
@@ -99,6 +89,16 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 		string absolutePath = Path.GetFullPath(WeakString, baseDirectory.WeakString);
 #endif
 		return AbsoluteFilePath.Create<AbsoluteFilePath>(absolutePath);
+	}
+
+	/// <summary>
+	/// Explicitly implements IRelativePath.AsAbsolute() to return the base AbsolutePath type.
+	/// </summary>
+	/// <returns>An <see cref="AbsolutePath"/> representing this absolute path.</returns>
+	AbsolutePath IRelativePath.AsAbsolute()
+	{
+		string absolutePath = Path.GetFullPath(WeakString);
+		return AbsolutePath.Create<AbsolutePath>(absolutePath);
 	}
 
 	/// <summary>
