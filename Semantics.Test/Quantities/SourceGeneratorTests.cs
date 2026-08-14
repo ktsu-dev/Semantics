@@ -33,46 +33,53 @@ public class SourceGeneratorTests
 	/// <summary>
 	/// Every generator paired with the metadata file it consumes.
 	/// </summary>
-	private static IEnumerable<object[]> Generators =>
+	private static IEnumerable<(IIncrementalGenerator Generator, string MetadataFileName)> Generators =>
 	[
-		[new ConversionsGenerator(), "conversions.json"],
-		[new DimensionsGenerator(), "dimensions.json"],
-		[new LogarithmicScalesGenerator(), "logarithmic.json"],
-		[new MagnitudesGenerator(), "magnitudes.json"],
-		[new PhysicalConstantsGenerator(), "domains.json"],
-		[new PrecisionGenerator(), "precision.json"],
-		[new QuantitiesGenerator(), "dimensions.json"],
-		[new UnitsGenerator(), "units.json"],
+		(new ConversionsGenerator(), "conversions.json"),
+		(new DimensionsGenerator(), "dimensions.json"),
+		(new LogarithmicScalesGenerator(), "logarithmic.json"),
+		(new MagnitudesGenerator(), "magnitudes.json"),
+		(new PhysicalConstantsGenerator(), "domains.json"),
+		(new PrecisionGenerator(), "precision.json"),
+		(new QuantitiesGenerator(), "dimensions.json"),
+		(new UnitsGenerator(), "units.json"),
 	];
 
+	// Iterates inside the test rather than using [DynamicData] with an IIncrementalGenerator
+	// parameter: a public test method taking a reference type trips CA1062, and neither escape is
+	// available here - CA1510 rejects an explicit ArgumentNullException throw, CA1062 does not
+	// recognise ArgumentNullException.ThrowIfNull, and Polyfill's Ensure cannot be referenced
+	// because its shim types collide with the ones the generator assembly embeds publicly.
+	// Assertion messages name the generator, so a failure is still unambiguous.
 	[TestMethod]
-	[DynamicData(nameof(Generators))]
-	public void Generator_EmitsSourcesWithTheCanonicalHeader(IIncrementalGenerator generator, string metadataFileName)
+	public void EveryGenerator_EmitsSourcesWithTheCanonicalHeader()
 	{
-		ArgumentNullException.ThrowIfNull(generator);
-
-		GeneratorRunResult result = RunGenerator(generator, metadataFileName);
-
-		Assert.IsEmpty(
-			result.Diagnostics,
-			$"{generator.GetType().Name} reported diagnostics: {string.Join("; ", result.Diagnostics.Select(d => d.GetMessage()))}");
-
-		Assert.IsGreaterThan(
-			0,
-			result.GeneratedSources.Length,
-			$"{generator.GetType().Name} produced no sources from {metadataFileName}.");
-
-		foreach (GeneratedSourceResult source in result.GeneratedSources)
+		foreach ((IIncrementalGenerator generator, string metadataFileName) in Generators)
 		{
-			// Normalise newlines so the assertion does not depend on the host platform.
-			string text = source.SourceText.ToString().Replace("\r\n", "\n", StringComparison.Ordinal);
+			string generatorName = generator.GetType().Name;
+			GeneratorRunResult result = RunGenerator(generator, metadataFileName);
 
-			Assert.StartsWith(
-				ExpectedHeader,
-				text,
-				$"{generator.GetType().Name} emitted {source.HintName} without the expected file header. " +
-				$"GeneratorBase.WriteHeaderTo must stay in step with file_header_template in .editorconfig, " +
-				$"otherwise every generated file fails IDE0073.");
+			Assert.IsEmpty(
+				result.Diagnostics,
+				$"{generatorName} reported diagnostics: {string.Join("; ", result.Diagnostics.Select(d => d.GetMessage()))}");
+
+			Assert.IsGreaterThan(
+				0,
+				result.GeneratedSources.Length,
+				$"{generatorName} produced no sources from {metadataFileName}.");
+
+			foreach (GeneratedSourceResult source in result.GeneratedSources)
+			{
+				// Normalise newlines so the assertion does not depend on the host platform.
+				string text = source.SourceText.ToString().Replace("\r\n", "\n", StringComparison.Ordinal);
+
+				Assert.StartsWith(
+					ExpectedHeader,
+					text,
+					$"{generatorName} emitted {source.HintName} without the expected file header. " +
+					$"GeneratorBase.WriteHeaderTo must stay in step with file_header_template in .editorconfig, " +
+					$"otherwise every generated file fails IDE0073.");
+			}
 		}
 	}
 

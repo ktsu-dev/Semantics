@@ -27,9 +27,6 @@ public sealed class IsSentenceCaseAttribute : NativeSemanticStringValidationAttr
 	/// </summary>
 	private sealed class SentenceCaseValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// The message reported for every way a value can fail this format.
-		/// </summary>
 		private const string FailureMessage = "The value must be in sentence case format.";
 
 		/// <summary>

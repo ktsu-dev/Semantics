@@ -27,9 +27,6 @@ public sealed class IsKebabCaseAttribute : NativeSemanticStringValidationAttribu
 	/// </summary>
 	private sealed class KebabCaseValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// The message reported for every way a value can fail this format.
-		/// </summary>
 		private const string FailureMessage = "The value must be in kebab-case format.";
 
 		/// <summary>

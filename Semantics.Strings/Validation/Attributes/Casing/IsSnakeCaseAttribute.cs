@@ -27,9 +27,6 @@ public sealed class IsSnakeCaseAttribute : NativeSemanticStringValidationAttribu
 	/// </summary>
 	private sealed class SnakeCaseValidator : ValidationAdapter
 	{
-		/// <summary>
-		/// The message reported for every way a value can fail this format.
-		/// </summary>
 		private const string FailureMessage = "The value must be in snake_case format.";
 
 		/// <summary>
