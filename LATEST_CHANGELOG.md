@@ -1,6 +1,6 @@
-## v2.9.7 (patch)
+## v2.9.8 (patch)
 
-Changes since v2.9.6:
+Changes since v2.9.7:
 
-- [patch] Fix a sentence-case bug, harden the pattern regex, tidy the generator ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] Add a local SonarCloud check; simplify AdjustForContrast; test PatternValidationRule ([@matt-edmondson](https://github.com/matt-edmondson))
 
