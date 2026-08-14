@@ -3,7 +3,6 @@
 namespace ktsu.Semantics.Strings;
 
 using System;
-using System.Linq;
 
 /// <summary>
 /// Validates that a string is in snake_case (lowercase words separated by underscores)
@@ -34,38 +33,7 @@ public sealed class IsSnakeCaseAttribute : NativeSemanticStringValidationAttribu
 		/// </summary>
 		/// <param name="value">The string value to validate</param>
 		/// <returns>A validation result indicating success or failure</returns>
-		protected override ValidationResult ValidateValue(string value)
-		{
-			if (string.IsNullOrEmpty(value))
-			{
-				return ValidationResult.Success();
-			}
-
-			// Cannot start or end with underscore
-			if (value.StartsWith('_') || value.EndsWith('_'))
-			{
-				return ValidationResult.Failure(FailureMessage);
-			}
-
-			// Cannot have consecutive underscores
-			if (value.Contains("__"))
-			{
-				return ValidationResult.Failure(FailureMessage);
-			}
-
-			// No spaces, hyphens, or other separators allowed (except underscores)
-			if (value.Any(c => char.IsWhiteSpace(c) || c == '-'))
-			{
-				return ValidationResult.Failure(FailureMessage);
-			}
-
-			// All characters must be lowercase letters, digits, or underscores
-			if (!value.All(c => char.IsLower(c) || char.IsDigit(c) || c == '_'))
-			{
-				return ValidationResult.Failure(FailureMessage);
-			}
-
-			return ValidationResult.Success();
-		}
+		protected override ValidationResult ValidateValue(string value) =>
+			DelimitedCaseValidation.Validate(value, '_', '-', char.IsLower, FailureMessage);
 	}
 }
