@@ -106,6 +106,17 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public bool Contains(string value, StringComparison comparisonType) => WeakString.IndexOf(value, comparisonType) >= 0;
 #endif
 
+	/// <summary>
+	/// Determines whether the semantic string contains the specified span using efficient span comparison.
+	/// </summary>
+	/// <param name="value">The span to search for within this string.</param>
+	/// <param name="comparisonType">The type of comparison to perform.</param>
+	/// <returns>true if this string contains the specified span; otherwise, false.</returns>
+	/// <remarks>
+	/// This overload uses span-based search which can be more efficient than string-based Contains for certain scenarios.
+	/// </remarks>
+	public bool Contains(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.Contains(value.ToString(), comparisonType);
+
 	/// <inheritdoc/>
 	public void CopyTo(int sourceIndex, char[] destination, int destinationIndex, int count) => WeakString.CopyTo(sourceIndex: sourceIndex, destination: destination, destinationIndex: destinationIndex, count: count);
 
@@ -115,6 +126,17 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public bool EndsWith(string value, bool ignoreCase, CultureInfo culture) => WeakString.EndsWith(value: value, ignoreCase: ignoreCase, culture: culture);
 	/// <inheritdoc/>
 	public bool EndsWith(string value, StringComparison comparisonType) => WeakString.EndsWith(value: value, comparisonType: comparisonType);
+
+	/// <summary>
+	/// Determines whether the semantic string ends with the specified span using efficient span comparison.
+	/// </summary>
+	/// <param name="value">The span to compare with the end of this string.</param>
+	/// <param name="comparisonType">The type of comparison to perform.</param>
+	/// <returns>true if this string ends with the specified span; otherwise, false.</returns>
+	/// <remarks>
+	/// This overload uses span-based comparison which avoids string allocations when working with substrings or spans.
+	/// </remarks>
+	public bool EndsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.EndsWith(value.ToString(), comparisonType);
 
 	/// <inheritdoc/>
 	public bool Equals(string value) => WeakString.Equals(value: value);
@@ -145,6 +167,17 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public int IndexOf(string value, int startIndex, StringComparison comparisonType) => WeakString.IndexOf(value: value, startIndex: startIndex, comparisonType: comparisonType);
 	/// <inheritdoc/>
 	public int IndexOf(string value, StringComparison comparisonType) => WeakString.IndexOf(value: value, comparisonType: comparisonType);
+
+	/// <summary>
+	/// Finds the first occurrence of a character sequence in the semantic string using span semantics.
+	/// </summary>
+	/// <param name="value">The character sequence to search for.</param>
+	/// <param name="comparisonType">The type of comparison to perform.</param>
+	/// <returns>The index of the first occurrence of the sequence, or -1 if not found.</returns>
+	/// <remarks>
+	/// This overload uses span-based search which can be more efficient than string-based IndexOf for certain scenarios.
+	/// </remarks>
+	public int IndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.IndexOf(value.ToString(), comparisonType);
 
 	/// <inheritdoc/>
 	public int IndexOfAny(char[] anyOf) => WeakString.IndexOfAny(anyOf: anyOf);
@@ -179,6 +212,17 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public int LastIndexOf(string value, int startIndex, StringComparison comparisonType) => WeakString.LastIndexOf(value: value, startIndex: startIndex, comparisonType: comparisonType);
 	/// <inheritdoc/>
 	public int LastIndexOf(string value, StringComparison comparisonType) => WeakString.LastIndexOf(value: value, comparisonType: comparisonType);
+
+	/// <summary>
+	/// Finds the last occurrence of a character sequence in the semantic string using span semantics.
+	/// </summary>
+	/// <param name="value">The character sequence to search for.</param>
+	/// <param name="comparisonType">The type of comparison to perform.</param>
+	/// <returns>The index of the last occurrence of the sequence, or -1 if not found.</returns>
+	/// <remarks>
+	/// This overload uses span-based search which can be more efficient than string-based LastIndexOf for certain scenarios.
+	/// </remarks>
+	public int LastIndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.LastIndexOf(value.ToString(), comparisonType);
 
 	/// <inheritdoc/>
 	public int LastIndexOfAny(char[] anyOf) => WeakString.LastIndexOfAny(anyOf: anyOf);
@@ -225,12 +269,35 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <inheritdoc/>
 	public string[] Split(string[] separator, StringSplitOptions options) => WeakString.Split(separator: separator, options: options);
 
+	/// <summary>
+	/// Splits the semantic string into spans based on the specified separator without allocating strings.
+	/// </summary>
+	/// <param name="separator">The character that delimits the spans in this string.</param>
+	/// <param name="options">Options to control the splitting behavior.</param>
+	/// <returns>An enumerable of spans that represent the segments of this string separated by the separator.</returns>
+	/// <remarks>
+	/// This method provides a zero-allocation alternative to Split() when you only need to enumerate
+	/// the parts without creating string objects. Use this for performance-critical scenarios.
+	/// </remarks>
+	public SpanSplitEnumerator Split(char separator, StringSplitOptions options = StringSplitOptions.None) => new(AsSpan(), separator, options);
+
 	/// <inheritdoc/>
 	public bool StartsWith(string value) => WeakString.StartsWith(value: value);
 	/// <inheritdoc/>
 	public bool StartsWith(string value, bool ignoreCase, CultureInfo culture) => WeakString.StartsWith(value: value, ignoreCase: ignoreCase, culture: culture);
 	/// <inheritdoc/>
 	public bool StartsWith(string value, StringComparison comparisonType) => WeakString.StartsWith(value: value, comparisonType: comparisonType);
+
+	/// <summary>
+	/// Determines whether the semantic string starts with the specified span using efficient span comparison.
+	/// </summary>
+	/// <param name="value">The span to compare with the beginning of this string.</param>
+	/// <param name="comparisonType">The type of comparison to perform.</param>
+	/// <returns>true if this string starts with the specified span; otherwise, false.</returns>
+	/// <remarks>
+	/// This overload uses span-based comparison which avoids string allocations when working with substrings or spans.
+	/// </remarks>
+	public bool StartsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.StartsWith(value.ToString(), comparisonType);
 
 	/// <inheritdoc/>
 	public string Substring(int startIndex) => WeakString[startIndex..];
@@ -481,69 +548,42 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		=> Create<TDest>(value: value.ToString());
 
 	/// <summary>
-	/// Creates a new instance of the specified semantic string type from a string value.
+	/// Creates a new instance of this semantic string type from a string value.
 	/// </summary>
-	/// <typeparam name="TDest">The semantic string type to create.</typeparam>
 	/// <param name="value">The string value to convert.</param>
-	/// <returns>A new instance of the specified semantic string type.</returns>
+	/// <returns>A new instance of this semantic string type.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="ArgumentException">
-	/// The <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
-	/// </exception>
+	/// <exception cref="ArgumentException">The string does not meet the validation criteria for this type.</exception>
 	/// <remarks>
-	/// This is an internal factory method for creating semantic string instances. It performs the following steps:
-	/// <list type="number">
-	/// <item><description>Creates an instance of the target type</description></item>
-	/// <item><description>Applies canonicalization through the type's <see cref="MakeCanonical"/> method</description></item>
-	/// <item><description>Validates the result using <see cref="IsValid()"/> method</description></item>
-	/// <item><description>Throws <see cref="ArgumentException"/> if validation fails</description></item>
-	/// </list>
+	/// This method provides type inference when called on concrete semantic string types,
+	/// eliminating the need for explicit generic type parameters.
 	/// </remarks>
-	private static TDest FromString<TDest>(string? value)
-		where TDest : SemanticString<TDest>
-	{
-		TDest newInstance = FromStringInternal<TDest>(value: value);
-		return PerformValidation(value: newInstance);
-	}
+	public static TDerived Create(string? value) => Create<TDerived>(value);
 
 	/// <summary>
-	/// Creates a new instance of the specified semantic string type from a character array.
+	/// Creates a new instance of this semantic string type from a character array.
 	/// </summary>
-	/// <typeparam name="TDest">The semantic string type to create.</typeparam>
 	/// <param name="value">The character array to convert.</param>
-	/// <returns>A new instance of the specified semantic string type.</returns>
+	/// <returns>A new instance of this semantic string type.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="ArgumentException">
-	/// The string representation of <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
-	/// </exception>
+	/// <exception cref="ArgumentException">The string does not meet the validation criteria for this type.</exception>
 	/// <remarks>
-	/// This internal factory method converts the character array to a string and then creates a semantic string instance,
-	/// applying canonicalization and validation in the process.
+	/// This method provides type inference when called on concrete semantic string types,
+	/// eliminating the need for explicit generic type parameters.
 	/// </remarks>
-	private static TDest FromCharArray<TDest>(char[]? value)
-		where TDest : SemanticString<TDest>
-	{
-		Ensure.NotNull(value);
-		return FromString<TDest>(value: new string(value: value));
-	}
+	public static TDerived Create(char[]? value) => Create<TDerived>(value);
 
 	/// <summary>
-	/// Creates a new instance of the specified semantic string type from a read-only character span.
+	/// Creates a new instance of this semantic string type from a read-only character span.
 	/// </summary>
-	/// <typeparam name="TDest">The semantic string type to create.</typeparam>
 	/// <param name="value">The read-only character span to convert.</param>
-	/// <returns>A new instance of the specified semantic string type.</returns>
-	/// <exception cref="ArgumentException">
-	/// The string representation of <paramref name="value"/> does not meet the validation criteria defined by the target semantic string type.
-	/// </exception>
+	/// <returns>A new instance of this semantic string type.</returns>
+	/// <exception cref="ArgumentException">The string does not meet the validation criteria for this type.</exception>
 	/// <remarks>
-	/// This internal factory method is optimized for performance when working with character spans,
-	/// avoiding unnecessary allocations until the final string creation.
-	/// The span is converted to a string and then processed through canonicalization and validation.
+	/// This method provides type inference when called on concrete semantic string types,
+	/// eliminating the need for explicit generic type parameters.
 	/// </remarks>
-	private static TDest FromReadOnlySpan<TDest>(ReadOnlySpan<char> value)
-		where TDest : SemanticString<TDest>
-		=> FromString<TDest>(value: value.ToString());
+	public static TDerived Create(ReadOnlySpan<char> value) => Create<TDerived>(value);
 
 	/// <summary>
 	/// Internal factory method that creates a new semantic string instance without validation.
@@ -584,44 +624,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		}
 		return value;
 	}
-
-	/// <summary>
-	/// Creates a new instance of this semantic string type from a string value.
-	/// </summary>
-	/// <param name="value">The string value to convert.</param>
-	/// <returns>A new instance of this semantic string type.</returns>
-	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="ArgumentException">The string does not meet the validation criteria for this type.</exception>
-	/// <remarks>
-	/// This method provides type inference when called on concrete semantic string types,
-	/// eliminating the need for explicit generic type parameters.
-	/// </remarks>
-	public static TDerived Create(string? value) => Create<TDerived>(value);
-
-	/// <summary>
-	/// Creates a new instance of this semantic string type from a character array.
-	/// </summary>
-	/// <param name="value">The character array to convert.</param>
-	/// <returns>A new instance of this semantic string type.</returns>
-	/// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
-	/// <exception cref="ArgumentException">The string does not meet the validation criteria for this type.</exception>
-	/// <remarks>
-	/// This method provides type inference when called on concrete semantic string types,
-	/// eliminating the need for explicit generic type parameters.
-	/// </remarks>
-	public static TDerived Create(char[]? value) => Create<TDerived>(value);
-
-	/// <summary>
-	/// Creates a new instance of this semantic string type from a read-only character span.
-	/// </summary>
-	/// <param name="value">The read-only character span to convert.</param>
-	/// <returns>A new instance of this semantic string type.</returns>
-	/// <exception cref="ArgumentException">The string does not meet the validation criteria for this type.</exception>
-	/// <remarks>
-	/// This method provides type inference when called on concrete semantic string types,
-	/// eliminating the need for explicit generic type parameters.
-	/// </remarks>
-	public static TDerived Create(ReadOnlySpan<char> value) => Create<TDerived>(value);
 
 	/// <summary>
 	/// Attempts to create a new instance of this semantic string type from a string value without throwing exceptions.
@@ -688,7 +690,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </returns>
 	/// <remarks>
 	/// This method provides exception-free creation of semantic string instances.
-	/// It performs the same validation as <see cref="FromString{TDest}(string)"/> but returns false instead of throwing exceptions when validation fails.
+	/// It performs the same validation as <see cref="Create{TDest}(string?)"/> but returns false instead of throwing exceptions when validation fails.
 	/// </remarks>
 	public static bool TryCreate<TDest>(string? value, out TDest? result)
 		where TDest : SemanticString<TDest>
@@ -708,7 +710,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </returns>
 	/// <remarks>
 	/// This method provides exception-free creation of semantic string instances.
-	/// It performs the same validation as <see cref="FromCharArray{TDest}(char[])"/> but returns false instead of throwing exceptions when validation fails.
+	/// It performs the same validation as <see cref="Create{TDest}(char[])"/> but returns false instead of throwing exceptions when validation fails.
 	/// </remarks>
 	public static bool TryCreate<TDest>(char[]? value, out TDest? result)
 		where TDest : SemanticString<TDest>
@@ -728,7 +730,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </returns>
 	/// <remarks>
 	/// This method provides exception-free creation of semantic string instances.
-	/// It performs the same validation as <see cref="FromReadOnlySpan{TDest}(ReadOnlySpan{char})"/> but returns false instead of throwing exceptions when validation fails.
+	/// It performs the same validation as <see cref="Create{TDest}(ReadOnlySpan{char})"/> but returns false instead of throwing exceptions when validation fails.
 	/// </remarks>
 	public static bool TryCreate<TDest>(ReadOnlySpan<char> value, out TDest? result)
 		where TDest : SemanticString<TDest>
@@ -743,7 +745,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
 	/// <remarks>
 	/// This internal method provides exception-free creation of semantic string instances. It performs the same validation
-	/// as <see cref="FromString{TDest}(string?)"/> but returns false instead of throwing exceptions when validation fails.
+	/// as <see cref="Create{TDest}(string?)"/> but returns false instead of throwing exceptions when validation fails.
 	/// This is useful for scenarios where you want to attempt creation without handling exceptions.
 	/// </remarks>
 	private static bool TryFromString<TDest>(string? value, out TDest? result)
@@ -757,7 +759,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 				return false;
 			}
 
-			result = FromString<TDest>(value);
+			result = Create<TDest>(value);
 			return true;
 		}
 		catch (ArgumentException)
@@ -775,7 +777,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
 	/// <remarks>
 	/// This internal method provides exception-free creation of semantic string instances from character arrays.
-	/// It performs the same validation as <see cref="FromCharArray{TDest}(char[])"/> but returns false instead of throwing exceptions when validation fails.
+	/// It performs the same validation as <see cref="Create{TDest}(char[])"/> but returns false instead of throwing exceptions when validation fails.
 	/// </remarks>
 	private static bool TryFromCharArray<TDest>(char[]? value, out TDest? result)
 		where TDest : SemanticString<TDest>
@@ -788,7 +790,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 				return false;
 			}
 
-			result = FromCharArray<TDest>(value);
+			result = Create<TDest>(value);
 			return true;
 		}
 		catch (ArgumentException)
@@ -806,7 +808,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <returns><see langword="true"/> if the conversion was successful; otherwise, <see langword="false"/>.</returns>
 	/// <remarks>
 	/// This internal method provides exception-free creation of semantic string instances from character spans.
-	/// It performs the same validation as <see cref="FromReadOnlySpan{TDest}(ReadOnlySpan{char})"/> but returns false instead of throwing exceptions when validation fails.
+	/// It performs the same validation as <see cref="Create{TDest}(ReadOnlySpan{char})"/> but returns false instead of throwing exceptions when validation fails.
 	/// This is particularly useful for performance-critical scenarios where you want to avoid both exceptions and unnecessary string allocations.
 	/// </remarks>
 	private static bool TryFromReadOnlySpan<TDest>(ReadOnlySpan<char> value, out TDest? result)
@@ -815,7 +817,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		result = null;
 		try
 		{
-			result = FromReadOnlySpan<TDest>(value);
+			result = Create<TDest>(value);
 			return true;
 		}
 		catch (ArgumentException)
@@ -858,61 +860,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public ReadOnlySpan<char> AsSpan(int start, int length) => WeakString.AsSpan(start, length);
 
 	/// <summary>
-	/// Finds the first occurrence of a character sequence in the semantic string using span semantics.
-	/// </summary>
-	/// <param name="value">The character sequence to search for.</param>
-	/// <param name="comparisonType">The type of comparison to perform.</param>
-	/// <returns>The index of the first occurrence of the sequence, or -1 if not found.</returns>
-	/// <remarks>
-	/// This overload uses span-based search which can be more efficient than string-based IndexOf for certain scenarios.
-	/// </remarks>
-	public int IndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.IndexOf(value.ToString(), comparisonType);
-
-	/// <summary>
-	/// Finds the last occurrence of a character sequence in the semantic string using span semantics.
-	/// </summary>
-	/// <param name="value">The character sequence to search for.</param>
-	/// <param name="comparisonType">The type of comparison to perform.</param>
-	/// <returns>The index of the last occurrence of the sequence, or -1 if not found.</returns>
-	/// <remarks>
-	/// This overload uses span-based search which can be more efficient than string-based LastIndexOf for certain scenarios.
-	/// </remarks>
-	public int LastIndexOf(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.LastIndexOf(value.ToString(), comparisonType);
-
-	/// <summary>
-	/// Determines whether the semantic string starts with the specified span using efficient span comparison.
-	/// </summary>
-	/// <param name="value">The span to compare with the beginning of this string.</param>
-	/// <param name="comparisonType">The type of comparison to perform.</param>
-	/// <returns>true if this string starts with the specified span; otherwise, false.</returns>
-	/// <remarks>
-	/// This overload uses span-based comparison which avoids string allocations when working with substrings or spans.
-	/// </remarks>
-	public bool StartsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.StartsWith(value.ToString(), comparisonType);
-
-	/// <summary>
-	/// Determines whether the semantic string ends with the specified span using efficient span comparison.
-	/// </summary>
-	/// <param name="value">The span to compare with the end of this string.</param>
-	/// <param name="comparisonType">The type of comparison to perform.</param>
-	/// <returns>true if this string ends with the specified span; otherwise, false.</returns>
-	/// <remarks>
-	/// This overload uses span-based comparison which avoids string allocations when working with substrings or spans.
-	/// </remarks>
-	public bool EndsWith(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.EndsWith(value.ToString(), comparisonType);
-
-	/// <summary>
-	/// Determines whether the semantic string contains the specified span using efficient span comparison.
-	/// </summary>
-	/// <param name="value">The span to search for within this string.</param>
-	/// <param name="comparisonType">The type of comparison to perform.</param>
-	/// <returns>true if this string contains the specified span; otherwise, false.</returns>
-	/// <remarks>
-	/// This overload uses span-based search which can be more efficient than string-based Contains for certain scenarios.
-	/// </remarks>
-	public bool Contains(ReadOnlySpan<char> value, StringComparison comparisonType = StringComparison.Ordinal) => WeakString.Contains(value.ToString(), comparisonType);
-
-	/// <summary>
 	/// Counts the number of characters that match the specified predicate using span semantics.
 	/// </summary>
 	/// <param name="predicate">A function to test each character.</param>
@@ -936,18 +883,6 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		}
 		return count;
 	}
-
-	/// <summary>
-	/// Splits the semantic string into spans based on the specified separator without allocating strings.
-	/// </summary>
-	/// <param name="separator">The character that delimits the spans in this string.</param>
-	/// <param name="options">Options to control the splitting behavior.</param>
-	/// <returns>An enumerable of spans that represent the segments of this string separated by the separator.</returns>
-	/// <remarks>
-	/// This method provides a zero-allocation alternative to Split() when you only need to enumerate
-	/// the parts without creating string objects. Use this for performance-critical scenarios.
-	/// </remarks>
-	public SpanSplitEnumerator Split(char separator, StringSplitOptions options = StringSplitOptions.None) => new(AsSpan(), separator, options);
 
 	/// <summary>
 	/// Trims whitespace from both ends of the semantic string using span semantics.
