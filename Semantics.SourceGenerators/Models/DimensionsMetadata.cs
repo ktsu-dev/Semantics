@@ -3,6 +3,7 @@
 namespace Semantics.SourceGenerators.Models;
 
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// Root metadata structure for physical dimensions.
@@ -59,12 +60,9 @@ public class DimensionsMetadata
 			}
 			else
 			{
-				foreach (string unit in dim.AvailableUnits)
+				foreach (string unit in dim.AvailableUnits.Where(string.IsNullOrWhiteSpace))
 				{
-					if (string.IsNullOrWhiteSpace(unit))
-					{
-						issues.Add($"Dimension '{label}' has a blank entry in 'availableUnits'.");
-					}
+					issues.Add($"Dimension '{label}' has a blank entry in 'availableUnits'.");
 				}
 			}
 
