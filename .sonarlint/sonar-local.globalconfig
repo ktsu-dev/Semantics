@@ -8,6 +8,7 @@ is_global = true
 # ships them disabled by default. Raise them so a local run sees what CI sees.
 dotnet_diagnostic.S107.severity = warning
 dotnet_diagnostic.S1075.severity = warning
+dotnet_diagnostic.S1172.severity = warning
 dotnet_diagnostic.S1192.severity = warning
 dotnet_diagnostic.S1871.severity = warning
 dotnet_diagnostic.S2583.severity = warning
