@@ -1,6 +1,6 @@
-## v2.9.6 (patch)
+## v2.9.7 (patch)
 
-Changes since v2.9.5:
+Changes since v2.9.6:
 
-- [patch] Extract the shared delimiter-separated casing rules ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] Fix a sentence-case bug, harden the pattern regex, tidy the generator ([@matt-edmondson](https://github.com/matt-edmondson))
 
