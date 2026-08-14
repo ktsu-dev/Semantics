@@ -96,17 +96,18 @@ public class DimensionsMetadata
 					issues.Add($"Type name '{form.Base}' (dimension '{label}' vector{i}) collides with another base or overload.");
 				}
 
-				foreach (OverloadDefinition overload in form.Overloads)
+				// Only the name is inspected, so iterate the names directly.
+				foreach (string overloadName in form.Overloads.Select(overload => overload.Name))
 				{
-					if (string.IsNullOrEmpty(overload.Name))
+					if (string.IsNullOrEmpty(overloadName))
 					{
 						issues.Add($"Dimension '{label}' vector{i} has an overload missing 'name'.");
 						continue;
 					}
 
-					if (!seenTypeNames.Add(overload.Name))
+					if (!seenTypeNames.Add(overloadName))
 					{
-						issues.Add($"Overload type name '{overload.Name}' (dimension '{label}' vector{i}) collides with another base or overload.");
+						issues.Add($"Overload type name '{overloadName}' (dimension '{label}' vector{i}) collides with another base or overload.");
 					}
 				}
 			}

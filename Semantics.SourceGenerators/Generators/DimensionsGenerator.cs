@@ -123,22 +123,19 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 
 		// Emit per-dimension marker interfaces (I{Dim}Unit : IUnit) so generated
 		// quantity types can accept dimensionally-compatible units only.
-		foreach (PhysicalDimension dimension in sortedDimensions)
+		sourceFileTemplate.Classes.AddRange(sortedDimensions.Select(dimension => new ClassTemplate()
 		{
-			sourceFileTemplate.Classes.Add(new ClassTemplate()
-			{
-				Comments =
-				[
-					Emit.SummaryOpen,
-					$"/// Marker interface implemented by every unit of the <c>{dimension.Name}</c> dimension.",
-					"/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.",
-					Emit.SummaryClose,
-				],
-				Keywords = [Emit.Public, "interface"],
-				Name = $"I{dimension.Name}Unit",
-				Interfaces = ["IUnit"],
-			});
-		}
+			Comments =
+			[
+				Emit.SummaryOpen,
+				$"/// Marker interface implemented by every unit of the <c>{dimension.Name}</c> dimension.",
+				"/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.",
+				Emit.SummaryClose,
+			],
+			Keywords = [Emit.Public, "interface"],
+			Name = $"I{dimension.Name}Unit",
+			Interfaces = ["IUnit"],
+		}));
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
 		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
