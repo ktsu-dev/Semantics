@@ -1,6 +1,6 @@
-## v2.9.11 (patch)
+## v2.9.12 (patch)
 
-Changes since v2.9.10:
+Changes since v2.9.11:
 
-- [patch] S1172: drop the last four unused generator parameters ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] S3267: clear the last two generator loops ([@matt-edmondson](https://github.com/matt-edmondson))
 
