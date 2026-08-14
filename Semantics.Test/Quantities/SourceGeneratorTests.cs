@@ -1,14 +1,14 @@
 // Copyright (c) 2023-2026 ktsu-dev contributors
 
-namespace ktsu.Semantics.SourceGenerators.Test;
+namespace ktsu.Semantics.Test.Quantities;
 
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-// Fully qualified: inside namespace ktsu.Semantics.SourceGenerators.Test, a bare
-// "Semantics.SourceGenerators" would bind relative to ktsu., which does not exist.
+// Fully qualified: inside namespace ktsu.Semantics.Test, a bare "Semantics.SourceGenerators"
+// would bind to ktsu.Semantics.SourceGenerators, which does not exist.
 using global::Semantics.SourceGenerators;
 
 /// <summary>

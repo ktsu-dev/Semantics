@@ -26,8 +26,13 @@
     <PackageReference Include="System.Text.Json" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
-  <!-- Bundle all dependencies alongside the generator so they're available at analyzer load time -->
-  <Target Name="GetDependencyTargetPaths">
+  <!-- Bundle all dependencies alongside the generator so they're available at analyzer load time.
+       A consumer that references this project as a plain library rather than as an analyzer (the
+       test project, which drives the generators through CSharpGeneratorDriver) must opt out via
+       AdditionalProperties="BundleAnalyzerDependencies=false": the bundled netstandard2.0 facades
+       otherwise land in that consumer's compile references and collide with the in-box types
+       (CS0433 on ReadOnlySpan<T>, Vector4, and friends). -->
+  <Target Name="GetDependencyTargetPaths" Condition="'$(BundleAnalyzerDependencies)' != 'false'">
     <ItemGroup>
       <TargetPathWithTargetPlatformMoniker Include="@(ResolvedCompileFileDefinitions)" IncludeRuntimeDependency="false" />
     </ItemGroup>
