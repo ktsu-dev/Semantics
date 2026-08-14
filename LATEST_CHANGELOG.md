@@ -1,6 +1,6 @@
-## v2.9.10 (patch)
+## v2.9.11 (patch)
 
-Changes since v2.9.9:
+Changes since v2.9.10:
 
-- [patch] S3267: simplify two generator loops with LINQ ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] S1172: drop the last four unused generator parameters ([@matt-edmondson](https://github.com/matt-edmondson))
 
