@@ -1,6 +1,6 @@
-## v2.9.13 (patch)
+## v2.9.14 (patch)
 
-Changes since v2.9.12:
+Changes since v2.9.13:
 
-- [patch] S3776: reduce cognitive complexity in seven methods ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] S4136/S4144: group overloads and drop duplicate private factories ([@matt-edmondson](https://github.com/matt-edmondson))
 
