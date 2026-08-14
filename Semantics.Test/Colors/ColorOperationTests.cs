@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Colors;
 
@@ -52,7 +50,7 @@ public class ColorOperationTests
 		Color a = Color.FromSrgb(0.0, 0.0, 0.0);
 		Color b = Color.FromSrgb(1.0, 1.0, 1.0);
 		IReadOnlyList<Color> gradient = a.Gradient(b, 5);
-		Assert.AreEqual(5, gradient.Count);
+		Assert.HasCount(5, gradient);
 		Assert.AreEqual(a.R, gradient[0].R, 1e-9);
 		Assert.AreEqual(b.R, gradient[4].R, 1e-9);
 	}

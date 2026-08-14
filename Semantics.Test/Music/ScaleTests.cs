@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Music;
 
@@ -16,7 +14,7 @@ public class ScaleTests
 	{
 		int[] expected = [0, 2, 4, 5, 7, 9, 11];
 		int[] values = [.. CMajor.PitchClasses.Select(pc => pc.Value)];
-		CollectionAssert.AreEqual(expected, values);
+		Assert.AreSequenceEqual(expected, values);
 	}
 
 	[TestMethod]

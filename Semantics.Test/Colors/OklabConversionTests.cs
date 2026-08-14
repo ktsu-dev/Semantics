@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Colors;
 
@@ -35,7 +33,7 @@ public class OklabConversionTests
 	public void Oklch_RedHasPositiveChroma()
 	{
 		Oklch lch = Color.FromSrgb(1.0, 0.0, 0.0).ToOklch();
-		Assert.IsTrue(lch.C > 0.1, $"expected chroma > 0.1 but was {lch.C}");
+		Assert.IsGreaterThan(0.1, lch.C, $"expected chroma > 0.1 but was {lch.C}");
 	}
 
 	[TestMethod]

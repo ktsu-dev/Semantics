@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Music;
 
@@ -47,7 +45,7 @@ public class FormTests
 	{
 		Form form = Form.Parse("ABACA");
 		Assert.AreEqual(NamedForm.Rondo, form.Name);
-		Assert.AreEqual(5, form.Letters.Count);
+		Assert.HasCount(5, form.Letters);
 	}
 
 	[TestMethod]

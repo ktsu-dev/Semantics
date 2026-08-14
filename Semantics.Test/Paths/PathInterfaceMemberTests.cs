@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Paths;
 
@@ -77,9 +75,9 @@ public class PathInterfaceMemberTests
 
 			List<string> contents = [.. directory.GetContents().Select(p => p.WeakString).OrderBy(p => p, StringComparer.Ordinal)];
 
-			CollectionAssert.AreEqual(
-				new List<string> { Path.Combine(root, "afile.txt"), Path.Combine(root, "child") },
-				contents);
+			List<string> expected = [Path.Combine(root, "afile.txt"), Path.Combine(root, "child")];
+
+			Assert.AreSequenceEqual(expected, contents);
 		}
 		finally
 		{

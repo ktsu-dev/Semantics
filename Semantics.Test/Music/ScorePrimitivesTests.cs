@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Music;
 
@@ -19,8 +17,8 @@ public class ScorePrimitivesTests
 	[TestMethod]
 	public void Velocity_NamedDynamicsAreOrdered()
 	{
-		Assert.IsTrue(Velocity.Pianissimo.Value < Velocity.MezzoForte.Value);
-		Assert.IsTrue(Velocity.MezzoForte.Value < Velocity.Fortissimo.Value);
+		Assert.IsLessThan(Velocity.MezzoForte.Value, Velocity.Pianissimo.Value);
+		Assert.IsLessThan(Velocity.Fortissimo.Value, Velocity.MezzoForte.Value);
 	}
 
 	[TestMethod]

@@ -19,6 +19,30 @@
     <ProjectReference Include="..\Semantics.Music\Semantics.Music.csproj" />
     <ProjectReference Include="..\Semantics.Color\Semantics.Color.csproj" />
     <ProjectReference Include="..\Semantics.Strings.Identifiers\Semantics.Strings.Identifiers.csproj" />
+    <!-- Referenced as a plain library, not OutputItemType="Analyzer": SourceGeneratorTests drives
+         the generators explicitly through CSharpGeneratorDriver rather than having them run against
+         this project. BundleAnalyzerDependencies=false stops the generator's GetDependencyTargetPaths
+         target from pushing its bundled netstandard2.0 facades into our compile references, where
+         they collide with the in-box types (CS0433 on ReadOnlySpan<T>, Vector4, ...). -->
+    <ProjectReference Include="..\Semantics.SourceGenerators\Semantics.SourceGenerators.csproj"
+                      AdditionalProperties="BundleAnalyzerDependencies=false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <!-- The generator declares its dependencies PrivateAssets="all" so they do not flow to
+         consumers, but the generators genuinely execute in these tests and fail with
+         FileNotFoundException without CodeBlocker present. Runtime only: taking its compile assets
+         would reintroduce the facade collision described above. -->
+    <PackageReference Include="ktsu.CodeBlocker" ExcludeAssets="compile" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Drive the generators with the real production metadata rather than fixtures, so these tests
+         fail if a metadata change breaks generation. -->
+    <None Include="..\Semantics.SourceGenerators\Metadata\*.json"
+          Link="GeneratorMetadata\%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

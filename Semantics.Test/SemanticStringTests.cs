@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test;
 
@@ -49,7 +47,7 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 		char[] chars = semanticString.ToCharArray();
-		CollectionAssert.AreEqual(TestCharArray, chars);
+		Assert.AreSequenceEqual(TestCharArray, chars);
 	}
 
 	[TestMethod]
@@ -87,7 +85,7 @@ public class StringTests
 	{
 		char[] charArray = ['t', 'e', 's', 't'];
 		MySemanticString semanticString = charArray.As<MySemanticString>();
-		CollectionAssert.AreEqual(charArray, semanticString.ToCharArray());
+		Assert.AreSequenceEqual(charArray, semanticString.ToCharArray());
 	}
 
 	[TestMethod]
@@ -113,7 +111,7 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("test");
 		char[] result = semanticString;
-		CollectionAssert.AreEqual(TestCharArray, result);
+		Assert.AreSequenceEqual(TestCharArray, result);
 	}
 
 	[TestMethod]
@@ -227,7 +225,7 @@ public class StringTests
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("hello");
 		char[] result = semanticString.ToCharArray(1, 3);
 		char[] expected = ['e', 'l', 'l'];
-		CollectionAssert.AreEqual(expected, result);
+		Assert.AreSequenceEqual(expected, result);
 	}
 
 	[TestMethod]
@@ -437,7 +435,7 @@ public class StringTests
 		semanticString.CopyTo(1, destination, 2, 3); // Copy "ell" to index 2
 
 		char[] expected = ['\0', '\0', 'e', 'l', 'l', '\0', '\0', '\0', '\0', '\0'];
-		CollectionAssert.AreEqual(expected, destination);
+		Assert.AreSequenceEqual(expected, destination);
 	}
 
 	[TestMethod]
@@ -485,7 +483,7 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("hello,world;test");
 		string[] result = semanticString.Split(',', ';');
-		CollectionAssert.AreEqual(Expected1, result);
+		Assert.AreSequenceEqual(Expected1, result);
 	}
 
 	[TestMethod]
@@ -493,7 +491,7 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("a,b,c,d");
 		string[] result = semanticString.Split([','], 2);
-		CollectionAssert.AreEqual(Expected2, result);
+		Assert.AreSequenceEqual(Expected2, result);
 	}
 
 	[TestMethod]
@@ -501,7 +499,7 @@ public class StringTests
 	{
 		MySemanticString semanticString = SemanticString<MySemanticString>.Create<MySemanticString>("hello::world::test");
 		string[] result = semanticString.Split(["::"], StringSplitOptions.None);
-		CollectionAssert.AreEqual(Expected1, result);
+		Assert.AreSequenceEqual(Expected1, result);
 	}
 
 	[TestMethod]
@@ -1067,7 +1065,7 @@ public class SemanticStringAdditionalTests
 			parts.Add(part.ToString());
 		}
 
-		CollectionAssert.AreEqual(expectedSplitParts, parts);
+		Assert.AreSequenceEqual(expectedSplitParts, parts);
 	}
 
 	[TestMethod]
@@ -1081,7 +1079,7 @@ public class SemanticStringAdditionalTests
 			parts.Add(part.ToString());
 		}
 
-		CollectionAssert.AreEqual(expectedSplitParts, parts);
+		Assert.AreSequenceEqual(expectedSplitParts, parts);
 	}
 
 	[TestMethod]
@@ -1244,7 +1242,9 @@ public class SemanticStringAdditionalTests
 
 		List<string> sorted = [.. values.OrderBy(v => v).Select(v => v.WeakString)];
 
-		CollectionAssert.AreEqual(new List<string> { "apple", "mango", "zebra" }, sorted);
+		List<string> expected = ["apple", "mango", "zebra"];
+
+		Assert.AreSequenceEqual(expected, sorted);
 	}
 
 	[TestMethod]
@@ -1319,7 +1319,7 @@ public class SemanticStringAdditionalTests
 			parts.Add(part.ToString());
 		}
 
-		CollectionAssert.AreEqual(expectedSingleCharacter, parts);
+		Assert.AreSequenceEqual(expectedSingleCharacter, parts);
 	}
 
 	[TestMethod]

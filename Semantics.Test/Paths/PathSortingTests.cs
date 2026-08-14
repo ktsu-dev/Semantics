@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Paths;
 
@@ -44,9 +42,9 @@ public class PathSortingTests
 
 		List<string> sorted = [.. contents.OrderBy(p => p).Select(p => p.WeakString)];
 
-		CollectionAssert.AreEqual(
-			new List<string> { PathFor("afile"), PathFor("alpha"), PathFor("bfile"), PathFor("zebra") },
-			sorted);
+		List<string> expected = [PathFor("afile"), PathFor("alpha"), PathFor("bfile"), PathFor("zebra")];
+
+		Assert.AreSequenceEqual(expected, sorted);
 	}
 
 	[TestMethod]
@@ -68,9 +66,9 @@ public class PathSortingTests
 				.Select(p => p.WeakString)
 		];
 
-		CollectionAssert.AreEqual(
-			new List<string> { PathFor("alpha"), PathFor("zebra"), PathFor("afile"), PathFor("bfile") },
-			sorted);
+		List<string> expected = [PathFor("alpha"), PathFor("zebra"), PathFor("afile"), PathFor("bfile")];
+
+		Assert.AreSequenceEqual(expected, sorted);
 	}
 
 	[TestMethod]
@@ -96,9 +94,9 @@ public class PathSortingTests
 
 		contents.Sort();
 
-		CollectionAssert.AreEqual(
-			new List<string> { PathFor("adir"), PathFor("bfile"), PathFor("cfile") },
-			contents.Select(p => p.WeakString).ToList());
+		List<string> expected = [PathFor("adir"), PathFor("bfile"), PathFor("cfile")];
+
+		Assert.AreSequenceEqual(expected, contents.Select(p => p.WeakString));
 	}
 
 	[TestMethod]

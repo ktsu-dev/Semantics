@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Music;
 
@@ -18,7 +16,7 @@ public class HarmonicFunctionTests
 		System.Collections.Generic.IReadOnlyList<string> numerals = progression.RomanNumerals(CMajor);
 		string[] expected = ["ii7", "V7", "Imaj7"];
 		string[] actual = [.. numerals];
-		CollectionAssert.AreEqual(expected, actual);
+		Assert.AreSequenceEqual(expected, actual);
 	}
 
 	[TestMethod]

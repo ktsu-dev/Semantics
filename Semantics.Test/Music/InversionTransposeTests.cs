@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Music;
 
@@ -14,7 +12,7 @@ public class InversionTransposeTests
 	{
 		int[] expected = [60, 64, 67];
 		int[] midi = [.. Chord.Parse("C").Voice(4, 0).Select(p => p.Midi)];
-		CollectionAssert.AreEqual(expected, midi);
+		Assert.AreSequenceEqual(expected, midi);
 	}
 
 	[TestMethod]
@@ -22,7 +20,7 @@ public class InversionTransposeTests
 	{
 		int[] expected = [64, 67, 72]; // E4 G4 C5
 		int[] midi = [.. Chord.Parse("C").Voice(4, 1).Select(p => p.Midi)];
-		CollectionAssert.AreEqual(expected, midi);
+		Assert.AreSequenceEqual(expected, midi);
 	}
 
 	[TestMethod]
@@ -30,7 +28,7 @@ public class InversionTransposeTests
 	{
 		int[] expected = [67, 72, 76]; // G4 C5 E5
 		int[] midi = [.. Chord.Parse("C").Voice(4, 2).Select(p => p.Midi)];
-		CollectionAssert.AreEqual(expected, midi);
+		Assert.AreSequenceEqual(expected, midi);
 	}
 
 	[TestMethod]

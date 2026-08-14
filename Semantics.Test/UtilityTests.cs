@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test;
 
@@ -11,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// <summary>
 /// Tests for utility classes that handle internal string operations and path parsing.
 /// </summary>
-[TestClass]
 public static class UtilityTests
 {
 	/// <summary>

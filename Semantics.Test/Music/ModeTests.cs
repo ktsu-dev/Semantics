@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Music;
 
@@ -13,14 +11,14 @@ public class ModeTests
 	public void Major_HasIonianIntervals()
 	{
 		int[] expected = [0, 2, 4, 5, 7, 9, 11];
-		CollectionAssert.AreEqual(expected, Mode.Major.Intervals.ToArray());
+		Assert.AreSequenceEqual(expected, Mode.Major.Intervals);
 	}
 
 	[TestMethod]
 	public void HarmonicMinor_HasRaisedSeventh()
 	{
 		int[] expected = [0, 2, 3, 5, 7, 8, 11];
-		CollectionAssert.AreEqual(expected, Mode.HarmonicMinor.Intervals.ToArray());
+		Assert.AreSequenceEqual(expected, Mode.HarmonicMinor.Intervals);
 	}
 
 	[TestMethod]
@@ -73,14 +71,14 @@ public class ModeTests
 	public void MelodicMinor_HasNaturalSixthAndSeventh()
 	{
 		int[] expected = [0, 2, 3, 5, 7, 9, 11];
-		CollectionAssert.AreEqual(expected, Mode.MelodicMinor.Intervals.ToArray());
+		Assert.AreSequenceEqual(expected, Mode.MelodicMinor.Intervals);
 	}
 
 	[TestMethod]
 	public void PhrygianDominant_HasFlatTwoAndMajorThird()
 	{
 		int[] expected = [0, 1, 4, 5, 7, 8, 10];
-		CollectionAssert.AreEqual(expected, Mode.PhrygianDominant.Intervals.ToArray());
+		Assert.AreSequenceEqual(expected, Mode.PhrygianDominant.Intervals);
 	}
 
 	[TestMethod]
@@ -88,8 +86,8 @@ public class ModeTests
 	{
 		int[] halfWhole = [0, 1, 3, 4, 6, 7, 9, 10];
 		int[] wholeHalf = [0, 2, 3, 5, 6, 8, 9, 11];
-		CollectionAssert.AreEqual(halfWhole, Mode.OctatonicHalfWhole.Intervals.ToArray());
-		CollectionAssert.AreEqual(wholeHalf, Mode.OctatonicWholeHalf.Intervals.ToArray());
+		Assert.AreSequenceEqual(halfWhole, Mode.OctatonicHalfWhole.Intervals);
+		Assert.AreSequenceEqual(wholeHalf, Mode.OctatonicWholeHalf.Intervals);
 		Assert.AreEqual(8, Mode.OctatonicHalfWhole.DegreeCount);
 	}
 
@@ -97,7 +95,7 @@ public class ModeTests
 	public void Altered_IsSuperLocrian()
 	{
 		int[] expected = [0, 1, 3, 4, 6, 8, 10];
-		CollectionAssert.AreEqual(expected, Mode.Altered.Intervals.ToArray());
+		Assert.AreSequenceEqual(expected, Mode.Altered.Intervals);
 		Assert.AreEqual(Mode.Altered, Mode.Parse("altered"));
 	}
 
@@ -105,14 +103,14 @@ public class ModeTests
 	public void LydianDominant_IsFourthModeOfMelodicMinor()
 	{
 		int[] expected = [0, 2, 4, 6, 7, 9, 10];
-		CollectionAssert.AreEqual(expected, Mode.LydianDominant.Intervals.ToArray());
+		Assert.AreSequenceEqual(expected, Mode.LydianDominant.Intervals);
 	}
 
 	[TestMethod]
 	public void WholeTone_HasSixDegrees()
 	{
 		int[] expected = [0, 2, 4, 6, 8, 10];
-		CollectionAssert.AreEqual(expected, Mode.WholeTone.Intervals.ToArray());
+		Assert.AreSequenceEqual(expected, Mode.WholeTone.Intervals);
 		Assert.AreEqual(6, Mode.WholeTone.DegreeCount);
 	}
 
@@ -127,14 +125,14 @@ public class ModeTests
 	{
 		int[] majorPent = [0, 2, 4, 7, 9];
 		int[] minorPent = [0, 3, 5, 7, 10];
-		CollectionAssert.AreEqual(majorPent, Mode.MajorPentatonic.Intervals.ToArray());
-		CollectionAssert.AreEqual(minorPent, Mode.MinorPentatonic.Intervals.ToArray());
+		Assert.AreSequenceEqual(majorPent, Mode.MajorPentatonic.Intervals);
+		Assert.AreSequenceEqual(minorPent, Mode.MinorPentatonic.Intervals);
 	}
 
 	[TestMethod]
 	public void BluesMinor_HasBlueNote()
 	{
 		int[] expected = [0, 3, 5, 6, 7, 10];
-		CollectionAssert.AreEqual(expected, Mode.BluesMinor.Intervals.ToArray());
+		Assert.AreSequenceEqual(expected, Mode.BluesMinor.Intervals);
 	}
 }

@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Paths;
 
@@ -105,9 +103,14 @@ public class AbsoluteDirectoryPathParentTests
 	{
 		List<AbsoluteDirectoryPath> ancestors = [.. Dir(Nested).GetAncestors()];
 
-		CollectionAssert.AreEqual(
-			new List<AbsoluteDirectoryPath> { Dir(Middle), Dir(BelowRoot), Dir(Root) },
-			ancestors,
+		// Compare the underlying string values: AbsoluteDirectoryPath implements IEnumerable<char>,
+		// and Assert.AreSequenceEqual recurses into elements that are themselves sequences rather
+		// than using the record's value equality.
+		List<string> expected = [Middle, BelowRoot, Root];
+
+		Assert.AreSequenceEqual(
+			expected,
+			ancestors.Select(a => a.WeakString),
 			$"Expected the chain up to the root, got [{string.Join(", ", ancestors.Select(a => a.WeakString))}].");
 	}
 

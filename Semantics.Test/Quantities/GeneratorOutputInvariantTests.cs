@@ -1,6 +1,4 @@
-// Copyright (c) ktsu.dev
-// All rights reserved.
-// Licensed under the MIT license.
+// Copyright (c) 2023-2026 ktsu-dev contributors
 
 namespace ktsu.Semantics.Test.Quantities;
 
@@ -35,8 +33,9 @@ public sealed class GeneratorOutputInvariantTests
 
 		// Sanity: we should be looking at a non-trivial set, otherwise the test is silently
 		// vacuous (e.g. namespace got renamed and the filter dropped everything).
-		Assert.IsTrue(
-			generatedQuantityTypes.Count > 50,
+		Assert.IsGreaterThan(
+			50,
+			generatedQuantityTypes.Count,
 			$"Expected to find many generated quantity types (got {generatedQuantityTypes.Count}). The filter likely needs updating.");
 
 		List<string> failures = [];
