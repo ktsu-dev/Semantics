@@ -137,11 +137,11 @@ public class UnitsGenerator : GeneratorBase<UnitsMetadata>
 				{
 					Comments =
 					[
-						"/// <summary>",
+						Emit.SummaryOpen,
 						$"/// {unit.Description}",
-						"/// </summary>",
+						Emit.SummaryClose,
 					],
-					Keywords = ["public", "sealed", "record"],
+					Keywords = [Emit.Public, "sealed", "record"],
 					Name = unit.Name,
 					Interfaces = interfaces,
 					Members =
@@ -149,43 +149,43 @@ public class UnitsGenerator : GeneratorBase<UnitsMetadata>
 						new ConstructorTemplate()
 						{
 							Comments = ["/// <summary>Initializes a new instance of the unit.</summary>"],
-							Keywords = ["public"],
+							Keywords = [Emit.Public],
 							Name = unit.Name,
 						},
 						new FieldTemplate()
 						{
 							Comments = ["/// <summary>Gets the full name of the unit.</summary>"],
-							Keywords = ["public", "string"],
+							Keywords = [Emit.Public, "string"],
 							Name = $"Name => \"{unit.Name}\"",
 						},
 						new FieldTemplate()
 						{
 							Comments = ["/// <summary>Gets the symbol/abbreviation of the unit.</summary>"],
-							Keywords = ["public", "string"],
+							Keywords = [Emit.Public, "string"],
 							Name = $"Symbol => \"{unit.Symbol}\"",
 						},
 						new FieldTemplate()
 						{
 							Comments = ["/// <summary>Gets the unit system this unit belongs to.</summary>"],
-							Keywords = ["public", "UnitSystem"],
+							Keywords = [Emit.Public, "UnitSystem"],
 							Name = $"System => UnitSystem.{unit.System}",
 						},
 						new FieldTemplate()
 						{
 							Comments = ["/// <summary>Gets the physical dimension this unit measures.</summary>"],
-							Keywords = ["public", "DimensionInfo"],
+							Keywords = [Emit.Public, "DimensionInfo"],
 							Name = $"Dimension => {dimensionExpr}",
 						},
 						new FieldTemplate()
 						{
 							Comments = ["/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>"],
-							Keywords = ["public", "double"],
+							Keywords = [Emit.Public, "double"],
 							Name = $"ToBaseFactor => {factorExpr}",
 						},
 						new FieldTemplate()
 						{
 							Comments = ["/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>"],
-							Keywords = ["public", "double"],
+							Keywords = [Emit.Public, "double"],
 							Name = $"ToBaseOffset => {offsetExpr}",
 						},
 					],
@@ -201,12 +201,12 @@ public class UnitsGenerator : GeneratorBase<UnitsMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				"/// Static catalogue exposing one singleton per declared unit. Generated quantity",
 				"/// types accept these on their typed <c>In(...)</c> methods.",
-				"/// </summary>",
+				Emit.SummaryClose,
 			],
-			Keywords = ["public", "static", "class"],
+			Keywords = [Emit.Public, Emit.Static, "class"],
 			Name = "Units",
 		};
 
@@ -215,7 +215,7 @@ public class UnitsGenerator : GeneratorBase<UnitsMetadata>
 			unitsCatalogue.Members.Add(new FieldTemplate()
 			{
 				Comments = [$"/// <summary>Singleton <c>{unitName}</c> instance.</summary>"],
-				Keywords = ["public", "static", "readonly", unitName],
+				Keywords = [Emit.Public, Emit.Static, "readonly", unitName],
 				Name = unitName,
 				DefaultValue = $"new {unitName}()",
 			});

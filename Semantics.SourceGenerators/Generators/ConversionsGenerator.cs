@@ -32,15 +32,15 @@ public class ConversionsGenerator : GeneratorBase<ConversionsMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				"/// Conversion constants used by generated unit definitions.",
 				"/// Values sourced from conversions.json metadata.",
-				"/// </summary>",
+				Emit.SummaryClose,
 			],
 			Keywords =
 			[
 				"internal",
-				"static",
+				Emit.Static,
 				"class",
 			],
 			Name = "ConversionConstants",

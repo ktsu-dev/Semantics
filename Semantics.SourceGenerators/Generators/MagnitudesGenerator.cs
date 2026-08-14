@@ -32,11 +32,11 @@ public class MagnitudesGenerator : GeneratorBase<MagnitudesMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				"/// Metric magnitude constants for unit scaling.",
-				"/// </summary>",
+				Emit.SummaryClose,
 			],
-			Keywords = ["public", "static", "class"],
+			Keywords = [Emit.Public, Emit.Static, "class"],
 			Name = "MetricMagnitudes",
 		};
 
@@ -51,7 +51,7 @@ public class MagnitudesGenerator : GeneratorBase<MagnitudesMetadata>
 			magnitudesClass.Members.Add(new FieldTemplate()
 			{
 				Comments = [$"/// <summary>{magnitude.Name} magnitude ({magnitude.Symbol}): 10^{magnitude.Exponent}</summary>"],
-				Keywords = ["public", "const", "double"],
+				Keywords = [Emit.Public, "const", "double"],
 				Name = magnitude.Name,
 				DefaultValue = valueString,
 			});

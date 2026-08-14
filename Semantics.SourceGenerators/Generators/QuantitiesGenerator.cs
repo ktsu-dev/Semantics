@@ -23,7 +23,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		id: "SEM001",
 		title: "Unknown dimension reference in physics relationship",
 		messageFormat: "Dimension '{0}' references unknown dimension '{1}' in {2}; the operator will not be generated. Check spelling and that the referenced dimension exists in dimensions.json.",
-		category: "Semantics.SourceGenerators",
+		category: Emit.DiagnosticCategory,
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true);
 
@@ -31,7 +31,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		id: "SEM002",
 		title: "dimensions.json metadata validation failed",
 		messageFormat: "dimensions.json validation issue: {0}",
-		category: "Semantics.SourceGenerators",
+		category: Emit.DiagnosticCategory,
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true);
 
@@ -39,7 +39,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		id: "SEM003",
 		title: "Relationship requires a vector form not declared on a participating dimension",
 		messageFormat: "Relationship in dimension '{0}' ({1}) explicitly requests form V{2}, but '{3}' does not declare that form. The operator will not be generated.",
-		category: "Semantics.SourceGenerators",
+		category: Emit.DiagnosticCategory,
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true);
 
@@ -47,7 +47,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		id: "SEM004",
 		title: "dimensions.json references a unit not declared in units.json",
 		messageFormat: "Unit '{0}' (referenced by dimension '{1}'.availableUnits) is not declared in units.json; the generated From{0} factory will use an identity conversion. Add the unit to units.json or fix the spelling.",
-		category: "Semantics.SourceGenerators",
+		category: Emit.DiagnosticCategory,
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true);
 
@@ -641,7 +641,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		{
 			bool isBase = unitName == baseUnit;
 			string conversionExpr = isBase
-				? "value"
+				? Emit.ValueParameter
 				: BuildToBaseExpression(unitName, unitMap);
 
 			string body = applyV0Guard
@@ -656,9 +656,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 
 			List<string> comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				$"/// Creates a new {crefForComment} from a value in {unitName}.",
-				"/// </summary>",
+				Emit.SummaryClose,
 				$"/// <param name=\"value\">The value in {unitName}.</param>",
 				$"/// <returns>A new {crefForComment} instance.</returns>",
 			];
@@ -670,9 +670,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			cls.Members.Add(new MethodTemplate()
 			{
 				Comments = comments,
-				Keywords = ["public", "static", fullType],
+				Keywords = [Emit.Public, Emit.Static, fullType],
 				Name = $"From{factorySuffix}",
-				Parameters = [new ParameterTemplate { Type = "T", Name = "value" }],
+				Parameters = [new ParameterTemplate { Type = "T", Name = Emit.ValueParameter }],
 				BodyFactory = (b) => b.Write(body),
 			});
 		}
@@ -691,10 +691,10 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		// (A future SEM00x diagnostic could surface this gap.)
 		if (!unitMap.TryGetValue(unitName, out UnitDefinition? unit) || unit == null)
 		{
-			return "value";
+			return Emit.ValueParameter;
 		}
 
-		string scaled = "value";
+		string scaled = Emit.ValueParameter;
 		bool hasMagnitude = !string.IsNullOrEmpty(unit.Magnitude) && unit.Magnitude != "1";
 		bool hasFactor = !string.IsNullOrEmpty(unit.ConversionFactor) && unit.ConversionFactor != "1";
 
@@ -728,7 +728,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		cls.Members.Add(new FieldTemplate()
 		{
 			Comments = [$"/// <summary>Gets the physical dimension this quantity belongs to.</summary>"],
-			Keywords = ["public", "override", "DimensionInfo"],
+			Keywords = [Emit.Public, "override", "DimensionInfo"],
 			Name = $"Dimension => PhysicalDimensions.{dim.Name}",
 		});
 
@@ -736,14 +736,14 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				$"/// Converts this quantity's SI-base value to the value in <paramref name=\"unit\"/>.",
 				"/// Cross-dimension calls (e.g. passing a non-" + dim.Name + " unit) fail at compile time.",
-				"/// </summary>",
+				Emit.SummaryClose,
 				"/// <param name=\"unit\">The dimensionally-compatible target unit.</param>",
 				"/// <returns>The value expressed in <paramref name=\"unit\"/>.</returns>",
 			],
-			Keywords = ["public", "T"],
+			Keywords = [Emit.Public, "T"],
 			Name = "In",
 			Parameters =
 			[
@@ -799,12 +799,12 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				$"/// Magnitude (Vector0) quantity for the {dim.Name} dimension.",
-				"/// </summary>",
+				Emit.SummaryClose,
 				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
 			],
-			Keywords = ["public", "partial", "record"],
+			Keywords = [Emit.Public, "partial", "record"],
 			Name = fullType,
 			BaseClass = $"PhysicalQuantity<{fullType}, T>",
 			Interfaces = [$"IVector0<{fullType}, T>"],
@@ -815,7 +815,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		cls.Members.Add(new FieldTemplate()
 		{
 			Comments = ["/// <summary>Gets a quantity with value zero.</summary>"],
-			Keywords = ["public", "static", fullType],
+			Keywords = [Emit.Public, Emit.Static, fullType],
 			Name = "Zero => Create(T.Zero)",
 		});
 
@@ -842,18 +842,18 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				$"/// Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.",
 				"/// Magnitude subtraction stays a magnitude (per the unified-vector model).",
-				"/// </summary>",
+				Emit.SummaryClose,
 			],
-			Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
-			Keywords = ["public", "static", fullType],
+			Attributes = [Emit.PhysicsOperatorSuppression],
+			Keywords = [Emit.Public, Emit.Static, fullType],
 			Name = "operator -",
 			Parameters =
 			[
 				new ParameterTemplate { Type = fullType, Name = "left" },
-				new ParameterTemplate { Type = fullType, Name = "right" },
+				new ParameterTemplate { Type = fullType, Name = Emit.RightParameter },
 			],
 			BodyFactory = (body) => body.Write(" => Create(T.Abs(left.Quantity - right.Quantity));"),
 		});
@@ -892,12 +892,12 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				$"/// Signed one-dimensional (Vector1) quantity for the {dim.Name} dimension.",
-				"/// </summary>",
+				Emit.SummaryClose,
 				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
 			],
-			Keywords = ["public", "partial", "record"],
+			Keywords = [Emit.Public, "partial", "record"],
 			Name = fullType,
 			BaseClass = $"PhysicalQuantity<{fullType}, T>",
 			Interfaces = [$"IVector1<{fullType}, T>"],
@@ -908,7 +908,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		cls.Members.Add(new FieldTemplate()
 		{
 			Comments = ["/// <summary>Gets a quantity with value zero.</summary>"],
-			Keywords = ["public", "static", fullType],
+			Keywords = [Emit.Public, Emit.Static, fullType],
 			Name = "Zero => Create(T.Zero)",
 		});
 
@@ -932,12 +932,12 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			{
 				Comments =
 				[
-					"/// <summary>",
+					Emit.SummaryOpen,
 					$"/// Gets the magnitude of this quantity as a <see cref=\"{v0TypeName}{{T}}\"/>.",
-					"/// </summary>",
+					Emit.SummaryClose,
 					$"/// <returns>The non-negative magnitude.</returns>",
 				],
-				Keywords = ["public", $"{v0TypeName}<T>"],
+				Keywords = [Emit.Public, $"{v0TypeName}<T>"],
 				Name = "Magnitude",
 				Parameters = [],
 				BodyFactory = (body) => body.Write($" => {v0TypeName}<T>.Create(T.Abs(Value));"),
@@ -987,9 +987,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		cb.WriteLine("using System.Numerics;");
 		cb.NewLine();
 
-		cb.WriteLine("/// <summary>");
+		cb.WriteLine(Emit.SummaryOpen);
 		cb.WriteLine($"/// {dims}D vector representation of {dim.Name}.");
-		cb.WriteLine("/// </summary>");
+		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine("/// <typeparam name=\"T\">The numeric component type.</typeparam>");
 		cb.WriteLine($"public partial record {fullType} : {interfaceName}");
 		cb.WriteLine("\twhere T : struct, INumber<T>");
@@ -1074,13 +1074,13 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			{
 				Comments =
 				[
-					"/// <summary>",
+					Emit.SummaryOpen,
 					$"/// {overload.Description}",
 					$"/// Semantic overload of <see cref=\"{baseTypeName}{{T}}\"/>.",
-					"/// </summary>",
+					Emit.SummaryClose,
 					"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
 				],
-				Keywords = ["public", "partial", "record"],
+				Keywords = [Emit.Public, "partial", "record"],
 				Name = fullType,
 				BaseClass = $"PhysicalQuantity<{fullType}, T>",
 				Interfaces = [interfaceName],
@@ -1091,7 +1091,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			cls.Members.Add(new FieldTemplate()
 			{
 				Comments = ["/// <summary>Gets a quantity with value zero.</summary>"],
-				Keywords = ["public", "static", fullType],
+				Keywords = [Emit.Public, Emit.Static, fullType],
 				Name = "Zero => Create(T.Zero)",
 			});
 
@@ -1119,9 +1119,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			cls.Members.Add(new MethodTemplate()
 			{
 				Comments = [$"/// <summary>Implicit conversion to {baseTypeName}.</summary>"],
-				Keywords = ["public", "static", "implicit", "operator"],
+				Keywords = [Emit.Public, Emit.Static, "implicit", "operator"],
 				Name = baseFullType,
-				Parameters = [new ParameterTemplate { Type = fullType, Name = "value" }],
+				Parameters = [new ParameterTemplate { Type = fullType, Name = Emit.ValueParameter }],
 				BodyFactory = (body) => body.Write($" => {baseFullType}.Create(value.Value);"),
 			});
 
@@ -1129,9 +1129,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			cls.Members.Add(new MethodTemplate()
 			{
 				Comments = [$"/// <summary>Explicit conversion from {baseTypeName}.</summary>"],
-				Keywords = ["public", "static", "explicit", "operator"],
+				Keywords = [Emit.Public, Emit.Static, "explicit", "operator"],
 				Name = fullType,
-				Parameters = [new ParameterTemplate { Type = baseFullType, Name = "value" }],
+				Parameters = [new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }],
 				BodyFactory = (body) => body.Write($" => Create(value.Value);"),
 			});
 
@@ -1139,9 +1139,9 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 			cls.Members.Add(new MethodTemplate()
 			{
 				Comments = [$"/// <summary>Creates a {typeName} from a {baseTypeName} value.</summary>"],
-				Keywords = ["public", "static", fullType],
+				Keywords = [Emit.Public, Emit.Static, fullType],
 				Name = "From",
-				Parameters = [new ParameterTemplate { Type = baseFullType, Name = "value" }],
+				Parameters = [new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }],
 				BodyFactory = (body) => body.Write(" => Create(value.Value);"),
 			});
 
@@ -1154,13 +1154,13 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				cls.Members.Add(new MethodTemplate()
 				{
 					Comments = [$"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.</summary>"],
-					Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
-					Keywords = ["public", "static", fullType],
+					Attributes = [Emit.PhysicsOperatorSuppression],
+					Keywords = [Emit.Public, Emit.Static, fullType],
 					Name = "operator -",
 					Parameters =
 					[
 						new ParameterTemplate { Type = fullType, Name = "left" },
-						new ParameterTemplate { Type = fullType, Name = "right" },
+						new ParameterTemplate { Type = fullType, Name = Emit.RightParameter },
 					],
 					BodyFactory = (body) => body.Write(" => Create(T.Abs(left.Quantity - right.Quantity));"),
 				});
@@ -1181,7 +1181,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 					cls.Members.Add(new MethodTemplate()
 					{
 						Comments = [$"/// <summary>Converts this {typeName} to a {targetName}.</summary>"],
-						Keywords = ["public", targetType],
+						Keywords = [Emit.Public, targetType],
 						Name = methodName,
 						Parameters = [],
 						BodyFactory = (body) => body.Write($" => {targetType}.Create({expr});"),
@@ -1197,7 +1197,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 					cls.Members.Add(new MethodTemplate()
 					{
 						Comments = [$"/// <summary>Creates a {typeName} from a {sourceName} value.</summary>"],
-						Keywords = ["public", "static", fullType],
+						Keywords = [Emit.Public, Emit.Static, fullType],
 						Name = methodName,
 						Parameters = [new ParameterTemplate { Type = sourceType, Name = "source" }],
 						BodyFactory = (body) => body.Write($" => Create({expr});"),
@@ -1251,10 +1251,10 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		cb.WriteLine("using System.Numerics;");
 		cb.NewLine();
 
-		cb.WriteLine("/// <summary>");
+		cb.WriteLine(Emit.SummaryOpen);
 		cb.WriteLine($"/// {overload.Description}");
 		cb.WriteLine($"/// Semantic overload of <see cref=\"{baseTypeName}{{T}}\"/>.");
-		cb.WriteLine("/// </summary>");
+		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine($"public partial record {fullType} : {interfaceName}");
 		cb.WriteLine("\twhere T : struct, INumber<T>");
 
@@ -1308,17 +1308,17 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 				{
 					Comments =
 					[
-						"/// <summary>",
+						Emit.SummaryOpen,
 						$"/// {(op.Op == "*" ? "Multiplies" : "Divides")} {op.LeftTypeName} by {op.RightTypeName} to produce {op.ReturnTypeName}.",
-						"/// </summary>",
+						Emit.SummaryClose,
 					],
-					Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
-					Keywords = ["public", "static", $"{op.ReturnTypeName}<T>"],
+					Attributes = [Emit.PhysicsOperatorSuppression],
+					Keywords = [Emit.Public, Emit.Static, $"{op.ReturnTypeName}<T>"],
 					Name = $"operator {op.Op}",
 					Parameters =
 					[
 						new ParameterTemplate { Type = $"{op.LeftTypeName}<T>", Name = "left" },
-						new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = "right" },
+						new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = Emit.RightParameter },
 					],
 					BodyFactory = (body) => body.Write($" => {helperName}<{op.ReturnTypeName}<T>>(left, right);"),
 				});
@@ -1385,17 +1385,17 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		{
 			Comments =
 			[
-				"/// <summary>",
+				Emit.SummaryOpen,
 				$"/// {(op.Op == "*" ? "Multiplies" : "Divides")} {op.LeftTypeName} by {op.RightTypeName} to produce {op.ReturnTypeName}.",
-				"/// </summary>",
+				Emit.SummaryClose,
 			],
-			Attributes = ["System.Diagnostics.CodeAnalysis.SuppressMessage(\"Usage\", \"CA2225:Operator overloads have named alternates\", Justification = \"Physics quantity operator\")"],
-			Keywords = ["public", "static", $"{op.ReturnTypeName}<T>"],
+			Attributes = [Emit.PhysicsOperatorSuppression],
+			Keywords = [Emit.Public, Emit.Static, $"{op.ReturnTypeName}<T>"],
 			Name = $"operator {op.Op}",
 			Parameters =
 			[
 				new ParameterTemplate { Type = $"{op.LeftTypeName}<T>", Name = "left" },
-				new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = "right" },
+				new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = Emit.RightParameter },
 			],
 			BodyFactory = (body) => body.Write(bodyExpr),
 		});
