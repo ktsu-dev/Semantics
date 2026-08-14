@@ -1,6 +1,6 @@
-## v2.9.12 (patch)
+## v2.9.13 (patch)
 
-Changes since v2.9.11:
+Changes since v2.9.12:
 
-- [patch] S3267: clear the last two generator loops ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] S3776: reduce cognitive complexity in seven methods ([@matt-edmondson](https://github.com/matt-edmondson))
 
