@@ -29,15 +29,15 @@ public readonly partial record struct Color
 	public AccessibilityLevel AccessibilityLevelAgainst(Color background, bool largeText = false)
 	{
 		double contrast = ContrastRatio(background);
-		double enhancedThreshold = largeText ? 4.5 : 7.0;
-		double minimumThreshold = largeText ? 3.0 : 4.5;
 
-		if (contrast >= enhancedThreshold)
+		if (contrast >= RequiredContrast(AccessibilityLevel.AAA, largeText))
 		{
 			return AccessibilityLevel.AAA;
 		}
 
-		return contrast >= minimumThreshold ? AccessibilityLevel.AA : AccessibilityLevel.Fail;
+		return contrast >= RequiredContrast(AccessibilityLevel.AA, largeText)
+			? AccessibilityLevel.AA
+			: AccessibilityLevel.Fail;
 	}
 
 	/// <summary>
@@ -51,12 +51,7 @@ public readonly partial record struct Color
 	/// <returns>An adjusted color, clamped to gamut.</returns>
 	public Color AdjustForContrast(Color background, AccessibilityLevel target, bool largeText = false)
 	{
-		double required = target switch
-		{
-			AccessibilityLevel.AAA => largeText ? 4.5 : 7.0,
-			AccessibilityLevel.AA => largeText ? 3.0 : 4.5,
-			_ => 1.0,
-		};
+		double required = RequiredContrast(target, largeText);
 
 		if (ContrastRatio(background) >= required)
 		{
@@ -76,24 +71,18 @@ public readonly partial record struct Color
 			double mid = (lo + hi) / 2.0;
 			Color candidate = Candidate(lab, mid);
 			bool meets = candidate.ContrastRatio(background) >= required;
-			if (goLighter)
+
+			// The interval always shrinks toward the end that satisfies the requirement. When
+			// lightening that is the upper bound if the midpoint already meets it; when darkening
+			// the roles swap. Both cases reduce to whether the midpoint landed on the goLighter
+			// side, so the four-way branch collapses to one comparison.
+			if (meets == goLighter)
 			{
-				if (meets)
-				{
-					hi = mid;
-				}
-				else
-				{
-					lo = mid;
-				}
-			}
-			else if (meets)
-			{
-				lo = mid;
+				hi = mid;
 			}
 			else
 			{
-				hi = mid;
+				lo = mid;
 			}
 		}
 
@@ -103,6 +92,20 @@ public readonly partial record struct Color
 		Color Candidate(Oklab source, double lightness) =>
 			FromOklab(new Oklab(lightness, source.A, source.B), alpha).Clamp();
 	}
+
+	/// <summary>
+	/// The WCAG contrast ratio a foreground/background pair must reach to satisfy
+	/// <paramref name="level"/>.
+	/// </summary>
+	/// <param name="level">The conformance level.</param>
+	/// <param name="largeText">True for large text, which has lower thresholds.</param>
+	/// <returns>The required contrast ratio; 1.0 for levels with no requirement.</returns>
+	private static double RequiredContrast(AccessibilityLevel level, bool largeText) => level switch
+	{
+		AccessibilityLevel.AAA => largeText ? 4.5 : 7.0,
+		AccessibilityLevel.AA => largeText ? 3.0 : 4.5,
+		_ => 1.0,
+	};
 
 	/// <summary>Computes the perceptual (Oklab Euclidean) distance to another color.</summary>
 	/// <param name="other">The other color.</param>
