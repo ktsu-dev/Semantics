@@ -135,7 +135,32 @@ public sealed record Chord
 		int FifthAlteration,
 		bool HasAdd9);
 
+	/// <summary>
+	/// Consumes the modifier tokens from a chord body, in the order they must be taken: the
+	/// omissions, the flat sixth (before any bare "6"), the altered tensions (multi-character
+	/// tokens before bare numbers), the fifth alteration, and finally "add9".
+	/// </summary>
 	private static ChordModifiers ConsumeModifiers(ref string body)
+	{
+		ChordOmission omissions = ConsumeOmissions(ref body);
+
+		// Flat sixth before the bare "6".
+		SixthType sixth = TakeEither(ref body, "b6", "♭6") ? SixthType.Flat : SixthType.None;
+
+		ChordTension tensions = ConsumeTensions(ref body);
+		int fifthAlteration = ConsumeFifthAlteration(ref body);
+
+		// "add9" must be consumed before the bare "9" logic so it does not imply a seventh.
+		bool hasAdd9 = Take(ref body, "add9");
+		if (hasAdd9)
+		{
+			tensions |= ChordTension.Nine;
+		}
+
+		return new ChordModifiers(omissions, sixth, tensions, fifthAlteration, hasAdd9);
+	}
+
+	private static ChordOmission ConsumeOmissions(ref string body)
 	{
 		ChordOmission omissions = ChordOmission.None;
 		if (Take(ref body, "no5"))
@@ -148,51 +173,59 @@ public sealed record Chord
 			omissions |= ChordOmission.Third;
 		}
 
-		// Flat sixth before the bare "6".
-		SixthType sixth = (Take(ref body, "b6") || Take(ref body, "♭6")) ? SixthType.Flat : SixthType.None;
+		return omissions;
+	}
 
-		// Altered tensions: consume multi-character tokens before the bare numbers.
+	/// <summary>Consumes the altered tensions, taking multi-character tokens before bare numbers.</summary>
+	private static ChordTension ConsumeTensions(ref string body)
+	{
 		ChordTension tensions = ChordTension.None;
-		if (Take(ref body, "#11") || Take(ref body, "♯11"))
+		if (TakeEither(ref body, "#11", "♯11"))
 		{
 			tensions |= ChordTension.SharpEleven;
 		}
 
-		if (Take(ref body, "b13") || Take(ref body, "♭13"))
+		if (TakeEither(ref body, "b13", "♭13"))
 		{
 			tensions |= ChordTension.FlatThirteen;
 		}
 
-		if (Take(ref body, "b9") || Take(ref body, "♭9"))
+		if (TakeEither(ref body, "b9", "♭9"))
 		{
 			tensions |= ChordTension.FlatNine;
 		}
 
-		if (Take(ref body, "#9") || Take(ref body, "♯9"))
+		if (TakeEither(ref body, "#9", "♯9"))
 		{
 			tensions |= ChordTension.SharpNine;
 		}
 
+		return tensions;
+	}
+
+	/// <summary>Consumes the fifth alteration, returning +1 for a sharp fifth, -1 for a flat fifth, 0 for neither.</summary>
+	private static int ConsumeFifthAlteration(ref string body)
+	{
 		int fifthAlteration = 0;
-		if (Take(ref body, "#5") || Take(ref body, "♯5"))
+		if (TakeEither(ref body, "#5", "♯5"))
 		{
 			fifthAlteration = 1;
 		}
 
-		if (Take(ref body, "b5") || Take(ref body, "♭5"))
+		if (TakeEither(ref body, "b5", "♭5"))
 		{
 			fifthAlteration = -1;
 		}
 
-		// "add9" must be consumed before the bare "9" logic so it does not imply a seventh.
-		bool hasAdd9 = Take(ref body, "add9");
-		if (hasAdd9)
-		{
-			tensions |= ChordTension.Nine;
-		}
-
-		return new ChordModifiers(omissions, sixth, tensions, fifthAlteration, hasAdd9);
+		return fifthAlteration;
 	}
+
+	/// <summary>
+	/// Takes the ASCII spelling of a token, falling back to its Unicode spelling. Only one is
+	/// ever consumed — the fallback is not attempted once the ASCII form matches.
+	/// </summary>
+	private static bool TakeEither(ref string body, string asciiToken, string unicodeToken) =>
+		Take(ref body, asciiToken) || Take(ref body, unicodeToken);
 
 	private static ChordQuality DetermineQuality(string body, int fifthAlteration)
 	{

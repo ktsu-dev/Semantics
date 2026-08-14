@@ -85,20 +85,7 @@ public class UnitsGenerator : GeneratorBase<UnitsMetadata>
 
 	private static void GenerateInner(SourceProductionContext context, UnitsMetadata units, DimensionsMetadata dimensions, CodeBlocker codeBlocker)
 	{
-		Dictionary<string, List<string>> unitToDimensions = [];
-		foreach (PhysicalDimension dim in dimensions.PhysicalDimensions ?? [])
-		{
-			foreach (string unitName in dim.AvailableUnits ?? [])
-			{
-				if (!unitToDimensions.TryGetValue(unitName, out List<string>? list))
-				{
-					list = [];
-					unitToDimensions[unitName] = list;
-				}
-
-				list.Add(dim.Name);
-			}
-		}
+		Dictionary<string, List<string>> unitToDimensions = BuildUnitToDimensionsMap(dimensions);
 
 		SourceFileTemplate sourceFileTemplate = new()
 		{
@@ -119,84 +106,126 @@ public class UnitsGenerator : GeneratorBase<UnitsMetadata>
 			{
 				List<string> dims = unitToDimensions.TryGetValue(unit.Name, out List<string>? d) ? d : [];
 
-				List<string> interfaces = ["IUnit"];
-				foreach (string dimName in dims)
-				{
-					interfaces.Add($"I{dimName}Unit");
-				}
-
-				string factorExpr = BuildToBaseFactorExpression(unit);
-				string offsetExpr = string.IsNullOrEmpty(unit.Offset) || unit.Offset == "0"
-					? "0d"
-					: unit.Offset;
-				string dimensionExpr = dims.Count > 0
-					? $"PhysicalDimensions.{dims[0]}"
-					: "null!";
-
-				ClassTemplate unitClass = new()
-				{
-					Comments =
-					[
-						Emit.SummaryOpen,
-						$"/// {unit.Description}",
-						Emit.SummaryClose,
-					],
-					Keywords = [Emit.Public, "sealed", "record"],
-					Name = unit.Name,
-					Interfaces = interfaces,
-					Members =
-					[
-						new ConstructorTemplate()
-						{
-							Comments = ["/// <summary>Initializes a new instance of the unit.</summary>"],
-							Keywords = [Emit.Public],
-							Name = unit.Name,
-						},
-						new FieldTemplate()
-						{
-							Comments = ["/// <summary>Gets the full name of the unit.</summary>"],
-							Keywords = [Emit.Public, "string"],
-							Name = $"Name => \"{unit.Name}\"",
-						},
-						new FieldTemplate()
-						{
-							Comments = ["/// <summary>Gets the symbol/abbreviation of the unit.</summary>"],
-							Keywords = [Emit.Public, "string"],
-							Name = $"Symbol => \"{unit.Symbol}\"",
-						},
-						new FieldTemplate()
-						{
-							Comments = ["/// <summary>Gets the unit system this unit belongs to.</summary>"],
-							Keywords = [Emit.Public, "UnitSystem"],
-							Name = $"System => UnitSystem.{unit.System}",
-						},
-						new FieldTemplate()
-						{
-							Comments = ["/// <summary>Gets the physical dimension this unit measures.</summary>"],
-							Keywords = [Emit.Public, "DimensionInfo"],
-							Name = $"Dimension => {dimensionExpr}",
-						},
-						new FieldTemplate()
-						{
-							Comments = ["/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>"],
-							Keywords = [Emit.Public, "double"],
-							Name = $"ToBaseFactor => {factorExpr}",
-						},
-						new FieldTemplate()
-						{
-							Comments = ["/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>"],
-							Keywords = [Emit.Public, "double"],
-							Name = $"ToBaseOffset => {offsetExpr}",
-						},
-					],
-				};
-
-				sourceFileTemplate.Classes.Add(unitClass);
+				sourceFileTemplate.Classes.Add(BuildUnitClass(unit, dims));
 				catalogueUnitNames.Add(unit.Name);
 			}
 		}
 
-		// Emit the static Units catalogue with one singleton per unit.
+		sourceFileTemplate.Classes.Add(BuildUnitsCatalogue(catalogueUnitNames));
+
+		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
+		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
+	}
+
+	/// <summary>
+	/// Indexes every dimension that declares a given unit in its <c>availableUnits</c>, so each
+	/// emitted unit type can implement the matching <c>I{Dimension}Unit</c> marker interfaces.
+	/// </summary>
+	private static Dictionary<string, List<string>> BuildUnitToDimensionsMap(DimensionsMetadata dimensions)
+	{
+		Dictionary<string, List<string>> unitToDimensions = [];
+		foreach (PhysicalDimension dim in dimensions.PhysicalDimensions ?? [])
+		{
+			foreach (string unitName in dim.AvailableUnits ?? [])
+			{
+				if (!unitToDimensions.TryGetValue(unitName, out List<string>? list))
+				{
+					list = [];
+					unitToDimensions[unitName] = list;
+				}
+
+				list.Add(dim.Name);
+			}
+		}
+
+		return unitToDimensions;
+	}
+
+	/// <summary>
+	/// Builds the sealed record for one unit, carrying its name, symbol, system, dimension, and
+	/// the affine to-base conversion (factor plus offset).
+	/// </summary>
+	private static ClassTemplate BuildUnitClass(UnitDefinition unit, List<string> dims)
+	{
+		List<string> interfaces = ["IUnit"];
+		foreach (string dimName in dims)
+		{
+			interfaces.Add($"I{dimName}Unit");
+		}
+
+		string factorExpr = BuildToBaseFactorExpression(unit);
+		string offsetExpr = string.IsNullOrEmpty(unit.Offset) || unit.Offset == "0"
+			? "0d"
+			: unit.Offset;
+		string dimensionExpr = dims.Count > 0
+			? $"PhysicalDimensions.{dims[0]}"
+			: "null!";
+
+		return new ClassTemplate()
+		{
+			Comments =
+			[
+				Emit.SummaryOpen,
+				$"/// {unit.Description}",
+				Emit.SummaryClose,
+			],
+			Keywords = [Emit.Public, "sealed", "record"],
+			Name = unit.Name,
+			Interfaces = interfaces,
+			Members =
+			[
+				new ConstructorTemplate()
+				{
+					Comments = ["/// <summary>Initializes a new instance of the unit.</summary>"],
+					Keywords = [Emit.Public],
+					Name = unit.Name,
+				},
+				new FieldTemplate()
+				{
+					Comments = ["/// <summary>Gets the full name of the unit.</summary>"],
+					Keywords = [Emit.Public, "string"],
+					Name = $"Name => \"{unit.Name}\"",
+				},
+				new FieldTemplate()
+				{
+					Comments = ["/// <summary>Gets the symbol/abbreviation of the unit.</summary>"],
+					Keywords = [Emit.Public, "string"],
+					Name = $"Symbol => \"{unit.Symbol}\"",
+				},
+				new FieldTemplate()
+				{
+					Comments = ["/// <summary>Gets the unit system this unit belongs to.</summary>"],
+					Keywords = [Emit.Public, "UnitSystem"],
+					Name = $"System => UnitSystem.{unit.System}",
+				},
+				new FieldTemplate()
+				{
+					Comments = ["/// <summary>Gets the physical dimension this unit measures.</summary>"],
+					Keywords = [Emit.Public, "DimensionInfo"],
+					Name = $"Dimension => {dimensionExpr}",
+				},
+				new FieldTemplate()
+				{
+					Comments = ["/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>"],
+					Keywords = [Emit.Public, "double"],
+					Name = $"ToBaseFactor => {factorExpr}",
+				},
+				new FieldTemplate()
+				{
+					Comments = ["/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>"],
+					Keywords = [Emit.Public, "double"],
+					Name = $"ToBaseOffset => {offsetExpr}",
+				},
+			],
+		};
+	}
+
+	/// <summary>
+	/// Builds the static <c>Units</c> catalogue exposing one singleton per declared unit,
+	/// ordered by name so the emitted file is stable across builds.
+	/// </summary>
+	private static ClassTemplate BuildUnitsCatalogue(List<string> catalogueUnitNames)
+	{
 		ClassTemplate unitsCatalogue = new()
 		{
 			Comments =
@@ -221,10 +250,7 @@ public class UnitsGenerator : GeneratorBase<UnitsMetadata>
 			});
 		}
 
-		sourceFileTemplate.Classes.Add(unitsCatalogue);
-
-		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
-		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
+		return unitsCatalogue;
 	}
 
 	/// <summary>

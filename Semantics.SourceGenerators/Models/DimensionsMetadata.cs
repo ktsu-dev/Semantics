@@ -38,82 +38,118 @@ public class DimensionsMetadata
 
 		foreach (PhysicalDimension dim in PhysicalDimensions)
 		{
-			string label = string.IsNullOrEmpty(dim.Name) ? "<unnamed>" : dim.Name;
-
-			if (string.IsNullOrEmpty(dim.Name))
-			{
-				issues.Add("A physicalDimensions entry is missing 'name'.");
-			}
-			else if (!seenDimensionNames.Add(dim.Name))
-			{
-				issues.Add($"Dimension '{dim.Name}' is declared more than once.");
-			}
-
-			if (string.IsNullOrEmpty(dim.Symbol))
-			{
-				issues.Add($"Dimension '{label}' is missing 'symbol'.");
-			}
-
-			if (dim.AvailableUnits.Count == 0)
-			{
-				issues.Add($"Dimension '{label}' has an empty 'availableUnits' list.");
-			}
-			else
-			{
-				foreach (string unit in dim.AvailableUnits.Where(string.IsNullOrWhiteSpace))
-				{
-					issues.Add($"Dimension '{label}' has a blank entry in 'availableUnits'.");
-				}
-			}
-
-			VectorFormDefinition?[] forms = [
-				dim.Quantities.Vector0,
-				dim.Quantities.Vector1,
-				dim.Quantities.Vector2,
-				dim.Quantities.Vector3,
-				dim.Quantities.Vector4,
-			];
-
-			if (System.Array.TrueForAll(forms, f => f == null))
-			{
-				issues.Add($"Dimension '{label}' declares no vector forms (vector0..vector4).");
-			}
-
-			for (int i = 0; i < forms.Length; i++)
-			{
-				VectorFormDefinition? form = forms[i];
-				if (form == null)
-				{
-					continue;
-				}
-
-				if (string.IsNullOrEmpty(form.Base))
-				{
-					issues.Add($"Dimension '{label}' vector{i} is missing 'base'.");
-				}
-				else if (!seenTypeNames.Add(form.Base))
-				{
-					issues.Add($"Type name '{form.Base}' (dimension '{label}' vector{i}) collides with another base or overload.");
-				}
-
-				// Only the name is inspected, so iterate the names directly.
-				foreach (string overloadName in form.Overloads.Select(overload => overload.Name))
-				{
-					if (string.IsNullOrEmpty(overloadName))
-					{
-						issues.Add($"Dimension '{label}' vector{i} has an overload missing 'name'.");
-						continue;
-					}
-
-					if (!seenTypeNames.Add(overloadName))
-					{
-						issues.Add($"Overload type name '{overloadName}' (dimension '{label}' vector{i}) collides with another base or overload.");
-					}
-				}
-			}
+			ValidateDimension(dim, seenDimensionNames, seenTypeNames, issues);
 		}
 
 		return issues;
+	}
+
+	/// <summary>
+	/// Validates a single dimension entry. <paramref name="seenDimensionNames"/> and
+	/// <paramref name="seenTypeNames"/> accumulate across the whole document so duplicates
+	/// are detected across dimensions, not just within one.
+	/// </summary>
+	private static void ValidateDimension(
+		PhysicalDimension dim,
+		HashSet<string> seenDimensionNames,
+		HashSet<string> seenTypeNames,
+		List<string> issues)
+	{
+		string label = string.IsNullOrEmpty(dim.Name) ? "<unnamed>" : dim.Name;
+
+		if (string.IsNullOrEmpty(dim.Name))
+		{
+			issues.Add("A physicalDimensions entry is missing 'name'.");
+		}
+		else if (!seenDimensionNames.Add(dim.Name))
+		{
+			issues.Add($"Dimension '{dim.Name}' is declared more than once.");
+		}
+
+		if (string.IsNullOrEmpty(dim.Symbol))
+		{
+			issues.Add($"Dimension '{label}' is missing 'symbol'.");
+		}
+
+		ValidateAvailableUnits(dim, label, issues);
+		ValidateVectorForms(dim, label, seenTypeNames, issues);
+	}
+
+	private static void ValidateAvailableUnits(PhysicalDimension dim, string label, List<string> issues)
+	{
+		if (dim.AvailableUnits.Count == 0)
+		{
+			issues.Add($"Dimension '{label}' has an empty 'availableUnits' list.");
+			return;
+		}
+
+		foreach (string unit in dim.AvailableUnits.Where(string.IsNullOrWhiteSpace))
+		{
+			issues.Add($"Dimension '{label}' has a blank entry in 'availableUnits'.");
+		}
+	}
+
+	private static void ValidateVectorForms(PhysicalDimension dim, string label, HashSet<string> seenTypeNames, List<string> issues)
+	{
+		VectorFormDefinition?[] forms = [
+			dim.Quantities.Vector0,
+			dim.Quantities.Vector1,
+			dim.Quantities.Vector2,
+			dim.Quantities.Vector3,
+			dim.Quantities.Vector4,
+		];
+
+		if (System.Array.TrueForAll(forms, f => f == null))
+		{
+			issues.Add($"Dimension '{label}' declares no vector forms (vector0..vector4).");
+		}
+
+		for (int i = 0; i < forms.Length; i++)
+		{
+			VectorFormDefinition? form = forms[i];
+			if (form == null)
+			{
+				continue;
+			}
+
+			ValidateVectorForm(form, label, i, seenTypeNames, issues);
+		}
+	}
+
+	/// <summary>
+	/// Validates one declared vector form: its <c>base</c> type name plus every overload name,
+	/// all of which share the one <paramref name="seenTypeNames"/> namespace.
+	/// </summary>
+	private static void ValidateVectorForm(
+		VectorFormDefinition form,
+		string label,
+		int formIndex,
+		HashSet<string> seenTypeNames,
+		List<string> issues)
+	{
+		if (string.IsNullOrEmpty(form.Base))
+		{
+			issues.Add($"Dimension '{label}' vector{formIndex} is missing 'base'.");
+		}
+		else if (!seenTypeNames.Add(form.Base))
+		{
+			issues.Add($"Type name '{form.Base}' (dimension '{label}' vector{formIndex}) collides with another base or overload.");
+		}
+
+		// Only the name is inspected, so iterate the names directly.
+		foreach (string overloadName in form.Overloads.Select(overload => overload.Name))
+		{
+			if (string.IsNullOrEmpty(overloadName))
+			{
+				issues.Add($"Dimension '{label}' vector{formIndex} has an overload missing 'name'.");
+				continue;
+			}
+
+			if (!seenTypeNames.Add(overloadName))
+			{
+				issues.Add($"Overload type name '{overloadName}' (dimension '{label}' vector{formIndex}) collides with another base or overload.");
+			}
+		}
 	}
 }
 
