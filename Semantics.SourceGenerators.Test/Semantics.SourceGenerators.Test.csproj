@@ -1,0 +1,44 @@
+<Project>
+  <Sdk Name="MSTest.Sdk" />
+  <Sdk Name="ktsu.Sdk" />
+
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks></TargetFrameworks>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
+    <TestingPlatformShowTestsFailureDetails>true</TestingPlatformShowTestsFailureDetails>
+    <!-- The generator targets netstandard2.0 and its GetDependencyTargetPaths target deliberately
+         bundles every dependency into consumers so they are present at analyzer load time. That
+         drags the System.Memory / System.Numerics.Vectors facades into this net10.0 project and
+         MSBuild reports MSB3243 while picking the in-box (newer) assembly, which is correct. This
+         is why the generator tests live in their own project rather than in Semantics.Test, where
+         those facades collided with the span-based tests (CS0433). -->
+    <NoWarn>$(NoWarn);MSB3243</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Referenced as a plain library, not OutputItemType="Analyzer": the tests drive the
+         generators explicitly through CSharpGeneratorDriver rather than having them run against
+         this project. -->
+    <ProjectReference Include="..\Semantics.SourceGenerators\Semantics.SourceGenerators.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <!-- The generator declares its dependencies PrivateAssets="all" so they do not flow to
+         consumers, but the generators genuinely execute here, so CodeBlocker must be present in the
+         test output or every generator fails with FileNotFoundException at run time. -->
+    <PackageReference Include="ktsu.CodeBlocker" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Drive the generators with the real production metadata rather than fixtures, so these tests
+         fail if a metadata change breaks generation. -->
+    <None Include="..\Semantics.SourceGenerators\Metadata\*.json"
+          Link="GeneratorMetadata\%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
