@@ -1,16 +1,11 @@
-## v2.9.4 (patch)
+## v2.9.5 (patch)
 
-Changes since v2.9.3:
+Changes since v2.9.4:
 
-- [patch] Fold the generator tests into Semantics.Test so their coverage is collected ([@matt-edmondson](https://github.com/matt-edmondson))
-- [patch] Add source generator tests to cover the generator pipeline ([@matt-edmondson](https://github.com/matt-edmondson))
-- [patch] MSTEST0037: use the intent-revealing assertions ([@matt-edmondson](https://github.com/matt-edmondson))
-- [patch] MSTEST0068: CollectionAssert.AreEqual -> Assert.AreSequenceEqual ([@matt-edmondson](https://github.com/matt-edmondson))
-- [patch] Migrate file headers to the one-line ktsu-dev form ([@matt-edmondson](https://github.com/matt-edmondson))
-- [patch] Fix SonarCloud BLOCKER issues in test suite ([@matt-edmondson](https://github.com/matt-edmondson))
-- Sync .serena\.gitignore ([@KtsuTools](https://github.com/KtsuTools))
-- Sync .runsettings ([@KtsuTools](https://github.com/KtsuTools))
-- Sync .editorconfig ([@KtsuTools](https://github.com/KtsuTools))
-- Sync .gitattributes ([@KtsuTools](https://github.com/KtsuTools))
-- Sync global.json ([@KtsuTools](https://github.com/KtsuTools))
+- [patch] Adopt ktsu.Sdk 2.27.0: KTSU0001 package references ([@matt-edmondson](https://github.com/matt-edmondson))
+- Merge remote-tracking branch 'origin/main' into chore/sonarcloud-cleanup-2 ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] Cover the untested casing and relative-path branches ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] Cover PropertyTemplate shorthand; drop the duplicated const docs ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] S4136: group AsAbsolute overloads in the relative path types ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] Fix SonarCloud issues: S2223, S1192, S6610, S6580, S3358 ([@matt-edmondson](https://github.com/matt-edmondson))
 
