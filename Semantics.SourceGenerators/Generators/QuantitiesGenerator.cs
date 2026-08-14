@@ -163,38 +163,65 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		// Phase B: Generate types
 		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
 		{
-			if (dim.Quantities.Vector0 != null)
+			EmitDimensionTypes(context, dim, operatorsByOwner, productsByOwner, typeFormMap, unitMap);
+		}
+	}
+
+	/// <summary>
+	/// Emits every type declared by a single dimension: its V0/V1 base types, its V2+ vector
+	/// types, and the semantic overloads of each declared form.
+	/// </summary>
+	private void EmitDimensionTypes(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
+		Dictionary<string, List<ProductInfo>> productsByOwner,
+		Dictionary<string, int> typeFormMap,
+		Dictionary<string, UnitDefinition> unitMap)
+	{
+		if (dim.Quantities.Vector0 != null)
+		{
+			EmitV0BaseType(context, dim, operatorsByOwner, typeFormMap, unitMap);
+		}
+
+		if (dim.Quantities.Vector1 != null)
+		{
+			EmitV1BaseType(context, dim, operatorsByOwner, typeFormMap, unitMap);
+		}
+
+		int[] vectorDims = [2, 3, 4];
+		foreach (int d in vectorDims)
+		{
+			VectorFormDefinition? form = GetFormDef(dim, d);
+			if (form != null)
 			{
-				EmitV0BaseType(context, dim, operatorsByOwner, typeFormMap, unitMap);
+				EmitVectorType(context, dim, d, form, operatorsByOwner, productsByOwner, typeFormMap);
+			}
+		}
+
+		EmitOverloadTypes(context, dim, unitMap);
+	}
+
+	/// <summary>
+	/// Emits the semantic overloads declared on every vector form of <paramref name="dim"/>.
+	/// </summary>
+	private void EmitOverloadTypes(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		Dictionary<string, UnitDefinition> unitMap)
+	{
+		int[] allForms = [0, 1, 2, 3, 4];
+		foreach (int f in allForms)
+		{
+			VectorFormDefinition? form = GetFormDef(dim, f);
+			if (form == null)
+			{
+				continue;
 			}
 
-			if (dim.Quantities.Vector1 != null)
+			foreach (OverloadDefinition overload in form.Overloads)
 			{
-				EmitV1BaseType(context, dim, operatorsByOwner, typeFormMap, unitMap);
-			}
-
-			int[] vectorDims = [2, 3, 4];
-			foreach (int d in vectorDims)
-			{
-				VectorFormDefinition? form = GetFormDef(dim, d);
-				if (form != null)
-				{
-					EmitVectorType(context, dim, d, form, operatorsByOwner, productsByOwner, typeFormMap);
-				}
-			}
-
-			// Emit semantic overloads for all vector forms
-			int[] allForms = [0, 1, 2, 3, 4];
-			foreach (int f in allForms)
-			{
-				VectorFormDefinition? form = GetFormDef(dim, f);
-				if (form != null)
-				{
-					foreach (OverloadDefinition overload in form.Overloads)
-					{
-						EmitOverloadType(context, dim, f, form.Base, overload, unitMap);
-					}
-				}
+				EmitOverloadType(context, dim, f, form.Base, overload, unitMap);
 			}
 		}
 	}
@@ -242,110 +269,155 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 
 		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
 		{
-			// Process integrals: Self * Other = Result
-			foreach (RelationshipDefinition integral in dim.Integrals)
-			{
-				if (!dimMap.TryGetValue(integral.Other, out PhysicalDimension? otherDim))
-				{
-					ReportUnknownReference(context, dim.Name, integral.Other, $"integrals[{integral.Other} -> {integral.Result}].other");
-					continue;
-				}
-
-				if (!dimMap.TryGetValue(integral.Result, out PhysicalDimension? resultDim))
-				{
-					ReportUnknownReference(context, dim.Name, integral.Result, $"integrals[{integral.Other} -> {integral.Result}].result");
-					continue;
-				}
-
-				// V0(Other) is the scalar multiplier
-				string? v0Other = otherDim.Quantities.Vector0?.Base;
-				if (v0Other == null)
-				{
-					continue;
-				}
-
-				// For integrals the "Other" multiplier is V0 only; the form propagates
-				// between Self and Result, so SEM003 should fire if either Self or
-				// Result is missing a declared form. (V0-only Other was already
-				// rejected above via the v0Other null check.)
-				int[] forms = ResolveForms(
-					context,
-					integral,
-					[0, 1, 2, 3, 4],
-					dim,
-					resultDim,
-					$"integrals[{integral.Other} -> {integral.Result}]");
-				foreach (int vn in forms)
-				{
-					string? selfType = GetBaseTypeName(dim, vn);
-					string? resultType = GetBaseTypeName(resultDim, vn);
-					if (selfType == null || resultType == null)
-					{
-						continue;
-					}
-
-					// Forward: VN(Self) * V0(Other) => VN(Result)
-					AddOp(result, seen, "*", selfType, v0Other, resultType, selfType);
-					// Commutative: V0(Other) * VN(Self) => VN(Result)
-					AddOp(result, seen, "*", v0Other, selfType, resultType, v0Other);
-					// Inverse: VN(Result) / V0(Other) => VN(Self)
-					AddOp(result, seen, "/", resultType, v0Other, selfType, resultType);
-					// Inverse: VN(Result) / VN(Self) => V0(Other) -- only if VN == V0
-					if (vn == 0)
-					{
-						AddOp(result, seen, "/", resultType, selfType, v0Other, resultType);
-					}
-				}
-			}
-
-			// Process derivatives: Self / Other = Result
-			foreach (RelationshipDefinition derivative in dim.Derivatives)
-			{
-				if (!dimMap.TryGetValue(derivative.Other, out PhysicalDimension? otherDim))
-				{
-					ReportUnknownReference(context, dim.Name, derivative.Other, $"derivatives[{derivative.Other} -> {derivative.Result}].other");
-					continue;
-				}
-
-				if (!dimMap.TryGetValue(derivative.Result, out PhysicalDimension? resultDim))
-				{
-					ReportUnknownReference(context, dim.Name, derivative.Result, $"derivatives[{derivative.Other} -> {derivative.Result}].result");
-					continue;
-				}
-
-				string? v0Other = otherDim.Quantities.Vector0?.Base;
-				if (v0Other == null)
-				{
-					continue;
-				}
-
-				int[] forms = ResolveForms(
-					context,
-					derivative,
-					[0, 1, 2, 3, 4],
-					dim,
-					resultDim,
-					$"derivatives[{derivative.Other} -> {derivative.Result}]");
-				foreach (int vn in forms)
-				{
-					string? selfType = GetBaseTypeName(dim, vn);
-					string? resultType = GetBaseTypeName(resultDim, vn);
-					if (selfType == null || resultType == null)
-					{
-						continue;
-					}
-
-					// Forward: VN(Self) / V0(Other) => VN(Result)
-					AddOp(result, seen, "/", selfType, v0Other, resultType, selfType);
-					// Inverse integral: VN(Result) * V0(Other) => VN(Self)
-					AddOp(result, seen, "*", resultType, v0Other, selfType, resultType);
-					// Commutative inverse: V0(Other) * VN(Result) => VN(Self)
-					AddOp(result, seen, "*", v0Other, resultType, selfType, v0Other);
-				}
-			}
+			CollectIntegralOperators(context, dim, dimMap, result, seen);
+			CollectDerivativeOperators(context, dim, dimMap, result, seen);
 		}
 
 		return result;
+	}
+
+	/// <summary>
+	/// Collects the operators implied by one dimension's <c>integrals</c> (Self * Other = Result).
+	/// </summary>
+	private static void CollectIntegralOperators(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		Dictionary<string, PhysicalDimension> dimMap,
+		List<OperatorInfo> result,
+		HashSet<string> seen)
+	{
+		foreach (RelationshipDefinition integral in dim.Integrals)
+		{
+			if (!dimMap.TryGetValue(integral.Other, out PhysicalDimension? otherDim))
+			{
+				ReportUnknownReference(context, dim.Name, integral.Other, $"integrals[{integral.Other} -> {integral.Result}].other");
+				continue;
+			}
+
+			if (!dimMap.TryGetValue(integral.Result, out PhysicalDimension? resultDim))
+			{
+				ReportUnknownReference(context, dim.Name, integral.Result, $"integrals[{integral.Other} -> {integral.Result}].result");
+				continue;
+			}
+
+			// V0(Other) is the scalar multiplier
+			string? v0Other = otherDim.Quantities.Vector0?.Base;
+			if (v0Other == null)
+			{
+				continue;
+			}
+
+			// For integrals the "Other" multiplier is V0 only; the form propagates
+			// between Self and Result, so SEM003 should fire if either Self or
+			// Result is missing a declared form. (V0-only Other was already
+			// rejected above via the v0Other null check.)
+			int[] forms = ResolveForms(
+				context,
+				integral,
+				[0, 1, 2, 3, 4],
+				dim,
+				resultDim,
+				$"integrals[{integral.Other} -> {integral.Result}]");
+			foreach (int vn in forms)
+			{
+				AddIntegralOpsForForm(result, seen, dim, resultDim, vn, v0Other);
+			}
+		}
+	}
+
+	private static void AddIntegralOpsForForm(
+		List<OperatorInfo> result,
+		HashSet<string> seen,
+		PhysicalDimension dim,
+		PhysicalDimension resultDim,
+		int vn,
+		string v0Other)
+	{
+		string? selfType = GetBaseTypeName(dim, vn);
+		string? resultType = GetBaseTypeName(resultDim, vn);
+		if (selfType == null || resultType == null)
+		{
+			return;
+		}
+
+		// Forward: VN(Self) * V0(Other) => VN(Result)
+		AddOp(result, seen, "*", selfType, v0Other, resultType, selfType);
+		// Commutative: V0(Other) * VN(Self) => VN(Result)
+		AddOp(result, seen, "*", v0Other, selfType, resultType, v0Other);
+		// Inverse: VN(Result) / V0(Other) => VN(Self)
+		AddOp(result, seen, "/", resultType, v0Other, selfType, resultType);
+		// Inverse: VN(Result) / VN(Self) => V0(Other) -- only if VN == V0
+		if (vn == 0)
+		{
+			AddOp(result, seen, "/", resultType, selfType, v0Other, resultType);
+		}
+	}
+
+	/// <summary>
+	/// Collects the operators implied by one dimension's <c>derivatives</c> (Self / Other = Result).
+	/// </summary>
+	private static void CollectDerivativeOperators(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		Dictionary<string, PhysicalDimension> dimMap,
+		List<OperatorInfo> result,
+		HashSet<string> seen)
+	{
+		foreach (RelationshipDefinition derivative in dim.Derivatives)
+		{
+			if (!dimMap.TryGetValue(derivative.Other, out PhysicalDimension? otherDim))
+			{
+				ReportUnknownReference(context, dim.Name, derivative.Other, $"derivatives[{derivative.Other} -> {derivative.Result}].other");
+				continue;
+			}
+
+			if (!dimMap.TryGetValue(derivative.Result, out PhysicalDimension? resultDim))
+			{
+				ReportUnknownReference(context, dim.Name, derivative.Result, $"derivatives[{derivative.Other} -> {derivative.Result}].result");
+				continue;
+			}
+
+			string? v0Other = otherDim.Quantities.Vector0?.Base;
+			if (v0Other == null)
+			{
+				continue;
+			}
+
+			int[] forms = ResolveForms(
+				context,
+				derivative,
+				[0, 1, 2, 3, 4],
+				dim,
+				resultDim,
+				$"derivatives[{derivative.Other} -> {derivative.Result}]");
+			foreach (int vn in forms)
+			{
+				AddDerivativeOpsForForm(result, seen, dim, resultDim, vn, v0Other);
+			}
+		}
+	}
+
+	private static void AddDerivativeOpsForForm(
+		List<OperatorInfo> result,
+		HashSet<string> seen,
+		PhysicalDimension dim,
+		PhysicalDimension resultDim,
+		int vn,
+		string v0Other)
+	{
+		string? selfType = GetBaseTypeName(dim, vn);
+		string? resultType = GetBaseTypeName(resultDim, vn);
+		if (selfType == null || resultType == null)
+		{
+			return;
+		}
+
+		// Forward: VN(Self) / V0(Other) => VN(Result)
+		AddOp(result, seen, "/", selfType, v0Other, resultType, selfType);
+		// Inverse integral: VN(Result) * V0(Other) => VN(Self)
+		AddOp(result, seen, "*", resultType, v0Other, selfType, resultType);
+		// Commutative inverse: V0(Other) * VN(Result) => VN(Self)
+		AddOp(result, seen, "*", v0Other, resultType, selfType, v0Other);
 	}
 
 	private static List<ProductInfo> CollectAllProducts(SourceProductionContext context, DimensionsMetadata metadata, Dictionary<string, PhysicalDimension> dimMap)
@@ -355,101 +427,145 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 
 		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
 		{
-			// Dot products: VN(Self) . VN(Other) => V0(Result)
-			foreach (RelationshipDefinition dot in dim.DotProducts)
-			{
-				if (!dimMap.TryGetValue(dot.Other, out PhysicalDimension? otherDim))
-				{
-					ReportUnknownReference(context, dim.Name, dot.Other, $"dotProducts[{dot.Other} -> {dot.Result}].other");
-					continue;
-				}
-
-				if (!dimMap.TryGetValue(dot.Result, out PhysicalDimension? resultDim))
-				{
-					ReportUnknownReference(context, dim.Name, dot.Result, $"dotProducts[{dot.Other} -> {dot.Result}].result");
-					continue;
-				}
-
-				string? v0Result = resultDim.Quantities.Vector0?.Base;
-				if (v0Result == null)
-				{
-					continue;
-				}
-
-				// Dot product is undefined for V0; default forms are V1+.
-				int[] forms = ResolveForms(
-					context,
-					dot,
-					[1, 2, 3, 4],
-					dim,
-					otherDim,
-					$"dotProducts[{dot.Other} -> {dot.Result}]");
-				foreach (int vn in forms)
-				{
-					string? selfType = GetBaseTypeName(dim, vn);
-					string? otherType = GetBaseTypeName(otherDim, vn);
-					if (selfType == null || otherType == null)
-					{
-						continue;
-					}
-
-					string key = $"Dot:{selfType}:{otherType}:{v0Result}";
-					if (seen.Add(key))
-					{
-						result.Add(new ProductInfo("Dot", selfType, otherType, v0Result, vn));
-					}
-				}
-			}
-
-			// Cross products: V3(Self) x V3(Other) => V3(Result)
-			foreach (RelationshipDefinition cross in dim.CrossProducts)
-			{
-				if (!dimMap.TryGetValue(cross.Other, out PhysicalDimension? otherDim))
-				{
-					ReportUnknownReference(context, dim.Name, cross.Other, $"crossProducts[{cross.Other} -> {cross.Result}].other");
-					continue;
-				}
-
-				if (!dimMap.TryGetValue(cross.Result, out PhysicalDimension? resultDim))
-				{
-					ReportUnknownReference(context, dim.Name, cross.Result, $"crossProducts[{cross.Other} -> {cross.Result}].result");
-					continue;
-				}
-
-				// Cross product is intrinsically 3D. Default to V3 only; explicit Forms
-				// other than [3] are accepted but the operator emit below only handles V3.
-				// Pass resultDim so SEM003 surfaces when the declared form is missing on
-				// the result type too (e.g. Force × Length → Torque at V2: Torque has no V2).
-				int[] forms = ResolveForms(
-					context,
-					cross,
-					[3],
-					dim,
-					otherDim,
-					$"crossProducts[{cross.Other} -> {cross.Result}]",
-					resultDim);
-				if (Array.IndexOf(forms, 3) < 0)
-				{
-					continue;
-				}
-
-				string? selfV3 = GetBaseTypeName(dim, 3);
-				string? otherV3 = GetBaseTypeName(otherDim, 3);
-				string? resultV3 = GetBaseTypeName(resultDim, 3);
-				if (selfV3 == null || otherV3 == null || resultV3 == null)
-				{
-					continue;
-				}
-
-				string key = $"Cross:{selfV3}:{otherV3}:{resultV3}";
-				if (seen.Add(key))
-				{
-					result.Add(new ProductInfo("Cross", selfV3, otherV3, resultV3, 3));
-				}
-			}
+			CollectDotProducts(context, dim, dimMap, result, seen);
+			CollectCrossProducts(context, dim, dimMap, result, seen);
 		}
 
 		return result;
+	}
+
+	/// <summary>
+	/// Collects one dimension's dot products: VN(Self) . VN(Other) => V0(Result).
+	/// </summary>
+	private static void CollectDotProducts(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		Dictionary<string, PhysicalDimension> dimMap,
+		List<ProductInfo> result,
+		HashSet<string> seen)
+	{
+		foreach (RelationshipDefinition dot in dim.DotProducts)
+		{
+			if (!dimMap.TryGetValue(dot.Other, out PhysicalDimension? otherDim))
+			{
+				ReportUnknownReference(context, dim.Name, dot.Other, $"dotProducts[{dot.Other} -> {dot.Result}].other");
+				continue;
+			}
+
+			if (!dimMap.TryGetValue(dot.Result, out PhysicalDimension? resultDim))
+			{
+				ReportUnknownReference(context, dim.Name, dot.Result, $"dotProducts[{dot.Other} -> {dot.Result}].result");
+				continue;
+			}
+
+			string? v0Result = resultDim.Quantities.Vector0?.Base;
+			if (v0Result == null)
+			{
+				continue;
+			}
+
+			// Dot product is undefined for V0; default forms are V1+.
+			int[] forms = ResolveForms(
+				context,
+				dot,
+				[1, 2, 3, 4],
+				dim,
+				otherDim,
+				$"dotProducts[{dot.Other} -> {dot.Result}]");
+			foreach (int vn in forms)
+			{
+				AddDotProductForForm(result, seen, dim, otherDim, vn, v0Result);
+			}
+		}
+	}
+
+	private static void AddDotProductForForm(
+		List<ProductInfo> result,
+		HashSet<string> seen,
+		PhysicalDimension dim,
+		PhysicalDimension otherDim,
+		int vn,
+		string v0Result)
+	{
+		string? selfType = GetBaseTypeName(dim, vn);
+		string? otherType = GetBaseTypeName(otherDim, vn);
+		if (selfType == null || otherType == null)
+		{
+			return;
+		}
+
+		string key = $"Dot:{selfType}:{otherType}:{v0Result}";
+		if (seen.Add(key))
+		{
+			result.Add(new ProductInfo("Dot", selfType, otherType, v0Result, vn));
+		}
+	}
+
+	/// <summary>
+	/// Collects one dimension's cross products: V3(Self) x V3(Other) => V3(Result).
+	/// </summary>
+	private static void CollectCrossProducts(
+		SourceProductionContext context,
+		PhysicalDimension dim,
+		Dictionary<string, PhysicalDimension> dimMap,
+		List<ProductInfo> result,
+		HashSet<string> seen)
+	{
+		foreach (RelationshipDefinition cross in dim.CrossProducts)
+		{
+			if (!dimMap.TryGetValue(cross.Other, out PhysicalDimension? otherDim))
+			{
+				ReportUnknownReference(context, dim.Name, cross.Other, $"crossProducts[{cross.Other} -> {cross.Result}].other");
+				continue;
+			}
+
+			if (!dimMap.TryGetValue(cross.Result, out PhysicalDimension? resultDim))
+			{
+				ReportUnknownReference(context, dim.Name, cross.Result, $"crossProducts[{cross.Other} -> {cross.Result}].result");
+				continue;
+			}
+
+			// Cross product is intrinsically 3D. Default to V3 only; explicit Forms
+			// other than [3] are accepted but the operator emit below only handles V3.
+			// Pass resultDim so SEM003 surfaces when the declared form is missing on
+			// the result type too (e.g. Force × Length → Torque at V2: Torque has no V2).
+			int[] forms = ResolveForms(
+				context,
+				cross,
+				[3],
+				dim,
+				otherDim,
+				$"crossProducts[{cross.Other} -> {cross.Result}]",
+				resultDim);
+			if (Array.IndexOf(forms, 3) < 0)
+			{
+				continue;
+			}
+
+			AddCrossProduct(result, seen, dim, otherDim, resultDim);
+		}
+	}
+
+	private static void AddCrossProduct(
+		List<ProductInfo> result,
+		HashSet<string> seen,
+		PhysicalDimension dim,
+		PhysicalDimension otherDim,
+		PhysicalDimension resultDim)
+	{
+		string? selfV3 = GetBaseTypeName(dim, 3);
+		string? otherV3 = GetBaseTypeName(otherDim, 3);
+		string? resultV3 = GetBaseTypeName(resultDim, 3);
+		if (selfV3 == null || otherV3 == null || resultV3 == null)
+		{
+			return;
+		}
+
+		string key = $"Cross:{selfV3}:{otherV3}:{resultV3}";
+		if (seen.Add(key))
+		{
+			result.Add(new ProductInfo("Cross", selfV3, otherV3, resultV3, 3));
+		}
 	}
 
 	private static void AddOp(List<OperatorInfo> list, HashSet<string> seen, string op, string left, string right, string ret, string owner)
