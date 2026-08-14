@@ -111,4 +111,32 @@ public sealed class CasingValidatorsTests
 		MacroCaseString empty = SemanticString<MacroCaseString>.Create<MacroCaseString>("");
 		Assert.AreEqual("", empty.WeakString);
 	}
+
+	/// <summary>
+	/// Covers the two rejection branches each casing validator has beyond the leading/trailing
+	/// separator checks: a separator belonging to a different convention, and correct separators
+	/// with the wrong letter case.
+	/// </summary>
+	[TestMethod]
+	public void CasingValidators_RejectForeignSeparatorsAndWrongCase()
+	{
+		AssertRejects<KebabCaseString>("hello world", "hello_world", "Hello-World");
+		AssertRejects<SnakeCaseString>("hello world", "hello-world", "Hello_World");
+		AssertRejects<MacroCaseString>("HELLO WORLD", "HELLO-WORLD", "Hello_World");
+
+		// Sentence case: first letter must be uppercase, and leading non-letters are skipped when
+		// locating it.
+		AssertRejects<SentenceCaseString>("hello world", "123 hello");
+	}
+
+	private static void AssertRejects<TString>(params string[] values)
+		where TString : SemanticString<TString>
+	{
+		foreach (string value in values)
+		{
+			Assert.ThrowsExactly<ArgumentException>(
+				() => SemanticString<TString>.Create<TString>(value),
+				$"{typeof(TString).Name} should reject \"{value}\".");
+		}
+	}
 }
