@@ -28,6 +28,11 @@ public sealed class IsSentenceCaseAttribute : NativeSemanticStringValidationAttr
 	private sealed class SentenceCaseValidator : ValidationAdapter
 	{
 		/// <summary>
+		/// The message reported for every way a value can fail this format.
+		/// </summary>
+		private const string FailureMessage = "The value must be in sentence case format.";
+
+		/// <summary>
 		/// Validates that a string is in sentence case.
 		/// </summary>
 		/// <param name="value">The string value to validate</param>
@@ -43,7 +48,7 @@ public sealed class IsSentenceCaseAttribute : NativeSemanticStringValidationAttr
 			char? firstLetter = value.FirstOrDefault(char.IsLetter);
 			if (firstLetter.HasValue && !char.IsUpper(firstLetter.Value))
 			{
-				return ValidationResult.Failure("The value must be in sentence case format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			// Check that all other letters after the first are lowercase
@@ -60,7 +65,7 @@ public sealed class IsSentenceCaseAttribute : NativeSemanticStringValidationAttr
 
 					if (char.IsUpper(c))
 					{
-						return ValidationResult.Failure("The value must be in sentence case format.");
+						return ValidationResult.Failure(FailureMessage);
 					}
 				}
 			}

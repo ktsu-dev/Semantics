@@ -146,7 +146,7 @@ public readonly record struct Hsl(double H, double S, double L)
 	/// <returns>The adjusted color.</returns>
 	public Hsl OffsetHue(double degrees) => this with { H = NormalizeHue(H + degrees) };
 
-	private static double Clamp01(double value) => value < 0.0 ? 0.0 : value > 1.0 ? 1.0 : value;
+	private static double Clamp01(double value) => Math.Clamp(value, 0.0, 1.0);
 
 	internal static double NormalizeHue(double h)
 	{

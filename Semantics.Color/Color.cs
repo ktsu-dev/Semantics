@@ -40,5 +40,5 @@ public readonly partial record struct Color(double R, double G, double B, double
 	/// <returns>A float vector of the linear RGB channels.</returns>
 	public Vector3 ToLinearVector3() => new((float)R, (float)G, (float)B);
 
-	internal static double Clamp01(double value) => value < 0.0 ? 0.0 : value > 1.0 ? 1.0 : value;
+	internal static double Clamp01(double value) => Math.Clamp(value, 0.0, 1.0);
 }

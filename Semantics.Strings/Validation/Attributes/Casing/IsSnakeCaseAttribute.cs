@@ -28,6 +28,11 @@ public sealed class IsSnakeCaseAttribute : NativeSemanticStringValidationAttribu
 	private sealed class SnakeCaseValidator : ValidationAdapter
 	{
 		/// <summary>
+		/// The message reported for every way a value can fail this format.
+		/// </summary>
+		private const string FailureMessage = "The value must be in snake_case format.";
+
+		/// <summary>
 		/// Validates that a string is in snake_case.
 		/// </summary>
 		/// <param name="value">The string value to validate</param>
@@ -40,27 +45,27 @@ public sealed class IsSnakeCaseAttribute : NativeSemanticStringValidationAttribu
 			}
 
 			// Cannot start or end with underscore
-			if (value.StartsWith("_") || value.EndsWith("_"))
+			if (value.StartsWith('_') || value.EndsWith('_'))
 			{
-				return ValidationResult.Failure("The value must be in snake_case format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			// Cannot have consecutive underscores
 			if (value.Contains("__"))
 			{
-				return ValidationResult.Failure("The value must be in snake_case format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			// No spaces, hyphens, or other separators allowed (except underscores)
 			if (value.Any(c => char.IsWhiteSpace(c) || c == '-'))
 			{
-				return ValidationResult.Failure("The value must be in snake_case format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			// All characters must be lowercase letters, digits, or underscores
 			if (!value.All(c => char.IsLower(c) || char.IsDigit(c) || c == '_'))
 			{
-				return ValidationResult.Failure("The value must be in snake_case format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			return ValidationResult.Success();

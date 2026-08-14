@@ -28,6 +28,11 @@ public sealed class IsKebabCaseAttribute : NativeSemanticStringValidationAttribu
 	private sealed class KebabCaseValidator : ValidationAdapter
 	{
 		/// <summary>
+		/// The message reported for every way a value can fail this format.
+		/// </summary>
+		private const string FailureMessage = "The value must be in kebab-case format.";
+
+		/// <summary>
 		/// Validates that a string is in kebab-case.
 		/// </summary>
 		/// <param name="value">The string value to validate</param>
@@ -40,27 +45,27 @@ public sealed class IsKebabCaseAttribute : NativeSemanticStringValidationAttribu
 			}
 
 			// Cannot start or end with hyphen
-			if (value.StartsWith("-") || value.EndsWith("-"))
+			if (value.StartsWith('-') || value.EndsWith('-'))
 			{
-				return ValidationResult.Failure("The value must be in kebab-case format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			// Cannot have consecutive hyphens
 			if (value.Contains("--"))
 			{
-				return ValidationResult.Failure("The value must be in kebab-case format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			// No spaces, underscores, or other separators allowed (except hyphens)
 			if (value.Any(c => char.IsWhiteSpace(c) || c == '_'))
 			{
-				return ValidationResult.Failure("The value must be in kebab-case format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			// All characters must be lowercase letters, digits, or hyphens
 			if (!value.All(c => char.IsLower(c) || char.IsDigit(c) || c == '-'))
 			{
-				return ValidationResult.Failure("The value must be in kebab-case format.");
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			return ValidationResult.Success();
