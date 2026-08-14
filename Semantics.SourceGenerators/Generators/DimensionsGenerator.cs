@@ -82,16 +82,10 @@ public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
 			// Collect all type names from vector forms (base types + overloads)
 			List<string> quantityNames = [];
 			VectorFormDefinition?[] forms = [dimension.Quantities.Vector0, dimension.Quantities.Vector1, dimension.Quantities.Vector2, dimension.Quantities.Vector3, dimension.Quantities.Vector4];
-			foreach (VectorFormDefinition? form in forms)
+			foreach (VectorFormDefinition form in forms.OfType<VectorFormDefinition>())
 			{
-				if (form != null)
-				{
-					quantityNames.Add(form.Base);
-					foreach (OverloadDefinition overload in form.Overloads)
-					{
-						quantityNames.Add(overload.Name);
-					}
-				}
+				quantityNames.Add(form.Base);
+				quantityNames.AddRange(form.Overloads.Select(overload => overload.Name));
 			}
 
 			// Build quantities list initializer
