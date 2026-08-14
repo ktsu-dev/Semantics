@@ -14,7 +14,7 @@ public class ScaleTests
 	{
 		int[] expected = [0, 2, 4, 5, 7, 9, 11];
 		int[] values = [.. CMajor.PitchClasses.Select(pc => pc.Value)];
-		CollectionAssert.AreEqual(expected, values);
+		Assert.AreSequenceEqual(expected, values);
 	}
 
 	[TestMethod]

@@ -75,9 +75,9 @@ public class PathInterfaceMemberTests
 
 			List<string> contents = [.. directory.GetContents().Select(p => p.WeakString).OrderBy(p => p, StringComparer.Ordinal)];
 
-			CollectionAssert.AreEqual(
-				new List<string> { Path.Combine(root, "afile.txt"), Path.Combine(root, "child") },
-				contents);
+			List<string> expected = [Path.Combine(root, "afile.txt"), Path.Combine(root, "child")];
+
+			Assert.AreSequenceEqual(expected, contents);
 		}
 		finally
 		{

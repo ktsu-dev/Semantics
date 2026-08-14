@@ -92,7 +92,7 @@ public class ChordTests
 	{
 		int[] expected = [60, 64, 67];
 		int[] midi = [.. Chord.Parse("C").Voice(4).Select(p => p.Midi)];
-		CollectionAssert.AreEqual(expected, midi);
+		Assert.AreSequenceEqual(expected, midi);
 	}
 
 	[TestMethod]
@@ -147,7 +147,7 @@ public class ChordTests
 		foreach ((string symbol, int[] expected) in cases)
 		{
 			int[] actual = [.. Chord.Parse(symbol).ChordTones()];
-			CollectionAssert.AreEqual(expected, actual, $"ChordTones mismatch for '{symbol}'.");
+			Assert.AreSequenceEqual(expected, actual, $"ChordTones mismatch for '{symbol}'.");
 		}
 	}
 }

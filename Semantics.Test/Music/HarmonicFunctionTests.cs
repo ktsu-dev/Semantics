@@ -16,7 +16,7 @@ public class HarmonicFunctionTests
 		System.Collections.Generic.IReadOnlyList<string> numerals = progression.RomanNumerals(CMajor);
 		string[] expected = ["ii7", "V7", "Imaj7"];
 		string[] actual = [.. numerals];
-		CollectionAssert.AreEqual(expected, actual);
+		Assert.AreSequenceEqual(expected, actual);
 	}
 
 	[TestMethod]
