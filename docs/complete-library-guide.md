@@ -223,7 +223,7 @@ public sealed record BusinessEmail : SemanticString<BusinessEmail> { }
 
 // Any can pass
 [ValidateAny]
-[IsEmailAddress, IsUri]
+[IsEmailAddress, StartsWith("https://")]
 public sealed record ContactMethod : SemanticString<ContactMethod> { }
 ```
 

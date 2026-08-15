@@ -88,7 +88,7 @@ public sealed record DotComEmail : SemanticString<DotComEmail> { }
 
 // Any one attribute passing is sufficient
 [ValidateAny]
-[IsEmailAddress, IsUri]
+[IsEmailAddress, StartsWith("https://")]
 public sealed record ContactMethod : SemanticString<ContactMethod> { }
 ```
 
@@ -168,7 +168,6 @@ All attributes apply to a class, derive from `SemanticStringValidationAttribute`
 | Casing | `IsCamelCase`, `IsPascalCase`, `IsSnakeCase`, `IsKebabCase`, `IsMacroCase`, `IsTitleCase`, `IsSentenceCase`, `IsUpperCase`, `IsLowerCase` |
 | Format | `HasNonWhitespaceContent`, `IsSingleLine`, `IsMultiLine`, `HasMinimumLines(n)`, `HasMaximumLines(n)`, `HasExactLines(n)`, `IsEmptyOrWhitespace` |
 | Text | `Contains(substring)`, `StartsWith(prefix)`, `EndsWith(suffix)`, `PrefixAndSuffix(prefix, suffix)`, `RegexMatch(pattern)`, `IsBase64`, `IsEmailAddress` |
-| First-class .NET types | `IsBoolean`, `IsDateTime`, `IsDecimal`, `IsDouble`, `IsInt32`, `IsGuid`, `IsUri`, `IsVersion`, `IsTimeSpan`, `IsIpAddress` |
 | Combination markers | `[ValidateAll]` (default), `[ValidateAny]` |
 
 The full catalogue lives in the [validation reference](../docs/validation-reference.md).

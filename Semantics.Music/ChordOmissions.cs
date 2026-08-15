@@ -6,7 +6,7 @@ using System;
 
 /// <summary>Chord tones intentionally omitted from a voicing (reduced voicings).</summary>
 [Flags]
-public enum ChordOmission
+public enum ChordOmissions
 {
 	/// <summary>Nothing omitted.</summary>
 	None = 0,

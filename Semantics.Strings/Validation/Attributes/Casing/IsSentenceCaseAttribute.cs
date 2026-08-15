@@ -53,22 +53,9 @@ public sealed class IsSentenceCaseAttribute : NativeSemanticStringValidationAttr
 			}
 
 			// Check that all other letters after the first are lowercase
-			bool foundFirstLetter = false;
-			foreach (char c in value)
+			if (value.Where(char.IsLetter).Skip(1).Any(char.IsUpper))
 			{
-				if (char.IsLetter(c))
-				{
-					if (!foundFirstLetter)
-					{
-						foundFirstLetter = true; // Skip the first letter
-						continue;
-					}
-
-					if (char.IsUpper(c))
-					{
-						return ValidationResult.Failure(FailureMessage);
-					}
-				}
+				return ValidationResult.Failure(FailureMessage);
 			}
 
 			return ValidationResult.Success();

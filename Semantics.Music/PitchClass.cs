@@ -51,13 +51,13 @@ public sealed record PitchClass
 	public static bool TryParse(string? text, [NotNullWhen(true)] out PitchClass? result)
 	{
 		result = null;
-		if (string.IsNullOrEmpty(text))
+		if (text is null || text.Length == 0)
 		{
 			return false;
 		}
 
 		int index = 0;
-		if (!Notation.TryReadNoteLetter(text![index], out NoteLetter letter))
+		if (!Notation.TryReadNoteLetter(text[index], out NoteLetter letter))
 		{
 			return false;
 		}

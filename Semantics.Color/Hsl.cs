@@ -154,6 +154,9 @@ public readonly record struct Hsl(double H, double S, double L)
 		return r < 0.0 ? r + 360.0 : r;
 	}
 
+	[System.Diagnostics.CodeAnalysis.SuppressMessage(
+		"Major Code Smell", "S1244:Do not check floating point equality with exact values, use a range instead",
+		Justification = "max is a bit-exact copy of whichever of R/G/B is largest, so == selects the max channel rather than comparing two independently computed values. A tolerance would let two near-equal channels both match and pick the wrong hue sector.")]
 	internal static double HueDegrees(Srgb srgb, double max, double d)
 	{
 		double h;
