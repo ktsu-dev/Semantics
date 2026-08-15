@@ -13,7 +13,6 @@ For the architecture (attribute → strategy → rule → factory pipeline), see
 | [Text](#text) | `Semantics.Strings/Validation/Attributes/Text/` | 7 |
 | [Format](#format) | `Semantics.Strings/Validation/Attributes/Format/` | 7 |
 | [Casing](#casing) | `Semantics.Strings/Validation/Attributes/Casing/` | 9 |
-| [First-class .NET types](#first-class-net-types) | `Semantics.Strings/Validation/Attributes/FirstClassTypes/` | 10 |
 | [Path](#path) | `Semantics.Paths/Validation/Attributes/Path/` | 10 |
 | [Strategies](#strategies) | `Semantics.Strings/Validation/Strategies/` | 2 |
 
@@ -96,30 +95,14 @@ public sealed record CommitMessageHeader : SemanticString<CommitMessageHeader> {
 
 ## First-class .NET types
 
-These attributes assert that the string parses to a particular .NET type.
-
-| Attribute | Parses as |
-|---|---|
-| `[IsBoolean]` | `bool` |
-| `[IsDateTime]` | `DateTime` |
-| `[IsDecimal]` | `decimal` |
-| `[IsDouble]` | `double` |
-| `[IsGuid]` | `Guid` |
-| `[IsInt32]` | `int` |
-| `[IsIpAddress]` | `IPAddress` |
-| `[IsTimeSpan]` | `TimeSpan` |
-| `[IsUri]` | `Uri` |
-| `[IsVersion]` | `Version` |
-
-```csharp
-[IsGuid]
-public sealed record TransactionId : SemanticString<TransactionId> { }
-
-[IsUri]
-public sealed record WebsiteUrl : SemanticString<WebsiteUrl> { }
-```
-
-> When the value will be used as the parsed type rather than as a string, prefer wrapping the .NET type directly (e.g. `record TransactionId(Guid Value)`). Use these attributes when the value lives inside a wider string-validation pipeline.
+> **Removed in 3.0.** The `[IsBoolean]`, `[IsDateTime]`, `[IsDecimal]`, `[IsDouble]`, `[IsGuid]`, `[IsInt32]`, `[IsIpAddress]`, `[IsTimeSpan]`, `[IsUri]`, and `[IsVersion]` attributes were deprecated in 2.x and have now been deleted. Wrap the .NET type directly instead — it is more type-safe, faster, and cheaper in memory than validating a string:
+>
+> ```csharp
+> public sealed record TransactionId(Guid Value);
+> public sealed record WebsiteUrl(Uri Value);
+> ```
+>
+> If a value genuinely has to stay a string inside a wider validation pipeline, write a custom validation attribute (see [Custom validation attributes](#custom-validation-attributes)) wrapping the corresponding `TryParse`.
 
 ## Path
 
@@ -157,7 +140,7 @@ At least one attribute must pass.
 
 ```csharp
 [ValidateAny]
-[IsEmailAddress, IsUri]
+[IsEmailAddress, StartsWith("https://")]
 public sealed record ContactMethod : SemanticString<ContactMethod> { }
 ```
 

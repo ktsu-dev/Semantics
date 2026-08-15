@@ -16,12 +16,6 @@ public sealed class CasingAndContractsTests
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Used via generic type references")]
 	private sealed partial record PascalCaseString : SemanticString<PascalCaseString> { }
 
-#pragma warning disable CS0618 // Obsolete attribute used intentionally to cover validation
-	[IsBoolean]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Used via generic type references")]
-	private sealed partial record BooleanString : SemanticString<BooleanString> { }
-#pragma warning restore CS0618
-
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Used via generic type references")]
 	private sealed partial record ContractString : SemanticString<ContractString> { }
 
@@ -62,32 +56,6 @@ public sealed class CasingAndContractsTests
 	public void PascalCase_Empty_ShouldPass()
 	{
 		PascalCaseString s = SemanticString<PascalCaseString>.Create<PascalCaseString>("");
-		Assert.AreEqual("", s.WeakString);
-	}
-
-	[TestMethod]
-	public void Boolean_Valid_ShouldPass()
-	{
-#pragma warning disable CS0618 // obsolete usage in tests
-		BooleanString s = SemanticString<BooleanString>.Create<BooleanString>("true");
-#pragma warning restore CS0618
-		Assert.AreEqual("true", s.WeakString);
-	}
-
-	[TestMethod]
-	public void Boolean_Invalid_ShouldThrow()
-	{
-#pragma warning disable CS0618 // obsolete usage in tests
-		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<BooleanString>.Create<BooleanString>("notabool"));
-#pragma warning restore CS0618
-	}
-
-	[TestMethod]
-	public void Boolean_Empty_ShouldPass()
-	{
-#pragma warning disable CS0618 // obsolete usage in tests
-		BooleanString s = SemanticString<BooleanString>.Create<BooleanString>("");
-#pragma warning restore CS0618
 		Assert.AreEqual("", s.WeakString);
 	}
 

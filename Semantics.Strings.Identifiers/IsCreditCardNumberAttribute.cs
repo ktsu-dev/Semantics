@@ -3,6 +3,7 @@
 namespace ktsu.Semantics.Strings.Identifiers;
 
 using System;
+using System.Linq;
 
 using ktsu.Semantics.Strings;
 
@@ -27,12 +28,9 @@ public sealed class IsCreditCardNumberAttribute : NativeSemanticStringValidation
 				return ValidationResult.Failure("A credit card number must have between 13 and 19 digits.");
 			}
 
-			foreach (char c in value)
+			if (value.Any(c => c is < '0' or > '9'))
 			{
-				if (c is < '0' or > '9')
-				{
-					return ValidationResult.Failure("A credit card number must contain digits only.");
-				}
+				return ValidationResult.Failure("A credit card number must contain digits only.");
 			}
 
 			return PassesLuhn(value)

@@ -68,8 +68,8 @@ public class ChordTests
 	[TestMethod]
 	public void Parse_OmitVoicings()
 	{
-		Assert.IsTrue(Chord.Parse("C7no5").Omissions.HasFlag(ChordOmission.Fifth));
-		Assert.IsTrue(Chord.Parse("Cm7no3").Omissions.HasFlag(ChordOmission.Third));
+		Assert.IsTrue(Chord.Parse("C7no5").Omissions.HasFlag(ChordOmissions.Fifth));
+		Assert.IsTrue(Chord.Parse("Cm7no3").Omissions.HasFlag(ChordOmissions.Third));
 	}
 
 	[TestMethod]

@@ -6,7 +6,7 @@ using System;
 
 /// <summary>Upper-structure tensions and alterations present in a chord.</summary>
 [Flags]
-public enum ChordTension
+public enum ChordTensions
 {
 	/// <summary>No tensions.</summary>
 	None = 0,

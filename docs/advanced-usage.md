@@ -195,7 +195,7 @@ public sealed record ExistingAbsolutePath : SemanticPath<ExistingAbsolutePath> {
 
 // Require ANY validation attribute to pass
 [ValidateAny]
-[IsEmailAddress, IsUri]
+[IsEmailAddress, StartsWith("https://")]
 public sealed record ContactInfo : SemanticString<ContactInfo> { }
 
 // Custom strategies plug in via ValidationStrategyFactory.Register<T>()

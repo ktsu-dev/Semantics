@@ -76,12 +76,14 @@ public sealed partial record Progression
 	public static bool TryParse(string? text, [NotNullWhen(true)] out Progression? result)
 	{
 		result = null;
-		if (string.IsNullOrWhiteSpace(text))
+		if (text is null)
 		{
 			return false;
 		}
 
-		string[] tokens = text!.Split((char[]?)null, System.StringSplitOptions.RemoveEmptyEntries);
+		// Splitting on whitespace with RemoveEmptyEntries already yields no tokens for an empty or
+		// whitespace-only input, so the token-count check below subsumes an IsNullOrWhiteSpace guard.
+		string[] tokens = text.Split((char[]?)null, System.StringSplitOptions.RemoveEmptyEntries);
 		if (tokens.Length < 2 || !TimeSignature.TryParse(tokens[0], out TimeSignature? ts))
 		{
 			return false;

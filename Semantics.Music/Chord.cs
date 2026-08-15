@@ -25,10 +25,10 @@ public sealed record Chord
 	public SixthType Sixth { get; init; } = SixthType.None;
 
 	/// <summary>Gets the upper-structure tensions and alterations.</summary>
-	public ChordTension Tensions { get; init; } = ChordTension.None;
+	public ChordTensions Tensions { get; init; } = ChordTensions.None;
 
 	/// <summary>Gets the chord tones intentionally omitted from the voicing.</summary>
-	public ChordOmission Omissions { get; init; } = ChordOmission.None;
+	public ChordOmissions Omissions { get; init; } = ChordOmissions.None;
 
 	/// <summary>Gets the slash-chord bass, if any (otherwise the root sounds in the bass).</summary>
 	public PitchClass? Bass { get; init; }
@@ -53,12 +53,12 @@ public sealed record Chord
 	public static bool TryParse(string? symbol, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Chord? result)
 	{
 		result = null;
-		if (string.IsNullOrEmpty(symbol))
+		if (symbol is null || symbol.Length == 0)
 		{
 			return false;
 		}
 
-		if (!TryReadRoot(symbol!, out PitchClass? bass, out string head, out int index, out PitchClass? root))
+		if (!TryReadRoot(symbol, out PitchClass? bass, out string head, out int index, out PitchClass? root))
 		{
 			return false;
 		}
@@ -74,7 +74,7 @@ public sealed record Chord
 			sixth = SixthType.Natural;
 		}
 
-		ChordTension tensions = modifiers.Tensions;
+		ChordTensions tensions = modifiers.Tensions;
 		ApplyExtensions(ref body, modifiers.HasAdd9, ref seventh, ref tensions);
 
 		result = new Chord
@@ -129,9 +129,9 @@ public sealed record Chord
 
 	/// <summary>The fifth alteration and the upper-structure modifiers consumed from a chord body.</summary>
 	private readonly record struct ChordModifiers(
-		ChordOmission Omissions,
+		ChordOmissions Omissions,
 		SixthType Sixth,
-		ChordTension Tensions,
+		ChordTensions Tensions,
 		int FifthAlteration,
 		bool HasAdd9);
 
@@ -142,62 +142,62 @@ public sealed record Chord
 	/// </summary>
 	private static ChordModifiers ConsumeModifiers(ref string body)
 	{
-		ChordOmission omissions = ConsumeOmissions(ref body);
+		ChordOmissions omissions = ConsumeOmissions(ref body);
 
 		// Flat sixth before the bare "6".
 		SixthType sixth = TakeEither(ref body, "b6", "♭6") ? SixthType.Flat : SixthType.None;
 
-		ChordTension tensions = ConsumeTensions(ref body);
+		ChordTensions tensions = ConsumeTensions(ref body);
 		int fifthAlteration = ConsumeFifthAlteration(ref body);
 
 		// "add9" must be consumed before the bare "9" logic so it does not imply a seventh.
 		bool hasAdd9 = Take(ref body, "add9");
 		if (hasAdd9)
 		{
-			tensions |= ChordTension.Nine;
+			tensions |= ChordTensions.Nine;
 		}
 
 		return new ChordModifiers(omissions, sixth, tensions, fifthAlteration, hasAdd9);
 	}
 
-	private static ChordOmission ConsumeOmissions(ref string body)
+	private static ChordOmissions ConsumeOmissions(ref string body)
 	{
-		ChordOmission omissions = ChordOmission.None;
+		ChordOmissions omissions = ChordOmissions.None;
 		if (Take(ref body, "no5"))
 		{
-			omissions |= ChordOmission.Fifth;
+			omissions |= ChordOmissions.Fifth;
 		}
 
 		if (Take(ref body, "no3"))
 		{
-			omissions |= ChordOmission.Third;
+			omissions |= ChordOmissions.Third;
 		}
 
 		return omissions;
 	}
 
 	/// <summary>Consumes the altered tensions, taking multi-character tokens before bare numbers.</summary>
-	private static ChordTension ConsumeTensions(ref string body)
+	private static ChordTensions ConsumeTensions(ref string body)
 	{
-		ChordTension tensions = ChordTension.None;
+		ChordTensions tensions = ChordTensions.None;
 		if (TakeEither(ref body, "#11", "♯11"))
 		{
-			tensions |= ChordTension.SharpEleven;
+			tensions |= ChordTensions.SharpEleven;
 		}
 
 		if (TakeEither(ref body, "b13", "♭13"))
 		{
-			tensions |= ChordTension.FlatThirteen;
+			tensions |= ChordTensions.FlatThirteen;
 		}
 
 		if (TakeEither(ref body, "b9", "♭9"))
 		{
-			tensions |= ChordTension.FlatNine;
+			tensions |= ChordTensions.FlatNine;
 		}
 
 		if (TakeEither(ref body, "#9", "♯9"))
 		{
-			tensions |= ChordTension.SharpNine;
+			tensions |= ChordTensions.SharpNine;
 		}
 
 		return tensions;
@@ -292,7 +292,7 @@ public sealed record Chord
 		return hasSeven ? SeventhType.Dominant : SeventhType.None;
 	}
 
-	private static void ApplyExtensions(ref string body, bool hasAdd9, ref SeventhType seventh, ref ChordTension tensions)
+	private static void ApplyExtensions(ref string body, bool hasAdd9, ref SeventhType seventh, ref ChordTensions tensions)
 	{
 		// Bare extension numbers (9/11/13) imply a dominant seventh and stack the lower tensions.
 		if (hasAdd9)
@@ -302,17 +302,17 @@ public sealed record Chord
 
 		if (Take(ref body, "13"))
 		{
-			tensions |= ChordTension.Nine | ChordTension.Eleven | ChordTension.Thirteen;
+			tensions |= ChordTensions.Nine | ChordTensions.Eleven | ChordTensions.Thirteen;
 		}
 		else if (Take(ref body, "11"))
 		{
-			tensions |= ChordTension.Nine | ChordTension.Eleven;
+			tensions |= ChordTensions.Nine | ChordTensions.Eleven;
 		}
 		else if (Take(ref body, "9"))
 		{
-			if (!tensions.HasFlag(ChordTension.FlatNine) && !tensions.HasFlag(ChordTension.SharpNine))
+			if (!tensions.HasFlag(ChordTensions.FlatNine) && !tensions.HasFlag(ChordTensions.SharpNine))
 			{
-				tensions |= ChordTension.Nine;
+				tensions |= ChordTensions.Nine;
 			}
 		}
 		else
@@ -329,7 +329,7 @@ public sealed record Chord
 	{
 		SortedSet<int> offsets = [0];
 
-		if (Quality != ChordQuality.Power && !Omissions.HasFlag(ChordOmission.Third))
+		if (Quality != ChordQuality.Power && !Omissions.HasFlag(ChordOmissions.Third))
 		{
 			_ = offsets.Add(Quality switch
 			{
@@ -340,7 +340,7 @@ public sealed record Chord
 			});
 		}
 
-		if (!Omissions.HasFlag(ChordOmission.Fifth))
+		if (!Omissions.HasFlag(ChordOmissions.Fifth))
 		{
 			_ = offsets.Add(Quality switch
 			{
@@ -369,13 +369,13 @@ public sealed record Chord
 			_ = offsets.Add(8);
 		}
 
-		AddTension(offsets, ChordTension.FlatNine, 13);
-		AddTension(offsets, ChordTension.Nine, 14);
-		AddTension(offsets, ChordTension.SharpNine, 15);
-		AddTension(offsets, ChordTension.Eleven, 17);
-		AddTension(offsets, ChordTension.SharpEleven, 18);
-		AddTension(offsets, ChordTension.FlatThirteen, 20);
-		AddTension(offsets, ChordTension.Thirteen, 21);
+		AddTension(offsets, ChordTensions.FlatNine, 13);
+		AddTension(offsets, ChordTensions.Nine, 14);
+		AddTension(offsets, ChordTensions.SharpNine, 15);
+		AddTension(offsets, ChordTensions.Eleven, 17);
+		AddTension(offsets, ChordTensions.SharpEleven, 18);
+		AddTension(offsets, ChordTensions.FlatThirteen, 20);
+		AddTension(offsets, ChordTensions.Thirteen, 21);
 
 		return [.. offsets];
 	}
@@ -506,35 +506,35 @@ public sealed record Chord
 		// Natural extension stack: 13 implies 9+11+13, 11 implies 9+11. A bare 9 with no
 		// seventh must be written "add9" so it does not imply a dominant seventh on reparse.
 		bool hasSeventh = Seventh != SeventhType.None;
-		if (Tensions.HasFlag(ChordTension.Thirteen))
+		if (Tensions.HasFlag(ChordTensions.Thirteen))
 		{
 			_ = sb.Append("13");
 		}
-		else if (Tensions.HasFlag(ChordTension.Eleven))
+		else if (Tensions.HasFlag(ChordTensions.Eleven))
 		{
 			_ = sb.Append("11");
 		}
-		else if (Tensions.HasFlag(ChordTension.Nine))
+		else if (Tensions.HasFlag(ChordTensions.Nine))
 		{
 			_ = sb.Append(hasSeventh ? "9" : "add9");
 		}
 
-		if (Tensions.HasFlag(ChordTension.FlatNine))
+		if (Tensions.HasFlag(ChordTensions.FlatNine))
 		{
 			_ = sb.Append("b9");
 		}
 
-		if (Tensions.HasFlag(ChordTension.SharpNine))
+		if (Tensions.HasFlag(ChordTensions.SharpNine))
 		{
 			_ = sb.Append("#9");
 		}
 
-		if (Tensions.HasFlag(ChordTension.SharpEleven))
+		if (Tensions.HasFlag(ChordTensions.SharpEleven))
 		{
 			_ = sb.Append("#11");
 		}
 
-		if (Tensions.HasFlag(ChordTension.FlatThirteen))
+		if (Tensions.HasFlag(ChordTensions.FlatThirteen))
 		{
 			_ = sb.Append("b13");
 		}
@@ -542,18 +542,18 @@ public sealed record Chord
 
 	private void AppendOmissions(System.Text.StringBuilder sb)
 	{
-		if (Omissions.HasFlag(ChordOmission.Third))
+		if (Omissions.HasFlag(ChordOmissions.Third))
 		{
 			_ = sb.Append("no3");
 		}
 
-		if (Omissions.HasFlag(ChordOmission.Fifth))
+		if (Omissions.HasFlag(ChordOmissions.Fifth))
 		{
 			_ = sb.Append("no5");
 		}
 	}
 
-	private void AddTension(SortedSet<int> offsets, ChordTension flag, int semitones)
+	private void AddTension(SortedSet<int> offsets, ChordTensions flag, int semitones)
 	{
 		if (Tensions.HasFlag(flag))
 		{

@@ -65,13 +65,13 @@ public sealed record Pitch
 	public static bool TryParse(string? name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Pitch? result)
 	{
 		result = null;
-		if (string.IsNullOrEmpty(name))
+		if (name is null || name.Length == 0)
 		{
 			return false;
 		}
 
 		int index = 0;
-		if (!Notation.TryReadNoteLetter(name![index], out NoteLetter letter))
+		if (!Notation.TryReadNoteLetter(name[index], out NoteLetter letter))
 		{
 			return false;
 		}
