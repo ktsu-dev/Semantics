@@ -42,15 +42,15 @@ public class AbsoluteDirectoryPathParentTests
 		Assert.AreEqual(root, root.Parent);
 	}
 
+	/// <remarks>
+	/// UNC paths are Windows-only, so the test is skipped elsewhere rather than reporting
+	/// inconclusive from inside the body.
+	/// </remarks>
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void Parent_OfUncShareRoot_ReturnsTheShareItself()
 	{
-		if (!OperatingSystem.IsWindows())
-		{
-			Assert.Inconclusive("UNC paths are Windows-only.");
-			return;
-		}
-
 		Assert.AreEqual(@"\\server\share", Dir(@"\\server\share\folder").Parent.WeakString);
 
 		AbsoluteDirectoryPath share = Dir(@"\\server\share");

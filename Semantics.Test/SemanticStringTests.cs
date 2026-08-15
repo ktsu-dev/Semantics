@@ -1341,14 +1341,9 @@ public class SemanticStringAdditionalTests
 	[TestMethod]
 	public void ErrorMessages_ContainTypeInformation()
 	{
-		try
-		{
-			ValidationTestSemanticString.Create("INVALID");
-			Assert.Fail("Expected ArgumentException");
-		}
-		catch (ArgumentException ex)
-		{
-			Assert.Contains(nameof(ValidationTestSemanticString), ex.Message);
-		}
+		ArgumentException ex = Assert.ThrowsExactly<ArgumentException>(
+			() => ValidationTestSemanticString.Create("INVALID"));
+
+		Assert.Contains(nameof(ValidationTestSemanticString), ex.Message);
 	}
 }
