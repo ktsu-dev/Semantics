@@ -6,7 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Polyfill" PrivateAssets="all" />
-    <PackageReference Include="System.Text.Json" />
     <!-- KTSU0001 (ktsu.Sdk 2.27.0+) requires System.Memory on netstandard2.1 as well, and
          System.Threading.Tasks.Extensions on netstandard2.0. -->
     <PackageReference Include="System.Memory" Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'" />

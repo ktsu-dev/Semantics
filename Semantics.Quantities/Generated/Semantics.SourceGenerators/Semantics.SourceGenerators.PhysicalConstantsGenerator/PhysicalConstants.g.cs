@@ -5,7 +5,6 @@ namespace ktsu.Semantics.Quantities;
 
 using System.Globalization;
 using System.Numerics;
-using ktsu.PreciseNumber;
 
 /// <summary>
 /// Provides fundamental physical constants used throughout the Semantics library.
@@ -18,17 +17,32 @@ public static class PhysicalConstants{
 	/// </summary>
 	public static class Acoustics{
 		/// <summary>Reference sound intensity: 1 × 10⁻¹² W/m² (threshold of hearing)</summary>
-		public static readonly PreciseNumber ReferenceSoundIntensity = PreciseNumber.Parse("1e-12", CultureInfo.InvariantCulture);
+		public static T ReferenceSoundIntensity<T>() where T : struct, INumber<T> => Values<T>.ReferenceSoundIntensity;
+/// <summary>Reference sound power: 1 × 10⁻¹² W</summary>
+		public static T ReferenceSoundPower<T>() where T : struct, INumber<T> => Values<T>.ReferenceSoundPower;
+/// <summary>Reference sound pressure: 20 × 10⁻⁶ Pa (threshold of hearing)</summary>
+		public static T ReferenceSoundPressure<T>() where T : struct, INumber<T> => Values<T>.ReferenceSoundPressure;
+/// <summary>Sabine reverberation constant: 0.161 s/m</summary>
+		public static T SabineConstant<T>() where T : struct, INumber<T> => Values<T>.SabineConstant;
 
-		/// <summary>Reference sound power: 1 × 10⁻¹² W</summary>
-		public static readonly PreciseNumber ReferenceSoundPower = PreciseNumber.Parse("1e-12", CultureInfo.InvariantCulture);
+/// <summary>
+		/// Caches the Acoustics constants materialised into <typeparamref name="T"/>.
+		/// </summary>
+		private static class Values<T>	where T : struct, INumber<T>
+		{
+			/// <summary>Reference sound intensity: 1 × 10⁻¹² W/m² (threshold of hearing)</summary>
+			internal static readonly T ReferenceSoundIntensity = T.Parse("1e-12", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Reference sound pressure: 20 × 10⁻⁶ Pa (threshold of hearing)</summary>
-		public static readonly PreciseNumber ReferenceSoundPressure = PreciseNumber.Parse("20e-6", CultureInfo.InvariantCulture);
+			/// <summary>Reference sound power: 1 × 10⁻¹² W</summary>
+			internal static readonly T ReferenceSoundPower = T.Parse("1e-12", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Sabine reverberation constant: 0.161 s/m</summary>
-		public static readonly PreciseNumber SabineConstant = PreciseNumber.Parse("0.161", CultureInfo.InvariantCulture);
+			/// <summary>Reference sound pressure: 20 × 10⁻⁶ Pa (threshold of hearing)</summary>
+			internal static readonly T ReferenceSoundPressure = T.Parse("20e-6", NumberStyles.Float, CultureInfo.InvariantCulture);
 
+			/// <summary>Sabine reverberation constant: 0.161 s/m</summary>
+			internal static readonly T SabineConstant = T.Parse("0.161", NumberStyles.Float, CultureInfo.InvariantCulture);
+
+		};
 	};
 
 	/// <summary>
@@ -36,14 +50,27 @@ public static class PhysicalConstants{
 	/// </summary>
 	public static class AngularMechanics{
 		/// <summary>Degrees per radian: 180/π ≈ 57.29577951308232</summary>
-		public static readonly PreciseNumber DegreesPerRadian = PreciseNumber.Parse("57.29577951308232087679815481410517033240547246656432154916024386120284714832155263244096899585111094418897585567892854596978524038074810298080734906", CultureInfo.InvariantCulture);
+		public static T DegreesPerRadian<T>() where T : struct, INumber<T> => Values<T>.DegreesPerRadian;
+/// <summary>Radians per degree: π/180 ≈ 0.017453292519943295</summary>
+		public static T RadiansPerDegree<T>() where T : struct, INumber<T> => Values<T>.RadiansPerDegree;
+/// <summary>2π - Full rotation in radians: 6.283185307179586</summary>
+		public static T TwoPi<T>() where T : struct, INumber<T> => Values<T>.TwoPi;
 
-		/// <summary>Radians per degree: π/180 ≈ 0.017453292519943295</summary>
-		public static readonly PreciseNumber RadiansPerDegree = PreciseNumber.Parse("0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983", CultureInfo.InvariantCulture);
+/// <summary>
+		/// Caches the AngularMechanics constants materialised into <typeparamref name="T"/>.
+		/// </summary>
+		private static class Values<T>	where T : struct, INumber<T>
+		{
+			/// <summary>Degrees per radian: 180/π ≈ 57.29577951308232</summary>
+			internal static readonly T DegreesPerRadian = T.Parse("57.29577951308232087679815481410517033240547246656432154916024386120284714832155263244096899585111094418897585567892854596978524038074810298080734906", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>2π - Full rotation in radians: 6.283185307179586</summary>
-		public static readonly PreciseNumber TwoPi = PreciseNumber.Parse("6.283185307179586476925286766559005768394338798750211641949889184615632812572417997256069650684234135964735462226659258240820374631042607435096896808248", CultureInfo.InvariantCulture);
+			/// <summary>Radians per degree: π/180 ≈ 0.017453292519943295</summary>
+			internal static readonly T RadiansPerDegree = T.Parse("0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983", NumberStyles.Float, CultureInfo.InvariantCulture);
 
+			/// <summary>2π - Full rotation in radians: 6.283185307179586</summary>
+			internal static readonly T TwoPi = T.Parse("6.283185307179586476925286766559005768394338798750211641949889184615632812572417997256069650684234135964735462226659258240820374631042607435096896808248", NumberStyles.Float, CultureInfo.InvariantCulture);
+
+		};
 	};
 
 	/// <summary>
@@ -51,20 +78,37 @@ public static class PhysicalConstants{
 	/// </summary>
 	public static class Chemistry{
 		/// <summary>Gas constant: 8.31446261815324 J/(mol·K) (exact, derived from Avogadro and Boltzmann constants)</summary>
-		public static readonly PreciseNumber GasConstant = PreciseNumber.Parse("8.31446261815324", CultureInfo.InvariantCulture);
+		public static T GasConstant<T>() where T : struct, INumber<T> => Values<T>.GasConstant;
+/// <summary>Natural logarithm of 2: 0.6931471805599453</summary>
+		public static T Ln2<T>() where T : struct, INumber<T> => Values<T>.Ln2;
+/// <summary>Molar volume of ideal gas at STP: 22.413969545014137 L/mol (calculated from R*T/P at 273.15K, 101325Pa)</summary>
+		public static T MolarVolumeSTP<T>() where T : struct, INumber<T> => Values<T>.MolarVolumeSTP;
+/// <summary>Neutral pH value at 25°C: 7.0</summary>
+		public static T NeutralPH<T>() where T : struct, INumber<T> => Values<T>.NeutralPH;
+/// <summary>Water ion product (Kw) at 25°C: 1.0 × 10⁻¹⁴ (pKw = 14.0)</summary>
+		public static T WaterIonProduct<T>() where T : struct, INumber<T> => Values<T>.WaterIonProduct;
 
-		/// <summary>Natural logarithm of 2: 0.6931471805599453</summary>
-		public static readonly PreciseNumber Ln2 = PreciseNumber.Parse("0.6931471805599453094172321214581765680755001343602552541206800094933936219696947156058633269964186875420014810205706857336855202357581305570326707", CultureInfo.InvariantCulture);
+/// <summary>
+		/// Caches the Chemistry constants materialised into <typeparamref name="T"/>.
+		/// </summary>
+		private static class Values<T>	where T : struct, INumber<T>
+		{
+			/// <summary>Gas constant: 8.31446261815324 J/(mol·K) (exact, derived from Avogadro and Boltzmann constants)</summary>
+			internal static readonly T GasConstant = T.Parse("8.31446261815324", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Molar volume of ideal gas at STP: 22.413969545014137 L/mol (calculated from R*T/P at 273.15K, 101325Pa)</summary>
-		public static readonly PreciseNumber MolarVolumeSTP = PreciseNumber.Parse("22.413969545014137", CultureInfo.InvariantCulture);
+			/// <summary>Natural logarithm of 2: 0.6931471805599453</summary>
+			internal static readonly T Ln2 = T.Parse("0.6931471805599453094172321214581765680755001343602552541206800094933936219696947156058633269964186875420014810205706857336855202357581305570326707", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Neutral pH value at 25°C: 7.0</summary>
-		public static readonly PreciseNumber NeutralPH = PreciseNumber.Parse("7.0", CultureInfo.InvariantCulture);
+			/// <summary>Molar volume of ideal gas at STP: 22.413969545014137 L/mol (calculated from R*T/P at 273.15K, 101325Pa)</summary>
+			internal static readonly T MolarVolumeSTP = T.Parse("22.413969545014137", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Water ion product (Kw) at 25°C: 1.0 × 10⁻¹⁴ (pKw = 14.0)</summary>
-		public static readonly PreciseNumber WaterIonProduct = PreciseNumber.Parse("14.0", CultureInfo.InvariantCulture);
+			/// <summary>Neutral pH value at 25°C: 7.0</summary>
+			internal static readonly T NeutralPH = T.Parse("7.0", NumberStyles.Float, CultureInfo.InvariantCulture);
 
+			/// <summary>Water ion product (Kw) at 25°C: 1.0 × 10⁻¹⁴ (pKw = 14.0)</summary>
+			internal static readonly T WaterIonProduct = T.Parse("14.0", NumberStyles.Float, CultureInfo.InvariantCulture);
+
+		};
 	};
 
 	/// <summary>
@@ -72,11 +116,22 @@ public static class PhysicalConstants{
 	/// </summary>
 	public static class ClassicalMechanics{
 		/// <summary>Standard atmospheric pressure: 101,325 Pa (exact by definition)</summary>
-		public static readonly PreciseNumber StandardAtmosphericPressure = PreciseNumber.Parse("101325", CultureInfo.InvariantCulture);
+		public static T StandardAtmosphericPressure<T>() where T : struct, INumber<T> => Values<T>.StandardAtmosphericPressure;
+/// <summary>Standard gravitational acceleration: 9.80665 m/s² (exact by definition)</summary>
+		public static T StandardGravity<T>() where T : struct, INumber<T> => Values<T>.StandardGravity;
 
-		/// <summary>Standard gravitational acceleration: 9.80665 m/s² (exact by definition)</summary>
-		public static readonly PreciseNumber StandardGravity = PreciseNumber.Parse("9.80665", CultureInfo.InvariantCulture);
+/// <summary>
+		/// Caches the ClassicalMechanics constants materialised into <typeparamref name="T"/>.
+		/// </summary>
+		private static class Values<T>	where T : struct, INumber<T>
+		{
+			/// <summary>Standard atmospheric pressure: 101,325 Pa (exact by definition)</summary>
+			internal static readonly T StandardAtmosphericPressure = T.Parse("101325", NumberStyles.Float, CultureInfo.InvariantCulture);
 
+			/// <summary>Standard gravitational acceleration: 9.80665 m/s² (exact by definition)</summary>
+			internal static readonly T StandardGravity = T.Parse("9.80665", NumberStyles.Float, CultureInfo.InvariantCulture);
+
+		};
 	};
 
 	/// <summary>
@@ -84,11 +139,22 @@ public static class PhysicalConstants{
 	/// </summary>
 	public static class FluidMechanics{
 		/// <summary>Standard air density at 15°C and 1 atm: 1.225 kg/m³ (ISO 2533)</summary>
-		public static readonly PreciseNumber StandardAirDensity = PreciseNumber.Parse("1.225", CultureInfo.InvariantCulture);
+		public static T StandardAirDensity<T>() where T : struct, INumber<T> => Values<T>.StandardAirDensity;
+/// <summary>Water surface tension at 20°C: 0.0728 N/m (NIST)</summary>
+		public static T WaterSurfaceTension<T>() where T : struct, INumber<T> => Values<T>.WaterSurfaceTension;
 
-		/// <summary>Water surface tension at 20°C: 0.0728 N/m (NIST)</summary>
-		public static readonly PreciseNumber WaterSurfaceTension = PreciseNumber.Parse("0.0728", CultureInfo.InvariantCulture);
+/// <summary>
+		/// Caches the FluidMechanics constants materialised into <typeparamref name="T"/>.
+		/// </summary>
+		private static class Values<T>	where T : struct, INumber<T>
+		{
+			/// <summary>Standard air density at 15°C and 1 atm: 1.225 kg/m³ (ISO 2533)</summary>
+			internal static readonly T StandardAirDensity = T.Parse("1.225", NumberStyles.Float, CultureInfo.InvariantCulture);
 
+			/// <summary>Water surface tension at 20°C: 0.0728 N/m (NIST)</summary>
+			internal static readonly T WaterSurfaceTension = T.Parse("0.0728", NumberStyles.Float, CultureInfo.InvariantCulture);
+
+		};
 	};
 
 	/// <summary>
@@ -96,32 +162,57 @@ public static class PhysicalConstants{
 	/// </summary>
 	public static class Fundamental{
 		/// <summary>Avogadro's number: 6.02214076 × 10²³ entities/mol (exact, SI defining constant)</summary>
-		public static readonly PreciseNumber AvogadroNumber = PreciseNumber.Parse("6.02214076e23", CultureInfo.InvariantCulture);
+		public static T AvogadroNumber<T>() where T : struct, INumber<T> => Values<T>.AvogadroNumber;
+/// <summary>Boltzmann constant: 1.380649 × 10⁻²³ J/K (exact, SI defining constant)</summary>
+		public static T BoltzmannConstant<T>() where T : struct, INumber<T> => Values<T>.BoltzmannConstant;
+/// <summary>Elementary charge: 1.602176634 × 10⁻¹⁹ C (exact, SI defining constant)</summary>
+		public static T ElementaryCharge<T>() where T : struct, INumber<T> => Values<T>.ElementaryCharge;
+/// <summary>Fine structure constant: 7.2973525693 × 10⁻³ (dimensionless, 2018 CODATA)</summary>
+		public static T FineStructureConstant<T>() where T : struct, INumber<T> => Values<T>.FineStructureConstant;
+/// <summary>Gravitational constant: 6.67430 × 10⁻¹¹ m³/(kg⋅s²) (2018 CODATA)</summary>
+		public static T GravitationalConstant<T>() where T : struct, INumber<T> => Values<T>.GravitationalConstant;
+/// <summary>Magnetic permeability of free space: 4π × 10⁻⁷ H/m (exact by definition)</summary>
+		public static T PermeabilityOfFreeSpace<T>() where T : struct, INumber<T> => Values<T>.PermeabilityOfFreeSpace;
+/// <summary>Electric permittivity of free space: 8.8541878128 × 10⁻¹² F/m (exact, derived)</summary>
+		public static T PermittivityOfFreeSpace<T>() where T : struct, INumber<T> => Values<T>.PermittivityOfFreeSpace;
+/// <summary>Planck constant: 6.62607015 × 10⁻³⁴ J·s (exact, SI defining constant)</summary>
+		public static T PlanckConstant<T>() where T : struct, INumber<T> => Values<T>.PlanckConstant;
+/// <summary>Speed of light in vacuum: 299,792,458 m/s (exact, SI defining constant)</summary>
+		public static T SpeedOfLight<T>() where T : struct, INumber<T> => Values<T>.SpeedOfLight;
 
-		/// <summary>Boltzmann constant: 1.380649 × 10⁻²³ J/K (exact, SI defining constant)</summary>
-		public static readonly PreciseNumber BoltzmannConstant = PreciseNumber.Parse("1.380649e-23", CultureInfo.InvariantCulture);
+/// <summary>
+		/// Caches the Fundamental constants materialised into <typeparamref name="T"/>.
+		/// </summary>
+		private static class Values<T>	where T : struct, INumber<T>
+		{
+			/// <summary>Avogadro's number: 6.02214076 × 10²³ entities/mol (exact, SI defining constant)</summary>
+			internal static readonly T AvogadroNumber = T.Parse("6.02214076e23", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Elementary charge: 1.602176634 × 10⁻¹⁹ C (exact, SI defining constant)</summary>
-		public static readonly PreciseNumber ElementaryCharge = PreciseNumber.Parse("1.602176634e-19", CultureInfo.InvariantCulture);
+			/// <summary>Boltzmann constant: 1.380649 × 10⁻²³ J/K (exact, SI defining constant)</summary>
+			internal static readonly T BoltzmannConstant = T.Parse("1.380649e-23", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Fine structure constant: 7.2973525693 × 10⁻³ (dimensionless, 2018 CODATA)</summary>
-		public static readonly PreciseNumber FineStructureConstant = PreciseNumber.Parse("7.2973525693e-3", CultureInfo.InvariantCulture);
+			/// <summary>Elementary charge: 1.602176634 × 10⁻¹⁹ C (exact, SI defining constant)</summary>
+			internal static readonly T ElementaryCharge = T.Parse("1.602176634e-19", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Gravitational constant: 6.67430 × 10⁻¹¹ m³/(kg⋅s²) (2018 CODATA)</summary>
-		public static readonly PreciseNumber GravitationalConstant = PreciseNumber.Parse("6.67430e-11", CultureInfo.InvariantCulture);
+			/// <summary>Fine structure constant: 7.2973525693 × 10⁻³ (dimensionless, 2018 CODATA)</summary>
+			internal static readonly T FineStructureConstant = T.Parse("7.2973525693e-3", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Magnetic permeability of free space: 4π × 10⁻⁷ H/m (exact by definition)</summary>
-		public static readonly PreciseNumber PermeabilityOfFreeSpace = PreciseNumber.Parse("1.25663706212e-6", CultureInfo.InvariantCulture);
+			/// <summary>Gravitational constant: 6.67430 × 10⁻¹¹ m³/(kg⋅s²) (2018 CODATA)</summary>
+			internal static readonly T GravitationalConstant = T.Parse("6.67430e-11", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Electric permittivity of free space: 8.8541878128 × 10⁻¹² F/m (exact, derived)</summary>
-		public static readonly PreciseNumber PermittivityOfFreeSpace = PreciseNumber.Parse("8.8541878128e-12", CultureInfo.InvariantCulture);
+			/// <summary>Magnetic permeability of free space: 4π × 10⁻⁷ H/m (exact by definition)</summary>
+			internal static readonly T PermeabilityOfFreeSpace = T.Parse("1.25663706212e-6", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Planck constant: 6.62607015 × 10⁻³⁴ J·s (exact, SI defining constant)</summary>
-		public static readonly PreciseNumber PlanckConstant = PreciseNumber.Parse("6.62607015e-34", CultureInfo.InvariantCulture);
+			/// <summary>Electric permittivity of free space: 8.8541878128 × 10⁻¹² F/m (exact, derived)</summary>
+			internal static readonly T PermittivityOfFreeSpace = T.Parse("8.8541878128e-12", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Speed of light in vacuum: 299,792,458 m/s (exact, SI defining constant)</summary>
-		public static readonly PreciseNumber SpeedOfLight = PreciseNumber.Parse("299792458", CultureInfo.InvariantCulture);
+			/// <summary>Planck constant: 6.62607015 × 10⁻³⁴ J·s (exact, SI defining constant)</summary>
+			internal static readonly T PlanckConstant = T.Parse("6.62607015e-34", NumberStyles.Float, CultureInfo.InvariantCulture);
 
+			/// <summary>Speed of light in vacuum: 299,792,458 m/s (exact, SI defining constant)</summary>
+			internal static readonly T SpeedOfLight = T.Parse("299792458", NumberStyles.Float, CultureInfo.InvariantCulture);
+
+		};
 	};
 
 	/// <summary>
@@ -129,11 +220,22 @@ public static class PhysicalConstants{
 	/// </summary>
 	public static class NuclearPhysics{
 		/// <summary>Atomic mass unit: 1.66053906660 × 10⁻²⁷ kg (2018 CODATA)</summary>
-		public static readonly PreciseNumber AtomicMassUnit = PreciseNumber.Parse("1.66053906660e-27", CultureInfo.InvariantCulture);
+		public static T AtomicMassUnit<T>() where T : struct, INumber<T> => Values<T>.AtomicMassUnit;
+/// <summary>Nuclear magneton: 5.0507837461 × 10⁻²⁷ J/T (2018 CODATA)</summary>
+		public static T NuclearMagneton<T>() where T : struct, INumber<T> => Values<T>.NuclearMagneton;
 
-		/// <summary>Nuclear magneton: 5.0507837461 × 10⁻²⁷ J/T (2018 CODATA)</summary>
-		public static readonly PreciseNumber NuclearMagneton = PreciseNumber.Parse("5.0507837461e-27", CultureInfo.InvariantCulture);
+/// <summary>
+		/// Caches the NuclearPhysics constants materialised into <typeparamref name="T"/>.
+		/// </summary>
+		private static class Values<T>	where T : struct, INumber<T>
+		{
+			/// <summary>Atomic mass unit: 1.66053906660 × 10⁻²⁷ kg (2018 CODATA)</summary>
+			internal static readonly T AtomicMassUnit = T.Parse("1.66053906660e-27", NumberStyles.Float, CultureInfo.InvariantCulture);
 
+			/// <summary>Nuclear magneton: 5.0507837461 × 10⁻²⁷ J/T (2018 CODATA)</summary>
+			internal static readonly T NuclearMagneton = T.Parse("5.0507837461e-27", NumberStyles.Float, CultureInfo.InvariantCulture);
+
+		};
 	};
 
 	/// <summary>
@@ -141,8 +243,17 @@ public static class PhysicalConstants{
 	/// </summary>
 	public static class Optics{
 		/// <summary>Luminous efficacy of monochromatic radiation at 540 THz: 683 lm/W (exact, SI defining constant)</summary>
-		public static readonly PreciseNumber LuminousEfficacy = PreciseNumber.Parse("683.0", CultureInfo.InvariantCulture);
+		public static T LuminousEfficacy<T>() where T : struct, INumber<T> => Values<T>.LuminousEfficacy;
 
+/// <summary>
+		/// Caches the Optics constants materialised into <typeparamref name="T"/>.
+		/// </summary>
+		private static class Values<T>	where T : struct, INumber<T>
+		{
+			/// <summary>Luminous efficacy of monochromatic radiation at 540 THz: 683 lm/W (exact, SI defining constant)</summary>
+			internal static readonly T LuminousEfficacy = T.Parse("683.0", NumberStyles.Float, CultureInfo.InvariantCulture);
+
+		};
 	};
 
 	/// <summary>
@@ -150,17 +261,32 @@ public static class PhysicalConstants{
 	/// </summary>
 	public static class Thermodynamics{
 		/// <summary>Absolute zero in Celsius: 273.15 K (exact by definition)</summary>
-		public static readonly PreciseNumber AbsoluteZeroInCelsius = PreciseNumber.Parse("273.15", CultureInfo.InvariantCulture);
+		public static T AbsoluteZeroInCelsius<T>() where T : struct, INumber<T> => Values<T>.AbsoluteZeroInCelsius;
+/// <summary>Standard temperature (STP): 273.15 K (0°C)</summary>
+		public static T StandardTemperature<T>() where T : struct, INumber<T> => Values<T>.StandardTemperature;
+/// <summary>Water boiling point at 1 atm: 373.15 K (100°C)</summary>
+		public static T WaterBoilingPoint<T>() where T : struct, INumber<T> => Values<T>.WaterBoilingPoint;
+/// <summary>Water triple point: 273.16 K (exact by definition)</summary>
+		public static T WaterTriplePoint<T>() where T : struct, INumber<T> => Values<T>.WaterTriplePoint;
 
-		/// <summary>Standard temperature (STP): 273.15 K (0°C)</summary>
-		public static readonly PreciseNumber StandardTemperature = PreciseNumber.Parse("273.15", CultureInfo.InvariantCulture);
+/// <summary>
+		/// Caches the Thermodynamics constants materialised into <typeparamref name="T"/>.
+		/// </summary>
+		private static class Values<T>	where T : struct, INumber<T>
+		{
+			/// <summary>Absolute zero in Celsius: 273.15 K (exact by definition)</summary>
+			internal static readonly T AbsoluteZeroInCelsius = T.Parse("273.15", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Water boiling point at 1 atm: 373.15 K (100°C)</summary>
-		public static readonly PreciseNumber WaterBoilingPoint = PreciseNumber.Parse("373.15", CultureInfo.InvariantCulture);
+			/// <summary>Standard temperature (STP): 273.15 K (0°C)</summary>
+			internal static readonly T StandardTemperature = T.Parse("273.15", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-		/// <summary>Water triple point: 273.16 K (exact by definition)</summary>
-		public static readonly PreciseNumber WaterTriplePoint = PreciseNumber.Parse("273.16", CultureInfo.InvariantCulture);
+			/// <summary>Water boiling point at 1 atm: 373.15 K (100°C)</summary>
+			internal static readonly T WaterBoilingPoint = T.Parse("373.15", NumberStyles.Float, CultureInfo.InvariantCulture);
 
+			/// <summary>Water triple point: 273.16 K (exact by definition)</summary>
+			internal static readonly T WaterTriplePoint = T.Parse("273.16", NumberStyles.Float, CultureInfo.InvariantCulture);
+
+		};
 	};
 
 	/// <summary>
@@ -168,69 +294,69 @@ public static class PhysicalConstants{
 	/// </summary>
 	public static class Generic{
 		/// <summary>Gets absolute zero in celsius: 273.15 k (exact by definition) as type T.</summary>
-		public static T AbsoluteZeroInCelsius<T>() where T : struct, INumber<T> => Thermodynamics.AbsoluteZeroInCelsius.To<T>();
+		public static T AbsoluteZeroInCelsius<T>() where T : struct, INumber<T> => Thermodynamics.AbsoluteZeroInCelsius<T>();
 /// <summary>Gets atomic mass unit: 1.66053906660 × 10⁻²⁷ kg (2018 codata) as type T.</summary>
-		public static T AtomicMassUnit<T>() where T : struct, INumber<T> => NuclearPhysics.AtomicMassUnit.To<T>();
+		public static T AtomicMassUnit<T>() where T : struct, INumber<T> => NuclearPhysics.AtomicMassUnit<T>();
 /// <summary>Gets avogadro's number: 6.02214076 × 10²³ entities/mol (exact, si defining constant) as type T.</summary>
-		public static T AvogadroNumber<T>() where T : struct, INumber<T> => Fundamental.AvogadroNumber.To<T>();
+		public static T AvogadroNumber<T>() where T : struct, INumber<T> => Fundamental.AvogadroNumber<T>();
 /// <summary>Gets boltzmann constant: 1.380649 × 10⁻²³ j/k (exact, si defining constant) as type T.</summary>
-		public static T BoltzmannConstant<T>() where T : struct, INumber<T> => Fundamental.BoltzmannConstant.To<T>();
+		public static T BoltzmannConstant<T>() where T : struct, INumber<T> => Fundamental.BoltzmannConstant<T>();
 /// <summary>Gets degrees per radian: 180/π ≈ 57.29577951308232 as type T.</summary>
-		public static T DegreesPerRadian<T>() where T : struct, INumber<T> => AngularMechanics.DegreesPerRadian.To<T>();
+		public static T DegreesPerRadian<T>() where T : struct, INumber<T> => AngularMechanics.DegreesPerRadian<T>();
 /// <summary>Gets elementary charge: 1.602176634 × 10⁻¹⁹ c (exact, si defining constant) as type T.</summary>
-		public static T ElementaryCharge<T>() where T : struct, INumber<T> => Fundamental.ElementaryCharge.To<T>();
+		public static T ElementaryCharge<T>() where T : struct, INumber<T> => Fundamental.ElementaryCharge<T>();
 /// <summary>Gets fine structure constant: 7.2973525693 × 10⁻³ (dimensionless, 2018 codata) as type T.</summary>
-		public static T FineStructureConstant<T>() where T : struct, INumber<T> => Fundamental.FineStructureConstant.To<T>();
+		public static T FineStructureConstant<T>() where T : struct, INumber<T> => Fundamental.FineStructureConstant<T>();
 /// <summary>Gets gas constant: 8.31446261815324 j/(mol·k) (exact, derived from avogadro and boltzmann constants) as type T.</summary>
-		public static T GasConstant<T>() where T : struct, INumber<T> => Chemistry.GasConstant.To<T>();
+		public static T GasConstant<T>() where T : struct, INumber<T> => Chemistry.GasConstant<T>();
 /// <summary>Gets gravitational constant: 6.67430 × 10⁻¹¹ m³/(kg⋅s²) (2018 codata) as type T.</summary>
-		public static T GravitationalConstant<T>() where T : struct, INumber<T> => Fundamental.GravitationalConstant.To<T>();
+		public static T GravitationalConstant<T>() where T : struct, INumber<T> => Fundamental.GravitationalConstant<T>();
 /// <summary>Gets natural logarithm of 2: 0.6931471805599453 as type T.</summary>
-		public static T Ln2<T>() where T : struct, INumber<T> => Chemistry.Ln2.To<T>();
+		public static T Ln2<T>() where T : struct, INumber<T> => Chemistry.Ln2<T>();
 /// <summary>Gets luminous efficacy of monochromatic radiation at 540 thz: 683 lm/w (exact, si defining constant) as type T.</summary>
-		public static T LuminousEfficacy<T>() where T : struct, INumber<T> => Optics.LuminousEfficacy.To<T>();
+		public static T LuminousEfficacy<T>() where T : struct, INumber<T> => Optics.LuminousEfficacy<T>();
 /// <summary>Gets molar volume of ideal gas at stp: 22.413969545014137 l/mol (calculated from r*t/p at 273.15k, 101325pa) as type T.</summary>
-		public static T MolarVolumeSTP<T>() where T : struct, INumber<T> => Chemistry.MolarVolumeSTP.To<T>();
+		public static T MolarVolumeSTP<T>() where T : struct, INumber<T> => Chemistry.MolarVolumeSTP<T>();
 /// <summary>Gets neutral ph value at 25°c: 7.0 as type T.</summary>
-		public static T NeutralPH<T>() where T : struct, INumber<T> => Chemistry.NeutralPH.To<T>();
+		public static T NeutralPH<T>() where T : struct, INumber<T> => Chemistry.NeutralPH<T>();
 /// <summary>Gets nuclear magneton: 5.0507837461 × 10⁻²⁷ j/t (2018 codata) as type T.</summary>
-		public static T NuclearMagneton<T>() where T : struct, INumber<T> => NuclearPhysics.NuclearMagneton.To<T>();
+		public static T NuclearMagneton<T>() where T : struct, INumber<T> => NuclearPhysics.NuclearMagneton<T>();
 /// <summary>Gets magnetic permeability of free space: 4π × 10⁻⁷ h/m (exact by definition) as type T.</summary>
-		public static T PermeabilityOfFreeSpace<T>() where T : struct, INumber<T> => Fundamental.PermeabilityOfFreeSpace.To<T>();
+		public static T PermeabilityOfFreeSpace<T>() where T : struct, INumber<T> => Fundamental.PermeabilityOfFreeSpace<T>();
 /// <summary>Gets electric permittivity of free space: 8.8541878128 × 10⁻¹² f/m (exact, derived) as type T.</summary>
-		public static T PermittivityOfFreeSpace<T>() where T : struct, INumber<T> => Fundamental.PermittivityOfFreeSpace.To<T>();
+		public static T PermittivityOfFreeSpace<T>() where T : struct, INumber<T> => Fundamental.PermittivityOfFreeSpace<T>();
 /// <summary>Gets planck constant: 6.62607015 × 10⁻³⁴ j·s (exact, si defining constant) as type T.</summary>
-		public static T PlanckConstant<T>() where T : struct, INumber<T> => Fundamental.PlanckConstant.To<T>();
+		public static T PlanckConstant<T>() where T : struct, INumber<T> => Fundamental.PlanckConstant<T>();
 /// <summary>Gets radians per degree: π/180 ≈ 0.017453292519943295 as type T.</summary>
-		public static T RadiansPerDegree<T>() where T : struct, INumber<T> => AngularMechanics.RadiansPerDegree.To<T>();
+		public static T RadiansPerDegree<T>() where T : struct, INumber<T> => AngularMechanics.RadiansPerDegree<T>();
 /// <summary>Gets reference sound intensity: 1 × 10⁻¹² w/m² (threshold of hearing) as type T.</summary>
-		public static T ReferenceSoundIntensity<T>() where T : struct, INumber<T> => Acoustics.ReferenceSoundIntensity.To<T>();
+		public static T ReferenceSoundIntensity<T>() where T : struct, INumber<T> => Acoustics.ReferenceSoundIntensity<T>();
 /// <summary>Gets reference sound power: 1 × 10⁻¹² w as type T.</summary>
-		public static T ReferenceSoundPower<T>() where T : struct, INumber<T> => Acoustics.ReferenceSoundPower.To<T>();
+		public static T ReferenceSoundPower<T>() where T : struct, INumber<T> => Acoustics.ReferenceSoundPower<T>();
 /// <summary>Gets reference sound pressure: 20 × 10⁻⁶ pa (threshold of hearing) as type T.</summary>
-		public static T ReferenceSoundPressure<T>() where T : struct, INumber<T> => Acoustics.ReferenceSoundPressure.To<T>();
+		public static T ReferenceSoundPressure<T>() where T : struct, INumber<T> => Acoustics.ReferenceSoundPressure<T>();
 /// <summary>Gets sabine reverberation constant: 0.161 s/m as type T.</summary>
-		public static T SabineConstant<T>() where T : struct, INumber<T> => Acoustics.SabineConstant.To<T>();
+		public static T SabineConstant<T>() where T : struct, INumber<T> => Acoustics.SabineConstant<T>();
 /// <summary>Gets speed of light in vacuum: 299,792,458 m/s (exact, si defining constant) as type T.</summary>
-		public static T SpeedOfLight<T>() where T : struct, INumber<T> => Fundamental.SpeedOfLight.To<T>();
+		public static T SpeedOfLight<T>() where T : struct, INumber<T> => Fundamental.SpeedOfLight<T>();
 /// <summary>Gets standard air density at 15°c and 1 atm: 1.225 kg/m³ (iso 2533) as type T.</summary>
-		public static T StandardAirDensity<T>() where T : struct, INumber<T> => FluidMechanics.StandardAirDensity.To<T>();
+		public static T StandardAirDensity<T>() where T : struct, INumber<T> => FluidMechanics.StandardAirDensity<T>();
 /// <summary>Gets standard atmospheric pressure: 101,325 pa (exact by definition) as type T.</summary>
-		public static T StandardAtmosphericPressure<T>() where T : struct, INumber<T> => ClassicalMechanics.StandardAtmosphericPressure.To<T>();
+		public static T StandardAtmosphericPressure<T>() where T : struct, INumber<T> => ClassicalMechanics.StandardAtmosphericPressure<T>();
 /// <summary>Gets standard gravitational acceleration: 9.80665 m/s² (exact by definition) as type T.</summary>
-		public static T StandardGravity<T>() where T : struct, INumber<T> => ClassicalMechanics.StandardGravity.To<T>();
+		public static T StandardGravity<T>() where T : struct, INumber<T> => ClassicalMechanics.StandardGravity<T>();
 /// <summary>Gets standard temperature (stp): 273.15 k (0°c) as type T.</summary>
-		public static T StandardTemperature<T>() where T : struct, INumber<T> => Thermodynamics.StandardTemperature.To<T>();
+		public static T StandardTemperature<T>() where T : struct, INumber<T> => Thermodynamics.StandardTemperature<T>();
 /// <summary>Gets 2π - full rotation in radians: 6.283185307179586 as type T.</summary>
-		public static T TwoPi<T>() where T : struct, INumber<T> => AngularMechanics.TwoPi.To<T>();
+		public static T TwoPi<T>() where T : struct, INumber<T> => AngularMechanics.TwoPi<T>();
 /// <summary>Gets water boiling point at 1 atm: 373.15 k (100°c) as type T.</summary>
-		public static T WaterBoilingPoint<T>() where T : struct, INumber<T> => Thermodynamics.WaterBoilingPoint.To<T>();
+		public static T WaterBoilingPoint<T>() where T : struct, INumber<T> => Thermodynamics.WaterBoilingPoint<T>();
 /// <summary>Gets water ion product (kw) at 25°c: 1.0 × 10⁻¹⁴ (pkw = 14.0) as type T.</summary>
-		public static T WaterIonProduct<T>() where T : struct, INumber<T> => Chemistry.WaterIonProduct.To<T>();
+		public static T WaterIonProduct<T>() where T : struct, INumber<T> => Chemistry.WaterIonProduct<T>();
 /// <summary>Gets water surface tension at 20°c: 0.0728 n/m (nist) as type T.</summary>
-		public static T WaterSurfaceTension<T>() where T : struct, INumber<T> => FluidMechanics.WaterSurfaceTension.To<T>();
+		public static T WaterSurfaceTension<T>() where T : struct, INumber<T> => FluidMechanics.WaterSurfaceTension<T>();
 /// <summary>Gets water triple point: 273.16 k (exact by definition) as type T.</summary>
-		public static T WaterTriplePoint<T>() where T : struct, INumber<T> => Thermodynamics.WaterTriplePoint.To<T>();
+		public static T WaterTriplePoint<T>() where T : struct, INumber<T> => Thermodynamics.WaterTriplePoint<T>();
 };
 };
 

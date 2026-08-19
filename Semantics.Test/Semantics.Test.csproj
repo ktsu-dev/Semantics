@@ -35,6 +35,9 @@
          FileNotFoundException without CodeBlocker present. PropertyTemplateTests also needs its
          types at compile time. -->
     <PackageReference Include="ktsu.CodeBlocker" />
+    <!-- SemanticStringJsonTests exercises the converter registration that consumers are
+         expected to perform; Semantics.Strings itself no longer depends on this. -->
+    <PackageReference Include="ktsu.RoundTripStringJsonConverter" />
   </ItemGroup>
 
   <ItemGroup>

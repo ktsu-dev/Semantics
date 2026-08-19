@@ -16,7 +16,6 @@
     <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ktsu.PreciseNumber" />
     <PackageReference Include="Polyfill" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>

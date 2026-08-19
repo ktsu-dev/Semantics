@@ -79,18 +79,23 @@ These are now baked into the generator and enforced by tests. **Do not reopen wi
 `PhysicalConstants` is **generated** from `domains.json`. Public surface:
 
 ```csharp
-// Domain-grouped PreciseNumber values:
-PhysicalConstants.Fundamental.SpeedOfLight
-PhysicalConstants.Fundamental.PlanckConstant
-PhysicalConstants.AngularMechanics.DegreesPerRadian
+// Domain-grouped generic accessors:
+PhysicalConstants.Fundamental.SpeedOfLight<T>()
+PhysicalConstants.Fundamental.PlanckConstant<T>()
+PhysicalConstants.AngularMechanics.DegreesPerRadian<T>()
 
-// Generic accessors that materialise into any T : INumber<T>:
+// Flat accessors over every constant, regardless of domain:
 PhysicalConstants.Generic.SpeedOfLight<T>()
 PhysicalConstants.Generic.PlanckConstant<T>()
 PhysicalConstants.Generic.DegreesPerRadian<T>()
 ```
 
-Backing values are stored as `PreciseNumber` and converted with `T.CreateChecked` per call.
+Each constant is emitted as `T.Parse(literal, NumberStyles.Float, CultureInfo.InvariantCulture)`
+into a private `Values<T>` holder nested in its domain class, so the literal is parsed once per
+closed generic type and the package needs no arbitrary-precision dependency. `NumberStyles.Float`
+is mandatory, not incidental: several literals are in exponent form (`6.62607015e-34`, `20e-6`),
+and the `Parse(string, IFormatProvider)` overload resolves to `NumberStyles.Number` for some
+numeric types, which rejects an exponent.
 
 ### Operators and physics relationships
 
@@ -186,3 +191,4 @@ This file is the entry point. For deeper material:
 - `docs/advanced-usage.md` — advanced patterns for strings/paths.
 - `docs/migration-guide-2.0.md` — 1.x → 2.0 upgrade guide (renames, namespace moves, behavioral changes).
 - `docs/migration-guide-3.0.md` — 2.x → 3.0 upgrade guide (removed first-class .NET type attributes, chord flag enum renames).
+- `docs/migration-guide-3.1.md` — 3.0 → 3.1 upgrade guide (JSON converter is now opt-in, `PhysicalConstants` domain fields became generic accessors).

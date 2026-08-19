@@ -201,7 +201,7 @@ var R   = PhysicalConstants.Generic.GasConstant<decimal>();
 var ftM = PhysicalConstants.Conversion.FeetToMeters<double>();      // 0.3048
 ```
 
-Backing storage is `PreciseNumber`; the accessor converts via `T.CreateChecked` per call.
+Each constant is parsed from its metadata literal directly into `T` and cached per closed generic type. Constants are also reachable by domain: `PhysicalConstants.Fundamental.SpeedOfLight<double>()`.
 
 ### Adding new dimensions / overloads / relationships
 
