@@ -27,7 +27,15 @@ Validation is declarative. You attach attributes such as `[IsEmailAddress]` or `
 - **Fluent conversions**: `"user@example.com".As<EmailAddress>()` and cross-type reinterpretation via `source.As<TSource, TTarget>()`.
 - **Factory abstraction for dependency injection**: `ISemanticStringFactory<T>` / `SemanticStringFactory<T>` for constructor injection, with a `SemanticStringFactory<T>.Default` singleton for non-DI use.
 - **Span-friendly and allocation-conscious**: span-based overloads and a `ref struct` split enumerator on the target frameworks that support them.
-- **JSON round-trip serialization**: values serialize as their underlying string via `ktsu.RoundTripStringJsonConverter`.
+- **Dependency-free**: no NuGet dependencies on .NET 8 and later.
+- **JSON round-trip serialization**: opt-in. A semantic string is an `IEnumerable<char>`, so `System.Text.Json` writes it as an array of characters unless you register a converter. Add one that writes `ToString()` and reads back through `Create<T>(string)` — `ktsu.RoundTripStringJsonConverter` supplies a suitable factory:
+
+  ```csharp
+  JsonSerializerOptions options = new()
+  {
+      Converters = { new RoundTripStringJsonConverterFactory() },
+  };
+  ```
 
 ## Installation
 

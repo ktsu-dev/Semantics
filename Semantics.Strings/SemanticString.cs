@@ -9,16 +9,21 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
-using System.Text.Json.Serialization;
-
-using ktsu.RoundTripStringJsonConverter;
 
 /// <summary>
 /// Base class for all semantic string types using CRTP (Curiously Recurring Template Pattern).
 /// Provides type safety and validation for string values that have specific meaning or format requirements.
 /// </summary>
+/// <remarks>
+/// This type carries no <c>JsonConverter</c> attribute. Because <see cref="ISemanticString"/> is an
+/// <see cref="IEnumerable{T}"/> of <see cref="char"/>, the default System.Text.Json behaviour is to
+/// treat a semantic string as a collection and write it as an array of single-character strings, so a
+/// converter is required for the string round-trip. Registering one is the consumer's decision rather
+/// than something the type forces: add a converter that writes <see cref="object.ToString"/> and reads
+/// back through <see cref="Create{TDest}(string)"/> to the <c>JsonSerializerOptions</c> used for
+/// serialization. <c>ktsu.RoundTripStringJsonConverter</c> provides such a converter factory.
+/// </remarks>
 [DebuggerDisplay(value: $"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-[JsonConverter(typeof(RoundTripStringJsonConverterFactory))]
 public abstract record SemanticString<TDerived> : ISemanticString
 	where TDerived : SemanticString<TDerived>
 {

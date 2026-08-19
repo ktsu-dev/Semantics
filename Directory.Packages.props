@@ -6,10 +6,10 @@
     <!-- Test packages: CodeCoverage and TrxReport versions are supplied by MSTest.Sdk;
          do not pin them here or CPM reports duplicate PackageVersion items (NU1506). -->
     <!-- Semantics runtime packages -->
-    <PackageVersion Include="ktsu.PreciseNumber" Version="1.7.27" />
-    <PackageVersion Include="ktsu.RoundTripStringJsonConverter" Version="1.0.39" />
     <PackageVersion Include="Polyfill" Version="11.2.0" />
-    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.11" />
+    <!-- Test-only: Semantics ships no JSON converter, so the tests register this factory the
+         same way a consumer is expected to. Not referenced by any shipping project. -->
+    <PackageVersion Include="ktsu.RoundTripStringJsonConverter" Version="1.0.39" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />

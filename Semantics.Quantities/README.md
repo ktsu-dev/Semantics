@@ -36,7 +36,7 @@ Every quantity is a vector, and the dimensionality of its direction space is par
 - **Generated unit conversions**: `From{Unit}` factories per declared unit (`Mass.FromKilogram`, `Speed.FromMeterPerSecond`, `Length.FromFoot`), converting to the SI base unit on construction, with `In(unit)` to convert back.
 - **Unified vector model**: `IVector0` through `IVector4`, with `Magnitude()`, `Dot`, `Cross`, `Normalize`, and typed cross-quantity results (`Force3D.Dot(Displacement3D)` returns `Energy`).
 - **Construction-time invariants**: `IVector0` magnitudes are guarded non-negative, and quantities where zero is unphysical (`Wavelength`, `Period`, `HalfLife`) are guarded strictly positive.
-- **Physical constants**: `PhysicalConstants` with domain-grouped `PreciseNumber` values and generic accessors that materialize into any `T : INumber<T>`.
+- **Physical constants**: `PhysicalConstants` with domain-grouped generic accessors that materialize into any `T : INumber<T>`.
 - **Generator diagnostics**: metadata problems (`SEM001`-`SEM005`) are caught at build time.
 
 ## Installation
@@ -102,9 +102,9 @@ Momentum3D<double> impulse = f * Duration<double>.Create(2.0);
 ```csharp
 using ktsu.Semantics.Quantities;
 
-// domain-grouped, exact PreciseNumber values
-var c = PhysicalConstants.Fundamental.SpeedOfLight;      // 299_792_458 m/s
-var R = PhysicalConstants.Chemistry.GasConstant;         // 8.31446... J/(mol.K)
+// domain-grouped, materialized into the numeric type you ask for
+double c = PhysicalConstants.Fundamental.SpeedOfLight<double>();   // 299_792_458 m/s
+decimal R = PhysicalConstants.Chemistry.GasConstant<decimal>();    // 8.31446... J/(mol.K)
 
 // generic accessors materialize into any T : INumber<T>
 double g = PhysicalConstants.Generic.StandardGravity<double>();   // 9.80665
@@ -143,8 +143,9 @@ Factory names use the singular lemma of each unit name verbatim (`FromMeterPerSe
 
 ### `PhysicalConstants`
 
-- **Domain-grouped**: nested static classes returning `PreciseNumber`, for example `PhysicalConstants.Fundamental.SpeedOfLight`, `PhysicalConstants.ClassicalMechanics.StandardGravity`, `PhysicalConstants.Thermodynamics.WaterTriplePoint`. Domain groups include Acoustics, AngularMechanics, Chemistry, ClassicalMechanics, FluidMechanics, Fundamental, NuclearPhysics, Optics, and Thermodynamics.
-- **Generic**: `PhysicalConstants.Generic.Name<T>()` materializes any constant into a `T : INumber<T>`.
+- **Domain-grouped**: nested static classes with generic accessors, for example `PhysicalConstants.Fundamental.SpeedOfLight<T>()`, `PhysicalConstants.ClassicalMechanics.StandardGravity<T>()`, `PhysicalConstants.Thermodynamics.WaterTriplePoint<T>()`. Domain groups include Acoustics, AngularMechanics, Chemistry, ClassicalMechanics, FluidMechanics, Fundamental, NuclearPhysics, Optics, and Thermodynamics.
+- **Generic**: `PhysicalConstants.Generic.Name<T>()` is a flat accessor over every constant, regardless of domain.
+- Each constant is parsed from its metadata literal straight into `T` and cached per closed generic type, so the package carries no arbitrary-precision dependency and no rounding happens through an intermediate representation.
 
 ## Architecture
 

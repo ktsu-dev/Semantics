@@ -13,7 +13,7 @@ For the *why* (the unified vector model), see `docs/strategy-unified-vector-quan
 | `ConversionsGenerator` | `ConversionConstants.g.cs` | Hard-coded conversion ratios (`FeetToMeters`, etc.) used by `Units` and operators. |
 | `MagnitudesGenerator` | `MetricMagnitudes.g.cs` | SI prefixes and their numeric magnitudes. |
 | `PrecisionGenerator` | `StorageTypes.g.cs` | The set of `INumber<T>` storage types the library opts into (`double`, `float`, `decimal`, …). |
-| `PhysicalConstantsGenerator` | `PhysicalConstants.g.cs` | `PhysicalConstants.Generic.X<T>()` and `PhysicalConstants.Conversion.X<T>()` accessors backed by `PreciseNumber`. |
+| `PhysicalConstantsGenerator` | `PhysicalConstants.g.cs` | `PhysicalConstants.<Domain>.X<T>()`, `PhysicalConstants.Generic.X<T>()`, and `PhysicalConstants.Conversion.X<T>()` accessors; each literal is parsed straight into `T` and cached per closed generic type. |
 | `QuantitiesGenerator` | one `*.g.cs` file per emitted type | Vector0/V1/V2/V3/V4 bases, semantic overloads, factories, operators, magnitude extraction, dot/cross products. |
 | `LogarithmicScalesGenerator` | one `*.g.cs` file per logarithmic scale | Decibel levels, pitch intervals, and pH from `logarithmic.json`: standalone `readonly partial record struct`s with linear-quantity conversions, log-space arithmetic, and comparisons. |
 

@@ -312,8 +312,8 @@ Semantics.SourceGenerators (Roslyn IIncrementalGenerator)
        │                                + Vector0Guards.EnsureNonNegative / EnsurePositive
        │                                + cross-dimensional *, /, Dot, Cross operators
        ├── ConversionsGenerator      → unit-to-SI conversion helpers
-       ├── PhysicalConstantsGenerator → PhysicalConstants.<Domain>.* (PreciseNumber)
-       │                                + PhysicalConstants.Generic.*<T>() (T.CreateChecked)
+       ├── PhysicalConstantsGenerator → PhysicalConstants.<Domain>.*<T>() (T.Parse, cached per T)
+       │                                + PhysicalConstants.Generic.*<T>() (flat accessors)
        └── StorageHelpersGenerator   → DivideToStorage with DivideByZeroException
        │
        ▼
