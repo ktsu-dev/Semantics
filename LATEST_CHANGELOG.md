@@ -1,6 +1,8 @@
-## v3.0.1 (patch)
+## v3.1.0 (minor)
 
 Changes since v3.0.0:
 
-- Bump the ktsu group with 1 update ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Drop the System.Text.Json dependency from Strings.Identifiers ([@matt-edmondson](https://github.com/matt-edmondson))
+- [minor] Drop the ktsu.PreciseNumber and ktsu.RoundTripStringJsonConverter dependencies ([@matt-edmondson](https://github.com/matt-edmondson))
+- docs: scope build badge to the default branch ([@matt-edmondson](https://github.com/matt-edmondson))
 
