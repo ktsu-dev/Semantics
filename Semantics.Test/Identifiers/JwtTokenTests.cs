@@ -59,4 +59,29 @@ public sealed class JwtTokenTests
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create(string.Empty));
 	}
+
+	[TestMethod]
+	public void Create_HeaderNotUtf8_Throws()
+	{
+		// "_v8A" is base64url for the bytes FE FF 00; 0xFE is never valid in UTF-8.
+		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create("_v8A.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig"));
+	}
+
+	[TestMethod]
+	public void Create_HeaderIsJsonString_Throws()
+	{
+		// "ImEi" is base64url for the JSON string "a" — valid JSON, but not an object.
+		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create("ImEi.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig"));
+	}
+
+	[TestMethod]
+	public void Create_HeaderWithMalformedObjectBody_Succeeds()
+	{
+		// "eyJhIjp9" is base64url for {"a":} — brace-delimited but not well-formed JSON.
+		// Validation is deliberately structural and does not parse the body, so this is
+		// accepted. See the remarks on IsJwtTokenAttribute.
+		string malformed = "eyJhIjp9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig";
+		JwtToken token = JwtToken.Create(malformed);
+		Assert.AreEqual(malformed, token.WeakString);
+	}
 }

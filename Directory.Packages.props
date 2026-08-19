@@ -17,6 +17,8 @@
     <PackageVersion Include="ktsu.CodeBlocker" Version="1.2.9" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" />
+    <!-- Build-time only: the generator reads its metadata with it. No shipping project
+         references System.Text.Json, so it is not a dependency of any package. -->
     <PackageVersion Include="System.Text.Json" Version="10.0.11" />
   </ItemGroup>
 </Project>

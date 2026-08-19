@@ -1,11 +1,15 @@
 # Migrating from Semantics 3.0 to 3.1
 
-Semantics 3.1 removes the last two third-party NuGet dependencies from the
-shipping packages. `ktsu.Semantics.Strings` now has no NuGet dependencies at all
-on .NET 8 and later, and `ktsu.Semantics.Quantities` has none on any target.
+Semantics 3.1 removes every third-party NuGet dependency from the shipping
+packages. `ktsu.Semantics.Strings` and `ktsu.Semantics.Strings.Identifiers` now
+have no NuGet dependencies at all on .NET 8 and later, and
+`ktsu.Semantics.Quantities` has none on any target. What remains anywhere is the
+netstandard2.0 polyfill shims (`System.Memory`, `System.Threading.Tasks.Extensions`,
+and `System.Numerics.Vectors` for Color).
 
-Both removals are breaking. Paths, Music, Color, and the storage-type alias
-packages are unaffected except through their dependency on Strings.
+The first two changes below are breaking. Paths, Music, Color, and the
+storage-type alias packages are unaffected except through their dependency on
+Strings.
 
 ## Quick checklist
 
@@ -15,6 +19,8 @@ packages are unaffected except through their dependency on Strings.
    shape and deserialization of existing files throws.
 2. Replace `PhysicalConstants.<Domain>.<Name>` field reads with the generic
    accessor `PhysicalConstants.<Domain>.<Name><T>()`.
+3. Nothing to do for `JwtToken`, but note its validation is now shallower — see
+   below.
 
 ## 1. `ktsu.RoundTripStringJsonConverter` is no longer a dependency
 
@@ -119,3 +125,36 @@ conversion — remove the workaround.
 
 Values that were already correct are unchanged, so `double` results are stable
 apart from the last-ulp corrections shown above.
+
+## 3. `JwtToken` validation no longer parses the header and payload
+
+`IsJwtTokenAttribute` used `JsonDocument.Parse` to confirm that the base64url
+header and payload segments decoded to JSON objects. That was the only reason
+`ktsu.Semantics.Strings.Identifiers` referenced `System.Text.Json`, which on
+netstandard2.0 drags a substantial transitive tail (`System.Memory`,
+`System.Buffers`, `System.Text.Encodings.Web`, ...) onto .NET Framework
+consumers.
+
+The segments are now checked structurally: each must base64url-decode to valid
+UTF-8 that, once trimmed, starts with `{` and ends with `}`. The body between
+the braces is not parsed.
+
+This only ever *widens* what validates — no token accepted by 3.0 is rejected by
+3.1. What changes is that a malformed body is now accepted:
+
+```csharp
+// base64url of {"a":} — brace-delimited but not well-formed JSON
+JwtToken.Create("eyJhIjp9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig");
+// 3.0: throws ArgumentException
+// 3.1: succeeds
+```
+
+Still rejected: wrong segment count, empty header or payload, non-base64url
+segments, segments that are not valid UTF-8, and segments that decode to a JSON
+array, string, or number rather than an object.
+
+A hand-rolled JSON reader was the alternative, and it was rejected deliberately:
+a bug in one would reject *valid* tokens, which is the worse failure for a
+validation attribute. If you need the header or payload to be well-formed JSON —
+or need `alg`, claim, or expiry checks, or signature verification, none of which
+this attribute has ever done — validate with a JWT library after construction.

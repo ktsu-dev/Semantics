@@ -16,14 +16,15 @@
 
 Defining your own semantic string types is the core use of the framework, but a handful of identifier formats show up in almost every codebase. `ktsu.Semantics.Strings.Identifiers` ships six of them ready to use, each with real normalization and real check-digit or structural validation. You get compile-time-distinct types with no boilerplate.
 
-Validation is pragmatic rather than exhaustive, with documented limits. For example `JwtToken` verifies the three-segment structure and that the header and payload decode to JSON objects, but it does **not** verify the signature.
+Validation is pragmatic rather than exhaustive, with documented limits. For example `JwtToken` verifies the three-segment structure and that the header and payload decode to brace-delimited UTF-8, but it does **not** parse those bodies or verify the signature.
 
 ## Features
 
 - **Six identifier types**: `Uuid`, `Ulid`, `Iban`, `Isbn`, `CreditCardNumber`, `JwtToken`.
 - **Normalization on creation**: whitespace and separators stripped, casing folded to the canonical form for each format.
 - **Real validation**: check-digit maths for `Iban` (ISO 7064 mod-97), `Isbn` (mod-11 / mod-10), and `CreditCardNumber` (Luhn), structural and format rules for `Uuid`, `Ulid`, and `JwtToken`.
-- **Same surface as any semantic string**: `Create`, `TryCreate`, `As<T>()`, value equality, ordering, implicit `string` conversion, and JSON round-tripping, all inherited from `SemanticString<T>`.
+- **Same surface as any semantic string**: `Create`, `TryCreate`, `As<T>()`, value equality, ordering, and implicit `string` conversion, all inherited from `SemanticString<T>`.
+- **No NuGet dependencies** on .NET 8 and later.
 
 ## Installation
 
@@ -88,7 +89,7 @@ Each type is a `sealed record` deriving from `SemanticString<T>`. None declare t
 | `Iban` | Strip spaces, uppercase | Length 15-34, country/check prefix, ISO 7064 mod-97-10 checksum | Country-specific BBAN structure is not enforced. |
 | `Isbn` | Strip `-` and spaces, uppercase | ISBN-10 (weighted mod-11, `X` allowed) or ISBN-13 (mod-10) | Registration-group/publisher ranges are not validated. |
 | `CreditCardNumber` | Strip spaces and hyphens | 13-19 digits, Luhn (mod-10) checksum | Luhn only. No issuer/network detection, no PCI guarantee. The value is sensitive, do not log it. |
-| `JwtToken` | None (stored verbatim, case-sensitive) | Three `.`-separated segments, non-empty header and payload that decode to JSON objects | Signature is not decoded or verified. `alg`, claims, and expiry are not inspected. |
+| `JwtToken` | None (stored verbatim, case-sensitive) | Three `.`-separated segments, non-empty header and payload that base64url-decode to UTF-8 text delimited as `{ ... }` | Structural only: the header and payload bodies are not parsed, so malformed JSON between the braces is accepted. Signature is not decoded or verified. `alg`, claims, and expiry are not inspected. |
 
 Creation follows the base-type contract: `Create(...)` throws `ArgumentException` on invalid input and `ArgumentNullException` on null, while `TryCreate(...)` returns `false` instead.
 

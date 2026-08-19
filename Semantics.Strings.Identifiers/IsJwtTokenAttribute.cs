@@ -3,14 +3,19 @@
 namespace ktsu.Semantics.Strings.Identifiers;
 
 using System;
-using System.Text.Json;
+using System.Text;
 
 using ktsu.Semantics.Strings;
 
 /// <summary>
 /// Validates that the string is a structurally well-formed JWT: exactly three '.'-separated segments,
-/// with non-empty header and payload segments that base64url-decode to JSON objects. The signature
-/// segment may be empty (e.g. <c>alg=none</c>) and is neither decoded nor verified.
+/// with non-empty header and payload segments that base64url-decode to UTF-8 text delimited as a JSON
+/// object. The signature segment may be empty (e.g. <c>alg=none</c>) and is neither decoded nor verified.
+/// <para>
+/// The check is deliberately structural. The header and payload bodies are not parsed, so malformed
+/// JSON between the braces is accepted, and no claim (not even <c>alg</c>) is inspected. Use a JWT
+/// library for anything beyond shape.
+/// </para>
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public sealed class IsJwtTokenAttribute : NativeSemanticStringValidationAttribute
@@ -71,15 +76,26 @@ public sealed class IsJwtTokenAttribute : NativeSemanticStringValidationAttribut
 				return false;
 			}
 
+			// The decoded segment must be UTF-8 text delimited as a JSON object. The body is not
+			// parsed: doing so would mean either a System.Text.Json reference on the downlevel
+			// targets, where it drags a substantial transitive tail onto .NET Framework consumers,
+			// or a hand-rolled JSON reader here. A reader bug that rejected a valid token would be
+			// worse than accepting a malformed body, so the check stays shallow and is documented
+			// as such on the attribute.
+			string text;
 			try
 			{
-				using JsonDocument document = JsonDocument.Parse(bytes);
-				return document.RootElement.ValueKind == JsonValueKind.Object;
+				text = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true).GetString(bytes);
 			}
-			catch (JsonException)
+			catch (DecoderFallbackException)
 			{
 				return false;
 			}
+
+			string trimmed = text.Trim();
+			return trimmed.Length >= 2
+				&& trimmed[0] == '{'
+				&& trimmed[^1] == '}';
 		}
 	}
 }
