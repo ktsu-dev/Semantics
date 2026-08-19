@@ -6,7 +6,7 @@
 [![NuGet Downloads](https://img.shields.io/nuget/dt/ktsu.Semantics?label=Downloads&logo=nuget)](https://nuget.org/packages/ktsu.Semantics)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ktsu-dev/Semantics?label=Commits&logo=github)](https://github.com/ktsu-dev/Semantics/commits/main)
 [![GitHub contributors](https://img.shields.io/github/contributors/ktsu-dev/Semantics?label=Contributors&logo=github)](https://github.com/ktsu-dev/Semantics/graphs/contributors)
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ktsu-dev/Semantics/dotnet.yml?label=Build&logo=github)](https://github.com/ktsu-dev/Semantics/actions)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ktsu-dev/Semantics/dotnet.yml?branch=main&label=Build&logo=github)](https://github.com/ktsu-dev/Semantics/actions)
 
 A .NET family of libraries for replacing primitive obsession with strongly-typed, self-validating domain models. Each pillar ships as its own NuGet package, so you take only what you need.
 
