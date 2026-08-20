@@ -1,6 +1,6 @@
-## v3.1.1 (patch)
+## v3.1.2 (patch)
 
-Changes since v3.1.0:
+Changes since v3.1.1:
 
-- Bump ktsu.CodeBlocker and ktsu.RoundTripStringJsonConverter ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Bump the ktsu group with 9 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
