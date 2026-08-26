@@ -9,12 +9,12 @@
     <PackageVersion Include="Polyfill" Version="11.2.0" />
     <!-- Test-only: Semantics ships no JSON converter, so the tests register this factory the
          same way a consumer is expected to. Not referenced by any shipping project. -->
-    <PackageVersion Include="ktsu.RoundTripStringJsonConverter" Version="1.0.45" />
+    <PackageVersion Include="ktsu.RoundTripStringJsonConverter" Version="1.0.46" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
     <!-- Source generator packages -->
-    <PackageVersion Include="ktsu.CodeBlocker" Version="1.2.14" />
+    <PackageVersion Include="ktsu.CodeBlocker" Version="1.2.15" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" />
     <!-- Build-time only: the generator reads its metadata with it. No shipping project
