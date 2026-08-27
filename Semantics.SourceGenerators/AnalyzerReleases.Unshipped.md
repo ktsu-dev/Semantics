@@ -10,3 +10,5 @@ SEM002  | Semantics.SourceGenerators | Warning | Reports schema-level validation
 SEM003  | Semantics.SourceGenerators | Warning | Reports a relationship whose explicit `forms` list references a vector form not declared on a participating dimension.
 SEM004  | Semantics.SourceGenerators | Warning | Reports a `dimensions.json` `availableUnits` entry that doesn't match any unit declared in `units.json`.
 SEM005  | Semantics.SourceGenerators | Warning | Reports schema-level validation issues in logarithmic.json (missing or duplicate scale names, conversions with no linear type).
+SEM006  | Semantics.SourceGenerators | Warning | Reports a metadata file a generator declared that was not supplied as an AdditionalFile.
+SEM007  | Semantics.SourceGenerators | Error | Reports a metadata file that could not be parsed. Replaces the base generator's CONV001.

@@ -3,17 +3,21 @@
 namespace Semantics.SourceGenerators;
 
 /// <summary>
-/// Literal fragments the generators emit into the generated C#. Naming them keeps the emission
-/// sites readable and means a typo in a keyword or a documentation delimiter is a compile error
-/// rather than malformed generated source.
+/// Literal fragments specific to this repository's generated output.
 /// </summary>
+/// <remarks>
+/// The general C# vocabulary that used to sit alongside these — the <c>public</c> and
+/// <c>static</c> modifiers, the XML documentation delimiters — has moved to the reusable layer as
+/// <c>CodeGen.CSharpKeywords</c>. What is left is the part that only means something here: the
+/// names this generator gives its parameters, and a suppression that is about physics.
+/// </remarks>
 internal static class Emit
 {
 	/// <summary>The <c>public</c> modifier.</summary>
-	internal const string Public = "public";
+	internal const string Public = CodeGen.CSharpKeywords.Public;
 
 	/// <summary>The <c>static</c> modifier.</summary>
-	internal const string Static = "static";
+	internal const string Static = CodeGen.CSharpKeywords.Static;
 
 	/// <summary>Opening delimiter of an XML documentation summary.</summary>
 	internal const string SummaryOpen = "/// <summary>";
@@ -26,9 +30,6 @@ internal static class Emit
 
 	/// <summary>Conventional name of the right-hand operand on generated binary operators.</summary>
 	internal const string RightParameter = "right";
-
-	/// <summary>Category reported on generator diagnostics.</summary>
-	internal const string DiagnosticCategory = "Semantics.SourceGenerators";
 
 	/// <summary>
 	/// Suppression emitted onto generated physics operators. CA2225 wants named alternates such as

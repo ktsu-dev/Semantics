@@ -161,7 +161,20 @@ type.
 
 ## Validation, diagnostics, and gotchas
 
-- Unknown dimension references in `integrals` / `derivatives` / `dotProducts` / `crossProducts` are currently dropped silently; this is tracked as a generator diagnostic improvement (issue #56). Until it lands, **diff the output** when editing metadata to catch typos.
+- Unknown dimension references in `integrals` / `derivatives` / `dotProducts` / `crossProducts` report **SEM001** and the operator is dropped.
+- Every diagnostic is declared in `SemanticsDiagnostics` and allocated from one `DiagnosticCatalog`, which fixes the identifier prefix and the category:
+
+  | ID | Reports |
+  |----|---------|
+  | SEM001 | A relationship naming a dimension that does not exist. |
+  | SEM002 | A schema-level problem in `dimensions.json`. |
+  | SEM003 | A relationship whose explicit `forms` list names a form a participant does not declare. |
+  | SEM004 | An `availableUnits` entry naming a unit `units.json` does not declare. Reported at the position in `dimensions.json` where the name is written. |
+  | SEM005 | A schema-level problem in `logarithmic.json`. |
+  | SEM006 | A metadata file a generator declared that was not supplied as an `AdditionalFile`. |
+  | SEM007 | A metadata file that could not be parsed. |
+
+  Adding one means adding it to `SemanticsDiagnostics` and to `AnalyzerReleases.Unshipped.md`; `AnalyzerReleaseTrackingTests` fails if the second step is forgotten. `GeneratorDiagnosticTests` proves each one still fires on the input it is meant to catch.
 - `availableUnits` order matters: the first entry is treated as the SI base unit by `UnitsGenerator`.
 - `relationships` expressions are emitted verbatim into method bodies. Use `Value` for the current quantity and `T.CreateChecked(...)` (not literal numerics) for constants so all storage types stay correct.
 - Generator output is committed. CI must catch metadata/code drift; `git status` should be clean after a build.

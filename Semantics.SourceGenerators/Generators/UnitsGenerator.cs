@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.Json;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
+using Semantics.SourceGenerators.CodeGen;
 using Semantics.SourceGenerators.Models;
 using Semantics.SourceGenerators.Templates;
 
@@ -22,66 +23,37 @@ using Semantics.SourceGenerators.Templates;
 /// generated quantities can accept dimensionally-correct units only at compile time.
 /// </remarks>
 [Generator]
-public class UnitsGenerator : GeneratorBase<UnitsMetadata>
+public class UnitsGenerator : SemanticsMultiFileGenerator
 {
-	public UnitsGenerator() : base("units.json") { }
+	/// <summary>
+	/// Both metadata files, because each unit's declaration records which dimensions use it, and
+	/// that mapping only exists in <c>dimensions.json</c>.
+	/// </summary>
+	/// <remarks>
+	/// This generator carried its own copy of the same workaround <c>QuantitiesGenerator</c> did —
+	/// an <c>Initialize</c> override, a private JSON loader, a combining type, and a dead shim for
+	/// the single-file base's abstract contract. Two generators reimplementing the same thing is
+	/// what made multi-file support belong in the base.
+	/// </remarks>
+	protected override IReadOnlyList<string> MetadataFileNames => ["units.json", "dimensions.json"];
 
-	private sealed class CombinedMetadata
+	/// <inheritdoc/>
+	protected override void Generate(SourceProductionContext context, MetadataSet metadata)
 	{
-		public UnitsMetadata Units { get; }
-		public DimensionsMetadata Dimensions { get; }
-
-		public CombinedMetadata(UnitsMetadata units, DimensionsMetadata dimensions)
+		UnitsMetadata? units = metadata["units.json"]?.Deserialize<UnitsMetadata>(context, MetadataParseFailed);
+		if (units is null)
 		{
-			Units = units;
-			Dimensions = dimensions;
+			return;
 		}
+
+		// A missing dimensions.json is reported as SEM006; an empty set still lets the unit
+		// declarations themselves be emitted, just without their dimension cross-references.
+		DimensionsMetadata dimensions =
+			metadata["dimensions.json"]?.Deserialize<DimensionsMetadata>(context, MetadataParseFailed) ?? new DimensionsMetadata();
+
+		using CodeBlocker codeBlocker = CreateCodeBlocker();
+		GenerateInner(context, units, dimensions, codeBlocker);
 	}
-
-	public override void Initialize(IncrementalGeneratorInitializationContext context)
-	{
-		IncrementalValueProvider<UnitsMetadata?> unitsProvider = LoadJson<UnitsMetadata>(context, "units.json");
-		IncrementalValueProvider<DimensionsMetadata?> dimensionsProvider = LoadJson<DimensionsMetadata>(context, "dimensions.json");
-		IncrementalValueProvider<CombinedMetadata?> combined = unitsProvider.Combine(dimensionsProvider).Select(static (pair, _) =>
-			pair.Left == null ? null : new CombinedMetadata(pair.Left, pair.Right ?? new DimensionsMetadata()));
-
-		context.RegisterSourceOutput(combined, (ctx, metadata) =>
-		{
-			if (metadata == null)
-			{
-				return;
-			}
-
-			using CodeBlocker codeBlocker = CodeBlocker.Create();
-			GenerateInner(ctx, metadata.Units, metadata.Dimensions, codeBlocker);
-		});
-	}
-
-	private static IncrementalValueProvider<TMeta?> LoadJson<TMeta>(IncrementalGeneratorInitializationContext context, string filename)
-		where TMeta : class
-	{
-		return context.AdditionalTextsProvider
-			.Where(file => file.Path.EndsWith(filename, StringComparison.InvariantCulture))
-			.Select((file, ct) => file.GetText(ct)?.ToString() ?? "")
-			.Where(content => !string.IsNullOrEmpty(content))
-			.Select((content, _) =>
-			{
-				try
-				{
-					return JsonSerializer.Deserialize<TMeta>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-				}
-				catch (JsonException)
-				{
-					return null;
-				}
-			})
-			.Where(m => m != null)
-			.Collect()
-			.Select((arr, _) => arr.FirstOrDefault());
-	}
-
-	protected override void Generate(SourceProductionContext context, UnitsMetadata metadata, CodeBlocker codeBlocker)
-		=> GenerateInner(context, metadata, new DimensionsMetadata(), codeBlocker);
 
 	private static void GenerateInner(SourceProductionContext context, UnitsMetadata units, DimensionsMetadata dimensions, CodeBlocker codeBlocker)
 	{

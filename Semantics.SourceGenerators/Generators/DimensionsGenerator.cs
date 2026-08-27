@@ -7,13 +7,14 @@ using System.Linq;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
+using Semantics.SourceGenerators.CodeGen;
 using Semantics.SourceGenerators.Templates;
 
 /// <summary>
 /// Source generator that creates the PhysicalDimensions.cs file from JSON metadata.
 /// </summary>
 [Generator]
-public class DimensionsGenerator : GeneratorBase<DimensionsMetadata>
+public class DimensionsGenerator : SemanticsGenerator<DimensionsMetadata>
 {
 	public DimensionsGenerator() : base("dimensions.json") { }
 

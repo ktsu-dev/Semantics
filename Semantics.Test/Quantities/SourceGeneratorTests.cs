@@ -30,6 +30,8 @@ public class SourceGeneratorTests
 
 	private static string MetadataDirectory => Path.Combine(AppContext.BaseDirectory, "GeneratorMetadata");
 
+	private static GeneratorHarness Harness => new(MetadataDirectory);
+
 	/// <summary>
 	/// Every generator paired with the metadata file it consumes.
 	/// </summary>
@@ -57,7 +59,7 @@ public class SourceGeneratorTests
 		foreach ((IIncrementalGenerator generator, string metadataFileName) in Generators)
 		{
 			string generatorName = generator.GetType().Name;
-			GeneratorRunResult result = RunGenerator(generator, metadataFileName);
+			GeneratorRunResult result = Harness.Run(generator);
 
 			Assert.IsEmpty(
 				result.Diagnostics,
@@ -86,7 +88,7 @@ public class SourceGeneratorTests
 	[TestMethod]
 	public void QuantitiesGenerator_EmitsTheExpectedBreadthOfTypes()
 	{
-		GeneratorRunResult result = RunGenerator(new QuantitiesGenerator(), "dimensions.json");
+		GeneratorRunResult result = Harness.Run(new QuantitiesGenerator());
 
 		// Sanity bound: the dimensions metadata drives a large catalogue, so a collapse to a handful
 		// of sources means the metadata or the filter regressed rather than that the shape changed.
@@ -96,42 +98,26 @@ public class SourceGeneratorTests
 	[TestMethod]
 	public void Generator_WithMalformedMetadata_ReportsDiagnosticInsteadOfThrowing()
 	{
-		GeneratorRunResult result = RunGenerator(new PrecisionGenerator(), "precision.json", "{ not valid json");
+		GeneratorRunResult result = Harness.Run(
+			new PrecisionGenerator(),
+			new Dictionary<string, string> { ["precision.json"] = "{ not valid json" });
 
 		Assert.IsEmpty(result.GeneratedSources);
 		Assert.IsNotEmpty(result.Diagnostics, "Malformed metadata should surface as a diagnostic.");
-		Assert.AreEqual("CONV001", result.Diagnostics[0].Id);
+		Assert.AreEqual("SEM007", result.Diagnostics[0].Id);
 	}
 
-	private static GeneratorRunResult RunGenerator(IIncrementalGenerator generator, string metadataFileName, string? metadataOverride = null)
+	[TestMethod]
+	public void EveryGenerator_ReusesItsOutputWhenTheMetadataHasNotChanged()
 	{
-		string metadataPath = Path.Combine(MetadataDirectory, metadataFileName);
-		string metadata = metadataOverride ?? File.ReadAllText(metadataPath);
-
-		CSharpCompilation compilation = CSharpCompilation.Create(
-			assemblyName: "GeneratorHost",
-			syntaxTrees: [],
-			references: [MetadataReference.CreateFromFile(typeof(object).Assembly.Location)],
-			options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-
-		GeneratorDriver driver = CSharpGeneratorDriver.Create(
-			generators: [generator.AsSourceGenerator()],
-			additionalTexts: [new InMemoryAdditionalText(metadataPath, metadata)]);
-
-		GeneratorDriverRunResult runResult = driver.RunGenerators(compilation).GetRunResult();
-
-		Assert.HasCount(1, runResult.Results);
-		return runResult.Results[0];
-	}
-
-	/// <summary>
-	/// Supplies metadata JSON to the generators the same way MSBuild's AdditionalFiles would.
-	/// </summary>
-	private sealed class InMemoryAdditionalText(string path, string text) : AdditionalText
-	{
-		public override string Path { get; } = path;
-
-		public override SourceText GetText(CancellationToken cancellationToken = default) =>
-			SourceText.From(text);
+		// These are IIncrementalGenerators, and nothing checked that they behave like one: a
+		// generator that recomputes everything on every keystroke still passes every output
+		// assertion, it just makes the IDE slow.
+		foreach ((IIncrementalGenerator generator, string _) in Generators)
+		{
+			Assert.IsTrue(
+				Harness.ReusesCachedOutputOnRerun(generator),
+				$"{generator.GetType().Name} recomputed its output for unchanged metadata.");
+		}
 	}
 }

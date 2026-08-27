@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.Json;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
+using Semantics.SourceGenerators.CodeGen;
 using Semantics.SourceGenerators.Models;
 using Semantics.SourceGenerators.Templates;
 
@@ -17,115 +18,40 @@ using Semantics.SourceGenerators.Templates;
 /// then generates each type with its assigned operators.
 /// </summary>
 [Generator]
-public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
+public class QuantitiesGenerator : SemanticsMultiFileGenerator
 {
-	private static readonly DiagnosticDescriptor UnknownDimensionReference = new(
-		id: "SEM001",
-		title: "Unknown dimension reference in physics relationship",
-		messageFormat: "Dimension '{0}' references unknown dimension '{1}' in {2}; the operator will not be generated. Check spelling and that the referenced dimension exists in dimensions.json.",
-		category: Emit.DiagnosticCategory,
-		defaultSeverity: DiagnosticSeverity.Warning,
-		isEnabledByDefault: true);
-
-	private static readonly DiagnosticDescriptor MetadataValidationFailed = new(
-		id: "SEM002",
-		title: "dimensions.json metadata validation failed",
-		messageFormat: "dimensions.json validation issue: {0}",
-		category: Emit.DiagnosticCategory,
-		defaultSeverity: DiagnosticSeverity.Warning,
-		isEnabledByDefault: true);
-
-	private static readonly DiagnosticDescriptor RelationshipFormMissing = new(
-		id: "SEM003",
-		title: "Relationship requires a vector form not declared on a participating dimension",
-		messageFormat: "Relationship in dimension '{0}' ({1}) explicitly requests form V{2}, but '{3}' does not declare that form. The operator will not be generated.",
-		category: Emit.DiagnosticCategory,
-		defaultSeverity: DiagnosticSeverity.Warning,
-		isEnabledByDefault: true);
-
-	private static readonly DiagnosticDescriptor UnknownUnitReference = new(
-		id: "SEM004",
-		title: "dimensions.json references a unit not declared in units.json",
-		messageFormat: "Unit '{0}' (referenced by dimension '{1}'.availableUnits) is not declared in units.json; the generated From{0} factory will use an identity conversion. Add the unit to units.json or fix the spelling.",
-		category: Emit.DiagnosticCategory,
-		defaultSeverity: DiagnosticSeverity.Warning,
-		isEnabledByDefault: true);
-
-	public QuantitiesGenerator() : base("dimensions.json") { }
-
 	/// <summary>
-	/// Holds the metadata that drives quantity emission. Combined from dimensions.json and
-	/// units.json so factory methods can apply per-unit conversion factors. Plain class
-	/// (not a positional record) because the netstandard2.0 source-generator target lacks
-	/// <c>System.Runtime.CompilerServices.IsExternalInit</c>.
+	/// Both metadata files, because per-unit conversion factors are needed to emit
+	/// <c>From{Unit}</c> factories for units that are not the SI base unit.
 	/// </summary>
-	private sealed class CombinedMetadata
-	{
-		public DimensionsMetadata Dimensions { get; }
-		public UnitsMetadata Units { get; }
+	/// <remarks>
+	/// This used to require overriding <see cref="GeneratorBase.Initialize"/> outright, along with a
+	/// private JSON loader, a combining type, and a dead shim to satisfy the single-file base's
+	/// abstract contract. Multi-file metadata is the normal case, so the base handles it.
+	/// </remarks>
+	protected override IReadOnlyList<string> MetadataFileNames => ["dimensions.json", "units.json"];
 
-		public CombinedMetadata(DimensionsMetadata dimensions, UnitsMetadata units)
+	/// <inheritdoc/>
+	protected override void Generate(SourceProductionContext context, MetadataSet metadata)
+	{
+		MetadataFile? dimensionsFile = metadata["dimensions.json"];
+		DimensionsMetadata? dimensions = dimensionsFile?.Deserialize<DimensionsMetadata>(context, MetadataParseFailed);
+		if (dimensions is null)
 		{
-			Dimensions = dimensions;
-			Units = units;
+			return;
 		}
+
+		// A missing units.json is already reported as SEM006; carrying on with an empty set keeps
+		// the base-unit factories generatable. A malformed one is now reported as SEM007 rather
+		// than swallowed, which is what used to leave the generator silently emitting identity
+		// conversions.
+		UnitsMetadata units =
+			metadata["units.json"]?.Deserialize<UnitsMetadata>(context, MetadataParseFailed) ?? new UnitsMetadata();
+
+		GenerateInner(context, dimensions, units, dimensionsFile);
 	}
 
-	/// <summary>
-	/// Override to load both dimensions.json and units.json. The base class only loads a single
-	/// metadata file; we need both because per-unit conversion factors are required to emit
-	/// <c>From{Unit}</c> factories that aren't the SI base unit.
-	/// </summary>
-	public override void Initialize(IncrementalGeneratorInitializationContext context)
-	{
-		IncrementalValueProvider<DimensionsMetadata?> dimensionsProvider = LoadJson<DimensionsMetadata>(context, "dimensions.json");
-		IncrementalValueProvider<UnitsMetadata?> unitsProvider = LoadJson<UnitsMetadata>(context, "units.json");
-		IncrementalValueProvider<CombinedMetadata?> combined = dimensionsProvider.Combine(unitsProvider).Select(static (pair, _) =>
-			pair.Left == null ? null : new CombinedMetadata(pair.Left, pair.Right ?? new UnitsMetadata()));
-
-		context.RegisterSourceOutput(combined, (ctx, metadata) =>
-		{
-			if (metadata == null)
-			{
-				return;
-			}
-
-			GenerateInner(ctx, metadata.Dimensions, metadata.Units);
-		});
-	}
-
-	private static IncrementalValueProvider<TMeta?> LoadJson<TMeta>(IncrementalGeneratorInitializationContext context, string filename)
-		where TMeta : class
-	{
-		return context.AdditionalTextsProvider
-			.Where(file => file.Path.EndsWith(filename, StringComparison.InvariantCulture))
-			.Select((file, ct) => file.GetText(ct)?.ToString() ?? "")
-			.Where(content => !string.IsNullOrEmpty(content))
-			.Select((content, _) =>
-			{
-				try
-				{
-					return JsonSerializer.Deserialize<TMeta>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-				}
-				catch (JsonException)
-				{
-					return null;
-				}
-			})
-			.Where(m => m != null)
-			.Collect()
-			.Select((arr, _) => arr.FirstOrDefault());
-	}
-
-	/// <summary>
-	/// The legacy abstract <see cref="GeneratorBase{T}.Generate"/> entry point is unused: the
-	/// overridden <see cref="Initialize"/> handles registration and calls
-	/// <see cref="GenerateInner"/> directly. This shim exists to satisfy the abstract contract.
-	/// </summary>
-	protected override void Generate(SourceProductionContext context, DimensionsMetadata metadata, CodeBlocker codeBlocker)
-		=> GenerateInner(context, metadata, new UnitsMetadata());
-
-	private void GenerateInner(SourceProductionContext context, DimensionsMetadata metadata, UnitsMetadata units)
+	private void GenerateInner(SourceProductionContext context, DimensionsMetadata metadata, UnitsMetadata units, MetadataFile? dimensionsFile)
 	{
 		if (metadata.PhysicalDimensions == null || metadata.PhysicalDimensions.Count == 0)
 		{
@@ -137,10 +63,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		List<string> validationIssues = metadata.Validate();
 		foreach (string issue in validationIssues)
 		{
-			context.ReportDiagnostic(Diagnostic.Create(
-				MetadataValidationFailed,
-				Location.None,
-				issue));
+			context.Report(SemanticsDiagnostics.MetadataValidationFailed, issue);
 		}
 
 		Dictionary<string, UnitDefinition> unitMap = BuildUnitMap(units);
@@ -150,7 +73,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 		// back to identity conversion in that case, which is wrong for any non-base unit
 		// — a typo (e.g. "Kilometres" vs "Kilometers") would silently produce a factory
 		// with no scale factor. SEM004 catches that at build time.
-		ReportUnknownUnitReferences(context, metadata, unitMap);
+		ReportUnknownUnitReferences(context, metadata, unitMap, dimensionsFile);
 
 		// Phase A: Build maps and collect operators
 		Dictionary<string, PhysicalDimension> dimensionMap = BuildDimensionMap(metadata);
@@ -586,7 +509,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 	private static void ReportUnknownReference(SourceProductionContext context, string owningDimension, string unknownReference, string fieldPath)
 	{
 		context.ReportDiagnostic(Diagnostic.Create(
-			UnknownDimensionReference,
+			SemanticsDiagnostics.UnknownDimensionReference,
 			Location.None,
 			owningDimension,
 			unknownReference,
@@ -650,7 +573,7 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 	private static void ReportFormMissing(SourceProductionContext context, string owningDimension, string fieldPath, int form, string offendingDimension)
 	{
 		context.ReportDiagnostic(Diagnostic.Create(
-			RelationshipFormMissing,
+			SemanticsDiagnostics.RelationshipFormMissing,
 			Location.None,
 			owningDimension,
 			fieldPath,
@@ -686,12 +609,12 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 	private static void ReportUnknownUnitReferences(
 		SourceProductionContext context,
 		DimensionsMetadata metadata,
-		Dictionary<string, UnitDefinition> unitMap)
+		Dictionary<string, UnitDefinition> unitMap,
+		MetadataFile? dimensionsFile)
 	{
 		// If units.json wasn't loaded the map is empty; treating every unit as "unknown"
-		// would flood the build log. The CombinedMetadata loader already supplies a
-		// non-null UnitsMetadata even when units.json is missing — check for that case
-		// and bail rather than report a useless wall of warnings.
+		// would flood the build log. Its absence is already reported as SEM006, so bail
+		// rather than add a wall of warnings on top of it.
 		if (unitMap.Count == 0)
 		{
 			return;
@@ -713,11 +636,13 @@ public class QuantitiesGenerator : GeneratorBase<DimensionsMetadata>
 					continue;
 				}
 
-				context.ReportDiagnostic(Diagnostic.Create(
-					UnknownUnitReference,
-					Location.None,
+				// Pointed at where the name is actually written, so the warning is navigable
+				// rather than just naming a string to go and search a large file for.
+				context.ReportAt(
+					SemanticsDiagnostics.UnknownUnitReference,
+					dimensionsFile?.FindLocation(unitName),
 					unitName,
-					dim.Name));
+					dim.Name);
 			}
 		}
 	}

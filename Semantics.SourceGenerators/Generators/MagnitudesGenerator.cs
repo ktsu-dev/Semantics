@@ -5,13 +5,14 @@ namespace Semantics.SourceGenerators;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
+using Semantics.SourceGenerators.CodeGen;
 using Semantics.SourceGenerators.Templates;
 
 /// <summary>
 /// Source generator that creates the MetricMagnitudes.cs file from JSON metadata.
 /// </summary>
 [Generator]
-public class MagnitudesGenerator : GeneratorBase<MagnitudesMetadata>
+public class MagnitudesGenerator : SemanticsGenerator<MagnitudesMetadata>
 {
 	public MagnitudesGenerator() : base("magnitudes.json") { }
 
