@@ -25,98 +25,124 @@ public partial record Area<T> : PhysicalQuantity<Area<T>, T>, IVector0<Area<T>, 
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Area<T> FromSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareKilometer.
 	/// </summary>
 	/// <param name="value">The value in SquareKilometer.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Area<T> FromSquareKilometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareKilometerToSquareMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareCentimeter.
 	/// </summary>
 	/// <param name="value">The value in SquareCentimeter.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Area<T> FromSquareCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareCentimeterToSquareMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareFoot.
 	/// </summary>
 	/// <param name="value">The value in SquareFoot.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Area<T> FromSquareFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareFootToSquareMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareInch.
 	/// </summary>
 	/// <param name="value">The value in SquareInch.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Area<T> FromSquareInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareInchToSquareMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareMile.
 	/// </summary>
 	/// <param name="value">The value in SquareMile.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Area<T> FromSquareMile(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.SquareMileToSquareMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in Hectare.
 	/// </summary>
 	/// <param name="value">The value in Hectare.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Area<T> FromHectare(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HectareToSquareMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in Acre.
 	/// </summary>
 	/// <param name="value">The value in Acre.</param>
 	/// <returns>A new <see cref="Area{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Area<T> FromAcre(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AcreToSquareMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Area unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAreaUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two Area values, returning the absolute difference as a non-negative Area.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Area<T> operator -(Area<T> left, Area<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator -(Area<T> left, Area<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Divides Area by Length to produce Length.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Length<T> operator /(Area<T> left, Length<T> right) => Divide<Length<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(Area<T> left, Length<T> right) => Divide<Length<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Area by Length to produce Volume.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Volume<T> operator *(Area<T> left, Length<T> right) => Multiply<Volume<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(Area<T> left, Length<T> right) => Multiply<Volume<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Area by Pressure to produce ForceMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ForceMagnitude<T> operator *(Area<T> left, Pressure<T> right) => Multiply<ForceMagnitude<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(Area<T> left, Pressure<T> right) => Multiply<ForceMagnitude<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Area by ElectricFieldMagnitude to produce ElectricFlux.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ElectricFlux<T> operator *(Area<T> left, ElectricFieldMagnitude<T> right) => Multiply<ElectricFlux<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricFlux<T> operator *(Area<T> left, ElectricFieldMagnitude<T> right) => Multiply<ElectricFlux<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Area by Illuminance to produce LuminousFlux.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static LuminousFlux<T> operator *(Area<T> left, Illuminance<T> right) => Multiply<LuminousFlux<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static LuminousFlux<T> operator *(Area<T> left, Illuminance<T> right) => Multiply<LuminousFlux<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Area by MagneticFluxDensityMagnitude to produce MagneticFlux.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MagneticFlux<T> operator *(Area<T> left, MagneticFluxDensityMagnitude<T> right) => Multiply<MagneticFlux<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFlux<T> operator *(Area<T> left, MagneticFluxDensityMagnitude<T> right) => Multiply<MagneticFlux<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Area by Irradiance to produce Power.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Power<T> operator *(Area<T> left, Irradiance<T> right) => Multiply<Power<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(Area<T> left, Irradiance<T> right) => Multiply<Power<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Area by Luminance to produce LuminousIntensity.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static LuminousIntensity<T> operator *(Area<T> left, Luminance<T> right) => Multiply<LuminousIntensity<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static LuminousIntensity<T> operator *(Area<T> left, Luminance<T> right) => Multiply<LuminousIntensity<T>>(left, right);
+}
 

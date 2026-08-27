@@ -26,48 +26,58 @@ public partial record GroupVelocity<T> : PhysicalQuantity<GroupVelocity<T>, T>, 
 	/// <returns>A new GroupVelocity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static GroupVelocity<T> FromMeterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new GroupVelocity from a value in KilometerPerHour.
 	/// </summary>
 	/// <param name="value">The value in KilometerPerHour.</param>
 	/// <returns>A new GroupVelocity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static GroupVelocity<T> FromKilometerPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilometerPerHourToMeterPerSecond)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new GroupVelocity from a value in MilePerHour.
 	/// </summary>
 	/// <param name="value">The value in MilePerHour.</param>
 	/// <returns>A new GroupVelocity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static GroupVelocity<T> FromMilePerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilePerHourToMeterPerSecond)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new GroupVelocity from a value in FootPerSecond.
 	/// </summary>
 	/// <param name="value">The value in FootPerSecond.</param>
 	/// <returns>A new GroupVelocity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static GroupVelocity<T> FromFootPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FootPerSecondToMeterPerSecond)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new GroupVelocity from a value in Knot.
 	/// </summary>
 	/// <param name="value">The value in Knot.</param>
 	/// <returns>A new GroupVelocity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static GroupVelocity<T> FromKnot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KnotToMeterPerSecond)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Velocity unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IVelocityUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Speed.</summary>
+
+	/// <summary>Implicit conversion to Speed.</summary>
 	public static implicit operator Speed<T>(GroupVelocity<T> value) => Speed<T>.Create(value.Value);
-/// <summary>Explicit conversion from Speed.</summary>
+
+	/// <summary>Explicit conversion from Speed.</summary>
 	public static explicit operator GroupVelocity<T>(Speed<T> value) => Create(value.Value);
-/// <summary>Creates a GroupVelocity from a Speed value.</summary>
+
+	/// <summary>Creates a GroupVelocity from a Speed value.</summary>
 	public static GroupVelocity<T> From(Speed<T> value) => Create(value.Value);
-/// <summary>Subtracts two GroupVelocity values, returning the absolute difference as a non-negative GroupVelocity.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static GroupVelocity<T> operator -(GroupVelocity<T> left, GroupVelocity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two GroupVelocity values, returning the absolute difference as a non-negative GroupVelocity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GroupVelocity<T> operator -(GroupVelocity<T> left, GroupVelocity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

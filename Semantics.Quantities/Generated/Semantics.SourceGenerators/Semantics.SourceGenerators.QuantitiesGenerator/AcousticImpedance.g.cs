@@ -25,17 +25,20 @@ public partial record AcousticImpedance<T> : PhysicalQuantity<AcousticImpedance<
 	/// <returns>A new <see cref="AcousticImpedance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AcousticImpedance<T> FromPascalSecondPerMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AcousticImpedance unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAcousticImpedanceUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two AcousticImpedance values, returning the absolute difference as a non-negative AcousticImpedance.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AcousticImpedance<T> operator -(AcousticImpedance<T> left, AcousticImpedance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AcousticImpedance<T> operator -(AcousticImpedance<T> left, AcousticImpedance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

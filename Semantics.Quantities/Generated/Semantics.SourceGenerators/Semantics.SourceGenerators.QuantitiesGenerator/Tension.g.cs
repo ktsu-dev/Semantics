@@ -26,41 +26,50 @@ public partial record Tension<T> : PhysicalQuantity<Tension<T>, T>, IVector0<Ten
 	/// <returns>A new Tension instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Tension<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Tension from a value in Kilonewton.
 	/// </summary>
 	/// <param name="value">The value in Kilonewton.</param>
 	/// <returns>A new Tension instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Tension<T> FromKilonewton(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Tension from a value in Dyne.
 	/// </summary>
 	/// <param name="value">The value in Dyne.</param>
 	/// <returns>A new Tension instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Tension<T> FromDyne(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DyneToNewtons)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Tension from a value in PoundForce.
 	/// </summary>
 	/// <param name="value">The value in PoundForce.</param>
 	/// <returns>A new Tension instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Tension<T> FromPoundForce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundForceToNewtons)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Force unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IForceUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to ForceMagnitude.</summary>
+
+	/// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Tension<T> value) => ForceMagnitude<T>.Create(value.Value);
-/// <summary>Explicit conversion from ForceMagnitude.</summary>
+
+	/// <summary>Explicit conversion from ForceMagnitude.</summary>
 	public static explicit operator Tension<T>(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Creates a Tension from a ForceMagnitude value.</summary>
+
+	/// <summary>Creates a Tension from a ForceMagnitude value.</summary>
 	public static Tension<T> From(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two Tension values, returning the absolute difference as a non-negative Tension.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Tension<T> operator -(Tension<T> left, Tension<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two Tension values, returning the absolute difference as a non-negative Tension.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Tension<T> operator -(Tension<T> left, Tension<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

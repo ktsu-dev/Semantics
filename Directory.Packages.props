@@ -14,7 +14,7 @@
     <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
     <!-- Source generator packages -->
-    <PackageVersion Include="ktsu.CodeBlocker" Version="1.2.16" />
+    <PackageVersion Include="ktsu.CodeBlocker" Version="1.3.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" />
     <!-- Build-time only: the generator reads its metadata with it. No shipping project

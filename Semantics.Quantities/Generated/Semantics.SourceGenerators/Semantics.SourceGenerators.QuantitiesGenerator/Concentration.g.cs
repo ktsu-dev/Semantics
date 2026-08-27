@@ -25,50 +25,62 @@ public partial record Concentration<T> : PhysicalQuantity<Concentration<T>, T>, 
 	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Concentration<T> FromMolePerCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Concentration{T}"/> from a value in Molar.
 	/// </summary>
 	/// <param name="value">The value in Molar.</param>
 	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Concentration<T> FromMolar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MolarToCubicMeter)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Concentration{T}"/> from a value in Millimolar.
 	/// </summary>
 	/// <param name="value">The value in Millimolar.</param>
 	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Concentration<T> FromMillimolar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MillimolarToMolePerCubicMeter)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Concentration{T}"/> from a value in Micromolar.
 	/// </summary>
 	/// <param name="value">The value in Micromolar.</param>
 	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Concentration<T> FromMicromolar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MicromolarToMolePerCubicMeter)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Concentration unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IConcentrationUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two Concentration values, returning the absolute difference as a non-negative Concentration.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Concentration<T> operator -(Concentration<T> left, Concentration<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Concentration<T> operator -(Concentration<T> left, Concentration<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies Concentration by Volume to produce AmountOfSubstance.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AmountOfSubstance<T> operator *(Concentration<T> left, Volume<T> right) => Multiply<AmountOfSubstance<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AmountOfSubstance<T> operator *(Concentration<T> left, Volume<T> right) => Multiply<AmountOfSubstance<T>>(left, right);
+
+	/// <summary>
 	/// Divides Concentration by Duration to produce ReactionRate.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ReactionRate<T> operator /(Concentration<T> left, Duration<T> right) => Divide<ReactionRate<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ReactionRate<T> operator /(Concentration<T> left, Duration<T> right) => Divide<ReactionRate<T>>(left, right);
+
+	/// <summary>
 	/// Divides Concentration by ReactionRate to produce Duration.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Duration<T> operator /(Concentration<T> left, ReactionRate<T> right) => Divide<Duration<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Concentration<T> left, ReactionRate<T> right) => Divide<Duration<T>>(left, right);
+}
 

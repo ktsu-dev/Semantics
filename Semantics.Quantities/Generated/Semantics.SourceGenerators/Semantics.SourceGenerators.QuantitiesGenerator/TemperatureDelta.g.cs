@@ -24,35 +24,40 @@ public partial record TemperatureDelta<T> : PhysicalQuantity<TemperatureDelta<T>
 	/// <param name="value">The value in Kelvin.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
 	public static TemperatureDelta<T> FromKelvin(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Celsius.
 	/// </summary>
 	/// <param name="value">The value in Celsius.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
 	public static TemperatureDelta<T> FromCelsius(T value) => Create((value + T.CreateChecked(Units.ConversionConstants.CelsiusToKelvinOffset)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Fahrenheit.
 	/// </summary>
 	/// <param name="value">The value in Fahrenheit.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
 	public static TemperatureDelta<T> FromFahrenheit(T value) => Create(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Rankine.
 	/// </summary>
 	/// <param name="value">The value in Rankine.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
 	public static TemperatureDelta<T> FromRankine(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Temperature unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ITemperatureUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Temperature{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public Temperature<T> Magnitude() => Temperature<T>.Create(T.Abs(Value));
-};
+}
 

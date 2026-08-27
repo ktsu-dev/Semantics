@@ -10,7 +10,8 @@ using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.CodeGen;
 using Semantics.SourceGenerators.Models;
-using Semantics.SourceGenerators.Templates;
+using ktsu.CodeBlocker.Templates;
+using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;
 
 /// <summary>
 /// Source generator that creates quantity types from the unified vector schema in dimensions.json.
@@ -686,8 +687,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				: BuildToBaseExpression(unitName, unitMap);
 
 			string body = applyV0Guard
-				? $" => Create(Vector0Guards.{guardMethod}({conversionExpr}, nameof(value)));"
-				: $" => Create({conversionExpr});";
+				? $"=> Create(Vector0Guards.{guardMethod}({conversionExpr}, nameof(value)));"
+				: $"=> Create({conversionExpr});";
 
 			// Issue #49: factory names are the unit's singular lemma — the unit name verbatim
 			// (e.g. From{Meter}, From{Kilogram}, From{MeterPerSecond}). units.json carries the
@@ -710,12 +711,11 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 			cls.Members.Add(new MethodTemplate()
 			{
-				Comments = comments,
-				Keywords = [Emit.Public, Emit.Static, fullType],
+				Keywords = {Emit.Public, Emit.Static, fullType},
 				Name = $"From{factorySuffix}",
-				Parameters = [new ParameterTemplate { Type = "T", Name = Emit.ValueParameter }],
+				Parameters = {new ParameterTemplate { Type = "T", Name = Emit.ValueParameter }},
 				BodyFactory = (b) => b.Write(body),
-			});
+			}.WithComments(comments));
 		}
 	}
 
@@ -768,29 +768,29 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	{
 		cls.Members.Add(new FieldTemplate()
 		{
-			Comments = [$"/// <summary>Gets the physical dimension this quantity belongs to.</summary>"],
-			Keywords = [Emit.Public, "override", "DimensionInfo"],
+			Comments = {$"/// <summary>Gets the physical dimension this quantity belongs to.</summary>"},
+			Keywords = {Emit.Public, "override", "DimensionInfo"},
 			Name = $"Dimension => PhysicalDimensions.{dim.Name}",
 		});
 
 		cls.Members.Add(new MethodTemplate()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				$"/// Converts this quantity's SI-base value to the value in <paramref name=\"unit\"/>.",
 				"/// Cross-dimension calls (e.g. passing a non-" + dim.Name + " unit) fail at compile time.",
 				Emit.SummaryClose,
 				"/// <param name=\"unit\">The dimensionally-compatible target unit.</param>",
 				"/// <returns>The value expressed in <paramref name=\"unit\"/>.</returns>",
-			],
-			Keywords = [Emit.Public, "T"],
+			},
+			Keywords = {Emit.Public, "T"},
 			Name = "In",
 			Parameters =
-			[
+			{
 				new ParameterTemplate { Type = $"global::ktsu.Semantics.Quantities.I{dim.Name}Unit", Name = "unit" },
-			],
-			BodyFactory = (body) => body.Write(" => unit.FromBase(Value);"),
+			},
+			BodyFactory = (body) => body.Write("=> unit.FromBase(Value);"),
 		});
 	}
 
@@ -833,30 +833,31 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		{
 			FileName = $"{typeName}.g.cs",
 			Namespace = "ktsu.Semantics.Quantities",
-			Usings = ["System.Numerics"],
+			Usings = {"System.Numerics"},
 		};
 
 		ClassTemplate cls = new()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				$"/// Magnitude (Vector0) quantity for the {dim.Name} dimension.",
 				Emit.SummaryClose,
 				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
-			],
-			Keywords = [Emit.Public, "partial", "record"],
+			},
+			Kind = TypeKind.Record,
+			Keywords = {Emit.Public, "partial"},
 			Name = fullType,
 			BaseClass = $"PhysicalQuantity<{fullType}, T>",
-			Interfaces = [$"IVector0<{fullType}, T>"],
-			Constraints = ["where T : struct, INumber<T>"],
+			Interfaces = {$"IVector0<{fullType}, T>"},
+			Constraints = {"where T : struct, INumber<T>"},
 		};
 
 		// Zero property (satisfies IVector0)
 		cls.Members.Add(new FieldTemplate()
 		{
-			Comments = ["/// <summary>Gets a quantity with value zero.</summary>"],
-			Keywords = [Emit.Public, Emit.Static, fullType],
+			Comments = {"/// <summary>Gets a quantity with value zero.</summary>"},
+			Keywords = {Emit.Public, Emit.Static, fullType},
 			Name = "Zero => Create(T.Zero)",
 		});
 
@@ -882,21 +883,21 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		cls.Members.Add(new MethodTemplate()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				$"/// Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.",
 				"/// Magnitude subtraction stays a magnitude (per the unified-vector model).",
 				Emit.SummaryClose,
-			],
-			Attributes = [Emit.PhysicsOperatorSuppression],
-			Keywords = [Emit.Public, Emit.Static, fullType],
+			},
+			Attributes = {Emit.PhysicsOperatorSuppression},
+			Keywords = {Emit.Public, Emit.Static, fullType},
 			Name = "operator -",
 			Parameters =
-			[
+			{
 				new ParameterTemplate { Type = fullType, Name = "left" },
 				new ParameterTemplate { Type = fullType, Name = Emit.RightParameter },
-			],
-			BodyFactory = (body) => body.Write(" => Create(T.Abs(left.Quantity - right.Quantity));"),
+			},
+			BodyFactory = (body) => body.Write("=> Create(T.Abs(left.Quantity - right.Quantity));"),
 		});
 
 		// Cross-dimensional operators
@@ -926,30 +927,31 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		{
 			FileName = $"{typeName}.g.cs",
 			Namespace = "ktsu.Semantics.Quantities",
-			Usings = ["System.Numerics"],
+			Usings = {"System.Numerics"},
 		};
 
 		ClassTemplate cls = new()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				$"/// Signed one-dimensional (Vector1) quantity for the {dim.Name} dimension.",
 				Emit.SummaryClose,
 				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
-			],
-			Keywords = [Emit.Public, "partial", "record"],
+			},
+			Kind = TypeKind.Record,
+			Keywords = {Emit.Public, "partial"},
 			Name = fullType,
 			BaseClass = $"PhysicalQuantity<{fullType}, T>",
-			Interfaces = [$"IVector1<{fullType}, T>"],
-			Constraints = ["where T : struct, INumber<T>"],
+			Interfaces = {$"IVector1<{fullType}, T>"},
+			Constraints = {"where T : struct, INumber<T>"},
 		};
 
 		// Zero property (satisfies IVector1)
 		cls.Members.Add(new FieldTemplate()
 		{
-			Comments = ["/// <summary>Gets a quantity with value zero.</summary>"],
-			Keywords = [Emit.Public, Emit.Static, fullType],
+			Comments = {"/// <summary>Gets a quantity with value zero.</summary>"},
+			Keywords = {Emit.Public, Emit.Static, fullType},
 			Name = "Zero => Create(T.Zero)",
 		});
 
@@ -972,16 +974,16 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			cls.Members.Add(new MethodTemplate()
 			{
 				Comments =
-				[
+				{
 					Emit.SummaryOpen,
 					$"/// Gets the magnitude of this quantity as a <see cref=\"{v0TypeName}{{T}}\"/>.",
 					Emit.SummaryClose,
 					$"/// <returns>The non-negative magnitude.</returns>",
-				],
-				Keywords = [Emit.Public, $"{v0TypeName}<T>"],
+				},
+				Keywords = {Emit.Public, $"{v0TypeName}<T>"},
 				Name = "Magnitude",
-				Parameters = [],
-				BodyFactory = (body) => body.Write($" => {v0TypeName}<T>.Create(T.Abs(Value));"),
+				Parameters = {},
+				BodyFactory = (body) => body.Write($"=> {v0TypeName}<T>.Create(T.Abs(Value));"),
 			});
 		}
 
@@ -1107,31 +1109,32 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			{
 				FileName = $"{typeName}.g.cs",
 				Namespace = "ktsu.Semantics.Quantities",
-				Usings = ["System.Numerics"],
+				Usings = {"System.Numerics"},
 			};
 
 			ClassTemplate cls = new()
 			{
 				Comments =
-				[
+				{
 					Emit.SummaryOpen,
 					$"/// {overload.Description}",
 					$"/// Semantic overload of <see cref=\"{baseTypeName}{{T}}\"/>.",
 					Emit.SummaryClose,
 					"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
-				],
-				Keywords = [Emit.Public, "partial", "record"],
+				},
+				Kind = TypeKind.Record,
+			Keywords = {Emit.Public, "partial"},
 				Name = fullType,
 				BaseClass = $"PhysicalQuantity<{fullType}, T>",
-				Interfaces = [interfaceName],
-				Constraints = ["where T : struct, INumber<T>"],
+				Interfaces = {interfaceName},
+				Constraints = {"where T : struct, INumber<T>"},
 			};
 
 			// Zero property
 			cls.Members.Add(new FieldTemplate()
 			{
-				Comments = ["/// <summary>Gets a quantity with value zero.</summary>"],
-				Keywords = [Emit.Public, Emit.Static, fullType],
+				Comments = {"/// <summary>Gets a quantity with value zero.</summary>"},
+				Keywords = {Emit.Public, Emit.Static, fullType},
 				Name = "Zero => Create(T.Zero)",
 			});
 
@@ -1158,31 +1161,31 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			// Implicit widening to base type
 			cls.Members.Add(new MethodTemplate()
 			{
-				Comments = [$"/// <summary>Implicit conversion to {baseTypeName}.</summary>"],
-				Keywords = [Emit.Public, Emit.Static, "implicit", "operator"],
+				Comments = {$"/// <summary>Implicit conversion to {baseTypeName}.</summary>"},
+				Keywords = {Emit.Public, Emit.Static, "implicit", "operator"},
 				Name = baseFullType,
-				Parameters = [new ParameterTemplate { Type = fullType, Name = Emit.ValueParameter }],
-				BodyFactory = (body) => body.Write($" => {baseFullType}.Create(value.Value);"),
+				Parameters = {new ParameterTemplate { Type = fullType, Name = Emit.ValueParameter }},
+				BodyFactory = (body) => body.Write($"=> {baseFullType}.Create(value.Value);"),
 			});
 
 			// Explicit narrowing from base type
 			cls.Members.Add(new MethodTemplate()
 			{
-				Comments = [$"/// <summary>Explicit conversion from {baseTypeName}.</summary>"],
-				Keywords = [Emit.Public, Emit.Static, "explicit", "operator"],
+				Comments = {$"/// <summary>Explicit conversion from {baseTypeName}.</summary>"},
+				Keywords = {Emit.Public, Emit.Static, "explicit", "operator"},
 				Name = fullType,
-				Parameters = [new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }],
-				BodyFactory = (body) => body.Write($" => Create(value.Value);"),
+				Parameters = {new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }},
+				BodyFactory = (body) => body.Write($"=> Create(value.Value);"),
 			});
 
 			// Factory-style narrowing from base
 			cls.Members.Add(new MethodTemplate()
 			{
-				Comments = [$"/// <summary>Creates a {typeName} from a {baseTypeName} value.</summary>"],
-				Keywords = [Emit.Public, Emit.Static, fullType],
+				Comments = {$"/// <summary>Creates a {typeName} from a {baseTypeName} value.</summary>"},
+				Keywords = {Emit.Public, Emit.Static, fullType},
 				Name = "From",
-				Parameters = [new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }],
-				BodyFactory = (body) => body.Write(" => Create(value.Value);"),
+				Parameters = {new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }},
+				BodyFactory = (body) => body.Write("=> Create(value.Value);"),
 			});
 
 			// V0 overload subtraction returns the same V0 of T.Abs(left - right) (locked
@@ -1193,16 +1196,16 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			{
 				cls.Members.Add(new MethodTemplate()
 				{
-					Comments = [$"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.</summary>"],
-					Attributes = [Emit.PhysicsOperatorSuppression],
-					Keywords = [Emit.Public, Emit.Static, fullType],
+					Comments = {$"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.</summary>"},
+					Attributes = {Emit.PhysicsOperatorSuppression},
+					Keywords = {Emit.Public, Emit.Static, fullType},
 					Name = "operator -",
 					Parameters =
-					[
+					{
 						new ParameterTemplate { Type = fullType, Name = "left" },
 						new ParameterTemplate { Type = fullType, Name = Emit.RightParameter },
-					],
-					BodyFactory = (body) => body.Write(" => Create(T.Abs(left.Quantity - right.Quantity));"),
+					},
+					BodyFactory = (body) => body.Write("=> Create(T.Abs(left.Quantity - right.Quantity));"),
 				});
 			}
 
@@ -1220,11 +1223,11 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 					string expr = rel.Value; // uses "Value" referring to this instance
 					cls.Members.Add(new MethodTemplate()
 					{
-						Comments = [$"/// <summary>Converts this {typeName} to a {targetName}.</summary>"],
-						Keywords = [Emit.Public, targetType],
+						Comments = {$"/// <summary>Converts this {typeName} to a {targetName}.</summary>"},
+						Keywords = {Emit.Public, targetType},
 						Name = methodName,
-						Parameters = [],
-						BodyFactory = (body) => body.Write($" => {targetType}.Create({expr});"),
+						Parameters = {},
+						BodyFactory = (body) => body.Write($"=> {targetType}.Create({expr});"),
 					});
 				}
 				else if (methodName.StartsWith("From", StringComparison.Ordinal))
@@ -1236,11 +1239,11 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 					string expr = rel.Value.Replace("Value", "source.Value");
 					cls.Members.Add(new MethodTemplate()
 					{
-						Comments = [$"/// <summary>Creates a {typeName} from a {sourceName} value.</summary>"],
-						Keywords = [Emit.Public, Emit.Static, fullType],
+						Comments = {$"/// <summary>Creates a {typeName} from a {sourceName} value.</summary>"},
+						Keywords = {Emit.Public, Emit.Static, fullType},
 						Name = methodName,
-						Parameters = [new ParameterTemplate { Type = sourceType, Name = "source" }],
-						BodyFactory = (body) => body.Write($" => Create({expr});"),
+						Parameters = {new ParameterTemplate { Type = sourceType, Name = "source" }},
+						BodyFactory = (body) => body.Write($"=> Create({expr});"),
 					});
 				}
 			}
@@ -1346,20 +1349,20 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				cls.Members.Add(new MethodTemplate()
 				{
 					Comments =
-					[
+					{
 						Emit.SummaryOpen,
 						$"/// {(op.Op == "*" ? "Multiplies" : "Divides")} {op.LeftTypeName} by {op.RightTypeName} to produce {op.ReturnTypeName}.",
 						Emit.SummaryClose,
-					],
-					Attributes = [Emit.PhysicsOperatorSuppression],
-					Keywords = [Emit.Public, Emit.Static, $"{op.ReturnTypeName}<T>"],
+					},
+					Attributes = {Emit.PhysicsOperatorSuppression},
+					Keywords = {Emit.Public, Emit.Static, $"{op.ReturnTypeName}<T>"},
 					Name = $"operator {op.Op}",
 					Parameters =
-					[
+					{
 						new ParameterTemplate { Type = $"{op.LeftTypeName}<T>", Name = "left" },
 						new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = Emit.RightParameter },
-					],
-					BodyFactory = (body) => body.Write($" => {helperName}<{op.ReturnTypeName}<T>>(left, right);"),
+					},
+					BodyFactory = (body) => body.Write($"=> {helperName}<{op.ReturnTypeName}<T>>(left, right);"),
 				});
 			}
 			else
@@ -1399,7 +1402,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		{
 			// VN op V0: component-wise with right.Value
 			string initExpr = string.Join(", ", resultComponents.Select(c => $"{c} = left.{c} {op.Op} right.Value"));
-			bodyExpr = $" => new() {{ {initExpr} }};";
+			bodyExpr = $"=> new() {{ {initExpr} }};";
 		}
 		else if (leftForm <= 1 && rightForm >= 2)
 		{
@@ -1407,7 +1410,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			if (op.Op == "*")
 			{
 				string initExpr = string.Join(", ", resultComponents.Select(c => $"{c} = left.Value {op.Op} right.{c}"));
-				bodyExpr = $" => new() {{ {initExpr} }};";
+				bodyExpr = $"=> new() {{ {initExpr} }};";
 			}
 			else
 			{
@@ -1423,19 +1426,19 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		cls.Members.Add(new MethodTemplate()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				$"/// {(op.Op == "*" ? "Multiplies" : "Divides")} {op.LeftTypeName} by {op.RightTypeName} to produce {op.ReturnTypeName}.",
 				Emit.SummaryClose,
-			],
-			Attributes = [Emit.PhysicsOperatorSuppression],
-			Keywords = [Emit.Public, Emit.Static, $"{op.ReturnTypeName}<T>"],
+			},
+			Attributes = {Emit.PhysicsOperatorSuppression},
+			Keywords = {Emit.Public, Emit.Static, $"{op.ReturnTypeName}<T>"},
 			Name = $"operator {op.Op}",
 			Parameters =
-			[
+			{
 				new ParameterTemplate { Type = $"{op.LeftTypeName}<T>", Name = "left" },
 				new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = Emit.RightParameter },
-			],
+			},
 			BodyFactory = (body) => body.Write(bodyExpr),
 		});
 	}

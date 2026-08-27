@@ -25,42 +25,50 @@ public partial record Capacitance<T> : PhysicalQuantity<Capacitance<T>, T>, IVec
 	/// <returns>A new <see cref="Capacitance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacitance<T> FromFarad(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Capacitance{T}"/> from a value in Microfarad.
 	/// </summary>
 	/// <param name="value">The value in Microfarad.</param>
 	/// <returns>A new <see cref="Capacitance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacitance<T> FromMicrofarad(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Capacitance{T}"/> from a value in Nanofarad.
 	/// </summary>
 	/// <param name="value">The value in Nanofarad.</param>
 	/// <returns>A new <see cref="Capacitance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacitance<T> FromNanofarad(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Capacitance{T}"/> from a value in Picofarad.
 	/// </summary>
 	/// <param name="value">The value in Picofarad.</param>
 	/// <returns>A new <see cref="Capacitance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacitance<T> FromPicofarad(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Pico)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricCapacitance unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IElectricCapacitanceUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two Capacitance values, returning the absolute difference as a non-negative Capacitance.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Capacitance<T> operator -(Capacitance<T> left, Capacitance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Capacitance<T> operator -(Capacitance<T> left, Capacitance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies Capacitance by VoltageMagnitude to produce ChargeMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ChargeMagnitude<T> operator *(Capacitance<T> left, VoltageMagnitude<T> right) => Multiply<ChargeMagnitude<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ChargeMagnitude<T> operator *(Capacitance<T> left, VoltageMagnitude<T> right) => Multiply<ChargeMagnitude<T>>(left, right);
+}
 

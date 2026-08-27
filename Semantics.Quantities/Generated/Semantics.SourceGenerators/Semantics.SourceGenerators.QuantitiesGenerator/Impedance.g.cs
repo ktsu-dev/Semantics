@@ -26,34 +26,42 @@ public partial record Impedance<T> : PhysicalQuantity<Impedance<T>, T>, IVector0
 	/// <returns>A new Impedance instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Impedance<T> FromOhm(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Impedance from a value in Kilohm.
 	/// </summary>
 	/// <param name="value">The value in Kilohm.</param>
 	/// <returns>A new Impedance instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Impedance<T> FromKilohm(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Impedance from a value in Megohm.
 	/// </summary>
 	/// <param name="value">The value in Megohm.</param>
 	/// <returns>A new Impedance instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Impedance<T> FromMegohm(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricResistance unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IElectricResistanceUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Resistance.</summary>
+
+	/// <summary>Implicit conversion to Resistance.</summary>
 	public static implicit operator Resistance<T>(Impedance<T> value) => Resistance<T>.Create(value.Value);
-/// <summary>Explicit conversion from Resistance.</summary>
+
+	/// <summary>Explicit conversion from Resistance.</summary>
 	public static explicit operator Impedance<T>(Resistance<T> value) => Create(value.Value);
-/// <summary>Creates a Impedance from a Resistance value.</summary>
+
+	/// <summary>Creates a Impedance from a Resistance value.</summary>
 	public static Impedance<T> From(Resistance<T> value) => Create(value.Value);
-/// <summary>Subtracts two Impedance values, returning the absolute difference as a non-negative Impedance.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Impedance<T> operator -(Impedance<T> left, Impedance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two Impedance values, returning the absolute difference as a non-negative Impedance.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Impedance<T> operator -(Impedance<T> left, Impedance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

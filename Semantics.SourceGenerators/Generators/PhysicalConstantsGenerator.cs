@@ -8,7 +8,8 @@ using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
 using Semantics.SourceGenerators.CodeGen;
-using Semantics.SourceGenerators.Templates;
+using ktsu.CodeBlocker.Templates;
+using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;
 
 /// <summary>
 /// Source generator that creates the PhysicalConstants.cs file from JSON metadata.
@@ -58,22 +59,23 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 			FileName = "PhysicalConstants.g.cs",
 			Namespace = "ktsu.Semantics.Quantities",
 			Usings =
-			[
+			{
 				"System.Globalization",
 				"System.Numerics",
-			],
+			},
 		};
 
 		ClassTemplate constantsClass = new()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				"/// Provides fundamental physical constants used throughout the Semantics library.",
 				"/// All values are based on the 2019 redefinition of SI base units and CODATA 2018 values.",
 				Emit.SummaryClose,
-			],
-			Keywords = [Emit.Public, Emit.Static, "class"],
+			},
+			Kind = TypeKind.Class,
+			Keywords = {Emit.Public, Emit.Static},
 			Name = "PhysicalConstants",
 		};
 
@@ -88,12 +90,13 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 			ClassTemplate domainClass = new()
 			{
 				Comments =
-				[
+				{
 					Emit.SummaryOpen,
 					$"/// {domain.Description}",
 					Emit.SummaryClose,
-				],
-				Keywords = [Emit.Public, Emit.Static, "class"],
+				},
+				Kind = TypeKind.Class,
+			Keywords = {Emit.Public, Emit.Static},
 				Name = domain.Name,
 			};
 
@@ -101,30 +104,31 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 			ClassTemplate holderClass = new()
 			{
 				Comments =
-				[
+				{
 					Emit.SummaryOpen,
 					$"/// Caches the {domain.Name} constants materialised into <typeparamref name=\"T\"/>.",
 					Emit.SummaryClose,
-				],
-				Keywords = ["private", Emit.Static, "class"],
+				},
+				Kind = TypeKind.Class,
+			Keywords = {"private", Emit.Static},
 				Name = $"{HolderName}<T>",
-				Constraints = [NumericConstraint],
+				Constraints = {NumericConstraint},
 			};
 
 			foreach (ConstantDefinition constant in domain.Constants.OrderBy(c => c.Name))
 			{
 				domainClass.Members.Add(new MethodTemplate()
 				{
-					Comments = [$"/// <summary>{constant.Description}</summary>"],
-					Keywords = [Emit.Public, Emit.Static, "T"],
+					Comments = {$"/// <summary>{constant.Description}</summary>"},
+					Keywords = {Emit.Public, Emit.Static, "T"},
 					Name = $"{constant.Name}<T>",
 					BodyFactory = (body) => body.Write($" {NumericConstraint} => {HolderName}<T>.{constant.Name};"),
 				});
 
 				holderClass.Members.Add(new FieldTemplate()
 				{
-					Comments = [$"/// <summary>{constant.Description}</summary>"],
-					Keywords = ["internal", Emit.Static, "readonly", "T"],
+					Comments = {$"/// <summary>{constant.Description}</summary>"},
+					Keywords = {"internal", Emit.Static, "readonly", "T"},
 					Name = constant.Name,
 					DefaultValue = $"T.Parse(\"{constant.Value}\", {ParseStyles}, CultureInfo.InvariantCulture)",
 				});
@@ -144,12 +148,13 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 			ClassTemplate genericClass = new()
 			{
 				Comments =
-				[
+				{
 					Emit.SummaryOpen,
 					"/// Helper methods to get constants as generic numeric types.",
 					Emit.SummaryClose,
-				],
-				Keywords = [Emit.Public, Emit.Static, "class"],
+				},
+				Kind = TypeKind.Class,
+			Keywords = {Emit.Public, Emit.Static},
 				Name = "Generic",
 			};
 
@@ -162,8 +167,8 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 
 				genericClass.Members.Add(new MethodTemplate()
 				{
-					Comments = [$"/// <summary>Gets {constant.Description.ToLowerInvariant()} as type T.</summary>"],
-					Keywords = [Emit.Public, Emit.Static, "T"],
+					Comments = {$"/// <summary>Gets {constant.Description.ToLowerInvariant()} as type T.</summary>"},
+					Keywords = {Emit.Public, Emit.Static, "T"},
 					Name = $"{constant.Name}<T>",
 					BodyFactory = (body) => body.Write($" {NumericConstraint} => {domainName}.{constant.Name}<T>();"),
 				});

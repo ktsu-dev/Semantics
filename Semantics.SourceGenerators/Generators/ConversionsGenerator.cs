@@ -6,7 +6,8 @@ using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
 using Semantics.SourceGenerators.CodeGen;
-using Semantics.SourceGenerators.Templates;
+using ktsu.CodeBlocker.Templates;
+using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;
 
 /// <summary>
 /// Source generator that creates the ConversionConstants.cs file from JSON metadata.
@@ -32,18 +33,18 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 		ClassTemplate constantsClass = new()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				"/// Conversion constants used by generated unit definitions.",
 				"/// Values sourced from conversions.json metadata.",
 				Emit.SummaryClose,
-			],
+			},
+			Kind = TypeKind.Class,
 			Keywords =
-			[
+			{
 				"internal",
 				Emit.Static,
-				"class",
-			],
+			},
 			Name = "ConversionConstants",
 		};
 
@@ -54,15 +55,15 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 				constantsClass.Members.Add(new FieldTemplate()
 				{
 					Comments =
-					[
+					{
 						$"/// <summary>{factor.Description}</summary>",
-					],
+					},
 					Keywords =
-					[
+					{
 						"internal",
 						"const",
 						"double",
-					],
+					},
 					Name = factor.Name,
 					DefaultValue = factor.Value,
 				});

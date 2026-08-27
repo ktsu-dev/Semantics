@@ -135,8 +135,8 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 		string ratioExpr = referenceExpr == null ? "linearValue" : "linearValue / reference";
 		string logExpr = logBase switch
 		{
-			"10.0" => $"Math.Log10({ratioExpr})",
-			"2.0" => $"Math.Log2({ratioExpr})",
+			"10.0"=> $"Math.Log10({ratioExpr})",
+			"2.0"=> $"Math.Log2({ratioExpr})",
 			_ => $"Math.Log({ratioExpr}, {logBase})",
 		};
 

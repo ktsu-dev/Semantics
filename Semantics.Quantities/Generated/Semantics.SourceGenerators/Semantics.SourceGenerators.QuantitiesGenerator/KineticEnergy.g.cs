@@ -26,76 +26,90 @@ public partial record KineticEnergy<T> : PhysicalQuantity<KineticEnergy<T>, T>, 
 	/// <returns>A new KineticEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static KineticEnergy<T> FromJoule(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new KineticEnergy from a value in Kilojoule.
 	/// </summary>
 	/// <param name="value">The value in Kilojoule.</param>
 	/// <returns>A new KineticEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static KineticEnergy<T> FromKilojoule(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new KineticEnergy from a value in ElectronVolt.
 	/// </summary>
 	/// <param name="value">The value in ElectronVolt.</param>
 	/// <returns>A new KineticEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static KineticEnergy<T> FromElectronVolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ElectronVoltToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new KineticEnergy from a value in Calorie.
 	/// </summary>
 	/// <param name="value">The value in Calorie.</param>
 	/// <returns>A new KineticEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static KineticEnergy<T> FromCalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CalorieToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new KineticEnergy from a value in Kilocalorie.
 	/// </summary>
 	/// <param name="value">The value in Kilocalorie.</param>
 	/// <returns>A new KineticEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static KineticEnergy<T> FromKilocalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilocalorieToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new KineticEnergy from a value in KilowattHour.
 	/// </summary>
 	/// <param name="value">The value in KilowattHour.</param>
 	/// <returns>A new KineticEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static KineticEnergy<T> FromKilowattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new KineticEnergy from a value in WattHour.
 	/// </summary>
 	/// <param name="value">The value in WattHour.</param>
 	/// <returns>A new KineticEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static KineticEnergy<T> FromWattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.WattHourToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new KineticEnergy from a value in Erg.
 	/// </summary>
 	/// <param name="value">The value in Erg.</param>
 	/// <returns>A new KineticEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static KineticEnergy<T> FromErg(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ErgToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new KineticEnergy from a value in Btu.
 	/// </summary>
 	/// <param name="value">The value in Btu.</param>
 	/// <returns>A new KineticEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static KineticEnergy<T> FromBtu(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BtuToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Energy unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IEnergyUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Energy.</summary>
+
+	/// <summary>Implicit conversion to Energy.</summary>
 	public static implicit operator Energy<T>(KineticEnergy<T> value) => Energy<T>.Create(value.Value);
-/// <summary>Explicit conversion from Energy.</summary>
+
+	/// <summary>Explicit conversion from Energy.</summary>
 	public static explicit operator KineticEnergy<T>(Energy<T> value) => Create(value.Value);
-/// <summary>Creates a KineticEnergy from a Energy value.</summary>
+
+	/// <summary>Creates a KineticEnergy from a Energy value.</summary>
 	public static KineticEnergy<T> From(Energy<T> value) => Create(value.Value);
-/// <summary>Subtracts two KineticEnergy values, returning the absolute difference as a non-negative KineticEnergy.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static KineticEnergy<T> operator -(KineticEnergy<T> left, KineticEnergy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two KineticEnergy values, returning the absolute difference as a non-negative KineticEnergy.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static KineticEnergy<T> operator -(KineticEnergy<T> left, KineticEnergy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

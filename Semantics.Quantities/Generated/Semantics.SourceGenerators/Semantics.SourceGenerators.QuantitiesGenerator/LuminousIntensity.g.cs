@@ -25,32 +25,40 @@ public partial record LuminousIntensity<T> : PhysicalQuantity<LuminousIntensity<
 	/// <returns>A new <see cref="LuminousIntensity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static LuminousIntensity<T> FromCandela(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="LuminousIntensity{T}"/> from a value in Millicandela.
 	/// </summary>
 	/// <param name="value">The value in Millicandela.</param>
 	/// <returns>A new <see cref="LuminousIntensity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static LuminousIntensity<T> FromMillicandela(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-LuminousIntensity unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ILuminousIntensityUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two LuminousIntensity values, returning the absolute difference as a non-negative LuminousIntensity.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static LuminousIntensity<T> operator -(LuminousIntensity<T> left, LuminousIntensity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static LuminousIntensity<T> operator -(LuminousIntensity<T> left, LuminousIntensity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Divides LuminousIntensity by Area to produce Luminance.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Luminance<T> operator /(LuminousIntensity<T> left, Area<T> right) => Divide<Luminance<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Luminance<T> operator /(LuminousIntensity<T> left, Area<T> right) => Divide<Luminance<T>>(left, right);
+
+	/// <summary>
 	/// Divides LuminousIntensity by Luminance to produce Area.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Area<T> operator /(LuminousIntensity<T> left, Luminance<T> right) => Divide<Area<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator /(LuminousIntensity<T> left, Luminance<T> right) => Divide<Area<T>>(left, right);
+}
 

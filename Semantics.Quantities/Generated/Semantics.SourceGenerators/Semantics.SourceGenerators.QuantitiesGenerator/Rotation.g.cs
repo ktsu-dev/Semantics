@@ -25,42 +25,50 @@ public partial record Rotation<T> : PhysicalQuantity<Rotation<T>, T>, IVector1<R
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new Rotation instance.</returns>
 	public static Rotation<T> FromRadian(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Rotation from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new Rotation instance.</returns>
 	public static Rotation<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Rotation from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new Rotation instance.</returns>
 	public static Rotation<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Rotation from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new Rotation instance.</returns>
 	public static Rotation<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Rotation from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new Rotation instance.</returns>
 	public static Rotation<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularDisplacement unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAngularDisplacementUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to SignedAngle.</summary>
+
+	/// <summary>Implicit conversion to SignedAngle.</summary>
 	public static implicit operator SignedAngle<T>(Rotation<T> value) => SignedAngle<T>.Create(value.Value);
-/// <summary>Explicit conversion from SignedAngle.</summary>
+
+	/// <summary>Explicit conversion from SignedAngle.</summary>
 	public static explicit operator Rotation<T>(SignedAngle<T> value) => Create(value.Value);
-/// <summary>Creates a Rotation from a SignedAngle value.</summary>
+
+	/// <summary>Creates a Rotation from a SignedAngle value.</summary>
 	public static Rotation<T> From(SignedAngle<T> value) => Create(value.Value);
-};
+}
 

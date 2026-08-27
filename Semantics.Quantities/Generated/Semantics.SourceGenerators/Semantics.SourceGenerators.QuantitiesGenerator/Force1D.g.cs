@@ -24,39 +24,46 @@ public partial record Force1D<T> : PhysicalQuantity<Force1D<T>, T>, IVector1<For
 	/// <param name="value">The value in Newton.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
 	public static Force1D<T> FromNewton(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Force1D{T}"/> from a value in Kilonewton.
 	/// </summary>
 	/// <param name="value">The value in Kilonewton.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
 	public static Force1D<T> FromKilonewton(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Force1D{T}"/> from a value in Dyne.
 	/// </summary>
 	/// <param name="value">The value in Dyne.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
 	public static Force1D<T> FromDyne(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DyneToNewtons)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Force1D{T}"/> from a value in PoundForce.
 	/// </summary>
 	/// <param name="value">The value in PoundForce.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
 	public static Force1D<T> FromPoundForce(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PoundForceToNewtons)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Force unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IForceUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="ForceMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public ForceMagnitude<T> Magnitude() => ForceMagnitude<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Multiplies Force1D by Duration to produce Momentum1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Momentum1D<T> operator *(Force1D<T> left, Duration<T> right) => Multiply<Momentum1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Momentum1D<T> operator *(Force1D<T> left, Duration<T> right) => Multiply<Momentum1D<T>>(left, right);
+}
 

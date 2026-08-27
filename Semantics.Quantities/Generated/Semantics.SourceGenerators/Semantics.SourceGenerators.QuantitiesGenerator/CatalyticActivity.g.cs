@@ -25,28 +25,34 @@ public partial record CatalyticActivity<T> : PhysicalQuantity<CatalyticActivity<
 	/// <returns>A new <see cref="CatalyticActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static CatalyticActivity<T> FromKatal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="CatalyticActivity{T}"/> from a value in EnzymeUnit.
 	/// </summary>
 	/// <param name="value">The value in EnzymeUnit.</param>
 	/// <returns>A new <see cref="CatalyticActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static CatalyticActivity<T> FromEnzymeUnit(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.EnzymeUnitToKatals)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-CatalyticActivity unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ICatalyticActivityUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two CatalyticActivity values, returning the absolute difference as a non-negative CatalyticActivity.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static CatalyticActivity<T> operator -(CatalyticActivity<T> left, CatalyticActivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CatalyticActivity<T> operator -(CatalyticActivity<T> left, CatalyticActivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies CatalyticActivity by Duration to produce AmountOfSubstance.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AmountOfSubstance<T> operator *(CatalyticActivity<T> left, Duration<T> right) => Multiply<AmountOfSubstance<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AmountOfSubstance<T> operator *(CatalyticActivity<T> left, Duration<T> right) => Multiply<AmountOfSubstance<T>>(left, right);
+}
 

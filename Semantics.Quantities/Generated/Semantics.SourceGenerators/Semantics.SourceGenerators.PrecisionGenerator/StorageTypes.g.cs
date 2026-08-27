@@ -9,7 +9,8 @@ using System.Collections.Generic;
 /// <summary>
 /// Available storage types for numeric values in the Semantics library.
 /// </summary>
-public static class StorageTypes{
+public static class StorageTypes
+{
 	/// <summary>The double storage type.</summary>
 	public static readonly Type DOUBLE = typeof(double);
 
@@ -21,6 +22,5 @@ public static class StorageTypes{
 
 	/// <summary>Gets the names of all available storage types.</summary>
 	public static readonly IReadOnlyList<string> Names = new List<string> { "double", "float" };
-
-};
+}
 

@@ -6,7 +6,8 @@ using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
 using Semantics.SourceGenerators.CodeGen;
-using Semantics.SourceGenerators.Templates;
+using ktsu.CodeBlocker.Templates;
+using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;
 
 /// <summary>
 /// Source generator that creates the MetricMagnitudes.cs file from JSON metadata.
@@ -32,12 +33,13 @@ public class MagnitudesGenerator : SemanticsGenerator<MagnitudesMetadata>
 		ClassTemplate magnitudesClass = new()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				"/// Metric magnitude constants for unit scaling.",
 				Emit.SummaryClose,
-			],
-			Keywords = [Emit.Public, Emit.Static, "class"],
+			},
+			Kind = TypeKind.Class,
+			Keywords = {Emit.Public, Emit.Static},
 			Name = "MetricMagnitudes",
 		};
 
@@ -51,8 +53,8 @@ public class MagnitudesGenerator : SemanticsGenerator<MagnitudesMetadata>
 
 			magnitudesClass.Members.Add(new FieldTemplate()
 			{
-				Comments = [$"/// <summary>{magnitude.Name} magnitude ({magnitude.Symbol}): 10^{magnitude.Exponent}</summary>"],
-				Keywords = [Emit.Public, "const", "double"],
+				Comments = {$"/// <summary>{magnitude.Name} magnitude ({magnitude.Symbol}): 10^{magnitude.Exponent}</summary>"},
+				Keywords = {Emit.Public, "const", "double"},
 				Name = magnitude.Name,
 				DefaultValue = valueString,
 			});

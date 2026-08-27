@@ -24,27 +24,32 @@ public partial record Torque1D<T> : PhysicalQuantity<Torque1D<T>, T>, IVector1<T
 	/// <param name="value">The value in NewtonMeter.</param>
 	/// <returns>A new <see cref="Torque1D{T}"/> instance.</returns>
 	public static Torque1D<T> FromNewtonMeter(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Torque1D{T}"/> from a value in PoundFoot.
 	/// </summary>
 	/// <param name="value">The value in PoundFoot.</param>
 	/// <returns>A new <see cref="Torque1D{T}"/> instance.</returns>
 	public static Torque1D<T> FromPoundFoot(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PoundFootToNewtonMeters)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Torque unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ITorqueUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="TorqueMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public TorqueMagnitude<T> Magnitude() => TorqueMagnitude<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Multiplies Torque1D by Duration to produce AngularMomentum1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularMomentum1D<T> operator *(Torque1D<T> left, Duration<T> right) => Multiply<AngularMomentum1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularMomentum1D<T> operator *(Torque1D<T> left, Duration<T> right) => Multiply<AngularMomentum1D<T>>(left, right);
+}
 

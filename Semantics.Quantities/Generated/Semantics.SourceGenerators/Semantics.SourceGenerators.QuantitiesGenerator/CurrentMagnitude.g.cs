@@ -25,55 +25,72 @@ public partial record CurrentMagnitude<T> : PhysicalQuantity<CurrentMagnitude<T>
 	/// <returns>A new <see cref="CurrentMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static CurrentMagnitude<T> FromAmpere(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="CurrentMagnitude{T}"/> from a value in Milliampere.
 	/// </summary>
 	/// <param name="value">The value in Milliampere.</param>
 	/// <returns>A new <see cref="CurrentMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static CurrentMagnitude<T> FromMilliampere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="CurrentMagnitude{T}"/> from a value in Kiloampere.
 	/// </summary>
 	/// <param name="value">The value in Kiloampere.</param>
 	/// <returns>A new <see cref="CurrentMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static CurrentMagnitude<T> FromKiloampere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricCurrent unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IElectricCurrentUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two CurrentMagnitude values, returning the absolute difference as a non-negative CurrentMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static CurrentMagnitude<T> operator -(CurrentMagnitude<T> left, CurrentMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CurrentMagnitude<T> operator -(CurrentMagnitude<T> left, CurrentMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies CurrentMagnitude by Duration to produce ChargeMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ChargeMagnitude<T> operator *(CurrentMagnitude<T> left, Duration<T> right) => Multiply<ChargeMagnitude<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ChargeMagnitude<T> operator *(CurrentMagnitude<T> left, Duration<T> right) => Multiply<ChargeMagnitude<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies CurrentMagnitude by Resistance to produce VoltageMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static VoltageMagnitude<T> operator *(CurrentMagnitude<T> left, Resistance<T> right) => Multiply<VoltageMagnitude<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(CurrentMagnitude<T> left, Resistance<T> right) => Multiply<VoltageMagnitude<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies CurrentMagnitude by VoltageMagnitude to produce Power.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Power<T> operator *(CurrentMagnitude<T> left, VoltageMagnitude<T> right) => Multiply<Power<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(CurrentMagnitude<T> left, VoltageMagnitude<T> right) => Multiply<Power<T>>(left, right);
+
+	/// <summary>
 	/// Divides CurrentMagnitude by VoltageMagnitude to produce Conductance.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Conductance<T> operator /(CurrentMagnitude<T> left, VoltageMagnitude<T> right) => Divide<Conductance<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Conductance<T> operator /(CurrentMagnitude<T> left, VoltageMagnitude<T> right) => Divide<Conductance<T>>(left, right);
+
+	/// <summary>
 	/// Divides CurrentMagnitude by Conductance to produce VoltageMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static VoltageMagnitude<T> operator /(CurrentMagnitude<T> left, Conductance<T> right) => Divide<VoltageMagnitude<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator /(CurrentMagnitude<T> left, Conductance<T> right) => Divide<VoltageMagnitude<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies CurrentMagnitude by Inductance to produce MagneticFlux.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MagneticFlux<T> operator *(CurrentMagnitude<T> left, Inductance<T> right) => Multiply<MagneticFlux<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFlux<T> operator *(CurrentMagnitude<T> left, Inductance<T> right) => Multiply<MagneticFlux<T>>(left, right);
+}
 

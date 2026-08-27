@@ -26,41 +26,50 @@ public partial record Drag<T> : PhysicalQuantity<Drag<T>, T>, IVector0<Drag<T>, 
 	/// <returns>A new Drag instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Drag<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Drag from a value in Kilonewton.
 	/// </summary>
 	/// <param name="value">The value in Kilonewton.</param>
 	/// <returns>A new Drag instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Drag<T> FromKilonewton(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Drag from a value in Dyne.
 	/// </summary>
 	/// <param name="value">The value in Dyne.</param>
 	/// <returns>A new Drag instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Drag<T> FromDyne(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DyneToNewtons)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Drag from a value in PoundForce.
 	/// </summary>
 	/// <param name="value">The value in PoundForce.</param>
 	/// <returns>A new Drag instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Drag<T> FromPoundForce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundForceToNewtons)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Force unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IForceUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to ForceMagnitude.</summary>
+
+	/// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Drag<T> value) => ForceMagnitude<T>.Create(value.Value);
-/// <summary>Explicit conversion from ForceMagnitude.</summary>
+
+	/// <summary>Explicit conversion from ForceMagnitude.</summary>
 	public static explicit operator Drag<T>(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Creates a Drag from a ForceMagnitude value.</summary>
+
+	/// <summary>Creates a Drag from a ForceMagnitude value.</summary>
 	public static Drag<T> From(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two Drag values, returning the absolute difference as a non-negative Drag.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Drag<T> operator -(Drag<T> left, Drag<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two Drag values, returning the absolute difference as a non-negative Drag.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Drag<T> operator -(Drag<T> left, Drag<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

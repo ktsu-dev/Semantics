@@ -25,29 +25,38 @@ public partial record AngularMomentumMagnitude<T> : PhysicalQuantity<AngularMome
 	/// <returns>A new <see cref="AngularMomentumMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AngularMomentumMagnitude<T> FromKilogramMeterSquaredPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularMomentum unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAngularMomentumUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two AngularMomentumMagnitude values, returning the absolute difference as a non-negative AngularMomentumMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularMomentumMagnitude<T> operator -(AngularMomentumMagnitude<T> left, AngularMomentumMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularMomentumMagnitude<T> operator -(AngularMomentumMagnitude<T> left, AngularMomentumMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Divides AngularMomentumMagnitude by Duration to produce TorqueMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static TorqueMagnitude<T> operator /(AngularMomentumMagnitude<T> left, Duration<T> right) => Divide<TorqueMagnitude<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static TorqueMagnitude<T> operator /(AngularMomentumMagnitude<T> left, Duration<T> right) => Divide<TorqueMagnitude<T>>(left, right);
+
+	/// <summary>
 	/// Divides AngularMomentumMagnitude by AngularSpeed to produce MomentOfInertia.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MomentOfInertia<T> operator /(AngularMomentumMagnitude<T> left, AngularSpeed<T> right) => Divide<MomentOfInertia<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentOfInertia<T> operator /(AngularMomentumMagnitude<T> left, AngularSpeed<T> right) => Divide<MomentOfInertia<T>>(left, right);
+
+	/// <summary>
 	/// Divides AngularMomentumMagnitude by MomentOfInertia to produce AngularSpeed.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularSpeed<T> operator /(AngularMomentumMagnitude<T> left, MomentOfInertia<T> right) => Divide<AngularSpeed<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularSpeed<T> operator /(AngularMomentumMagnitude<T> left, MomentOfInertia<T> right) => Divide<AngularSpeed<T>>(left, right);
+}
 

@@ -10,7 +10,8 @@ using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.CodeGen;
 using Semantics.SourceGenerators.Models;
-using Semantics.SourceGenerators.Templates;
+using ktsu.CodeBlocker.Templates;
+using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;
 
 /// <summary>
 /// Source generator that creates the per-unit record types and the static <c>Units</c>
@@ -64,10 +65,10 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 			FileName = "Units.g.cs",
 			Namespace = "ktsu.Semantics.Quantities.Units",
 			Usings =
-			[
+			{
 				"ktsu.Semantics.Quantities",
 				"static ktsu.Semantics.Quantities.Units.ConversionConstants",
-			],
+			},
 		};
 
 		List<string> catalogueUnitNames = [];
@@ -133,63 +134,63 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 			? $"PhysicalDimensions.{dims[0]}"
 			: "null!";
 
-		return new ClassTemplate()
+		return new ClassTemplate
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				$"/// {unit.Description}",
 				Emit.SummaryClose,
-			],
-			Keywords = [Emit.Public, "sealed", "record"],
+			},
+			Kind = TypeKind.Record,
+			Keywords = {Emit.Public, "sealed"},
 			Name = unit.Name,
-			Interfaces = interfaces,
 			Members =
-			[
+			{
 				new ConstructorTemplate()
 				{
-					Comments = ["/// <summary>Initializes a new instance of the unit.</summary>"],
-					Keywords = [Emit.Public],
+					Comments = {"/// <summary>Initializes a new instance of the unit.</summary>"},
+					Keywords = {Emit.Public},
 					Name = unit.Name,
 				},
 				new FieldTemplate()
 				{
-					Comments = ["/// <summary>Gets the full name of the unit.</summary>"],
-					Keywords = [Emit.Public, "string"],
+					Comments = {"/// <summary>Gets the full name of the unit.</summary>"},
+					Keywords = {Emit.Public, "string"},
 					Name = $"Name => \"{unit.Name}\"",
 				},
 				new FieldTemplate()
 				{
-					Comments = ["/// <summary>Gets the symbol/abbreviation of the unit.</summary>"],
-					Keywords = [Emit.Public, "string"],
+					Comments = {"/// <summary>Gets the symbol/abbreviation of the unit.</summary>"},
+					Keywords = {Emit.Public, "string"},
 					Name = $"Symbol => \"{unit.Symbol}\"",
 				},
 				new FieldTemplate()
 				{
-					Comments = ["/// <summary>Gets the unit system this unit belongs to.</summary>"],
-					Keywords = [Emit.Public, "UnitSystem"],
+					Comments = {"/// <summary>Gets the unit system this unit belongs to.</summary>"},
+					Keywords = {Emit.Public, "UnitSystem"},
 					Name = $"System => UnitSystem.{unit.System}",
 				},
 				new FieldTemplate()
 				{
-					Comments = ["/// <summary>Gets the physical dimension this unit measures.</summary>"],
-					Keywords = [Emit.Public, "DimensionInfo"],
+					Comments = {"/// <summary>Gets the physical dimension this unit measures.</summary>"},
+					Keywords = {Emit.Public, "DimensionInfo"},
 					Name = $"Dimension => {dimensionExpr}",
 				},
 				new FieldTemplate()
 				{
-					Comments = ["/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>"],
-					Keywords = [Emit.Public, "double"],
+					Comments = {"/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>"},
+					Keywords = {Emit.Public, "double"},
 					Name = $"ToBaseFactor => {factorExpr}",
 				},
 				new FieldTemplate()
 				{
-					Comments = ["/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>"],
-					Keywords = [Emit.Public, "double"],
+					Comments = {"/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>"},
+					Keywords = {Emit.Public, "double"},
 					Name = $"ToBaseOffset => {offsetExpr}",
 				},
-			],
-		};
+			},
+		}.WithInterfaces(interfaces);
 	}
 
 	/// <summary>
@@ -201,13 +202,14 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 		ClassTemplate unitsCatalogue = new()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				"/// Static catalogue exposing one singleton per declared unit. Generated quantity",
 				"/// types accept these on their typed <c>In(...)</c> methods.",
 				Emit.SummaryClose,
-			],
-			Keywords = [Emit.Public, Emit.Static, "class"],
+			},
+			Kind = TypeKind.Class,
+			Keywords = {Emit.Public, Emit.Static},
 			Name = "Units",
 		};
 
@@ -215,8 +217,8 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 		{
 			unitsCatalogue.Members.Add(new FieldTemplate()
 			{
-				Comments = [$"/// <summary>Singleton <c>{unitName}</c> instance.</summary>"],
-				Keywords = [Emit.Public, Emit.Static, "readonly", unitName],
+				Comments = {$"/// <summary>Singleton <c>{unitName}</c> instance.</summary>"},
+				Keywords = {Emit.Public, Emit.Static, "readonly", unitName},
 				Name = unitName,
 				DefaultValue = $"new {unitName}()",
 			});

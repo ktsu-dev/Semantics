@@ -25,37 +25,50 @@ public partial record MagneticFlux<T> : PhysicalQuantity<MagneticFlux<T>, T>, IV
 	/// <returns>A new <see cref="MagneticFlux{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MagneticFlux<T> FromWeber(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-MagneticFlux unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IMagneticFluxUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two MagneticFlux values, returning the absolute difference as a non-negative MagneticFlux.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MagneticFlux<T> operator -(MagneticFlux<T> left, MagneticFlux<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFlux<T> operator -(MagneticFlux<T> left, MagneticFlux<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Divides MagneticFlux by Area to produce MagneticFluxDensityMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MagneticFluxDensityMagnitude<T> operator /(MagneticFlux<T> left, Area<T> right) => Divide<MagneticFluxDensityMagnitude<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFluxDensityMagnitude<T> operator /(MagneticFlux<T> left, Area<T> right) => Divide<MagneticFluxDensityMagnitude<T>>(left, right);
+
+	/// <summary>
 	/// Divides MagneticFlux by MagneticFluxDensityMagnitude to produce Area.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Area<T> operator /(MagneticFlux<T> left, MagneticFluxDensityMagnitude<T> right) => Divide<Area<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator /(MagneticFlux<T> left, MagneticFluxDensityMagnitude<T> right) => Divide<Area<T>>(left, right);
+
+	/// <summary>
 	/// Divides MagneticFlux by Duration to produce VoltageMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static VoltageMagnitude<T> operator /(MagneticFlux<T> left, Duration<T> right) => Divide<VoltageMagnitude<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator /(MagneticFlux<T> left, Duration<T> right) => Divide<VoltageMagnitude<T>>(left, right);
+
+	/// <summary>
 	/// Divides MagneticFlux by CurrentMagnitude to produce Inductance.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Inductance<T> operator /(MagneticFlux<T> left, CurrentMagnitude<T> right) => Divide<Inductance<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Inductance<T> operator /(MagneticFlux<T> left, CurrentMagnitude<T> right) => Divide<Inductance<T>>(left, right);
+
+	/// <summary>
 	/// Divides MagneticFlux by Inductance to produce CurrentMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static CurrentMagnitude<T> operator /(MagneticFlux<T> left, Inductance<T> right) => Divide<CurrentMagnitude<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CurrentMagnitude<T> operator /(MagneticFlux<T> left, Inductance<T> right) => Divide<CurrentMagnitude<T>>(left, right);
+}
 

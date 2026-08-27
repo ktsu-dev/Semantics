@@ -26,41 +26,50 @@ public partial record Thrust<T> : PhysicalQuantity<Thrust<T>, T>, IVector0<Thrus
 	/// <returns>A new Thrust instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Thrust<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Thrust from a value in Kilonewton.
 	/// </summary>
 	/// <param name="value">The value in Kilonewton.</param>
 	/// <returns>A new Thrust instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Thrust<T> FromKilonewton(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Thrust from a value in Dyne.
 	/// </summary>
 	/// <param name="value">The value in Dyne.</param>
 	/// <returns>A new Thrust instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Thrust<T> FromDyne(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DyneToNewtons)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Thrust from a value in PoundForce.
 	/// </summary>
 	/// <param name="value">The value in PoundForce.</param>
 	/// <returns>A new Thrust instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Thrust<T> FromPoundForce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundForceToNewtons)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Force unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IForceUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to ForceMagnitude.</summary>
+
+	/// <summary>Implicit conversion to ForceMagnitude.</summary>
 	public static implicit operator ForceMagnitude<T>(Thrust<T> value) => ForceMagnitude<T>.Create(value.Value);
-/// <summary>Explicit conversion from ForceMagnitude.</summary>
+
+	/// <summary>Explicit conversion from ForceMagnitude.</summary>
 	public static explicit operator Thrust<T>(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Creates a Thrust from a ForceMagnitude value.</summary>
+
+	/// <summary>Creates a Thrust from a ForceMagnitude value.</summary>
 	public static Thrust<T> From(ForceMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two Thrust values, returning the absolute difference as a non-negative Thrust.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Thrust<T> operator -(Thrust<T> left, Thrust<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two Thrust values, returning the absolute difference as a non-negative Thrust.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Thrust<T> operator -(Thrust<T> left, Thrust<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

@@ -26,41 +26,50 @@ public partial record SoundPower<T> : PhysicalQuantity<SoundPower<T>, T>, IVecto
 	/// <returns>A new SoundPower instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SoundPower<T> FromWatt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new SoundPower from a value in Kilowatt.
 	/// </summary>
 	/// <param name="value">The value in Kilowatt.</param>
 	/// <returns>A new SoundPower instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SoundPower<T> FromKilowatt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new SoundPower from a value in Megawatt.
 	/// </summary>
 	/// <param name="value">The value in Megawatt.</param>
 	/// <returns>A new SoundPower instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SoundPower<T> FromMegawatt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new SoundPower from a value in Horsepower.
 	/// </summary>
 	/// <param name="value">The value in Horsepower.</param>
 	/// <returns>A new SoundPower instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SoundPower<T> FromHorsepower(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HorsepowerToWatts)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Power unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IPowerUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Power.</summary>
+
+	/// <summary>Implicit conversion to Power.</summary>
 	public static implicit operator Power<T>(SoundPower<T> value) => Power<T>.Create(value.Value);
-/// <summary>Explicit conversion from Power.</summary>
+
+	/// <summary>Explicit conversion from Power.</summary>
 	public static explicit operator SoundPower<T>(Power<T> value) => Create(value.Value);
-/// <summary>Creates a SoundPower from a Power value.</summary>
+
+	/// <summary>Creates a SoundPower from a Power value.</summary>
 	public static SoundPower<T> From(Power<T> value) => Create(value.Value);
-/// <summary>Subtracts two SoundPower values, returning the absolute difference as a non-negative SoundPower.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SoundPower<T> operator -(SoundPower<T> left, SoundPower<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two SoundPower values, returning the absolute difference as a non-negative SoundPower.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SoundPower<T> operator -(SoundPower<T> left, SoundPower<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

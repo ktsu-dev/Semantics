@@ -25,28 +25,34 @@ public partial record MagneticFluxDensityMagnitude<T> : PhysicalQuantity<Magneti
 	/// <returns>A new <see cref="MagneticFluxDensityMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MagneticFluxDensityMagnitude<T> FromTesla(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="MagneticFluxDensityMagnitude{T}"/> from a value in Gauss.
 	/// </summary>
 	/// <param name="value">The value in Gauss.</param>
 	/// <returns>A new <see cref="MagneticFluxDensityMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MagneticFluxDensityMagnitude<T> FromGauss(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GaussToTesla)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-MagneticFluxDensity unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IMagneticFluxDensityUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two MagneticFluxDensityMagnitude values, returning the absolute difference as a non-negative MagneticFluxDensityMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MagneticFluxDensityMagnitude<T> operator -(MagneticFluxDensityMagnitude<T> left, MagneticFluxDensityMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFluxDensityMagnitude<T> operator -(MagneticFluxDensityMagnitude<T> left, MagneticFluxDensityMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies MagneticFluxDensityMagnitude by Area to produce MagneticFlux.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MagneticFlux<T> operator *(MagneticFluxDensityMagnitude<T> left, Area<T> right) => Multiply<MagneticFlux<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFlux<T> operator *(MagneticFluxDensityMagnitude<T> left, Area<T> right) => Multiply<MagneticFlux<T>>(left, right);
+}
 

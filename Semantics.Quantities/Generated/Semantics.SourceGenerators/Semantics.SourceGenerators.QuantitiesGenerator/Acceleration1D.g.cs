@@ -24,31 +24,38 @@ public partial record Acceleration1D<T> : PhysicalQuantity<Acceleration1D<T>, T>
 	/// <param name="value">The value in MeterPerSecondSquared.</param>
 	/// <returns>A new <see cref="Acceleration1D{T}"/> instance.</returns>
 	public static Acceleration1D<T> FromMeterPerSecondSquared(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Acceleration1D{T}"/> from a value in StandardGravity.
 	/// </summary>
 	/// <param name="value">The value in StandardGravity.</param>
 	/// <returns>A new <see cref="Acceleration1D{T}"/> instance.</returns>
 	public static Acceleration1D<T> FromStandardGravity(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.StandardGravityToMeterPerSecondSquared)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Acceleration unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAccelerationUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="AccelerationMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public AccelerationMagnitude<T> Magnitude() => AccelerationMagnitude<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Multiplies Acceleration1D by Duration to produce Velocity1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Velocity1D<T> operator *(Acceleration1D<T> left, Duration<T> right) => Multiply<Velocity1D<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Velocity1D<T> operator *(Acceleration1D<T> left, Duration<T> right) => Multiply<Velocity1D<T>>(left, right);
+
+	/// <summary>
 	/// Divides Acceleration1D by Duration to produce Jerk1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Jerk1D<T> operator /(Acceleration1D<T> left, Duration<T> right) => Divide<Jerk1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Jerk1D<T> operator /(Acceleration1D<T> left, Duration<T> right) => Divide<Jerk1D<T>>(left, right);
+}
 

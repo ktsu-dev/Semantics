@@ -25,42 +25,50 @@ public partial record Phase<T> : PhysicalQuantity<Phase<T>, T>, IVector1<Phase<T
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new Phase instance.</returns>
 	public static Phase<T> FromRadian(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Phase from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new Phase instance.</returns>
 	public static Phase<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Phase from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new Phase instance.</returns>
 	public static Phase<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Phase from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new Phase instance.</returns>
 	public static Phase<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Phase from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new Phase instance.</returns>
 	public static Phase<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularDisplacement unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAngularDisplacementUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to SignedAngle.</summary>
+
+	/// <summary>Implicit conversion to SignedAngle.</summary>
 	public static implicit operator SignedAngle<T>(Phase<T> value) => SignedAngle<T>.Create(value.Value);
-/// <summary>Explicit conversion from SignedAngle.</summary>
+
+	/// <summary>Explicit conversion from SignedAngle.</summary>
 	public static explicit operator Phase<T>(SignedAngle<T> value) => Create(value.Value);
-/// <summary>Creates a Phase from a SignedAngle value.</summary>
+
+	/// <summary>Creates a Phase from a SignedAngle value.</summary>
 	public static Phase<T> From(SignedAngle<T> value) => Create(value.Value);
-};
+}
 

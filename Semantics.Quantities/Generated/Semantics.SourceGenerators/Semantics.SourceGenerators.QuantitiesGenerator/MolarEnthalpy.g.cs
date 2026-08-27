@@ -26,34 +26,42 @@ public partial record MolarEnthalpy<T> : PhysicalQuantity<MolarEnthalpy<T>, T>, 
 	/// <returns>A new MolarEnthalpy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MolarEnthalpy<T> FromJoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new MolarEnthalpy from a value in KilojoulePerMole.
 	/// </summary>
 	/// <param name="value">The value in KilojoulePerMole.</param>
 	/// <returns>A new MolarEnthalpy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MolarEnthalpy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilojoulePerMoleToJoulePerMole)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new MolarEnthalpy from a value in CaloriePerMole.
 	/// </summary>
 	/// <param name="value">The value in CaloriePerMole.</param>
 	/// <returns>A new MolarEnthalpy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MolarEnthalpy<T> FromCaloriePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CaloriePerMoleToJoulePerMole)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-MolarEnergy unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IMolarEnergyUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to MolarEnergy.</summary>
+
+	/// <summary>Implicit conversion to MolarEnergy.</summary>
 	public static implicit operator MolarEnergy<T>(MolarEnthalpy<T> value) => MolarEnergy<T>.Create(value.Value);
-/// <summary>Explicit conversion from MolarEnergy.</summary>
+
+	/// <summary>Explicit conversion from MolarEnergy.</summary>
 	public static explicit operator MolarEnthalpy<T>(MolarEnergy<T> value) => Create(value.Value);
-/// <summary>Creates a MolarEnthalpy from a MolarEnergy value.</summary>
+
+	/// <summary>Creates a MolarEnthalpy from a MolarEnergy value.</summary>
 	public static MolarEnthalpy<T> From(MolarEnergy<T> value) => Create(value.Value);
-/// <summary>Subtracts two MolarEnthalpy values, returning the absolute difference as a non-negative MolarEnthalpy.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MolarEnthalpy<T> operator -(MolarEnthalpy<T> left, MolarEnthalpy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two MolarEnthalpy values, returning the absolute difference as a non-negative MolarEnthalpy.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MolarEnthalpy<T> operator -(MolarEnthalpy<T> left, MolarEnthalpy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

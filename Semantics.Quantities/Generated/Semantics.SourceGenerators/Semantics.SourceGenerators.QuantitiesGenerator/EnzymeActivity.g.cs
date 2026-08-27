@@ -26,27 +26,34 @@ public partial record EnzymeActivity<T> : PhysicalQuantity<EnzymeActivity<T>, T>
 	/// <returns>A new EnzymeActivity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static EnzymeActivity<T> FromKatal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new EnzymeActivity from a value in EnzymeUnit.
 	/// </summary>
 	/// <param name="value">The value in EnzymeUnit.</param>
 	/// <returns>A new EnzymeActivity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static EnzymeActivity<T> FromEnzymeUnit(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.EnzymeUnitToKatals)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-CatalyticActivity unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ICatalyticActivityUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to CatalyticActivity.</summary>
+
+	/// <summary>Implicit conversion to CatalyticActivity.</summary>
 	public static implicit operator CatalyticActivity<T>(EnzymeActivity<T> value) => CatalyticActivity<T>.Create(value.Value);
-/// <summary>Explicit conversion from CatalyticActivity.</summary>
+
+	/// <summary>Explicit conversion from CatalyticActivity.</summary>
 	public static explicit operator EnzymeActivity<T>(CatalyticActivity<T> value) => Create(value.Value);
-/// <summary>Creates a EnzymeActivity from a CatalyticActivity value.</summary>
+
+	/// <summary>Creates a EnzymeActivity from a CatalyticActivity value.</summary>
 	public static EnzymeActivity<T> From(CatalyticActivity<T> value) => Create(value.Value);
-/// <summary>Subtracts two EnzymeActivity values, returning the absolute difference as a non-negative EnzymeActivity.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static EnzymeActivity<T> operator -(EnzymeActivity<T> left, EnzymeActivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two EnzymeActivity values, returning the absolute difference as a non-negative EnzymeActivity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static EnzymeActivity<T> operator -(EnzymeActivity<T> left, EnzymeActivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

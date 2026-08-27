@@ -24,79 +24,94 @@ public partial record SignedRatio<T> : PhysicalQuantity<SignedRatio<T>, T>, IVec
 	/// <param name="value">The value in Dimensionless.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromDimensionless(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Radian.
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromRadian(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in Percent.
 	/// </summary>
 	/// <param name="value">The value in Percent.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromPercent(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PartPerMillion.
 	/// </summary>
 	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromPartPerMillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PartPerBillion.
 	/// </summary>
 	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromPartPerBillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedRatio{T}"/> from a value in PercentByWeight.
 	/// </summary>
 	/// <param name="value">The value in PercentByWeight.</param>
 	/// <returns>A new <see cref="SignedRatio{T}"/> instance.</returns>
 	public static SignedRatio<T> FromPercentByWeight(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentByWeightToRatio)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Dimensionless unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IDimensionlessUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Ratio{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public Ratio<T> Magnitude() => Ratio<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Multiplies SignedRatio by Ratio to produce SignedRatio.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedRatio<T> operator *(SignedRatio<T> left, Ratio<T> right) => Multiply<SignedRatio<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedRatio<T> operator *(SignedRatio<T> left, Ratio<T> right) => Multiply<SignedRatio<T>>(left, right);
+
+	/// <summary>
 	/// Divides SignedRatio by Ratio to produce SignedRatio.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedRatio<T> operator /(SignedRatio<T> left, Ratio<T> right) => Divide<SignedRatio<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedRatio<T> operator /(SignedRatio<T> left, Ratio<T> right) => Divide<SignedRatio<T>>(left, right);
+}
 

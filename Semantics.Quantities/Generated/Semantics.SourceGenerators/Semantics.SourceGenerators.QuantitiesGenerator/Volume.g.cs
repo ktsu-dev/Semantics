@@ -25,119 +25,148 @@ public partial record Volume<T> : PhysicalQuantity<Volume<T>, T>, IVector0<Volum
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in Liter.
 	/// </summary>
 	/// <param name="value">The value in Liter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromLiter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in Milliliter.
 	/// </summary>
 	/// <param name="value">The value in Milliliter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromMilliliter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in CubicCentimeter.
 	/// </summary>
 	/// <param name="value">The value in CubicCentimeter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromCubicCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicCentimeterToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in CubicFoot.
 	/// </summary>
 	/// <param name="value">The value in CubicFoot.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromCubicFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicFootToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in CubicInch.
 	/// </summary>
 	/// <param name="value">The value in CubicInch.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromCubicInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicInchToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in Gallon.
 	/// </summary>
 	/// <param name="value">The value in Gallon.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromGallon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GallonToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in ImperialGallon.
 	/// </summary>
 	/// <param name="value">The value in ImperialGallon.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromImperialGallon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ImperialGallonToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in USQuart.
 	/// </summary>
 	/// <param name="value">The value in USQuart.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromUSQuart(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USQuartToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in USPint.
 	/// </summary>
 	/// <param name="value">The value in USPint.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromUSPint(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USPintToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in USFluidOunce.
 	/// </summary>
 	/// <param name="value">The value in USFluidOunce.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Volume<T> FromUSFluidOunce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USFluidOunceToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Volume unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IVolumeUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two Volume values, returning the absolute difference as a non-negative Volume.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Volume<T> operator -(Volume<T> left, Volume<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator -(Volume<T> left, Volume<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Divides Volume by Length to produce Area.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Area<T> operator /(Volume<T> left, Length<T> right) => Divide<Area<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator /(Volume<T> left, Length<T> right) => Divide<Area<T>>(left, right);
+
+	/// <summary>
 	/// Divides Volume by Area to produce Length.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Length<T> operator /(Volume<T> left, Area<T> right) => Divide<Length<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(Volume<T> left, Area<T> right) => Divide<Length<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Volume by Pressure to produce Energy.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Energy<T> operator *(Volume<T> left, Pressure<T> right) => Multiply<Energy<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Volume<T> left, Pressure<T> right) => Multiply<Energy<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Volume by Density to produce Mass.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Mass<T> operator *(Volume<T> left, Density<T> right) => Multiply<Mass<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator *(Volume<T> left, Density<T> right) => Multiply<Mass<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Volume by Concentration to produce AmountOfSubstance.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AmountOfSubstance<T> operator *(Volume<T> left, Concentration<T> right) => Multiply<AmountOfSubstance<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AmountOfSubstance<T> operator *(Volume<T> left, Concentration<T> right) => Multiply<AmountOfSubstance<T>>(left, right);
+
+	/// <summary>
 	/// Divides Volume by Duration to produce VolumetricFlowRate.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static VolumetricFlowRate<T> operator /(Volume<T> left, Duration<T> right) => Divide<VolumetricFlowRate<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VolumetricFlowRate<T> operator /(Volume<T> left, Duration<T> right) => Divide<VolumetricFlowRate<T>>(left, right);
+
+	/// <summary>
 	/// Divides Volume by VolumetricFlowRate to produce Duration.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Duration<T> operator /(Volume<T> left, VolumetricFlowRate<T> right) => Divide<Duration<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Volume<T> left, VolumetricFlowRate<T> right) => Divide<Duration<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Volume by ElectricPowerDensity to produce Power.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Power<T> operator *(Volume<T> left, ElectricPowerDensity<T> right) => Multiply<Power<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(Volume<T> left, ElectricPowerDensity<T> right) => Multiply<Power<T>>(left, right);
+}
 

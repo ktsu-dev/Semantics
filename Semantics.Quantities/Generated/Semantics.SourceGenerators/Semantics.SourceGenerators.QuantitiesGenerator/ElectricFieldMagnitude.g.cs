@@ -25,25 +25,32 @@ public partial record ElectricFieldMagnitude<T> : PhysicalQuantity<ElectricField
 	/// <returns>A new <see cref="ElectricFieldMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ElectricFieldMagnitude<T> FromVoltPerMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricField unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IElectricFieldUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two ElectricFieldMagnitude values, returning the absolute difference as a non-negative ElectricFieldMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ElectricFieldMagnitude<T> operator -(ElectricFieldMagnitude<T> left, ElectricFieldMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricFieldMagnitude<T> operator -(ElectricFieldMagnitude<T> left, ElectricFieldMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies ElectricFieldMagnitude by Length to produce VoltageMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static VoltageMagnitude<T> operator *(ElectricFieldMagnitude<T> left, Length<T> right) => Multiply<VoltageMagnitude<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(ElectricFieldMagnitude<T> left, Length<T> right) => Multiply<VoltageMagnitude<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies ElectricFieldMagnitude by Area to produce ElectricFlux.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ElectricFlux<T> operator *(ElectricFieldMagnitude<T> left, Area<T> right) => Multiply<ElectricFlux<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricFlux<T> operator *(ElectricFieldMagnitude<T> left, Area<T> right) => Multiply<ElectricFlux<T>>(left, right);
+}
 

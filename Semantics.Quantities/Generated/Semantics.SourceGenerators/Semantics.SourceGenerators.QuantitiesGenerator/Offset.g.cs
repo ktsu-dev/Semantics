@@ -25,84 +25,99 @@ public partial record Offset<T> : PhysicalQuantity<Offset<T>, T>, IVector1<Offse
 	/// <param name="value">The value in Meter.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromMeter(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in Kilometer.
 	/// </summary>
 	/// <param name="value">The value in Kilometer.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromKilometer(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in Centimeter.
 	/// </summary>
 	/// <param name="value">The value in Centimeter.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromCentimeter(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Centi)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in Millimeter.
 	/// </summary>
 	/// <param name="value">The value in Millimeter.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromMillimeter(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in Micrometer.
 	/// </summary>
 	/// <param name="value">The value in Micrometer.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromMicrometer(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Micro)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in Nanometer.
 	/// </summary>
 	/// <param name="value">The value in Nanometer.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromNanometer(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Nano)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in Angstrom.
 	/// </summary>
 	/// <param name="value">The value in Angstrom.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromAngstrom(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.AngstromToMeters)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in Foot.
 	/// </summary>
 	/// <param name="value">The value in Foot.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromFoot(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FeetToMeters)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in Inch.
 	/// </summary>
 	/// <param name="value">The value in Inch.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromInch(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.InchesToMeters)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in Yard.
 	/// </summary>
 	/// <param name="value">The value in Yard.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromYard(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.YardToMeters)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in Mile.
 	/// </summary>
 	/// <param name="value">The value in Mile.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromMile(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Offset from a value in NauticalMile.
 	/// </summary>
 	/// <param name="value">The value in NauticalMile.</param>
 	/// <returns>A new Offset instance.</returns>
 	public static Offset<T> FromNauticalMile(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.NauticalMileToMeters)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Length unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ILengthUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Displacement1D.</summary>
+
+	/// <summary>Implicit conversion to Displacement1D.</summary>
 	public static implicit operator Displacement1D<T>(Offset<T> value) => Displacement1D<T>.Create(value.Value);
-/// <summary>Explicit conversion from Displacement1D.</summary>
+
+	/// <summary>Explicit conversion from Displacement1D.</summary>
 	public static explicit operator Offset<T>(Displacement1D<T> value) => Create(value.Value);
-/// <summary>Creates a Offset from a Displacement1D value.</summary>
+
+	/// <summary>Creates a Offset from a Displacement1D value.</summary>
 	public static Offset<T> From(Displacement1D<T> value) => Create(value.Value);
-};
+}
 

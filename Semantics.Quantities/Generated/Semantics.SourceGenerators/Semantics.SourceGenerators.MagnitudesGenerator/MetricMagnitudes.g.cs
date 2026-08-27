@@ -6,7 +6,8 @@ namespace ktsu.Semantics.Quantities;
 /// <summary>
 /// Metric magnitude constants for unit scaling.
 /// </summary>
-public static class MetricMagnitudes{
+public static class MetricMagnitudes
+{
 	/// <summary>Yotta magnitude (Y): 10^24</summary>
 	public const double Yotta = 1e24;
 
@@ -69,6 +70,5 @@ public static class MetricMagnitudes{
 
 	/// <summary>Yocto magnitude (y): 10^-24</summary>
 	public const double Yocto = 1e-24;
-
-};
+}
 

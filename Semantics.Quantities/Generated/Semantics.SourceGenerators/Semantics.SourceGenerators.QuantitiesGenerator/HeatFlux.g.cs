@@ -26,20 +26,26 @@ public partial record HeatFlux<T> : PhysicalQuantity<HeatFlux<T>, T>, IVector0<H
 	/// <returns>A new HeatFlux instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HeatFlux<T> FromWattPerSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Irradiance unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IIrradianceUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Irradiance.</summary>
+
+	/// <summary>Implicit conversion to Irradiance.</summary>
 	public static implicit operator Irradiance<T>(HeatFlux<T> value) => Irradiance<T>.Create(value.Value);
-/// <summary>Explicit conversion from Irradiance.</summary>
+
+	/// <summary>Explicit conversion from Irradiance.</summary>
 	public static explicit operator HeatFlux<T>(Irradiance<T> value) => Create(value.Value);
-/// <summary>Creates a HeatFlux from a Irradiance value.</summary>
+
+	/// <summary>Creates a HeatFlux from a Irradiance value.</summary>
 	public static HeatFlux<T> From(Irradiance<T> value) => Create(value.Value);
-/// <summary>Subtracts two HeatFlux values, returning the absolute difference as a non-negative HeatFlux.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static HeatFlux<T> operator -(HeatFlux<T> left, HeatFlux<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two HeatFlux values, returning the absolute difference as a non-negative HeatFlux.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static HeatFlux<T> operator -(HeatFlux<T> left, HeatFlux<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

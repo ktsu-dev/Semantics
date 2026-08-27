@@ -26,55 +26,66 @@ public partial record YoungsModulus<T> : PhysicalQuantity<YoungsModulus<T>, T>, 
 	/// <returns>A new YoungsModulus instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static YoungsModulus<T> FromPascal(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new YoungsModulus from a value in Kilopascal.
 	/// </summary>
 	/// <param name="value">The value in Kilopascal.</param>
 	/// <returns>A new YoungsModulus instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static YoungsModulus<T> FromKilopascal(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new YoungsModulus from a value in Bar.
 	/// </summary>
 	/// <param name="value">The value in Bar.</param>
 	/// <returns>A new YoungsModulus instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static YoungsModulus<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new YoungsModulus from a value in Atmosphere.
 	/// </summary>
 	/// <param name="value">The value in Atmosphere.</param>
 	/// <returns>A new YoungsModulus instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static YoungsModulus<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new YoungsModulus from a value in Psi.
 	/// </summary>
 	/// <param name="value">The value in Psi.</param>
 	/// <returns>A new YoungsModulus instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static YoungsModulus<T> FromPsi(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PsiToPascals)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new YoungsModulus from a value in Torr.
 	/// </summary>
 	/// <param name="value">The value in Torr.</param>
 	/// <returns>A new YoungsModulus instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static YoungsModulus<T> FromTorr(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.TorrToPascals)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Pressure unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IPressureUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Pressure.</summary>
+
+	/// <summary>Implicit conversion to Pressure.</summary>
 	public static implicit operator Pressure<T>(YoungsModulus<T> value) => Pressure<T>.Create(value.Value);
-/// <summary>Explicit conversion from Pressure.</summary>
+
+	/// <summary>Explicit conversion from Pressure.</summary>
 	public static explicit operator YoungsModulus<T>(Pressure<T> value) => Create(value.Value);
-/// <summary>Creates a YoungsModulus from a Pressure value.</summary>
+
+	/// <summary>Creates a YoungsModulus from a Pressure value.</summary>
 	public static YoungsModulus<T> From(Pressure<T> value) => Create(value.Value);
-/// <summary>Subtracts two YoungsModulus values, returning the absolute difference as a non-negative YoungsModulus.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static YoungsModulus<T> operator -(YoungsModulus<T> left, YoungsModulus<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two YoungsModulus values, returning the absolute difference as a non-negative YoungsModulus.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static YoungsModulus<T> operator -(YoungsModulus<T> left, YoungsModulus<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

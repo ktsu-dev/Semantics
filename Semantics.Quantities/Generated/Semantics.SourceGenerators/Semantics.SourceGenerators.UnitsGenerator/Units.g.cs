@@ -31,8 +31,7 @@ public sealed record Meter : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Meter() { }
-
-};
+}
 
 /// <summary>
 /// Kilometer - 1000 meters.
@@ -59,8 +58,7 @@ public sealed record Kilometer : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilometer() { }
-
-};
+}
 
 /// <summary>
 /// Centimeter - 0.01 meters.
@@ -87,8 +85,7 @@ public sealed record Centimeter : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Centimeter() { }
-
-};
+}
 
 /// <summary>
 /// Millimeter - 0.001 meters.
@@ -115,8 +112,7 @@ public sealed record Millimeter : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Millimeter() { }
-
-};
+}
 
 /// <summary>
 /// Foot - Imperial unit of length.
@@ -143,8 +139,7 @@ public sealed record Foot : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Foot() { }
-
-};
+}
 
 /// <summary>
 /// Inch - Imperial unit of length.
@@ -171,8 +166,7 @@ public sealed record Inch : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Inch() { }
-
-};
+}
 
 /// <summary>
 /// Micrometer - 0.000001 meters.
@@ -199,8 +193,7 @@ public sealed record Micrometer : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Micrometer() { }
-
-};
+}
 
 /// <summary>
 /// Nanometer - 0.000000001 meters.
@@ -227,8 +220,7 @@ public sealed record Nanometer : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Nanometer() { }
-
-};
+}
 
 /// <summary>
 /// Angstrom - 10⁻¹⁰ meters, used for atomic scales.
@@ -255,8 +247,7 @@ public sealed record Angstrom : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Angstrom() { }
-
-};
+}
 
 /// <summary>
 /// Yard - Imperial unit of length.
@@ -283,8 +274,7 @@ public sealed record Yard : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Yard() { }
-
-};
+}
 
 /// <summary>
 /// Mile - Imperial unit of length.
@@ -311,8 +301,7 @@ public sealed record Mile : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Mile() { }
-
-};
+}
 
 /// <summary>
 /// Kilogram - SI base unit of mass.
@@ -339,8 +328,7 @@ public sealed record Kilogram : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilogram() { }
-
-};
+}
 
 /// <summary>
 /// Gram - 0.001 kilograms.
@@ -367,8 +355,7 @@ public sealed record Gram : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Gram() { }
-
-};
+}
 
 /// <summary>
 /// Metric ton - 1000 kilograms.
@@ -395,8 +382,7 @@ public sealed record Ton : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Ton() { }
-
-};
+}
 
 /// <summary>
 /// Pound - Imperial unit of mass.
@@ -423,8 +409,7 @@ public sealed record Pound : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Pound() { }
-
-};
+}
 
 /// <summary>
 /// Ounce - Imperial unit of mass.
@@ -451,8 +436,7 @@ public sealed record Ounce : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Ounce() { }
-
-};
+}
 
 /// <summary>
 /// Second - SI base unit of time.
@@ -479,8 +463,7 @@ public sealed record Second : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Second() { }
-
-};
+}
 
 /// <summary>
 /// Minute - 60 seconds.
@@ -507,8 +490,7 @@ public sealed record Minute : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Minute() { }
-
-};
+}
 
 /// <summary>
 /// Hour - 3600 seconds.
@@ -535,8 +517,7 @@ public sealed record Hour : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Hour() { }
-
-};
+}
 
 /// <summary>
 /// Day - 86400 seconds.
@@ -563,8 +544,7 @@ public sealed record Day : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Day() { }
-
-};
+}
 
 /// <summary>
 /// Year - 365.25 days (31557600 seconds).
@@ -591,8 +571,7 @@ public sealed record Year : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Year() { }
-
-};
+}
 
 /// <summary>
 /// Millisecond - 0.001 seconds.
@@ -619,8 +598,7 @@ public sealed record Millisecond : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Millisecond() { }
-
-};
+}
 
 /// <summary>
 /// Microsecond - 0.000001 seconds.
@@ -647,8 +625,7 @@ public sealed record Microsecond : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Microsecond() { }
-
-};
+}
 
 /// <summary>
 /// Square meter - SI derived unit of area.
@@ -675,8 +652,7 @@ public sealed record SquareMeter : IUnit, IAreaUnit, INuclearCrossSectionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareMeter() { }
-
-};
+}
 
 /// <summary>
 /// Square foot - Imperial unit of area.
@@ -703,8 +679,7 @@ public sealed record SquareFoot : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareFoot() { }
-
-};
+}
 
 /// <summary>
 /// Square inch - Imperial unit of area.
@@ -731,8 +706,7 @@ public sealed record SquareInch : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareInch() { }
-
-};
+}
 
 /// <summary>
 /// Cubic meter - SI derived unit of volume.
@@ -759,8 +733,7 @@ public sealed record CubicMeter : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CubicMeter() { }
-
-};
+}
 
 /// <summary>
 /// Liter - 0.001 cubic meters.
@@ -787,8 +760,7 @@ public sealed record Liter : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Liter() { }
-
-};
+}
 
 /// <summary>
 /// Milliliter - 0.001 liters.
@@ -815,8 +787,7 @@ public sealed record Milliliter : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Milliliter() { }
-
-};
+}
 
 /// <summary>
 /// US gallon - Imperial unit of volume.
@@ -843,8 +814,7 @@ public sealed record Gallon : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Gallon() { }
-
-};
+}
 
 /// <summary>
 /// Dimensionless - Pure number or ratio with no physical units.
@@ -871,8 +841,7 @@ public sealed record Dimensionless : IUnit, IDimensionlessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Dimensionless() { }
-
-};
+}
 
 /// <summary>
 /// Radian - SI derived unit of plane angle.
@@ -899,8 +868,7 @@ public sealed record Radian : IUnit, IDimensionlessUnit, IAngularDisplacementUni
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Radian() { }
-
-};
+}
 
 /// <summary>
 /// Degree - Common unit of plane angle.
@@ -927,8 +895,7 @@ public sealed record Degree : IUnit, IDimensionlessUnit, IAngularDisplacementUni
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Degree() { }
-
-};
+}
 
 /// <summary>
 /// Nautical mile - 1852 meters, used in navigation.
@@ -955,8 +922,7 @@ public sealed record NauticalMile : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public NauticalMile() { }
-
-};
+}
 
 /// <summary>
 /// Stone - Imperial unit of mass (14 pounds).
@@ -983,8 +949,7 @@ public sealed record Stone : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Stone() { }
-
-};
+}
 
 /// <summary>
 /// Short ton - US customary unit of mass (2000 pounds).
@@ -1011,8 +976,7 @@ public sealed record ShortTon : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public ShortTon() { }
-
-};
+}
 
 /// <summary>
 /// Atomic mass unit - 1/12 the mass of a carbon-12 atom.
@@ -1039,8 +1003,7 @@ public sealed record AtomicMassUnit : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public AtomicMassUnit() { }
-
-};
+}
 
 /// <summary>
 /// Week - 7 days.
@@ -1067,8 +1030,7 @@ public sealed record Week : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Week() { }
-
-};
+}
 
 /// <summary>
 /// Nanosecond - 1e-9 seconds.
@@ -1095,8 +1057,7 @@ public sealed record Nanosecond : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Nanosecond() { }
-
-};
+}
 
 /// <summary>
 /// Square kilometer - 1e6 square meters.
@@ -1123,8 +1084,7 @@ public sealed record SquareKilometer : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareKilometer() { }
-
-};
+}
 
 /// <summary>
 /// Square centimeter - 1e-4 square meters.
@@ -1151,8 +1111,7 @@ public sealed record SquareCentimeter : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareCentimeter() { }
-
-};
+}
 
 /// <summary>
 /// Square mile - Imperial unit of area.
@@ -1179,8 +1138,7 @@ public sealed record SquareMile : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareMile() { }
-
-};
+}
 
 /// <summary>
 /// Hectare - metric unit of area (10000 m²).
@@ -1207,8 +1165,7 @@ public sealed record Hectare : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Hectare() { }
-
-};
+}
 
 /// <summary>
 /// Acre - Imperial unit of area.
@@ -1235,8 +1192,7 @@ public sealed record Acre : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Acre() { }
-
-};
+}
 
 /// <summary>
 /// Cubic centimeter - 1e-6 cubic meters.
@@ -1263,8 +1219,7 @@ public sealed record CubicCentimeter : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CubicCentimeter() { }
-
-};
+}
 
 /// <summary>
 /// Cubic foot - Imperial unit of volume.
@@ -1291,8 +1246,7 @@ public sealed record CubicFoot : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CubicFoot() { }
-
-};
+}
 
 /// <summary>
 /// Cubic inch - Imperial unit of volume.
@@ -1319,8 +1273,7 @@ public sealed record CubicInch : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CubicInch() { }
-
-};
+}
 
 /// <summary>
 /// Imperial gallon - British unit of volume.
@@ -1347,8 +1300,7 @@ public sealed record ImperialGallon : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public ImperialGallon() { }
-
-};
+}
 
 /// <summary>
 /// US liquid quart - US customary unit of volume.
@@ -1375,8 +1327,7 @@ public sealed record USQuart : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public USQuart() { }
-
-};
+}
 
 /// <summary>
 /// US liquid pint - US customary unit of volume.
@@ -1403,8 +1354,7 @@ public sealed record USPint : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public USPint() { }
-
-};
+}
 
 /// <summary>
 /// US fluid ounce - US customary unit of volume.
@@ -1431,8 +1381,7 @@ public sealed record USFluidOunce : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public USFluidOunce() { }
-
-};
+}
 
 /// <summary>
 /// Gradian - 1/400 of a full circle (π/200 rad).
@@ -1459,8 +1408,7 @@ public sealed record Gradian : IUnit, IDimensionlessUnit, IAngularDisplacementUn
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Gradian() { }
-
-};
+}
 
 /// <summary>
 /// Revolution - one full circle (2π rad).
@@ -1487,8 +1435,7 @@ public sealed record Revolution : IUnit, IDimensionlessUnit, IAngularDisplacemen
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Revolution() { }
-
-};
+}
 
 /// <summary>
 /// Milliradian - 0.001 radians.
@@ -1515,8 +1462,7 @@ public sealed record Milliradian : IUnit, IDimensionlessUnit, IAngularDisplaceme
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Milliradian() { }
-
-};
+}
 
 /// <summary>
 /// Percent - one hundredth of unity.
@@ -1543,8 +1489,7 @@ public sealed record Percent : IUnit, IDimensionlessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Percent() { }
-
-};
+}
 
 /// <summary>
 /// Parts per million - 1e-6 dimensionless ratio.
@@ -1571,8 +1516,7 @@ public sealed record PartPerMillion : IUnit, IDimensionlessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PartPerMillion() { }
-
-};
+}
 
 /// <summary>
 /// Parts per billion - 1e-9 dimensionless ratio.
@@ -1599,8 +1543,7 @@ public sealed record PartPerBillion : IUnit, IDimensionlessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PartPerBillion() { }
-
-};
+}
 
 /// <summary>
 /// Percent by weight - mass fraction expressed as a percentage.
@@ -1627,8 +1570,7 @@ public sealed record PercentByWeight : IUnit, IDimensionlessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PercentByWeight() { }
-
-};
+}
 
 /// <summary>
 /// Newton - SI derived unit of force.
@@ -1655,8 +1597,7 @@ public sealed record Newton : IUnit, IForceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Newton() { }
-
-};
+}
 
 /// <summary>
 /// Pascal - SI derived unit of pressure.
@@ -1683,8 +1624,7 @@ public sealed record Pascal : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Pascal() { }
-
-};
+}
 
 /// <summary>
 /// Meters per second - SI derived unit of velocity.
@@ -1711,8 +1651,7 @@ public sealed record MeterPerSecond : IUnit, IVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MeterPerSecond() { }
-
-};
+}
 
 /// <summary>
 /// Meters per second squared - SI derived unit of acceleration.
@@ -1739,8 +1678,7 @@ public sealed record MeterPerSecondSquared : IUnit, IAccelerationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MeterPerSecondSquared() { }
-
-};
+}
 
 /// <summary>
 /// Bar - Metric unit of pressure.
@@ -1767,8 +1705,7 @@ public sealed record Bar : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Bar() { }
-
-};
+}
 
 /// <summary>
 /// Standard atmosphere - Unit of pressure.
@@ -1795,8 +1732,7 @@ public sealed record Atmosphere : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Atmosphere() { }
-
-};
+}
 
 /// <summary>
 /// Pounds per square inch - Imperial unit of pressure.
@@ -1823,8 +1759,7 @@ public sealed record Psi : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Psi() { }
-
-};
+}
 
 /// <summary>
 /// Kilometers per hour - Common unit of velocity.
@@ -1851,8 +1786,7 @@ public sealed record KilometerPerHour : IUnit, IVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilometerPerHour() { }
-
-};
+}
 
 /// <summary>
 /// Miles per hour - Imperial unit of velocity.
@@ -1879,8 +1813,7 @@ public sealed record MilePerHour : IUnit, IVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MilePerHour() { }
-
-};
+}
 
 /// <summary>
 /// Joule - SI derived unit of energy.
@@ -1907,8 +1840,7 @@ public sealed record Joule : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Joule() { }
-
-};
+}
 
 /// <summary>
 /// Watt - SI derived unit of power.
@@ -1935,8 +1867,7 @@ public sealed record Watt : IUnit, IPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Watt() { }
-
-};
+}
 
 /// <summary>
 /// Calorie - Thermochemical calorie, energy unit.
@@ -1963,8 +1894,7 @@ public sealed record Calorie : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Calorie() { }
-
-};
+}
 
 /// <summary>
 /// Kilowatt-hour - Common unit of electrical energy.
@@ -1991,8 +1921,7 @@ public sealed record KilowattHour : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilowattHour() { }
-
-};
+}
 
 /// <summary>
 /// Mechanical horsepower - Imperial unit of power.
@@ -2019,8 +1948,7 @@ public sealed record Horsepower : IUnit, IPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Horsepower() { }
-
-};
+}
 
 /// <summary>
 /// Newton-second - SI derived unit of momentum.
@@ -2047,8 +1975,7 @@ public sealed record NewtonSecond : IUnit, IMomentumUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public NewtonSecond() { }
-
-};
+}
 
 /// <summary>
 /// Electron volt - Energy unit equal to electron charge times one volt.
@@ -2075,8 +2002,7 @@ public sealed record ElectronVolt : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public ElectronVolt() { }
-
-};
+}
 
 /// <summary>
 /// Newton-meter - SI derived unit of torque.
@@ -2103,8 +2029,7 @@ public sealed record NewtonMeter : IUnit, ITorqueUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public NewtonMeter() { }
-
-};
+}
 
 /// <summary>
 /// Pound-foot - Imperial unit of torque.
@@ -2131,8 +2056,7 @@ public sealed record PoundFoot : IUnit, ITorqueUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PoundFoot() { }
-
-};
+}
 
 /// <summary>
 /// Kilogram-meter squared - SI derived unit of moment of inertia.
@@ -2159,8 +2083,7 @@ public sealed record KilogramMeterSquared : IUnit, IMomentOfInertiaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramMeterSquared() { }
-
-};
+}
 
 /// <summary>
 /// Kilogram-meter squared per second - SI derived unit of angular momentum.
@@ -2187,8 +2110,7 @@ public sealed record KilogramMeterSquaredPerSecond : IUnit, IAngularMomentumUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramMeterSquaredPerSecond() { }
-
-};
+}
 
 /// <summary>
 /// Meters per second cubed - SI derived unit of jerk.
@@ -2215,8 +2137,7 @@ public sealed record MeterPerSecondCubed : IUnit, IJerkUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MeterPerSecondCubed() { }
-
-};
+}
 
 /// <summary>
 /// Meters per second to the fourth - SI derived unit of snap.
@@ -2243,8 +2164,7 @@ public sealed record MeterPerSecondQuartic : IUnit, ISnapUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MeterPerSecondQuartic() { }
-
-};
+}
 
 /// <summary>
 /// Feet per second - Imperial unit of velocity.
@@ -2271,8 +2191,7 @@ public sealed record FootPerSecond : IUnit, IVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public FootPerSecond() { }
-
-};
+}
 
 /// <summary>
 /// Knot - one nautical mile per hour.
@@ -2299,8 +2218,7 @@ public sealed record Knot : IUnit, IVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Knot() { }
-
-};
+}
 
 /// <summary>
 /// Standard gravity - acceleration of free fall at Earth's surface.
@@ -2327,8 +2245,7 @@ public sealed record StandardGravity : IUnit, IAccelerationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public StandardGravity() { }
-
-};
+}
 
 /// <summary>
 /// Kilonewton - 1000 newtons.
@@ -2355,8 +2272,7 @@ public sealed record Kilonewton : IUnit, IForceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilonewton() { }
-
-};
+}
 
 /// <summary>
 /// Dyne - CGS unit of force.
@@ -2383,8 +2299,7 @@ public sealed record Dyne : IUnit, IForceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Dyne() { }
-
-};
+}
 
 /// <summary>
 /// Pound-force - Imperial unit of force.
@@ -2411,8 +2326,7 @@ public sealed record PoundForce : IUnit, IForceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PoundForce() { }
-
-};
+}
 
 /// <summary>
 /// Kilopascal - 1000 pascals.
@@ -2439,8 +2353,7 @@ public sealed record Kilopascal : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilopascal() { }
-
-};
+}
 
 /// <summary>
 /// Torr - 1/760 of a standard atmosphere.
@@ -2467,8 +2380,7 @@ public sealed record Torr : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Torr() { }
-
-};
+}
 
 /// <summary>
 /// Kilojoule - 1000 joules.
@@ -2495,8 +2407,7 @@ public sealed record Kilojoule : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilojoule() { }
-
-};
+}
 
 /// <summary>
 /// Kilocalorie - 1000 thermochemical calories.
@@ -2523,8 +2434,7 @@ public sealed record Kilocalorie : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilocalorie() { }
-
-};
+}
 
 /// <summary>
 /// Watt-hour - 3600 joules.
@@ -2551,8 +2461,7 @@ public sealed record WattHour : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public WattHour() { }
-
-};
+}
 
 /// <summary>
 /// Erg - CGS unit of energy.
@@ -2579,8 +2488,7 @@ public sealed record Erg : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Erg() { }
-
-};
+}
 
 /// <summary>
 /// British thermal unit (IT) - Imperial unit of energy.
@@ -2607,8 +2515,7 @@ public sealed record Btu : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Btu() { }
-
-};
+}
 
 /// <summary>
 /// Kilowatt - 1000 watts.
@@ -2635,8 +2542,7 @@ public sealed record Kilowatt : IUnit, IPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilowatt() { }
-
-};
+}
 
 /// <summary>
 /// Megawatt - 1e6 watts.
@@ -2663,8 +2569,7 @@ public sealed record Megawatt : IUnit, IPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Megawatt() { }
-
-};
+}
 
 /// <summary>
 /// Watt per cubic meter - SI unit of volumetric power density.
@@ -2691,8 +2596,7 @@ public sealed record WattPerCubicMeter : IUnit, IElectricPowerDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public WattPerCubicMeter() { }
-
-};
+}
 
 /// <summary>
 /// Kelvin - SI base unit of thermodynamic temperature.
@@ -2719,8 +2623,7 @@ public sealed record Kelvin : IUnit, ITemperatureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kelvin() { }
-
-};
+}
 
 /// <summary>
 /// Celsius - Common temperature scale.
@@ -2747,8 +2650,7 @@ public sealed record Celsius : IUnit, ITemperatureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Celsius() { }
-
-};
+}
 
 /// <summary>
 /// Fahrenheit - Imperial temperature scale.
@@ -2775,8 +2677,7 @@ public sealed record Fahrenheit : IUnit, ITemperatureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Fahrenheit() { }
-
-};
+}
 
 /// <summary>
 /// Joule per kelvin - SI derived unit of entropy and heat capacity.
@@ -2803,8 +2704,7 @@ public sealed record JoulePerKelvin : IUnit, IEntropyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public JoulePerKelvin() { }
-
-};
+}
 
 /// <summary>
 /// Joule per kilogram kelvin - SI derived unit of specific heat capacity.
@@ -2831,8 +2731,7 @@ public sealed record JoulePerKilogramKelvin : IUnit, ISpecificHeatUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public JoulePerKilogramKelvin() { }
-
-};
+}
 
 /// <summary>
 /// Watt per meter kelvin - SI derived unit of thermal conductivity.
@@ -2859,8 +2758,7 @@ public sealed record WattPerMeterKelvin : IUnit, IThermalConductivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public WattPerMeterKelvin() { }
-
-};
+}
 
 /// <summary>
 /// Watt per square meter kelvin - SI derived unit of heat transfer coefficient.
@@ -2887,8 +2785,7 @@ public sealed record WattPerSquareMeterKelvin : IUnit, IHeatTransferCoefficientU
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public WattPerSquareMeterKelvin() { }
-
-};
+}
 
 /// <summary>
 /// Per kelvin - SI derived unit of thermal expansion coefficient.
@@ -2915,8 +2812,7 @@ public sealed record PerKelvin : IUnit, IThermalExpansionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PerKelvin() { }
-
-};
+}
 
 /// <summary>
 /// Rankine - absolute temperature scale with Fahrenheit-sized degrees.
@@ -2943,8 +2839,7 @@ public sealed record Rankine : IUnit, ITemperatureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Rankine() { }
-
-};
+}
 
 /// <summary>
 /// Kelvin per watt - SI unit of absolute thermal resistance.
@@ -2971,8 +2866,7 @@ public sealed record KelvinPerWatt : IUnit, IThermalResistanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KelvinPerWatt() { }
-
-};
+}
 
 /// <summary>
 /// Ampere - SI base unit of electric current.
@@ -2999,8 +2893,7 @@ public sealed record Ampere : IUnit, IElectricCurrentUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Ampere() { }
-
-};
+}
 
 /// <summary>
 /// Volt - SI derived unit of electric potential.
@@ -3027,8 +2920,7 @@ public sealed record Volt : IUnit, IElectricPotentialUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Volt() { }
-
-};
+}
 
 /// <summary>
 /// Volt per meter - SI derived unit of electric field strength.
@@ -3055,8 +2947,7 @@ public sealed record VoltPerMeter : IUnit, IElectricFieldUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public VoltPerMeter() { }
-
-};
+}
 
 /// <summary>
 /// Ohm - SI derived unit of electric resistance.
@@ -3083,8 +2974,7 @@ public sealed record Ohm : IUnit, IElectricResistanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Ohm() { }
-
-};
+}
 
 /// <summary>
 /// Coulomb - SI derived unit of electric charge.
@@ -3111,8 +3001,7 @@ public sealed record Coulomb : IUnit, IElectricChargeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Coulomb() { }
-
-};
+}
 
 /// <summary>
 /// Farad - SI derived unit of electric capacitance.
@@ -3139,8 +3028,7 @@ public sealed record Farad : IUnit, IElectricCapacitanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Farad() { }
-
-};
+}
 
 /// <summary>
 /// Siemens - SI derived unit of electric conductance.
@@ -3167,8 +3055,7 @@ public sealed record Siemens : IUnit, IElectricConductanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Siemens() { }
-
-};
+}
 
 /// <summary>
 /// Tesla - SI derived unit of magnetic flux density.
@@ -3195,8 +3082,7 @@ public sealed record Tesla : IUnit, IMagneticFluxDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Tesla() { }
-
-};
+}
 
 /// <summary>
 /// Gauss - CGS unit of magnetic flux density.
@@ -3223,8 +3109,7 @@ public sealed record Gauss : IUnit, IMagneticFluxDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Gauss() { }
-
-};
+}
 
 /// <summary>
 /// Weber - SI derived unit of magnetic flux.
@@ -3251,8 +3136,7 @@ public sealed record Weber : IUnit, IMagneticFluxUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Weber() { }
-
-};
+}
 
 /// <summary>
 /// Henry - SI derived unit of inductance.
@@ -3279,8 +3163,7 @@ public sealed record Henry : IUnit, IInductanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Henry() { }
-
-};
+}
 
 /// <summary>
 /// Milliampere - 0.001 amperes.
@@ -3307,8 +3190,7 @@ public sealed record Milliampere : IUnit, IElectricCurrentUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Milliampere() { }
-
-};
+}
 
 /// <summary>
 /// Kiloampere - 1000 amperes.
@@ -3335,8 +3217,7 @@ public sealed record Kiloampere : IUnit, IElectricCurrentUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kiloampere() { }
-
-};
+}
 
 /// <summary>
 /// Kilovolt - 1000 volts.
@@ -3363,8 +3244,7 @@ public sealed record Kilovolt : IUnit, IElectricPotentialUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilovolt() { }
-
-};
+}
 
 /// <summary>
 /// Kilohm - 1000 ohms.
@@ -3391,8 +3271,7 @@ public sealed record Kilohm : IUnit, IElectricResistanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilohm() { }
-
-};
+}
 
 /// <summary>
 /// Megohm - 1e6 ohms.
@@ -3419,8 +3298,7 @@ public sealed record Megohm : IUnit, IElectricResistanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Megohm() { }
-
-};
+}
 
 /// <summary>
 /// Microfarad - 1e-6 farads.
@@ -3447,8 +3325,7 @@ public sealed record Microfarad : IUnit, IElectricCapacitanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Microfarad() { }
-
-};
+}
 
 /// <summary>
 /// Nanofarad - 1e-9 farads.
@@ -3475,8 +3352,7 @@ public sealed record Nanofarad : IUnit, IElectricCapacitanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Nanofarad() { }
-
-};
+}
 
 /// <summary>
 /// Picofarad - 1e-12 farads.
@@ -3503,8 +3379,7 @@ public sealed record Picofarad : IUnit, IElectricCapacitanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Picofarad() { }
-
-};
+}
 
 /// <summary>
 /// Ampere-hour - 3600 coulombs of electric charge.
@@ -3531,8 +3406,7 @@ public sealed record AmpereHour : IUnit, IElectricChargeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public AmpereHour() { }
-
-};
+}
 
 /// <summary>
 /// Volt meter - SI unit of electric flux.
@@ -3559,8 +3433,7 @@ public sealed record VoltMeter : IUnit, IElectricFluxUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public VoltMeter() { }
-
-};
+}
 
 /// <summary>
 /// Farad per meter - SI unit of permittivity.
@@ -3587,8 +3460,7 @@ public sealed record FaradPerMeter : IUnit, IPermittivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public FaradPerMeter() { }
-
-};
+}
 
 /// <summary>
 /// Siemens per meter - SI unit of electrical conductivity.
@@ -3615,8 +3487,7 @@ public sealed record SiemensPerMeter : IUnit, IElectricConductivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SiemensPerMeter() { }
-
-};
+}
 
 /// <summary>
 /// Volt per pascal - SI unit of transducer sensitivity.
@@ -3643,8 +3514,7 @@ public sealed record VoltPerPascal : IUnit, ISensitivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public VoltPerPascal() { }
-
-};
+}
 
 /// <summary>
 /// Radians per second - SI derived unit of angular velocity.
@@ -3671,8 +3541,7 @@ public sealed record RadianPerSecond : IUnit, IAngularVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public RadianPerSecond() { }
-
-};
+}
 
 /// <summary>
 /// Revolutions per minute - Common unit of angular velocity.
@@ -3699,8 +3568,7 @@ public sealed record RevolutionPerMinute : IUnit, IAngularVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public RevolutionPerMinute() { }
-
-};
+}
 
 /// <summary>
 /// Radians per second squared - SI derived unit of angular acceleration.
@@ -3727,8 +3595,7 @@ public sealed record RadianPerSecondSquared : IUnit, IAngularAccelerationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public RadianPerSecondSquared() { }
-
-};
+}
 
 /// <summary>
 /// Radians per second cubed - SI derived unit of angular jerk.
@@ -3755,8 +3622,7 @@ public sealed record RadianPerSecondCubed : IUnit, IAngularJerkUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public RadianPerSecondCubed() { }
-
-};
+}
 
 /// <summary>
 /// Hertz - SI derived unit of frequency.
@@ -3783,8 +3649,7 @@ public sealed record Hertz : IUnit, IFrequencyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Hertz() { }
-
-};
+}
 
 /// <summary>
 /// Kilohertz - 1000 hertz.
@@ -3811,8 +3676,7 @@ public sealed record Kilohertz : IUnit, IFrequencyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilohertz() { }
-
-};
+}
 
 /// <summary>
 /// Megahertz - 1e6 hertz.
@@ -3839,8 +3703,7 @@ public sealed record Megahertz : IUnit, IFrequencyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Megahertz() { }
-
-};
+}
 
 /// <summary>
 /// Sone - psychoacoustic unit of perceived loudness.
@@ -3867,8 +3730,7 @@ public sealed record Sone : IUnit, ILoudnessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Sone() { }
-
-};
+}
 
 /// <summary>
 /// Acum - psychoacoustic unit of perceived sharpness.
@@ -3895,8 +3757,7 @@ public sealed record Acum : IUnit, ISharpnessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Acum() { }
-
-};
+}
 
 /// <summary>
 /// Candela - SI base unit of luminous intensity.
@@ -3923,8 +3784,7 @@ public sealed record Candela : IUnit, ILuminousIntensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Candela() { }
-
-};
+}
 
 /// <summary>
 /// Lumen - SI derived unit of luminous flux.
@@ -3951,8 +3811,7 @@ public sealed record Lumen : IUnit, ILuminousFluxUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Lumen() { }
-
-};
+}
 
 /// <summary>
 /// Lux - SI derived unit of illuminance.
@@ -3979,8 +3838,7 @@ public sealed record Lux : IUnit, IIlluminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Lux() { }
-
-};
+}
 
 /// <summary>
 /// Diopter - SI unit of optical power.
@@ -4007,8 +3865,7 @@ public sealed record Diopter : IUnit, IOpticalPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Diopter() { }
-
-};
+}
 
 /// <summary>
 /// Millicandela - 0.001 candelas.
@@ -4035,8 +3892,7 @@ public sealed record Millicandela : IUnit, ILuminousIntensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Millicandela() { }
-
-};
+}
 
 /// <summary>
 /// Foot-candle - Imperial unit of illuminance (lumen per square foot).
@@ -4063,8 +3919,7 @@ public sealed record FootCandle : IUnit, IIlluminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public FootCandle() { }
-
-};
+}
 
 /// <summary>
 /// Candela per square meter - SI unit of luminance.
@@ -4091,8 +3946,7 @@ public sealed record CandelaPerSquareMeter : IUnit, ILuminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CandelaPerSquareMeter() { }
-
-};
+}
 
 /// <summary>
 /// Nit - common name for one candela per square meter.
@@ -4119,8 +3973,7 @@ public sealed record Nit : IUnit, ILuminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Nit() { }
-
-};
+}
 
 /// <summary>
 /// Foot-lambert - Imperial unit of luminance (1/π candela per square foot).
@@ -4147,8 +4000,7 @@ public sealed record FootLambert : IUnit, ILuminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public FootLambert() { }
-
-};
+}
 
 /// <summary>
 /// Becquerel - SI derived unit of radioactive activity.
@@ -4175,8 +4027,7 @@ public sealed record Becquerel : IUnit, IRadioactiveActivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Becquerel() { }
-
-};
+}
 
 /// <summary>
 /// Gray - SI derived unit of absorbed dose.
@@ -4203,8 +4054,7 @@ public sealed record Gray : IUnit, IAbsorbedDoseUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Gray() { }
-
-};
+}
 
 /// <summary>
 /// Sievert - SI derived unit of equivalent dose.
@@ -4231,8 +4081,7 @@ public sealed record Sievert : IUnit, IEquivalentDoseUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Sievert() { }
-
-};
+}
 
 /// <summary>
 /// Barn - Unit of nuclear cross section.
@@ -4259,8 +4108,7 @@ public sealed record Barn : IUnit, INuclearCrossSectionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Barn() { }
-
-};
+}
 
 /// <summary>
 /// Coulomb per kilogram - SI derived unit of radiation exposure.
@@ -4287,8 +4135,7 @@ public sealed record CoulombPerKilogram : IUnit, IExposureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CoulombPerKilogram() { }
-
-};
+}
 
 /// <summary>
 /// Curie - traditional unit of radioactive activity.
@@ -4315,8 +4162,7 @@ public sealed record Curie : IUnit, IRadioactiveActivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Curie() { }
-
-};
+}
 
 /// <summary>
 /// Rad - traditional unit of absorbed dose (0.01 Gy).
@@ -4343,8 +4189,7 @@ public sealed record Rad : IUnit, IAbsorbedDoseUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Rad() { }
-
-};
+}
 
 /// <summary>
 /// Rem - traditional unit of equivalent dose (0.01 Sv).
@@ -4371,8 +4216,7 @@ public sealed record Rem : IUnit, IEquivalentDoseUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Rem() { }
-
-};
+}
 
 /// <summary>
 /// Roentgen - traditional unit of ionizing radiation exposure.
@@ -4399,8 +4243,7 @@ public sealed record Roentgen : IUnit, IExposureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Roentgen() { }
-
-};
+}
 
 /// <summary>
 /// Kilogram per cubic meter - SI derived unit of density.
@@ -4427,8 +4270,7 @@ public sealed record KilogramPerCubicMeter : IUnit, IDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramPerCubicMeter() { }
-
-};
+}
 
 /// <summary>
 /// Gram per cubic centimeter - 1000 kg/m³.
@@ -4455,8 +4297,7 @@ public sealed record GramPerCubicCentimeter : IUnit, IDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public GramPerCubicCentimeter() { }
-
-};
+}
 
 /// <summary>
 /// Gram per liter - equal to one kilogram per cubic meter.
@@ -4483,8 +4324,7 @@ public sealed record GramPerLiter : IUnit, IDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public GramPerLiter() { }
-
-};
+}
 
 /// <summary>
 /// Mole - SI base unit of amount of substance.
@@ -4511,8 +4351,7 @@ public sealed record Mole : IUnit, IAmountOfSubstanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Mole() { }
-
-};
+}
 
 /// <summary>
 /// Mole per cubic meter - SI base unit of concentration.
@@ -4539,8 +4378,7 @@ public sealed record MolePerCubicMeter : IUnit, IConcentrationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MolePerCubicMeter() { }
-
-};
+}
 
 /// <summary>
 /// Molar - Moles per liter concentration.
@@ -4567,8 +4405,7 @@ public sealed record Molar : IUnit, IConcentrationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Molar() { }
-
-};
+}
 
 /// <summary>
 /// Kilomole - 1000 moles.
@@ -4595,8 +4432,7 @@ public sealed record Kilomole : IUnit, IAmountOfSubstanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilomole() { }
-
-};
+}
 
 /// <summary>
 /// Millimole - 0.001 moles.
@@ -4623,8 +4459,7 @@ public sealed record Millimole : IUnit, IAmountOfSubstanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Millimole() { }
-
-};
+}
 
 /// <summary>
 /// Millimolar - 0.001 moles per liter (1 mol/m³).
@@ -4651,8 +4486,7 @@ public sealed record Millimolar : IUnit, IConcentrationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Millimolar() { }
-
-};
+}
 
 /// <summary>
 /// Micromolar - 1e-6 moles per liter (0.001 mol/m³).
@@ -4679,8 +4513,7 @@ public sealed record Micromolar : IUnit, IConcentrationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Micromolar() { }
-
-};
+}
 
 /// <summary>
 /// Square meter per second - SI derived unit of kinematic viscosity.
@@ -4707,8 +4540,7 @@ public sealed record SquareMeterPerSecond : IUnit, IKinematicViscosityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareMeterPerSecond() { }
-
-};
+}
 
 /// <summary>
 /// Stokes - CGS unit of kinematic viscosity.
@@ -4735,8 +4567,7 @@ public sealed record Stokes : IUnit, IKinematicViscosityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Stokes() { }
-
-};
+}
 
 /// <summary>
 /// Pascal second - SI derived unit of dynamic viscosity.
@@ -4763,8 +4594,7 @@ public sealed record PascalSecond : IUnit, IDynamicViscosityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PascalSecond() { }
-
-};
+}
 
 /// <summary>
 /// Poise - CGS unit of dynamic viscosity.
@@ -4791,8 +4621,7 @@ public sealed record Poise : IUnit, IDynamicViscosityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Poise() { }
-
-};
+}
 
 /// <summary>
 /// Cubic meter per second - SI derived unit of volumetric flow rate.
@@ -4819,8 +4648,7 @@ public sealed record CubicMeterPerSecond : IUnit, IVolumetricFlowRateUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CubicMeterPerSecond() { }
-
-};
+}
 
 /// <summary>
 /// Liter per second - Common unit of volumetric flow rate.
@@ -4847,8 +4675,7 @@ public sealed record LiterPerSecond : IUnit, IVolumetricFlowRateUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public LiterPerSecond() { }
-
-};
+}
 
 /// <summary>
 /// Kilogram per second - SI derived unit of mass flow rate.
@@ -4875,8 +4702,7 @@ public sealed record KilogramPerSecond : IUnit, IMassFlowRateUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramPerSecond() { }
-
-};
+}
 
 /// <summary>
 /// Newton per meter - SI derived unit of surface tension.
@@ -4903,8 +4729,7 @@ public sealed record NewtonPerMeter : IUnit, ISurfaceTensionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public NewtonPerMeter() { }
-
-};
+}
 
 /// <summary>
 /// Centipoise - 0.001 pascal seconds (viscosity of water at 20°C ≈ 1 cP).
@@ -4931,8 +4756,7 @@ public sealed record Centipoise : IUnit, IDynamicViscosityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Centipoise() { }
-
-};
+}
 
 /// <summary>
 /// Dyne per centimeter - CGS unit of surface tension.
@@ -4959,8 +4783,7 @@ public sealed record DynePerCentimeter : IUnit, ISurfaceTensionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public DynePerCentimeter() { }
-
-};
+}
 
 /// <summary>
 /// Kilogram per mole - SI derived unit of molar mass.
@@ -4987,8 +4810,7 @@ public sealed record KilogramPerMole : IUnit, IMolarMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramPerMole() { }
-
-};
+}
 
 /// <summary>
 /// Gram per mole - Common unit of molar mass.
@@ -5015,8 +4837,7 @@ public sealed record GramPerMole : IUnit, IMolarMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public GramPerMole() { }
-
-};
+}
 
 /// <summary>
 /// Katal - SI derived unit of catalytic activity.
@@ -5043,8 +4864,7 @@ public sealed record Katal : IUnit, ICatalyticActivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Katal() { }
-
-};
+}
 
 /// <summary>
 /// Mole per cubic meter second - SI derived unit of reaction rate.
@@ -5071,8 +4891,7 @@ public sealed record MolePerCubicMeterSecond : IUnit, IReactionRateUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MolePerCubicMeterSecond() { }
-
-};
+}
 
 /// <summary>
 /// Joule per mole - SI derived unit of molar energy.
@@ -5099,8 +4918,7 @@ public sealed record JoulePerMole : IUnit, IMolarEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public JoulePerMole() { }
-
-};
+}
 
 /// <summary>
 /// Kilojoule per mole - Common unit of molar energy.
@@ -5127,8 +4945,7 @@ public sealed record KilojoulePerMole : IUnit, IMolarEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilojoulePerMole() { }
-
-};
+}
 
 /// <summary>
 /// Calorie per mole - thermochemical calorie per mole.
@@ -5155,8 +4972,7 @@ public sealed record CaloriePerMole : IUnit, IMolarEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CaloriePerMole() { }
-
-};
+}
 
 /// <summary>
 /// Enzyme unit - one micromole of substrate per minute.
@@ -5183,8 +4999,7 @@ public sealed record EnzymeUnit : IUnit, ICatalyticActivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public EnzymeUnit() { }
-
-};
+}
 
 /// <summary>
 /// Dalton - molar mass numerically equal to one gram per mole.
@@ -5211,8 +5026,7 @@ public sealed record Dalton : IUnit, IMolarMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Dalton() { }
-
-};
+}
 
 /// <summary>
 /// Per second - SI unit of a first-order rate constant.
@@ -5239,8 +5053,7 @@ public sealed record PerSecond : IUnit, IRateConstantUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PerSecond() { }
-
-};
+}
 
 /// <summary>
 /// Watt per square meter - SI derived unit of irradiance and sound intensity.
@@ -5267,8 +5080,7 @@ public sealed record WattPerSquareMeter : IUnit, IIrradianceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public WattPerSquareMeter() { }
-
-};
+}
 
 /// <summary>
 /// Pascal second per meter - SI derived unit of acoustic impedance.
@@ -5295,14 +5107,14 @@ public sealed record PascalSecondPerMeter : IUnit, IAcousticImpedanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PascalSecondPerMeter() { }
-
-};
+}
 
 /// <summary>
 /// Static catalogue exposing one singleton per declared unit. Generated quantity
 /// types accept these on their typed <c>In(...)</c> methods.
 /// </summary>
-public static class Units{
+public static class Units
+{
 	/// <summary>Singleton <c>Acre</c> instance.</summary>
 	public static readonly Acre Acre = new Acre();
 
@@ -5869,6 +5681,5 @@ public static class Units{
 
 	/// <summary>Singleton <c>Year</c> instance.</summary>
 	public static readonly Year Year = new Year();
-
-};
+}
 
