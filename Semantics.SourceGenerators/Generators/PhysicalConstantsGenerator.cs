@@ -180,6 +180,6 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 		sourceFileTemplate.Classes.Add(constantsClass);
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
-		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
+		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 }

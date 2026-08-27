@@ -146,6 +146,6 @@ public class DimensionsGenerator : SemanticsGenerator<DimensionsMetadata>
 		}
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
-		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
+		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 }

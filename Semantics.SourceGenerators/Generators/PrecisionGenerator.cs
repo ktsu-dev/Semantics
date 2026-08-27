@@ -84,6 +84,6 @@ public class PrecisionGenerator : SemanticsGenerator<PrecisionMetadata>
 		sourceFileTemplate.Classes.Add(storageClass);
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
-		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
+		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 }

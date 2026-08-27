@@ -54,7 +54,7 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 
 	private static void EmitScale(SourceProductionContext context, LogarithmicScaleDefinition scale)
 	{
-		using CodeBlocker cb = CodeBlocker.Create();
+		using CodeBlocker cb = CreateCodeBlocker();
 		string name = scale.Name;
 		string fullType = $"{name}<T>";
 
@@ -108,7 +108,7 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 			WriteToString(cb, scale);
 		}
 
-		GeneratedSource.Add(context, $"{name}.g.cs", cb.ToString());
+		context.AddSource($"{name}.g.cs", cb.ToString());
 	}
 
 	private static void WriteScalarFactory(CodeBlocker cb, LogarithmicScaleDefinition scale, string fullType)

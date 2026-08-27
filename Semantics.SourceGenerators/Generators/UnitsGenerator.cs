@@ -87,7 +87,7 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 		sourceFileTemplate.Classes.Add(BuildUnitsCatalogue(catalogueUnitNames));
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
-		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
+		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 
 	/// <summary>

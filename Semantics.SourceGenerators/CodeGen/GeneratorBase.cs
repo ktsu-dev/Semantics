@@ -88,7 +88,21 @@ public abstract class GeneratorBase : IIncrementalGenerator
 	/// Creates a <see cref="CodeBlocker"/> configured the way generated sources are written.
 	/// </summary>
 	/// <returns>A new <see cref="CodeBlocker"/>.</returns>
-	protected static CodeBlocker CreateCodeBlocker() => CodeBlocker.Create();
+	/// <remarks>
+	/// The line terminator is pinned rather than inherited from the host. Generated output is
+	/// committed and verified by CI, so it has to be byte-identical wherever it was produced —
+	/// which previously meant rewriting every line ending after the fact, because
+	/// <see cref="System.CodeDom.Compiler.IndentedTextWriter"/> uses
+	/// <see cref="System.Environment.NewLine"/>.
+	/// <para>
+	/// LF, matching <c>* text=auto eol=lf</c> in <c>.gitattributes</c> and
+	/// <c>end_of_line = lf</c> in <c>.editorconfig</c>. The pass this replaces rewrote everything
+	/// to CRLF on the grounds that those files asked for CRLF, which stopped being true at the LF
+	/// migration; git had been quietly normalising the difference away on every commit ever since.
+	/// </para>
+	/// </remarks>
+	protected static CodeBlocker CreateCodeBlocker() =>
+		CodeBlocker.Create(CodeBlocker.DefaultIndentString, NewLines.Lf);
 
 	/// <summary>
 	/// Writes the header every generated file starts with.

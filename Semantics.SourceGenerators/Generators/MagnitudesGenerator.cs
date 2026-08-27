@@ -63,6 +63,6 @@ public class MagnitudesGenerator : SemanticsGenerator<MagnitudesMetadata>
 		sourceFileTemplate.Classes.Add(magnitudesClass);
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
-		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
+		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 }

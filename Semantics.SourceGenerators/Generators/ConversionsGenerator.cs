@@ -74,6 +74,6 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
 
-		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
+		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 }

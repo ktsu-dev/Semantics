@@ -827,7 +827,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		string typeName = v0.Base;
 		string fullType = $"{typeName}<T>";
 
-		using CodeBlocker cb = CodeBlocker.Create();
+		using CodeBlocker cb = CreateCodeBlocker();
 
 		SourceFileTemplate sourceFile = new()
 		{
@@ -906,7 +906,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 		sourceFile.Classes.Add(cls);
 		WriteSourceFileTo(cb, sourceFile);
-		GeneratedSource.Add(context, sourceFile.FileName, cb.ToString());
+		context.AddSource(sourceFile.FileName, cb.ToString());
 	}
 
 	private void EmitV1BaseType(
@@ -921,7 +921,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		string fullType = $"{typeName}<T>";
 		string? v0TypeName = dim.Quantities.Vector0?.Base;
 
-		using CodeBlocker cb = CodeBlocker.Create();
+		using CodeBlocker cb = CreateCodeBlocker();
 
 		SourceFileTemplate sourceFile = new()
 		{
@@ -992,7 +992,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 		sourceFile.Classes.Add(cls);
 		WriteSourceFileTo(cb, sourceFile);
-		GeneratedSource.Add(context, sourceFile.FileName, cb.ToString());
+		context.AddSource(sourceFile.FileName, cb.ToString());
 	}
 
 	private static void EmitVectorType(
@@ -1017,7 +1017,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		string interfaceName = $"IVector{dims}<{fullType}, T>";
 		string? v0TypeName = dim.Quantities.Vector0?.Base;
 
-		using CodeBlocker cb = CodeBlocker.Create();
+		using CodeBlocker cb = CreateCodeBlocker();
 
 		WriteHeaderTo(cb);
 		cb.WriteLine("#pragma warning disable IDE0040 // Accessibility modifiers required");
@@ -1083,7 +1083,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			}
 		}
 
-		GeneratedSource.Add(context, $"{typeName}.g.cs", cb.ToString());
+		context.AddSource($"{typeName}.g.cs", cb.ToString());
 	}
 
 	private void EmitOverloadType(
@@ -1101,7 +1101,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		// V0/V1 overloads inherit from PhysicalQuantity
 		if (vectorForm <= 1)
 		{
-			using CodeBlocker cb = CodeBlocker.Create();
+			using CodeBlocker cb = CreateCodeBlocker();
 
 			string interfaceName = vectorForm == 0 ? $"IVector0<{fullType}, T>" : $"IVector1<{fullType}, T>";
 
@@ -1250,7 +1250,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 			sourceFile.Classes.Add(cls);
 			WriteSourceFileTo(cb, sourceFile);
-			GeneratedSource.Add(context, sourceFile.FileName, cb.ToString());
+			context.AddSource(sourceFile.FileName, cb.ToString());
 		}
 		else
 		{
@@ -1280,7 +1280,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		string baseFullType = $"{baseTypeName}<T>";
 		string interfaceName = $"IVector{dims}<{fullType}, T>";
 
-		using CodeBlocker cb = CodeBlocker.Create();
+		using CodeBlocker cb = CreateCodeBlocker();
 
 		WriteHeaderTo(cb);
 		cb.WriteLine("#pragma warning disable IDE0040 // Accessibility modifiers required");
@@ -1319,7 +1319,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			cb.NewLine();
 		}
 
-		GeneratedSource.Add(context, $"{typeName}.g.cs", cb.ToString());
+		context.AddSource($"{typeName}.g.cs", cb.ToString());
 	}
 
 	#endregion
