@@ -46,6 +46,39 @@ public class GeneratorDiagnosticTests
 		}
 		""";
 
+	/// <summary>
+	/// Two dimensions, so a relationship's <c>other</c> and <c>result</c> can name different things
+	/// and a diagnostic about one can be told from a diagnostic about the other.
+	/// </summary>
+	/// <param name="relationships">Relationship JSON to splice into the Length dimension.</param>
+	/// <returns>The document.</returns>
+	/// <remarks>
+	/// Time deliberately declares only <c>vector0</c>. Length declares <c>vector0</c> and
+	/// <c>vector3</c>, so a relationship between them at form 3 is honourable for Length and not for
+	/// Time — which is what SEM003 is for.
+	/// </remarks>
+	private static string TwoDimensionsDocument(string relationships) =>
+		$$"""
+		{
+		  "physicalDimensions": [
+		    {
+		      "name": "Length",
+		      "symbol": "L",
+		      "dimensionalFormula": { "length": 1 },
+		      "availableUnits": [ "Meter" ],
+		      "quantities": { "vector0": { "base": "Length" }, "vector3": { "base": "Displacement3D" } }{{relationships}}
+		    },
+		    {
+		      "name": "Time",
+		      "symbol": "T",
+		      "dimensionalFormula": { "time": 1 },
+		      "availableUnits": [ "Second" ],
+		      "quantities": { "vector0": { "base": "Duration" } }
+		    }
+		  ]
+		}
+		""";
+
 	private static IReadOnlyList<Diagnostic> Run(string generatorMetadata, IIncrementalGenerator generator, string fileName) =>
 		[.. Harness.Run(generator, new Dictionary<string, string> { [fileName] = generatorMetadata }).Diagnostics];
 
@@ -107,6 +140,41 @@ public class GeneratorDiagnosticTests
 		AssertPointsAt(metadata, Run(metadata, new QuantitiesGenerator(), "dimensions.json"), "SEM001", "Tiem");
 	}
 
+	/// <summary>
+	/// SEM001 fires for a bad name in any relationship kind, in either field.
+	/// </summary>
+	/// <param name="kind">The relationship array to put the bad name in.</param>
+	/// <param name="field">Which of <c>other</c>/<c>result</c> is wrong.</param>
+	/// <remarks>
+	/// Each of these is a separate report site with its own field-path message, and only
+	/// <c>integrals.other</c> had a test. A rename that dropped one of the other seven would not
+	/// have failed anything.
+	/// </remarks>
+	[TestMethod]
+	[DataRow("integrals", "other")]
+	[DataRow("integrals", "result")]
+	[DataRow("derivatives", "other")]
+	[DataRow("derivatives", "result")]
+	[DataRow("dotProducts", "other")]
+	[DataRow("dotProducts", "result")]
+	[DataRow("crossProducts", "other")]
+	[DataRow("crossProducts", "result")]
+	public void Sem001_IsReportedForAnUnknownNameInAnyRelationshipField(string kind, string field)
+	{
+		string other = field == "other" ? "Nonexistent" : "Time";
+		string result = field == "result" ? "Nonexistent" : "Time";
+		string metadata = TwoDimensionsDocument(
+			$",\n      \"{kind}\": [ {{ \"other\": \"{other}\", \"result\": \"{result}\" }} ]");
+
+		IReadOnlyList<Diagnostic> diagnostics = Run(metadata, new QuantitiesGenerator(), "dimensions.json");
+
+		AssertPointsAt(metadata, diagnostics, "SEM001", "Nonexistent");
+		Assert.Contains(
+			$"{kind}[{other} -> {result}].{field}",
+			diagnostics.First(candidate => candidate.Id == "SEM001").GetMessage(),
+			"The message should name the field path the bad name is written at.");
+	}
+
 	[TestMethod]
 	public void Sem002_IsReportedForADimensionMissingItsSymbol()
 	{
@@ -149,6 +217,40 @@ public class GeneratorDiagnosticTests
 			Run(metadata, new QuantitiesGenerator(), "dimensions.json"),
 			"SEM003",
 			"\"other\": \"Length\"");
+	}
+
+	/// <remarks>
+	/// The self branch is covered above. This is the second participant: Length has a vector3 and
+	/// Time does not, so the cross product cannot be honoured at form 3 — and the diagnostic has to
+	/// name Time rather than Length.
+	/// </remarks>
+	[TestMethod]
+	public void Sem003_NamesTheOtherParticipantWhenItIsTheOneMissingTheForm()
+	{
+		string metadata = TwoDimensionsDocument(
+			",\n      \"crossProducts\": [ { \"other\": \"Time\", \"result\": \"Length\", \"forms\": [ 3 ] } ]");
+
+		IReadOnlyList<Diagnostic> diagnostics = Run(metadata, new QuantitiesGenerator(), "dimensions.json");
+
+		AssertReports(diagnostics, "SEM003");
+		Assert.Contains("Time", diagnostics.First(candidate => candidate.Id == "SEM003").GetMessage());
+	}
+
+	/// <remarks>
+	/// The third participant. A cross product also needs its <em>result</em> to have the form —
+	/// Force x Length -> Torque at V2 fails because Torque has no V2, not because either operand
+	/// is missing one.
+	/// </remarks>
+	[TestMethod]
+	public void Sem003_NamesTheResultWhenItIsTheOneMissingTheForm()
+	{
+		string metadata = TwoDimensionsDocument(
+			",\n      \"crossProducts\": [ { \"other\": \"Length\", \"result\": \"Time\", \"forms\": [ 3 ] } ]");
+
+		IReadOnlyList<Diagnostic> diagnostics = Run(metadata, new QuantitiesGenerator(), "dimensions.json");
+
+		AssertReports(diagnostics, "SEM003");
+		Assert.Contains("Time", diagnostics.First(candidate => candidate.Id == "SEM003").GetMessage());
 	}
 
 	[TestMethod]
