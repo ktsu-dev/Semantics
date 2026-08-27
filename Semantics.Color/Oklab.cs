@@ -103,6 +103,11 @@ public readonly record struct Oklab(double L, double A, double B)
 
 	// netstandard2.0 lacks Math.Cbrt; one Newton-Raphson refinement after a
 	// sign-aware Pow gives a correctly-rounded result on all target frameworks.
+	[System.Diagnostics.CodeAnalysis.SuppressMessage(
+		"Major Code Smell", "S1244:Do not check floating point equality with exact values",
+		Justification = "The exact comparison is the point: the Newton-Raphson step divides by x * x, " +
+			"and x is exactly zero only when value is. A tolerance band would send small-but-valid " +
+			"inputs down the shortcut and lose precision that the refinement exists to recover.")]
 	private static double Cbrt(double value)
 	{
 		if (value == 0.0)

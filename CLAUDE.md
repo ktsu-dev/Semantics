@@ -20,16 +20,18 @@ Tests use MSTest. Generator output is emitted to `Semantics.Quantities/Generated
 CI analyses this repository with the SonarCloud scanner, which injects the Sonar analyzers into the compilation. A plain `dotnet build` does **not** run them, so Sonar findings are invisible locally and only surface after a push — a ~10 minute round trip per attempt. To run the same analyzers:
 
 ```bash
-dotnet build -p:CustomBeforeMicrosoftCommonProps=$PWD/.sonarlint/sonar-local.props
+dotnet build -p:CustomAfterMicrosoftCommonProps=$PWD/.sonarlint/sonar-local.props
 ```
 
 ```powershell
-dotnet build -p:CustomBeforeMicrosoftCommonProps=$PWD\.sonarlint\sonar-local.props
+dotnet build -p:CustomAfterMicrosoftCommonProps=$PWD\.sonarlint\sonar-local.props
 ```
+
+Note **`After`**, not `Before`. `CustomBeforeMicrosoftCommonProps` reaches only `Semantics.SourceGenerators`, the one project declaring its SDK with the `<Project Sdk="...">` attribute form; the `ktsu.Sdk` projects use `<Project>` with `<Sdk Name="..." />` elements, which that hook does not reach. `CustomAfterMicrosoftCommonProps` does reach them, and is still early enough for restore to pick up the analyzer `PackageReference`.
 
 The opt-in lives in `.sonarlint/sonar-local.props` (analyzer package) and `.sonarlint/sonar-local.globalconfig` (rule severities — it raises the rules CI reports that the analyzer package ships disabled, and silences the ones CI's quality profile does not report). Nothing imports these automatically, so normal builds, the CI pipeline, and packaging are unaffected.
 
-**Known limitation:** this currently only reaches `Semantics.SourceGenerators`, the one project declaring its SDK with the `<Project Sdk="...">` attribute form. The `ktsu.Sdk` projects use `<Project>` with `<Sdk Name="..." />` elements, and `CustomBeforeMicrosoftCommonProps` does not reach them. Findings in `Semantics.Strings`, `Paths`, `Music`, `Color` and `Quantities` still have to be read from SonarCloud.
+**Caveat:** the globalconfig was calibrated against this repository's quality profile. If a project sits under a different profile the local rule set will not match it exactly, so treat a clean local run as strong evidence rather than proof.
 
 ## Project layout
 
