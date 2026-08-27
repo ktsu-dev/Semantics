@@ -10,7 +10,13 @@
     This file wires the same analyzers into a local build. It is NOT imported
     automatically - point MSBuild at it explicitly:
 
-        dotnet build -p:CustomBeforeMicrosoftCommonProps=$PWD/.sonarlint/sonar-local.props
+        dotnet build -p:CustomAfterMicrosoftCommonProps=$PWD/.sonarlint/sonar-local.props
+
+    Note "After", not "Before". This was CustomBeforeMicrosoftCommonProps, which reached
+    only Semantics.SourceGenerators - the one project declaring its SDK with the
+    <Project Sdk="..."> attribute form. Every ktsu.Sdk project uses <Project> with
+    <Sdk Name="..." /> elements, and the Before hook does not reach that form. The After
+    hook does, and is still early enough for restore to pick up the PackageReference below.
 
     sonar-local.globalconfig (next to this file) raises the rules that CI reports but
     that the analyzer package leaves off by default, so the local warning set matches

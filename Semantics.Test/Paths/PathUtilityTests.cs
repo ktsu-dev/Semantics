@@ -13,8 +13,8 @@ public class PathUtilityTests
 	public void IsChildOf_WithValidChildPath_ReturnsTrue()
 	{
 		// Test IsChildOf with valid parent-child relationship
-		AbsoluteDirectoryPath parent = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
-		AbsoluteDirectoryPath child = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects\app\src");
+		AbsoluteDirectoryPath parent = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
+		AbsoluteDirectoryPath child = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects", "app", "src"));
 
 		bool result = child.IsChildOf(parent);
 
@@ -25,8 +25,8 @@ public class PathUtilityTests
 	public void IsChildOf_WithSamePath_ReturnsFalse()
 	{
 		// Test IsChildOf with identical paths (should return false)
-		AbsoluteDirectoryPath path1 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
-		AbsoluteDirectoryPath path2 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
+		AbsoluteDirectoryPath path1 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
+		AbsoluteDirectoryPath path2 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
 
 		bool result = path1.IsChildOf(path2);
 
@@ -37,8 +37,8 @@ public class PathUtilityTests
 	public void IsChildOf_WithNonChildPath_ReturnsFalse()
 	{
 		// Test IsChildOf with unrelated paths
-		AbsoluteDirectoryPath path1 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects\app");
-		AbsoluteDirectoryPath path2 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\other\folder");
+		AbsoluteDirectoryPath path1 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects", "app"));
+		AbsoluteDirectoryPath path2 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("other", "folder"));
 
 		bool result = path1.IsChildOf(path2);
 
@@ -49,8 +49,8 @@ public class PathUtilityTests
 	public void IsChildOf_WithParentAsChild_ReturnsFalse()
 	{
 		// Test IsChildOf with parent-child relationship reversed
-		AbsoluteDirectoryPath parent = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
-		AbsoluteDirectoryPath child = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects\app");
+		AbsoluteDirectoryPath parent = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
+		AbsoluteDirectoryPath child = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects", "app"));
 
 		bool result = parent.IsChildOf(child);
 
@@ -61,7 +61,7 @@ public class PathUtilityTests
 	public void IsChildOf_WithNullArgument_ThrowsArgumentNullException()
 	{
 		// Test IsChildOf with null argument
-		AbsoluteDirectoryPath path = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteDirectoryPath path = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 
 		Assert.ThrowsExactly<ArgumentNullException>(() => path.IsChildOf(null!));
 	}
@@ -70,8 +70,9 @@ public class PathUtilityTests
 	public void IsChildOf_WithMixedSeparators_WorksCorrectly()
 	{
 		// Test IsChildOf with mixed path separators
-		AbsoluteDirectoryPath parent = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
-		AbsoluteDirectoryPath child = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:/projects/app/src");
+		AbsoluteDirectoryPath parent = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
+		AbsoluteDirectoryPath child = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(
+			TestPaths.AltAbsolute("projects", "app", "src"));
 
 		bool result = child.IsChildOf(parent);
 
@@ -82,8 +83,8 @@ public class PathUtilityTests
 	public void GetRelativePathTo_WithValidPaths_ReturnsCorrectRelativePath()
 	{
 		// Test GetRelativePathTo with valid directory paths
-		AbsoluteDirectoryPath from = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects\app");
-		AbsoluteDirectoryPath to = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects\lib\utils");
+		AbsoluteDirectoryPath from = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects", "app"));
+		AbsoluteDirectoryPath to = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects", "lib", "utils"));
 
 		RelativeDirectoryPath result = from.GetRelativePathTo(to);
 
@@ -97,8 +98,8 @@ public class PathUtilityTests
 	public void GetRelativePathTo_WithSamePath_ReturnsCurrentDirectory()
 	{
 		// Test GetRelativePathTo with identical paths
-		AbsoluteDirectoryPath path1 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
-		AbsoluteDirectoryPath path2 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
+		AbsoluteDirectoryPath path1 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
+		AbsoluteDirectoryPath path2 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
 
 		RelativeDirectoryPath result = path1.GetRelativePathTo(path2);
 
@@ -111,7 +112,7 @@ public class PathUtilityTests
 	public void GetRelativePathTo_WithNullArgument_ThrowsArgumentNullException()
 	{
 		// Test GetRelativePathTo with null argument
-		AbsoluteDirectoryPath path = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteDirectoryPath path = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 
 		Assert.ThrowsExactly<ArgumentNullException>(() => path.GetRelativePathTo(null!));
 	}
@@ -120,8 +121,8 @@ public class PathUtilityTests
 	public void GetRelativePathTo_WithChildPath_ReturnsSimpleRelativePath()
 	{
 		// Test GetRelativePathTo from parent to child
-		AbsoluteDirectoryPath parent = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
-		AbsoluteDirectoryPath child = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects\app\src");
+		AbsoluteDirectoryPath parent = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
+		AbsoluteDirectoryPath child = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects", "app", "src"));
 
 		RelativeDirectoryPath result = parent.GetRelativePathTo(child);
 
@@ -135,7 +136,7 @@ public class PathUtilityTests
 	public void Normalize_WithDotPaths_ResolvesCorrectly()
 	{
 		// Test Normalize with . and .. components
-		RelativeDirectoryPath complexPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"app\.\src\..\lib\utils");
+		RelativeDirectoryPath complexPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("app", ".", "src", "..", "lib", "utils"));
 
 		RelativeDirectoryPath normalized = complexPath.Normalize();
 
@@ -161,19 +162,19 @@ public class PathUtilityTests
 	public void Normalize_WithSimplePath_ReturnsSame()
 	{
 		// Test Normalize with already normalized path
-		RelativeDirectoryPath simplePath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"app\src");
+		RelativeDirectoryPath simplePath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("app", "src"));
 
 		RelativeDirectoryPath normalized = simplePath.Normalize();
 
 		Assert.IsNotNull(normalized);
-		Assert.AreEqual("app" + Path.DirectorySeparatorChar + "src", normalized.WeakString);
+		Assert.AreEqual(TestPaths.Relative("app", "src"), normalized.WeakString);
 	}
 
 	[TestMethod]
 	public void Normalize_WithOnlyDots_ResolvesCorrectly()
 	{
 		// Test Normalize with only . and .. components
-		RelativeDirectoryPath dotPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@".\..\.\folder");
+		RelativeDirectoryPath dotPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative(".", "..", ".", "folder"));
 
 		RelativeDirectoryPath normalized = dotPath.Normalize();
 
@@ -185,7 +186,7 @@ public class PathUtilityTests
 	public void RemoveExtension_WithValidExtension_RemovesCorrectly()
 	{
 		// Test RemoveExtension on RelativeFilePath
-		RelativeFilePath filePath = RelativeFilePath.Create<RelativeFilePath>(@"app\src\component.tsx");
+		RelativeFilePath filePath = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("app", "src", "component.tsx"));
 
 		RelativeFilePath result = filePath.RemoveExtension();
 
@@ -211,7 +212,7 @@ public class PathUtilityTests
 	public void RemoveExtension_WithNoExtension_ReturnsUnchanged()
 	{
 		// Test RemoveExtension with file that has no extension
-		RelativeFilePath filePath = RelativeFilePath.Create<RelativeFilePath>(@"app\src\README");
+		RelativeFilePath filePath = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("app", "src", "README"));
 
 		RelativeFilePath result = filePath.RemoveExtension();
 
@@ -224,7 +225,7 @@ public class PathUtilityTests
 	{
 		// Test depth calculation for relative directory paths
 		RelativeDirectoryPath shallowPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>("folder");
-		RelativeDirectoryPath deepPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"app\src\components\ui");
+		RelativeDirectoryPath deepPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("app", "src", "components", "ui"));
 
 		int shallowDepth = shallowPath.Depth;
 		int deepDepth = deepPath.Depth;
@@ -248,7 +249,7 @@ public class PathUtilityTests
 	public void PathDepth_WithMixedSeparators_CountsCorrectly()
 	{
 		// Test depth calculation with mixed separators
-		RelativeDirectoryPath mixedPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"app/src\components");
+		RelativeDirectoryPath mixedPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.AltRelative("app", "src") + TestPaths.Separator + "components");
 
 		int depth = mixedPath.Depth;
 

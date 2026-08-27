@@ -42,9 +42,11 @@ public class DirectoryNameTests
 	[TestMethod]
 	public void DirectoryName_Create_WithPathSeparator_ThrowsException()
 	{
-		// Test that DirectoryName rejects path separators
+		// Test that DirectoryName rejects path separators. Built from the platform's own separator
+		// rather than hard-coded as a backslash: on Unix a backslash is an ordinary filename
+		// character, and a DirectoryName is entitled to contain one there.
 		Assert.ThrowsExactly<ArgumentException>(() =>
-			DirectoryName.Create<DirectoryName>("folder\\subfolder"));
+			DirectoryName.Create<DirectoryName>(TestPaths.Relative("folder", "subfolder")));
 	}
 
 	[TestMethod]
@@ -55,7 +57,15 @@ public class DirectoryNameTests
 			DirectoryName.Create<DirectoryName>("folder/subfolder"));
 	}
 
+	/// <remarks>
+	/// Every character here — <c>&lt;</c>, <c>&gt;</c>, <c>:</c>, <c>|</c> — is reserved on Windows
+	/// and legal in a Unix filename. <c>IsDirectoryNameAttribute</c> asks the running platform via
+	/// <see cref="Path.GetInvalidFileNameChars"/>, so accepting them off Windows is the correct
+	/// answer rather than a gap in validation.
+	/// </remarks>
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void DirectoryName_Create_WithInvalidCharacters_ThrowsException()
 	{
 		// Test that DirectoryName rejects invalid filename characters
@@ -97,7 +107,7 @@ public class DirectoryNameTests
 	public void DirectoryName_TryCreate_WithInvalidName_ReturnsFalse()
 	{
 		// Test TryCreate with invalid directory name
-		bool success = DirectoryName.TryCreate("invalid\\name", out DirectoryName? result);
+		bool success = DirectoryName.TryCreate(TestPaths.Relative("invalid", "name"), out DirectoryName? result);
 
 		Assert.IsFalse(success, "TryCreate should return false for a directory name containing a path separator");
 		Assert.IsNull(result);
@@ -185,7 +195,7 @@ public class DirectoryNameTests
 	public void DirectoryName_CombineWithAbsoluteDirectoryPath_CreatesValidPath()
 	{
 		// Test combining DirectoryName with AbsoluteDirectoryPath
-		AbsoluteDirectoryPath basePath = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
+		AbsoluteDirectoryPath basePath = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
 		DirectoryName subDir = DirectoryName.Create<DirectoryName>("myapp");
 
 		AbsoluteDirectoryPath result = basePath / subDir;

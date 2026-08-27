@@ -13,7 +13,7 @@ public class RelativePathPropertyTests
 	public void RelativeDirectoryPath_Name_ReturnsCorrectDirectoryName()
 	{
 		// Test that Name property returns the last component as DirectoryName
-		RelativeDirectoryPath path = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"projects\app\src");
+		RelativeDirectoryPath path = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("projects", "app", "src"));
 
 		DirectoryName name = path.Name;
 
@@ -49,7 +49,7 @@ public class RelativePathPropertyTests
 	public void RelativeDirectoryPath_Parent_ReturnsCorrectParent()
 	{
 		// Test that Parent property returns parent directory
-		RelativeDirectoryPath path = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"projects\app\src");
+		RelativeDirectoryPath path = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("projects", "app", "src"));
 
 		RelativeDirectoryPath parent = path.Parent;
 
@@ -76,8 +76,8 @@ public class RelativePathPropertyTests
 	{
 		// Test Depth property calculation
 		RelativeDirectoryPath shallow = RelativeDirectoryPath.Create<RelativeDirectoryPath>("myapp");
-		RelativeDirectoryPath medium = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"projects\myapp");
-		RelativeDirectoryPath deep = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"projects\myapp\src\components");
+		RelativeDirectoryPath medium = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("projects", "myapp"));
+		RelativeDirectoryPath deep = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("projects", "myapp", "src", "components"));
 
 		Assert.AreEqual(0, shallow.Depth);
 		Assert.AreEqual(1, medium.Depth);
@@ -97,7 +97,7 @@ public class RelativePathPropertyTests
 	public void RelativeFilePath_RelativeDirectoryPath_ReturnsCorrectDirectory()
 	{
 		// Test RelativeDirectoryPath property
-		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>(@"projects\app\Component.tsx");
+		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("projects", "app", "Component.tsx"));
 
 		RelativeDirectoryPath dir = file.RelativeDirectoryPath;
 
@@ -123,7 +123,7 @@ public class RelativePathPropertyTests
 	public void RelativeFilePath_FileNameWithoutExtension_ReturnsCorrectName()
 	{
 		// Test FileNameWithoutExtension property
-		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>(@"projects\Component.tsx");
+		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("projects", "Component.tsx"));
 
 		FileName name = file.FileNameWithoutExtension;
 
@@ -147,7 +147,7 @@ public class RelativePathPropertyTests
 	public void RelativeFilePath_ChangeExtension_ChangesCorrectly()
 	{
 		// Test ChangeExtension method
-		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>(@"projects\file.txt");
+		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("projects", "file.txt"));
 		FileExtension newExt = FileExtension.Create<FileExtension>(".md");
 
 		RelativeFilePath result = file.ChangeExtension(newExt);
@@ -170,7 +170,7 @@ public class RelativePathPropertyTests
 	public void RelativeFilePath_RemoveExtension_RemovesCorrectly()
 	{
 		// Test RemoveExtension method
-		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>(@"projects\file.txt");
+		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("projects", "file.txt"));
 
 		RelativeFilePath result = file.RemoveExtension();
 
@@ -183,7 +183,7 @@ public class RelativePathPropertyTests
 	public void RelativeFilePath_RemoveExtension_WithNoExtension_ReturnsUnchanged()
 	{
 		// Test RemoveExtension with file without extension
-		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>(@"projects\README");
+		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("projects", "README"));
 
 		RelativeFilePath result = file.RemoveExtension();
 
@@ -238,7 +238,7 @@ public class RelativePathPropertyTests
 	{
 		// Test that AsRelative returns self for already relative paths
 		RelativeDirectoryPath path = RelativeDirectoryPath.Create<RelativeDirectoryPath>("projects");
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\temp");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("temp"));
 
 		RelativeDirectoryPath result = path.AsRelative(baseDir);
 
@@ -250,7 +250,7 @@ public class RelativePathPropertyTests
 	{
 		// Test that AsRelative returns self for already relative file paths
 		RelativeFilePath path = RelativeFilePath.Create<RelativeFilePath>("file.txt");
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\temp");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("temp"));
 
 		RelativeFilePath result = path.AsRelative(baseDir);
 
@@ -262,12 +262,12 @@ public class RelativePathPropertyTests
 	{
 		// Test AsAbsolute with explicit base directory
 		RelativeDirectoryPath relative = RelativeDirectoryPath.Create<RelativeDirectoryPath>("projects");
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\work");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("work"));
 
 		AbsoluteDirectoryPath result = relative.AsAbsolute(baseDir);
 
 		Assert.IsNotNull(result);
-		Assert.Contains(@"C:\work", result.WeakString);
+		Assert.Contains(TestPaths.Absolute("work"), result.WeakString);
 		Assert.Contains("projects", result.WeakString);
 	}
 
@@ -276,12 +276,12 @@ public class RelativePathPropertyTests
 	{
 		// Test AsAbsolute with explicit base directory for files
 		RelativeFilePath relative = RelativeFilePath.Create<RelativeFilePath>("file.txt");
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\work");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("work"));
 
 		AbsoluteFilePath result = relative.AsAbsolute(baseDir);
 
 		Assert.IsNotNull(result);
-		Assert.Contains(@"C:\work", result.WeakString);
+		Assert.Contains(TestPaths.Absolute("work"), result.WeakString);
 		Assert.Contains("file.txt", result.WeakString);
 	}
 

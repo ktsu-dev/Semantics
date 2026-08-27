@@ -16,8 +16,8 @@ public class PathIntegrationTests
 		// Test that different path types can coexist in polymorphic collections
 		List<IPath> paths =
 		[
-			AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects"),
-			AbsoluteFilePath.Create<AbsoluteFilePath>(@"C:\file.txt"),
+			AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects")),
+			AbsoluteFilePath.Create<AbsoluteFilePath>(TestPaths.Absolute("file.txt")),
 			RelativeDirectoryPath.Create<RelativeDirectoryPath>("subfolder"),
 			RelativeFilePath.Create<RelativeFilePath>("file.txt"),
 			DirectoryPath.Create<DirectoryPath>("any"),
@@ -65,7 +65,7 @@ public class PathIntegrationTests
 	public void ComplexPathConstruction_WithAllTypes_WorksCorrectly()
 	{
 		// Test complex path construction scenario
-		AbsoluteDirectoryPath root = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
+		AbsoluteDirectoryPath root = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
 		DirectoryName appDir = DirectoryName.Create<DirectoryName>("myapp");
 		DirectoryName srcDir = DirectoryName.Create<DirectoryName>("src");
 		FileName componentFile = FileName.Create<FileName>("Component.tsx");
@@ -76,7 +76,7 @@ public class PathIntegrationTests
 		AbsoluteFilePath filePath = srcPath / componentFile;
 
 		Assert.IsNotNull(filePath);
-		Assert.Contains(@"C:\projects", filePath.WeakString);
+		Assert.Contains(TestPaths.Absolute("projects"), filePath.WeakString);
 		Assert.Contains("myapp", filePath.WeakString);
 		Assert.Contains("src", filePath.WeakString);
 		Assert.Contains("Component.tsx", filePath.WeakString);
@@ -87,13 +87,13 @@ public class PathIntegrationTests
 	{
 		// Test converting between relative and absolute paths
 		RelativeDirectoryPath relative = RelativeDirectoryPath.Create<RelativeDirectoryPath>("projects");
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\work");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("work"));
 
 		// Convert to absolute with specific base
 		AbsoluteDirectoryPath absolute = relative.AsAbsolute(baseDir);
 
 		Assert.IsNotNull(absolute);
-		Assert.Contains(@"C:\work", absolute.WeakString);
+		Assert.Contains(TestPaths.Absolute("work"), absolute.WeakString);
 		Assert.Contains("projects", absolute.WeakString);
 	}
 
@@ -101,22 +101,22 @@ public class PathIntegrationTests
 	public void AbsoluteToRelative_RoundTrip_WorksCorrectly()
 	{
 		// Test converting from absolute to relative paths
-		AbsoluteDirectoryPath absolute = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\work\projects");
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\work");
+		AbsoluteDirectoryPath absolute = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("work", "projects"));
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("work"));
 
 		// Convert to relative
 		RelativeDirectoryPath relative = absolute.AsRelative(baseDir);
 
 		Assert.IsNotNull(relative);
 		Assert.Contains("projects", relative.WeakString);
-		Assert.DoesNotContain(@"C:\work", relative.WeakString);
+		Assert.DoesNotContain(TestPaths.Absolute("work"), relative.WeakString);
 	}
 
 	[TestMethod]
 	public void PathHierarchy_ParentTraversal_WorksCorrectly()
 	{
 		// Test traversing up the directory hierarchy
-		RelativeDirectoryPath deep = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"a\b\c\d");
+		RelativeDirectoryPath deep = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("a", "b", "c", "d"));
 
 		RelativeDirectoryPath parent1 = deep.Parent;
 		RelativeDirectoryPath parent2 = parent1.Parent;
@@ -133,7 +133,7 @@ public class PathIntegrationTests
 	public void PathNormalization_WithDotComponents_ResolvesCorrectly()
 	{
 		// Test path normalization with . and .. components
-		RelativeDirectoryPath pathWithDots = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"a\.\b\..\c");
+		RelativeDirectoryPath pathWithDots = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("a", ".", "b", "..", "c"));
 
 		RelativeDirectoryPath normalized = pathWithDots.Normalize();
 
@@ -148,7 +148,7 @@ public class PathIntegrationTests
 	public void PathNormalization_WithParentTraversal_ResolvesCorrectly()
 	{
 		// Test path normalization with parent directory traversal
-		RelativeDirectoryPath path = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"a\b\..\..\c");
+		RelativeDirectoryPath path = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("a", "b", "..", "..", "c"));
 
 		RelativeDirectoryPath normalized = path.Normalize();
 
@@ -180,8 +180,8 @@ public class PathIntegrationTests
 	{
 		// Test comparing depths of different paths
 		RelativeDirectoryPath shallow = RelativeDirectoryPath.Create<RelativeDirectoryPath>("a");
-		RelativeDirectoryPath medium = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"a\b");
-		RelativeDirectoryPath deep = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"a\b\c");
+		RelativeDirectoryPath medium = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("a", "b"));
+		RelativeDirectoryPath deep = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("a", "b", "c"));
 
 		Assert.IsLessThan(medium.Depth, shallow.Depth);
 		Assert.IsLessThan(deep.Depth, medium.Depth);
@@ -194,7 +194,7 @@ public class PathIntegrationTests
 	public void InterfaceBasedPathOperations_WorkPolymorphically()
 	{
 		// Test that interface-based operations work polymorphically
-		IDirectoryPath dir1 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		IDirectoryPath dir1 = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 		IDirectoryPath dir2 = RelativeDirectoryPath.Create<RelativeDirectoryPath>("test");
 		IDirectoryPath dir3 = DirectoryPath.Create<DirectoryPath>("test");
 
@@ -258,8 +258,8 @@ public class PathIntegrationTests
 	{
 		// Test that relative paths with .. components are valid
 		RelativeDirectoryPath parentRef = RelativeDirectoryPath.Create<RelativeDirectoryPath>("..");
-		RelativeDirectoryPath multiParent = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"..\..\..");
-		RelativeFilePath fileInParent = RelativeFilePath.Create<RelativeFilePath>(@"..\file.txt");
+		RelativeDirectoryPath multiParent = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("..", "..", ".."));
+		RelativeFilePath fileInParent = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("..", "file.txt"));
 
 		Assert.IsNotNull(parentRef);
 		Assert.IsNotNull(multiParent);
@@ -274,8 +274,8 @@ public class PathIntegrationTests
 	{
 		// Test that relative paths with . components are valid
 		RelativeDirectoryPath currentRef = RelativeDirectoryPath.Create<RelativeDirectoryPath>(".");
-		RelativeDirectoryPath withCurrent = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@".\subfolder");
-		RelativeFilePath fileInCurrent = RelativeFilePath.Create<RelativeFilePath>(@".\file.txt");
+		RelativeDirectoryPath withCurrent = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative(".", "subfolder"));
+		RelativeFilePath fileInCurrent = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative(".", "file.txt"));
 
 		Assert.IsNotNull(currentRef);
 		Assert.IsNotNull(withCurrent);

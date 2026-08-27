@@ -13,7 +13,7 @@ public class PathOperatorTests
 	public void PathOperators_NullArguments_ThrowArgumentNullException()
 	{
 		// Test all path combination operators with null arguments
-		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 		DirectoryPath genericDir = DirectoryPath.Create<DirectoryPath>(@"test");
 
 		FileName nullFileName = null!;
@@ -32,8 +32,8 @@ public class PathOperatorTests
 	public void PathOperators_ComplexCombinations_WorkCorrectly()
 	{
 		// Test complex path combinations
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
-		DirectoryPath subDir1 = DirectoryPath.Create<DirectoryPath>(@"app\src");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
+		DirectoryPath subDir1 = DirectoryPath.Create<DirectoryPath>(TestPaths.Relative("app", "src"));
 		DirectoryPath subDir2 = DirectoryPath.Create<DirectoryPath>(@"components");
 		FileName fileName = FileName.Create<FileName>("Component.tsx");
 
@@ -44,7 +44,7 @@ public class PathOperatorTests
 
 		Assert.IsNotNull(combinedDir);
 		Assert.IsNotNull(finalFile);
-		Assert.Contains(@"C:\projects", finalFile.WeakString);
+		Assert.Contains(TestPaths.Absolute("projects"), finalFile.WeakString);
 		Assert.Contains(@"app", finalFile.WeakString);
 		Assert.Contains(@"src", finalFile.WeakString);
 		Assert.Contains(@"components", finalFile.WeakString);
@@ -55,7 +55,7 @@ public class PathOperatorTests
 	public void PathOperators_EmptyPaths_HandleCorrectly()
 	{
 		// Test operators with empty paths
-		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 		FileName emptyFileName = FileName.Create<FileName>("");
 
 		// These should work without throwing
@@ -68,7 +68,7 @@ public class PathOperatorTests
 	public void PathOperators_SpecialCharacters_HandleCorrectly()
 	{
 		// Test with paths containing special characters
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test folder");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test folder"));
 		DirectoryPath specialDir = DirectoryPath.Create<DirectoryPath>(@"sub folder (1)");
 		FileName specialFile = FileName.Create<FileName>("file name with spaces.txt");
 
@@ -87,7 +87,7 @@ public class PathOperatorTests
 	public void PathOperators_ReturnTypes_AreCorrect()
 	{
 		// Verify that operators return the correct types
-		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 		DirectoryPath genericDir = DirectoryPath.Create<DirectoryPath>(@"test");
 		FileName fileName = FileName.Create<FileName>("file.txt");
 
@@ -106,10 +106,10 @@ public class PathOperatorTests
 	public void PathOperators_WithDotPaths_HandleCorrectly()
 	{
 		// Test with relative paths containing . and ..
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects\app");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects", "app"));
 		RelativeDirectoryPath currentDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>(".");
 		RelativeDirectoryPath parentDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>("..");
-		RelativeDirectoryPath complexPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"..\other\folder");
+		RelativeDirectoryPath complexPath = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("..", "other", "folder"));
 
 		AbsoluteDirectoryPath result1 = baseDir / currentDir;
 		AbsoluteDirectoryPath result2 = baseDir / parentDir;
@@ -129,7 +129,7 @@ public class PathOperatorTests
 	public void PathOperators_CrossPlatformSeparators_HandleCorrectly()
 	{
 		// Test with mixed path separators
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 		RelativeDirectoryPath unixStyleDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>("sub/folder");
 		RelativeFilePath unixStyleFile = RelativeFilePath.Create<RelativeFilePath>("sub/file.txt");
 
@@ -146,14 +146,14 @@ public class PathOperatorTests
 	public void DirectoryNameOperator_WithAbsoluteDirectoryPath_CreatesCorrectPath()
 	{
 		// Test combining AbsoluteDirectoryPath with DirectoryName
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
 		DirectoryName subDir = DirectoryName.Create<DirectoryName>("myapp");
 
 		AbsoluteDirectoryPath result = baseDir / subDir;
 
 		Assert.IsNotNull(result);
 		Assert.IsTrue(result.IsValid());
-		Assert.Contains(@"C:\projects", result.WeakString);
+		Assert.Contains(TestPaths.Absolute("projects"), result.WeakString);
 		Assert.Contains("myapp", result.WeakString);
 	}
 
@@ -195,7 +195,7 @@ public class PathOperatorTests
 	public void DirectoryNameOperator_WithNullDirectoryName_ThrowsArgumentNullException()
 	{
 		// Test null safety for DirectoryName operators
-		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 		DirectoryPath genericDir = DirectoryPath.Create<DirectoryPath>(@"test");
 		DirectoryName nullDirName = null!;
 

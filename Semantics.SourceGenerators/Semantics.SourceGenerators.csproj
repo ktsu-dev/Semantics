@@ -5,7 +5,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <NoWarn>$(NoWarn);CA1002;CA1304;CA1305;CA1307;CA1311;CA1805;RS1035;RS1041;RS1042</NoWarn>
+    <!-- RS2002 fires once per SEM diagnostic on every build. The release-tracking analyzer only
+         sees descriptors exposed through DiagnosticAnalyzer.SupportedDiagnostics; these are
+         reported by source generators, which have no such property, so it can never see them
+         however they are declared. Leaving them out of AnalyzerReleases.Unshipped.md instead
+         trades this for RS2008, which fails the build outright - so the identifiers stay tracked
+         and RS2002 is silenced here, scoped to this project. AnalyzerReleaseTrackingTests keeps
+         the discipline RS2008 enforces, from a vantage point that can actually see the
+         descriptors. -->
+    <NoWarn>$(NoWarn);CA1002;CA1304;CA1305;CA1307;CA1311;CA1805;RS1035;RS1041;RS1042;RS2002</NoWarn>
     <IsRoslynComponent>true</IsRoslynComponent>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>

@@ -17,13 +17,15 @@ public class AbsoluteDirectoryPathParentTests
 {
 	private static AbsoluteDirectoryPath Dir(string path) => AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(path);
 
-	private static string Nested => OperatingSystem.IsWindows() ? @"C:\Users\user\Documents" : "/home/user/Documents";
+	// These were a per-platform conditional spelling the same four paths twice. TestPaths already
+	// picks the platform's root and separator, so one expression covers both.
+	private static string Nested => TestPaths.Absolute("Users", "user", "Documents");
 
-	private static string Middle => OperatingSystem.IsWindows() ? @"C:\Users\user" : "/home/user";
+	private static string Middle => TestPaths.Absolute("Users", "user");
 
-	private static string BelowRoot => OperatingSystem.IsWindows() ? @"C:\Users" : "/home";
+	private static string BelowRoot => TestPaths.Absolute("Users");
 
-	private static string Root => OperatingSystem.IsWindows() ? @"C:\" : "/";
+	private static string Root => TestPaths.Root;
 
 	[TestMethod]
 	public void Parent_ReturnsTheContainingDirectory()

@@ -14,16 +14,16 @@ public class SemanticPathTests
 	public void SemanticPath_BasicUsage()
 	{
 		// Test basic path creation and string conversion
-		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:\\test\\path");
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("test", "path"));
 		Assert.IsNotNull(path);
-		Assert.AreEqual("C:\\test\\path", path.ToString());
+		Assert.AreEqual(TestPaths.Absolute("test", "path"), path.ToString());
 	}
 
 	[TestMethod]
 	public void SemanticAbsolutePath_WithAbsolutePath_ShouldBeValid()
 	{
 		// Arrange & Act
-		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:\\test\\path");
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("test", "path"));
 
 		// Assert
 		Assert.IsTrue(path.IsValid(), "Absolute path should be valid");
@@ -52,7 +52,7 @@ public class SemanticPathTests
 	{
 		// Arrange & Act & Assert
 		Assert.ThrowsExactly<ArgumentException>(() =>
-			RelativePath.Create<RelativePath>("C:\\test\\path"));
+			RelativePath.Create<RelativePath>(TestPaths.Absolute("test", "path")));
 	}
 
 	[TestMethod]
@@ -98,7 +98,7 @@ public class SemanticPathTests
 	public void SemanticFilePath_FileName_ShouldReturnCorrectFileName()
 	{
 		// Arrange
-		FilePath filePath = FilePath.Create<FilePath>("C:\\folder\\test.txt");
+		FilePath filePath = FilePath.Create<FilePath>(TestPaths.Absolute("folder", "test.txt"));
 
 		// Act
 		FileName fileName = filePath.FileName;
@@ -111,13 +111,13 @@ public class SemanticPathTests
 	public void SemanticFilePath_DirectoryPath_ShouldReturnCorrectDirectory()
 	{
 		// Arrange
-		FilePath filePath = FilePath.Create<FilePath>("C:\\folder\\test.txt");
+		FilePath filePath = FilePath.Create<FilePath>(TestPaths.Absolute("folder", "test.txt"));
 
 		// Act
 		DirectoryPath directoryPath = filePath.DirectoryPath;
 
 		// Assert
-		Assert.AreEqual("C:\\folder", directoryPath.ToString());
+		Assert.AreEqual(TestPaths.Absolute("folder"), directoryPath.ToString());
 	}
 
 	[TestMethod]
@@ -130,7 +130,13 @@ public class SemanticPathTests
 		Assert.IsTrue(fileName.IsValid(), "Valid file name should be valid");
 	}
 
+	/// <remarks>
+	/// <c>&lt;</c> and <c>&gt;</c> are reserved on Windows and legal in a Unix filename. The
+	/// validator asks the running platform, so accepting them off Windows is correct.
+	/// </remarks>
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void SemanticFileName_WithInvalidChars_ShouldThrowException()
 	{
 		// Arrange & Act & Assert
@@ -160,7 +166,8 @@ public class SemanticPathTests
 	public void SemanticPath_NormalizePath()
 	{
 		// Test path normalization with mixed separators
-		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:/test\\path/");
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>(
+			TestPaths.AltAbsolute("test") + TestPaths.Separator + "path" + TestPaths.AlternateSeparator);
 		Assert.IsNotNull(path);
 		// Path should be normalized regardless of input format
 		Assert.Contains("test", path.ToString());
@@ -171,18 +178,18 @@ public class SemanticPathTests
 	public void SemanticPath_NonExistentPath()
 	{
 		// Test that non-existent paths can be created but marked appropriately
-		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:\\nonexistent\\path");
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("nonexistent", "path"));
 		Assert.IsNotNull(path);
-		Assert.AreEqual("C:\\nonexistent\\path", path.ToString());
+		Assert.AreEqual(TestPaths.Absolute("nonexistent", "path"), path.ToString());
 	}
 
 	[TestMethod]
 	public void SemanticPath_RootPath()
 	{
 		// Test root path creation
-		AbsolutePath rootPath = AbsolutePath.Create<AbsolutePath>("C:\\");
+		AbsolutePath rootPath = AbsolutePath.Create<AbsolutePath>(TestPaths.Root);
 		Assert.IsNotNull(rootPath);
-		Assert.AreEqual("C:\\", rootPath.ToString());
+		Assert.AreEqual(TestPaths.Root, rootPath.ToString());
 	}
 
 	[TestMethod]
@@ -214,7 +221,7 @@ public class SemanticPathTests
 		Assert.IsTrue(relativePath.IsValid(), "Relative path should be valid");
 
 		// Test with absolute path
-		AbsolutePath absolutePath = AbsolutePath.Create<AbsolutePath>("C:\\folder/subfolder\\file");
+		AbsolutePath absolutePath = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("folder/subfolder", "file"));
 		Assert.IsNotNull(absolutePath);
 		Assert.IsTrue(absolutePath.IsValid(), "Absolute path should be valid");
 	}
@@ -232,7 +239,7 @@ public class SemanticPathTests
 	public void SemanticPath_PathLength_Long()
 	{
 		// Test long but valid path
-		string longButValidPath = "C:\\" + string.Join("\\", Enumerable.Repeat("folder", 20));
+		string longButValidPath = TestPaths.Absolute([.. Enumerable.Repeat("folder", 20)]);
 		AbsolutePath path = AbsolutePath.Create<AbsolutePath>(longButValidPath);
 		Assert.IsNotNull(path);
 		Assert.AreEqual(longButValidPath, path.ToString());
@@ -242,7 +249,8 @@ public class SemanticPathTests
 	public void SemanticPath_PathLength_TooLong()
 	{
 		// Test excessively long path (over typical OS limits)
-		string excessivelyLongPath = "C:\\" + string.Join("\\", Enumerable.Repeat("verylongfoldernamethatexceedstypicallimits", 50));
+		string excessivelyLongPath = TestPaths.Absolute(
+			[.. Enumerable.Repeat("verylongfoldernamethatexceedstypicallimits", 50)]);
 		Assert.ThrowsExactly<ArgumentException>(() =>
 			AbsolutePath.Create<AbsolutePath>(excessivelyLongPath));
 	}
@@ -251,8 +259,8 @@ public class SemanticPathTests
 	public void SemanticRelativePath_Make_ShouldCreateCorrectRelativePath()
 	{
 		// Arrange
-		AbsolutePath from = AbsolutePath.Create<AbsolutePath>("C:\\base\\folder");
-		AbsolutePath to = AbsolutePath.Create<AbsolutePath>("C:\\base\\other\\file.txt");
+		AbsolutePath from = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("base", "folder"));
+		AbsolutePath to = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("base", "other", "file.txt"));
 
 		// Act
 		RelativePath relativePath = RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(from, to);
@@ -267,8 +275,8 @@ public class SemanticPathTests
 	public void SemanticRelativePath_Make_WithDirectoryEndpoints_ShouldTreatThemAsDirectories()
 	{
 		// Arrange
-		string fromValue = OperatingSystem.IsWindows() ? "C:\\base\\folder" : "/base/folder";
-		string toValue = OperatingSystem.IsWindows() ? "C:\\base\\other" : "/base/other";
+		string fromValue = OperatingSystem.IsWindows() ? TestPaths.Absolute("base", "folder") : "/base/folder";
+		string toValue = OperatingSystem.IsWindows() ? TestPaths.Absolute("base", "other") : "/base/other";
 		AbsoluteDirectoryPath from = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(fromValue);
 		AbsoluteDirectoryPath to = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(toValue);
 
@@ -285,8 +293,8 @@ public class SemanticPathTests
 	public void SemanticRelativePath_Make_FromDirectoryToContainedFile_ShouldNotStepOutOfTheDirectory()
 	{
 		// Arrange
-		string fromValue = OperatingSystem.IsWindows() ? "C:\\base\\folder" : "/base/folder";
-		string toValue = OperatingSystem.IsWindows() ? "C:\\base\\folder\\file.txt" : "/base/folder/file.txt";
+		string fromValue = OperatingSystem.IsWindows() ? TestPaths.Absolute("base", "folder") : "/base/folder";
+		string toValue = OperatingSystem.IsWindows() ? TestPaths.Absolute("base", "folder", "file.txt") : "/base/folder/file.txt";
 		AbsoluteDirectoryPath from = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(fromValue);
 		AbsoluteFilePath to = AbsoluteFilePath.Create<AbsoluteFilePath>(toValue);
 
@@ -303,27 +311,18 @@ public class SemanticPathTests
 	[TestMethod]
 	public void SemanticPath_MakeCanonical_WithRootPath_ShouldPreserveTrailingSeparator()
 	{
-		// This test checks that root paths like "C:\" keep their trailing separator
-		if (OperatingSystem.IsWindows())
-		{
-			// On Windows, test root drive paths
-			AbsolutePath rootPath = AbsolutePath.Create<AbsolutePath>("C:\\");
-			Assert.AreEqual("C:\\", rootPath.ToString());
-		}
-		else
-		{
-			// On Unix-like systems, test root path
-			AbsolutePath rootPath = AbsolutePath.Create<AbsolutePath>("/");
-			Assert.AreEqual("/", rootPath.ToString());
-		}
+		// This test checks that a root path (C:\ on Windows, / elsewhere) keeps its trailing separator.
+		AbsolutePath rootPath = AbsolutePath.Create<AbsolutePath>(TestPaths.Root);
+		Assert.AreEqual(TestPaths.Root, rootPath.ToString());
 	}
 
 	[TestMethod]
 	public void SemanticPath_MakeCanonical_WithMixedSeparators_ShouldNormalize()
 	{
 		// Test path with mixed separators - use absolute path
-		AbsolutePath path = AbsolutePath.Create<AbsolutePath>("C:/folder/subfolder\\file");
-		string expected = "C:" + Path.DirectorySeparatorChar + "folder" + Path.DirectorySeparatorChar + "subfolder" + Path.DirectorySeparatorChar + "file";
+		AbsolutePath path = AbsolutePath.Create<AbsolutePath>(
+			TestPaths.AltAbsolute("folder", "subfolder") + TestPaths.Separator + "file");
+		string expected = TestPaths.Absolute("folder", "subfolder", "file");
 		Assert.AreEqual(expected, path.ToString());
 	}
 
@@ -349,7 +348,7 @@ public class SemanticPathTests
 	public void SemanticFilePath_FileName_WithPathSeparators_ShouldReturnOnlyFileName()
 	{
 		// Test filename extraction from complex paths
-		FilePath filePath = FilePath.Create<FilePath>("C:\\very\\deep\\folder\\structure\\document.docx");
+		FilePath filePath = FilePath.Create<FilePath>(TestPaths.Absolute("very", "deep", "folder", "structure", "document.docx"));
 		FileName fileName = filePath.FileName;
 		Assert.AreEqual("document.docx", fileName.ToString());
 	}
@@ -358,12 +357,9 @@ public class SemanticPathTests
 	public void SemanticFilePath_DirectoryPath_WithRootFile_ShouldReturnRootDirectory()
 	{
 		// Test directory extraction when file is in root
-		if (OperatingSystem.IsWindows())
-		{
-			FilePath filePath = FilePath.Create<FilePath>("C:\\file.txt");
-			DirectoryPath directoryPath = filePath.DirectoryPath;
-			Assert.AreEqual("C:\\", directoryPath.ToString());
-		}
+		FilePath filePath = FilePath.Create<FilePath>(TestPaths.Absolute("file.txt"));
+		DirectoryPath directoryPath = filePath.DirectoryPath;
+		Assert.AreEqual(TestPaths.Root, directoryPath.ToString());
 	}
 
 	[TestMethod]
@@ -379,7 +375,7 @@ public class SemanticPathTests
 	public void SemanticRelativePath_Make_WithNullArguments_ShouldThrowArgumentNullException()
 	{
 		// Test null argument handling
-		AbsolutePath validPath = AbsolutePath.Create<AbsolutePath>("C:\\test");
+		AbsolutePath validPath = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("test"));
 
 		Assert.ThrowsExactly<ArgumentNullException>(() =>
 			RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(null!, validPath));
@@ -392,8 +388,8 @@ public class SemanticPathTests
 	public void SemanticRelativePath_Make_WithDirectoryPaths_ShouldHandleCorrectly()
 	{
 		// Test relative path creation between directories
-		AbsolutePath from = AbsolutePath.Create<AbsolutePath>("C:\\base\\folder1");
-		AbsolutePath to = AbsolutePath.Create<AbsolutePath>("C:\\base\\folder2");
+		AbsolutePath from = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("base", "folder1"));
+		AbsolutePath to = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("base", "folder2"));
 
 		RelativePath relativePath = RelativePath.Make<RelativePath, AbsolutePath, AbsolutePath>(from, to);
 		Assert.IsNotNull(relativePath);

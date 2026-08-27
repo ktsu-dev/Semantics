@@ -178,7 +178,7 @@ public class ErrorHandlingTests
 	public void SemanticPath_RelativePath_Make_WithNullArguments_ThrowsArgumentNullException()
 	{
 		// Arrange
-		AbsolutePath validPath = AbsolutePath.Create<AbsolutePath>("C:\\test");
+		AbsolutePath validPath = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("test"));
 
 		// Act & Assert
 		Assert.ThrowsExactly<ArgumentNullException>(() =>
@@ -308,7 +308,7 @@ public class ErrorHandlingTests
 		char[] invalidChars = Path.GetInvalidPathChars();
 		if (invalidChars.Length > 0)
 		{
-			string invalidPath = "C:\\test" + invalidChars[0] + "path";
+			string invalidPath = TestPaths.Absolute("test") + invalidChars[0] + "path";
 			Assert.ThrowsExactly<ArgumentException>(() =>
 				AbsolutePath.Create<AbsolutePath>(invalidPath));
 		}
