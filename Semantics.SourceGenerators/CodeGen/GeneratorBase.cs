@@ -61,24 +61,16 @@ public abstract class GeneratorBase : IIncrementalGenerator
 
 		context.RegisterSourceOutput(metadataFiles, (productionContext, files) =>
 		{
-			Dictionary<string, MetadataFile> byName = [];
-			foreach (MetadataFile file in files)
-			{
-				// A duplicate name means the same metadata reached the compilation twice; the first
-				// wins, which is what the old EndsWith-plus-FirstOrDefault matching did implicitly.
-				if (!byName.ContainsKey(file.FileName))
-				{
-					byName.Add(file.FileName, file);
-				}
-			}
+			// A duplicate name means the same metadata reached the compilation twice; the first
+			// wins, which is what the old EndsWith-plus-FirstOrDefault matching did implicitly.
+			Dictionary<string, MetadataFile> byName = files
+				.GroupBy(file => file.FileName, StringComparer.Ordinal)
+				.ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
 
-			foreach (string name in wanted)
+			// Previously a missing file produced no output and no explanation.
+			foreach (string name in wanted.Where(name => !byName.ContainsKey(name)))
 			{
-				if (!byName.ContainsKey(name))
-				{
-					// Previously this produced no output and no explanation.
-					productionContext.Report(MetadataFileMissing, name);
-				}
+				productionContext.Report(MetadataFileMissing, name);
 			}
 
 			Generate(productionContext, new MetadataSet(byName));

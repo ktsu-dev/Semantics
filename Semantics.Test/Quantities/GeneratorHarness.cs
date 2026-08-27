@@ -99,18 +99,10 @@ internal sealed class GeneratorHarness(string metadataDirectory)
 		driver = driver.RunGenerators(compilation);
 		GeneratorDriverRunResult second = driver.RunGenerators(compilation).GetRunResult();
 
-		foreach (IncrementalGeneratorRunStep step in second.Results[0].TrackedOutputSteps.SelectMany(pair => pair.Value))
-		{
-			foreach ((object _, IncrementalStepRunReason reason) in step.Outputs)
-			{
-				if (reason is not (IncrementalStepRunReason.Cached or IncrementalStepRunReason.Unchanged))
-				{
-					return false;
-				}
-			}
-		}
-
-		return true;
+		return !second.Results[0].TrackedOutputSteps
+			.SelectMany(pair => pair.Value)
+			.SelectMany(step => step.Outputs)
+			.Any(output => output.Reason is not (IncrementalStepRunReason.Cached or IncrementalStepRunReason.Unchanged));
 	}
 
 	private List<AdditionalText> BuildTexts(IReadOnlyDictionary<string, string>? overrides)
