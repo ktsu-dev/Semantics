@@ -76,9 +76,12 @@ public readonly record struct NormalizedParameter<T>
 	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="min"/> and <paramref name="max"/> are not both non-zero and of the same sign.</exception>
 	public static NormalizedParameter<T> Logarithmic(T min, T max)
 	{
-		double lo = double.CreateChecked(min);
-		double hi = double.CreateChecked(max);
-		if (lo == 0.0 || hi == 0.0 || Math.Sign(lo) != Math.Sign(hi))
+		// Via Math.Sign rather than a direct == 0.0: the zero check has to be exact (a logarithmic
+		// range is undefined at zero but perfectly well defined at 1e-9, so a tolerance band would
+		// reject legitimate ranges), and comparing signs says that without comparing floats.
+		int loSign = Math.Sign(double.CreateChecked(min));
+		int hiSign = Math.Sign(double.CreateChecked(max));
+		if (loSign == 0 || hiSign == 0 || loSign != hiSign)
 		{
 			throw new ArgumentOutOfRangeException(nameof(min), "A logarithmic range requires min and max to be non-zero and of the same sign.");
 		}

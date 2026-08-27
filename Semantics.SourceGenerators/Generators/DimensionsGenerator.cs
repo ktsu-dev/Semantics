@@ -127,20 +127,20 @@ public class DimensionsGenerator : SemanticsGenerator<DimensionsMetadata>
 
 		// Emit per-dimension marker interfaces (I{Dim}Unit : IUnit) so generated
 		// quantity types can accept dimensionally-compatible units only.
-		foreach (PhysicalDimension dimension in sortedDimensions)
+		foreach (string dimensionName in sortedDimensions.Select(dimension => dimension.Name))
 		{
 			sourceFileTemplate.Classes.Add(new ClassTemplate
 			{
 				Comments =
 				{
 					Emit.SummaryOpen,
-					$"/// Marker interface implemented by every unit of the <c>{dimension.Name}</c> dimension.",
+					$"/// Marker interface implemented by every unit of the <c>{dimensionName}</c> dimension.",
 					"/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.",
 					Emit.SummaryClose,
 				},
 				Kind = TypeKind.Interface,
 				Keywords = {Emit.Public},
-				Name = $"I{dimension.Name}Unit",
+				Name = $"I{dimensionName}Unit",
 				Interfaces = {"IUnit"},
 			});
 		}

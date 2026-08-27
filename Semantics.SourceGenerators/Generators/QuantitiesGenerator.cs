@@ -241,13 +241,9 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			// Result is missing a declared form. (V0-only Other was already
 			// rejected above via the v0Other null check.)
 			int[] forms = ResolveForms(
-				context,
-				integral,
+				new RelationshipSite(context, dimensionsFile, dim, integral, $"integrals[{integral.Other} -> {integral.Result}]"),
 				[0, 1, 2, 3, 4],
-				dim,
-				resultDim,
-				$"integrals[{integral.Other} -> {integral.Result}]",
-				dimensionsFile);
+				resultDim);
 			foreach (int vn in forms)
 			{
 				AddIntegralOpsForForm(result, seen, dim, resultDim, vn, v0Other);
@@ -315,13 +311,9 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			}
 
 			int[] forms = ResolveForms(
-				context,
-				derivative,
+				new RelationshipSite(context, dimensionsFile, dim, derivative, $"derivatives[{derivative.Other} -> {derivative.Result}]"),
 				[0, 1, 2, 3, 4],
-				dim,
-				resultDim,
-				$"derivatives[{derivative.Other} -> {derivative.Result}]",
-				dimensionsFile);
+				resultDim);
 			foreach (int vn in forms)
 			{
 				AddDerivativeOpsForForm(result, seen, dim, resultDim, vn, v0Other);
@@ -403,13 +395,9 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 			// Dot product is undefined for V0; default forms are V1+.
 			int[] forms = ResolveForms(
-				context,
-				dot,
+				new RelationshipSite(context, dimensionsFile, dim, dot, $"dotProducts[{dot.Other} -> {dot.Result}]"),
 				[1, 2, 3, 4],
-				dim,
-				otherDim,
-				$"dotProducts[{dot.Other} -> {dot.Result}]",
-				dimensionsFile);
+				otherDim);
 			foreach (int vn in forms)
 			{
 				AddDotProductForForm(result, seen, dim, otherDim, vn, v0Result);
@@ -469,13 +457,9 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			// Pass resultDim so SEM003 surfaces when the declared form is missing on
 			// the result type too (e.g. Force × Length → Torque at V2: Torque has no V2).
 			int[] forms = ResolveForms(
-				context,
-				cross,
+				new RelationshipSite(context, dimensionsFile, dim, cross, $"crossProducts[{cross.Other} -> {cross.Result}]"),
 				[3],
-				dim,
 				otherDim,
-				$"crossProducts[{cross.Other} -> {cross.Result}]",
-				dimensionsFile,
 				resultDim);
 			if (Array.IndexOf(forms, 3) < 0)
 			{
@@ -545,6 +529,26 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			fieldPath);
 
 	/// <summary>
+	/// One relationship, plus everything a diagnostic about it needs to say where it is.
+	/// </summary>
+	/// <param name="Context">The source production context to report to.</param>
+	/// <param name="File">The metadata file the relationship was read from, for locations.</param>
+	/// <param name="Owner">The dimension whose entry declares the relationship.</param>
+	/// <param name="Relationship">The relationship itself.</param>
+	/// <param name="FieldPath">The relationship's path in the metadata, for the message text.</param>
+	/// <remarks>
+	/// These five travel together through form resolution and reporting. Passed individually they
+	/// pushed <see cref="ResolveForms"/> to eight parameters, which is both over the analyzer's
+	/// limit and genuinely hard to read at the call site.
+	/// </remarks>
+	private readonly record struct RelationshipSite(
+		SourceProductionContext Context,
+		MetadataFile? File,
+		PhysicalDimension Owner,
+		RelationshipDefinition Relationship,
+		string FieldPath);
+
+	/// <summary>
 	/// Resolves the forms at which a relationship should emit operators. When the metadata
 	/// declares <see cref="RelationshipDefinition.Forms"/> explicitly, that list wins and
 	/// any form missing from one of the participating dimensions is reported as
@@ -553,43 +557,39 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// that haven't opted into form-specific declarations).
 	/// </summary>
 	private static int[] ResolveForms(
-		SourceProductionContext context,
-		RelationshipDefinition rel,
+		RelationshipSite site,
 		int[] defaultForms,
-		PhysicalDimension dim,
 		PhysicalDimension otherDim,
-		string fieldPath,
-		MetadataFile? dimensionsFile,
 		PhysicalDimension? resultDim = null)
 	{
-		if (rel.Forms.Count == 0)
+		if (site.Relationship.Forms.Count == 0)
 		{
 			return defaultForms;
 		}
 
 		List<int> kept = [];
-		foreach (int form in rel.Forms)
+		foreach (int form in site.Relationship.Forms)
 		{
 			if (form < 0 || form > 4)
 			{
 				continue;
 			}
 
-			if (GetBaseTypeName(dim, form) == null)
+			if (GetBaseTypeName(site.Owner, form) == null)
 			{
-				ReportFormMissing(context, dimensionsFile, dim, rel, fieldPath, form, dim.Name);
+				ReportFormMissing(site, form, site.Owner.Name);
 				continue;
 			}
 
 			if (GetBaseTypeName(otherDim, form) == null)
 			{
-				ReportFormMissing(context, dimensionsFile, dim, rel, fieldPath, form, otherDim.Name);
+				ReportFormMissing(site, form, otherDim.Name);
 				continue;
 			}
 
 			if (resultDim != null && GetBaseTypeName(resultDim, form) == null)
 			{
-				ReportFormMissing(context, dimensionsFile, dim, rel, fieldPath, form, resultDim.Name);
+				ReportFormMissing(site, form, resultDim.Name);
 				continue;
 			}
 
@@ -608,19 +608,12 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// dimension's own <c>"name"</c> property and then looking for the relationship's <c>"other"</c>
 	/// within it puts the location on the declaration that is actually wrong.
 	/// </remarks>
-	private static void ReportFormMissing(
-		SourceProductionContext context,
-		MetadataFile? dimensionsFile,
-		PhysicalDimension owningDimension,
-		RelationshipDefinition rel,
-		string fieldPath,
-		int form,
-		string offendingDimension) =>
-		context.ReportAt(
+	private static void ReportFormMissing(RelationshipSite site, int form, string offendingDimension) =>
+		site.Context.ReportAt(
 			SemanticsDiagnostics.RelationshipFormMissing,
-			dimensionsFile?.FindLocation($"\"name\": \"{owningDimension.Name}\"", $"\"other\": \"{rel.Other}\""),
-			owningDimension.Name,
-			fieldPath,
+			site.File?.FindLocation($"\"name\": \"{site.Owner.Name}\"", $"\"other\": \"{site.Relationship.Other}\""),
+			site.Owner.Name,
+			site.FieldPath,
 			form,
 			offendingDimension);
 
