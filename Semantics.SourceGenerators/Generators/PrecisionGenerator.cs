@@ -6,13 +6,14 @@ using System.Linq;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
+using Semantics.SourceGenerators.CodeGen;
 using Semantics.SourceGenerators.Templates;
 
 /// <summary>
 /// Source generator that creates the StorageTypes.cs file from JSON metadata.
 /// </summary>
 [Generator]
-public class PrecisionGenerator : GeneratorBase<PrecisionMetadata>
+public class PrecisionGenerator : SemanticsGenerator<PrecisionMetadata>
 {
 	public PrecisionGenerator() : base("precision.json") { }
 

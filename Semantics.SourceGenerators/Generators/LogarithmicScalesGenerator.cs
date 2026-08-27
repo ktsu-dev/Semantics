@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
+using Semantics.SourceGenerators.CodeGen;
 using Semantics.SourceGenerators.Models;
 
 /// <summary>
@@ -17,16 +18,8 @@ using Semantics.SourceGenerators.Models;
 /// (named constants, cross-scale conversions) live in hand-written partials.
 /// </summary>
 [Generator]
-public class LogarithmicScalesGenerator : GeneratorBase<LogarithmicMetadata>
+public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata>
 {
-	private static readonly DiagnosticDescriptor InvalidScaleDefinition = new(
-		id: "SEM005",
-		title: "logarithmic.json scale definition is invalid",
-		messageFormat: "logarithmic.json validation issue: {0}",
-		category: Emit.DiagnosticCategory,
-		defaultSeverity: DiagnosticSeverity.Warning,
-		isEnabledByDefault: true);
-
 	public LogarithmicScalesGenerator() : base("logarithmic.json") { }
 
 	/// <inheritdoc/>
@@ -57,7 +50,7 @@ public class LogarithmicScalesGenerator : GeneratorBase<LogarithmicMetadata>
 	}
 
 	private static void Report(SourceProductionContext context, string message) =>
-		context.ReportDiagnostic(Diagnostic.Create(InvalidScaleDefinition, Location.None, message));
+		context.Report(SemanticsDiagnostics.InvalidScaleDefinition, message);
 
 	private static void EmitScale(SourceProductionContext context, LogarithmicScaleDefinition scale)
 	{

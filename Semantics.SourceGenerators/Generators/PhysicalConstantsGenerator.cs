@@ -7,6 +7,7 @@ using System.Linq;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
+using Semantics.SourceGenerators.CodeGen;
 using Semantics.SourceGenerators.Templates;
 
 /// <summary>
@@ -20,7 +21,7 @@ using Semantics.SourceGenerators.Templates;
 /// significand/exponent representation rounds twice and loses the tail of the long CODATA literals.
 /// </remarks>
 [Generator]
-public class PhysicalConstantsGenerator : GeneratorBase<DomainsMetadata>
+public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 {
 	/// <summary>
 	/// Name of the private nested holder that caches the parsed value of each constant per closed

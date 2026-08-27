@@ -1,6 +1,6 @@
 // Copyright (c) 2023-2026 ktsu-dev contributors
 
-namespace Semantics.SourceGenerators;
+namespace Semantics.SourceGenerators.CodeGen;
 
 using System;
 using Microsoft.CodeAnalysis;

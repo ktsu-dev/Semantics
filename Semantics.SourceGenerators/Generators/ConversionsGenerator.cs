@@ -5,13 +5,14 @@ namespace Semantics.SourceGenerators;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
+using Semantics.SourceGenerators.CodeGen;
 using Semantics.SourceGenerators.Templates;
 
 /// <summary>
 /// Source generator that creates the ConversionConstants.cs file from JSON metadata.
 /// </summary>
 [Generator]
-public class ConversionsGenerator : GeneratorBase<ConversionsMetadata>
+public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 {
 	public ConversionsGenerator() : base("conversions.json") { }
 
