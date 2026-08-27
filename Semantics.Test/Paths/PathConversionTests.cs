@@ -28,8 +28,8 @@ public class PathConversionTests
 	public void AsRelative_WithNullBaseDirectory_ThrowsArgumentNullException()
 	{
 		// Test all AsRelative(baseDirectory) methods with null base
-		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>(@"C:\test\file.txt");
-		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>(TestPaths.Absolute("test", "file.txt"));
+		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 
 		Assert.ThrowsExactly<ArgumentNullException>(() => absoluteFile.AsRelative(null!));
 		Assert.ThrowsExactly<ArgumentNullException>(() => absoluteDir.AsRelative(null!));
@@ -57,28 +57,28 @@ public class PathConversionTests
 	public void AsAbsolute_WithSpecificBaseDirectory_WorksCorrectly()
 	{
 		// Test AsAbsolute(baseDirectory) with specific base
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
-		RelativeFilePath relativeFile = RelativeFilePath.Create<RelativeFilePath>(@"app\src\file.ts");
-		RelativeDirectoryPath relativeDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"app\src");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
+		RelativeFilePath relativeFile = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("app", "src", "file.ts"));
+		RelativeDirectoryPath relativeDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("app", "src"));
 
 		AbsoluteFilePath absoluteFile = relativeFile.AsAbsolute(baseDir);
 		AbsoluteDirectoryPath absoluteDir = relativeDir.AsAbsolute(baseDir);
 
 		Assert.IsNotNull(absoluteFile);
 		Assert.IsNotNull(absoluteDir);
-		Assert.Contains(@"C:\projects", absoluteFile.WeakString);
-		Assert.Contains(@"app\src\file.ts", absoluteFile.WeakString);
-		Assert.Contains(@"C:\projects", absoluteDir.WeakString);
-		Assert.Contains(@"app\src", absoluteDir.WeakString);
+		Assert.Contains(TestPaths.Absolute("projects"), absoluteFile.WeakString);
+		Assert.Contains(TestPaths.Relative("app", "src", "file.ts"), absoluteFile.WeakString);
+		Assert.Contains(TestPaths.Absolute("projects"), absoluteDir.WeakString);
+		Assert.Contains(TestPaths.Relative("app", "src"), absoluteDir.WeakString);
 	}
 
 	[TestMethod]
 	public void AsRelative_WithSpecificBaseDirectory_WorksCorrectly()
 	{
 		// Test AsRelative(baseDirectory) conversion
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
-		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>(@"C:\projects\app\src\file.ts");
-		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects\app\src");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
+		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>(TestPaths.Absolute("projects", "app", "src", "file.ts"));
+		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects", "app", "src"));
 
 		RelativeFilePath relativeFile = absoluteFile.AsRelative(baseDir);
 		RelativeDirectoryPath relativeDir = absoluteDir.AsRelative(baseDir);
@@ -94,7 +94,7 @@ public class PathConversionTests
 	public void AsRelative_OnAlreadyRelativePath_ReturnsSelf()
 	{
 		// Test that AsRelative on already relative paths returns the same instance
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\base");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("base"));
 		RelativeDirectoryPath relativeDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>("test");
 
 		RelativeDirectoryPath result = relativeDir.AsRelative(baseDir);
@@ -106,8 +106,8 @@ public class PathConversionTests
 	public void AsAbsolute_OnAlreadyAbsolutePath_ReturnsSelf()
 	{
 		// Test that AsAbsolute on already absolute paths returns the same instance
-		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>(@"C:\test\file.txt");
-		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>(TestPaths.Absolute("test", "file.txt"));
+		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 
 		AbsoluteFilePath resultFile = absoluteFile.AsAbsolute();
 		AbsoluteDirectoryPath resultDir = absoluteDir.AsAbsolute();
@@ -120,9 +120,9 @@ public class PathConversionTests
 	public void PathConversion_WithComplexRelativePaths_WorksCorrectly()
 	{
 		// Test with complex relative paths containing .. and .
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects\app\src");
-		RelativeDirectoryPath complexRelative = RelativeDirectoryPath.Create<RelativeDirectoryPath>(@"..\..\..\other\project");
-		RelativeFilePath complexFile = RelativeFilePath.Create<RelativeFilePath>(@"..\..\config\settings.json");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects", "app", "src"));
+		RelativeDirectoryPath complexRelative = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("..", "..", "..", "other", "project"));
+		RelativeFilePath complexFile = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("..", "..", "config", "settings.json"));
 
 		AbsoluteDirectoryPath absoluteDir = complexRelative.AsAbsolute(baseDir);
 		AbsoluteFilePath absoluteFile = complexFile.AsAbsolute(baseDir);
@@ -137,9 +137,9 @@ public class PathConversionTests
 	public void PathConversion_RoundTrip_PreservesEquivalence()
 	{
 		// Test round-trip conversion: absolute -> relative -> absolute
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
-		AbsoluteFilePath originalFile = AbsoluteFilePath.Create<AbsoluteFilePath>(@"C:\projects\app\file.txt");
-		AbsoluteDirectoryPath originalDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects\app");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
+		AbsoluteFilePath originalFile = AbsoluteFilePath.Create<AbsoluteFilePath>(TestPaths.Absolute("projects", "app", "file.txt"));
+		AbsoluteDirectoryPath originalDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects", "app"));
 
 		// Convert to relative
 		RelativeFilePath relativeFile = originalFile.AsRelative(baseDir);
@@ -161,7 +161,7 @@ public class PathConversionTests
 	public void PathConversion_WithEmptyPaths_HandlesCorrectly()
 	{
 		// Test conversion with empty paths
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 		RelativeFilePath emptyFile = RelativeFilePath.Create<RelativeFilePath>("");
 		RelativeDirectoryPath emptyDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>("");
 
@@ -176,7 +176,7 @@ public class PathConversionTests
 	public void PathConversion_CrossPlatformPaths_HandlesCorrectly()
 	{
 		// Test conversion with mixed path separators
-		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\projects");
+		AbsoluteDirectoryPath baseDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("projects"));
 		RelativeFilePath unixStyleFile = RelativeFilePath.Create<RelativeFilePath>("app/src/file.js");
 		RelativeDirectoryPath unixStyleDir = RelativeDirectoryPath.Create<RelativeDirectoryPath>("app/src");
 
@@ -194,10 +194,10 @@ public class PathConversionTests
 	public void AsAbsolute_ReturnsCorrectConcreteTypes()
 	{
 		// Test that AsAbsolute methods return correct concrete types
-		AbsolutePath absolutePath = AbsolutePath.Create<AbsolutePath>(@"C:\test");
+		AbsolutePath absolutePath = AbsolutePath.Create<AbsolutePath>(TestPaths.Absolute("test"));
 		RelativePath relativePath = RelativePath.Create<RelativePath>("test");
-		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>(@"C:\test\file.txt");
-		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\test");
+		AbsoluteFilePath absoluteFile = AbsoluteFilePath.Create<AbsoluteFilePath>(TestPaths.Absolute("test", "file.txt"));
+		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("test"));
 
 		// Test AsAbsolute methods
 		AbsolutePath result1 = absolutePath.AsAbsolute();

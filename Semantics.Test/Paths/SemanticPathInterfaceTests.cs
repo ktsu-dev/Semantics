@@ -14,7 +14,7 @@ public class SemanticPathInterfaceTests
 		// Arrange
 		FileName fileName = FileName.Create<FileName>("test.txt");
 
-		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(@"C:\temp");
+		AbsoluteDirectoryPath absoluteDir = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("temp"));
 		DirectoryPath genericDir = DirectoryPath.Create<DirectoryPath>(@"temp");
 
 		// Act
@@ -25,7 +25,7 @@ public class SemanticPathInterfaceTests
 		Assert.IsNotNull(absoluteResult);
 		Assert.IsNotNull(genericResult);
 
-		Assert.AreEqual(@"C:\temp\test.txt", absoluteResult.WeakString);
-		Assert.AreEqual(@"temp\test.txt", genericResult.WeakString);
+		Assert.AreEqual(TestPaths.Absolute("temp", "test.txt"), absoluteResult.WeakString);
+		Assert.AreEqual(TestPaths.Relative("temp", "test.txt"), genericResult.WeakString);
 	}
 }

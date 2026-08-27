@@ -14,7 +14,7 @@ public class PathValidationAttributeTests
 	public void IsPathAttribute_ValidPath_ShouldPass()
 	{
 		// Arrange
-		TestPath validPath = TestPath.Create<TestPath>("C:\\valid\\path");
+		TestPath validPath = TestPath.Create<TestPath>(TestPaths.Absolute("valid", "path"));
 
 		// Act & Assert
 		Assert.IsTrue(validPath.IsValid());
@@ -35,7 +35,7 @@ public class PathValidationAttributeTests
 	{
 		// Arrange & Act & Assert
 		Assert.ThrowsExactly<ArgumentException>(() =>
-			TestPath.Create<TestPath>("C:\\invalid<>path"));
+			TestPath.Create<TestPath>(TestPaths.Absolute("invalid<>path")));
 	}
 
 	[TestMethod]
@@ -53,7 +53,7 @@ public class PathValidationAttributeTests
 	public void IsAbsolutePathAttribute_WithAbsolutePath_ShouldPass()
 	{
 		// Arrange
-		TestAbsolutePath absolutePath = TestAbsolutePath.Create<TestAbsolutePath>("C:\\test\\path");
+		TestAbsolutePath absolutePath = TestAbsolutePath.Create<TestAbsolutePath>(TestPaths.Absolute("test", "path"));
 
 		// Act & Assert
 		Assert.IsTrue(absolutePath.IsValid());
@@ -64,10 +64,17 @@ public class PathValidationAttributeTests
 	{
 		// Arrange & Act & Assert
 		Assert.ThrowsExactly<ArgumentException>(() =>
-			TestAbsolutePath.Create<TestAbsolutePath>("relative\\path"));
+			TestAbsolutePath.Create<TestAbsolutePath>(TestPaths.Relative("relative", "path")));
 	}
 
+	/// <remarks>
+	/// UNC is a Windows concept. On Unix <c>\\server\share\file</c> is an ordinary relative
+	/// filename whose characters happen to include backslashes, so rejecting it is correct there
+	/// and the test has nothing to assert.
+	/// </remarks>
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void IsAbsolutePathAttribute_WithUNCPath_ShouldPass()
 	{
 		// Arrange
@@ -102,7 +109,7 @@ public class PathValidationAttributeTests
 	{
 		// Arrange & Act & Assert
 		Assert.ThrowsExactly<ArgumentException>(() =>
-			TestRelativePath.Create<TestRelativePath>("C:\\absolute\\path"));
+			TestRelativePath.Create<TestRelativePath>(TestPaths.Absolute("absolute", "path")));
 	}
 
 	[TestMethod]
@@ -145,7 +152,14 @@ public class PathValidationAttributeTests
 		Assert.IsTrue(fileName.IsValid());
 	}
 
+	/// <remarks>
+	/// <c>&lt;</c> and <c>&gt;</c> are reserved on Windows and perfectly legal in a Unix filename.
+	/// The validator asks the running platform via <see cref="Path.GetInvalidFileNameChars"/>, so
+	/// accepting them off Windows is the correct answer, not a gap.
+	/// </remarks>
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void IsFileNameAttribute_FileNameWithInvalidChars_ShouldFail()
 	{
 		// Arrange & Act & Assert
@@ -167,7 +181,7 @@ public class PathValidationAttributeTests
 	public void IsDirectoryPathAttribute_NonExistentPath_ShouldPass()
 	{
 		// Arrange
-		TestDirectoryPath directoryPath = TestDirectoryPath.Create<TestDirectoryPath>("C:\\nonexistent\\directory");
+		TestDirectoryPath directoryPath = TestDirectoryPath.Create<TestDirectoryPath>(TestPaths.Absolute("nonexistent", "directory"));
 
 		// Act & Assert
 		Assert.IsTrue(directoryPath.IsValid());
@@ -187,7 +201,7 @@ public class PathValidationAttributeTests
 	public void IsFilePathAttribute_NonExistentPath_ShouldPass()
 	{
 		// Arrange
-		TestFilePath filePath = TestFilePath.Create<TestFilePath>("C:\\nonexistent\\file.txt");
+		TestFilePath filePath = TestFilePath.Create<TestFilePath>(TestPaths.Absolute("nonexistent", "file.txt"));
 
 		// Act & Assert
 		Assert.IsTrue(filePath.IsValid());
@@ -208,7 +222,7 @@ public class PathValidationAttributeTests
 	{
 		// Arrange & Act & Assert
 		Assert.ThrowsExactly<ArgumentException>(() =>
-			TestExistingPath.Create<TestExistingPath>("C:\\definitely\\does\\not\\exist"));
+			TestExistingPath.Create<TestExistingPath>(TestPaths.Absolute("definitely", "does", "not", "exist")));
 	}
 
 	[TestMethod]
@@ -368,9 +382,11 @@ public class PathValidationAttributeTests
 	[TestMethod]
 	public void IsValidDirectoryNameAttribute_DirectoryNameWithPathSeparator_ShouldFail()
 	{
-		// Arrange & Act & Assert - directory names shouldn't contain path separators
+		// Arrange & Act & Assert - directory names shouldn't contain path separators.
+		// The platform's own separator, not one platform's spelling of it: on Unix a backslash is
+		// an ordinary filename character and accepting it there is correct.
 		Assert.ThrowsExactly<ArgumentException>(() =>
-			TestDirectoryName.Create<TestDirectoryName>("folder\\subfolder"));
+			TestDirectoryName.Create<TestDirectoryName>(TestPaths.Relative("folder", "subfolder")));
 	}
 
 	[TestMethod]
@@ -381,7 +397,13 @@ public class PathValidationAttributeTests
 			TestDirectoryName.Create<TestDirectoryName>("folder/subfolder"));
 	}
 
+	/// <remarks>
+	/// <c>&lt;</c> and <c>&gt;</c> are reserved on Windows and legal in a Unix filename; the validator asks the running
+	/// platform, so accepting it off Windows is the correct answer.
+	/// </remarks>
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void IsValidDirectoryNameAttribute_DirectoryNameWithInvalidChars_ShouldFail()
 	{
 		// Arrange & Act & Assert - test with invalid filename characters
@@ -389,7 +411,13 @@ public class PathValidationAttributeTests
 			TestDirectoryName.Create<TestDirectoryName>("invalid<>name"));
 	}
 
+	/// <remarks>
+	/// A colon is reserved on Windows and legal in a Unix filename; the validator asks the running
+	/// platform, so accepting it off Windows is the correct answer.
+	/// </remarks>
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void IsValidDirectoryNameAttribute_DirectoryNameWithColon_ShouldFail()
 	{
 		// Arrange & Act & Assert - colon is invalid in directory names (except drive letters)
@@ -397,7 +425,13 @@ public class PathValidationAttributeTests
 			TestDirectoryName.Create<TestDirectoryName>("invalid:name"));
 	}
 
+	/// <remarks>
+	/// A pipe is reserved on Windows and legal in a Unix filename; the validator asks the running
+	/// platform, so accepting it off Windows is the correct answer.
+	/// </remarks>
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void IsValidDirectoryNameAttribute_DirectoryNameWithPipe_ShouldFail()
 	{
 		// Arrange & Act & Assert - pipe is an invalid character
