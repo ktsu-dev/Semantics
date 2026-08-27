@@ -25,21 +25,26 @@ public partial record SnapMagnitude<T> : PhysicalQuantity<SnapMagnitude<T>, T>, 
 	/// <returns>A new <see cref="SnapMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SnapMagnitude<T> FromMeterPerSecondQuartic(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Snap unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ISnapUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two SnapMagnitude values, returning the absolute difference as a non-negative SnapMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SnapMagnitude<T> operator -(SnapMagnitude<T> left, SnapMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SnapMagnitude<T> operator -(SnapMagnitude<T> left, SnapMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies SnapMagnitude by Duration to produce JerkMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static JerkMagnitude<T> operator *(SnapMagnitude<T> left, Duration<T> right) => Multiply<JerkMagnitude<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static JerkMagnitude<T> operator *(SnapMagnitude<T> left, Duration<T> right) => Multiply<JerkMagnitude<T>>(left, right);
+}
 

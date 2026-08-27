@@ -25,21 +25,26 @@ public partial record ThermalExpansionCoefficient<T> : PhysicalQuantity<ThermalE
 	/// <returns>A new <see cref="ThermalExpansionCoefficient{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ThermalExpansionCoefficient<T> FromPerKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ThermalExpansion unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IThermalExpansionUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two ThermalExpansionCoefficient values, returning the absolute difference as a non-negative ThermalExpansionCoefficient.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ThermalExpansionCoefficient<T> operator -(ThermalExpansionCoefficient<T> left, ThermalExpansionCoefficient<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ThermalExpansionCoefficient<T> operator -(ThermalExpansionCoefficient<T> left, ThermalExpansionCoefficient<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies ThermalExpansionCoefficient by Temperature to produce Ratio.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Ratio<T> operator *(ThermalExpansionCoefficient<T> left, Temperature<T> right) => Multiply<Ratio<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(ThermalExpansionCoefficient<T> left, Temperature<T> right) => Multiply<Ratio<T>>(left, right);
+}
 

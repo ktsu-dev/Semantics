@@ -25,28 +25,34 @@ public partial record SurfaceTension<T> : PhysicalQuantity<SurfaceTension<T>, T>
 	/// <returns>A new <see cref="SurfaceTension{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SurfaceTension<T> FromNewtonPerMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SurfaceTension{T}"/> from a value in DynePerCentimeter.
 	/// </summary>
 	/// <param name="value">The value in DynePerCentimeter.</param>
 	/// <returns>A new <see cref="SurfaceTension{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SurfaceTension<T> FromDynePerCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DynePerCentimeterToNewtonPerMeter)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-SurfaceTension unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ISurfaceTensionUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two SurfaceTension values, returning the absolute difference as a non-negative SurfaceTension.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SurfaceTension<T> operator -(SurfaceTension<T> left, SurfaceTension<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SurfaceTension<T> operator -(SurfaceTension<T> left, SurfaceTension<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies SurfaceTension by Length to produce ForceMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ForceMagnitude<T> operator *(SurfaceTension<T> left, Length<T> right) => Multiply<ForceMagnitude<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(SurfaceTension<T> left, Length<T> right) => Multiply<ForceMagnitude<T>>(left, right);
+}
 

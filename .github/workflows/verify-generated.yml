@@ -26,9 +26,11 @@ concurrency:
 jobs:
   verify-generated:
     name: Generated files up to date
-    # windows-latest so git's autocrlf matches the committed CRLF line endings and the
-    # diff doesn't flag end-of-line differences.
-    runs-on: windows-latest
+    # Runs on Linux: the generators pin their line terminator to LF, matching
+    # `* text=auto eol=lf` in .gitattributes, so the diff no longer depends on the runner's
+    # autocrlf. (This was windows-latest while the generators emitted CRLF and git normalised
+    # the difference away on commit.)
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout

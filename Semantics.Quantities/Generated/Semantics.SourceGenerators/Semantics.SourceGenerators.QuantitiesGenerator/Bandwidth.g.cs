@@ -26,34 +26,42 @@ public partial record Bandwidth<T> : PhysicalQuantity<Bandwidth<T>, T>, IVector0
 	/// <returns>A new Bandwidth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Bandwidth<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Bandwidth from a value in Kilohertz.
 	/// </summary>
 	/// <param name="value">The value in Kilohertz.</param>
 	/// <returns>A new Bandwidth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Bandwidth<T> FromKilohertz(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Bandwidth from a value in Megahertz.
 	/// </summary>
 	/// <param name="value">The value in Megahertz.</param>
 	/// <returns>A new Bandwidth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Bandwidth<T> FromMegahertz(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Frequency unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IFrequencyUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Frequency.</summary>
+
+	/// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(Bandwidth<T> value) => Frequency<T>.Create(value.Value);
-/// <summary>Explicit conversion from Frequency.</summary>
+
+	/// <summary>Explicit conversion from Frequency.</summary>
 	public static explicit operator Bandwidth<T>(Frequency<T> value) => Create(value.Value);
-/// <summary>Creates a Bandwidth from a Frequency value.</summary>
+
+	/// <summary>Creates a Bandwidth from a Frequency value.</summary>
 	public static Bandwidth<T> From(Frequency<T> value) => Create(value.Value);
-/// <summary>Subtracts two Bandwidth values, returning the absolute difference as a non-negative Bandwidth.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Bandwidth<T> operator -(Bandwidth<T> left, Bandwidth<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two Bandwidth values, returning the absolute difference as a non-negative Bandwidth.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Bandwidth<T> operator -(Bandwidth<T> left, Bandwidth<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

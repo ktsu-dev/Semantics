@@ -24,21 +24,25 @@ public partial record ElectricField1D<T> : PhysicalQuantity<ElectricField1D<T>, 
 	/// <param name="value">The value in VoltPerMeter.</param>
 	/// <returns>A new <see cref="ElectricField1D{T}"/> instance.</returns>
 	public static ElectricField1D<T> FromVoltPerMeter(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricField unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IElectricFieldUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="ElectricFieldMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public ElectricFieldMagnitude<T> Magnitude() => ElectricFieldMagnitude<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Multiplies ElectricField1D by Length to produce Voltage.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Voltage<T> operator *(ElectricField1D<T> left, Length<T> right) => Multiply<Voltage<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Voltage<T> operator *(ElectricField1D<T> left, Length<T> right) => Multiply<Voltage<T>>(left, right);
+}
 

@@ -19,6 +19,8 @@ For the *why* (the unified vector model), see `docs/strategy-unified-vector-quan
 
 Outputs land under `Semantics.Quantities/Generated/Semantics.SourceGenerators/<GeneratorName>/`. Generated files are **committed** so that the project compiles without first running the generator.
 
+The C# itself is described with the template object model from `ktsu.CodeBlocker.Templates` rather than assembled from `WriteLine` calls. The model owns the punctuation, spacing and indentation: a `BodyFactory` writes only the body (`=> Create(value);`, or a braced block) and the model supplies the separator, the line breaks between members, and the surrounding indent.
+
 ## `dimensions.json` schema
 
 `Semantics.SourceGenerators/Metadata/dimensions.json` is a single object with one key, `physicalDimensions`, whose value is a list of dimension entries. Each entry looks like:

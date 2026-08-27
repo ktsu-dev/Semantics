@@ -25,21 +25,26 @@ public partial record ElectricPowerDensity<T> : PhysicalQuantity<ElectricPowerDe
 	/// <returns>A new <see cref="ElectricPowerDensity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ElectricPowerDensity<T> FromWattPerCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricPowerDensity unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IElectricPowerDensityUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two ElectricPowerDensity values, returning the absolute difference as a non-negative ElectricPowerDensity.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ElectricPowerDensity<T> operator -(ElectricPowerDensity<T> left, ElectricPowerDensity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricPowerDensity<T> operator -(ElectricPowerDensity<T> left, ElectricPowerDensity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies ElectricPowerDensity by Volume to produce Power.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Power<T> operator *(ElectricPowerDensity<T> left, Volume<T> right) => Multiply<Power<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(ElectricPowerDensity<T> left, Volume<T> right) => Multiply<Power<T>>(left, right);
+}
 

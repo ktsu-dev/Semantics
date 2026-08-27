@@ -25,55 +25,72 @@ public partial record AmountOfSubstance<T> : PhysicalQuantity<AmountOfSubstance<
 	/// <returns>A new <see cref="AmountOfSubstance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AmountOfSubstance<T> FromMole(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="AmountOfSubstance{T}"/> from a value in Kilomole.
 	/// </summary>
 	/// <param name="value">The value in Kilomole.</param>
 	/// <returns>A new <see cref="AmountOfSubstance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AmountOfSubstance<T> FromKilomole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="AmountOfSubstance{T}"/> from a value in Millimole.
 	/// </summary>
 	/// <param name="value">The value in Millimole.</param>
 	/// <returns>A new <see cref="AmountOfSubstance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static AmountOfSubstance<T> FromMillimole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AmountOfSubstance unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAmountOfSubstanceUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two AmountOfSubstance values, returning the absolute difference as a non-negative AmountOfSubstance.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AmountOfSubstance<T> operator -(AmountOfSubstance<T> left, AmountOfSubstance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AmountOfSubstance<T> operator -(AmountOfSubstance<T> left, AmountOfSubstance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Divides AmountOfSubstance by Volume to produce Concentration.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Concentration<T> operator /(AmountOfSubstance<T> left, Volume<T> right) => Divide<Concentration<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Concentration<T> operator /(AmountOfSubstance<T> left, Volume<T> right) => Divide<Concentration<T>>(left, right);
+
+	/// <summary>
 	/// Divides AmountOfSubstance by Concentration to produce Volume.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Volume<T> operator /(AmountOfSubstance<T> left, Concentration<T> right) => Divide<Volume<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator /(AmountOfSubstance<T> left, Concentration<T> right) => Divide<Volume<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies AmountOfSubstance by MolarMass to produce Mass.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Mass<T> operator *(AmountOfSubstance<T> left, MolarMass<T> right) => Multiply<Mass<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator *(AmountOfSubstance<T> left, MolarMass<T> right) => Multiply<Mass<T>>(left, right);
+
+	/// <summary>
 	/// Divides AmountOfSubstance by Duration to produce CatalyticActivity.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static CatalyticActivity<T> operator /(AmountOfSubstance<T> left, Duration<T> right) => Divide<CatalyticActivity<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CatalyticActivity<T> operator /(AmountOfSubstance<T> left, Duration<T> right) => Divide<CatalyticActivity<T>>(left, right);
+
+	/// <summary>
 	/// Divides AmountOfSubstance by CatalyticActivity to produce Duration.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Duration<T> operator /(AmountOfSubstance<T> left, CatalyticActivity<T> right) => Divide<Duration<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(AmountOfSubstance<T> left, CatalyticActivity<T> right) => Divide<Duration<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies AmountOfSubstance by MolarEnergy to produce Energy.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Energy<T> operator *(AmountOfSubstance<T> left, MolarEnergy<T> right) => Multiply<Energy<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(AmountOfSubstance<T> left, MolarEnergy<T> right) => Multiply<Energy<T>>(left, right);
+}
 

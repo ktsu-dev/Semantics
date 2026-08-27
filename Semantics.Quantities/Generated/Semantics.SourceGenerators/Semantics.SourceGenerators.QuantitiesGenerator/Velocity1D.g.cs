@@ -24,49 +24,59 @@ public partial record Velocity1D<T> : PhysicalQuantity<Velocity1D<T>, T>, IVecto
 	/// <param name="value">The value in MeterPerSecond.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
 	public static Velocity1D<T> FromMeterPerSecond(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Velocity1D{T}"/> from a value in KilometerPerHour.
 	/// </summary>
 	/// <param name="value">The value in KilometerPerHour.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
 	public static Velocity1D<T> FromKilometerPerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.KilometerPerHourToMeterPerSecond)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Velocity1D{T}"/> from a value in MilePerHour.
 	/// </summary>
 	/// <param name="value">The value in MilePerHour.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
 	public static Velocity1D<T> FromMilePerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MilePerHourToMeterPerSecond)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Velocity1D{T}"/> from a value in FootPerSecond.
 	/// </summary>
 	/// <param name="value">The value in FootPerSecond.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
 	public static Velocity1D<T> FromFootPerSecond(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FootPerSecondToMeterPerSecond)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Velocity1D{T}"/> from a value in Knot.
 	/// </summary>
 	/// <param name="value">The value in Knot.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
 	public static Velocity1D<T> FromKnot(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.KnotToMeterPerSecond)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Velocity unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IVelocityUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Speed{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public Speed<T> Magnitude() => Speed<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Multiplies Velocity1D by Duration to produce Displacement1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Displacement1D<T> operator *(Velocity1D<T> left, Duration<T> right) => Multiply<Displacement1D<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Displacement1D<T> operator *(Velocity1D<T> left, Duration<T> right) => Multiply<Displacement1D<T>>(left, right);
+
+	/// <summary>
 	/// Divides Velocity1D by Duration to produce Acceleration1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Acceleration1D<T> operator /(Velocity1D<T> left, Duration<T> right) => Divide<Acceleration1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Acceleration1D<T> operator /(Velocity1D<T> left, Duration<T> right) => Divide<Acceleration1D<T>>(left, right);
+}
 

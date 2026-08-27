@@ -26,76 +26,90 @@ public partial record Heat<T> : PhysicalQuantity<Heat<T>, T>, IVector0<Heat<T>, 
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Heat<T> FromJoule(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Heat from a value in Kilojoule.
 	/// </summary>
 	/// <param name="value">The value in Kilojoule.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Heat<T> FromKilojoule(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Heat from a value in ElectronVolt.
 	/// </summary>
 	/// <param name="value">The value in ElectronVolt.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Heat<T> FromElectronVolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ElectronVoltToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Heat from a value in Calorie.
 	/// </summary>
 	/// <param name="value">The value in Calorie.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Heat<T> FromCalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CalorieToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Heat from a value in Kilocalorie.
 	/// </summary>
 	/// <param name="value">The value in Kilocalorie.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Heat<T> FromKilocalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilocalorieToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Heat from a value in KilowattHour.
 	/// </summary>
 	/// <param name="value">The value in KilowattHour.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Heat<T> FromKilowattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Heat from a value in WattHour.
 	/// </summary>
 	/// <param name="value">The value in WattHour.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Heat<T> FromWattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.WattHourToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Heat from a value in Erg.
 	/// </summary>
 	/// <param name="value">The value in Erg.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Heat<T> FromErg(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ErgToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Heat from a value in Btu.
 	/// </summary>
 	/// <param name="value">The value in Btu.</param>
 	/// <returns>A new Heat instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Heat<T> FromBtu(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BtuToJoules)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Energy unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IEnergyUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Energy.</summary>
+
+	/// <summary>Implicit conversion to Energy.</summary>
 	public static implicit operator Energy<T>(Heat<T> value) => Energy<T>.Create(value.Value);
-/// <summary>Explicit conversion from Energy.</summary>
+
+	/// <summary>Explicit conversion from Energy.</summary>
 	public static explicit operator Heat<T>(Energy<T> value) => Create(value.Value);
-/// <summary>Creates a Heat from a Energy value.</summary>
+
+	/// <summary>Creates a Heat from a Energy value.</summary>
 	public static Heat<T> From(Energy<T> value) => Create(value.Value);
-/// <summary>Subtracts two Heat values, returning the absolute difference as a non-negative Heat.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Heat<T> operator -(Heat<T> left, Heat<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two Heat values, returning the absolute difference as a non-negative Heat.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Heat<T> operator -(Heat<T> left, Heat<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

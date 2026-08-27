@@ -7,7 +7,8 @@ using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
 using Semantics.SourceGenerators.CodeGen;
-using Semantics.SourceGenerators.Templates;
+using ktsu.CodeBlocker.Templates;
+using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;
 
 /// <summary>
 /// Source generator that creates the StorageTypes.cs file from JSON metadata.
@@ -29,21 +30,22 @@ public class PrecisionGenerator : SemanticsGenerator<PrecisionMetadata>
 			FileName = "StorageTypes.g.cs",
 			Namespace = "ktsu.Semantics.Quantities",
 			Usings =
-			[
+			{
 				"System",
 				"System.Collections.Generic",
-			],
+			},
 		};
 
 		ClassTemplate storageClass = new()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				"/// Available storage types for numeric values in the Semantics library.",
 				Emit.SummaryClose,
-			],
-			Keywords = [Emit.Public, Emit.Static, "class"],
+			},
+			Kind = TypeKind.Class,
+			Keywords = {Emit.Public, Emit.Static},
 			Name = "StorageTypes",
 		};
 
@@ -52,8 +54,8 @@ public class PrecisionGenerator : SemanticsGenerator<PrecisionMetadata>
 		{
 			storageClass.Members.Add(new FieldTemplate()
 			{
-				Comments = [$"/// <summary>The {storageType} storage type.</summary>"],
-				Keywords = [Emit.Public, Emit.Static, "readonly", "Type"],
+				Comments = {$"/// <summary>The {storageType} storage type.</summary>"},
+				Keywords = {Emit.Public, Emit.Static, "readonly", "Type"},
 				Name = storageType.ToUpperInvariant(),
 				DefaultValue = $"typeof({storageType})",
 			});
@@ -63,8 +65,8 @@ public class PrecisionGenerator : SemanticsGenerator<PrecisionMetadata>
 		string allTypes = string.Join(", ", metadata.StorageTypes.OrderBy(t => t).Select(t => t.ToUpperInvariant()));
 		storageClass.Members.Add(new FieldTemplate()
 		{
-			Comments = ["/// <summary>Gets all available storage types.</summary>"],
-			Keywords = [Emit.Public, Emit.Static, "readonly", "IReadOnlyList<Type>"],
+			Comments = {"/// <summary>Gets all available storage types.</summary>"},
+			Keywords = {Emit.Public, Emit.Static, "readonly", "IReadOnlyList<Type>"},
 			Name = "All",
 			DefaultValue = $"new List<Type> {{ {allTypes} }}",
 		});
@@ -73,8 +75,8 @@ public class PrecisionGenerator : SemanticsGenerator<PrecisionMetadata>
 		string allNames = string.Join(", ", metadata.StorageTypes.OrderBy(t => t).Select(t => $"\"{t}\""));
 		storageClass.Members.Add(new FieldTemplate()
 		{
-			Comments = ["/// <summary>Gets the names of all available storage types.</summary>"],
-			Keywords = [Emit.Public, Emit.Static, "readonly", "IReadOnlyList<string>"],
+			Comments = {"/// <summary>Gets the names of all available storage types.</summary>"},
+			Keywords = {Emit.Public, Emit.Static, "readonly", "IReadOnlyList<string>"},
 			Name = "Names",
 			DefaultValue = $"new List<string> {{ {allNames} }}",
 		});
@@ -82,6 +84,6 @@ public class PrecisionGenerator : SemanticsGenerator<PrecisionMetadata>
 		sourceFileTemplate.Classes.Add(storageClass);
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
-		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
+		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 }

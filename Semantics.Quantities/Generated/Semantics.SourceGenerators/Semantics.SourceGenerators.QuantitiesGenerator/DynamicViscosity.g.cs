@@ -25,35 +25,42 @@ public partial record DynamicViscosity<T> : PhysicalQuantity<DynamicViscosity<T>
 	/// <returns>A new <see cref="DynamicViscosity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static DynamicViscosity<T> FromPascalSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="DynamicViscosity{T}"/> from a value in Poise.
 	/// </summary>
 	/// <param name="value">The value in Poise.</param>
 	/// <returns>A new <see cref="DynamicViscosity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static DynamicViscosity<T> FromPoise(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoiseToPascalSecond)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="DynamicViscosity{T}"/> from a value in Centipoise.
 	/// </summary>
 	/// <param name="value">The value in Centipoise.</param>
 	/// <returns>A new <see cref="DynamicViscosity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static DynamicViscosity<T> FromCentipoise(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CentipoiseToPascalSecond)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-DynamicViscosity unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IDynamicViscosityUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two DynamicViscosity values, returning the absolute difference as a non-negative DynamicViscosity.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static DynamicViscosity<T> operator -(DynamicViscosity<T> left, DynamicViscosity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static DynamicViscosity<T> operator -(DynamicViscosity<T> left, DynamicViscosity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Divides DynamicViscosity by Density to produce KinematicViscosity.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static KinematicViscosity<T> operator /(DynamicViscosity<T> left, Density<T> right) => Divide<KinematicViscosity<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static KinematicViscosity<T> operator /(DynamicViscosity<T> left, Density<T> right) => Divide<KinematicViscosity<T>>(left, right);
+}
 

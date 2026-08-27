@@ -25,72 +25,85 @@ public partial record ReflectionCoefficient<T> : PhysicalQuantity<ReflectionCoef
 	/// <param name="value">The value in Dimensionless.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromDimensionless(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Radian.
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromRadian(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Percent.
 	/// </summary>
 	/// <param name="value">The value in Percent.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromPercent(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in PartPerMillion.
 	/// </summary>
 	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromPartPerMillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in PartPerBillion.
 	/// </summary>
 	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromPartPerBillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in PercentByWeight.
 	/// </summary>
 	/// <param name="value">The value in PercentByWeight.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
 	public static ReflectionCoefficient<T> FromPercentByWeight(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentByWeightToRatio)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Dimensionless unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IDimensionlessUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to SignedRatio.</summary>
+
+	/// <summary>Implicit conversion to SignedRatio.</summary>
 	public static implicit operator SignedRatio<T>(ReflectionCoefficient<T> value) => SignedRatio<T>.Create(value.Value);
-/// <summary>Explicit conversion from SignedRatio.</summary>
+
+	/// <summary>Explicit conversion from SignedRatio.</summary>
 	public static explicit operator ReflectionCoefficient<T>(SignedRatio<T> value) => Create(value.Value);
-/// <summary>Creates a ReflectionCoefficient from a SignedRatio value.</summary>
+
+	/// <summary>Creates a ReflectionCoefficient from a SignedRatio value.</summary>
 	public static ReflectionCoefficient<T> From(SignedRatio<T> value) => Create(value.Value);
-};
+}
 

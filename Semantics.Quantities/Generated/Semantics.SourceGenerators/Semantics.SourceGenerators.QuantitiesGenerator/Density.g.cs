@@ -25,39 +25,48 @@ public partial record Density<T> : PhysicalQuantity<Density<T>, T>, IVector0<Den
 	/// <returns>A new <see cref="Density{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Density<T> FromKilogramPerCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Density{T}"/> from a value in GramPerCubicCentimeter.
 	/// </summary>
 	/// <param name="value">The value in GramPerCubicCentimeter.</param>
 	/// <returns>A new <see cref="Density{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Density<T> FromGramPerCubicCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GramPerCubicCentimeterToKilogramPerCubicMeter)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Density{T}"/> from a value in GramPerLiter.
 	/// </summary>
 	/// <param name="value">The value in GramPerLiter.</param>
 	/// <returns>A new <see cref="Density{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Density<T> FromGramPerLiter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GramPerLiterToKilogramPerCubicMeter)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Density unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IDensityUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two Density values, returning the absolute difference as a non-negative Density.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Density<T> operator -(Density<T> left, Density<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Density<T> operator -(Density<T> left, Density<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies Density by Volume to produce Mass.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Mass<T> operator *(Density<T> left, Volume<T> right) => Multiply<Mass<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator *(Density<T> left, Volume<T> right) => Multiply<Mass<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Density by KinematicViscosity to produce DynamicViscosity.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static DynamicViscosity<T> operator *(Density<T> left, KinematicViscosity<T> right) => Multiply<DynamicViscosity<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static DynamicViscosity<T> operator *(Density<T> left, KinematicViscosity<T> right) => Multiply<DynamicViscosity<T>>(left, right);
+}
 

@@ -26,20 +26,26 @@ public partial record SpecificEntropy<T> : PhysicalQuantity<SpecificEntropy<T>, 
 	/// <returns>A new SpecificEntropy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SpecificEntropy<T> FromJoulePerKilogramKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-SpecificHeat unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ISpecificHeatUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to SpecificHeat.</summary>
+
+	/// <summary>Implicit conversion to SpecificHeat.</summary>
 	public static implicit operator SpecificHeat<T>(SpecificEntropy<T> value) => SpecificHeat<T>.Create(value.Value);
-/// <summary>Explicit conversion from SpecificHeat.</summary>
+
+	/// <summary>Explicit conversion from SpecificHeat.</summary>
 	public static explicit operator SpecificEntropy<T>(SpecificHeat<T> value) => Create(value.Value);
-/// <summary>Creates a SpecificEntropy from a SpecificHeat value.</summary>
+
+	/// <summary>Creates a SpecificEntropy from a SpecificHeat value.</summary>
 	public static SpecificEntropy<T> From(SpecificHeat<T> value) => Create(value.Value);
-/// <summary>Subtracts two SpecificEntropy values, returning the absolute difference as a non-negative SpecificEntropy.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SpecificEntropy<T> operator -(SpecificEntropy<T> left, SpecificEntropy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two SpecificEntropy values, returning the absolute difference as a non-negative SpecificEntropy.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SpecificEntropy<T> operator -(SpecificEntropy<T> left, SpecificEntropy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

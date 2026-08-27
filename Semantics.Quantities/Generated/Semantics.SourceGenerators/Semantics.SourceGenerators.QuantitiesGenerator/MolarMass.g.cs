@@ -25,35 +25,42 @@ public partial record MolarMass<T> : PhysicalQuantity<MolarMass<T>, T>, IVector0
 	/// <returns>A new <see cref="MolarMass{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MolarMass<T> FromKilogramPerMole(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="MolarMass{T}"/> from a value in GramPerMole.
 	/// </summary>
 	/// <param name="value">The value in GramPerMole.</param>
 	/// <returns>A new <see cref="MolarMass{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MolarMass<T> FromGramPerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GramPerMoleToKilogramPerMole)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="MolarMass{T}"/> from a value in Dalton.
 	/// </summary>
 	/// <param name="value">The value in Dalton.</param>
 	/// <returns>A new <see cref="MolarMass{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static MolarMass<T> FromDalton(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GramPerMoleToKilogramPerMole)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-MolarMass unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IMolarMassUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two MolarMass values, returning the absolute difference as a non-negative MolarMass.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MolarMass<T> operator -(MolarMass<T> left, MolarMass<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MolarMass<T> operator -(MolarMass<T> left, MolarMass<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies MolarMass by AmountOfSubstance to produce Mass.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Mass<T> operator *(MolarMass<T> left, AmountOfSubstance<T> right) => Multiply<Mass<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator *(MolarMass<T> left, AmountOfSubstance<T> right) => Multiply<Mass<T>>(left, right);
+}
 

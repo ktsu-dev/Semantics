@@ -24,37 +24,45 @@ public partial record Current1D<T> : PhysicalQuantity<Current1D<T>, T>, IVector1
 	/// <param name="value">The value in Ampere.</param>
 	/// <returns>A new <see cref="Current1D{T}"/> instance.</returns>
 	public static Current1D<T> FromAmpere(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Current1D{T}"/> from a value in Milliampere.
 	/// </summary>
 	/// <param name="value">The value in Milliampere.</param>
 	/// <returns>A new <see cref="Current1D{T}"/> instance.</returns>
 	public static Current1D<T> FromMilliampere(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Current1D{T}"/> from a value in Kiloampere.
 	/// </summary>
 	/// <param name="value">The value in Kiloampere.</param>
 	/// <returns>A new <see cref="Current1D{T}"/> instance.</returns>
 	public static Current1D<T> FromKiloampere(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricCurrent unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IElectricCurrentUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="CurrentMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public CurrentMagnitude<T> Magnitude() => CurrentMagnitude<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Multiplies Current1D by Duration to produce Charge.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Charge<T> operator *(Current1D<T> left, Duration<T> right) => Multiply<Charge<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Charge<T> operator *(Current1D<T> left, Duration<T> right) => Multiply<Charge<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Current1D by Resistance to produce Voltage.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Voltage<T> operator *(Current1D<T> left, Resistance<T> right) => Multiply<Voltage<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Voltage<T> operator *(Current1D<T> left, Resistance<T> right) => Multiply<Voltage<T>>(left, right);
+}
 

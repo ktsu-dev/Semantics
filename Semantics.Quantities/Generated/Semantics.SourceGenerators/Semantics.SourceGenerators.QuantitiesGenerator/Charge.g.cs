@@ -24,27 +24,32 @@ public partial record Charge<T> : PhysicalQuantity<Charge<T>, T>, IVector1<Charg
 	/// <param name="value">The value in Coulomb.</param>
 	/// <returns>A new <see cref="Charge{T}"/> instance.</returns>
 	public static Charge<T> FromCoulomb(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Charge{T}"/> from a value in AmpereHour.
 	/// </summary>
 	/// <param name="value">The value in AmpereHour.</param>
 	/// <returns>A new <see cref="Charge{T}"/> instance.</returns>
 	public static Charge<T> FromAmpereHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.AmpereHourToCoulombs)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricCharge unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IElectricChargeUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="ChargeMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public ChargeMagnitude<T> Magnitude() => ChargeMagnitude<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Divides Charge by Duration to produce Current1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Current1D<T> operator /(Charge<T> left, Duration<T> right) => Divide<Current1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Current1D<T> operator /(Charge<T> left, Duration<T> right) => Divide<Current1D<T>>(left, right);
+}
 

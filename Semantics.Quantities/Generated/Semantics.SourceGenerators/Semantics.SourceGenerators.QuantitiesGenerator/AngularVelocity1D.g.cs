@@ -24,31 +24,38 @@ public partial record AngularVelocity1D<T> : PhysicalQuantity<AngularVelocity1D<
 	/// <param name="value">The value in RadianPerSecond.</param>
 	/// <returns>A new <see cref="AngularVelocity1D{T}"/> instance.</returns>
 	public static AngularVelocity1D<T> FromRadianPerSecond(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="AngularVelocity1D{T}"/> from a value in RevolutionPerMinute.
 	/// </summary>
 	/// <param name="value">The value in RevolutionPerMinute.</param>
 	/// <returns>A new <see cref="AngularVelocity1D{T}"/> instance.</returns>
 	public static AngularVelocity1D<T> FromRevolutionPerMinute(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionPerMinuteToRadianPerSecond)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularVelocity unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAngularVelocityUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="AngularSpeed{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public AngularSpeed<T> Magnitude() => AngularSpeed<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Multiplies AngularVelocity1D by Duration to produce SignedAngle.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SignedAngle<T> operator *(AngularVelocity1D<T> left, Duration<T> right) => Multiply<SignedAngle<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedAngle<T> operator *(AngularVelocity1D<T> left, Duration<T> right) => Multiply<SignedAngle<T>>(left, right);
+
+	/// <summary>
 	/// Divides AngularVelocity1D by Duration to produce AngularAcceleration1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularAcceleration1D<T> operator /(AngularVelocity1D<T> left, Duration<T> right) => Divide<AngularAcceleration1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularAcceleration1D<T> operator /(AngularVelocity1D<T> left, Duration<T> right) => Divide<AngularAcceleration1D<T>>(left, right);
+}
 

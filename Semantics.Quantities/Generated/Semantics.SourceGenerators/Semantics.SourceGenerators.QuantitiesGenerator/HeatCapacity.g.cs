@@ -26,20 +26,26 @@ public partial record HeatCapacity<T> : PhysicalQuantity<HeatCapacity<T>, T>, IV
 	/// <returns>A new HeatCapacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HeatCapacity<T> FromJoulePerKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Entropy unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IEntropyUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Entropy.</summary>
+
+	/// <summary>Implicit conversion to Entropy.</summary>
 	public static implicit operator Entropy<T>(HeatCapacity<T> value) => Entropy<T>.Create(value.Value);
-/// <summary>Explicit conversion from Entropy.</summary>
+
+	/// <summary>Explicit conversion from Entropy.</summary>
 	public static explicit operator HeatCapacity<T>(Entropy<T> value) => Create(value.Value);
-/// <summary>Creates a HeatCapacity from a Entropy value.</summary>
+
+	/// <summary>Creates a HeatCapacity from a Entropy value.</summary>
 	public static HeatCapacity<T> From(Entropy<T> value) => Create(value.Value);
-/// <summary>Subtracts two HeatCapacity values, returning the absolute difference as a non-negative HeatCapacity.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static HeatCapacity<T> operator -(HeatCapacity<T> left, HeatCapacity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two HeatCapacity values, returning the absolute difference as a non-negative HeatCapacity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static HeatCapacity<T> operator -(HeatCapacity<T> left, HeatCapacity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

@@ -26,90 +26,106 @@ public partial record Capacity<T> : PhysicalQuantity<Capacity<T>, T>, IVector0<C
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromCubicMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Capacity from a value in Liter.
 	/// </summary>
 	/// <param name="value">The value in Liter.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromLiter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Capacity from a value in Milliliter.
 	/// </summary>
 	/// <param name="value">The value in Milliliter.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromMilliliter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Capacity from a value in CubicCentimeter.
 	/// </summary>
 	/// <param name="value">The value in CubicCentimeter.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromCubicCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicCentimeterToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Capacity from a value in CubicFoot.
 	/// </summary>
 	/// <param name="value">The value in CubicFoot.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromCubicFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicFootToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Capacity from a value in CubicInch.
 	/// </summary>
 	/// <param name="value">The value in CubicInch.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromCubicInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CubicInchToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Capacity from a value in Gallon.
 	/// </summary>
 	/// <param name="value">The value in Gallon.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromGallon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GallonToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Capacity from a value in ImperialGallon.
 	/// </summary>
 	/// <param name="value">The value in ImperialGallon.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromImperialGallon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ImperialGallonToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Capacity from a value in USQuart.
 	/// </summary>
 	/// <param name="value">The value in USQuart.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromUSQuart(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USQuartToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Capacity from a value in USPint.
 	/// </summary>
 	/// <param name="value">The value in USPint.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromUSPint(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USPintToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Capacity from a value in USFluidOunce.
 	/// </summary>
 	/// <param name="value">The value in USFluidOunce.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Capacity<T> FromUSFluidOunce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.USFluidOunceToCubicMeters)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Volume unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IVolumeUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Volume.</summary>
+
+	/// <summary>Implicit conversion to Volume.</summary>
 	public static implicit operator Volume<T>(Capacity<T> value) => Volume<T>.Create(value.Value);
-/// <summary>Explicit conversion from Volume.</summary>
+
+	/// <summary>Explicit conversion from Volume.</summary>
 	public static explicit operator Capacity<T>(Volume<T> value) => Create(value.Value);
-/// <summary>Creates a Capacity from a Volume value.</summary>
+
+	/// <summary>Creates a Capacity from a Volume value.</summary>
 	public static Capacity<T> From(Volume<T> value) => Create(value.Value);
-/// <summary>Subtracts two Capacity values, returning the absolute difference as a non-negative Capacity.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Capacity<T> operator -(Capacity<T> left, Capacity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two Capacity values, returning the absolute difference as a non-negative Capacity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Capacity<T> operator -(Capacity<T> left, Capacity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

@@ -9,7 +9,7 @@ using System.Linq;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using Semantics.SourceGenerators.Templates;
+using ktsu.CodeBlocker.Templates;
 
 /// <summary>
 /// Base class for a generator driven by one or more JSON metadata files supplied as
@@ -88,7 +88,21 @@ public abstract class GeneratorBase : IIncrementalGenerator
 	/// Creates a <see cref="CodeBlocker"/> configured the way generated sources are written.
 	/// </summary>
 	/// <returns>A new <see cref="CodeBlocker"/>.</returns>
-	protected static CodeBlocker CreateCodeBlocker() => CodeBlocker.Create();
+	/// <remarks>
+	/// The line terminator is pinned rather than inherited from the host. Generated output is
+	/// committed and verified by CI, so it has to be byte-identical wherever it was produced —
+	/// which previously meant rewriting every line ending after the fact, because
+	/// <see cref="System.CodeDom.Compiler.IndentedTextWriter"/> uses
+	/// <see cref="System.Environment.NewLine"/>.
+	/// <para>
+	/// LF, matching <c>* text=auto eol=lf</c> in <c>.gitattributes</c> and
+	/// <c>end_of_line = lf</c> in <c>.editorconfig</c>. The pass this replaces rewrote everything
+	/// to CRLF on the grounds that those files asked for CRLF, which stopped being true at the LF
+	/// migration; git had been quietly normalising the difference away on every commit ever since.
+	/// </para>
+	/// </remarks>
+	protected static CodeBlocker CreateCodeBlocker() =>
+		CodeBlocker.Create(CodeBlocker.DefaultIndentString, NewLines.Lf);
 
 	/// <summary>
 	/// Writes the header every generated file starts with.
@@ -101,14 +115,9 @@ public abstract class GeneratorBase : IIncrementalGenerator
 	/// <remarks>
 	/// A parameter rather than the literal this used to hard-code, so a consuming repository can
 	/// keep the header in step with its own file header template from one place.
-	/// <para>
-	/// Assembly-private only because <c>SourceFileTemplate</c> still lives in this project. Both
-	/// this and <see cref="WriteSourceFile"/> become <c>protected</c> once the template model comes
-	/// from <c>ktsu.CodeBlocker</c>, where it is already public.
-	/// </para>
 	/// </remarks>
 	/// <exception cref="ArgumentNullException"><paramref name="codeBlocker"/> is <see langword="null"/>.</exception>
-	private protected static void WriteFileHeader(CodeBlocker codeBlocker, string? copyright)
+	protected static void WriteFileHeader(CodeBlocker codeBlocker, string? copyright)
 	{
 		if (codeBlocker is null)
 		{
@@ -130,7 +139,7 @@ public abstract class GeneratorBase : IIncrementalGenerator
 	/// <param name="codeBlocker">The <see cref="CodeBlocker"/> to write to.</param>
 	/// <param name="sourceFileTemplate">The file to write.</param>
 	/// <param name="copyright">The copyright line, as for <see cref="WriteFileHeader"/>.</param>
-	private protected static void WriteSourceFile(CodeBlocker codeBlocker, SourceFileTemplate sourceFileTemplate, string? copyright)
+	protected static void WriteSourceFile(CodeBlocker codeBlocker, SourceFileTemplate sourceFileTemplate, string? copyright)
 	{
 		WriteFileHeader(codeBlocker, copyright);
 		codeBlocker.AddSourceFile(sourceFileTemplate);

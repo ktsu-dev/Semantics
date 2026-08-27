@@ -24,45 +24,53 @@ public partial record SignedAngle<T> : PhysicalQuantity<SignedAngle<T>, T>, IVec
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
 	public static SignedAngle<T> FromRadian(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
 	public static SignedAngle<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
 	public static SignedAngle<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
 	public static SignedAngle<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
 	public static SignedAngle<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularDisplacement unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAngularDisplacementUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Angle{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public Angle<T> Magnitude() => Angle<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Divides SignedAngle by Duration to produce AngularVelocity1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularVelocity1D<T> operator /(SignedAngle<T> left, Duration<T> right) => Divide<AngularVelocity1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularVelocity1D<T> operator /(SignedAngle<T> left, Duration<T> right) => Divide<AngularVelocity1D<T>>(left, right);
+}
 

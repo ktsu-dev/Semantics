@@ -25,36 +25,43 @@ public partial record TemperatureDrop<T> : PhysicalQuantity<TemperatureDrop<T>, 
 	/// <param name="value">The value in Kelvin.</param>
 	/// <returns>A new TemperatureDrop instance.</returns>
 	public static TemperatureDrop<T> FromKelvin(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new TemperatureDrop from a value in Celsius.
 	/// </summary>
 	/// <param name="value">The value in Celsius.</param>
 	/// <returns>A new TemperatureDrop instance.</returns>
 	public static TemperatureDrop<T> FromCelsius(T value) => Create((value + T.CreateChecked(Units.ConversionConstants.CelsiusToKelvinOffset)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new TemperatureDrop from a value in Fahrenheit.
 	/// </summary>
 	/// <param name="value">The value in Fahrenheit.</param>
 	/// <returns>A new TemperatureDrop instance.</returns>
 	public static TemperatureDrop<T> FromFahrenheit(T value) => Create(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new TemperatureDrop from a value in Rankine.
 	/// </summary>
 	/// <param name="value">The value in Rankine.</param>
 	/// <returns>A new TemperatureDrop instance.</returns>
 	public static TemperatureDrop<T> FromRankine(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Temperature unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ITemperatureUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to TemperatureDelta.</summary>
+
+	/// <summary>Implicit conversion to TemperatureDelta.</summary>
 	public static implicit operator TemperatureDelta<T>(TemperatureDrop<T> value) => TemperatureDelta<T>.Create(value.Value);
-/// <summary>Explicit conversion from TemperatureDelta.</summary>
+
+	/// <summary>Explicit conversion from TemperatureDelta.</summary>
 	public static explicit operator TemperatureDrop<T>(TemperatureDelta<T> value) => Create(value.Value);
-/// <summary>Creates a TemperatureDrop from a TemperatureDelta value.</summary>
+
+	/// <summary>Creates a TemperatureDrop from a TemperatureDelta value.</summary>
 	public static TemperatureDrop<T> From(TemperatureDelta<T> value) => Create(value.Value);
-};
+}
 

@@ -26,27 +26,34 @@ public partial record EMF<T> : PhysicalQuantity<EMF<T>, T>, IVector0<EMF<T>, T>
 	/// <returns>A new EMF instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static EMF<T> FromVolt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new EMF from a value in Kilovolt.
 	/// </summary>
 	/// <param name="value">The value in Kilovolt.</param>
 	/// <returns>A new EMF instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static EMF<T> FromKilovolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricPotential unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IElectricPotentialUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to VoltageMagnitude.</summary>
+
+	/// <summary>Implicit conversion to VoltageMagnitude.</summary>
 	public static implicit operator VoltageMagnitude<T>(EMF<T> value) => VoltageMagnitude<T>.Create(value.Value);
-/// <summary>Explicit conversion from VoltageMagnitude.</summary>
+
+	/// <summary>Explicit conversion from VoltageMagnitude.</summary>
 	public static explicit operator EMF<T>(VoltageMagnitude<T> value) => Create(value.Value);
-/// <summary>Creates a EMF from a VoltageMagnitude value.</summary>
+
+	/// <summary>Creates a EMF from a VoltageMagnitude value.</summary>
 	public static EMF<T> From(VoltageMagnitude<T> value) => Create(value.Value);
-/// <summary>Subtracts two EMF values, returning the absolute difference as a non-negative EMF.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static EMF<T> operator -(EMF<T> left, EMF<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two EMF values, returning the absolute difference as a non-negative EMF.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static EMF<T> operator -(EMF<T> left, EMF<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

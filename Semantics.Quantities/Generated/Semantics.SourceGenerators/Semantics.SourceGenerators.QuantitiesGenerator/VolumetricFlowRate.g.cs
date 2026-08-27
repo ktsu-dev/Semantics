@@ -25,28 +25,34 @@ public partial record VolumetricFlowRate<T> : PhysicalQuantity<VolumetricFlowRat
 	/// <returns>A new <see cref="VolumetricFlowRate{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static VolumetricFlowRate<T> FromCubicMeterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="VolumetricFlowRate{T}"/> from a value in LiterPerSecond.
 	/// </summary>
 	/// <param name="value">The value in LiterPerSecond.</param>
 	/// <returns>A new <see cref="VolumetricFlowRate{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static VolumetricFlowRate<T> FromLiterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterPerSecondToCubicMeterPerSecond)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-VolumetricFlowRate unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IVolumetricFlowRateUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two VolumetricFlowRate values, returning the absolute difference as a non-negative VolumetricFlowRate.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static VolumetricFlowRate<T> operator -(VolumetricFlowRate<T> left, VolumetricFlowRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VolumetricFlowRate<T> operator -(VolumetricFlowRate<T> left, VolumetricFlowRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies VolumetricFlowRate by Duration to produce Volume.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Volume<T> operator *(VolumetricFlowRate<T> left, Duration<T> right) => Multiply<Volume<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(VolumetricFlowRate<T> left, Duration<T> right) => Multiply<Volume<T>>(left, right);
+}
 

@@ -8,12 +8,15 @@ using System.Collections.Generic;
 /// <summary>
 /// Dimension information record.
 /// </summary>
-public record DimensionInfo(string Name, string Symbol, Dictionary<string, int> DimensionalFormula, List<string> Quantities){ }
+public record DimensionInfo(string Name, string Symbol, Dictionary<string, int> DimensionalFormula, List<string> Quantities)
+{
+}
 
 /// <summary>
 /// Static registry of physical dimensions.
 /// </summary>
-public static class PhysicalDimensions{
+public static class PhysicalDimensions
+{
 	/// <summary>Physical dimension: AbsorbedDose</summary>
 	public static readonly DimensionInfo AbsorbedDose = new("AbsorbedDose", "L² T⁻²", new Dictionary<string, int> { ["length"] = 2, ["time"] = -2 }, new List<string> { "AbsorbedDose" });
 
@@ -232,510 +235,581 @@ public static class PhysicalDimensions{
 
 	/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>
 	public static IReadOnlySet<DimensionInfo> All = new HashSet<DimensionInfo>([ AbsorbedDose, Acceleration, AcousticImpedance, AmountOfSubstance, AngularAcceleration, AngularDisplacement, AngularJerk, AngularMomentum, AngularVelocity, Area, CatalyticActivity, Concentration, Density, Dimensionless, DynamicViscosity, ElectricCapacitance, ElectricCharge, ElectricConductance, ElectricConductivity, ElectricCurrent, ElectricField, ElectricFlux, ElectricPotential, ElectricPowerDensity, ElectricResistance, Energy, Entropy, EquivalentDose, Exposure, Force, Frequency, HeatTransferCoefficient, Illuminance, Inductance, Irradiance, Jerk, KinematicViscosity, Length, Loudness, Luminance, LuminousFlux, LuminousIntensity, MagneticFlux, MagneticFluxDensity, Mass, MassFlowRate, MolarEnergy, MolarMass, MomentOfInertia, Momentum, NuclearCrossSection, OpticalPower, Permittivity, Power, Pressure, RadioactiveActivity, RateConstant, ReactionRate, Sensitivity, Sharpness, Snap, SpecificHeat, SurfaceTension, Temperature, ThermalConductivity, ThermalExpansion, ThermalResistance, Time, Torque, Velocity, Volume, VolumetricFlowRate ]);
-
-};
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>AbsorbedDose</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IAbsorbedDoseUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Acceleration</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IAccelerationUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>AcousticImpedance</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IAcousticImpedanceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>AmountOfSubstance</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IAmountOfSubstanceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>AngularAcceleration</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IAngularAccelerationUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>AngularDisplacement</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IAngularDisplacementUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>AngularJerk</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IAngularJerkUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>AngularMomentum</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IAngularMomentumUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>AngularVelocity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IAngularVelocityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Area</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IAreaUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>CatalyticActivity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ICatalyticActivityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Concentration</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IConcentrationUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Density</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IDensityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Dimensionless</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IDimensionlessUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>DynamicViscosity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IDynamicViscosityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricCapacitance</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricCapacitanceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricCharge</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricChargeUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricConductance</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricConductanceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricConductivity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricConductivityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricCurrent</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricCurrentUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricField</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricFieldUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricFlux</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricFluxUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricPotential</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricPotentialUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricPowerDensity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricPowerDensityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ElectricResistance</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IElectricResistanceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Energy</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IEnergyUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Entropy</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IEntropyUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>EquivalentDose</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IEquivalentDoseUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Exposure</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IExposureUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Force</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IForceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Frequency</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IFrequencyUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>HeatTransferCoefficient</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IHeatTransferCoefficientUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Illuminance</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IIlluminanceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Inductance</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IInductanceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Irradiance</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IIrradianceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Jerk</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IJerkUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>KinematicViscosity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IKinematicViscosityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Length</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ILengthUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Loudness</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ILoudnessUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Luminance</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ILuminanceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>LuminousFlux</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ILuminousFluxUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>LuminousIntensity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ILuminousIntensityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>MagneticFlux</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IMagneticFluxUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>MagneticFluxDensity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IMagneticFluxDensityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Mass</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IMassUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>MassFlowRate</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IMassFlowRateUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>MolarEnergy</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IMolarEnergyUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>MolarMass</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IMolarMassUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>MomentOfInertia</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IMomentOfInertiaUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Momentum</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IMomentumUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>NuclearCrossSection</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface INuclearCrossSectionUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>OpticalPower</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IOpticalPowerUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Permittivity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IPermittivityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Power</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IPowerUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Pressure</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IPressureUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>RadioactiveActivity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IRadioactiveActivityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>RateConstant</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IRateConstantUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ReactionRate</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IReactionRateUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Sensitivity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ISensitivityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Sharpness</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ISharpnessUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Snap</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ISnapUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>SpecificHeat</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ISpecificHeatUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>SurfaceTension</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ISurfaceTensionUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Temperature</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ITemperatureUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ThermalConductivity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IThermalConductivityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ThermalExpansion</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IThermalExpansionUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>ThermalResistance</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IThermalResistanceUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Time</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ITimeUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Torque</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ITorqueUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Velocity</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IVelocityUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>Volume</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IVolumeUnit : IUnit
-{ }
+{
+}
 
 /// <summary>
 /// Marker interface implemented by every unit of the <c>VolumetricFlowRate</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface IVolumetricFlowRateUnit : IUnit
-{ }
+{
+}
 

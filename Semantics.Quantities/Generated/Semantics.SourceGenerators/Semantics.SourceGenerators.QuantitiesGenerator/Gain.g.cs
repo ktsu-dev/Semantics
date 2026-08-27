@@ -26,83 +26,98 @@ public partial record Gain<T> : PhysicalQuantity<Gain<T>, T>, IVector0<Gain<T>, 
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromDimensionless(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Gain from a value in Radian.
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Gain from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Gain from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromGradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Gain from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromRevolution(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Gain from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromMilliradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Gain from a value in Percent.
 	/// </summary>
 	/// <param name="value">The value in Percent.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromPercent(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Gain from a value in PartPerMillion.
 	/// </summary>
 	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromPartPerMillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Gain from a value in PartPerBillion.
 	/// </summary>
 	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromPartPerBillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new Gain from a value in PercentByWeight.
 	/// </summary>
 	/// <param name="value">The value in PercentByWeight.</param>
 	/// <returns>A new Gain instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Gain<T> FromPercentByWeight(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentByWeightToRatio)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Dimensionless unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IDimensionlessUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Ratio.</summary>
+
+	/// <summary>Implicit conversion to Ratio.</summary>
 	public static implicit operator Ratio<T>(Gain<T> value) => Ratio<T>.Create(value.Value);
-/// <summary>Explicit conversion from Ratio.</summary>
+
+	/// <summary>Explicit conversion from Ratio.</summary>
 	public static explicit operator Gain<T>(Ratio<T> value) => Create(value.Value);
-/// <summary>Creates a Gain from a Ratio value.</summary>
+
+	/// <summary>Creates a Gain from a Ratio value.</summary>
 	public static Gain<T> From(Ratio<T> value) => Create(value.Value);
-/// <summary>Subtracts two Gain values, returning the absolute difference as a non-negative Gain.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Gain<T> operator -(Gain<T> left, Gain<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two Gain values, returning the absolute difference as a non-negative Gain.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Gain<T> operator -(Gain<T> left, Gain<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

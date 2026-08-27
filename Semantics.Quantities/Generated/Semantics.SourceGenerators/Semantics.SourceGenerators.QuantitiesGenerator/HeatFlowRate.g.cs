@@ -26,41 +26,50 @@ public partial record HeatFlowRate<T> : PhysicalQuantity<HeatFlowRate<T>, T>, IV
 	/// <returns>A new HeatFlowRate instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HeatFlowRate<T> FromWatt(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new HeatFlowRate from a value in Kilowatt.
 	/// </summary>
 	/// <param name="value">The value in Kilowatt.</param>
 	/// <returns>A new HeatFlowRate instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HeatFlowRate<T> FromKilowatt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new HeatFlowRate from a value in Megawatt.
 	/// </summary>
 	/// <param name="value">The value in Megawatt.</param>
 	/// <returns>A new HeatFlowRate instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HeatFlowRate<T> FromMegawatt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new HeatFlowRate from a value in Horsepower.
 	/// </summary>
 	/// <param name="value">The value in Horsepower.</param>
 	/// <returns>A new HeatFlowRate instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static HeatFlowRate<T> FromHorsepower(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HorsepowerToWatts)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Power unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IPowerUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Power.</summary>
+
+	/// <summary>Implicit conversion to Power.</summary>
 	public static implicit operator Power<T>(HeatFlowRate<T> value) => Power<T>.Create(value.Value);
-/// <summary>Explicit conversion from Power.</summary>
+
+	/// <summary>Explicit conversion from Power.</summary>
 	public static explicit operator HeatFlowRate<T>(Power<T> value) => Create(value.Value);
-/// <summary>Creates a HeatFlowRate from a Power value.</summary>
+
+	/// <summary>Creates a HeatFlowRate from a Power value.</summary>
 	public static HeatFlowRate<T> From(Power<T> value) => Create(value.Value);
-/// <summary>Subtracts two HeatFlowRate values, returning the absolute difference as a non-negative HeatFlowRate.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static HeatFlowRate<T> operator -(HeatFlowRate<T> left, HeatFlowRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two HeatFlowRate values, returning the absolute difference as a non-negative HeatFlowRate.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static HeatFlowRate<T> operator -(HeatFlowRate<T> left, HeatFlowRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

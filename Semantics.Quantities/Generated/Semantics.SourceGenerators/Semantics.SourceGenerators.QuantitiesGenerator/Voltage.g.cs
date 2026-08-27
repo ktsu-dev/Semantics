@@ -24,31 +24,38 @@ public partial record Voltage<T> : PhysicalQuantity<Voltage<T>, T>, IVector1<Vol
 	/// <param name="value">The value in Volt.</param>
 	/// <returns>A new <see cref="Voltage{T}"/> instance.</returns>
 	public static Voltage<T> FromVolt(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Voltage{T}"/> from a value in Kilovolt.
 	/// </summary>
 	/// <param name="value">The value in Kilovolt.</param>
 	/// <returns>A new <see cref="Voltage{T}"/> instance.</returns>
 	public static Voltage<T> FromKilovolt(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-ElectricPotential unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IElectricPotentialUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="VoltageMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public VoltageMagnitude<T> Magnitude() => VoltageMagnitude<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Divides Voltage by Resistance to produce Current1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Current1D<T> operator /(Voltage<T> left, Resistance<T> right) => Divide<Current1D<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Current1D<T> operator /(Voltage<T> left, Resistance<T> right) => Divide<Current1D<T>>(left, right);
+
+	/// <summary>
 	/// Divides Voltage by Length to produce ElectricField1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ElectricField1D<T> operator /(Voltage<T> left, Length<T> right) => Divide<ElectricField1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricField1D<T> operator /(Voltage<T> left, Length<T> right) => Divide<ElectricField1D<T>>(left, right);
+}
 

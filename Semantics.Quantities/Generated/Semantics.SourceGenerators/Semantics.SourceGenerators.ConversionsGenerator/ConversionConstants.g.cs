@@ -7,7 +7,8 @@ namespace ktsu.Semantics.Quantities.Units;
 /// Conversion constants used by generated unit definitions.
 /// Values sourced from conversions.json metadata.
 /// </summary>
-internal static class ConversionConstants{
+internal static class ConversionConstants
+{
 	/// <summary>Foot to meter conversion: 0.3048 m/ft (exact by definition)</summary>
 	internal const double FeetToMeters = 0.3048;
 
@@ -271,6 +272,5 @@ internal static class ConversionConstants{
 
 	/// <summary>Percent by weight to mass-fraction ratio: 0.01 (exact by definition)</summary>
 	internal const double PercentByWeightToRatio = 0.01;
-
-};
+}
 

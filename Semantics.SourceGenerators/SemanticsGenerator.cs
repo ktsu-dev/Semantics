@@ -5,7 +5,7 @@ namespace Semantics.SourceGenerators;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.CodeGen;
-using Semantics.SourceGenerators.Templates;
+using ktsu.CodeBlocker.Templates;
 
 /// <summary>
 /// The settings every generator in this repository shares, in one place.
@@ -46,7 +46,7 @@ public abstract class SemanticsGenerator<T>(string metadataFileName) : Generator
 	/// Writes the header every generated file in this repository starts with.
 	/// </summary>
 	/// <param name="codeBlocker">The <see cref="CodeBlocker"/> to write to.</param>
-	private protected static void WriteHeaderTo(CodeBlocker codeBlocker) =>
+	protected static void WriteHeaderTo(CodeBlocker codeBlocker) =>
 		WriteFileHeader(codeBlocker, SemanticsGeneratorSettings.Copyright);
 
 	/// <summary>
@@ -54,7 +54,7 @@ public abstract class SemanticsGenerator<T>(string metadataFileName) : Generator
 	/// </summary>
 	/// <param name="codeBlocker">The <see cref="CodeBlocker"/> to write to.</param>
 	/// <param name="sourceFileTemplate">The file to write.</param>
-	private protected static void WriteSourceFileTo(CodeBlocker codeBlocker, SourceFileTemplate sourceFileTemplate) =>
+	protected static void WriteSourceFileTo(CodeBlocker codeBlocker, SourceFileTemplate sourceFileTemplate) =>
 		WriteSourceFile(codeBlocker, sourceFileTemplate, SemanticsGeneratorSettings.Copyright);
 }
 
@@ -77,7 +77,7 @@ public abstract class SemanticsMultiFileGenerator : GeneratorBase
 	/// Writes the header every generated file in this repository starts with.
 	/// </summary>
 	/// <param name="codeBlocker">The <see cref="CodeBlocker"/> to write to.</param>
-	private protected static void WriteHeaderTo(CodeBlocker codeBlocker) =>
+	protected static void WriteHeaderTo(CodeBlocker codeBlocker) =>
 		WriteFileHeader(codeBlocker, SemanticsGeneratorSettings.Copyright);
 
 	/// <summary>
@@ -85,6 +85,6 @@ public abstract class SemanticsMultiFileGenerator : GeneratorBase
 	/// </summary>
 	/// <param name="codeBlocker">The <see cref="CodeBlocker"/> to write to.</param>
 	/// <param name="sourceFileTemplate">The file to write.</param>
-	private protected static void WriteSourceFileTo(CodeBlocker codeBlocker, SourceFileTemplate sourceFileTemplate) =>
+	protected static void WriteSourceFileTo(CodeBlocker codeBlocker, SourceFileTemplate sourceFileTemplate) =>
 		WriteSourceFile(codeBlocker, sourceFileTemplate, SemanticsGeneratorSettings.Copyright);
 }

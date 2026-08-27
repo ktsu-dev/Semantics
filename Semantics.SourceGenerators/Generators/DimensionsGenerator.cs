@@ -8,7 +8,8 @@ using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using Semantics.SourceGenerators.Models;
 using Semantics.SourceGenerators.CodeGen;
-using Semantics.SourceGenerators.Templates;
+using ktsu.CodeBlocker.Templates;
+using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;
 
 /// <summary>
 /// Source generator that creates the PhysicalDimensions.cs file from JSON metadata.
@@ -30,21 +31,22 @@ public class DimensionsGenerator : SemanticsGenerator<DimensionsMetadata>
 			FileName = "PhysicalDimensions.g.cs",
 			Namespace = "ktsu.Semantics.Quantities",
 			Usings =
-			[
+			{
 				"System.Collections.Generic",
-			],
+			},
 		};
 
 		// Generate DimensionInfo record
 		ClassTemplate dimensionInfoRecord = new()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				"/// Dimension information record.",
 				Emit.SummaryClose,
-			],
-			Keywords = [Emit.Public, "record"],
+			},
+			Kind = TypeKind.Record,
+			Keywords = {Emit.Public},
 			Name = "DimensionInfo(string Name, string Symbol, Dictionary<string, int> DimensionalFormula, List<string> Quantities)",
 		};
 		sourceFileTemplate.Classes.Add(dimensionInfoRecord);
@@ -53,12 +55,13 @@ public class DimensionsGenerator : SemanticsGenerator<DimensionsMetadata>
 		ClassTemplate dimensionsClass = new()
 		{
 			Comments =
-			[
+			{
 				Emit.SummaryOpen,
 				"/// Static registry of physical dimensions.",
 				Emit.SummaryClose,
-			],
-			Keywords = [Emit.Public, Emit.Static, "class"],
+			},
+			Kind = TypeKind.Class,
+			Keywords = {Emit.Public, Emit.Static},
 			Name = "PhysicalDimensions",
 		};
 
@@ -103,8 +106,8 @@ public class DimensionsGenerator : SemanticsGenerator<DimensionsMetadata>
 
 			dimensionsClass.Members.Add(new FieldTemplate()
 			{
-				Comments = [$"/// <summary>{description}</summary>"],
-				Keywords = [Emit.Public, Emit.Static, "readonly", "DimensionInfo"],
+				Comments = {$"/// <summary>{description}</summary>"},
+				Keywords = {Emit.Public, Emit.Static, "readonly", "DimensionInfo"},
 				Name = dimension.Name,
 				DefaultValue = $"new(\"{dimension.Name}\", \"{dimension.Symbol}\", {formulaInit}, {quantitiesInit})",
 			});
@@ -114,8 +117,8 @@ public class DimensionsGenerator : SemanticsGenerator<DimensionsMetadata>
 		string allDimensions = string.Join(", ", sortedDimensions.Select(d => d.Name));
 		dimensionsClass.Members.Add(new FieldTemplate()
 		{
-			Comments = ["/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>"],
-			Keywords = [Emit.Public, Emit.Static, "IReadOnlySet<DimensionInfo>"],
+			Comments = {"/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>"},
+			Keywords = {Emit.Public, Emit.Static, "IReadOnlySet<DimensionInfo>"},
 			Name = "All",
 			DefaultValue = $"new HashSet<DimensionInfo>([ {allDimensions} ])",
 		});
@@ -124,21 +127,25 @@ public class DimensionsGenerator : SemanticsGenerator<DimensionsMetadata>
 
 		// Emit per-dimension marker interfaces (I{Dim}Unit : IUnit) so generated
 		// quantity types can accept dimensionally-compatible units only.
-		sourceFileTemplate.Classes.AddRange(sortedDimensions.Select(dimension => new ClassTemplate()
+		foreach (PhysicalDimension dimension in sortedDimensions)
 		{
-			Comments =
-			[
-				Emit.SummaryOpen,
-				$"/// Marker interface implemented by every unit of the <c>{dimension.Name}</c> dimension.",
-				"/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.",
-				Emit.SummaryClose,
-			],
-			Keywords = [Emit.Public, "interface"],
-			Name = $"I{dimension.Name}Unit",
-			Interfaces = ["IUnit"],
-		}));
+			sourceFileTemplate.Classes.Add(new ClassTemplate
+			{
+				Comments =
+				{
+					Emit.SummaryOpen,
+					$"/// Marker interface implemented by every unit of the <c>{dimension.Name}</c> dimension.",
+					"/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.",
+					Emit.SummaryClose,
+				},
+				Kind = TypeKind.Interface,
+				Keywords = {Emit.Public},
+				Name = $"I{dimension.Name}Unit",
+				Interfaces = {"IUnit"},
+			});
+		}
 
 		WriteSourceFileTo(codeBlocker, sourceFileTemplate);
-		GeneratedSource.Add(context, sourceFileTemplate.FileName, codeBlocker.ToString());
+		context.AddSource(sourceFileTemplate.FileName, codeBlocker.ToString());
 	}
 }

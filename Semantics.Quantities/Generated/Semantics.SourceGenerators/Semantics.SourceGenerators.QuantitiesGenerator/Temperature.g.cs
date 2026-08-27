@@ -25,46 +25,56 @@ public partial record Temperature<T> : PhysicalQuantity<Temperature<T>, T>, IVec
 	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Temperature<T> FromKelvin(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Temperature{T}"/> from a value in Celsius.
 	/// </summary>
 	/// <param name="value">The value in Celsius.</param>
 	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Temperature<T> FromCelsius(T value) => Create(Vector0Guards.EnsureNonNegative((value + T.CreateChecked(Units.ConversionConstants.CelsiusToKelvinOffset)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Temperature{T}"/> from a value in Fahrenheit.
 	/// </summary>
 	/// <param name="value">The value in Fahrenheit.</param>
 	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Temperature<T> FromFahrenheit(T value) => Create(Vector0Guards.EnsureNonNegative(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Temperature{T}"/> from a value in Rankine.
 	/// </summary>
 	/// <param name="value">The value in Rankine.</param>
 	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Temperature<T> FromRankine(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Temperature unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.ITemperatureUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two Temperature values, returning the absolute difference as a non-negative Temperature.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Temperature<T> operator -(Temperature<T> left, Temperature<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator -(Temperature<T> left, Temperature<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Multiplies Temperature by Entropy to produce Energy.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Energy<T> operator *(Temperature<T> left, Entropy<T> right) => Multiply<Energy<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Temperature<T> left, Entropy<T> right) => Multiply<Energy<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies Temperature by ThermalExpansionCoefficient to produce Ratio.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Ratio<T> operator *(Temperature<T> left, ThermalExpansionCoefficient<T> right) => Multiply<Ratio<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(Temperature<T> left, ThermalExpansionCoefficient<T> right) => Multiply<Ratio<T>>(left, right);
+}
 

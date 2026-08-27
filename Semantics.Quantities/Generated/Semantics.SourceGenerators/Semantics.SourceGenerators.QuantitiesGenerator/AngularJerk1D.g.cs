@@ -24,21 +24,25 @@ public partial record AngularJerk1D<T> : PhysicalQuantity<AngularJerk1D<T>, T>, 
 	/// <param name="value">The value in RadianPerSecondCubed.</param>
 	/// <returns>A new <see cref="AngularJerk1D{T}"/> instance.</returns>
 	public static AngularJerk1D<T> FromRadianPerSecondCubed(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularJerk unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAngularJerkUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="AngularJerkMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public AngularJerkMagnitude<T> Magnitude() => AngularJerkMagnitude<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Multiplies AngularJerk1D by Duration to produce AngularAcceleration1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AngularAcceleration1D<T> operator *(AngularJerk1D<T> left, Duration<T> right) => Multiply<AngularAcceleration1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularAcceleration1D<T> operator *(AngularJerk1D<T> left, Duration<T> right) => Multiply<AngularAcceleration1D<T>>(left, right);
+}
 

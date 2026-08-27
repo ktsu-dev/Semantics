@@ -24,21 +24,25 @@ public partial record AngularMomentum1D<T> : PhysicalQuantity<AngularMomentum1D<
 	/// <param name="value">The value in KilogramMeterSquaredPerSecond.</param>
 	/// <returns>A new <see cref="AngularMomentum1D{T}"/> instance.</returns>
 	public static AngularMomentum1D<T> FromKilogramMeterSquaredPerSecond(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-AngularMomentum unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IAngularMomentumUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="AngularMomentumMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public AngularMomentumMagnitude<T> Magnitude() => AngularMomentumMagnitude<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Divides AngularMomentum1D by Duration to produce Torque1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Torque1D<T> operator /(AngularMomentum1D<T> left, Duration<T> right) => Divide<Torque1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Torque1D<T> operator /(AngularMomentum1D<T> left, Duration<T> right) => Divide<Torque1D<T>>(left, right);
+}
 

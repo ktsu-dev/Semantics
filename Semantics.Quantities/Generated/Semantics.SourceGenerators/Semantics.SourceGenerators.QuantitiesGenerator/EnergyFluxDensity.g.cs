@@ -26,20 +26,26 @@ public partial record EnergyFluxDensity<T> : PhysicalQuantity<EnergyFluxDensity<
 	/// <returns>A new EnergyFluxDensity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static EnergyFluxDensity<T> FromWattPerSquareMeter(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Irradiance unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IIrradianceUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Irradiance.</summary>
+
+	/// <summary>Implicit conversion to Irradiance.</summary>
 	public static implicit operator Irradiance<T>(EnergyFluxDensity<T> value) => Irradiance<T>.Create(value.Value);
-/// <summary>Explicit conversion from Irradiance.</summary>
+
+	/// <summary>Explicit conversion from Irradiance.</summary>
 	public static explicit operator EnergyFluxDensity<T>(Irradiance<T> value) => Create(value.Value);
-/// <summary>Creates a EnergyFluxDensity from a Irradiance value.</summary>
+
+	/// <summary>Creates a EnergyFluxDensity from a Irradiance value.</summary>
 	public static EnergyFluxDensity<T> From(Irradiance<T> value) => Create(value.Value);
-/// <summary>Subtracts two EnergyFluxDensity values, returning the absolute difference as a non-negative EnergyFluxDensity.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static EnergyFluxDensity<T> operator -(EnergyFluxDensity<T> left, EnergyFluxDensity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two EnergyFluxDensity values, returning the absolute difference as a non-negative EnergyFluxDensity.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static EnergyFluxDensity<T> operator -(EnergyFluxDensity<T> left, EnergyFluxDensity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

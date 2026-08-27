@@ -26,34 +26,42 @@ public partial record SamplingRate<T> : PhysicalQuantity<SamplingRate<T>, T>, IV
 	/// <returns>A new SamplingRate instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SamplingRate<T> FromHertz(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new SamplingRate from a value in Kilohertz.
 	/// </summary>
 	/// <param name="value">The value in Kilohertz.</param>
 	/// <returns>A new SamplingRate instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SamplingRate<T> FromKilohertz(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new SamplingRate from a value in Megahertz.
 	/// </summary>
 	/// <param name="value">The value in Megahertz.</param>
 	/// <returns>A new SamplingRate instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static SamplingRate<T> FromMegahertz(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Frequency unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IFrequencyUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Frequency.</summary>
+
+	/// <summary>Implicit conversion to Frequency.</summary>
 	public static implicit operator Frequency<T>(SamplingRate<T> value) => Frequency<T>.Create(value.Value);
-/// <summary>Explicit conversion from Frequency.</summary>
+
+	/// <summary>Explicit conversion from Frequency.</summary>
 	public static explicit operator SamplingRate<T>(Frequency<T> value) => Create(value.Value);
-/// <summary>Creates a SamplingRate from a Frequency value.</summary>
+
+	/// <summary>Creates a SamplingRate from a Frequency value.</summary>
 	public static SamplingRate<T> From(Frequency<T> value) => Create(value.Value);
-/// <summary>Subtracts two SamplingRate values, returning the absolute difference as a non-negative SamplingRate.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SamplingRate<T> operator -(SamplingRate<T> left, SamplingRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two SamplingRate values, returning the absolute difference as a non-negative SamplingRate.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SamplingRate<T> operator -(SamplingRate<T> left, SamplingRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

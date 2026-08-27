@@ -25,24 +25,28 @@ public partial record Exposure<T> : PhysicalQuantity<Exposure<T>, T>, IVector0<E
 	/// <returns>A new <see cref="Exposure{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Exposure<T> FromCoulombPerKilogram(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="Exposure{T}"/> from a value in Roentgen.
 	/// </summary>
 	/// <param name="value">The value in Roentgen.</param>
 	/// <returns>A new <see cref="Exposure{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static Exposure<T> FromRoentgen(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RoentgenToCoulombsPerKilogram)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Exposure unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IExposureUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two Exposure values, returning the absolute difference as a non-negative Exposure.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Exposure<T> operator -(Exposure<T> left, Exposure<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Exposure<T> operator -(Exposure<T> left, Exposure<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

@@ -25,24 +25,28 @@ public partial record RadioactiveActivity<T> : PhysicalQuantity<RadioactiveActiv
 	/// <returns>A new <see cref="RadioactiveActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static RadioactiveActivity<T> FromBecquerel(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="RadioactiveActivity{T}"/> from a value in Curie.
 	/// </summary>
 	/// <param name="value">The value in Curie.</param>
 	/// <returns>A new <see cref="RadioactiveActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static RadioactiveActivity<T> FromCurie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CurieToBecquerels)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-RadioactiveActivity unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IRadioactiveActivityUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two RadioactiveActivity values, returning the absolute difference as a non-negative RadioactiveActivity.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static RadioactiveActivity<T> operator -(RadioactiveActivity<T> left, RadioactiveActivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static RadioactiveActivity<T> operator -(RadioactiveActivity<T> left, RadioactiveActivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

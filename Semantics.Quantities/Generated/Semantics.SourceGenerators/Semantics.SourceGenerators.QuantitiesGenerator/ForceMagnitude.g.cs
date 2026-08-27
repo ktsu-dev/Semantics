@@ -25,70 +25,92 @@ public partial record ForceMagnitude<T> : PhysicalQuantity<ForceMagnitude<T>, T>
 	/// <returns>A new <see cref="ForceMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ForceMagnitude<T> FromNewton(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="ForceMagnitude{T}"/> from a value in Kilonewton.
 	/// </summary>
 	/// <param name="value">The value in Kilonewton.</param>
 	/// <returns>A new <see cref="ForceMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ForceMagnitude<T> FromKilonewton(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="ForceMagnitude{T}"/> from a value in Dyne.
 	/// </summary>
 	/// <param name="value">The value in Dyne.</param>
 	/// <returns>A new <see cref="ForceMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ForceMagnitude<T> FromDyne(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DyneToNewtons)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new <see cref="ForceMagnitude{T}"/> from a value in PoundForce.
 	/// </summary>
 	/// <param name="value">The value in PoundForce.</param>
 	/// <returns>A new <see cref="ForceMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ForceMagnitude<T> FromPoundForce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundForceToNewtons)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Force unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IForceUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Subtracts two ForceMagnitude values, returning the absolute difference as a non-negative ForceMagnitude.
 	/// Magnitude subtraction stays a magnitude (per the unified-vector model).
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ForceMagnitude<T> operator -(ForceMagnitude<T> left, ForceMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator -(ForceMagnitude<T> left, ForceMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>
 	/// Divides ForceMagnitude by AccelerationMagnitude to produce Mass.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Mass<T> operator /(ForceMagnitude<T> left, AccelerationMagnitude<T> right) => Divide<Mass<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator /(ForceMagnitude<T> left, AccelerationMagnitude<T> right) => Divide<Mass<T>>(left, right);
+
+	/// <summary>
 	/// Divides ForceMagnitude by Mass to produce AccelerationMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static AccelerationMagnitude<T> operator /(ForceMagnitude<T> left, Mass<T> right) => Divide<AccelerationMagnitude<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator /(ForceMagnitude<T> left, Mass<T> right) => Divide<AccelerationMagnitude<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies ForceMagnitude by Length to produce Energy.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Energy<T> operator *(ForceMagnitude<T> left, Length<T> right) => Multiply<Energy<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(ForceMagnitude<T> left, Length<T> right) => Multiply<Energy<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies ForceMagnitude by Duration to produce MomentumMagnitude.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static MomentumMagnitude<T> operator *(ForceMagnitude<T> left, Duration<T> right) => Multiply<MomentumMagnitude<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(ForceMagnitude<T> left, Duration<T> right) => Multiply<MomentumMagnitude<T>>(left, right);
+
+	/// <summary>
 	/// Multiplies ForceMagnitude by Speed to produce Power.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Power<T> operator *(ForceMagnitude<T> left, Speed<T> right) => Multiply<Power<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(ForceMagnitude<T> left, Speed<T> right) => Multiply<Power<T>>(left, right);
+
+	/// <summary>
 	/// Divides ForceMagnitude by Area to produce Pressure.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Pressure<T> operator /(ForceMagnitude<T> left, Area<T> right) => Divide<Pressure<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Pressure<T> operator /(ForceMagnitude<T> left, Area<T> right) => Divide<Pressure<T>>(left, right);
+
+	/// <summary>
 	/// Divides ForceMagnitude by Length to produce SurfaceTension.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static SurfaceTension<T> operator /(ForceMagnitude<T> left, Length<T> right) => Divide<SurfaceTension<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SurfaceTension<T> operator /(ForceMagnitude<T> left, Length<T> right) => Divide<SurfaceTension<T>>(left, right);
+
+	/// <summary>
 	/// Divides ForceMagnitude by SurfaceTension to produce Length.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Length<T> operator /(ForceMagnitude<T> left, SurfaceTension<T> right) => Divide<Length<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(ForceMagnitude<T> left, SurfaceTension<T> right) => Divide<Length<T>>(left, right);
+}
 

@@ -26,83 +26,98 @@ public partial record ReynoldsNumber<T> : PhysicalQuantity<ReynoldsNumber<T>, T>
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromDimensionless(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReynoldsNumber from a value in Radian.
 	/// </summary>
 	/// <param name="value">The value in Radian.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromRadian(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReynoldsNumber from a value in Degree.
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReynoldsNumber from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromGradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReynoldsNumber from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromRevolution(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReynoldsNumber from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromMilliradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReynoldsNumber from a value in Percent.
 	/// </summary>
 	/// <param name="value">The value in Percent.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromPercent(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReynoldsNumber from a value in PartPerMillion.
 	/// </summary>
 	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromPartPerMillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReynoldsNumber from a value in PartPerBillion.
 	/// </summary>
 	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromPartPerBillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Creates a new ReynoldsNumber from a value in PercentByWeight.
 	/// </summary>
 	/// <param name="value">The value in PercentByWeight.</param>
 	/// <returns>A new ReynoldsNumber instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
 	public static ReynoldsNumber<T> FromPercentByWeight(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentByWeightToRatio)), nameof(value)));
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Dimensionless unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IDimensionlessUnit unit) => unit.FromBase(Value);
-/// <summary>Implicit conversion to Ratio.</summary>
+
+	/// <summary>Implicit conversion to Ratio.</summary>
 	public static implicit operator Ratio<T>(ReynoldsNumber<T> value) => Ratio<T>.Create(value.Value);
-/// <summary>Explicit conversion from Ratio.</summary>
+
+	/// <summary>Explicit conversion from Ratio.</summary>
 	public static explicit operator ReynoldsNumber<T>(Ratio<T> value) => Create(value.Value);
-/// <summary>Creates a ReynoldsNumber from a Ratio value.</summary>
+
+	/// <summary>Creates a ReynoldsNumber from a Ratio value.</summary>
 	public static ReynoldsNumber<T> From(Ratio<T> value) => Create(value.Value);
-/// <summary>Subtracts two ReynoldsNumber values, returning the absolute difference as a non-negative ReynoldsNumber.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static ReynoldsNumber<T> operator -(ReynoldsNumber<T> left, ReynoldsNumber<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-};
+
+	/// <summary>Subtracts two ReynoldsNumber values, returning the absolute difference as a non-negative ReynoldsNumber.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ReynoldsNumber<T> operator -(ReynoldsNumber<T> left, ReynoldsNumber<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+}
 

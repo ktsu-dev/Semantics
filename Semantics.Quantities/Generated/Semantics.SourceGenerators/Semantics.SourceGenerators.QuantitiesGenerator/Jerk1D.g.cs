@@ -24,25 +24,31 @@ public partial record Jerk1D<T> : PhysicalQuantity<Jerk1D<T>, T>, IVector1<Jerk1
 	/// <param name="value">The value in MeterPerSecondCubed.</param>
 	/// <returns>A new <see cref="Jerk1D{T}"/> instance.</returns>
 	public static Jerk1D<T> FromMeterPerSecondCubed(T value) => Create(value);
-/// <summary>
+
+	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
 	/// Cross-dimension calls (e.g. passing a non-Jerk unit) fail at compile time.
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
 	public T In(global::ktsu.Semantics.Quantities.IJerkUnit unit) => unit.FromBase(Value);
-/// <summary>
+
+	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="JerkMagnitude{T}"/>.
 	/// </summary>
 	/// <returns>The non-negative magnitude.</returns>
 	public JerkMagnitude<T> Magnitude() => JerkMagnitude<T>.Create(T.Abs(Value));
-/// <summary>
+
+	/// <summary>
 	/// Multiplies Jerk1D by Duration to produce Acceleration1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Acceleration1D<T> operator *(Jerk1D<T> left, Duration<T> right) => Multiply<Acceleration1D<T>>(left, right);
-/// <summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Acceleration1D<T> operator *(Jerk1D<T> left, Duration<T> right) => Multiply<Acceleration1D<T>>(left, right);
+
+	/// <summary>
 	/// Divides Jerk1D by Duration to produce Snap1D.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")] public static Snap1D<T> operator /(Jerk1D<T> left, Duration<T> right) => Divide<Snap1D<T>>(left, right);
-};
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Snap1D<T> operator /(Jerk1D<T> left, Duration<T> right) => Divide<Snap1D<T>>(left, right);
+}
 
