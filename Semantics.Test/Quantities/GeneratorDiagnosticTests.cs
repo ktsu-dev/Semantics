@@ -5,6 +5,7 @@ namespace ktsu.Semantics.Test.Quantities;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using global::Semantics.SourceGenerators;
 
@@ -55,6 +56,39 @@ public class GeneratorDiagnosticTests
 			$"Expected {id}. Got: {(diagnostics.Count == 0 ? "no diagnostics" : string.Join("; ", diagnostics.Select(d => $"{d.Id}: {d.GetMessage()}")))}");
 	}
 
+	/// <summary>
+	/// Asserts that a diagnostic points at a specific piece of text in the metadata it was reported
+	/// against.
+	/// </summary>
+	/// <param name="metadata">The metadata document the generator was run over.</param>
+	/// <param name="diagnostics">Everything the generator reported.</param>
+	/// <param name="id">The diagnostic to look for.</param>
+	/// <param name="expected">The text the location should cover.</param>
+	/// <remarks>
+	/// Asserting only that the location is not <see cref="Location.None"/> would pass for a location
+	/// pointing at the wrong entry, which is the failure mode that actually matters: every name in a
+	/// relationship is spelled correctly somewhere else in the file, so an unscoped search lands
+	/// plausibly and uselessly far from the mistake. Reading the covered text back proves it landed
+	/// on the right one.
+	/// </remarks>
+	private static void AssertPointsAt(string metadata, IReadOnlyList<Diagnostic> diagnostics, string id, string expected)
+	{
+		AssertReports(diagnostics, id);
+		Diagnostic diagnostic = diagnostics.First(candidate => candidate.Id == id);
+
+		Assert.AreNotEqual(
+			Location.None,
+			diagnostic.Location,
+			$"{id} is only actionable if it says where in the metadata the problem is.");
+		Assert.EndsWith("dimensions.json", diagnostic.Location.GetLineSpan().Path);
+
+		TextSpan span = diagnostic.Location.SourceSpan;
+		Assert.AreEqual(
+			expected,
+			metadata.Substring(span.Start, span.Length),
+			$"{id} pointed at the wrong place in the metadata.");
+	}
+
 	[TestMethod]
 	public void Sem001_IsReportedForARelationshipNamingAnUnknownDimension()
 	{
@@ -62,6 +96,15 @@ public class GeneratorDiagnosticTests
 			relationships: ",\n      \"integrals\": [ { \"other\": \"Tiem\", \"result\": \"Length\" } ]");
 
 		AssertReports(Run(metadata, new QuantitiesGenerator(), "dimensions.json"), "SEM001");
+	}
+
+	[TestMethod]
+	public void Sem001_PointsAtTheMisspelledNameRatherThanAtNothing()
+	{
+		string metadata = DimensionsDocument(
+			relationships: ",\n      \"integrals\": [ { \"other\": \"Tiem\", \"result\": \"Length\" } ]");
+
+		AssertPointsAt(metadata, Run(metadata, new QuantitiesGenerator(), "dimensions.json"), "SEM001", "Tiem");
 	}
 
 	[TestMethod]
@@ -94,6 +137,21 @@ public class GeneratorDiagnosticTests
 	}
 
 	[TestMethod]
+	public void Sem003_PointsAtTheRelationshipRatherThanAtNothing()
+	{
+		string metadata = DimensionsDocument(
+			relationships: ",\n      \"crossProducts\": [ { \"other\": \"Length\", \"result\": \"Length\", \"forms\": [ 2 ] } ]");
+
+		// Not the bare name: "Length" is spelled correctly and appears several times before the
+		// relationship that is wrong. The location has to be the relationship's own "other".
+		AssertPointsAt(
+			metadata,
+			Run(metadata, new QuantitiesGenerator(), "dimensions.json"),
+			"SEM003",
+			"\"other\": \"Length\"");
+	}
+
+	[TestMethod]
 	public void Sem004_IsReportedForAUnitThatUnitsJsonDoesNotDeclare()
 	{
 		string metadata = DimensionsDocument(availableUnits: "\"Meter\", \"Kilometres\"");
@@ -106,14 +164,7 @@ public class GeneratorDiagnosticTests
 	{
 		string metadata = DimensionsDocument(availableUnits: "\"Meter\", \"Kilometres\"");
 
-		Diagnostic diagnostic = Run(metadata, new QuantitiesGenerator(), "dimensions.json")
-			.First(candidate => candidate.Id == "SEM004");
-
-		Assert.AreNotEqual(
-			Location.None,
-			diagnostic.Location,
-			"A warning about a name in a large JSON file is only actionable if it says where the name is.");
-		Assert.EndsWith("dimensions.json", diagnostic.Location.GetLineSpan().Path);
+		AssertPointsAt(metadata, Run(metadata, new QuantitiesGenerator(), "dimensions.json"), "SEM004", "Kilometres");
 	}
 
 	[TestMethod]

@@ -79,8 +79,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		// Phase A: Build maps and collect operators
 		Dictionary<string, PhysicalDimension> dimensionMap = BuildDimensionMap(metadata);
 		Dictionary<string, int> typeFormMap = BuildTypeFormMap(metadata);
-		List<OperatorInfo> allOperators = CollectAllOperators(context, metadata, dimensionMap);
-		List<ProductInfo> allProducts = CollectAllProducts(context, metadata, dimensionMap);
+		List<OperatorInfo> allOperators = CollectAllOperators(context, metadata, dimensionMap, dimensionsFile);
+		List<ProductInfo> allProducts = CollectAllProducts(context, metadata, dimensionMap, dimensionsFile);
 		Dictionary<string, List<OperatorInfo>> operatorsByOwner = GroupBy(allOperators, o => o.OwnerTypeName);
 		Dictionary<string, List<ProductInfo>> productsByOwner = GroupBy(allProducts, p => p.SelfTypeName);
 
@@ -186,15 +186,19 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		return map;
 	}
 
-	private static List<OperatorInfo> CollectAllOperators(SourceProductionContext context, DimensionsMetadata metadata, Dictionary<string, PhysicalDimension> dimMap)
+	private static List<OperatorInfo> CollectAllOperators(
+		SourceProductionContext context,
+		DimensionsMetadata metadata,
+		Dictionary<string, PhysicalDimension> dimMap,
+		MetadataFile? dimensionsFile)
 	{
 		HashSet<string> seen = [];
 		List<OperatorInfo> result = [];
 
 		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
 		{
-			CollectIntegralOperators(context, dim, dimMap, result, seen);
-			CollectDerivativeOperators(context, dim, dimMap, result, seen);
+			CollectIntegralOperators(context, dim, dimMap, result, seen, dimensionsFile);
+			CollectDerivativeOperators(context, dim, dimMap, result, seen, dimensionsFile);
 		}
 
 		return result;
@@ -208,19 +212,20 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		PhysicalDimension dim,
 		Dictionary<string, PhysicalDimension> dimMap,
 		List<OperatorInfo> result,
-		HashSet<string> seen)
+		HashSet<string> seen,
+		MetadataFile? dimensionsFile)
 	{
 		foreach (RelationshipDefinition integral in dim.Integrals)
 		{
 			if (!dimMap.TryGetValue(integral.Other, out PhysicalDimension? otherDim))
 			{
-				ReportUnknownReference(context, dim.Name, integral.Other, $"integrals[{integral.Other} -> {integral.Result}].other");
+				ReportUnknownReference(context, dimensionsFile, dim.Name, integral.Other, $"integrals[{integral.Other} -> {integral.Result}].other");
 				continue;
 			}
 
 			if (!dimMap.TryGetValue(integral.Result, out PhysicalDimension? resultDim))
 			{
-				ReportUnknownReference(context, dim.Name, integral.Result, $"integrals[{integral.Other} -> {integral.Result}].result");
+				ReportUnknownReference(context, dimensionsFile, dim.Name, integral.Result, $"integrals[{integral.Other} -> {integral.Result}].result");
 				continue;
 			}
 
@@ -241,7 +246,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				[0, 1, 2, 3, 4],
 				dim,
 				resultDim,
-				$"integrals[{integral.Other} -> {integral.Result}]");
+				$"integrals[{integral.Other} -> {integral.Result}]",
+				dimensionsFile);
 			foreach (int vn in forms)
 			{
 				AddIntegralOpsForForm(result, seen, dim, resultDim, vn, v0Other);
@@ -285,19 +291,20 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		PhysicalDimension dim,
 		Dictionary<string, PhysicalDimension> dimMap,
 		List<OperatorInfo> result,
-		HashSet<string> seen)
+		HashSet<string> seen,
+		MetadataFile? dimensionsFile)
 	{
 		foreach (RelationshipDefinition derivative in dim.Derivatives)
 		{
 			if (!dimMap.TryGetValue(derivative.Other, out PhysicalDimension? otherDim))
 			{
-				ReportUnknownReference(context, dim.Name, derivative.Other, $"derivatives[{derivative.Other} -> {derivative.Result}].other");
+				ReportUnknownReference(context, dimensionsFile, dim.Name, derivative.Other, $"derivatives[{derivative.Other} -> {derivative.Result}].other");
 				continue;
 			}
 
 			if (!dimMap.TryGetValue(derivative.Result, out PhysicalDimension? resultDim))
 			{
-				ReportUnknownReference(context, dim.Name, derivative.Result, $"derivatives[{derivative.Other} -> {derivative.Result}].result");
+				ReportUnknownReference(context, dimensionsFile, dim.Name, derivative.Result, $"derivatives[{derivative.Other} -> {derivative.Result}].result");
 				continue;
 			}
 
@@ -313,7 +320,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				[0, 1, 2, 3, 4],
 				dim,
 				resultDim,
-				$"derivatives[{derivative.Other} -> {derivative.Result}]");
+				$"derivatives[{derivative.Other} -> {derivative.Result}]",
+				dimensionsFile);
 			foreach (int vn in forms)
 			{
 				AddDerivativeOpsForForm(result, seen, dim, resultDim, vn, v0Other);
@@ -344,15 +352,19 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		AddOp(result, seen, "*", v0Other, resultType, selfType, v0Other);
 	}
 
-	private static List<ProductInfo> CollectAllProducts(SourceProductionContext context, DimensionsMetadata metadata, Dictionary<string, PhysicalDimension> dimMap)
+	private static List<ProductInfo> CollectAllProducts(
+		SourceProductionContext context,
+		DimensionsMetadata metadata,
+		Dictionary<string, PhysicalDimension> dimMap,
+		MetadataFile? dimensionsFile)
 	{
 		HashSet<string> seen = [];
 		List<ProductInfo> result = [];
 
 		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
 		{
-			CollectDotProducts(context, dim, dimMap, result, seen);
-			CollectCrossProducts(context, dim, dimMap, result, seen);
+			CollectDotProducts(context, dim, dimMap, result, seen, dimensionsFile);
+			CollectCrossProducts(context, dim, dimMap, result, seen, dimensionsFile);
 		}
 
 		return result;
@@ -366,19 +378,20 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		PhysicalDimension dim,
 		Dictionary<string, PhysicalDimension> dimMap,
 		List<ProductInfo> result,
-		HashSet<string> seen)
+		HashSet<string> seen,
+		MetadataFile? dimensionsFile)
 	{
 		foreach (RelationshipDefinition dot in dim.DotProducts)
 		{
 			if (!dimMap.TryGetValue(dot.Other, out PhysicalDimension? otherDim))
 			{
-				ReportUnknownReference(context, dim.Name, dot.Other, $"dotProducts[{dot.Other} -> {dot.Result}].other");
+				ReportUnknownReference(context, dimensionsFile, dim.Name, dot.Other, $"dotProducts[{dot.Other} -> {dot.Result}].other");
 				continue;
 			}
 
 			if (!dimMap.TryGetValue(dot.Result, out PhysicalDimension? resultDim))
 			{
-				ReportUnknownReference(context, dim.Name, dot.Result, $"dotProducts[{dot.Other} -> {dot.Result}].result");
+				ReportUnknownReference(context, dimensionsFile, dim.Name, dot.Result, $"dotProducts[{dot.Other} -> {dot.Result}].result");
 				continue;
 			}
 
@@ -395,7 +408,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				[1, 2, 3, 4],
 				dim,
 				otherDim,
-				$"dotProducts[{dot.Other} -> {dot.Result}]");
+				$"dotProducts[{dot.Other} -> {dot.Result}]",
+				dimensionsFile);
 			foreach (int vn in forms)
 			{
 				AddDotProductForForm(result, seen, dim, otherDim, vn, v0Result);
@@ -433,19 +447,20 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		PhysicalDimension dim,
 		Dictionary<string, PhysicalDimension> dimMap,
 		List<ProductInfo> result,
-		HashSet<string> seen)
+		HashSet<string> seen,
+		MetadataFile? dimensionsFile)
 	{
 		foreach (RelationshipDefinition cross in dim.CrossProducts)
 		{
 			if (!dimMap.TryGetValue(cross.Other, out PhysicalDimension? otherDim))
 			{
-				ReportUnknownReference(context, dim.Name, cross.Other, $"crossProducts[{cross.Other} -> {cross.Result}].other");
+				ReportUnknownReference(context, dimensionsFile, dim.Name, cross.Other, $"crossProducts[{cross.Other} -> {cross.Result}].other");
 				continue;
 			}
 
 			if (!dimMap.TryGetValue(cross.Result, out PhysicalDimension? resultDim))
 			{
-				ReportUnknownReference(context, dim.Name, cross.Result, $"crossProducts[{cross.Other} -> {cross.Result}].result");
+				ReportUnknownReference(context, dimensionsFile, dim.Name, cross.Result, $"crossProducts[{cross.Other} -> {cross.Result}].result");
 				continue;
 			}
 
@@ -460,6 +475,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				dim,
 				otherDim,
 				$"crossProducts[{cross.Other} -> {cross.Result}]",
+				dimensionsFile,
 				resultDim);
 			if (Array.IndexOf(forms, 3) < 0)
 			{
@@ -507,15 +523,26 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		}
 	}
 
-	private static void ReportUnknownReference(SourceProductionContext context, string owningDimension, string unknownReference, string fieldPath)
-	{
-		context.ReportDiagnostic(Diagnostic.Create(
+	/// <summary>
+	/// Reports SEM001 at the position in <c>dimensions.json</c> where the unknown name is written.
+	/// </summary>
+	/// <remarks>
+	/// Unscoped, because the name is by definition a typo and so occurs exactly once. The scoped
+	/// overload would only help if the same typo were made twice, and would point at the first of
+	/// them either way.
+	/// </remarks>
+	private static void ReportUnknownReference(
+		SourceProductionContext context,
+		MetadataFile? dimensionsFile,
+		string owningDimension,
+		string unknownReference,
+		string fieldPath) =>
+		context.ReportAt(
 			SemanticsDiagnostics.UnknownDimensionReference,
-			Location.None,
+			dimensionsFile?.FindLocation(unknownReference),
 			owningDimension,
 			unknownReference,
-			fieldPath));
-	}
+			fieldPath);
 
 	/// <summary>
 	/// Resolves the forms at which a relationship should emit operators. When the metadata
@@ -532,6 +559,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		PhysicalDimension dim,
 		PhysicalDimension otherDim,
 		string fieldPath,
+		MetadataFile? dimensionsFile,
 		PhysicalDimension? resultDim = null)
 	{
 		if (rel.Forms.Count == 0)
@@ -549,19 +577,19 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 			if (GetBaseTypeName(dim, form) == null)
 			{
-				ReportFormMissing(context, dim.Name, fieldPath, form, dim.Name);
+				ReportFormMissing(context, dimensionsFile, dim, rel, fieldPath, form, dim.Name);
 				continue;
 			}
 
 			if (GetBaseTypeName(otherDim, form) == null)
 			{
-				ReportFormMissing(context, dim.Name, fieldPath, form, otherDim.Name);
+				ReportFormMissing(context, dimensionsFile, dim, rel, fieldPath, form, otherDim.Name);
 				continue;
 			}
 
 			if (resultDim != null && GetBaseTypeName(resultDim, form) == null)
 			{
-				ReportFormMissing(context, dim.Name, fieldPath, form, resultDim.Name);
+				ReportFormMissing(context, dimensionsFile, dim, rel, fieldPath, form, resultDim.Name);
 				continue;
 			}
 
@@ -571,16 +599,30 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		return [.. kept];
 	}
 
-	private static void ReportFormMissing(SourceProductionContext context, string owningDimension, string fieldPath, int form, string offendingDimension)
-	{
-		context.ReportDiagnostic(Diagnostic.Create(
+	/// <summary>
+	/// Reports SEM003 at the relationship that requested the missing form.
+	/// </summary>
+	/// <remarks>
+	/// Scoped, unlike SEM001: every name involved here is spelled correctly and appears throughout
+	/// the file, so an unscoped search would land on an unrelated entry. Anchoring on the owning
+	/// dimension's own <c>"name"</c> property and then looking for the relationship's <c>"other"</c>
+	/// within it puts the location on the declaration that is actually wrong.
+	/// </remarks>
+	private static void ReportFormMissing(
+		SourceProductionContext context,
+		MetadataFile? dimensionsFile,
+		PhysicalDimension owningDimension,
+		RelationshipDefinition rel,
+		string fieldPath,
+		int form,
+		string offendingDimension) =>
+		context.ReportAt(
 			SemanticsDiagnostics.RelationshipFormMissing,
-			Location.None,
-			owningDimension,
+			dimensionsFile?.FindLocation($"\"name\": \"{owningDimension.Name}\"", $"\"other\": \"{rel.Other}\""),
+			owningDimension.Name,
 			fieldPath,
 			form,
-			offendingDimension));
-	}
+			offendingDimension);
 
 	private static Dictionary<string, UnitDefinition> BuildUnitMap(UnitsMetadata units)
 	{

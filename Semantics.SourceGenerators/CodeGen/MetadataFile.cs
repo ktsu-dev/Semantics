@@ -52,6 +52,45 @@ public sealed class MetadataFile(string fileName, string text, SourceText? sourc
 	}
 
 	/// <summary>
+	/// Finds <paramref name="needle"/> at or after the first occurrence of <paramref name="anchor"/>,
+	/// and returns a location covering it.
+	/// </summary>
+	/// <param name="anchor">Text that scopes the search — typically the entry the needle belongs to.</param>
+	/// <param name="needle">The text to find within that scope.</param>
+	/// <returns>
+	/// A location in the metadata file, falling back to the first unscoped match of
+	/// <paramref name="needle"/> and then to <see cref="Location.None"/>.
+	/// </returns>
+	/// <remarks>
+	/// The unscoped <see cref="FindLocation(string)"/> is enough when the needle is a typo, which by
+	/// definition occurs once. It is not enough when the needle is a name that is spelled correctly
+	/// in dozens of places and only wrong in one of them — there the first occurrence is somewhere
+	/// else entirely. Anchoring on the surrounding entry picks the right one.
+	/// </remarks>
+	public Location FindLocation(string anchor, string needle)
+	{
+		if (sourceText is null || string.IsNullOrEmpty(needle))
+		{
+			return Location.None;
+		}
+
+		int scope = string.IsNullOrEmpty(anchor) ? 0 : Text.IndexOf(anchor, StringComparison.Ordinal);
+		if (scope < 0)
+		{
+			return FindLocation(needle);
+		}
+
+		int index = Text.IndexOf(needle, scope, StringComparison.Ordinal);
+		if (index < 0)
+		{
+			return FindLocation(needle);
+		}
+
+		TextSpan span = new(index, needle.Length);
+		return Location.Create(path, span, sourceText.Lines.GetLinePositionSpan(span));
+	}
+
+	/// <summary>
 	/// Deserializes the file into <typeparamref name="T"/>.
 	/// </summary>
 	/// <typeparam name="T">The metadata shape to deserialize into.</typeparam>
