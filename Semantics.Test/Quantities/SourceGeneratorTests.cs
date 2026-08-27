@@ -2,10 +2,8 @@
 
 namespace ktsu.Semantics.Test.Quantities;
 
-using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // Fully qualified: inside namespace ktsu.Semantics.Test, a bare "Semantics.SourceGenerators"
 // would bind to ktsu.Semantics.SourceGenerators, which does not exist.

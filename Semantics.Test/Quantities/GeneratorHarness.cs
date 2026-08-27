@@ -101,9 +101,9 @@ internal sealed class GeneratorHarness(string metadataDirectory)
 
 		foreach (IncrementalGeneratorRunStep step in second.Results[0].TrackedOutputSteps.SelectMany(pair => pair.Value))
 		{
-			foreach ((object Value, IncrementalStepRunReason Reason) output in step.Outputs)
+			foreach ((object _, IncrementalStepRunReason reason) in step.Outputs)
 			{
-				if (output.Reason is not (IncrementalStepRunReason.Cached or IncrementalStepRunReason.Unchanged))
+				if (reason is not (IncrementalStepRunReason.Cached or IncrementalStepRunReason.Unchanged))
 				{
 					return false;
 				}
