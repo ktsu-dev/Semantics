@@ -1,6 +1,6 @@
-## v3.2.7 (patch)
+## v3.3.0 (minor)
 
-Changes since v3.2.6:
+Changes since v3.2.0:
 
-- Bump the ktsu group with 2 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- refactor: consume the extracted source-generator toolkit from its package [minor] ([@Claude](https://github.com/Claude))
 
