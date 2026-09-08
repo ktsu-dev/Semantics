@@ -4,7 +4,7 @@ namespace Semantics.SourceGenerators;
 
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
-using Semantics.SourceGenerators.CodeGen;
+using ktsu.SourceGeneratorToolkit;
 using ktsu.CodeBlocker.Templates;
 
 /// <summary>

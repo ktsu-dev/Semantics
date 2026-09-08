@@ -6,7 +6,7 @@ using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using global::Semantics.SourceGenerators.CodeGen;
+using global::ktsu.SourceGeneratorToolkit;
 
 /// <summary>
 /// Covers <see cref="MetadataFile.FindLocation(string, string)"/> directly.

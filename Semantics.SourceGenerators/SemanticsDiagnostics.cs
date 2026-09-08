@@ -4,7 +4,7 @@ namespace Semantics.SourceGenerators;
 
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
-using Semantics.SourceGenerators.CodeGen;
+using ktsu.SourceGeneratorToolkit;
 
 /// <summary>
 /// Every diagnostic this repository's generators report, allocated from one catalogue so the

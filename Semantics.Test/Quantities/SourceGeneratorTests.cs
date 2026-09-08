@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 // Fully qualified: inside namespace ktsu.Semantics.Test, a bare "Semantics.SourceGenerators"
 // would bind to ktsu.Semantics.SourceGenerators, which does not exist.
 using global::Semantics.SourceGenerators;
+using global::ktsu.SourceGeneratorToolkit.Testing;
 
 /// <summary>
 /// Drives the incremental source generators directly through <see cref="CSharpGeneratorDriver"/>.
