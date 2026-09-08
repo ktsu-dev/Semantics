@@ -15,6 +15,8 @@
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
     <!-- Source generator packages -->
     <PackageVersion Include="ktsu.CodeBlocker" Version="2.0.4" />
+    <PackageVersion Include="ktsu.SourceGeneratorToolkit" Version="1.0.0" />
+    <PackageVersion Include="ktsu.SourceGeneratorToolkit.Testing" Version="1.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" />
     <!-- Build-time only: the generator reads its metadata with it. No shipping project

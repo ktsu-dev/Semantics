@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using global::Semantics.SourceGenerators;
+using global::ktsu.SourceGeneratorToolkit.Testing;
 
 /// <summary>
 /// Proves each generator diagnostic fires on the input it is meant to catch.

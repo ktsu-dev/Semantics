@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text.Json;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
-using Semantics.SourceGenerators.CodeGen;
+using ktsu.SourceGeneratorToolkit;
 using Semantics.SourceGenerators.Models;
 using ktsu.CodeBlocker.Templates;
 using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;

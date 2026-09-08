@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
-using Semantics.SourceGenerators.CodeGen;
+using ktsu.SourceGeneratorToolkit;
 using Semantics.SourceGenerators.Models;
 
 /// <summary>

@@ -35,6 +35,11 @@
          FileNotFoundException without CodeBlocker present. PropertyTemplateTests also needs its
          types at compile time. -->
     <PackageReference Include="ktsu.CodeBlocker" />
+    <!-- GeneratorBase, MetadataFile and the diagnostic catalogue moved to this package; the
+         generator declares it PrivateAssets="all", so the tests that touch those types directly
+         and the harness that drives the generators both need it referenced here. -->
+    <PackageReference Include="ktsu.SourceGeneratorToolkit" />
+    <PackageReference Include="ktsu.SourceGeneratorToolkit.Testing" />
     <!-- SemanticStringJsonTests exercises the converter registration that consumers are
          expected to perform; Semantics.Strings itself no longer depends on this. -->
     <PackageReference Include="ktsu.RoundTripStringJsonConverter" />
