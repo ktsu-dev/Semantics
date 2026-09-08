@@ -1,6 +1,4 @@
-## v3.3.0 (minor)
+## v3.3.0
 
-Changes since v3.2.0:
-
-- refactor: consume the extracted source-generator toolkit from its package [minor] ([@Claude](https://github.com/Claude))
+No significant changes detected since v3.3.0.
 
