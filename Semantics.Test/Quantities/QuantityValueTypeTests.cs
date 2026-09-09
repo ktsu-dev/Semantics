@@ -39,8 +39,8 @@ public sealed class QuantityValueTypeTests
 
 		List<string> referenceTypes = [.. quantities.Where(static t => !t.IsValueType).Select(static t => t.Name)];
 
-		Assert.IsTrue(
-			referenceTypes.Count == 0,
+		Assert.IsEmpty(
+			referenceTypes,
 			$"These generated quantities are reference types and will allocate on every operation:\n  " +
 			string.Join("\n  ", referenceTypes));
 	}
