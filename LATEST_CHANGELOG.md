@@ -1,4 +1,7 @@
-## v3.3.0
+## v3.3.1 (patch)
 
-No significant changes detected since v3.3.0.
+Changes since v3.3.0:
+
+- Bump the system group with 1 update ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Bump the ktsu group with 1 update ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
