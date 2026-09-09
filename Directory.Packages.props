@@ -21,6 +21,6 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" />
     <!-- Build-time only: the generator reads its metadata with it. No shipping project
          references System.Text.Json, so it is not a dependency of any package. -->
-    <PackageVersion Include="System.Text.Json" Version="10.0.11" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.12" />
   </ItemGroup>
 </Project>
