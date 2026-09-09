@@ -707,7 +707,7 @@ For each entry in `quantities` (vector0 through vector4):
 
 ```csharp
 // vector0 → implements IVector0
-public record Speed<T> : IVector0<Speed<T>, T>
+public readonly record struct Speed<T> : IVector0<Speed<T>, T>
     where T : struct, INumber<T>
 {
     public T Value { get; init; }
@@ -734,7 +734,7 @@ public record Speed<T> : IVector0<Speed<T>, T>
 
 ```csharp
 // vector1 → implements IVector1
-public record Velocity1D<T> : IVector1<Velocity1D<T>, T>
+public readonly record struct Velocity1D<T> : IVector1<Velocity1D<T>, T>
     where T : struct, INumber<T>
 {
     public T Value { get; init; }
@@ -759,7 +759,7 @@ public record Velocity1D<T> : IVector1<Velocity1D<T>, T>
 
 ```csharp
 // vector3 → implements IVector3
-public record Velocity3D<T> : IVector3<Velocity3D<T>, T>
+public readonly record struct Velocity3D<T> : IVector3<Velocity3D<T>, T>
     where T : struct, INumber<T>
 {
     public T X { get; init; }
@@ -791,7 +791,7 @@ public record Velocity3D<T> : IVector3<Velocity3D<T>, T>
 For each overload in a vector form's `overloads` array:
 
 ```csharp
-public record Width<T> : IVector0<Width<T>, T>
+public readonly record struct Width<T> : IVector0<Width<T>, T>
     where T : struct, INumber<T>
 {
     public T Value { get; init; }
@@ -1059,7 +1059,7 @@ Semantic overloads are generated as thin wrapper records around the base type:
 
 ```csharp
 // Generated base type
-public record Length<T> : IVector0<Length<T>, T>
+public readonly record struct Length<T> : IVector0<Length<T>, T>
     where T : struct, INumber<T>
 {
     public T Value { get; init; }
@@ -1067,7 +1067,7 @@ public record Length<T> : IVector0<Length<T>, T>
 }
 
 // Generated semantic overload
-public record Width<T> : IVector0<Width<T>, T>
+public readonly record struct Width<T> : IVector0<Width<T>, T>
     where T : struct, INumber<T>
 {
     public T Value { get; init; }

@@ -13,7 +13,7 @@ using System.Numerics;
 /// 3D vector representation of Length.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public partial record Displacement3D<T> : IVector3<Displacement3D<T>, T>
+public readonly partial record struct Displacement3D<T> : IVector3<Displacement3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

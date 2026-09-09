@@ -13,7 +13,7 @@ using System.Numerics;
 /// 3D vector representation of AngularMomentum.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public partial record AngularMomentum3D<T> : IVector3<AngularMomentum3D<T>, T>
+public readonly partial record struct AngularMomentum3D<T> : IVector3<AngularMomentum3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

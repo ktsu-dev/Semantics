@@ -9,14 +9,89 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the ElectricCharge dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public partial record ChargeMagnitude<T> : PhysicalQuantity<ChargeMagnitude<T>, T>, IVector0<ChargeMagnitude<T>, T>
+public readonly partial record struct ChargeMagnitude<T> : IVector0<ChargeMagnitude<T>, T>, IPhysicalQuantity<ChargeMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
+	/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>
+	public T Value => Quantity;
+
+	/// <summary>Gets whether this quantity is finite and not NaN.</summary>
+	public bool IsPhysicallyValid => PhysicalQuantityCore.IsPhysicallyValid(Quantity);
+
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static ChargeMagnitude<T> Zero => Create(T.Zero);
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	public override DimensionInfo Dimension => PhysicalDimensions.ElectricCharge;
+	public DimensionInfo Dimension => PhysicalDimensions.ElectricCharge;
+
+	/// <summary>Gets the stored value, in the dimension's SI base unit.</summary>
+	public T Quantity { get; init; }
+
+	/// <summary>
+	/// Creates a quantity holding <paramref name="value"/>, in the SI base unit.
+	/// </summary>
+	/// <param name="value">The value in the SI base unit.</param>
+	/// <returns>A new quantity holding <paramref name="value"/>.</returns>
+	public static ChargeMagnitude<T> Create(T value) => new() { Quantity = value };
+
+	/// <summary>
+	/// Compares this quantity to another of the same physical dimension.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns>A negative number, zero or a positive number as this sorts before, with, or after <paramref name="other"/>.</returns>
+	/// <exception cref="System.ArgumentException">When the two do not share a dimension.</exception>
+	public int CompareTo(IPhysicalQuantity<T> other) => PhysicalQuantityCore.Compare<ChargeMagnitude<T>, T>(this, other);
+
+	/// <summary>
+	/// Reports whether this quantity shares a dimension and a value with <paramref name="other"/>.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns><see langword="true"/> when both dimension and value match.</returns>
+	public bool Equals(IPhysicalQuantity<T> other) => PhysicalQuantityCore.AreEqual<ChargeMagnitude<T>, T>(this, other);
+
+	/// <summary>Adds two <see cref="ChargeMagnitude{T}"/> values.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ChargeMagnitude<T> operator +(ChargeMagnitude<T> left, ChargeMagnitude<T> right) => Create(left.Quantity + right.Quantity);
+
+	/// <summary>Negates a <see cref="ChargeMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ChargeMagnitude<T> operator -(ChargeMagnitude<T> value) => Create(-value.Quantity);
+
+	/// <summary>Scales a <see cref="ChargeMagnitude{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ChargeMagnitude<T> operator *(ChargeMagnitude<T> left, T right) => Create(left.Quantity * right);
+
+	/// <summary>Scales a <see cref="ChargeMagnitude{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ChargeMagnitude<T> operator *(T left, ChargeMagnitude<T> right) => Create(left * right.Quantity);
+
+	/// <summary>Divides a <see cref="ChargeMagnitude{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ChargeMagnitude<T> operator /(ChargeMagnitude<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+
+	/// <summary>Divides one <see cref="ChargeMagnitude{T}"/> by another, giving the bare ratio.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static T operator /(ChargeMagnitude<T> left, ChargeMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : left.Quantity / right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <(ChargeMagnitude<T> left, ChargeMagnitude<T> right) => left.Quantity < right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <=(ChargeMagnitude<T> left, ChargeMagnitude<T> right) => left.Quantity <= right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >(ChargeMagnitude<T> left, ChargeMagnitude<T> right) => left.Quantity > right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >=(ChargeMagnitude<T> left, ChargeMagnitude<T> right) => left.Quantity >= right.Quantity;
+
+	/// <summary>Returns the stored value as text.</summary>
+	/// <returns>The value in the SI base unit, rendered by <typeparamref name="T"/>.</returns>
+	public override string ToString() => Quantity.ToString() ?? string.Empty;
 
 	/// <summary>
 	/// Creates a new <see cref="ChargeMagnitude{T}"/> from a value in Coulomb.
@@ -53,24 +128,24 @@ public partial record ChargeMagnitude<T> : PhysicalQuantity<ChargeMagnitude<T>, 
 	/// Divides ChargeMagnitude by Duration to produce CurrentMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static CurrentMagnitude<T> operator /(ChargeMagnitude<T> left, Duration<T> right) => Divide<CurrentMagnitude<T>>(left, right);
+	public static CurrentMagnitude<T> operator /(ChargeMagnitude<T> left, Duration<T> right) => CurrentMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides ChargeMagnitude by CurrentMagnitude to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(ChargeMagnitude<T> left, CurrentMagnitude<T> right) => Divide<Duration<T>>(left, right);
+	public static Duration<T> operator /(ChargeMagnitude<T> left, CurrentMagnitude<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides ChargeMagnitude by VoltageMagnitude to produce Capacitance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Capacitance<T> operator /(ChargeMagnitude<T> left, VoltageMagnitude<T> right) => Divide<Capacitance<T>>(left, right);
+	public static Capacitance<T> operator /(ChargeMagnitude<T> left, VoltageMagnitude<T> right) => Capacitance<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides ChargeMagnitude by Capacitance to produce VoltageMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator /(ChargeMagnitude<T> left, Capacitance<T> right) => Divide<VoltageMagnitude<T>>(left, right);
+	public static VoltageMagnitude<T> operator /(ChargeMagnitude<T> left, Capacitance<T> right) => VoltageMagnitude<T>.Create(left.Quantity / right.Quantity);
 }
 

@@ -13,7 +13,7 @@ using System.Numerics;
 /// 2D vector representation of Momentum.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public partial record Momentum2D<T> : IVector2<Momentum2D<T>, T>
+public readonly partial record struct Momentum2D<T> : IVector2<Momentum2D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

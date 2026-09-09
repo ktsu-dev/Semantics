@@ -13,7 +13,7 @@ using System.Numerics;
 /// Movement applied to an object in 3D space.
 /// Semantic overload of <see cref="Displacement3D{T}"/>.
 /// </summary>
-public partial record Translation3D<T> : IVector3<Translation3D<T>, T>
+public readonly partial record struct Translation3D<T> : IVector3<Translation3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

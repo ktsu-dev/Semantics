@@ -9,14 +9,89 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Area dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public partial record Area<T> : PhysicalQuantity<Area<T>, T>, IVector0<Area<T>, T>
+public readonly partial record struct Area<T> : IVector0<Area<T>, T>, IPhysicalQuantity<Area<T>, T>
 	where T : struct, INumber<T>
 {
+	/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>
+	public T Value => Quantity;
+
+	/// <summary>Gets whether this quantity is finite and not NaN.</summary>
+	public bool IsPhysicallyValid => PhysicalQuantityCore.IsPhysicallyValid(Quantity);
+
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Area<T> Zero => Create(T.Zero);
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	public override DimensionInfo Dimension => PhysicalDimensions.Area;
+	public DimensionInfo Dimension => PhysicalDimensions.Area;
+
+	/// <summary>Gets the stored value, in the dimension's SI base unit.</summary>
+	public T Quantity { get; init; }
+
+	/// <summary>
+	/// Creates a quantity holding <paramref name="value"/>, in the SI base unit.
+	/// </summary>
+	/// <param name="value">The value in the SI base unit.</param>
+	/// <returns>A new quantity holding <paramref name="value"/>.</returns>
+	public static Area<T> Create(T value) => new() { Quantity = value };
+
+	/// <summary>
+	/// Compares this quantity to another of the same physical dimension.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns>A negative number, zero or a positive number as this sorts before, with, or after <paramref name="other"/>.</returns>
+	/// <exception cref="System.ArgumentException">When the two do not share a dimension.</exception>
+	public int CompareTo(IPhysicalQuantity<T> other) => PhysicalQuantityCore.Compare<Area<T>, T>(this, other);
+
+	/// <summary>
+	/// Reports whether this quantity shares a dimension and a value with <paramref name="other"/>.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns><see langword="true"/> when both dimension and value match.</returns>
+	public bool Equals(IPhysicalQuantity<T> other) => PhysicalQuantityCore.AreEqual<Area<T>, T>(this, other);
+
+	/// <summary>Adds two <see cref="Area{T}"/> values.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator +(Area<T> left, Area<T> right) => Create(left.Quantity + right.Quantity);
+
+	/// <summary>Negates a <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator -(Area<T> value) => Create(-value.Quantity);
+
+	/// <summary>Scales a <see cref="Area{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator *(Area<T> left, T right) => Create(left.Quantity * right);
+
+	/// <summary>Scales a <see cref="Area{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator *(T left, Area<T> right) => Create(left * right.Quantity);
+
+	/// <summary>Divides a <see cref="Area{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator /(Area<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+
+	/// <summary>Divides one <see cref="Area{T}"/> by another, giving the bare ratio.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static T operator /(Area<T> left, Area<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : left.Quantity / right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <(Area<T> left, Area<T> right) => left.Quantity < right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <=(Area<T> left, Area<T> right) => left.Quantity <= right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >(Area<T> left, Area<T> right) => left.Quantity > right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >=(Area<T> left, Area<T> right) => left.Quantity >= right.Quantity;
+
+	/// <summary>Returns the stored value as text.</summary>
+	/// <returns>The value in the SI base unit, rendered by <typeparamref name="T"/>.</returns>
+	public override string ToString() => Quantity.ToString() ?? string.Empty;
 
 	/// <summary>
 	/// Creates a new <see cref="Area{T}"/> from a value in SquareMeter.
@@ -101,48 +176,48 @@ public partial record Area<T> : PhysicalQuantity<Area<T>, T>, IVector0<Area<T>, 
 	/// Divides Area by Length to produce Length.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Length<T> operator /(Area<T> left, Length<T> right) => Divide<Length<T>>(left, right);
+	public static Length<T> operator /(Area<T> left, Length<T> right) => Length<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies Area by Length to produce Volume.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Volume<T> operator *(Area<T> left, Length<T> right) => Multiply<Volume<T>>(left, right);
+	public static Volume<T> operator *(Area<T> left, Length<T> right) => Volume<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Area by Pressure to produce ForceMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ForceMagnitude<T> operator *(Area<T> left, Pressure<T> right) => Multiply<ForceMagnitude<T>>(left, right);
+	public static ForceMagnitude<T> operator *(Area<T> left, Pressure<T> right) => ForceMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Area by ElectricFieldMagnitude to produce ElectricFlux.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ElectricFlux<T> operator *(Area<T> left, ElectricFieldMagnitude<T> right) => Multiply<ElectricFlux<T>>(left, right);
+	public static ElectricFlux<T> operator *(Area<T> left, ElectricFieldMagnitude<T> right) => ElectricFlux<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Area by Illuminance to produce LuminousFlux.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static LuminousFlux<T> operator *(Area<T> left, Illuminance<T> right) => Multiply<LuminousFlux<T>>(left, right);
+	public static LuminousFlux<T> operator *(Area<T> left, Illuminance<T> right) => LuminousFlux<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Area by MagneticFluxDensityMagnitude to produce MagneticFlux.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MagneticFlux<T> operator *(Area<T> left, MagneticFluxDensityMagnitude<T> right) => Multiply<MagneticFlux<T>>(left, right);
+	public static MagneticFlux<T> operator *(Area<T> left, MagneticFluxDensityMagnitude<T> right) => MagneticFlux<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Area by Irradiance to produce Power.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Power<T> operator *(Area<T> left, Irradiance<T> right) => Multiply<Power<T>>(left, right);
+	public static Power<T> operator *(Area<T> left, Irradiance<T> right) => Power<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Area by Luminance to produce LuminousIntensity.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static LuminousIntensity<T> operator *(Area<T> left, Luminance<T> right) => Multiply<LuminousIntensity<T>>(left, right);
+	public static LuminousIntensity<T> operator *(Area<T> left, Luminance<T> right) => LuminousIntensity<T>.Create(left.Quantity * right.Quantity);
 }
 

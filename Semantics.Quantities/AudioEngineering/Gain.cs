@@ -15,7 +15,7 @@ using System.Numerics;
 /// using the amplitude (field) convention <c>dB = 20·log10(gain)</c>. As a Vector0
 /// magnitude, gain is non-negative — polarity inversion is a separate concern.
 /// </remarks>
-public partial record Gain<T>
+public readonly partial record struct Gain<T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets unity gain (a factor of one).</summary>
@@ -44,12 +44,7 @@ public partial record Gain<T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage(
 		"Usage", "CA2225:Operator overloads have named alternates",
 		Justification = "Multiply is provided as the named alternate.")]
-	public static Gain<T> operator *(Gain<T> left, Gain<T> right)
-	{
-		ArgumentNullException.ThrowIfNull(left);
-		ArgumentNullException.ThrowIfNull(right);
-		return Create(left.Value * right.Value);
-	}
+	public static Gain<T> operator *(Gain<T> left, Gain<T> right) => Create(left.Value * right.Value);
 
 	/// <summary>Multiplies two gains (friendly alternate for <c>operator *</c>).</summary>
 	/// <param name="left">The first gain.</param>

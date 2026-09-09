@@ -9,14 +9,89 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Time dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<Duration<T>, T>
+public readonly partial record struct Duration<T> : IVector0<Duration<T>, T>, IPhysicalQuantity<Duration<T>, T>
 	where T : struct, INumber<T>
 {
+	/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>
+	public T Value => Quantity;
+
+	/// <summary>Gets whether this quantity is finite and not NaN.</summary>
+	public bool IsPhysicallyValid => PhysicalQuantityCore.IsPhysicallyValid(Quantity);
+
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Duration<T> Zero => Create(T.Zero);
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	public override DimensionInfo Dimension => PhysicalDimensions.Time;
+	public DimensionInfo Dimension => PhysicalDimensions.Time;
+
+	/// <summary>Gets the stored value, in the dimension's SI base unit.</summary>
+	public T Quantity { get; init; }
+
+	/// <summary>
+	/// Creates a quantity holding <paramref name="value"/>, in the SI base unit.
+	/// </summary>
+	/// <param name="value">The value in the SI base unit.</param>
+	/// <returns>A new quantity holding <paramref name="value"/>.</returns>
+	public static Duration<T> Create(T value) => new() { Quantity = value };
+
+	/// <summary>
+	/// Compares this quantity to another of the same physical dimension.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns>A negative number, zero or a positive number as this sorts before, with, or after <paramref name="other"/>.</returns>
+	/// <exception cref="System.ArgumentException">When the two do not share a dimension.</exception>
+	public int CompareTo(IPhysicalQuantity<T> other) => PhysicalQuantityCore.Compare<Duration<T>, T>(this, other);
+
+	/// <summary>
+	/// Reports whether this quantity shares a dimension and a value with <paramref name="other"/>.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns><see langword="true"/> when both dimension and value match.</returns>
+	public bool Equals(IPhysicalQuantity<T> other) => PhysicalQuantityCore.AreEqual<Duration<T>, T>(this, other);
+
+	/// <summary>Adds two <see cref="Duration{T}"/> values.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator +(Duration<T> left, Duration<T> right) => Create(left.Quantity + right.Quantity);
+
+	/// <summary>Negates a <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator -(Duration<T> value) => Create(-value.Quantity);
+
+	/// <summary>Scales a <see cref="Duration{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator *(Duration<T> left, T right) => Create(left.Quantity * right);
+
+	/// <summary>Scales a <see cref="Duration{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator *(T left, Duration<T> right) => Create(left * right.Quantity);
+
+	/// <summary>Divides a <see cref="Duration{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Duration<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+
+	/// <summary>Divides one <see cref="Duration{T}"/> by another, giving the bare ratio.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static T operator /(Duration<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : left.Quantity / right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <(Duration<T> left, Duration<T> right) => left.Quantity < right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <=(Duration<T> left, Duration<T> right) => left.Quantity <= right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >(Duration<T> left, Duration<T> right) => left.Quantity > right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >=(Duration<T> left, Duration<T> right) => left.Quantity >= right.Quantity;
+
+	/// <summary>Returns the stored value as text.</summary>
+	/// <returns>The value in the SI base unit, rendered by <typeparamref name="T"/>.</returns>
+	public override string ToString() => Quantity.ToString() ?? string.Empty;
 
 	/// <summary>
 	/// Creates a new <see cref="Duration{T}"/> from a value in Second.
@@ -109,25 +184,25 @@ public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<D
 	/// Multiplies Duration by CurrentMagnitude to produce ChargeMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ChargeMagnitude<T> operator *(Duration<T> left, CurrentMagnitude<T> right) => Multiply<ChargeMagnitude<T>>(left, right);
+	public static ChargeMagnitude<T> operator *(Duration<T> left, CurrentMagnitude<T> right) => ChargeMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Current1D to produce Charge.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Charge<T> operator *(Duration<T> left, Current1D<T> right) => Multiply<Charge<T>>(left, right);
+	public static Charge<T> operator *(Duration<T> left, Current1D<T> right) => Charge<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Speed to produce Length.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Length<T> operator *(Duration<T> left, Speed<T> right) => Multiply<Length<T>>(left, right);
+	public static Length<T> operator *(Duration<T> left, Speed<T> right) => Length<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Velocity1D to produce Displacement1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Displacement1D<T> operator *(Duration<T> left, Velocity1D<T> right) => Multiply<Displacement1D<T>>(left, right);
+	public static Displacement1D<T> operator *(Duration<T> left, Velocity1D<T> right) => Displacement1D<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Velocity2D to produce Displacement2D.
@@ -151,13 +226,13 @@ public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<D
 	/// Multiplies Duration by AccelerationMagnitude to produce Speed.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Speed<T> operator *(Duration<T> left, AccelerationMagnitude<T> right) => Multiply<Speed<T>>(left, right);
+	public static Speed<T> operator *(Duration<T> left, AccelerationMagnitude<T> right) => Speed<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Acceleration1D to produce Velocity1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Velocity1D<T> operator *(Duration<T> left, Acceleration1D<T> right) => Multiply<Velocity1D<T>>(left, right);
+	public static Velocity1D<T> operator *(Duration<T> left, Acceleration1D<T> right) => Velocity1D<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Acceleration2D to produce Velocity2D.
@@ -181,13 +256,13 @@ public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<D
 	/// Multiplies Duration by JerkMagnitude to produce AccelerationMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AccelerationMagnitude<T> operator *(Duration<T> left, JerkMagnitude<T> right) => Multiply<AccelerationMagnitude<T>>(left, right);
+	public static AccelerationMagnitude<T> operator *(Duration<T> left, JerkMagnitude<T> right) => AccelerationMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Jerk1D to produce Acceleration1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Acceleration1D<T> operator *(Duration<T> left, Jerk1D<T> right) => Multiply<Acceleration1D<T>>(left, right);
+	public static Acceleration1D<T> operator *(Duration<T> left, Jerk1D<T> right) => Acceleration1D<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Jerk2D to produce Acceleration2D.
@@ -211,13 +286,13 @@ public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<D
 	/// Multiplies Duration by SnapMagnitude to produce JerkMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static JerkMagnitude<T> operator *(Duration<T> left, SnapMagnitude<T> right) => Multiply<JerkMagnitude<T>>(left, right);
+	public static JerkMagnitude<T> operator *(Duration<T> left, SnapMagnitude<T> right) => JerkMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Snap1D to produce Jerk1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Jerk1D<T> operator *(Duration<T> left, Snap1D<T> right) => Multiply<Jerk1D<T>>(left, right);
+	public static Jerk1D<T> operator *(Duration<T> left, Snap1D<T> right) => Jerk1D<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Snap2D to produce Jerk2D.
@@ -241,19 +316,19 @@ public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<D
 	/// Multiplies Duration by Frequency to produce Ratio.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Ratio<T> operator *(Duration<T> left, Frequency<T> right) => Multiply<Ratio<T>>(left, right);
+	public static Ratio<T> operator *(Duration<T> left, Frequency<T> right) => Ratio<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by AngularSpeed to produce Angle.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Angle<T> operator *(Duration<T> left, AngularSpeed<T> right) => Multiply<Angle<T>>(left, right);
+	public static Angle<T> operator *(Duration<T> left, AngularSpeed<T> right) => Angle<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by AngularVelocity1D to produce SignedAngle.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SignedAngle<T> operator *(Duration<T> left, AngularVelocity1D<T> right) => Multiply<SignedAngle<T>>(left, right);
+	public static SignedAngle<T> operator *(Duration<T> left, AngularVelocity1D<T> right) => SignedAngle<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by AngularVelocity3D to produce AngularDisplacement3D.
@@ -265,13 +340,13 @@ public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<D
 	/// Multiplies Duration by AngularAccelerationMagnitude to produce AngularSpeed.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularSpeed<T> operator *(Duration<T> left, AngularAccelerationMagnitude<T> right) => Multiply<AngularSpeed<T>>(left, right);
+	public static AngularSpeed<T> operator *(Duration<T> left, AngularAccelerationMagnitude<T> right) => AngularSpeed<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by AngularAcceleration1D to produce AngularVelocity1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularVelocity1D<T> operator *(Duration<T> left, AngularAcceleration1D<T> right) => Multiply<AngularVelocity1D<T>>(left, right);
+	public static AngularVelocity1D<T> operator *(Duration<T> left, AngularAcceleration1D<T> right) => AngularVelocity1D<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by AngularAcceleration3D to produce AngularVelocity3D.
@@ -283,13 +358,13 @@ public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<D
 	/// Multiplies Duration by AngularJerkMagnitude to produce AngularAccelerationMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularAccelerationMagnitude<T> operator *(Duration<T> left, AngularJerkMagnitude<T> right) => Multiply<AngularAccelerationMagnitude<T>>(left, right);
+	public static AngularAccelerationMagnitude<T> operator *(Duration<T> left, AngularJerkMagnitude<T> right) => AngularAccelerationMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by AngularJerk1D to produce AngularAcceleration1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularAcceleration1D<T> operator *(Duration<T> left, AngularJerk1D<T> right) => Multiply<AngularAcceleration1D<T>>(left, right);
+	public static AngularAcceleration1D<T> operator *(Duration<T> left, AngularJerk1D<T> right) => AngularAcceleration1D<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by AngularJerk3D to produce AngularAcceleration3D.
@@ -301,13 +376,13 @@ public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<D
 	/// Multiplies Duration by TorqueMagnitude to produce AngularMomentumMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularMomentumMagnitude<T> operator *(Duration<T> left, TorqueMagnitude<T> right) => Multiply<AngularMomentumMagnitude<T>>(left, right);
+	public static AngularMomentumMagnitude<T> operator *(Duration<T> left, TorqueMagnitude<T> right) => AngularMomentumMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Torque1D to produce AngularMomentum1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularMomentum1D<T> operator *(Duration<T> left, Torque1D<T> right) => Multiply<AngularMomentum1D<T>>(left, right);
+	public static AngularMomentum1D<T> operator *(Duration<T> left, Torque1D<T> right) => AngularMomentum1D<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Torque3D to produce AngularMomentum3D.
@@ -319,13 +394,13 @@ public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<D
 	/// Multiplies Duration by ForceMagnitude to produce MomentumMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MomentumMagnitude<T> operator *(Duration<T> left, ForceMagnitude<T> right) => Multiply<MomentumMagnitude<T>>(left, right);
+	public static MomentumMagnitude<T> operator *(Duration<T> left, ForceMagnitude<T> right) => MomentumMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Force1D to produce Momentum1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Momentum1D<T> operator *(Duration<T> left, Force1D<T> right) => Multiply<Momentum1D<T>>(left, right);
+	public static Momentum1D<T> operator *(Duration<T> left, Force1D<T> right) => Momentum1D<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by Force2D to produce Momentum2D.
@@ -349,36 +424,36 @@ public partial record Duration<T> : PhysicalQuantity<Duration<T>, T>, IVector0<D
 	/// Multiplies Duration by Power to produce Energy.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Energy<T> operator *(Duration<T> left, Power<T> right) => Multiply<Energy<T>>(left, right);
+	public static Energy<T> operator *(Duration<T> left, Power<T> right) => Energy<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by VolumetricFlowRate to produce Volume.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Volume<T> operator *(Duration<T> left, VolumetricFlowRate<T> right) => Multiply<Volume<T>>(left, right);
+	public static Volume<T> operator *(Duration<T> left, VolumetricFlowRate<T> right) => Volume<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by MassFlowRate to produce Mass.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Mass<T> operator *(Duration<T> left, MassFlowRate<T> right) => Multiply<Mass<T>>(left, right);
+	public static Mass<T> operator *(Duration<T> left, MassFlowRate<T> right) => Mass<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by CatalyticActivity to produce AmountOfSubstance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AmountOfSubstance<T> operator *(Duration<T> left, CatalyticActivity<T> right) => Multiply<AmountOfSubstance<T>>(left, right);
+	public static AmountOfSubstance<T> operator *(Duration<T> left, CatalyticActivity<T> right) => AmountOfSubstance<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by ReactionRate to produce Concentration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Concentration<T> operator *(Duration<T> left, ReactionRate<T> right) => Multiply<Concentration<T>>(left, right);
+	public static Concentration<T> operator *(Duration<T> left, ReactionRate<T> right) => Concentration<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Duration by VoltageMagnitude to produce MagneticFlux.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MagneticFlux<T> operator *(Duration<T> left, VoltageMagnitude<T> right) => Multiply<MagneticFlux<T>>(left, right);
+	public static MagneticFlux<T> operator *(Duration<T> left, VoltageMagnitude<T> right) => MagneticFlux<T>.Create(left.Quantity * right.Quantity);
 }
 

@@ -13,7 +13,7 @@ using System.Numerics;
 /// Propulsive force vector.
 /// Semantic overload of <see cref="Force3D{T}"/>.
 /// </summary>
-public partial record ThrustVector<T> : IVector3<ThrustVector<T>, T>
+public readonly partial record struct ThrustVector<T> : IVector3<ThrustVector<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

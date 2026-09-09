@@ -31,3 +31,27 @@ public interface IPhysicalQuantity<T>
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
 	public DimensionInfo Dimension { get; }
 }
+
+/// <summary>
+/// A physical quantity that knows its own type, so generic code can construct one.
+/// </summary>
+/// <remarks>
+/// This is the seam that replaced the <c>TSelf</c>-constrained record base. Generated quantities
+/// are structs and cannot inherit a shared <c>Create</c>, so each declares its own and this
+/// interface is what lets a caller reach it without knowing which quantity it holds.
+/// </remarks>
+/// <typeparam name="TSelf">The implementing quantity type.</typeparam>
+/// <typeparam name="T">The storage type for the quantity value.</typeparam>
+public interface IPhysicalQuantity<TSelf, T>
+	: IPhysicalQuantity<T>
+	where TSelf : struct, IPhysicalQuantity<TSelf, T>
+	where T : struct, INumber<T>
+{
+	/// <summary>
+	/// Creates a quantity holding <paramref name="value"/>, interpreted in the dimension's SI
+	/// base unit.
+	/// </summary>
+	/// <param name="value">The value in the SI base unit.</param>
+	/// <returns>A quantity of this type holding <paramref name="value"/>.</returns>
+	public static abstract TSelf Create(T value);
+}

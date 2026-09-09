@@ -804,7 +804,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		cls.Members.Add(new FieldTemplate()
 		{
 			Comments = {$"/// <summary>Gets the physical dimension this quantity belongs to.</summary>"},
-			Keywords = {Emit.Public, "override", "DimensionInfo"},
+			Keywords = {Emit.Public, "DimensionInfo"},
 			Name = $"Dimension => PhysicalDimensions.{dim.Name}",
 		});
 
@@ -826,6 +826,190 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				new ParameterTemplate { Type = $"global::ktsu.Semantics.Quantities.I{dim.Name}Unit", Name = "unit" },
 			},
 			BodyFactory = (body) => body.Write("=> unit.FromBase(Value);"),
+		});
+	}
+
+	/// <summary>
+	/// Adds the members a scalar-storage quantity used to inherit from the abstract
+	/// <c>PhysicalQuantity</c> record: the stored value, construction, arithmetic, ordering and
+	/// the <see cref="ktsu.Semantics.Quantities.IPhysicalQuantity{T}"/> surface.
+	/// </summary>
+	/// <remarks>
+	/// A quantity is a struct, so none of this can be inherited. Emitting it per type is not
+	/// only the way to keep the surface — it is the point: an operator declared on the type
+	/// itself is a direct call the JIT can inline, where the shared generic base allocated a
+	/// new object for every result.
+	/// </remarks>
+	/// <param name="cls">The type being built.</param>
+	/// <param name="fullType">The type's name including its type argument, e.g. <c>Mass&lt;T&gt;</c>.</param>
+	/// <param name="isV0">
+	/// Whether this is a magnitude (Vector0) type. A V0 declares its own subtraction —
+	/// <c>T.Abs(left - right)</c>, per the locked decision in #52 — so the plain one is skipped
+	/// rather than emitted twice.
+	/// </param>
+	private static void AddValueTypeCore(ClassTemplate cls, string fullType, bool isV0)
+	{
+		// A doc comment is XML, so the type argument is spelled with braces: Mass{T}, not Mass<T>.
+		string docRef = $"<see cref=\"{fullType.Replace('<', '{').Replace('>', '}')}\"/>";
+
+		cls.Members.Add(new PropertyTemplate()
+		{
+			Comments = {"/// <summary>Gets the stored value, in the dimension's SI base unit.</summary>"},
+			Keywords = {Emit.Public},
+			Type = "T",
+			Name = "Quantity",
+			Getter = new AccessorTemplate { Kind = AccessorKind.Auto },
+			Setter = new AccessorTemplate { Kind = AccessorKind.Auto },
+			SetterIsInitOnly = true,
+		});
+
+		cls.Members.Add(new FieldTemplate()
+		{
+			Comments = {"/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>"},
+			Keywords = {Emit.Public, "T"},
+			Name = "Value => Quantity",
+		});
+
+		cls.Members.Add(new FieldTemplate()
+		{
+			Comments = {"/// <summary>Gets whether this quantity is finite and not NaN.</summary>"},
+			Keywords = {Emit.Public, "bool"},
+			Name = "IsPhysicallyValid => PhysicalQuantityCore.IsPhysicallyValid(Quantity)",
+		});
+
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments =
+			{
+				Emit.SummaryOpen,
+				"/// Creates a quantity holding <paramref name=\"value\"/>, in the SI base unit.",
+				Emit.SummaryClose,
+				"/// <param name=\"value\">The value in the SI base unit.</param>",
+				"/// <returns>A new quantity holding <paramref name=\"value\"/>.</returns>",
+			},
+			Keywords = {Emit.Public, Emit.Static, fullType},
+			Name = "Create",
+			Parameters = {new ParameterTemplate { Type = "T", Name = Emit.ValueParameter }},
+			BodyFactory = (body) => body.Write("=> new() { Quantity = value };"),
+		});
+
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments =
+			{
+				Emit.SummaryOpen,
+				"/// Compares this quantity to another of the same physical dimension.",
+				Emit.SummaryClose,
+				"/// <param name=\"other\">The quantity to compare against.</param>",
+				"/// <returns>A negative number, zero or a positive number as this sorts before, with, or after <paramref name=\"other\"/>.</returns>",
+				"/// <exception cref=\"System.ArgumentException\">When the two do not share a dimension.</exception>",
+			},
+			Keywords = {Emit.Public, "int"},
+			Name = "CompareTo",
+			Parameters = {new ParameterTemplate { Type = "IPhysicalQuantity<T>", Name = "other" }},
+			BodyFactory = (body) => body.Write($"=> PhysicalQuantityCore.Compare<{fullType}, T>(this, other);"),
+		});
+
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments =
+			{
+				Emit.SummaryOpen,
+				"/// Reports whether this quantity shares a dimension and a value with <paramref name=\"other\"/>.",
+				Emit.SummaryClose,
+				"/// <param name=\"other\">The quantity to compare against.</param>",
+				"/// <returns><see langword=\"true\"/> when both dimension and value match.</returns>",
+			},
+			Keywords = {Emit.Public, "bool"},
+			Name = "Equals",
+			Parameters = {new ParameterTemplate { Type = "IPhysicalQuantity<T>", Name = "other" }},
+			BodyFactory = (body) => body.Write($"=> PhysicalQuantityCore.AreEqual<{fullType}, T>(this, other);"),
+		});
+
+		AddBinaryOperator(cls, fullType, "+", fullType, fullType, "=> Create(left.Quantity + right.Quantity);",
+			$"Adds two {docRef} values.");
+
+		if (!isV0)
+		{
+			AddBinaryOperator(cls, fullType, "-", fullType, fullType, "=> Create(left.Quantity - right.Quantity);",
+				$"Subtracts one {docRef} from another.");
+		}
+
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments = {$"/// <summary>Negates a {docRef}.</summary>"},
+			Attributes = {Emit.PhysicsOperatorSuppression},
+			Keywords = {Emit.Public, Emit.Static, fullType},
+			Name = "operator -",
+			Parameters = {new ParameterTemplate { Type = fullType, Name = Emit.ValueParameter }},
+			BodyFactory = (body) => body.Write("=> Create(-value.Quantity);"),
+		});
+
+		AddBinaryOperator(cls, fullType, "*", fullType, "T", "=> Create(left.Quantity * right);",
+			$"Scales a {docRef} by a bare number.");
+		AddBinaryOperator(cls, fullType, "*", "T", fullType, "=> Create(left * right.Quantity);",
+			$"Scales a {docRef} by a bare number.");
+		AddBinaryOperator(cls, fullType, "/", fullType, "T",
+			"=> T.IsZero(right) ? throw new System.DivideByZeroException(\"Cannot divide by zero.\") : Create(left.Quantity / right);",
+			$"Divides a {docRef} by a bare number.");
+		AddBinaryOperator(cls, "T", "/", fullType, fullType,
+			"=> T.IsZero(right.Quantity) ? throw new System.DivideByZeroException(\"Cannot divide by zero.\") : left.Quantity / right.Quantity;",
+			$"Divides one {docRef} by another, giving the bare ratio.");
+
+		AddBinaryOperator(cls, "bool", "<", fullType, fullType, "=> left.Quantity < right.Quantity;",
+			"Reports whether the left value sorts before the right.");
+		AddBinaryOperator(cls, "bool", "<=", fullType, fullType, "=> left.Quantity <= right.Quantity;",
+			"Reports whether the left value sorts before or with the right.");
+		AddBinaryOperator(cls, "bool", ">", fullType, fullType, "=> left.Quantity > right.Quantity;",
+			"Reports whether the left value sorts after the right.");
+		AddBinaryOperator(cls, "bool", ">=", fullType, fullType, "=> left.Quantity >= right.Quantity;",
+			"Reports whether the left value sorts after or with the right.");
+
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments =
+			{
+				"/// <summary>Returns the stored value as text.</summary>",
+				"/// <returns>The value in the SI base unit, rendered by <typeparamref name=\"T\"/>.</returns>",
+			},
+			Keywords = {Emit.Public, "override", "string"},
+			Name = "ToString",
+			Parameters = {},
+			BodyFactory = (body) => body.Write("=> Quantity.ToString() ?? string.Empty;"),
+		});
+	}
+
+	/// <summary>
+	/// Adds one binary operator to <paramref name="cls"/>.
+	/// </summary>
+	/// <param name="cls">The type being built.</param>
+	/// <param name="returnType">What the operator returns.</param>
+	/// <param name="symbol">The operator symbol.</param>
+	/// <param name="leftType">The left operand's type.</param>
+	/// <param name="rightType">The right operand's type.</param>
+	/// <param name="body">The expression body, including its leading arrow.</param>
+	/// <param name="summary">One line of documentation.</param>
+	private static void AddBinaryOperator(
+		ClassTemplate cls,
+		string returnType,
+		string symbol,
+		string leftType,
+		string rightType,
+		string body,
+		string summary)
+	{
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments = {$"/// <summary>{summary}</summary>"},
+			Attributes = {Emit.PhysicsOperatorSuppression},
+			Keywords = {Emit.Public, Emit.Static, returnType},
+			Name = $"operator {symbol}",
+			Parameters =
+			{
+				new ParameterTemplate { Type = leftType, Name = "left" },
+				new ParameterTemplate { Type = rightType, Name = Emit.RightParameter },
+			},
+			BodyFactory = (b) => b.Write(body),
 		});
 	}
 
@@ -880,13 +1064,15 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				Emit.SummaryClose,
 				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
 			},
-			Kind = TypeKind.Record,
-			Keywords = {Emit.Public, "partial"},
+			Kind = TypeKind.RecordStruct,
+			Keywords = {Emit.Public, "readonly", "partial"},
 			Name = fullType,
-			BaseClass = $"PhysicalQuantity<{fullType}, T>",
-			Interfaces = {$"IVector0<{fullType}, T>"},
+			Interfaces = {$"IVector0<{fullType}, T>", $"IPhysicalQuantity<{fullType}, T>"},
 			Constraints = {"where T : struct, INumber<T>"},
 		};
+
+		// Everything a quantity used to inherit from the PhysicalQuantity record.
+		AddValueTypeCore(cls, fullType, isV0: true);
 
 		// Zero property (satisfies IVector0)
 		cls.Members.Add(new FieldTemplate()
@@ -974,13 +1160,15 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				Emit.SummaryClose,
 				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
 			},
-			Kind = TypeKind.Record,
-			Keywords = {Emit.Public, "partial"},
+			Kind = TypeKind.RecordStruct,
+			Keywords = {Emit.Public, "readonly", "partial"},
 			Name = fullType,
-			BaseClass = $"PhysicalQuantity<{fullType}, T>",
-			Interfaces = {$"IVector1<{fullType}, T>"},
+			Interfaces = {$"IVector1<{fullType}, T>", $"IPhysicalQuantity<{fullType}, T>"},
 			Constraints = {"where T : struct, INumber<T>"},
 		};
+
+		// Everything a quantity used to inherit from the PhysicalQuantity record.
+		AddValueTypeCore(cls, fullType, isV0: false);
 
 		// Zero property (satisfies IVector1)
 		cls.Members.Add(new FieldTemplate()
@@ -1069,7 +1257,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		cb.WriteLine($"/// {dims}D vector representation of {dim.Name}.");
 		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine("/// <typeparam name=\"T\">The numeric component type.</typeparam>");
-		cb.WriteLine($"public partial record {fullType} : {interfaceName}");
+		cb.WriteLine($"public readonly partial record struct {fullType} : {interfaceName}");
 		cb.WriteLine("\twhere T : struct, INumber<T>");
 
 		using (new ScopeWithTrailingSemicolon(cb))
@@ -1157,13 +1345,15 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 					Emit.SummaryClose,
 					"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
 				},
-				Kind = TypeKind.Record,
-			Keywords = {Emit.Public, "partial"},
+				Kind = TypeKind.RecordStruct,
+				Keywords = {Emit.Public, "readonly", "partial"},
 				Name = fullType,
-				BaseClass = $"PhysicalQuantity<{fullType}, T>",
-				Interfaces = {interfaceName},
+				Interfaces = {interfaceName, $"IPhysicalQuantity<{fullType}, T>"},
 				Constraints = {"where T : struct, INumber<T>"},
 			};
+
+			// Everything a quantity used to inherit from the PhysicalQuantity record.
+			AddValueTypeCore(cls, fullType, isV0: vectorForm == 0);
 
 			// Zero property
 			cls.Members.Add(new FieldTemplate()
@@ -1332,7 +1522,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		cb.WriteLine($"/// {overload.Description}");
 		cb.WriteLine($"/// Semantic overload of <see cref=\"{baseTypeName}{{T}}\"/>.");
 		cb.WriteLine(Emit.SummaryClose);
-		cb.WriteLine($"public partial record {fullType} : {interfaceName}");
+		cb.WriteLine($"public readonly partial record struct {fullType} : {interfaceName}");
 		cb.WriteLine("\twhere T : struct, INumber<T>");
 
 		using (new ScopeWithTrailingSemicolon(cb))
@@ -1380,7 +1570,9 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			// For V0/V1 owner types, use Multiply/Divide helpers when both operands are V0/V1
 			if (leftForm <= 1 && rightForm <= 1)
 			{
-				string helperName = op.Op == "*" ? "Multiply" : "Divide";
+				// The inherited Multiply/Divide helpers went away with the record base. A
+				// quantity constructs its result directly now, which is also what makes the
+				// operator a plain arithmetic expression the JIT can inline.
 				cls.Members.Add(new MethodTemplate()
 				{
 					Comments =
@@ -1397,7 +1589,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 						new ParameterTemplate { Type = $"{op.LeftTypeName}<T>", Name = "left" },
 						new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = Emit.RightParameter },
 					},
-					BodyFactory = (body) => body.Write($"=> {helperName}<{op.ReturnTypeName}<T>>(left, right);"),
+					BodyFactory = (body) => body.Write(
+						$"=> {op.ReturnTypeName}<T>.Create(left.Quantity {op.Op} right.Quantity);"),
 				});
 			}
 			else
