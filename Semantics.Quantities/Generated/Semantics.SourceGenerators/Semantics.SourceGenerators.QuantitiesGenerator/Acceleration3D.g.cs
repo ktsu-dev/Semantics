@@ -13,7 +13,7 @@ using System.Numerics;
 /// 3D vector representation of Acceleration.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public partial record Acceleration3D<T> : IVector3<Acceleration3D<T>, T>
+public readonly partial record struct Acceleration3D<T> : IVector3<Acceleration3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

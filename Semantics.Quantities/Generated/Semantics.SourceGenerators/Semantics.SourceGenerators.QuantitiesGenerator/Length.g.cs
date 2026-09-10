@@ -9,14 +9,89 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Length dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public partial record Length<T> : PhysicalQuantity<Length<T>, T>, IVector0<Length<T>, T>
+public readonly partial record struct Length<T> : IVector0<Length<T>, T>, IPhysicalQuantity<Length<T>, T>
 	where T : struct, INumber<T>
 {
+	/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>
+	public T Value => Quantity;
+
+	/// <summary>Gets whether this quantity is finite and not NaN.</summary>
+	public bool IsPhysicallyValid => PhysicalQuantityCore.IsPhysicallyValid(Quantity);
+
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Length<T> Zero => Create(T.Zero);
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	public override DimensionInfo Dimension => PhysicalDimensions.Length;
+	public DimensionInfo Dimension => PhysicalDimensions.Length;
+
+	/// <summary>Gets the stored value, in the dimension's SI base unit.</summary>
+	public T Quantity { get; init; }
+
+	/// <summary>
+	/// Creates a quantity holding <paramref name="value"/>, in the SI base unit.
+	/// </summary>
+	/// <param name="value">The value in the SI base unit.</param>
+	/// <returns>A new quantity holding <paramref name="value"/>.</returns>
+	public static Length<T> Create(T value) => new() { Quantity = value };
+
+	/// <summary>
+	/// Compares this quantity to another of the same physical dimension.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns>A negative number, zero or a positive number as this sorts before, with, or after <paramref name="other"/>.</returns>
+	/// <exception cref="System.ArgumentException">When the two do not share a dimension.</exception>
+	public int CompareTo(IPhysicalQuantity<T> other) => PhysicalQuantityCore.Compare<Length<T>, T>(this, other);
+
+	/// <summary>
+	/// Reports whether this quantity shares a dimension and a value with <paramref name="other"/>.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns><see langword="true"/> when both dimension and value match.</returns>
+	public bool Equals(IPhysicalQuantity<T> other) => PhysicalQuantityCore.AreEqual<Length<T>, T>(this, other);
+
+	/// <summary>Adds two <see cref="Length{T}"/> values.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator +(Length<T> left, Length<T> right) => Create(left.Quantity + right.Quantity);
+
+	/// <summary>Negates a <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator -(Length<T> value) => Create(-value.Quantity);
+
+	/// <summary>Scales a <see cref="Length{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator *(Length<T> left, T right) => Create(left.Quantity * right);
+
+	/// <summary>Scales a <see cref="Length{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator *(T left, Length<T> right) => Create(left * right.Quantity);
+
+	/// <summary>Divides a <see cref="Length{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(Length<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+
+	/// <summary>Divides one <see cref="Length{T}"/> by another, giving the bare ratio.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static T operator /(Length<T> left, Length<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : left.Quantity / right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <(Length<T> left, Length<T> right) => left.Quantity < right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <=(Length<T> left, Length<T> right) => left.Quantity <= right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >(Length<T> left, Length<T> right) => left.Quantity > right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >=(Length<T> left, Length<T> right) => left.Quantity >= right.Quantity;
+
+	/// <summary>Returns the stored value as text.</summary>
+	/// <returns>The value in the SI base unit, rendered by <typeparamref name="T"/>.</returns>
+	public override string ToString() => Quantity.ToString() ?? string.Empty;
 
 	/// <summary>
 	/// Creates a new <see cref="Length{T}"/> from a value in Meter.
@@ -133,54 +208,54 @@ public partial record Length<T> : PhysicalQuantity<Length<T>, T>, IVector0<Lengt
 	/// Multiplies Length by Length to produce Area.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Area<T> operator *(Length<T> left, Length<T> right) => Multiply<Area<T>>(left, right);
+	public static Area<T> operator *(Length<T> left, Length<T> right) => Area<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Length by Area to produce Volume.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Volume<T> operator *(Length<T> left, Area<T> right) => Multiply<Volume<T>>(left, right);
+	public static Volume<T> operator *(Length<T> left, Area<T> right) => Volume<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Divides Length by Duration to produce Speed.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Speed<T> operator /(Length<T> left, Duration<T> right) => Divide<Speed<T>>(left, right);
+	public static Speed<T> operator /(Length<T> left, Duration<T> right) => Speed<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Length by Speed to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(Length<T> left, Speed<T> right) => Divide<Duration<T>>(left, right);
+	public static Duration<T> operator /(Length<T> left, Speed<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies Length by Frequency to produce Speed.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Speed<T> operator *(Length<T> left, Frequency<T> right) => Multiply<Speed<T>>(left, right);
+	public static Speed<T> operator *(Length<T> left, Frequency<T> right) => Speed<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Length by ForceMagnitude to produce Energy.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Energy<T> operator *(Length<T> left, ForceMagnitude<T> right) => Multiply<Energy<T>>(left, right);
+	public static Energy<T> operator *(Length<T> left, ForceMagnitude<T> right) => Energy<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Length by ElectricFieldMagnitude to produce VoltageMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator *(Length<T> left, ElectricFieldMagnitude<T> right) => Multiply<VoltageMagnitude<T>>(left, right);
+	public static VoltageMagnitude<T> operator *(Length<T> left, ElectricFieldMagnitude<T> right) => VoltageMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Length by ElectricField1D to produce Voltage.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Voltage<T> operator *(Length<T> left, ElectricField1D<T> right) => Multiply<Voltage<T>>(left, right);
+	public static Voltage<T> operator *(Length<T> left, ElectricField1D<T> right) => Voltage<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Length by SurfaceTension to produce ForceMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ForceMagnitude<T> operator *(Length<T> left, SurfaceTension<T> right) => Multiply<ForceMagnitude<T>>(left, right);
+	public static ForceMagnitude<T> operator *(Length<T> left, SurfaceTension<T> right) => ForceMagnitude<T>.Create(left.Quantity * right.Quantity);
 }
 

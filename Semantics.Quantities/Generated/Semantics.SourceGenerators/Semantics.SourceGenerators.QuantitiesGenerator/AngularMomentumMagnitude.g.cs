@@ -9,14 +9,89 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the AngularMomentum dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public partial record AngularMomentumMagnitude<T> : PhysicalQuantity<AngularMomentumMagnitude<T>, T>, IVector0<AngularMomentumMagnitude<T>, T>
+public readonly partial record struct AngularMomentumMagnitude<T> : IVector0<AngularMomentumMagnitude<T>, T>, IPhysicalQuantity<AngularMomentumMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
+	/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>
+	public T Value => Quantity;
+
+	/// <summary>Gets whether this quantity is finite and not NaN.</summary>
+	public bool IsPhysicallyValid => PhysicalQuantityCore.IsPhysicallyValid(Quantity);
+
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static AngularMomentumMagnitude<T> Zero => Create(T.Zero);
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	public override DimensionInfo Dimension => PhysicalDimensions.AngularMomentum;
+	public DimensionInfo Dimension => PhysicalDimensions.AngularMomentum;
+
+	/// <summary>Gets the stored value, in the dimension's SI base unit.</summary>
+	public T Quantity { get; init; }
+
+	/// <summary>
+	/// Creates a quantity holding <paramref name="value"/>, in the SI base unit.
+	/// </summary>
+	/// <param name="value">The value in the SI base unit.</param>
+	/// <returns>A new quantity holding <paramref name="value"/>.</returns>
+	public static AngularMomentumMagnitude<T> Create(T value) => new() { Quantity = value };
+
+	/// <summary>
+	/// Compares this quantity to another of the same physical dimension.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns>A negative number, zero or a positive number as this sorts before, with, or after <paramref name="other"/>.</returns>
+	/// <exception cref="System.ArgumentException">When the two do not share a dimension.</exception>
+	public int CompareTo(IPhysicalQuantity<T> other) => PhysicalQuantityCore.Compare<AngularMomentumMagnitude<T>, T>(this, other);
+
+	/// <summary>
+	/// Reports whether this quantity shares a dimension and a value with <paramref name="other"/>.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns><see langword="true"/> when both dimension and value match.</returns>
+	public bool Equals(IPhysicalQuantity<T> other) => PhysicalQuantityCore.AreEqual<AngularMomentumMagnitude<T>, T>(this, other);
+
+	/// <summary>Adds two <see cref="AngularMomentumMagnitude{T}"/> values.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularMomentumMagnitude<T> operator +(AngularMomentumMagnitude<T> left, AngularMomentumMagnitude<T> right) => Create(left.Quantity + right.Quantity);
+
+	/// <summary>Negates a <see cref="AngularMomentumMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularMomentumMagnitude<T> operator -(AngularMomentumMagnitude<T> value) => Create(-value.Quantity);
+
+	/// <summary>Scales a <see cref="AngularMomentumMagnitude{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularMomentumMagnitude<T> operator *(AngularMomentumMagnitude<T> left, T right) => Create(left.Quantity * right);
+
+	/// <summary>Scales a <see cref="AngularMomentumMagnitude{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularMomentumMagnitude<T> operator *(T left, AngularMomentumMagnitude<T> right) => Create(left * right.Quantity);
+
+	/// <summary>Divides a <see cref="AngularMomentumMagnitude{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularMomentumMagnitude<T> operator /(AngularMomentumMagnitude<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+
+	/// <summary>Divides one <see cref="AngularMomentumMagnitude{T}"/> by another, giving the bare ratio.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static T operator /(AngularMomentumMagnitude<T> left, AngularMomentumMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : left.Quantity / right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <(AngularMomentumMagnitude<T> left, AngularMomentumMagnitude<T> right) => left.Quantity < right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <=(AngularMomentumMagnitude<T> left, AngularMomentumMagnitude<T> right) => left.Quantity <= right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >(AngularMomentumMagnitude<T> left, AngularMomentumMagnitude<T> right) => left.Quantity > right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >=(AngularMomentumMagnitude<T> left, AngularMomentumMagnitude<T> right) => left.Quantity >= right.Quantity;
+
+	/// <summary>Returns the stored value as text.</summary>
+	/// <returns>The value in the SI base unit, rendered by <typeparamref name="T"/>.</returns>
+	public override string ToString() => Quantity.ToString() ?? string.Empty;
 
 	/// <summary>
 	/// Creates a new <see cref="AngularMomentumMagnitude{T}"/> from a value in KilogramMeterSquaredPerSecond.
@@ -45,18 +120,18 @@ public partial record AngularMomentumMagnitude<T> : PhysicalQuantity<AngularMome
 	/// Divides AngularMomentumMagnitude by Duration to produce TorqueMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static TorqueMagnitude<T> operator /(AngularMomentumMagnitude<T> left, Duration<T> right) => Divide<TorqueMagnitude<T>>(left, right);
+	public static TorqueMagnitude<T> operator /(AngularMomentumMagnitude<T> left, Duration<T> right) => TorqueMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides AngularMomentumMagnitude by AngularSpeed to produce MomentOfInertia.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MomentOfInertia<T> operator /(AngularMomentumMagnitude<T> left, AngularSpeed<T> right) => Divide<MomentOfInertia<T>>(left, right);
+	public static MomentOfInertia<T> operator /(AngularMomentumMagnitude<T> left, AngularSpeed<T> right) => MomentOfInertia<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides AngularMomentumMagnitude by MomentOfInertia to produce AngularSpeed.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularSpeed<T> operator /(AngularMomentumMagnitude<T> left, MomentOfInertia<T> right) => Divide<AngularSpeed<T>>(left, right);
+	public static AngularSpeed<T> operator /(AngularMomentumMagnitude<T> left, MomentOfInertia<T> right) => AngularSpeed<T>.Create(left.Quantity / right.Quantity);
 }
 

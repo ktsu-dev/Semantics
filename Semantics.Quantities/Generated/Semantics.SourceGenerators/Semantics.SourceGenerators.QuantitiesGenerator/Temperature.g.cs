@@ -9,14 +9,89 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Temperature dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public partial record Temperature<T> : PhysicalQuantity<Temperature<T>, T>, IVector0<Temperature<T>, T>
+public readonly partial record struct Temperature<T> : IVector0<Temperature<T>, T>, IPhysicalQuantity<Temperature<T>, T>
 	where T : struct, INumber<T>
 {
+	/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>
+	public T Value => Quantity;
+
+	/// <summary>Gets whether this quantity is finite and not NaN.</summary>
+	public bool IsPhysicallyValid => PhysicalQuantityCore.IsPhysicallyValid(Quantity);
+
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Temperature<T> Zero => Create(T.Zero);
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	public override DimensionInfo Dimension => PhysicalDimensions.Temperature;
+	public DimensionInfo Dimension => PhysicalDimensions.Temperature;
+
+	/// <summary>Gets the stored value, in the dimension's SI base unit.</summary>
+	public T Quantity { get; init; }
+
+	/// <summary>
+	/// Creates a quantity holding <paramref name="value"/>, in the SI base unit.
+	/// </summary>
+	/// <param name="value">The value in the SI base unit.</param>
+	/// <returns>A new quantity holding <paramref name="value"/>.</returns>
+	public static Temperature<T> Create(T value) => new() { Quantity = value };
+
+	/// <summary>
+	/// Compares this quantity to another of the same physical dimension.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns>A negative number, zero or a positive number as this sorts before, with, or after <paramref name="other"/>.</returns>
+	/// <exception cref="System.ArgumentException">When the two do not share a dimension.</exception>
+	public int CompareTo(IPhysicalQuantity<T> other) => PhysicalQuantityCore.Compare<Temperature<T>, T>(this, other);
+
+	/// <summary>
+	/// Reports whether this quantity shares a dimension and a value with <paramref name="other"/>.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns><see langword="true"/> when both dimension and value match.</returns>
+	public bool Equals(IPhysicalQuantity<T> other) => PhysicalQuantityCore.AreEqual<Temperature<T>, T>(this, other);
+
+	/// <summary>Adds two <see cref="Temperature{T}"/> values.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator +(Temperature<T> left, Temperature<T> right) => Create(left.Quantity + right.Quantity);
+
+	/// <summary>Negates a <see cref="Temperature{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator -(Temperature<T> value) => Create(-value.Quantity);
+
+	/// <summary>Scales a <see cref="Temperature{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator *(Temperature<T> left, T right) => Create(left.Quantity * right);
+
+	/// <summary>Scales a <see cref="Temperature{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator *(T left, Temperature<T> right) => Create(left * right.Quantity);
+
+	/// <summary>Divides a <see cref="Temperature{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator /(Temperature<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+
+	/// <summary>Divides one <see cref="Temperature{T}"/> by another, giving the bare ratio.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static T operator /(Temperature<T> left, Temperature<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : left.Quantity / right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <(Temperature<T> left, Temperature<T> right) => left.Quantity < right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <=(Temperature<T> left, Temperature<T> right) => left.Quantity <= right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >(Temperature<T> left, Temperature<T> right) => left.Quantity > right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >=(Temperature<T> left, Temperature<T> right) => left.Quantity >= right.Quantity;
+
+	/// <summary>Returns the stored value as text.</summary>
+	/// <returns>The value in the SI base unit, rendered by <typeparamref name="T"/>.</returns>
+	public override string ToString() => Quantity.ToString() ?? string.Empty;
 
 	/// <summary>
 	/// Creates a new <see cref="Temperature{T}"/> from a value in Kelvin.
@@ -69,12 +144,12 @@ public partial record Temperature<T> : PhysicalQuantity<Temperature<T>, T>, IVec
 	/// Multiplies Temperature by Entropy to produce Energy.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Energy<T> operator *(Temperature<T> left, Entropy<T> right) => Multiply<Energy<T>>(left, right);
+	public static Energy<T> operator *(Temperature<T> left, Entropy<T> right) => Energy<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Temperature by ThermalExpansionCoefficient to produce Ratio.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Ratio<T> operator *(Temperature<T> left, ThermalExpansionCoefficient<T> right) => Multiply<Ratio<T>>(left, right);
+	public static Ratio<T> operator *(Temperature<T> left, ThermalExpansionCoefficient<T> right) => Ratio<T>.Create(left.Quantity * right.Quantity);
 }
 

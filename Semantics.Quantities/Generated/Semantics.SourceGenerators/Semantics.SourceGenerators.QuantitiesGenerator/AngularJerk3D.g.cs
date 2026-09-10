@@ -13,7 +13,7 @@ using System.Numerics;
 /// 3D vector representation of AngularJerk.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public partial record AngularJerk3D<T> : IVector3<AngularJerk3D<T>, T>
+public readonly partial record struct AngularJerk3D<T> : IVector3<AngularJerk3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

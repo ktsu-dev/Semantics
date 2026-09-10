@@ -9,14 +9,89 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Mass dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public partial record Mass<T> : PhysicalQuantity<Mass<T>, T>, IVector0<Mass<T>, T>
+public readonly partial record struct Mass<T> : IVector0<Mass<T>, T>, IPhysicalQuantity<Mass<T>, T>
 	where T : struct, INumber<T>
 {
+	/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>
+	public T Value => Quantity;
+
+	/// <summary>Gets whether this quantity is finite and not NaN.</summary>
+	public bool IsPhysicallyValid => PhysicalQuantityCore.IsPhysicallyValid(Quantity);
+
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Mass<T> Zero => Create(T.Zero);
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	public override DimensionInfo Dimension => PhysicalDimensions.Mass;
+	public DimensionInfo Dimension => PhysicalDimensions.Mass;
+
+	/// <summary>Gets the stored value, in the dimension's SI base unit.</summary>
+	public T Quantity { get; init; }
+
+	/// <summary>
+	/// Creates a quantity holding <paramref name="value"/>, in the SI base unit.
+	/// </summary>
+	/// <param name="value">The value in the SI base unit.</param>
+	/// <returns>A new quantity holding <paramref name="value"/>.</returns>
+	public static Mass<T> Create(T value) => new() { Quantity = value };
+
+	/// <summary>
+	/// Compares this quantity to another of the same physical dimension.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns>A negative number, zero or a positive number as this sorts before, with, or after <paramref name="other"/>.</returns>
+	/// <exception cref="System.ArgumentException">When the two do not share a dimension.</exception>
+	public int CompareTo(IPhysicalQuantity<T> other) => PhysicalQuantityCore.Compare<Mass<T>, T>(this, other);
+
+	/// <summary>
+	/// Reports whether this quantity shares a dimension and a value with <paramref name="other"/>.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns><see langword="true"/> when both dimension and value match.</returns>
+	public bool Equals(IPhysicalQuantity<T> other) => PhysicalQuantityCore.AreEqual<Mass<T>, T>(this, other);
+
+	/// <summary>Adds two <see cref="Mass{T}"/> values.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator +(Mass<T> left, Mass<T> right) => Create(left.Quantity + right.Quantity);
+
+	/// <summary>Negates a <see cref="Mass{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator -(Mass<T> value) => Create(-value.Quantity);
+
+	/// <summary>Scales a <see cref="Mass{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator *(Mass<T> left, T right) => Create(left.Quantity * right);
+
+	/// <summary>Scales a <see cref="Mass{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator *(T left, Mass<T> right) => Create(left * right.Quantity);
+
+	/// <summary>Divides a <see cref="Mass{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator /(Mass<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+
+	/// <summary>Divides one <see cref="Mass{T}"/> by another, giving the bare ratio.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static T operator /(Mass<T> left, Mass<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : left.Quantity / right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <(Mass<T> left, Mass<T> right) => left.Quantity < right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <=(Mass<T> left, Mass<T> right) => left.Quantity <= right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >(Mass<T> left, Mass<T> right) => left.Quantity > right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >=(Mass<T> left, Mass<T> right) => left.Quantity >= right.Quantity;
+
+	/// <summary>Returns the stored value as text.</summary>
+	/// <returns>The value in the SI base unit, rendered by <typeparamref name="T"/>.</returns>
+	public override string ToString() => Quantity.ToString() ?? string.Empty;
 
 	/// <summary>
 	/// Creates a new <see cref="Mass{T}"/> from a value in Kilogram.
@@ -101,54 +176,54 @@ public partial record Mass<T> : PhysicalQuantity<Mass<T>, T>, IVector0<Mass<T>, 
 	/// Multiplies Mass by AccelerationMagnitude to produce ForceMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ForceMagnitude<T> operator *(Mass<T> left, AccelerationMagnitude<T> right) => Multiply<ForceMagnitude<T>>(left, right);
+	public static ForceMagnitude<T> operator *(Mass<T> left, AccelerationMagnitude<T> right) => ForceMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Multiplies Mass by Speed to produce MomentumMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MomentumMagnitude<T> operator *(Mass<T> left, Speed<T> right) => Multiply<MomentumMagnitude<T>>(left, right);
+	public static MomentumMagnitude<T> operator *(Mass<T> left, Speed<T> right) => MomentumMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Divides Mass by Volume to produce Density.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Density<T> operator /(Mass<T> left, Volume<T> right) => Divide<Density<T>>(left, right);
+	public static Density<T> operator /(Mass<T> left, Volume<T> right) => Density<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Mass by Density to produce Volume.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Volume<T> operator /(Mass<T> left, Density<T> right) => Divide<Volume<T>>(left, right);
+	public static Volume<T> operator /(Mass<T> left, Density<T> right) => Volume<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies Mass by SpecificHeat to produce Entropy.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Entropy<T> operator *(Mass<T> left, SpecificHeat<T> right) => Multiply<Entropy<T>>(left, right);
+	public static Entropy<T> operator *(Mass<T> left, SpecificHeat<T> right) => Entropy<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Divides Mass by Duration to produce MassFlowRate.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MassFlowRate<T> operator /(Mass<T> left, Duration<T> right) => Divide<MassFlowRate<T>>(left, right);
+	public static MassFlowRate<T> operator /(Mass<T> left, Duration<T> right) => MassFlowRate<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Mass by MassFlowRate to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(Mass<T> left, MassFlowRate<T> right) => Divide<Duration<T>>(left, right);
+	public static Duration<T> operator /(Mass<T> left, MassFlowRate<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Mass by AmountOfSubstance to produce MolarMass.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MolarMass<T> operator /(Mass<T> left, AmountOfSubstance<T> right) => Divide<MolarMass<T>>(left, right);
+	public static MolarMass<T> operator /(Mass<T> left, AmountOfSubstance<T> right) => MolarMass<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Mass by MolarMass to produce AmountOfSubstance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AmountOfSubstance<T> operator /(Mass<T> left, MolarMass<T> right) => Divide<AmountOfSubstance<T>>(left, right);
+	public static AmountOfSubstance<T> operator /(Mass<T> left, MolarMass<T> right) => AmountOfSubstance<T>.Create(left.Quantity / right.Quantity);
 }
 

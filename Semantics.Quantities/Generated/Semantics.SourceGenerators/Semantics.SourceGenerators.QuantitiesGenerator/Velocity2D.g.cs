@@ -13,7 +13,7 @@ using System.Numerics;
 /// 2D vector representation of Velocity.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public partial record Velocity2D<T> : IVector2<Velocity2D<T>, T>
+public readonly partial record struct Velocity2D<T> : IVector2<Velocity2D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

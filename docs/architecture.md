@@ -323,8 +323,7 @@ Semantics.Quantities/Generated/   (committed source — diff before commit)
 ### Runtime contract — `IPhysicalQuantity<T>`
 
 Every generated V0 / V1 quantity (and V0/V1 semantic overload) implements
-`IPhysicalQuantity<T>` through the `PhysicalQuantity<TSelf, T>` base. The contract is
-deliberately slim:
+`IPhysicalQuantity<TSelf, T>`, and through it the slim `IPhysicalQuantity<T>`:
 
 ```csharp
 public interface IPhysicalQuantity<T>
@@ -352,6 +351,18 @@ Semantics (locked in #59):
 
 V2 / V3 / V4 vector types implement only their `IVectorN<TSelf, T>` interface — the
 slim `IPhysicalQuantity<T>` contract applies to scalar-storage quantities.
+
+A quantity is a **`readonly record struct`**, so none of this is inherited: there is no
+base class to inherit it from. `IPhysicalQuantity<TSelf, T>` adds
+`static abstract TSelf Create(T)`, which is what replaced the
+`where TSelf : PhysicalQuantity<TSelf, T>, new()` constraint the record base needed, and
+the generator emits the members per type. That is not merely how the surface is kept —
+it is the point. The record base's `Create` was `new TQuantity() with { Quantity = value }`,
+two heap allocations for one number, on every operator and every unit factory; an operator
+declared on the struct itself is a plain arithmetic expression the JIT inlines to nothing.
+The three rules above are shared without a base class through `PhysicalQuantityCore`,
+which each quantity delegates to in one line. `QuantityValueTypeTests` measures the
+allocation, so the regression cannot return silently.
 
 ### Unit conversion — typed `In(...)`
 

@@ -9,14 +9,89 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Power dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public partial record Power<T> : PhysicalQuantity<Power<T>, T>, IVector0<Power<T>, T>
+public readonly partial record struct Power<T> : IVector0<Power<T>, T>, IPhysicalQuantity<Power<T>, T>
 	where T : struct, INumber<T>
 {
+	/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>
+	public T Value => Quantity;
+
+	/// <summary>Gets whether this quantity is finite and not NaN.</summary>
+	public bool IsPhysicallyValid => PhysicalQuantityCore.IsPhysicallyValid(Quantity);
+
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static Power<T> Zero => Create(T.Zero);
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	public override DimensionInfo Dimension => PhysicalDimensions.Power;
+	public DimensionInfo Dimension => PhysicalDimensions.Power;
+
+	/// <summary>Gets the stored value, in the dimension's SI base unit.</summary>
+	public T Quantity { get; init; }
+
+	/// <summary>
+	/// Creates a quantity holding <paramref name="value"/>, in the SI base unit.
+	/// </summary>
+	/// <param name="value">The value in the SI base unit.</param>
+	/// <returns>A new quantity holding <paramref name="value"/>.</returns>
+	public static Power<T> Create(T value) => new() { Quantity = value };
+
+	/// <summary>
+	/// Compares this quantity to another of the same physical dimension.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns>A negative number, zero or a positive number as this sorts before, with, or after <paramref name="other"/>.</returns>
+	/// <exception cref="System.ArgumentException">When the two do not share a dimension.</exception>
+	public int CompareTo(IPhysicalQuantity<T> other) => PhysicalQuantityCore.Compare<Power<T>, T>(this, other);
+
+	/// <summary>
+	/// Reports whether this quantity shares a dimension and a value with <paramref name="other"/>.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns><see langword="true"/> when both dimension and value match.</returns>
+	public bool Equals(IPhysicalQuantity<T> other) => PhysicalQuantityCore.AreEqual<Power<T>, T>(this, other);
+
+	/// <summary>Adds two <see cref="Power{T}"/> values.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator +(Power<T> left, Power<T> right) => Create(left.Quantity + right.Quantity);
+
+	/// <summary>Negates a <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator -(Power<T> value) => Create(-value.Quantity);
+
+	/// <summary>Scales a <see cref="Power{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(Power<T> left, T right) => Create(left.Quantity * right);
+
+	/// <summary>Scales a <see cref="Power{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(T left, Power<T> right) => Create(left * right.Quantity);
+
+	/// <summary>Divides a <see cref="Power{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator /(Power<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+
+	/// <summary>Divides one <see cref="Power{T}"/> by another, giving the bare ratio.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static T operator /(Power<T> left, Power<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : left.Quantity / right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <(Power<T> left, Power<T> right) => left.Quantity < right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <=(Power<T> left, Power<T> right) => left.Quantity <= right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >(Power<T> left, Power<T> right) => left.Quantity > right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >=(Power<T> left, Power<T> right) => left.Quantity >= right.Quantity;
+
+	/// <summary>Returns the stored value as text.</summary>
+	/// <returns>The value in the SI base unit, rendered by <typeparamref name="T"/>.</returns>
+	public override string ToString() => Quantity.ToString() ?? string.Empty;
 
 	/// <summary>
 	/// Creates a new <see cref="Power{T}"/> from a value in Watt.
@@ -69,54 +144,54 @@ public partial record Power<T> : PhysicalQuantity<Power<T>, T>, IVector0<Power<T
 	/// Divides Power by VoltageMagnitude to produce CurrentMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static CurrentMagnitude<T> operator /(Power<T> left, VoltageMagnitude<T> right) => Divide<CurrentMagnitude<T>>(left, right);
+	public static CurrentMagnitude<T> operator /(Power<T> left, VoltageMagnitude<T> right) => CurrentMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by CurrentMagnitude to produce VoltageMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator /(Power<T> left, CurrentMagnitude<T> right) => Divide<VoltageMagnitude<T>>(left, right);
+	public static VoltageMagnitude<T> operator /(Power<T> left, CurrentMagnitude<T> right) => VoltageMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by Speed to produce ForceMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ForceMagnitude<T> operator /(Power<T> left, Speed<T> right) => Divide<ForceMagnitude<T>>(left, right);
+	public static ForceMagnitude<T> operator /(Power<T> left, Speed<T> right) => ForceMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by ForceMagnitude to produce Speed.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Speed<T> operator /(Power<T> left, ForceMagnitude<T> right) => Divide<Speed<T>>(left, right);
+	public static Speed<T> operator /(Power<T> left, ForceMagnitude<T> right) => Speed<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies Power by Duration to produce Energy.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Energy<T> operator *(Power<T> left, Duration<T> right) => Multiply<Energy<T>>(left, right);
+	public static Energy<T> operator *(Power<T> left, Duration<T> right) => Energy<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Divides Power by Area to produce Irradiance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Irradiance<T> operator /(Power<T> left, Area<T> right) => Divide<Irradiance<T>>(left, right);
+	public static Irradiance<T> operator /(Power<T> left, Area<T> right) => Irradiance<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by Irradiance to produce Area.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Area<T> operator /(Power<T> left, Irradiance<T> right) => Divide<Area<T>>(left, right);
+	public static Area<T> operator /(Power<T> left, Irradiance<T> right) => Area<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by Volume to produce ElectricPowerDensity.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ElectricPowerDensity<T> operator /(Power<T> left, Volume<T> right) => Divide<ElectricPowerDensity<T>>(left, right);
+	public static ElectricPowerDensity<T> operator /(Power<T> left, Volume<T> right) => ElectricPowerDensity<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by ElectricPowerDensity to produce Volume.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Volume<T> operator /(Power<T> left, ElectricPowerDensity<T> right) => Divide<Volume<T>>(left, right);
+	public static Volume<T> operator /(Power<T> left, ElectricPowerDensity<T> right) => Volume<T>.Create(left.Quantity / right.Quantity);
 }
 

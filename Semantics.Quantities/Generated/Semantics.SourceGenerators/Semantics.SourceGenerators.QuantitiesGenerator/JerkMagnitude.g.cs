@@ -9,14 +9,89 @@ using System.Numerics;
 /// Magnitude (Vector0) quantity for the Jerk dimension.
 /// </summary>
 /// <typeparam name="T">The numeric storage type.</typeparam>
-public partial record JerkMagnitude<T> : PhysicalQuantity<JerkMagnitude<T>, T>, IVector0<JerkMagnitude<T>, T>
+public readonly partial record struct JerkMagnitude<T> : IVector0<JerkMagnitude<T>, T>, IPhysicalQuantity<JerkMagnitude<T>, T>
 	where T : struct, INumber<T>
 {
+	/// <summary>Gets the value stored in this quantity (in the dimension's SI base unit).</summary>
+	public T Value => Quantity;
+
+	/// <summary>Gets whether this quantity is finite and not NaN.</summary>
+	public bool IsPhysicallyValid => PhysicalQuantityCore.IsPhysicallyValid(Quantity);
+
 	/// <summary>Gets a quantity with value zero.</summary>
 	public static JerkMagnitude<T> Zero => Create(T.Zero);
 
 	/// <summary>Gets the physical dimension this quantity belongs to.</summary>
-	public override DimensionInfo Dimension => PhysicalDimensions.Jerk;
+	public DimensionInfo Dimension => PhysicalDimensions.Jerk;
+
+	/// <summary>Gets the stored value, in the dimension's SI base unit.</summary>
+	public T Quantity { get; init; }
+
+	/// <summary>
+	/// Creates a quantity holding <paramref name="value"/>, in the SI base unit.
+	/// </summary>
+	/// <param name="value">The value in the SI base unit.</param>
+	/// <returns>A new quantity holding <paramref name="value"/>.</returns>
+	public static JerkMagnitude<T> Create(T value) => new() { Quantity = value };
+
+	/// <summary>
+	/// Compares this quantity to another of the same physical dimension.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns>A negative number, zero or a positive number as this sorts before, with, or after <paramref name="other"/>.</returns>
+	/// <exception cref="System.ArgumentException">When the two do not share a dimension.</exception>
+	public int CompareTo(IPhysicalQuantity<T> other) => PhysicalQuantityCore.Compare<JerkMagnitude<T>, T>(this, other);
+
+	/// <summary>
+	/// Reports whether this quantity shares a dimension and a value with <paramref name="other"/>.
+	/// </summary>
+	/// <param name="other">The quantity to compare against.</param>
+	/// <returns><see langword="true"/> when both dimension and value match.</returns>
+	public bool Equals(IPhysicalQuantity<T> other) => PhysicalQuantityCore.AreEqual<JerkMagnitude<T>, T>(this, other);
+
+	/// <summary>Adds two <see cref="JerkMagnitude{T}"/> values.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static JerkMagnitude<T> operator +(JerkMagnitude<T> left, JerkMagnitude<T> right) => Create(left.Quantity + right.Quantity);
+
+	/// <summary>Negates a <see cref="JerkMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static JerkMagnitude<T> operator -(JerkMagnitude<T> value) => Create(-value.Quantity);
+
+	/// <summary>Scales a <see cref="JerkMagnitude{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static JerkMagnitude<T> operator *(JerkMagnitude<T> left, T right) => Create(left.Quantity * right);
+
+	/// <summary>Scales a <see cref="JerkMagnitude{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static JerkMagnitude<T> operator *(T left, JerkMagnitude<T> right) => Create(left * right.Quantity);
+
+	/// <summary>Divides a <see cref="JerkMagnitude{T}"/> by a bare number.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static JerkMagnitude<T> operator /(JerkMagnitude<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+
+	/// <summary>Divides one <see cref="JerkMagnitude{T}"/> by another, giving the bare ratio.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static T operator /(JerkMagnitude<T> left, JerkMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : left.Quantity / right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <(JerkMagnitude<T> left, JerkMagnitude<T> right) => left.Quantity < right.Quantity;
+
+	/// <summary>Reports whether the left value sorts before or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator <=(JerkMagnitude<T> left, JerkMagnitude<T> right) => left.Quantity <= right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >(JerkMagnitude<T> left, JerkMagnitude<T> right) => left.Quantity > right.Quantity;
+
+	/// <summary>Reports whether the left value sorts after or with the right.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static bool operator >=(JerkMagnitude<T> left, JerkMagnitude<T> right) => left.Quantity >= right.Quantity;
+
+	/// <summary>Returns the stored value as text.</summary>
+	/// <returns>The value in the SI base unit, rendered by <typeparamref name="T"/>.</returns>
+	public override string ToString() => Quantity.ToString() ?? string.Empty;
 
 	/// <summary>
 	/// Creates a new <see cref="JerkMagnitude{T}"/> from a value in MeterPerSecondCubed.
@@ -45,18 +120,18 @@ public partial record JerkMagnitude<T> : PhysicalQuantity<JerkMagnitude<T>, T>, 
 	/// Multiplies JerkMagnitude by Duration to produce AccelerationMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AccelerationMagnitude<T> operator *(JerkMagnitude<T> left, Duration<T> right) => Multiply<AccelerationMagnitude<T>>(left, right);
+	public static AccelerationMagnitude<T> operator *(JerkMagnitude<T> left, Duration<T> right) => AccelerationMagnitude<T>.Create(left.Quantity * right.Quantity);
 
 	/// <summary>
 	/// Divides JerkMagnitude by Duration to produce SnapMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SnapMagnitude<T> operator /(JerkMagnitude<T> left, Duration<T> right) => Divide<SnapMagnitude<T>>(left, right);
+	public static SnapMagnitude<T> operator /(JerkMagnitude<T> left, Duration<T> right) => SnapMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides JerkMagnitude by SnapMagnitude to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(JerkMagnitude<T> left, SnapMagnitude<T> right) => Divide<Duration<T>>(left, right);
+	public static Duration<T> operator /(JerkMagnitude<T> left, SnapMagnitude<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
 }
 

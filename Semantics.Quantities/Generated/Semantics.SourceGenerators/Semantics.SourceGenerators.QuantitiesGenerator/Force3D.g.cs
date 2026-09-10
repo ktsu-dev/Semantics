@@ -13,7 +13,7 @@ using System.Numerics;
 /// 3D vector representation of Force.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public partial record Force3D<T> : IVector3<Force3D<T>, T>
+public readonly partial record struct Force3D<T> : IVector3<Force3D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>

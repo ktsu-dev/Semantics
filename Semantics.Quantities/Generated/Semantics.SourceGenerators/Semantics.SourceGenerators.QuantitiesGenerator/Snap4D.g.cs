@@ -13,7 +13,7 @@ using System.Numerics;
 /// 4D vector representation of Snap.
 /// </summary>
 /// <typeparam name="T">The numeric component type.</typeparam>
-public partial record Snap4D<T> : IVector4<Snap4D<T>, T>
+public readonly partial record struct Snap4D<T> : IVector4<Snap4D<T>, T>
 	where T : struct, INumber<T>
 {
 	/// <summary>Gets the X component.</summary>
