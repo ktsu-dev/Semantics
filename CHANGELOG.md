@@ -1,6 +1,9 @@
-## v4.0.0
+## v4.1.0 (minor)
 
-No significant changes detected since v4.0.0.
+Changes since v4.0.0:
+
+- Address code-quality findings on the C++ projection ([@matt-edmondson](https://github.com/matt-edmondson))
+- Add Semantics.Cpp: the C++ projection of the quantity vocabulary [minor] ([@Claude](https://github.com/Claude))
 
 ## v4.0.0 (major)
 
