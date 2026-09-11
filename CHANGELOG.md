@@ -1,3 +1,7 @@
+## v4.2.0
+
+No significant changes detected since v4.2.0.
+
 ## v4.2.0 (minor)
 
 Changes since v4.1.0:

@@ -1,6 +1,4 @@
-## v4.2.0 (minor)
+## v4.2.0
 
-Changes since v4.1.0:
-
-- Generate the vector forms in the C++ projection [minor] ([@matt-edmondson](https://github.com/matt-edmondson))
+No significant changes detected since v4.2.0.
 
