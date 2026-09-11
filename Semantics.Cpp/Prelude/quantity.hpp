@@ -133,6 +133,15 @@ namespace @NAMESPACE@
 		return Quantity<DimensionInverse<D>, Rep>{ scale / q.count() };
 	}
 
+	// The size of a quantity regardless of its sign, with the dimension untouched. Written out
+	// rather than calling std::abs because std::abs is not constexpr before C++23, and a generated
+	// magnitude() that stops being usable in a constant expression would be a silent loss.
+	template <typename D, typename Rep>
+	[[nodiscard]] constexpr Quantity<D, Rep> abs(Quantity<D, Rep> q) noexcept
+	{
+		return Quantity<D, Rep>{ q.count() < Rep{} ? -q.count() : q.count() };
+	}
+
 	// The square root of a quantity halves its dimension, which only exists when every exponent is
 	// even. `sqrt(SquareMetres)` is a length; `sqrt(Metres)` is rejected at compile time.
 	template <typename D, typename Rep>
