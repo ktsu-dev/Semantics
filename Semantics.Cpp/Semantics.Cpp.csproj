@@ -1,0 +1,28 @@
+<Project>
+  <Sdk Name="Microsoft.NET.Sdk" />
+  <Sdk Name="ktsu.Sdk" />
+
+  <PropertyGroup>
+    <!-- ktsu.Coder publishes net10.0 and net9.0 and no net8.0, which is the whole reason this is
+         a project of its own rather than part of Semantics.Quantities. The same constraint put
+         ktsu.Schema.Cpp outside ktsu.Schema. -->
+    <TargetFrameworks>net10.0;net9.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ktsu.Coder" />
+    <PackageReference Include="Polyfill" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The two headers that are not derived from anything: Dimension and Quantity are the same
+         for every target and every version of the metadata, so they are shipped rather than
+         generated. See CppPrelude. -->
+    <EmbeddedResource Include="Prelude\*.hpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="ktsu.Semantics.Cpp.Test" />
+    <InternalsVisibleTo Include="ktsu.Semantics.Test" />
+  </ItemGroup>
+</Project>

@@ -13,6 +13,10 @@
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />
+    <!-- The C++ projection of the quantity vocabulary. ktsu.Coder publishes net10.0 and net9.0
+         only, which is why Semantics.Cpp is a project of its own rather than part of a library
+         that also ships net8.0. -->
+    <PackageVersion Include="ktsu.Coder" Version="3.6.0" />
     <!-- Source generator packages -->
     <PackageVersion Include="ktsu.CodeBlocker" Version="2.0.4" />
     <PackageVersion Include="ktsu.SourceGeneratorToolkit" Version="1.0.2" />

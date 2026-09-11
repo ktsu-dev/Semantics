@@ -30,19 +30,19 @@ public static class PhysicalDimensions
 	public static readonly DimensionInfo AmountOfSubstance = new("AmountOfSubstance", "N", new Dictionary<string, int> { ["amountOfSubstance"] = 1 }, new List<string> { "AmountOfSubstance" });
 
 	/// <summary>Physical dimension: AngularAcceleration</summary>
-	public static readonly DimensionInfo AngularAcceleration = new("AngularAcceleration", "T⁻²", new Dictionary<string, int> { ["time"] = -2 }, new List<string> { "AngularAccelerationMagnitude", "AngularAcceleration1D", "AngularAcceleration3D" });
+	public static readonly DimensionInfo AngularAcceleration = new("AngularAcceleration", "A T⁻²", new Dictionary<string, int> { ["angle"] = 1, ["time"] = -2 }, new List<string> { "AngularAccelerationMagnitude", "AngularAcceleration1D", "AngularAcceleration3D" });
 
 	/// <summary>Physical dimension: AngularDisplacement</summary>
-	public static readonly DimensionInfo AngularDisplacement = new("AngularDisplacement", "1", new Dictionary<string, int>(), new List<string> { "Angle", "FieldOfView", "ApertureAngle", "SignedAngle", "Rotation", "Phase", "Bearing", "Heading", "AngularDisplacement3D" });
+	public static readonly DimensionInfo AngularDisplacement = new("AngularDisplacement", "A", new Dictionary<string, int> { ["angle"] = 1 }, new List<string> { "Angle", "FieldOfView", "ApertureAngle", "SignedAngle", "Rotation", "Phase", "Bearing", "Heading", "AngularDisplacement3D" });
 
 	/// <summary>Physical dimension: AngularJerk</summary>
-	public static readonly DimensionInfo AngularJerk = new("AngularJerk", "T⁻³", new Dictionary<string, int> { ["time"] = -3 }, new List<string> { "AngularJerkMagnitude", "AngularJerk1D", "AngularJerk3D" });
+	public static readonly DimensionInfo AngularJerk = new("AngularJerk", "A T⁻³", new Dictionary<string, int> { ["angle"] = 1, ["time"] = -3 }, new List<string> { "AngularJerkMagnitude", "AngularJerk1D", "AngularJerk3D" });
 
 	/// <summary>Physical dimension: AngularMomentum</summary>
 	public static readonly DimensionInfo AngularMomentum = new("AngularMomentum", "M L² T⁻¹", new Dictionary<string, int> { ["mass"] = 1, ["length"] = 2, ["time"] = -1 }, new List<string> { "AngularMomentumMagnitude", "AngularMomentum1D", "AngularMomentum3D" });
 
 	/// <summary>Physical dimension: AngularVelocity</summary>
-	public static readonly DimensionInfo AngularVelocity = new("AngularVelocity", "T⁻¹", new Dictionary<string, int> { ["time"] = -1 }, new List<string> { "AngularSpeed", "AngularVelocity1D", "AngularVelocity3D" });
+	public static readonly DimensionInfo AngularVelocity = new("AngularVelocity", "A T⁻¹", new Dictionary<string, int> { ["angle"] = 1, ["time"] = -1 }, new List<string> { "AngularSpeed", "AngularVelocity1D", "AngularVelocity3D" });
 
 	/// <summary>Physical dimension: Area</summary>
 	public static readonly DimensionInfo Area = new("Area", "L²", new Dictionary<string, int> { ["length"] = 2 }, new List<string> { "Area", "SurfaceArea", "CrossSectionalArea" });

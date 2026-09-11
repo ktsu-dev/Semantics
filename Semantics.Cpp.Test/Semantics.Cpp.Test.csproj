@@ -1,0 +1,27 @@
+<Project>
+  <Sdk Name="MSTest.Sdk" />
+  <Import Project="Sdk.props" Sdk="ktsu.Sdk" />
+
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Semantics.Cpp\Semantics.Cpp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Driven with the real production metadata rather than a fixture, so these tests fail if a
+         metadata change breaks the C++ projection. The same reason Semantics.Test does it. -->
+    <None Include="..\Semantics.SourceGenerators\Metadata\dimensions.json"
+          Link="Metadata\dimensions.json"
+          CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="ktsu.Sdk" />
+
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net10.0;net9.0</TargetFrameworks>
+  </PropertyGroup>
+</Project>

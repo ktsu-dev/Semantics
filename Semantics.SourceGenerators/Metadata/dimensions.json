@@ -400,8 +400,8 @@
     },
     {
       "name": "AngularDisplacement",
-      "symbol": "1",
-      "dimensionalFormula": {},
+      "symbol": "A",
+      "dimensionalFormula": { "angle": 1 },
       "availableUnits": ["Radian", "Degree", "Gradian", "Revolution", "Milliradian"],
       "quantities": {
         "vector0": {
@@ -431,8 +431,8 @@
     },
     {
       "name": "AngularVelocity",
-      "symbol": "T⁻¹",
-      "dimensionalFormula": { "time": -1 },
+      "symbol": "A T⁻¹",
+      "dimensionalFormula": { "angle": 1, "time": -1 },
       "availableUnits": ["RadianPerSecond", "RevolutionPerMinute"],
       "quantities": {
         "vector0": { "base": "AngularSpeed" },
@@ -450,8 +450,8 @@
     },
     {
       "name": "AngularAcceleration",
-      "symbol": "T⁻²",
-      "dimensionalFormula": { "time": -2 },
+      "symbol": "A T⁻²",
+      "dimensionalFormula": { "angle": 1, "time": -2 },
       "availableUnits": ["RadianPerSecondSquared"],
       "quantities": {
         "vector0": { "base": "AngularAccelerationMagnitude" },
@@ -469,8 +469,8 @@
     },
     {
       "name": "AngularJerk",
-      "symbol": "T⁻³",
-      "dimensionalFormula": { "time": -3 },
+      "symbol": "A T⁻³",
+      "dimensionalFormula": { "angle": 1, "time": -3 },
       "availableUnits": ["RadianPerSecondCubed"],
       "quantities": {
         "vector0": { "base": "AngularJerkMagnitude" },
