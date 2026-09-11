@@ -176,15 +176,15 @@ internal sealed class QuantityVocabulary
 			// A dot or a cross product is a statement about vector forms rather than magnitudes,
 			// so neither belongs here: `dot` on two magnitudes is just their product, and a cross
 			// product of two magnitudes is not defined at all.
-			foreach (QuantityRelationship? resolved in dimension.Integrals
+			// A relationship Resolve refused is null, and has already said why in `refused`; OfType
+			// drops those and hands the loop a relationship that is there.
+			foreach (QuantityRelationship resolved in dimension.Integrals
 				.Select(relationship => Resolve(dimension, relationship, RelationshipKind.Product, byDimensionName, baseTypeOf, refused))
 				.Concat(dimension.Derivatives
-					.Select(relationship => Resolve(dimension, relationship, RelationshipKind.Quotient, byDimensionName, baseTypeOf, refused))))
+					.Select(relationship => Resolve(dimension, relationship, RelationshipKind.Quotient, byDimensionName, baseTypeOf, refused)))
+				.OfType<QuantityRelationship>())
 			{
-				if (resolved is not null)
-				{
-					yield return resolved;
-				}
+				yield return resolved;
 			}
 		}
 	}

@@ -5,6 +5,7 @@ namespace ktsu.Semantics.Cpp.Test;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 using ktsu.Semantics.Cpp;
 
@@ -35,7 +36,7 @@ public sealed class GeneratedCppCompilesTests
 	public void TheWholeVocabularyCompiles()
 	{
 		string directory = Emit();
-		File.WriteAllText(Path.Combine(directory, "main.cpp"), "#include \"quantities.hpp\"\nint main() { return 0; }\n");
+		File.WriteAllText(Path.Join(directory, "main.cpp"), "#include \"quantities.hpp\"\nint main() { return 0; }\n");
 
 		(int exitCode, string output) = Compile(directory, "main.cpp");
 
@@ -57,7 +58,7 @@ public sealed class GeneratedCppCompilesTests
 	public void AProductWithTheWrongDimensionDoesNotCompile()
 	{
 		string directory = Emit();
-		File.WriteAllText(Path.Combine(directory, "wrong.cpp"), """
+		File.WriteAllText(Path.Join(directory, "wrong.cpp"), """
 			#include "Length.hpp"
 			#include "Duration.hpp"
 			#include "Speed.hpp"
@@ -80,16 +81,16 @@ public sealed class GeneratedCppCompilesTests
 
 	private static string Emit()
 	{
-		string directory = Path.Combine(Path.GetTempPath(), $"semantics-cpp-{Guid.NewGuid():N}");
+		string directory = Path.Join(Path.GetTempPath(), $"semantics-cpp-{Guid.NewGuid():N}");
 		Directory.CreateDirectory(directory);
 
 		CppQuantityOutput output = new CppQuantityGenerator(new CppQuantityOptions { Namespace = "holo" })
 			.Generate(QuantityMetadata.Parse(File.ReadAllText(
-				Path.Combine(AppContext.BaseDirectory, "Metadata", "dimensions.json"))));
+				Path.Join(AppContext.BaseDirectory, "Metadata", "dimensions.json"))));
 
 		foreach ((string name, string text) in output.Files)
 		{
-			File.WriteAllText(Path.Combine(directory, name), text);
+			File.WriteAllText(Path.Join(directory, name), text);
 		}
 
 		return directory;
@@ -127,18 +128,14 @@ public sealed class GeneratedCppCompilesTests
 
 	private static string? Find(string executable)
 	{
-		string[] directories = (Environment.GetEnvironmentVariable("PATH") ?? string.Empty)
-			.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
+		// The name alone, and joined rather than combined: a PATH entry is the directory, so a
+		// candidate that turned out to be rooted would silently be the answer instead of a
+		// directory's file.
+		string name = Path.GetFileName(executable);
 
-		foreach (string directory in directories)
-		{
-			string candidate = Path.Combine(directory, executable);
-			if (File.Exists(candidate))
-			{
-				return candidate;
-			}
-		}
-
-		return null;
+		return (Environment.GetEnvironmentVariable("PATH") ?? string.Empty)
+			.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries)
+			.Select(directory => Path.Join(directory, name))
+			.FirstOrDefault(File.Exists);
 	}
 }

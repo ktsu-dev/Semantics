@@ -25,7 +25,7 @@ public sealed class CppQuantityGeneratorTests
 		new CppQuantityOptions { Namespace = "holo" }).Generate(Metadata());
 
 	private static QuantityMetadata Metadata() =>
-		QuantityMetadata.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Metadata", "dimensions.json")));
+		QuantityMetadata.Parse(File.ReadAllText(Path.Join(AppContext.BaseDirectory, "Metadata", "dimensions.json")));
 
 	/// <summary>
 	/// The metadata is read at all, which is the one thing every other test rests on.
