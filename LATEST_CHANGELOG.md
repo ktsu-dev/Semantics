@@ -1,7 +1,6 @@
-## v4.1.0 (minor)
+## v4.2.0 (minor)
 
-Changes since v4.0.0:
+Changes since v4.1.0:
 
-- Address code-quality findings on the C++ projection ([@matt-edmondson](https://github.com/matt-edmondson))
-- Add Semantics.Cpp: the C++ projection of the quantity vocabulary [minor] ([@Claude](https://github.com/Claude))
+- Generate the vector forms in the C++ projection [minor] ([@matt-edmondson](https://github.com/matt-edmondson))
 
