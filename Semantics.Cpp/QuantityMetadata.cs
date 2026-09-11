@@ -77,14 +77,59 @@ public sealed class MetadataDimension
 
 	/// <summary>Gets what this dimension divided by another produces.</summary>
 	public Collection<MetadataRelationship> Derivatives { get; } = [];
+
+	/// <summary>Gets what this dimension dotted with another produces.</summary>
+	public Collection<MetadataRelationship> DotProducts { get; } = [];
+
+	/// <summary>Gets what this dimension crossed with another produces.</summary>
+	public Collection<MetadataRelationship> CrossProducts { get; } = [];
 }
 
-/// <summary>The vector forms a dimension declares. Only the magnitude form is read so far.</summary>
+/// <summary>The vector forms a dimension declares, from the magnitude up to four components.</summary>
+/// <remarks>
+/// Indexed rather than named individually by everything that walks them, because every rule about
+/// a form -- what it is called, how many components it has, whether a relationship reaches it --
+/// is the same rule with a different number in it.
+/// </remarks>
 public sealed class MetadataForms
 {
 	/// <summary>Gets or sets the magnitude form, or null when the dimension has none.</summary>
 	[JsonPropertyName("vector0")]
 	public MetadataForm? Vector0 { get; set; }
+
+	/// <summary>Gets or sets the signed one-dimensional form.</summary>
+	[JsonPropertyName("vector1")]
+	public MetadataForm? Vector1 { get; set; }
+
+	/// <summary>Gets or sets the two-component form.</summary>
+	[JsonPropertyName("vector2")]
+	public MetadataForm? Vector2 { get; set; }
+
+	/// <summary>Gets or sets the three-component form.</summary>
+	[JsonPropertyName("vector3")]
+	public MetadataForm? Vector3 { get; set; }
+
+	/// <summary>Gets or sets the four-component form.</summary>
+	[JsonPropertyName("vector4")]
+	public MetadataForm? Vector4 { get; set; }
+
+	/// <summary>The number of forms a dimension can declare, counting the magnitude.</summary>
+	internal const int Count = 5;
+
+	/// <summary>
+	/// Gets one form by how many components it has.
+	/// </summary>
+	/// <param name="form">The component count, from zero to four.</param>
+	/// <returns>The form, or null when the dimension does not declare it.</returns>
+	internal MetadataForm? this[int form] => form switch
+	{
+		0 => Vector0,
+		1 => Vector1,
+		2 => Vector2,
+		3 => Vector3,
+		4 => Vector4,
+		_ => null,
+	};
 }
 
 /// <summary>One vector form: a base type and the names that refine it.</summary>
@@ -131,6 +176,11 @@ public sealed class MetadataConstraints
 }
 
 /// <summary>One declared relationship between dimensions.</summary>
+/// <remarks>
+/// The collection property is get-only and populated in place, which is what
+/// <see cref="JsonObjectCreationHandling.Populate"/> asks for.
+/// </remarks>
+[JsonObjectCreationHandling(JsonObjectCreationHandling.Populate)]
 public sealed class MetadataRelationship
 {
 	/// <summary>Gets or sets the dimension on the other side of the operator.</summary>
@@ -138,4 +188,14 @@ public sealed class MetadataRelationship
 
 	/// <summary>Gets or sets the dimension the operator produces.</summary>
 	public string Result { get; set; } = string.Empty;
+
+	/// <summary>
+	/// Gets the vector forms this relationship is declared at, or nothing to mean every form the
+	/// participants share.
+	/// </summary>
+	/// <remarks>
+	/// A constraint rather than a request: a cross product is declared at <c>[3]</c> because it is
+	/// only defined in three dimensions, not because three is the form someone happened to want.
+	/// </remarks>
+	public Collection<int> Forms { get; } = [];
 }

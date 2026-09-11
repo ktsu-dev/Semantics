@@ -79,6 +79,99 @@ public sealed class GeneratedCppCompilesTests
 		Assert.AreNotEqual(0, exitCode, "a product whose exponents do not match the result type should be refused");
 	}
 
+	/// <summary>
+	/// The vector forms mean what they say, and the compiler is what says so.
+	/// </summary>
+	/// <remarks>
+	/// Every claim below is a <c>static_assert</c>, so this needs no run: a wrong answer is a
+	/// compile error and <c>-fsyntax-only</c> reaches it. That matters more for the vector forms
+	/// than it did for the magnitudes, because a good deal of what they promise is arithmetic
+	/// rather than shape -- that the length of (3, 4, 0) is 5, that scaling by a duration lands in
+	/// the right type, that an overload survives the trip out to its base and back.
+	/// <para>
+	/// The layout assertions are the other half. Holotype copies a vector whole across a language
+	/// boundary and onto the wire, which only works if the class is exactly its components with
+	/// nothing added.
+	/// </para>
+	/// </remarks>
+	[TestMethod]
+	public void TheVectorFormsMeanWhatTheySay()
+	{
+		string directory = Emit();
+		File.WriteAllText(Path.Join(directory, "meaning.cpp"), """
+			#include "quantities.hpp"
+			#include <type_traits>
+
+			using namespace holo;
+
+			// Exactly its components, which is what lets one be copied whole.
+			static_assert(sizeof(Displacement3D) == 3 * sizeof(float));
+			static_assert(std::is_trivially_copyable_v<Displacement3D>);
+			static_assert(std::is_standard_layout_v<Displacement3D>);
+
+			constexpr Displacement3D d{ Displacement3D::component{ 3.0f }, Displacement3D::component{ 4.0f }, Displacement3D::component{ 0.0f } };
+			static_assert(d.magnitude_squared().count() == 25.0f);
+
+			// A velocity scaled by a duration is a displacement, and it is componentwise.
+			constexpr Duration t{ Duration::underlying{ 2.0f } };
+			constexpr Velocity3D v{ Velocity3D::component{ 1.0f }, Velocity3D::component{ 2.0f }, Velocity3D::component{ 3.0f } };
+			static_assert((v * t).x().count() == 2.0f);
+			static_assert((v * t).z().count() == 6.0f);
+
+			// The one-component form is signed, and its magnitude is not.
+			constexpr Displacement1D back{ Displacement1D::underlying{ -5.0f } };
+			static_assert(back.magnitude().value().count() == 5.0f);
+			static_assert((-back).value().count() == 5.0f);
+
+			// An overload widens to its base implicitly and narrows back by name, across every
+			// component rather than only the first.
+			constexpr Position3D p{ Position3D::component{ 1.0f }, Position3D::component{ 2.0f }, Position3D::component{ 3.0f } };
+			constexpr Displacement3D widened = p;
+			static_assert(widened.z().count() == 3.0f);
+			static_assert(Position3D::from(widened).z().count() == 3.0f);
+
+			int main() { return 0; }
+			""");
+
+		(int exitCode, string output) = Compile(directory, "meaning.cpp");
+
+		Assert.AreEqual(0, exitCode, $"the vector forms should behave as generated:\n{output}");
+	}
+
+	/// <summary>
+	/// The structural layer checks a componentwise relationship the same way it checks a scalar
+	/// one.
+	/// </summary>
+	/// <remarks>
+	/// The vector half of <see cref="AProductWithTheWrongDimensionDoesNotCompile"/>, and worth
+	/// having separately: a generator that expanded the components correctly but lost the
+	/// dimension on the way would pass the scalar test and fail here.
+	/// </remarks>
+	[TestMethod]
+	public void AComponentwiseProductWithTheWrongDimensionDoesNotCompile()
+	{
+		string directory = Emit();
+		File.WriteAllText(Path.Join(directory, "wrongvector.cpp"), """
+			#include "Displacement3D.hpp"
+			#include "Velocity3D.hpp"
+			#include "Duration.hpp"
+
+			// A displacement times a duration is L T, and a velocity is L T⁻¹. The components are
+			// expanded correctly and the dimension is still wrong, which is the case that would
+			// slip past a test that only looked at the shape.
+			holo::Velocity3D wrong(holo::Displacement3D l, holo::Duration d)
+			{
+				return holo::Velocity3D{ l.x() * d.value(), l.y() * d.value(), l.z() * d.value() };
+			}
+
+			int main() { return 0; }
+			""");
+
+		(int exitCode, _) = Compile(directory, "wrongvector.cpp");
+
+		Assert.AreNotEqual(0, exitCode, "a componentwise product whose exponents do not match the result type should be refused");
+	}
+
 	private static string Emit()
 	{
 		string directory = Path.Join(Path.GetTempPath(), $"semantics-cpp-{Guid.NewGuid():N}");

@@ -42,7 +42,8 @@ public sealed class CppQuantityGeneratorTests
 	}
 
 	/// <summary>
-	/// A class per dimension and per named overload, plus the prelude and the two roll-ups.
+	/// A class per dimension, per vector form and per named overload, plus the prelude and the two
+	/// roll-ups.
 	/// </summary>
 	[TestMethod]
 	public void GeneratesAHeaderPerQuantity()
@@ -198,8 +199,199 @@ public sealed class CppQuantityGeneratorTests
 
 		Assert.IsTrue(
 			refused.All(issue => issue.Contains("is not dimensionally true", StringComparison.Ordinal)
-				|| issue.Contains("does not declare", StringComparison.Ordinal)),
-			$"every refusal should say which of the two things went wrong; got: {string.Join(" | ", refused)}");
+				|| issue.Contains("does not declare", StringComparison.Ordinal)
+				|| issue.Contains("reduces to a signed value", StringComparison.Ordinal)),
+			$"every refusal should say which of the three things went wrong; got: {string.Join(" | ", refused)}");
+	}
+
+	/// <summary>
+	/// A vector form is a class of its own with as many components as it has dimensions, not an
+	/// alias for the magnitude and not an array.
+	/// </summary>
+	[TestMethod]
+	public void GeneratesAClassPerVectorForm()
+	{
+		Assert.Contains("Displacement1D.hpp", Output.Files.Keys);
+		Assert.Contains("Displacement2D.hpp", Output.Files.Keys);
+		Assert.Contains("Displacement3D.hpp", Output.Files.Keys);
+		Assert.Contains("Displacement4D.hpp", Output.Files.Keys);
+
+		string displacement = Output.Files["Displacement3D.hpp"];
+
+		Assert.Contains("explicit constexpr Displacement3D(component x, component y, component z)", displacement, StringComparison.Ordinal);
+		Assert.Contains("component x_{};", displacement, StringComparison.Ordinal);
+		Assert.Contains("component z_{};", displacement, StringComparison.Ordinal);
+		Assert.DoesNotContain("component w_{};", displacement, StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// An overload of a vector form is a distinct class too, and widens and narrows across every
+	/// component rather than only the first.
+	/// </summary>
+	[TestMethod]
+	public void WidensAndNarrowsAVectorAcrossAllOfItsComponents()
+	{
+		string position = Output.Files["Position3D.hpp"];
+
+		Assert.Contains("return Displacement3D{ x_, y_, z_ };", position, StringComparison.Ordinal);
+		Assert.Contains("return Position3D{ value.x(), value.y(), value.z() };", position, StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// Rule four of the four the zero-cost measurement produced: a componentwise operation is
+	/// expanded at compile time rather than looped over an index.
+	/// </summary>
+	/// <remarks>
+	/// A loop over a runtime subscript is what took the same spike from 1.01 to 4.51 on MSVC. It
+	/// costs this generator nothing to obey, because the components are in hand while the class is
+	/// being written -- so what is asserted here is that the expansion is in the text, with no
+	/// index anywhere for a compiler to have an opinion about.
+	/// </remarks>
+	[TestMethod]
+	public void ExpandsAComponentwiseOperationRatherThanLoopingOverIt()
+	{
+		string displacement = Output.Files["Displacement3D.hpp"];
+
+		Assert.Contains(
+			"return Displacement3D{ lhs.x_ + rhs.x_, lhs.y_ + rhs.y_, lhs.z_ + rhs.z_ };",
+			displacement,
+			StringComparison.Ordinal);
+
+		Assert.DoesNotContain("for(", displacement, StringComparison.Ordinal);
+		Assert.DoesNotContain("operator[]", displacement, StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// Arithmetic belongs to the signed forms and stops there.
+	/// </summary>
+	/// <remarks>
+	/// Not an oversight. <c>Length - Length</c> has a question in it that the vector forms do not:
+	/// what it means when the answer would be negative. The .NET side settled that as the absolute
+	/// difference, and settling it here is a decision about the magnitude form rather than
+	/// something to smuggle in alongside the vectors.
+	/// </remarks>
+	[TestMethod]
+	public void GivesArithmeticToTheSignedFormsOnly()
+	{
+		Assert.Contains("operator+(Displacement1D lhs, Displacement1D rhs)", Output.Files["Displacement1D.hpp"], StringComparison.Ordinal);
+		Assert.Contains("operator+(Displacement3D lhs, Displacement3D rhs)", Output.Files["Displacement3D.hpp"], StringComparison.Ordinal);
+		Assert.DoesNotContain("operator+(Length lhs, Length rhs)", Output.Files["Length.hpp"], StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// A vector compares for equality and for nothing else: there is no reading in which one
+	/// displacement is less than another.
+	/// </summary>
+	[TestMethod]
+	public void OrdersAScalarAndOnlyEquatesAVector()
+	{
+		Assert.Contains("operator<=>(Length, Length)", Output.Files["Length.hpp"], StringComparison.Ordinal);
+		Assert.Contains("operator<=>(Displacement1D, Displacement1D)", Output.Files["Displacement1D.hpp"], StringComparison.Ordinal);
+
+		string displacement = Output.Files["Displacement3D.hpp"];
+
+		Assert.Contains("operator==(Displacement3D, Displacement3D)", displacement, StringComparison.Ordinal);
+		Assert.DoesNotContain("operator<=>", displacement, StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// Every signed form answers its size with the magnitude form of the same dimension, which is
+	/// the one place the signed half of the vocabulary reaches back into the unsigned half.
+	/// </summary>
+	/// <remarks>
+	/// The dimension works out rather than being arranged: the sum of the squares of the
+	/// components has twice a component's dimension, and <c>sqrt</c> halves it again. The
+	/// magnitude form's constructor takes exactly that, so the two would not compile together if
+	/// the generator had this wrong -- which is what
+	/// <c>GeneratedCppCompilesTests</c> then actually checks.
+	/// </remarks>
+	[TestMethod]
+	public void AnswersItsSizeWithTheMagnitudeForm()
+	{
+		Assert.Contains("Length magnitude() const", Output.Files["Displacement1D.hpp"], StringComparison.Ordinal);
+		Assert.Contains("return Length{ abs(value_) };", Output.Files["Displacement1D.hpp"], StringComparison.Ordinal);
+
+		string displacement = Output.Files["Displacement3D.hpp"];
+
+		Assert.Contains("Length magnitude() const", displacement, StringComparison.Ordinal);
+		Assert.Contains("return Length{ sqrt(magnitude_squared()) };", displacement, StringComparison.Ordinal);
+
+		// A length squared is an area, and the structural layer is what says so without having to
+		// choose between Area and NuclearCrossSection, which are the same exponents.
+		Assert.Contains("constexpr Quantity<Dimension<2>> magnitude_squared() const", displacement, StringComparison.Ordinal);
+
+		Assert.DoesNotContain("magnitude()", Output.Files["Length.hpp"], StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// A relationship reaches the vector forms by carrying its form on the left operand and the
+	/// result, with the right operand staying a magnitude.
+	/// </summary>
+	/// <remarks>
+	/// There is no reading in which the duration in <c>Velocity3D * Duration</c> has three
+	/// components, which is why the form propagates along one side rather than all three. It is
+	/// the same rule the .NET generator follows.
+	/// </remarks>
+	[TestMethod]
+	public void CarriesARelationshipToEveryFormItsParticipantsShare()
+	{
+		string relationships = Output.Files["relationships.hpp"];
+
+		Assert.Contains("Length operator*(Speed lhs, Duration rhs)", relationships, StringComparison.Ordinal);
+		Assert.Contains("Displacement1D operator*(Velocity1D lhs, Duration rhs)", relationships, StringComparison.Ordinal);
+		Assert.Contains("Displacement3D operator*(Velocity3D lhs, Duration rhs)", relationships, StringComparison.Ordinal);
+
+		Assert.Contains(
+			"return Displacement3D{ lhs.x() * rhs.value(), lhs.y() * rhs.value(), lhs.z() * rhs.value() };",
+			relationships,
+			StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// A cross product is emitted at three components and nowhere else.
+	/// </summary>
+	/// <remarks>
+	/// That is the definition rather than a limitation: the cross product exists in 3D and 7D and
+	/// nowhere else, and the metadata says so with <c>forms: [3]</c>. It is a named call rather
+	/// than an operator because C++ has no symbol for it.
+	/// </remarks>
+	[TestMethod]
+	public void GeneratesACrossProductAtThreeComponentsOnly()
+	{
+		string relationships = Output.Files["relationships.hpp"];
+
+		Assert.Contains("Torque3D cross(Force3D lhs, Displacement3D rhs)", relationships, StringComparison.Ordinal);
+		Assert.Contains(
+			"return Torque3D{ lhs.y() * rhs.z() - lhs.z() * rhs.y(), lhs.z() * rhs.x() - lhs.x() * rhs.z(), lhs.x() * rhs.y() - lhs.y() * rhs.x() };",
+			relationships,
+			StringComparison.Ordinal);
+
+		Assert.DoesNotContain("cross(Force2D", relationships, StringComparison.Ordinal);
+		Assert.DoesNotContain("cross(ForceMagnitude", relationships, StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// The second kind of refusal, which the vector forms are what surfaced: a claim the exponents
+	/// agree with and the sign does not.
+	/// </summary>
+	/// <remarks>
+	/// A force opposing a displacement does negative work, so <c>dot</c> answers with a signed
+	/// value; the metadata names <c>Energy</c> for the result, and a magnitude form cannot be
+	/// negative. Emitting it would produce a type that fails its own assertion on a perfectly
+	/// ordinary input, so it is refused with the fix named -- a <c>vector1</c> form on
+	/// <c>Energy</c> -- rather than generated.
+	/// </remarks>
+	[TestMethod]
+	public void RefusesADotProductThatWouldLandInAMagnitude()
+	{
+		IReadOnlyList<string> refused = Output.Refused;
+
+		Assert.IsTrue(
+			refused.Any(issue => issue.Contains("dot(Force, Length) -> Energy", StringComparison.Ordinal)
+				&& issue.Contains("vector1", StringComparison.Ordinal)),
+			$"the refusal should name the relationship and what would fix it; got: {string.Join(" | ", refused)}");
+
+		Assert.DoesNotContain("dot(", Output.Files["relationships.hpp"], StringComparison.Ordinal);
 	}
 
 	/// <summary>
