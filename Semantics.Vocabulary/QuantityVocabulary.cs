@@ -1,6 +1,6 @@
 // Copyright (c) 2023-2026 ktsu-dev contributors
 
-namespace ktsu.Semantics.Cpp;
+namespace ktsu.Semantics.Vocabulary;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -82,7 +82,11 @@ internal enum RelationshipKind
 /// <param name="Form">How many components the left operand and the result have.</param>
 internal sealed record QuantityRelationship(string Left, string Right, string Result, RelationshipKind Kind, int Form)
 {
-	/// <summary>Gets the operator as C++ spells it, or the function's name when it has no symbol.</summary>
+	/// <summary>Gets the operator's symbol, or the function's name when it has no symbol.</summary>
+	/// <remarks>
+	/// A dot and a cross product are calls rather than operators in every target that has them,
+	/// which is why they are named here rather than spelled.
+	/// </remarks>
 	internal string Symbol => Kind switch
 	{
 		RelationshipKind.Product => "*",
@@ -91,7 +95,7 @@ internal sealed record QuantityRelationship(string Left, string Right, string Re
 		_ => "dot",
 	};
 
-	/// <summary>Gets a value indicating whether C++ spells this as an operator rather than a call.</summary>
+	/// <summary>Gets a value indicating whether this is spelled as an operator rather than a call.</summary>
 	internal bool IsOperator => Kind is RelationshipKind.Product or RelationshipKind.Quotient;
 
 	/// <inheritdoc />
@@ -100,26 +104,53 @@ internal sealed record QuantityRelationship(string Left, string Right, string Re
 }
 
 /// <summary>
-/// Something the metadata says that the generator will not emit, and why.
+/// Why something the metadata asked for was refused.
 /// </summary>
+/// <remarks>
+/// Carried so a consumer can report only what it does not already diagnose for itself. The C#
+/// generator has had its own diagnostics for an unknown dimension (SEM001) and a missing vector
+/// form (SEM003) since before this was shared, so it reports the two kinds that are genuinely new
+/// to it and leaves those alone; the C++ projection prints all of them, having no other channel.
+/// </remarks>
+internal enum VocabularyIssueKind
+{
+	/// <summary>A relationship names a dimension the metadata does not declare.</summary>
+	UnknownDimension,
+
+	/// <summary>A dimension declares no magnitude form, so its other forms have nothing to measure against.</summary>
+	NoMagnitudeForm,
+
+	/// <summary>The exponents contradict the declared result.</summary>
+	NotDimensionallyTrue,
+
+	/// <summary>The value is signed and the declared result is a magnitude, which cannot hold one.</summary>
+	SignedResultInMagnitudeForm,
+
+	/// <summary>A relationship names a vector form a participant does not declare.</summary>
+	MissingVectorForm,
+}
+
+/// <summary>
+/// Something the metadata says that will not be emitted, and why.
+/// </summary>
+/// <param name="Kind">Which kind of problem it is, so a consumer can report only what it needs to.</param>
 /// <param name="Subject">What was refused, named the way the metadata names it.</param>
 /// <param name="Reason">Why, in terms a person editing the metadata can act on.</param>
-internal sealed record VocabularyIssue(string Subject, string Reason)
+internal sealed record VocabularyIssue(VocabularyIssueKind Kind, string Subject, string Reason)
 {
 	/// <inheritdoc />
 	public override string ToString() => $"{Subject}: {Reason}";
 }
 
 /// <summary>
-/// The metadata, resolved into what the C++ projection needs, with everything it cannot honour
-/// separated out rather than silently dropped.
+/// The metadata, resolved into the quantities and operators it describes, with everything it
+/// cannot honour separated out rather than silently dropped.
 /// </summary>
 /// <remarks>
 /// The separation is the point. A relationship is a claim -- <c>Force * Length -&gt; Torque</c> --
-/// and the exponents are what check it. A claim the exponents contradict is not emitted, because
-/// the generated operator builds its result out of <c>Quantity</c> arithmetic and would simply
-/// fail to compile; refusing it by name, with the two dimensions written out, is the same house
-/// style the rest of this stack uses for something it cannot express.
+/// and the exponents are what check it. A claim the exponents contradict is refused by name, with
+/// the two dimensions written out, because the alternative is an operator that compiles and
+/// computes the wrong physics.
 /// <para>
 /// That check earns its keep immediately: on the metadata as it stands it refuses four
 /// relationships, one of which (<c>Sensitivity * Pressure -&gt; ElectricPotential</c>) was already
@@ -132,6 +163,10 @@ internal sealed record VocabularyIssue(string Subject, string Reason)
 /// signed but whose declared result is a magnitude is refused for that reason instead. A dot
 /// product is the case in the metadata. The message says the same two things either way -- what is
 /// wrong, and what would fix it.
+/// </para>
+/// <para>
+/// This is shared source rather than a project of its own, compiled into both the C# source
+/// generator and the C++ projection. See the README beside it for why, and for what that costs.
 /// </para>
 /// </remarks>
 internal sealed class QuantityVocabulary
@@ -158,39 +193,42 @@ internal sealed class QuantityVocabulary
 	/// <summary>
 	/// Resolves the metadata.
 	/// </summary>
-	/// <param name="metadata">The deserialised <c>dimensions.json</c>.</param>
+	/// <param name="dimensions">The dimensions, as each reader projects them.</param>
 	/// <returns>The vocabulary, and everything refused.</returns>
-	internal static QuantityVocabulary FromMetadata(QuantityMetadata metadata)
+	internal static QuantityVocabulary FromDimensions(IReadOnlyList<DimensionDeclaration> dimensions)
 	{
 		List<QuantityType> types = [];
 		List<VocabularyIssue> refused = [];
 
 		Dictionary<string, DimensionVector> byDimensionName = [];
-		Dictionary<string, MetadataForms> formsOf = [];
+		Dictionary<string, DimensionDeclaration> declarations = [];
 
-		foreach (MetadataDimension dimension in metadata.PhysicalDimensions)
+		foreach (DimensionDeclaration dimension in dimensions)
 		{
-			DimensionVector exponents = DimensionVector.FromFormula(dimension.DimensionalFormula);
+			DimensionVector exponents = DimensionVector.FromFormula(dimension.Formula);
 			byDimensionName[dimension.Name] = exponents;
-			formsOf[dimension.Name] = dimension.Quantities;
+			declarations[dimension.Name] = dimension;
 
-			MetadataForm? magnitude = dimension.Quantities.Vector0;
+			FormDeclaration? magnitude = dimension.Form(0);
 			if (magnitude is null || string.IsNullOrEmpty(magnitude.Base))
 			{
 				// Every other form reports its length through this one, so a dimension without it
 				// has nothing for the vector forms to answer with either.
-				refused.Add(new VocabularyIssue(dimension.Name, "has no vector0 form, so it has no magnitude type to generate."));
+				refused.Add(new VocabularyIssue(
+					VocabularyIssueKind.NoMagnitudeForm,
+					dimension.Name,
+					"has no vector0 form, so it has no magnitude type to generate."));
 				continue;
 			}
 
-			for (int form = 0; form < MetadataForms.Count; form++)
+			for (int form = 0; form < DimensionDeclaration.FormCount; form++)
 			{
 				types.AddRange(Declared(dimension, form, exponents, magnitude.Base));
 			}
 		}
 
 		List<QuantityRelationship> relationships =
-			[.. ResolveRelationships(metadata, byDimensionName, formsOf, refused)];
+			[.. ResolveRelationships(dimensions, byDimensionName, declarations, refused)];
 
 		return new QuantityVocabulary(
 			new ReadOnlyCollection<QuantityType>(types),
@@ -209,12 +247,12 @@ internal sealed class QuantityVocabulary
 	/// of a displacement along one axis routinely is.
 	/// </remarks>
 	private static IEnumerable<QuantityType> Declared(
-		MetadataDimension dimension,
+		DimensionDeclaration dimension,
 		int form,
 		DimensionVector exponents,
 		string magnitudeType)
 	{
-		MetadataForm? declared = dimension.Quantities[form];
+		FormDeclaration? declared = dimension.Form(form);
 		if (declared is null || string.IsNullOrEmpty(declared.Base))
 		{
 			yield break;
@@ -229,7 +267,7 @@ internal sealed class QuantityVocabulary
 			form,
 			magnitudeType);
 
-		foreach (MetadataOverload overload in declared.Overloads)
+		foreach (OverloadDeclaration overload in declared.Overloads)
 		{
 			yield return new QuantityType(
 				overload.Name,
@@ -237,7 +275,7 @@ internal sealed class QuantityVocabulary
 				exponents,
 				Refines: declared.Base,
 				form != 0 ? Magnitude.Signed
-					: overload.PhysicalConstraints is null ? Magnitude.NonNegative : Magnitude.Positive,
+					: overload.IsStrictlyPositive ? Magnitude.Positive : Magnitude.NonNegative,
 				form,
 				magnitudeType);
 		}
@@ -247,18 +285,18 @@ internal sealed class QuantityVocabulary
 	{
 		0 => $"The magnitude of {Article(dimension)} {Spaced(dimension)}.",
 		1 => $"A signed {Spaced(dimension)} along one axis.",
-		_ => $"{Capitalised(Article(dimension))} {Spaced(dimension)} in {form.ToString(CultureInfo.InvariantCulture)} dimensions.",
+		_ => $"{CapitalisedArticle(dimension)} {Spaced(dimension)} in {form.ToString(CultureInfo.InvariantCulture)} dimensions.",
 	};
 
 	private static IEnumerable<QuantityRelationship> ResolveRelationships(
-		QuantityMetadata metadata,
+		IReadOnlyList<DimensionDeclaration> dimensions,
 		IReadOnlyDictionary<string, DimensionVector> byDimensionName,
-		IReadOnlyDictionary<string, MetadataForms> formsOf,
+		IReadOnlyDictionary<string, DimensionDeclaration> declarations,
 		List<VocabularyIssue> refused)
 	{
-		foreach (MetadataDimension dimension in metadata.PhysicalDimensions)
+		foreach (DimensionDeclaration dimension in dimensions)
 		{
-			IEnumerable<(MetadataRelationship Declared, RelationshipKind Kind)> declared =
+			IEnumerable<(RelationshipDeclaration Declared, RelationshipKind Kind)> declared =
 			[
 				.. dimension.Integrals.Select(relationship => (relationship, RelationshipKind.Product)),
 				.. dimension.Derivatives.Select(relationship => (relationship, RelationshipKind.Quotient)),
@@ -266,10 +304,10 @@ internal sealed class QuantityVocabulary
 				.. dimension.CrossProducts.Select(relationship => (relationship, RelationshipKind.Cross)),
 			];
 
-			foreach ((MetadataRelationship relationship, RelationshipKind kind) in declared)
+			foreach ((RelationshipDeclaration relationship, RelationshipKind kind) in declared)
 			{
 				foreach (QuantityRelationship resolved in
-					Resolve(dimension, relationship, kind, byDimensionName, formsOf, refused))
+					Resolve(dimension, relationship, kind, byDimensionName, declarations, refused))
 				{
 					yield return resolved;
 				}
@@ -286,11 +324,11 @@ internal sealed class QuantityVocabulary
 	/// claim that is not dimensionally true is one refusal rather than five.
 	/// </remarks>
 	private static List<QuantityRelationship> Resolve(
-		MetadataDimension dimension,
-		MetadataRelationship relationship,
+		DimensionDeclaration dimension,
+		RelationshipDeclaration relationship,
 		RelationshipKind kind,
 		IReadOnlyDictionary<string, DimensionVector> byDimensionName,
-		IReadOnlyDictionary<string, MetadataForms> formsOf,
+		IReadOnlyDictionary<string, DimensionDeclaration> declarations,
 		List<VocabularyIssue> refused)
 	{
 		string subject = Subject(dimension.Name, relationship, kind);
@@ -299,8 +337,11 @@ internal sealed class QuantityVocabulary
 		{
 			if (!byDimensionName.ContainsKey(named))
 			{
-				// The same gap SEM001 reports on the .NET side, seen from here.
-				refused.Add(new VocabularyIssue(subject, $"names '{named}', which dimensions.json does not declare."));
+				// The same gap SEM001 reports.
+				refused.Add(new VocabularyIssue(
+					VocabularyIssueKind.UnknownDimension,
+					subject,
+					$"names '{named}', which dimensions.json does not declare."));
 				return [];
 			}
 		}
@@ -313,6 +354,7 @@ internal sealed class QuantityVocabulary
 		if (!combined.Equals(result))
 		{
 			refused.Add(new VocabularyIssue(
+				VocabularyIssueKind.NotDimensionallyTrue,
 				subject,
 				$"is not dimensionally true: {left} {(kind == RelationshipKind.Quotient ? "/" : "*")} {right} is {combined}, and {relationship.Result} is {result}."));
 			return [];
@@ -324,12 +366,13 @@ internal sealed class QuantityVocabulary
 		if (kind == RelationshipKind.Dot)
 		{
 			refused.Add(new VocabularyIssue(
+				VocabularyIssueKind.SignedResultInMagnitudeForm,
 				subject,
 				$"reduces to a signed value -- two vectors that oppose each other give a negative one -- and '{relationship.Result}' declares only a magnitude form, which cannot be negative. A vector1 form on it is what would let this be generated."));
 			return [];
 		}
 
-		return At(subject, dimension.Name, relationship, kind, formsOf, refused);
+		return At(subject, dimension.Name, relationship, kind, declarations, refused);
 	}
 
 	/// <summary>
@@ -346,21 +389,21 @@ internal sealed class QuantityVocabulary
 	/// When the metadata lists forms explicitly, a form a participant does not declare is refused
 	/// by name; when it lists none, the relationship is emitted at whatever forms the participants
 	/// share and saying nothing about the rest is the intended answer. That is the same split
-	/// <c>SEM003</c> makes on the .NET side.
+	/// <c>SEM003</c> makes.
 	/// </para>
 	/// </remarks>
 	private static List<QuantityRelationship> At(
 		string subject,
 		string self,
-		MetadataRelationship relationship,
+		RelationshipDeclaration relationship,
 		RelationshipKind kind,
-		IReadOnlyDictionary<string, MetadataForms> formsOf,
+		IReadOnlyDictionary<string, DimensionDeclaration> declarations,
 		List<VocabularyIssue> refused)
 	{
 		bool crossed = kind == RelationshipKind.Cross;
 		IReadOnlyList<int> wanted = relationship.Forms.Count > 0
 			? [.. relationship.Forms]
-			: crossed ? [3] : [.. Enumerable.Range(0, MetadataForms.Count)];
+			: crossed ? [3] : [.. Enumerable.Range(0, DimensionDeclaration.FormCount)];
 
 		List<QuantityRelationship> emitted = [];
 
@@ -368,19 +411,20 @@ internal sealed class QuantityVocabulary
 		{
 			// The right operand of a cross product has the same shape as the left; of a product or
 			// a quotient it is the magnitude the vector is scaled by.
-			string? leftType = Base(formsOf, self, form);
-			string? rightType = Base(formsOf, relationship.Other, crossed ? form : 0);
-			string? resultType = Base(formsOf, relationship.Result, form);
+			string? leftType = Base(declarations, self, form);
+			string? rightType = Base(declarations, relationship.Other, crossed ? form : 0);
+			string? resultType = Base(declarations, relationship.Result, form);
 
 			if (leftType is null || rightType is null || resultType is null)
 			{
 				if (relationship.Forms.Count > 0)
 				{
-					// The same gap SEM003 reports on the .NET side: a form asked for by name that
-					// one of the participants does not have.
+					// The same gap SEM003 reports: a form asked for by name that one of the
+					// participants does not have.
 					refused.Add(new VocabularyIssue(
+						VocabularyIssueKind.MissingVectorForm,
 						subject,
-						$"is declared at vector{form.ToString(CultureInfo.InvariantCulture)}, which {Missing(formsOf, form, self, relationship, crossed)} does not declare."));
+						$"is declared at vector{form.ToString(CultureInfo.InvariantCulture)}, which {Missing(declarations, form, self, relationship, crossed)} does not declare."));
 				}
 
 				continue;
@@ -393,26 +437,28 @@ internal sealed class QuantityVocabulary
 	}
 
 	private static string Missing(
-		IReadOnlyDictionary<string, MetadataForms> formsOf,
+		IReadOnlyDictionary<string, DimensionDeclaration> declarations,
 		int form,
 		string self,
-		MetadataRelationship relationship,
+		RelationshipDeclaration relationship,
 		bool crossed)
 	{
 		IEnumerable<string> participants = crossed
 			? [self, relationship.Other, relationship.Result]
 			: [self, relationship.Result];
 
-		return string.Join(" and ", participants.Where(named => Base(formsOf, named, form) is null));
+		return string.Join(" and ", participants.Where(named => Base(declarations, named, form) is null));
 	}
 
-	private static string? Base(IReadOnlyDictionary<string, MetadataForms> formsOf, string dimension, int form)
+	private static string? Base(IReadOnlyDictionary<string, DimensionDeclaration> declarations, string dimension, int form)
 	{
-		string? name = formsOf.TryGetValue(dimension, out MetadataForms? forms) ? forms[form]?.Base : null;
+		string? name = declarations.TryGetValue(dimension, out DimensionDeclaration? declared)
+			? declared.Form(form)?.Base
+			: null;
 		return string.IsNullOrEmpty(name) ? null : name;
 	}
 
-	private static string Subject(string self, MetadataRelationship relationship, RelationshipKind kind) => kind switch
+	private static string Subject(string self, RelationshipDeclaration relationship, RelationshipKind kind) => kind switch
 	{
 		RelationshipKind.Product => $"{self} * {relationship.Other} -> {relationship.Result}",
 		RelationshipKind.Quotient => $"{self} / {relationship.Other} -> {relationship.Result}",
@@ -430,7 +476,19 @@ internal sealed class QuantityVocabulary
 				? $" {char.ToLowerInvariant(character)}"
 				: $"{(index == 0 ? char.ToLowerInvariant(character) : character)}"));
 
-	private static string Capitalised(string word) => $"{char.ToUpperInvariant(word[0])}{word[1..]}";
+	/// <summary>
+	/// Whether a dimension's name takes "an" rather than "a".
+	/// </summary>
+	/// <remarks>
+	/// A pattern over the character rather than a lookup in a string, which is what keeps this
+	/// inside netstandard2.0's surface: <c>string.Contains(char)</c> arrived later, and the
+	/// <c>IndexOf</c> that netstandard2.0 does have is what CA2249 objects to. Dimension names are
+	/// PascalCase, so only the upper-case vowels can appear first.
+	/// </remarks>
+	private static bool StartsWithVowel(string name) =>
+		name.Length > 0 && name[0] is 'A' or 'E' or 'I' or 'O' or 'U';
 
-	private static string Article(string name) => "AEIOU".Contains(name[0]) ? "an" : "a";
+	private static string Article(string name) => StartsWithVowel(name) ? "an" : "a";
+
+	private static string CapitalisedArticle(string name) => StartsWithVowel(name) ? "An" : "A";
 }

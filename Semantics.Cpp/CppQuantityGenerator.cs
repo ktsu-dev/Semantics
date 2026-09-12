@@ -12,6 +12,7 @@ using System.Reflection;
 
 using ktsu.Coder.Ast;
 using ktsu.Coder.Languages;
+using ktsu.Semantics.Vocabulary;
 
 /// <summary>
 /// Projects the quantity metadata into C++.
@@ -100,7 +101,7 @@ public sealed class CppQuantityGenerator(CppQuantityOptions options)
 	{
 		Ensure.NotNull(metadata);
 
-		QuantityVocabulary vocabulary = QuantityVocabulary.FromMetadata(metadata);
+		QuantityVocabulary vocabulary = QuantityVocabulary.FromDimensions(metadata.ToDeclarations());
 		Dictionary<string, string> files = [];
 
 		foreach ((string name, string text) in Prelude())

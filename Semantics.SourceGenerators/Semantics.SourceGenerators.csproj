@@ -27,6 +27,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- The physics, shared with Semantics.Cpp as source rather than as an assembly. See
+         Semantics.Vocabulary/README.md: this project bundles its dependencies into the analyzer, so
+         an extra assembly here is an extra thing to load at analysis time, and the other consumer
+         is packed, so it would become a published package. Source costs neither. -->
+    <Compile Include="..\Semantics.Vocabulary\*.cs" LinkBase="Vocabulary" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ktsu.CodeBlocker" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="ktsu.SourceGeneratorToolkit" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />

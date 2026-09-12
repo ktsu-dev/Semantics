@@ -60,9 +60,16 @@ public class SourceGeneratorTests
 			string generatorName = generator.GetType().Name;
 			GeneratorRunResult result = Harness.Run(generator);
 
+			// SEM008 is excluded because the real metadata declares five relationships that are not
+			// dimensionally true, all documented in CLAUDE.md and none of them a spelling mistake.
+			// UnkeepableRelationshipTests pins that set to exactly those five, so excluding the
+			// identifier here does not let a sixth through.
+			IEnumerable<Diagnostic> unexpected =
+				result.Diagnostics.Where(diagnostic => diagnostic.Id != "SEM008");
+
 			Assert.IsEmpty(
-				result.Diagnostics,
-				$"{generatorName} reported diagnostics: {string.Join("; ", result.Diagnostics.Select(d => d.GetMessage()))}");
+				unexpected,
+				$"{generatorName} reported diagnostics: {string.Join("; ", unexpected.Select(d => d.GetMessage()))}");
 
 			Assert.IsGreaterThan(
 				0,

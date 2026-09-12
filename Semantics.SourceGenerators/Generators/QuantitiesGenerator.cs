@@ -9,6 +9,7 @@ using System.Text.Json;
 using ktsu.CodeBlocker;
 using Microsoft.CodeAnalysis;
 using ktsu.SourceGeneratorToolkit;
+using ktsu.Semantics.Vocabulary;
 using Semantics.SourceGenerators.Models;
 using ktsu.CodeBlocker.Templates;
 using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;
@@ -52,6 +53,34 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		GenerateInner(context, dimensions, units, dimensionsFile);
 	}
 
+	/// <summary>
+	/// Reports the relationships the metadata declares that cannot be true, as SEM008.
+	/// </summary>
+	/// <param name="context">Where the diagnostics go.</param>
+	/// <param name="metadata">The deserialised <c>dimensions.json</c>.</param>
+	/// <remarks>
+	/// The check comes from <see cref="QuantityVocabulary"/>, shared with the C++ projection, which
+	/// has had it since it needed the exponents to write <c>Quantity&lt;D&gt;</c> and could not
+	/// avoid multiplying them out. This side never had it: it checked that a relationship's names
+	/// resolved and that its forms existed, and then emitted the operator.
+	/// <para>
+	/// Only the two kinds this project has no diagnostic of its own for are reported. An unknown
+	/// dimension is already SEM001 and a missing vector form is already SEM003, both of them from
+	/// the code that actually drops the operator, and reporting them twice from two places would
+	/// say the same thing in two voices.
+	/// </para>
+	/// </remarks>
+	private static void ReportUnkeepableRelationships(SourceProductionContext context, DimensionsMetadata metadata)
+	{
+		QuantityVocabulary vocabulary = QuantityVocabulary.FromDimensions(metadata.ToDeclarations());
+
+		foreach (VocabularyIssue issue in vocabulary.Refused.Where(issue =>
+			issue.Kind is VocabularyIssueKind.NotDimensionallyTrue or VocabularyIssueKind.SignedResultInMagnitudeForm))
+		{
+			context.Report(SemanticsDiagnostics.RelationshipNotDimensionallyTrue, issue.Subject, issue.Reason);
+		}
+	}
+
 	private void GenerateInner(SourceProductionContext context, DimensionsMetadata metadata, UnitsMetadata units, MetadataFile? dimensionsFile)
 	{
 		if (metadata.PhysicalDimensions == null || metadata.PhysicalDimensions.Count == 0)
@@ -66,6 +95,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		{
 			context.Report(SemanticsDiagnostics.MetadataValidationFailed, issue);
 		}
+
+		ReportUnkeepableRelationships(context, metadata);
 
 		Dictionary<string, UnitDefinition> unitMap = BuildUnitMap(units);
 

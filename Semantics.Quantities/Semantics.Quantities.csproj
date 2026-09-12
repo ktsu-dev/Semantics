@@ -3,7 +3,16 @@
   <Sdk Name="ktsu.Sdk" />
   <PropertyGroup>
     <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
-    <NoWarn>$(NoWarn);CA1716;CA2225;KTSU0003;IDE0032</NoWarn>
+    <!-- SEM008 reports a relationship in dimensions.json whose declared result does not follow
+         from its operands. Five are outstanding and all five are documented in CLAUDE.md: three are
+         the "r x F versus tau . theta" contradiction and are provably unfixable by choosing
+         exponents, one (Sensitivity * Pressure to ElectricPotential) is a metadata bug whose fix is
+         a physics call, and one needs a vector1 form on Energy. ktsu.Sdk builds warnings as errors,
+         so until those five are settled the diagnostic cannot be left on here.
+         It is suppressed only in this project, so a consumer editing metadata still sees it, and
+         UnkeepableRelationshipTests pins the set to exactly those five: a sixth fails there rather
+         than disappearing into this line. Delete this when dimensions.json is fixed. -->
+    <NoWarn>$(NoWarn);CA1716;CA2225;KTSU0003;IDE0032;SEM008</NoWarn>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
     <!-- Package validation is on (ktsu.Sdk default). This library intentionally exposes a different

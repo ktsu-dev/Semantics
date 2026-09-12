@@ -306,8 +306,22 @@ public class GeneratorDiagnosticTests
 		AssertReports(diagnostics, "SEM007");
 	}
 
+	/// <summary>
+	/// The real metadata reports nothing except the relationships it is already known to get wrong.
+	/// </summary>
+	/// <remarks>
+	/// This asserted nothing at all until the dimensional check moved into the shared vocabulary and
+	/// the C# generator started running it. Five relationships fail it, all five documented in
+	/// <c>CLAUDE.md</c> and none of them fixable by spelling, so SEM008 is excluded here rather than
+	/// the invariant being abandoned: everything else must still be silent.
+	/// <para>
+	/// Which five is not this test's business but
+	/// <see cref="UnkeepableRelationshipTests"/>'s, which pins them exactly. Excluding the
+	/// identifier here without that would let a sixth through.
+	/// </para>
+	/// </remarks>
 	[TestMethod]
-	public void TheRealMetadataReportsNothing()
+	public void TheRealMetadataReportsNothingUnexpected()
 	{
 		List<IIncrementalGenerator> generators =
 		[
@@ -324,9 +338,12 @@ public class GeneratorDiagnosticTests
 		foreach (IIncrementalGenerator generator in generators)
 		{
 			GeneratorRunResult result = Harness.Run(generator);
+			IEnumerable<Diagnostic> unexpected =
+				result.Diagnostics.Where(diagnostic => diagnostic.Id != "SEM008");
+
 			Assert.IsEmpty(
-				result.Diagnostics,
-				$"{generator.GetType().Name}: {string.Join("; ", result.Diagnostics.Select(d => $"{d.Id}: {d.GetMessage()}"))}");
+				unexpected,
+				$"{generator.GetType().Name}: {string.Join("; ", unexpected.Select(d => $"{d.Id}: {d.GetMessage()}"))}");
 		}
 	}
 }

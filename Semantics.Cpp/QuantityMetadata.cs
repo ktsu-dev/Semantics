@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using ktsu.Semantics.Vocabulary;
+
 /// <summary>
 /// As much of <c>dimensions.json</c> as the C++ projection reads.
 /// </summary>
