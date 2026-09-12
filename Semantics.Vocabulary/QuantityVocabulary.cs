@@ -274,11 +274,31 @@ internal sealed class QuantityVocabulary
 				overload.Description,
 				exponents,
 				Refines: declared.Base,
-				form != 0 ? Magnitude.Signed
-					: overload.IsStrictlyPositive ? Magnitude.Positive : Magnitude.NonNegative,
+				BoundOf(form, overload),
 				form,
 				magnitudeType);
 		}
+	}
+
+	/// <summary>
+	/// How far down an overload is bounded.
+	/// </summary>
+	/// <param name="form">How many components the form has.</param>
+	/// <param name="overload">The overload being declared.</param>
+	/// <returns>Its lower bound.</returns>
+	/// <remarks>
+	/// Only the magnitude form is bounded below at all, which is the whole reason the forms are
+	/// separate types: a component of a vector is signed whatever the overload asked for, so a
+	/// stricter floor declared on one applies to the magnitude and to nothing else.
+	/// </remarks>
+	private static Magnitude BoundOf(int form, OverloadDeclaration overload)
+	{
+		if (form != 0)
+		{
+			return Magnitude.Signed;
+		}
+
+		return overload.IsStrictlyPositive ? Magnitude.Positive : Magnitude.NonNegative;
 	}
 
 	private static string Describe(string dimension, int form) => form switch
@@ -401,9 +421,7 @@ internal sealed class QuantityVocabulary
 		List<VocabularyIssue> refused)
 	{
 		bool crossed = kind == RelationshipKind.Cross;
-		IReadOnlyList<int> wanted = relationship.Forms.Count > 0
-			? [.. relationship.Forms]
-			: crossed ? [3] : [.. Enumerable.Range(0, DimensionDeclaration.FormCount)];
+		IReadOnlyList<int> wanted = Wanted(relationship, crossed);
 
 		List<QuantityRelationship> emitted = [];
 
@@ -434,6 +452,27 @@ internal sealed class QuantityVocabulary
 		}
 
 		return emitted;
+	}
+
+	/// <summary>
+	/// The forms a relationship asks to be emitted at.
+	/// </summary>
+	/// <param name="relationship">The declared relationship.</param>
+	/// <param name="crossed">Whether it is a cross product.</param>
+	/// <returns>The forms, in the order they should be walked.</returns>
+	/// <remarks>
+	/// An explicit list is taken as it stands. With none, a cross product defaults to three
+	/// components and nothing else, because that is where a cross product exists; everything else
+	/// defaults to every form and lets the participants decide which of them it reaches.
+	/// </remarks>
+	private static IReadOnlyList<int> Wanted(RelationshipDeclaration relationship, bool crossed)
+	{
+		if (relationship.Forms.Count > 0)
+		{
+			return [.. relationship.Forms];
+		}
+
+		return crossed ? [3] : [.. Enumerable.Range(0, DimensionDeclaration.FormCount)];
 	}
 
 	private static string Missing(

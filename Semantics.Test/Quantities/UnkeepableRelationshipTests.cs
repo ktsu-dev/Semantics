@@ -3,7 +3,6 @@
 namespace ktsu.Semantics.Test.Quantities;
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -108,8 +107,8 @@ public sealed class UnkeepableRelationshipTests
 			refused.Subject == "Sensitivity * Pressure -> ElectricPotential");
 
 		Assert.AreEqual(VocabularyIssueKind.NotDimensionallyTrue, issue.Kind);
-		StringAssert.Contains(issue.Reason, "L⁻² I", StringComparison.Ordinal);
-		StringAssert.Contains(issue.Reason, "L² M T⁻³ I⁻¹", StringComparison.Ordinal);
+		Assert.Contains("L⁻² I", issue.Reason);
+		Assert.Contains("L² M T⁻³ I⁻¹", issue.Reason);
 	}
 
 	/// <summary>
@@ -119,14 +118,16 @@ public sealed class UnkeepableRelationshipTests
 	[TestMethod]
 	public void TheKindsWithTheirOwnDiagnosticsAreKeptSeparate()
 	{
-		IReadOnlyList<VocabularyIssue> refused = Vocabulary().Refused;
+		VocabularyIssueKind[] kinds = [.. Vocabulary().Refused.Select(issue => issue.Kind)];
 
-		Assert.IsFalse(
-			refused.Any(issue => issue.Kind is VocabularyIssueKind.UnknownDimension),
+		Assert.DoesNotContain(
+			VocabularyIssueKind.UnknownDimension,
+			kinds,
 			"an unknown dimension is SEM001's to report, and the metadata should have none.");
 
-		Assert.IsFalse(
-			refused.Any(issue => issue.Kind is VocabularyIssueKind.NoMagnitudeForm),
+		Assert.DoesNotContain(
+			VocabularyIssueKind.NoMagnitudeForm,
+			kinds,
 			"every dimension should declare a magnitude form for the other forms to measure against.");
 	}
 }
