@@ -1,7 +1,6 @@
-## v4.3.0 (minor)
+## v4.3.1 (patch)
 
-Changes since v4.2.0:
+Changes since v4.3.0:
 
-- Join rather than Combine when reading the test's metadata ([@Claude](https://github.com/Claude))
-- [minor] Share the quantity vocabulary between both generators ([@Claude](https://github.com/Claude))
+- Address the SonarCloud findings from #219 ([@Claude](https://github.com/Claude))
 
