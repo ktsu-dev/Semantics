@@ -1,6 +1,6 @@
-## v4.3.1 (patch)
+## v4.3.2 (patch)
 
-Changes since v4.3.0:
+Changes since v4.3.1:
 
-- Address the SonarCloud findings from #219 ([@Claude](https://github.com/Claude))
+- Fix the sensitivity dimension and the torque operand order [patch] ([@Claude](https://github.com/Claude))
 

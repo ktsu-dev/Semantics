@@ -110,10 +110,4 @@ public readonly partial record struct Force3D<T> : IVector3<Force3D<T>, T>
 	/// <summary>Force3D * Duration = Momentum3D.</summary>
 	public static Momentum3D<T> operator *(Force3D<T> left, Duration<T> right) => new() { X = left.X * right.Value, Y = left.Y * right.Value, Z = left.Z * right.Value };
 
-	/// <summary>Typed cross product: Force3D x Displacement3D = Torque3D.</summary>
-	public Torque3D<T> Cross(Displacement3D<T> other)
-	{
-		return new() { X = (Y * other.Z) - (Z * other.Y), Y = (Z * other.X) - (X * other.Z), Z = (X * other.Y) - (Y * other.X) };
-	}
-
 };

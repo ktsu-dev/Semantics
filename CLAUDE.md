@@ -103,7 +103,7 @@ carried through `DimensionInfo` on the .NET side, where nothing depends on it ye
 `Result{ lhs.value() * rhs.value() }`, so the exponents have to agree with the declared result or it
 does not compile — which makes every claim in `integrals` and `derivatives` checkable. A claim they
 contradict is refused by name, with both dimensions written out, rather than emitted as something
-broken. Five are refused as the metadata stands.
+broken. Four are refused as the metadata stands.
 
 The check itself lives in `Semantics.Vocabulary`, and the vocabulary is what both generators emit
 *from* rather than merely check against — `QuantityVocabulary.Types` is the list of classes to write
@@ -123,7 +123,6 @@ claim. That expansion lives in `QuantitiesGenerator.CollectOperators`.
 | `Torque * AngularDisplacement -> Energy` | rotational cluster |
 | `MomentOfInertia * AngularVelocity -> AngularMomentum` | rotational cluster |
 | `MomentOfInertia * AngularAcceleration -> Torque` | rotational cluster |
-| `Sensitivity * Pressure -> ElectricPotential` | **pre-existing metadata bug** |
 | `dot(Force, Length) -> Energy` | signed value, magnitude result |
 
 The first three are not fixable by choosing different angle exponents, and that is provable rather
@@ -132,21 +131,25 @@ than a matter of opinion: `Torque * AngularDisplacement -> Energy` forces torque
 and is why SI keeps the radian dimensionless. The nominal layer is what separates torque from
 energy; the exponents cannot.
 
-The fourth is unrelated to angle and was already wrong: `Sensitivity` is declared as A/Pa
-(`M⁻¹L⁻¹T²I`) while the relationship treats it as V/Pa. One of the two is wrong and it is a physics
-call, so it is reported rather than guessed at.
+**A fifth was refused and is now fixed.** `Sensitivity * Pressure -> ElectricPotential` was the one
+unrelated to angle, and it needed no physics judgement in the end: the dimension read `M⁻¹ L⁻¹ T² I`,
+which is amperes per *newton*, while `availableUnits` beside it said `VoltPerPascal` and the
+relationship agreed with the unit. Two witnesses against one, so the formula was simply wrong.
+`Sensitivity` is `L³ T⁻¹ I⁻¹` — volts per pascal — and the product now lands on
+`ElectricPotential` exactly.
 
-The fifth is a second kind of refusal, and the vector forms are what surfaced it. The exponents
+The last is a second kind of refusal, and the vector forms are what surfaced it. The exponents
 agree — `L M T⁻² · L` is `L² M T⁻²`, which is what `Energy` is — and the claim is still unkeepable,
 because a force opposing a displacement does negative work and a magnitude form cannot be negative.
 Emitting it would produce a type that fails its own assertion on an ordinary input. The fix is named
 in the message rather than guessed at: `Energy` needs a `vector1` form for the result to land in.
 
-**One thing the exponents cannot check, and do not.** `Force × Length → Torque` is emitted as
-`cross(Force3D, Displacement3D)`, which is **F × r**, and the convention is τ = **r × F**. The two
-differ by a sign, and no exponent can tell them apart — a cross product and its negation have
-identical dimensions. It is left as declared rather than quietly reordered, because which operand
-comes first is a claim the metadata makes and a physics call to change, the same as `Sensitivity`.
+**One thing the exponents cannot check, so the metadata has to say it correctly.** Torque is
+τ = **r × F**, and the relationship is declared on `Length` — `cross(Displacement3D, Force3D)` —
+which is what puts the operands in that order. It was declared on `Force` and emitted **F × r**, its
+negation. No exponent can catch that: a cross product and its negation have identical dimensions, so
+the only thing standing between the two is which dimension declares the relationship. A test pins
+the sign: a force of +10 ŷ at a lever arm of +0.5 x̂ gives +5 about z, and the other order gives −5.
 
 **How the generated code is written is measured, not chosen.** See the header of
 `CppQuantityGenerator` — the same vocabulary written two ways measured 0.9896 and 1.4004 against
@@ -294,7 +297,7 @@ var converted = sourceString.As<SourceType, TargetType>();
   - **SEM005** — schema-level validation issue in `logarithmic.json` (missing or duplicate scale names, a conversion with no linear type).
   - **SEM006** — a metadata file a generator declared in `MetadataFileNames` was not supplied as an `AdditionalFile`. Previously this produced no output and no explanation, which is indistinguishable from a generator that simply had nothing to emit.
   - **SEM007** — a metadata file could not be parsed. Replaces the base generator's `CONV001` in category `SourceGenerator`, and covers the path that used to swallow the exception, where a malformed `units.json` silently produced factories with no scale factor.
-  - **SEM008** — a relationship's declared result does not follow from the dimensions of its operands, or its value is signed and the declared result is a magnitude. The check comes from `Semantics.Vocabulary`, shared with the C++ projection; before that this side checked the names (SEM001) and the forms (SEM003) and then emitted the operator, so `Sensitivity * Pressure -> ElectricPotential` shipped as a working C# operator computing the wrong physics. **No operator is generated** for a refused relationship, in any of the directions C# spells a product in — that followed from making the vocabulary drive emission rather than only check it, and the removal is documented in `docs/migration-guide-5.0.md`. Suppressed in `Semantics.Quantities.csproj` because ktsu.Sdk builds warnings as errors and the five below are outstanding; `UnkeepableRelationshipTests` pins the set, and asserts that none of them is in the compiled surface, so a sixth fails there rather than disappearing into the suppression.
+  - **SEM008** — a relationship's declared result does not follow from the dimensions of its operands, or its value is signed and the declared result is a magnitude. The check comes from `Semantics.Vocabulary`, shared with the C++ projection; before that this side checked the names (SEM001) and the forms (SEM003) and then emitted the operator, so `Sensitivity * Pressure -> ElectricPotential` shipped as a working C# operator computing the wrong physics — which is what found that bug, and it is now fixed. **No operator is generated** for a refused relationship, in any of the directions C# spells a product in — that followed from making the vocabulary drive emission rather than only check it, and the removal is documented in `docs/migration-guide-5.0.md`. Suppressed in `Semantics.Quantities.csproj` because ktsu.Sdk builds warnings as errors and the four below are outstanding; `UnkeepableRelationshipTests` pins the set, and asserts that none of them is in the compiled surface, so a fifth fails there rather than disappearing into the suppression.
   - Descriptors are allocated from `SemanticsDiagnostics`, which is the one place to add a new one. `AnalyzerReleaseTrackingTests` fails if the identifier is missing from `AnalyzerReleases.Unshipped.md`, so RS2008 no longer surfaces only after a push.
 - See `docs/physics-generator.md` for the full schema and an end-to-end "add a dimension" walk-through.
 

@@ -130,6 +130,13 @@ public sealed class GeneratedCppCompilesTests
 			static_assert(widened.z().count() == 3.0f);
 			static_assert(Position3D::from(widened).z().count() == 3.0f);
 
+			// Torque is r x F, and the sign is the whole of what that says: a cross product and its
+			// negation have identical dimensions, so nothing structural can tell the two apart. A
+			// force of +10 y at a lever arm of +0.5 x turns counter-clockwise about z.
+			constexpr Displacement3D lever{ Displacement3D::component{ 0.5f }, Displacement3D::component{ 0.0f }, Displacement3D::component{ 0.0f } };
+			constexpr Force3D push{ Force3D::component{ 0.0f }, Force3D::component{ 10.0f }, Force3D::component{ 0.0f } };
+			static_assert(cross(lever, push).z().count() == 5.0f);
+
 			int main() { return 0; }
 			""");
 

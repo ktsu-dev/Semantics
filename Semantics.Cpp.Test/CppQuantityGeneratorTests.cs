@@ -186,7 +186,13 @@ public sealed class CppQuantityGeneratorTests
 	/// Four are refused on the metadata as it stands. Three are the rotational cluster, where no
 	/// assignment of angle exponents can satisfy both <c>Force x Length -&gt; Torque</c> and
 	/// <c>Torque * AngularDisplacement -&gt; Energy</c> -- the two force the same exponent to be 0
-	/// and -1. The fourth was already wrong before angle existed.
+	/// and -1. The fourth is a signed value in a magnitude form.
+	/// <para>
+	/// A fifth used to be here: <c>Sensitivity * Pressure -&gt; ElectricPotential</c>, which was a
+	/// plain metadata bug rather than anything about angle, and is fixed. This check is what found
+	/// it, so it is asserted the other way round in
+	/// <c>UnkeepableRelationshipTests.TheSensitivityRelationshipIsNoLongerRefused</c>.
+	/// </para>
 	/// </remarks>
 	[TestMethod]
 	public void RefusesARelationshipTheExponentsContradict()
@@ -194,8 +200,8 @@ public sealed class CppQuantityGeneratorTests
 		IReadOnlyList<string> refused = Output.Refused;
 
 		Assert.IsTrue(
-			refused.Any(issue => issue.Contains("Sensitivity * Pressure", StringComparison.Ordinal)),
-			$"expected the pre-existing metadata error to be caught; got: {string.Join(" | ", refused)}");
+			refused.Any(issue => issue.Contains("Torque * AngularDisplacement", StringComparison.Ordinal)),
+			$"expected the rotational contradiction to be caught; got: {string.Join(" | ", refused)}");
 
 		Assert.IsTrue(
 			refused.All(issue => issue.Contains("is not dimensionally true", StringComparison.Ordinal)
@@ -360,14 +366,16 @@ public sealed class CppQuantityGeneratorTests
 	{
 		string relationships = Output.Files["relationships.hpp"];
 
-		Assert.Contains("Torque3D cross(Force3D lhs, Displacement3D rhs)", relationships, StringComparison.Ordinal);
+		// r x F, not F x r: the operands are in the order the declaring dimension puts them in, and
+		// the two differ by a sign that no exponent can tell apart.
+		Assert.Contains("Torque3D cross(Displacement3D lhs, Force3D rhs)", relationships, StringComparison.Ordinal);
 		Assert.Contains(
 			"return Torque3D{ lhs.y() * rhs.z() - lhs.z() * rhs.y(), lhs.z() * rhs.x() - lhs.x() * rhs.z(), lhs.x() * rhs.y() - lhs.y() * rhs.x() };",
 			relationships,
 			StringComparison.Ordinal);
 
-		Assert.DoesNotContain("cross(Force2D", relationships, StringComparison.Ordinal);
-		Assert.DoesNotContain("cross(ForceMagnitude", relationships, StringComparison.Ordinal);
+		Assert.DoesNotContain("cross(Displacement2D", relationships, StringComparison.Ordinal);
+		Assert.DoesNotContain("cross(Length", relationships, StringComparison.Ordinal);
 	}
 
 	/// <summary>

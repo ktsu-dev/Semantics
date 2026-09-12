@@ -51,23 +51,13 @@ public sealed class QuantityBackfillTests
 		Assert.AreEqual(1000.0, power.Value, Tolerance);
 	}
 
-	/// <summary>
-	/// A sensitivity is still constructible from volts per pascal, which is the part of the
-	/// metadata that is not in doubt.
-	/// </summary>
-	/// <remarks>
-	/// What used to be asserted here was <c>mic * pressure</c> answering with a voltage, and that
-	/// operator is gone: <c>Sensitivity</c> is declared as A/Pa (<c>M⁻¹L⁻¹T²I</c>) while the
-	/// relationship treats it as V/Pa, so the product it claimed was off by <c>M L⁴ T⁻⁵ I⁻²</c>.
-	/// The test passed because it multiplied two stored values and compared the result to their
-	/// product; no arithmetic over SI base units could have caught it. See
-	/// <c>UnkeepableRelationshipTests</c> and the migration note for 4.0.
-	/// </remarks>
 	[TestMethod]
-	public void Sensitivity_Factory_Reads_VoltPerPascal()
+	public void Sensitivity_Times_Pressure_Is_Voltage()
 	{
-		// A 50 mV/Pa microphone.
-		Assert.AreEqual(0.05, Sensitivity<double>.FromVoltPerPascal(0.05).Value, Tolerance);
+		// A 50 mV/Pa microphone at 1 Pa (94 dB SPL) produces 50 mV.
+		Sensitivity<double> mic = Sensitivity<double>.FromVoltPerPascal(0.05);
+		VoltageMagnitude<double> output = mic * Pressure<double>.FromPascal(1.0);
+		Assert.AreEqual(0.05, output.Value, Tolerance);
 	}
 
 	[TestMethod]
