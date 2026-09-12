@@ -17,10 +17,15 @@ using global::Semantics.SourceGenerators.Models;
 /// </summary>
 /// <remarks>
 /// <c>SEM008</c> reports these, and <c>Semantics.Quantities.csproj</c> suppresses it, because
-/// ktsu.Sdk builds warnings as errors and all five are outstanding for reasons that are not
+/// ktsu.Sdk builds warnings as errors and all four are outstanding for reasons that are not
 /// spelling: three are the <c>r x F</c> versus <c>tau . theta</c> contradiction and no assignment of
-/// angle exponents satisfies both, one is a metadata bug whose fix is a physics call, and one needs
-/// a <c>vector1</c> form on <c>Energy</c>.
+/// angle exponents satisfies both, and one needs a <c>vector1</c> form on <c>Energy</c>.
+/// <para>
+/// There were five. <c>Sensitivity * Pressure -> ElectricPotential</c> was the one unrelated to
+/// angle, and it is fixed: the dimension said amperes per newton while the unit beside it said
+/// <c>VoltPerPascal</c> and the relationship agreed with the unit, so the formula was the one thing
+/// that was wrong.
+/// </para>
 /// <para>
 /// A suppression with no floor under it would swallow a sixth, which is what this exists to stop.
 /// The assertion is on the exact set rather than on a count, so a relationship that stops being
@@ -44,7 +49,6 @@ public sealed class UnkeepableRelationshipTests
 	[
 		"MomentOfInertia * AngularAcceleration -> Torque",
 		"MomentOfInertia * AngularVelocity -> AngularMomentum",
-		"Sensitivity * Pressure -> ElectricPotential",
 		"Torque * AngularDisplacement -> Energy",
 		"dot(Force, Length) -> Energy",
 	];
@@ -70,7 +74,7 @@ public sealed class UnkeepableRelationshipTests
 	}
 
 	/// <summary>
-	/// The unkeepable relationships are exactly the five that are documented.
+	/// The unkeepable relationships are exactly the four that are documented.
 	/// </summary>
 	[TestMethod]
 	public void TheMetadataDeclaresExactlyTheKnownUnkeepableRelationships()
@@ -93,22 +97,20 @@ public sealed class UnkeepableRelationshipTests
 	}
 
 	/// <summary>
-	/// The pre-existing metadata bug is among them, named rather than merely counted.
+	/// The relationship that used to be refused is emitted, and means what its unit says.
 	/// </summary>
 	/// <remarks>
-	/// <c>Sensitivity</c> is declared as A/Pa while the relationship treats it as V/Pa. It is the
-	/// one refusal unrelated to angle, and the one that had been shipping as a working C# operator
-	/// computing the wrong physics before the C# side gained this check.
+	/// The check that caught it is what says it is fixed: a sensitivity in volts per pascal times a
+	/// pressure is a potential, and nothing refuses it now. Asserted through the vocabulary rather
+	/// than by multiplying two quantities, because the refusal was never about a value - it was
+	/// about whether the exponents on either side of the claim agreed.
 	/// </remarks>
 	[TestMethod]
-	public void TheSensitivityBugIsCaughtWithBothDimensionsWrittenOut()
+	public void TheSensitivityRelationshipIsNoLongerRefused()
 	{
-		VocabularyIssue issue = Vocabulary().Refused.Single(refused =>
-			refused.Subject == "Sensitivity * Pressure -> ElectricPotential");
-
-		Assert.AreEqual(VocabularyIssueKind.NotDimensionallyTrue, issue.Kind);
-		Assert.Contains("L⁻² I", issue.Reason);
-		Assert.Contains("L² M T⁻³ I⁻¹", issue.Reason);
+		Assert.DoesNotContain(
+			"Sensitivity * Pressure -> ElectricPotential",
+			Vocabulary().Refused.Select(refused => refused.Subject).ToArray());
 	}
 
 	/// <summary>

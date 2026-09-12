@@ -72,15 +72,18 @@ public sealed class VectorQuantityTests
 	// ---------------------------------------------------- Typed cross product
 
 	[TestMethod]
-	public void Force3D_Cross_Displacement3D_Returns_Torque3D()
+	public void Displacement3D_Cross_Force3D_Returns_Torque3D()
 	{
-		Force3D<double> f = new() { X = 0.0, Y = 10.0, Z = 0.0 };
 		Displacement3D<double> r = new() { X = 0.5, Y = 0.0, Z = 0.0 };
-		Torque3D<double> t = f.Cross(r);
-		// (Y*rZ - Z*rY, Z*rX - X*rZ, X*rY - Y*rX) = (0, 0, -5)
+		Force3D<double> f = new() { X = 0.0, Y = 10.0, Z = 0.0 };
+		Torque3D<double> t = r.Cross(f);
+
+		// Torque is r x F, not F x r. A force of +10 y at a lever arm of +0.5 x turns
+		// counter-clockwise about z, so the sign is positive - the other order gives its negation,
+		// which is what this asserted while the relationship was declared on Force.
 		Assert.AreEqual(0.0, t.X, Tolerance);
 		Assert.AreEqual(0.0, t.Y, Tolerance);
-		Assert.AreEqual(-5.0, t.Z, Tolerance);
+		Assert.AreEqual(5.0, t.Z, Tolerance);
 	}
 
 	[TestMethod]

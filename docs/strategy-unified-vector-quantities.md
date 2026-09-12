@@ -345,9 +345,13 @@ This is how `Force3D * Displacement3D = Energy` is expressed: not as a `*` opera
 **Cross product methods from `crossProducts`:**
 
 ```csharp
-// Force × Length = Torque (cross product: V3 × V3 → V3)
-public Torque3D Force3D.Cross(Displacement3D other);
+// Length × Force = Torque (cross product: V3 × V3 → V3)
+public Torque3D Displacement3D.Cross(Force3D other);
 ```
+
+The operand order is the physics rather than a detail: torque is **r × F**, so the relationship is
+declared on `Length`. Declared on `Force` it emits **F × r**, which is its negation — and no
+dimension check can catch that, since a cross product and its negation have identical exponents.
 
 ### How Semantic Overloads Participate
 

@@ -192,7 +192,7 @@ public static class PhysicalDimensions
 	public static readonly DimensionInfo ReactionRate = new("ReactionRate", "N L⁻³ T⁻¹", new Dictionary<string, int> { ["amountOfSubstance"] = 1, ["length"] = -3, ["time"] = -1 }, new List<string> { "ReactionRate" });
 
 	/// <summary>Physical dimension: Sensitivity</summary>
-	public static readonly DimensionInfo Sensitivity = new("Sensitivity", "M⁻¹ L⁻¹ T² I", new Dictionary<string, int> { ["mass"] = -1, ["length"] = -1, ["time"] = 2, ["electricCurrent"] = 1 }, new List<string> { "Sensitivity" });
+	public static readonly DimensionInfo Sensitivity = new("Sensitivity", "L³ T⁻¹ I⁻¹", new Dictionary<string, int> { ["length"] = 3, ["time"] = -1, ["electricCurrent"] = -1 }, new List<string> { "Sensitivity" });
 
 	/// <summary>Physical dimension: Sharpness</summary>
 	public static readonly DimensionInfo Sharpness = new("Sharpness", "1", new Dictionary<string, int>(), new List<string> { "Sharpness" });
