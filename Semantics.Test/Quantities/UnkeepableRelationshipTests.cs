@@ -5,8 +5,10 @@ namespace ktsu.Semantics.Test.Quantities;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 
+using global::ktsu.Semantics.Quantities;
 using global::ktsu.Semantics.Vocabulary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using global::Semantics.SourceGenerators.Models;
@@ -16,10 +18,11 @@ using global::Semantics.SourceGenerators.Models;
 /// documented and accepted.
 /// </summary>
 /// <remarks>
-/// <c>SEM008</c> reports these, and <c>Semantics.Quantities.csproj</c> suppresses it, because
-/// ktsu.Sdk builds warnings as errors and all four are outstanding for reasons that are not
-/// spelling: three are the <c>r x F</c> versus <c>tau . theta</c> contradiction and no assignment of
-/// angle exponents satisfies both, and one needs a <c>vector1</c> form on <c>Energy</c>.
+/// None of the four generates an operator, and <c>SEM008</c> says so on every build.
+/// <c>Semantics.Quantities.csproj</c> suppresses that warning, because ktsu.Sdk builds warnings as
+/// errors and all four are outstanding for reasons that are not spelling: three are the
+/// <c>r x F</c> versus <c>tau . theta</c> contradiction and no assignment of angle exponents
+/// satisfies both, and one needs a <c>vector1</c> form on <c>Energy</c>.
 /// <para>
 /// There were five. <c>Sensitivity * Pressure -> ElectricPotential</c> was the one unrelated to
 /// angle, and it is fixed: the dimension said amperes per newton while the unit beside it said
@@ -30,7 +33,8 @@ using global::Semantics.SourceGenerators.Models;
 /// A suppression with no floor under it would swallow a sixth, which is what this exists to stop.
 /// The assertion is on the exact set rather than on a count, so a relationship that stops being
 /// refused fails here too — that would mean somebody fixed one, and the list and the suppression
-/// should shrink with it.
+/// should shrink with it. A sixth now costs an operator rather than only a warning, which is what
+/// makes the floor worth having.
 /// </para>
 /// <para>
 /// Driven by the real production metadata, read through the same model the generator reads it with
@@ -112,6 +116,83 @@ public sealed class UnkeepableRelationshipTests
 			"Sensitivity * Pressure -> ElectricPotential",
 			Vocabulary().Refused.Select(refused => refused.Subject).ToArray());
 	}
+
+	/// <summary>
+	/// None of the four reaches the generated surface.
+	/// </summary>
+	/// <remarks>
+	/// The refusal used to be a warning against an operator that was emitted anyway, so the whole
+	/// of what SEM008 bought was that the claim was no longer silent. Now the shared vocabulary
+	/// drives emission rather than only checking it, and a relationship it refuses produces no
+	/// operator on either side — which is what this asserts, against the compiled package rather
+	/// than against the metadata, because that is where the breaking change is.
+	/// <para>
+	/// By reflection rather than by failing to compile: a call that does not compile cannot be
+	/// written down in a test at all, so the only way to state the absence is to look for it.
+	/// Each operator is looked for on both operands, because C# finds one declared on either.
+	/// </para>
+	/// </remarks>
+	[TestMethod]
+	public void NoneOfTheUnkeepableRelationshipsIsGenerated()
+	{
+		Assert.IsFalse(
+			HasOperator("op_Multiply", typeof(TorqueMagnitude<double>), typeof(Angle<double>)),
+			"Torque * AngularDisplacement -> Energy is the r x F versus tau . theta contradiction.");
+
+		Assert.IsFalse(
+			HasOperator("op_Multiply", typeof(MomentOfInertia<double>), typeof(AngularSpeed<double>)),
+			"MomentOfInertia * AngularVelocity -> AngularMomentum is the same contradiction.");
+
+		Assert.IsFalse(
+			HasOperator("op_Multiply", typeof(MomentOfInertia<double>), typeof(AngularAccelerationMagnitude<double>)),
+			"MomentOfInertia * AngularAcceleration -> Torque is the same contradiction.");
+
+		Assert.IsFalse(
+			HasTypedDot(typeof(Force3D<double>), typeof(Displacement3D<double>)),
+			"dot(Force, Length) is signed and Energy is a magnitude form.");
+
+		// The counterpart, so this says what is gone rather than only that something is: the cross
+		// product between the same two is dimensionally true and is still generated, now from
+		// Length where r x F puts it.
+		Assert.IsTrue(
+			typeof(Displacement3D<double>).GetMethod(
+				"Cross",
+				BindingFlags.Public | BindingFlags.Instance,
+				binder: null,
+				[typeof(Force3D<double>)],
+				modifiers: null) is not null,
+			"cross(Length, Force) -> Torque is keepable and should still be generated.");
+	}
+
+	/// <summary>
+	/// Whether either operand declares the operator.
+	/// </summary>
+	/// <param name="name">The operator's compiled method name, such as <c>op_Multiply</c>.</param>
+	/// <param name="left">The type on the left.</param>
+	/// <param name="right">The type on the right.</param>
+	/// <returns>Whether a call would bind.</returns>
+	private static bool HasOperator(string name, Type left, Type right)
+	{
+		Type[] operands = [left, right];
+
+		return Declared(left, name, operands) || Declared(right, name, operands);
+	}
+
+	private static bool Declared(Type type, string name, Type[] operands) =>
+		type.GetMethod(name, BindingFlags.Public | BindingFlags.Static, binder: null, operands, modifiers: null) is not null;
+
+	/// <summary>
+	/// Whether a vector type declares a dot product taking another quantity's vector form.
+	/// </summary>
+	/// <param name="self">The type the method would be declared on.</param>
+	/// <param name="other">The type it would take.</param>
+	/// <returns>Whether the typed overload exists.</returns>
+	/// <remarks>
+	/// The untyped <c>Dot</c> over two vectors of the same kind is always generated and answers
+	/// with the storage type; what this looks for is the overload taking a different one.
+	/// </remarks>
+	private static bool HasTypedDot(Type self, Type other) =>
+		self.GetMethod("Dot", BindingFlags.Public | BindingFlags.Instance, binder: null, [other], modifiers: null) is not null;
 
 	/// <summary>
 	/// The refusals the C# generator already has diagnostics for are not counted among these, so

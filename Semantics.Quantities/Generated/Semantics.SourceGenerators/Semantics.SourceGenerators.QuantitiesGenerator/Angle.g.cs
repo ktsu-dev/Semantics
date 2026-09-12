@@ -159,11 +159,5 @@ public readonly partial record struct Angle<T> : IVector0<Angle<T>, T>, IPhysica
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Duration<T> operator /(Angle<T> left, AngularSpeed<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
-
-	/// <summary>
-	/// Multiplies Angle by TorqueMagnitude to produce Energy.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Energy<T> operator *(Angle<T> left, TorqueMagnitude<T> right) => Energy<T>.Create(left.Quantity * right.Quantity);
 }
 

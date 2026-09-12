@@ -49,24 +49,31 @@ public sealed class VectorQuantityTests
 		Assert.AreEqual(0.0, s.Value, Tolerance);
 	}
 
-	// ------------------------------------------------------ Typed dot product
+	// ------------------------------------------------------ Untyped dot product
 
+	/// <summary>
+	/// The dot product of a vector with one of its own kind answers with the storage type.
+	/// </summary>
+	/// <remarks>
+	/// The <em>typed</em> one — <c>Force3D.Dot(Displacement3D)</c> answering with an
+	/// <c>Energy</c> — used to be generated here and is not any more, because a force opposing a
+	/// displacement does negative work and <c>Energy</c> is a magnitude form, which cannot hold
+	/// one. <c>UnkeepableRelationshipTests</c> is where that is pinned.
+	/// </remarks>
 	[TestMethod]
-	public void Force3D_Dot_Displacement3D_Returns_Energy_Aligned()
+	public void Force3D_Dot_Force3D_Returns_The_Storage_Type()
 	{
 		Force3D<double> f = new() { X = 10.0, Y = 0.0, Z = 0.0 };
-		Displacement3D<double> r = new() { X = 2.0, Y = 0.0, Z = 0.0 };
-		Energy<double> work = f.Dot(r);
-		Assert.AreEqual(20.0, work.Value, Tolerance);
+		Force3D<double> g = new() { X = 2.0, Y = 0.0, Z = 0.0 };
+		Assert.AreEqual(20.0, f.Dot(g), Tolerance);
 	}
 
 	[TestMethod]
-	public void Force3D_Dot_Displacement3D_Is_Zero_For_Perpendicular()
+	public void Force3D_Dot_Force3D_Is_Zero_For_Perpendicular()
 	{
 		Force3D<double> f = new() { X = 10.0, Y = 0.0, Z = 0.0 };
-		Displacement3D<double> r = new() { X = 0.0, Y = 5.0, Z = 0.0 };
-		Energy<double> work = f.Dot(r);
-		Assert.AreEqual(0.0, work.Value, Tolerance);
+		Force3D<double> g = new() { X = 0.0, Y = 5.0, Z = 0.0 };
+		Assert.AreEqual(0.0, f.Dot(g), Tolerance);
 	}
 
 	// ---------------------------------------------------- Typed cross product

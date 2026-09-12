@@ -115,17 +115,5 @@ public readonly partial record struct MomentOfInertia<T> : IVector0<MomentOfIner
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static MomentOfInertia<T> operator -(MomentOfInertia<T> left, MomentOfInertia<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-
-	/// <summary>
-	/// Multiplies MomentOfInertia by AngularSpeed to produce AngularMomentumMagnitude.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularMomentumMagnitude<T> operator *(MomentOfInertia<T> left, AngularSpeed<T> right) => AngularMomentumMagnitude<T>.Create(left.Quantity * right.Quantity);
-
-	/// <summary>
-	/// Multiplies MomentOfInertia by AngularAccelerationMagnitude to produce TorqueMagnitude.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static TorqueMagnitude<T> operator *(MomentOfInertia<T> left, AngularAccelerationMagnitude<T> right) => TorqueMagnitude<T>.Create(left.Quantity * right.Quantity);
 }
 

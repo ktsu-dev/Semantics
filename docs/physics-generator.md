@@ -175,7 +175,7 @@ type.
   | SEM005 | A schema-level problem in `logarithmic.json`. |
   | SEM006 | A metadata file a generator declared that was not supplied as an `AdditionalFile`. |
   | SEM007 | A metadata file that could not be parsed. |
-  | SEM008 | A relationship whose declared result does not follow from the dimensions of its operands, or whose signed value cannot land in a magnitude result. The operator is still emitted. |
+  | SEM008 | A relationship whose declared result does not follow from the dimensions of its operands, or whose signed value cannot land in a magnitude result. No operator is generated for it. |
 
   Adding one means adding it to `SemanticsDiagnostics` and to `AnalyzerReleases.Unshipped.md`; `AnalyzerReleaseTrackingTests` fails if the second step is forgotten. `GeneratorDiagnosticTests` proves each one still fires on the input it is meant to catch.
 - `availableUnits` order matters: the first entry is treated as the SI base unit by `UnitsGenerator`.

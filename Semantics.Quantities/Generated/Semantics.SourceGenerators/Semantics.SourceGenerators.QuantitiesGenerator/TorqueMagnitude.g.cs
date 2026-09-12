@@ -125,27 +125,9 @@ public readonly partial record struct TorqueMagnitude<T> : IVector0<TorqueMagnit
 	public static TorqueMagnitude<T> operator -(TorqueMagnitude<T> left, TorqueMagnitude<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 
 	/// <summary>
-	/// Multiplies TorqueMagnitude by Angle to produce Energy.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Energy<T> operator *(TorqueMagnitude<T> left, Angle<T> right) => Energy<T>.Create(left.Quantity * right.Quantity);
-
-	/// <summary>
 	/// Multiplies TorqueMagnitude by Duration to produce AngularMomentumMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static AngularMomentumMagnitude<T> operator *(TorqueMagnitude<T> left, Duration<T> right) => AngularMomentumMagnitude<T>.Create(left.Quantity * right.Quantity);
-
-	/// <summary>
-	/// Divides TorqueMagnitude by AngularAccelerationMagnitude to produce MomentOfInertia.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MomentOfInertia<T> operator /(TorqueMagnitude<T> left, AngularAccelerationMagnitude<T> right) => MomentOfInertia<T>.Create(left.Quantity / right.Quantity);
-
-	/// <summary>
-	/// Divides TorqueMagnitude by MomentOfInertia to produce AngularAccelerationMagnitude.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularAccelerationMagnitude<T> operator /(TorqueMagnitude<T> left, MomentOfInertia<T> right) => AngularAccelerationMagnitude<T>.Create(left.Quantity / right.Quantity);
 }
 

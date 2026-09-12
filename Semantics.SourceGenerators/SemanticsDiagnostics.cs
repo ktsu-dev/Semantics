@@ -86,17 +86,23 @@ public static class SemanticsDiagnostics
 	/// A relationship is a claim, and until this existed nothing on the C# side checked it. The
 	/// names were checked (SEM001) and the forms were checked (SEM003), and then the operator was
 	/// emitted — so <c>Sensitivity * Pressure -&gt; ElectricPotential</c>, whose exponents are off
-	/// by <c>M L⁴ T⁻⁵ I⁻²</c>, has been shipping as a working operator that computes the wrong
-	/// physics. The C++ projection had the check and refused it by name; the two now share it.
+	/// by <c>M L⁴ T⁻⁵ I⁻²</c>, shipped for several versions as a working operator computing the
+	/// wrong physics. The C++ projection had the check and refused it by name; the two now share
+	/// it, and share what is done about it.
 	/// <para>
-	/// A warning rather than an error, and the operator is still emitted. Both of those are
-	/// deliberate: the metadata's own bug predates this, fixing it is a physics call rather than a
-	/// spelling one, and dropping an operator that is in a shipped package is a breaking change
-	/// nobody has asked for yet. What this buys is that the claim is no longer silent.
+	/// No operator is generated. That is what changed when the shared vocabulary went from
+	/// checking emission to driving it: a relationship it refuses is simply not among the ones
+	/// there are to write, in any of the directions C# spells a product in. Reporting it and
+	/// emitting it anyway was the earlier, narrower step — it made the claim audible without
+	/// breaking a shipped package, and the package has since had a major version to break in.
+	/// </para>
+	/// <para>
+	/// A warning rather than an error, because the metadata's bug is a physics call rather than a
+	/// spelling one and a build that cannot complete is no way to ask for one.
 	/// </para>
 	/// </remarks>
 	public static DiagnosticDescriptor RelationshipNotDimensionallyTrue { get; } = Catalog.Warning(
 		8,
 		"Physics relationship does not follow from the dimensions of its operands",
-		"Relationship {0} {1} The operator is still generated, so this is reported rather than dropped; fix dimensions.json.");
+		"Relationship {0} {1} No operator is generated for it; fix dimensions.json.");
 }

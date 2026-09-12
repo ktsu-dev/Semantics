@@ -53,34 +53,6 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		GenerateInner(context, dimensions, units, dimensionsFile);
 	}
 
-	/// <summary>
-	/// Reports the relationships the metadata declares that cannot be true, as SEM008.
-	/// </summary>
-	/// <param name="context">Where the diagnostics go.</param>
-	/// <param name="metadata">The deserialised <c>dimensions.json</c>.</param>
-	/// <remarks>
-	/// The check comes from <see cref="QuantityVocabulary"/>, shared with the C++ projection, which
-	/// has had it since it needed the exponents to write <c>Quantity&lt;D&gt;</c> and could not
-	/// avoid multiplying them out. This side never had it: it checked that a relationship's names
-	/// resolved and that its forms existed, and then emitted the operator.
-	/// <para>
-	/// Only the two kinds this project has no diagnostic of its own for are reported. An unknown
-	/// dimension is already SEM001 and a missing vector form is already SEM003, both of them from
-	/// the code that actually drops the operator, and reporting them twice from two places would
-	/// say the same thing in two voices.
-	/// </para>
-	/// </remarks>
-	private static void ReportUnkeepableRelationships(SourceProductionContext context, DimensionsMetadata metadata)
-	{
-		QuantityVocabulary vocabulary = QuantityVocabulary.FromDimensions(metadata.ToDeclarations());
-
-		foreach (VocabularyIssue issue in vocabulary.Refused.Where(issue =>
-			issue.Kind is VocabularyIssueKind.NotDimensionallyTrue or VocabularyIssueKind.SignedResultInMagnitudeForm))
-		{
-			context.Report(SemanticsDiagnostics.RelationshipNotDimensionallyTrue, issue.Subject, issue.Reason);
-		}
-	}
-
 	private void GenerateInner(SourceProductionContext context, DimensionsMetadata metadata, UnitsMetadata units, MetadataFile? dimensionsFile)
 	{
 		if (metadata.PhysicalDimensions == null || metadata.PhysicalDimensions.Count == 0)
@@ -96,7 +68,13 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			context.Report(SemanticsDiagnostics.MetadataValidationFailed, issue);
 		}
 
-		ReportUnkeepableRelationships(context, metadata);
+		// One physics model, resolved once. Everything below is a spelling of what it says: which
+		// types exist, what each one is, and which operators relate them. The C++ projection reads
+		// the same resolution from the same code, which is what keeps the two from drifting -- and
+		// what stops a relationship the exponents refuse from being written by one side and not
+		// the other.
+		QuantityVocabulary vocabulary = QuantityVocabulary.FromDimensions(metadata.ToDeclarations());
+		ReportRefusals(context, vocabulary, dimensionsFile);
 
 		Dictionary<string, UnitDefinition> unitMap = BuildUnitMap(units);
 
@@ -107,82 +85,101 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		// with no scale factor. SEM004 catches that at build time.
 		ReportUnknownUnitReferences(context, metadata, unitMap, dimensionsFile);
 
-		// Phase A: Build maps and collect operators
-		Dictionary<string, PhysicalDimension> dimensionMap = BuildDimensionMap(metadata);
-		Dictionary<string, int> typeFormMap = BuildTypeFormMap(metadata);
-		List<OperatorInfo> allOperators = CollectAllOperators(context, metadata, dimensionMap, dimensionsFile);
-		List<ProductInfo> allProducts = CollectAllProducts(context, metadata, dimensionMap, dimensionsFile);
-		Dictionary<string, List<OperatorInfo>> operatorsByOwner = GroupBy(allOperators, o => o.OwnerTypeName);
-		Dictionary<string, List<ProductInfo>> productsByOwner = GroupBy(allProducts, p => p.SelfTypeName);
+		Emission emission = new(
+			BuildDimensionMap(metadata),
+			BuildOverloadMap(metadata),
+			GroupBy(CollectOperators(vocabulary), op => op.OwnerTypeName),
+			GroupBy(CollectProducts(vocabulary), product => product.SelfTypeName),
+			BuildTypeFormMap(vocabulary),
+			unitMap);
 
-		// Phase B: Generate types
-		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
+		foreach (QuantityType type in vocabulary.Types)
 		{
-			EmitDimensionTypes(context, dim, operatorsByOwner, productsByOwner, typeFormMap, unitMap);
+			EmitType(context, type, emission);
 		}
 	}
 
 	/// <summary>
-	/// Emits every type declared by a single dimension: its V0/V1 base types, its V2+ vector
-	/// types, and the semantic overloads of each declared form.
+	/// Everything an emitter needs beyond the quantity it is writing.
 	/// </summary>
-	private void EmitDimensionTypes(
-		SourceProductionContext context,
-		PhysicalDimension dim,
-		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
-		Dictionary<string, List<ProductInfo>> productsByOwner,
-		Dictionary<string, int> typeFormMap,
-		Dictionary<string, UnitDefinition> unitMap)
-	{
-		if (dim.Quantities.Vector0 != null)
-		{
-			EmitV0BaseType(context, dim, operatorsByOwner, typeFormMap, unitMap);
-		}
-
-		if (dim.Quantities.Vector1 != null)
-		{
-			EmitV1BaseType(context, dim, operatorsByOwner, typeFormMap, unitMap);
-		}
-
-		int[] vectorDims = [2, 3, 4];
-		foreach (int d in vectorDims)
-		{
-			VectorFormDefinition? form = GetFormDef(dim, d);
-			if (form != null)
-			{
-				EmitVectorType(context, dim, d, form, operatorsByOwner, productsByOwner, typeFormMap);
-			}
-		}
-
-		EmitOverloadTypes(context, dim, unitMap);
-	}
+	/// <param name="Dimensions">Every dimension, keyed by name.</param>
+	/// <param name="Overloads">Every semantic overload, keyed by the type name it produces.</param>
+	/// <param name="OperatorsByOwner">The cross-dimensional operators each type declares.</param>
+	/// <param name="ProductsByOwner">The dot and cross products each vector type declares.</param>
+	/// <param name="TypeFormMap">How many components each generated type has.</param>
+	/// <param name="Units">Every unit, keyed by name.</param>
+	/// <remarks>
+	/// Six things that travel together to every emitter and are built once. Passed individually
+	/// they put every one of these methods over the analyzer's parameter limit, and made the call
+	/// sites hard to read for no gain: not one of them varies per type.
+	/// </remarks>
+	private sealed record Emission(
+		IReadOnlyDictionary<string, PhysicalDimension> Dimensions,
+		IReadOnlyDictionary<string, OverloadDefinition> Overloads,
+		IReadOnlyDictionary<string, List<OperatorInfo>> OperatorsByOwner,
+		IReadOnlyDictionary<string, List<ProductInfo>> ProductsByOwner,
+		IReadOnlyDictionary<string, int> TypeFormMap,
+		IReadOnlyDictionary<string, UnitDefinition> Units);
 
 	/// <summary>
-	/// Emits the semantic overloads declared on every vector form of <paramref name="dim"/>.
+	/// Writes one quantity, as whichever kind of type the vocabulary says it is.
 	/// </summary>
-	private void EmitOverloadTypes(
-		SourceProductionContext context,
-		PhysicalDimension dim,
-		Dictionary<string, UnitDefinition> unitMap)
+	/// <param name="context">Where the source goes.</param>
+	/// <param name="type">The quantity to write.</param>
+	/// <param name="emission">Everything shared between the types being written.</param>
+	/// <remarks>
+	/// Two questions decide it, and the vocabulary answers both: whether the quantity refines
+	/// another one, and how many components it stores. A base and an overload differ in what they
+	/// declare — an overload has the conversions to and from its base and nothing else does — and a
+	/// scalar and a vector differ in how they store a value at all.
+	/// </remarks>
+	private void EmitType(SourceProductionContext context, QuantityType type, Emission emission)
 	{
-		int[] allForms = [0, 1, 2, 3, 4];
-		foreach (int f in allForms)
+		PhysicalDimension dim = emission.Dimensions[type.Owner];
+
+		if (type.Refines is null)
 		{
-			VectorFormDefinition? form = GetFormDef(dim, f);
-			if (form == null)
+			switch (type.Form)
 			{
-				continue;
+				case 0:
+					EmitV0BaseType(context, type, dim, emission);
+					break;
+
+				case 1:
+					EmitV1BaseType(context, type, dim, emission);
+					break;
+
+				default:
+					EmitVectorType(context, type, dim, emission);
+					break;
 			}
 
-			foreach (OverloadDefinition overload in form.Overloads)
-			{
-				EmitOverloadType(context, dim, f, form.Base, overload, unitMap);
-			}
+			return;
+		}
+
+		if (type.Form <= 1)
+		{
+			EmitOverloadType(context, type, dim, emission);
+		}
+		else
+		{
+			// V2/3/4 overloads are rare — the strategy document shows them mainly for V3
+			// (Position3D, Translation3D) — and carry no units or relationships of their own.
+			EmitVectorOverloadType(context, type);
 		}
 	}
 
-	#region Phase A: Map Building and Operator Collection
+	#region Phase A: Resolving the vocabulary
 
+	/// <summary>
+	/// Every dimension, keyed by name, so an emitter holding a <see cref="QuantityType"/> can get
+	/// back to the entry it was read from.
+	/// </summary>
+	/// <remarks>
+	/// What the emitters need from that entry is the part the vocabulary has no opinion on: which
+	/// units a quantity can be built from, and what its dimension is called in the generated
+	/// <c>PhysicalDimensions</c> table. The physics itself comes from the vocabulary.
+	/// </remarks>
 	private static Dictionary<string, PhysicalDimension> BuildDimensionMap(DimensionsMetadata metadata)
 	{
 		Dictionary<string, PhysicalDimension> map = [];
@@ -194,22 +191,32 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		return map;
 	}
 
-	private static Dictionary<string, int> BuildTypeFormMap(DimensionsMetadata metadata)
+	/// <summary>
+	/// Every semantic overload, keyed by the type name it produces.
+	/// </summary>
+	/// <remarks>
+	/// The one thing an overload declares that is not physics: <c>relationships</c>, the
+	/// <c>Diameter.ToRadius()</c> pairs. They are C# expressions written in the metadata and
+	/// pasted into the generated source, so there is nothing in them for a shared model to hold —
+	/// the same reason <c>SourceFile.Imports</c> is per-language in ktsu.Coder.
+	/// </remarks>
+	private static Dictionary<string, OverloadDefinition> BuildOverloadMap(DimensionsMetadata metadata)
 	{
-		Dictionary<string, int> map = [];
+		Dictionary<string, OverloadDefinition> map = [];
 		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
 		{
 			int[] forms = [0, 1, 2, 3, 4];
 			foreach (int f in forms)
 			{
 				VectorFormDefinition? form = GetFormDef(dim, f);
-				if (form != null)
+				if (form == null)
 				{
-					map[form.Base] = f;
-					foreach (OverloadDefinition overload in form.Overloads)
-					{
-						map[overload.Name] = f;
-					}
+					continue;
+				}
+
+				foreach (OverloadDefinition overload in form.Overloads)
+				{
+					map[overload.Name] = overload;
 				}
 			}
 		}
@@ -217,310 +224,140 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		return map;
 	}
 
-	private static List<OperatorInfo> CollectAllOperators(
-		SourceProductionContext context,
-		DimensionsMetadata metadata,
-		Dictionary<string, PhysicalDimension> dimMap,
-		MetadataFile? dimensionsFile)
+	/// <summary>
+	/// How many components each generated type has, keyed by its name.
+	/// </summary>
+	/// <remarks>
+	/// Read off the vocabulary rather than recomputed from the metadata: an operator is emitted
+	/// differently depending on whether its operands store one value or several, and the
+	/// vocabulary is what decided which types exist at which form in the first place.
+	/// </remarks>
+	private static Dictionary<string, int> BuildTypeFormMap(QuantityVocabulary vocabulary)
+	{
+		Dictionary<string, int> map = [];
+		foreach (QuantityType type in vocabulary.Types)
+		{
+			map[type.Name] = type.Form;
+		}
+
+		return map;
+	}
+
+	/// <summary>
+	/// Every operator to emit, expanded from the relationships the vocabulary resolved.
+	/// </summary>
+	/// <remarks>
+	/// The vocabulary states each relationship once, in the direction the metadata declares it:
+	/// <c>Velocity3D * Duration -&gt; Displacement3D</c>. C# emits four operators from that — the
+	/// one declared, its commutation, and the two divisions that undo it — because a caller who
+	/// writes <c>duration * velocity</c> is not making a different claim about physics, and an
+	/// overload that is missing is a compile error rather than a wrong answer.
+	/// <para>
+	/// That expansion is the language's business rather than the model's, which is why it lives
+	/// here and the C++ projection, which emits only the declared direction, does not have it.
+	/// What both take from the vocabulary is which relationships there are at all — so a
+	/// relationship the exponents refuse produces no operator here either, in any of its four
+	/// directions.
+	/// </para>
+	/// </remarks>
+	private static List<OperatorInfo> CollectOperators(QuantityVocabulary vocabulary)
 	{
 		HashSet<string> seen = [];
 		List<OperatorInfo> result = [];
 
-		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
+		foreach (QuantityRelationship relationship in vocabulary.Relationships)
 		{
-			CollectIntegralOperators(context, dim, dimMap, result, seen, dimensionsFile);
-			CollectDerivativeOperators(context, dim, dimMap, result, seen, dimensionsFile);
+			switch (relationship.Kind)
+			{
+				case RelationshipKind.Product:
+					AddProductOperators(result, seen, relationship);
+					break;
+
+				case RelationshipKind.Quotient:
+					AddQuotientOperators(result, seen, relationship);
+					break;
+
+				default:
+					// A dot or a cross product is a method rather than an operator, because
+					// neither has a symbol in C#. They are collected as products below.
+					break;
+			}
 		}
 
 		return result;
 	}
 
 	/// <summary>
-	/// Collects the operators implied by one dimension's <c>integrals</c> (Self * Other = Result).
+	/// The four spellings of <c>Left * Right -&gt; Result</c>.
 	/// </summary>
-	private static void CollectIntegralOperators(
-		SourceProductionContext context,
-		PhysicalDimension dim,
-		Dictionary<string, PhysicalDimension> dimMap,
-		List<OperatorInfo> result,
-		HashSet<string> seen,
-		MetadataFile? dimensionsFile)
+	/// <remarks>
+	/// The last of them only exists at the magnitude form: <c>Displacement3D / Velocity3D</c>
+	/// would have to be a componentwise division to produce a <c>Duration</c>, and that is not
+	/// what dividing one vector by another means.
+	/// </remarks>
+	private static void AddProductOperators(List<OperatorInfo> operators, HashSet<string> seen, QuantityRelationship relationship)
 	{
-		foreach (RelationshipDefinition integral in dim.Integrals)
+		// Written against the relationship's own parts rather than through locals, so each line
+		// says which of the three each operand is. As declared, commuted, and undone:
+		AddOp(operators, seen, "*", relationship.Left, relationship.Right, relationship.Result, relationship.Left);
+		AddOp(operators, seen, "*", relationship.Right, relationship.Left, relationship.Result, relationship.Right);
+		AddOp(operators, seen, "/", relationship.Result, relationship.Right, relationship.Left, relationship.Result);
+
+		if (relationship.Form == 0)
 		{
-			if (!dimMap.TryGetValue(integral.Other, out PhysicalDimension? otherDim))
-			{
-				ReportUnknownReference(context, dimensionsFile, dim.Name, integral.Other, $"integrals[{integral.Other} -> {integral.Result}].other");
-				continue;
-			}
-
-			if (!dimMap.TryGetValue(integral.Result, out PhysicalDimension? resultDim))
-			{
-				ReportUnknownReference(context, dimensionsFile, dim.Name, integral.Result, $"integrals[{integral.Other} -> {integral.Result}].result");
-				continue;
-			}
-
-			// V0(Other) is the scalar multiplier
-			string? v0Other = otherDim.Quantities.Vector0?.Base;
-			if (v0Other == null)
-			{
-				continue;
-			}
-
-			// For integrals the "Other" multiplier is V0 only; the form propagates
-			// between Self and Result, so SEM003 should fire if either Self or
-			// Result is missing a declared form. (V0-only Other was already
-			// rejected above via the v0Other null check.)
-			int[] forms = ResolveForms(
-				new RelationshipSite(context, dimensionsFile, dim, integral, $"integrals[{integral.Other} -> {integral.Result}]"),
-				[0, 1, 2, 3, 4],
-				resultDim);
-			foreach (int vn in forms)
-			{
-				AddIntegralOpsForForm(result, seen, dim, resultDim, vn, v0Other);
-			}
-		}
-	}
-
-	private static void AddIntegralOpsForForm(
-		List<OperatorInfo> result,
-		HashSet<string> seen,
-		PhysicalDimension dim,
-		PhysicalDimension resultDim,
-		int vn,
-		string v0Other)
-	{
-		string? selfType = GetBaseTypeName(dim, vn);
-		string? resultType = GetBaseTypeName(resultDim, vn);
-		if (selfType == null || resultType == null)
-		{
-			return;
-		}
-
-		// Forward: VN(Self) * V0(Other) => VN(Result)
-		AddOp(result, seen, "*", selfType, v0Other, resultType, selfType);
-		// Commutative: V0(Other) * VN(Self) => VN(Result)
-		AddOp(result, seen, "*", v0Other, selfType, resultType, v0Other);
-		// Inverse: VN(Result) / V0(Other) => VN(Self)
-		AddOp(result, seen, "/", resultType, v0Other, selfType, resultType);
-		// Inverse: VN(Result) / VN(Self) => V0(Other) -- only if VN == V0
-		if (vn == 0)
-		{
-			AddOp(result, seen, "/", resultType, selfType, v0Other, resultType);
+			AddOp(operators, seen, "/", relationship.Result, relationship.Left, relationship.Right, relationship.Result);
 		}
 	}
 
 	/// <summary>
-	/// Collects the operators implied by one dimension's <c>derivatives</c> (Self / Other = Result).
+	/// The three spellings of <c>Left / Right -&gt; Result</c>.
 	/// </summary>
-	private static void CollectDerivativeOperators(
-		SourceProductionContext context,
-		PhysicalDimension dim,
-		Dictionary<string, PhysicalDimension> dimMap,
-		List<OperatorInfo> result,
-		HashSet<string> seen,
-		MetadataFile? dimensionsFile)
+	/// <remarks>
+	/// Three rather than four, because the fourth — <c>Left / Result -&gt; Right</c> — is the
+	/// division the metadata already declares in the other direction wherever it holds, and
+	/// asserting it from here would emit it for the cases where it does not.
+	/// </remarks>
+	private static void AddQuotientOperators(List<OperatorInfo> operators, HashSet<string> seen, QuantityRelationship relationship)
 	{
-		foreach (RelationshipDefinition derivative in dim.Derivatives)
-		{
-			if (!dimMap.TryGetValue(derivative.Other, out PhysicalDimension? otherDim))
-			{
-				ReportUnknownReference(context, dimensionsFile, dim.Name, derivative.Other, $"derivatives[{derivative.Other} -> {derivative.Result}].other");
-				continue;
-			}
-
-			if (!dimMap.TryGetValue(derivative.Result, out PhysicalDimension? resultDim))
-			{
-				ReportUnknownReference(context, dimensionsFile, dim.Name, derivative.Result, $"derivatives[{derivative.Other} -> {derivative.Result}].result");
-				continue;
-			}
-
-			string? v0Other = otherDim.Quantities.Vector0?.Base;
-			if (v0Other == null)
-			{
-				continue;
-			}
-
-			int[] forms = ResolveForms(
-				new RelationshipSite(context, dimensionsFile, dim, derivative, $"derivatives[{derivative.Other} -> {derivative.Result}]"),
-				[0, 1, 2, 3, 4],
-				resultDim);
-			foreach (int vn in forms)
-			{
-				AddDerivativeOpsForForm(result, seen, dim, resultDim, vn, v0Other);
-			}
-		}
+		AddOp(operators, seen, "/", relationship.Left, relationship.Right, relationship.Result, relationship.Left);
+		AddOp(operators, seen, "*", relationship.Result, relationship.Right, relationship.Left, relationship.Result);
+		AddOp(operators, seen, "*", relationship.Right, relationship.Result, relationship.Left, relationship.Right);
 	}
 
-	private static void AddDerivativeOpsForForm(
-		List<OperatorInfo> result,
-		HashSet<string> seen,
-		PhysicalDimension dim,
-		PhysicalDimension resultDim,
-		int vn,
-		string v0Other)
-	{
-		string? selfType = GetBaseTypeName(dim, vn);
-		string? resultType = GetBaseTypeName(resultDim, vn);
-		if (selfType == null || resultType == null)
-		{
-			return;
-		}
-
-		// Forward: VN(Self) / V0(Other) => VN(Result)
-		AddOp(result, seen, "/", selfType, v0Other, resultType, selfType);
-		// Inverse integral: VN(Result) * V0(Other) => VN(Self)
-		AddOp(result, seen, "*", resultType, v0Other, selfType, resultType);
-		// Commutative inverse: V0(Other) * VN(Result) => VN(Self)
-		AddOp(result, seen, "*", v0Other, resultType, selfType, v0Other);
-	}
-
-	private static List<ProductInfo> CollectAllProducts(
-		SourceProductionContext context,
-		DimensionsMetadata metadata,
-		Dictionary<string, PhysicalDimension> dimMap,
-		MetadataFile? dimensionsFile)
+	/// <summary>
+	/// Every dot and cross product to emit, which is one method each in the direction declared.
+	/// </summary>
+	/// <remarks>
+	/// No commutation and no inverse: <c>cross(a, b)</c> is <c>-cross(b, a)</c> rather than the
+	/// same thing, and neither product has one.
+	/// </remarks>
+	private static List<ProductInfo> CollectProducts(QuantityVocabulary vocabulary)
 	{
 		HashSet<string> seen = [];
 		List<ProductInfo> result = [];
 
-		foreach (PhysicalDimension dim in metadata.PhysicalDimensions)
+		foreach (QuantityRelationship relationship in vocabulary.Relationships)
 		{
-			CollectDotProducts(context, dim, dimMap, result, seen, dimensionsFile);
-			CollectCrossProducts(context, dim, dimMap, result, seen, dimensionsFile);
+			string method = relationship.Kind switch
+			{
+				RelationshipKind.Dot => "Dot",
+				RelationshipKind.Cross => "Cross",
+				_ => string.Empty,
+			};
+
+			if (method.Length == 0)
+			{
+				continue;
+			}
+
+			string key = $"{method}:{relationship.Left}:{relationship.Right}:{relationship.Result}";
+			if (seen.Add(key))
+			{
+				result.Add(new ProductInfo(method, relationship.Left, relationship.Right, relationship.Result, relationship.Form));
+			}
 		}
 
 		return result;
-	}
-
-	/// <summary>
-	/// Collects one dimension's dot products: VN(Self) . VN(Other) => V0(Result).
-	/// </summary>
-	private static void CollectDotProducts(
-		SourceProductionContext context,
-		PhysicalDimension dim,
-		Dictionary<string, PhysicalDimension> dimMap,
-		List<ProductInfo> result,
-		HashSet<string> seen,
-		MetadataFile? dimensionsFile)
-	{
-		foreach (RelationshipDefinition dot in dim.DotProducts)
-		{
-			if (!dimMap.TryGetValue(dot.Other, out PhysicalDimension? otherDim))
-			{
-				ReportUnknownReference(context, dimensionsFile, dim.Name, dot.Other, $"dotProducts[{dot.Other} -> {dot.Result}].other");
-				continue;
-			}
-
-			if (!dimMap.TryGetValue(dot.Result, out PhysicalDimension? resultDim))
-			{
-				ReportUnknownReference(context, dimensionsFile, dim.Name, dot.Result, $"dotProducts[{dot.Other} -> {dot.Result}].result");
-				continue;
-			}
-
-			string? v0Result = resultDim.Quantities.Vector0?.Base;
-			if (v0Result == null)
-			{
-				continue;
-			}
-
-			// Dot product is undefined for V0; default forms are V1+.
-			int[] forms = ResolveForms(
-				new RelationshipSite(context, dimensionsFile, dim, dot, $"dotProducts[{dot.Other} -> {dot.Result}]"),
-				[1, 2, 3, 4],
-				otherDim);
-			foreach (int vn in forms)
-			{
-				AddDotProductForForm(result, seen, dim, otherDim, vn, v0Result);
-			}
-		}
-	}
-
-	private static void AddDotProductForForm(
-		List<ProductInfo> result,
-		HashSet<string> seen,
-		PhysicalDimension dim,
-		PhysicalDimension otherDim,
-		int vn,
-		string v0Result)
-	{
-		string? selfType = GetBaseTypeName(dim, vn);
-		string? otherType = GetBaseTypeName(otherDim, vn);
-		if (selfType == null || otherType == null)
-		{
-			return;
-		}
-
-		string key = $"Dot:{selfType}:{otherType}:{v0Result}";
-		if (seen.Add(key))
-		{
-			result.Add(new ProductInfo("Dot", selfType, otherType, v0Result, vn));
-		}
-	}
-
-	/// <summary>
-	/// Collects one dimension's cross products: V3(Self) x V3(Other) => V3(Result).
-	/// </summary>
-	private static void CollectCrossProducts(
-		SourceProductionContext context,
-		PhysicalDimension dim,
-		Dictionary<string, PhysicalDimension> dimMap,
-		List<ProductInfo> result,
-		HashSet<string> seen,
-		MetadataFile? dimensionsFile)
-	{
-		foreach (RelationshipDefinition cross in dim.CrossProducts)
-		{
-			if (!dimMap.TryGetValue(cross.Other, out PhysicalDimension? otherDim))
-			{
-				ReportUnknownReference(context, dimensionsFile, dim.Name, cross.Other, $"crossProducts[{cross.Other} -> {cross.Result}].other");
-				continue;
-			}
-
-			if (!dimMap.TryGetValue(cross.Result, out PhysicalDimension? resultDim))
-			{
-				ReportUnknownReference(context, dimensionsFile, dim.Name, cross.Result, $"crossProducts[{cross.Other} -> {cross.Result}].result");
-				continue;
-			}
-
-			// Cross product is intrinsically 3D. Default to V3 only; explicit Forms
-			// other than [3] are accepted but the operator emit below only handles V3.
-			// Pass resultDim so SEM003 surfaces when the declared form is missing on
-			// the result type too (e.g. Force × Length → Torque at V2: Torque has no V2).
-			int[] forms = ResolveForms(
-				new RelationshipSite(context, dimensionsFile, dim, cross, $"crossProducts[{cross.Other} -> {cross.Result}]"),
-				[3],
-				otherDim,
-				resultDim);
-			if (Array.IndexOf(forms, 3) < 0)
-			{
-				continue;
-			}
-
-			AddCrossProduct(result, seen, dim, otherDim, resultDim);
-		}
-	}
-
-	private static void AddCrossProduct(
-		List<ProductInfo> result,
-		HashSet<string> seen,
-		PhysicalDimension dim,
-		PhysicalDimension otherDim,
-		PhysicalDimension resultDim)
-	{
-		string? selfV3 = GetBaseTypeName(dim, 3);
-		string? otherV3 = GetBaseTypeName(otherDim, 3);
-		string? resultV3 = GetBaseTypeName(resultDim, 3);
-		if (selfV3 == null || otherV3 == null || resultV3 == null)
-		{
-			return;
-		}
-
-		string key = $"Cross:{selfV3}:{otherV3}:{resultV3}";
-		if (seen.Add(key))
-		{
-			result.Add(new ProductInfo("Cross", selfV3, otherV3, resultV3, 3));
-		}
 	}
 
 	private static void AddOp(List<OperatorInfo> list, HashSet<string> seen, string op, string left, string right, string ret, string owner)
@@ -539,6 +376,51 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	}
 
 	/// <summary>
+	/// Reports everything the vocabulary refused, each as the diagnostic this project already has
+	/// for that kind of problem.
+	/// </summary>
+	/// <param name="context">Where the diagnostics go.</param>
+	/// <param name="vocabulary">The resolved vocabulary.</param>
+	/// <param name="dimensionsFile">The file the metadata was read from, for locations.</param>
+	/// <remarks>
+	/// Every refusal now costs an operator or a type, which is what makes reporting all five kinds
+	/// worth doing from one place. Before the vocabulary drove emission this reported only the two
+	/// kinds SEM008 covers, because the other three were dropped by the metadata-walking code that
+	/// also reported them — and saying the same thing twice in two voices would have been the only
+	/// effect.
+	/// </remarks>
+	private static void ReportRefusals(
+		SourceProductionContext context,
+		QuantityVocabulary vocabulary,
+		MetadataFile? dimensionsFile)
+	{
+		foreach (VocabularyIssue issue in vocabulary.Refused)
+		{
+			switch (issue.Kind)
+			{
+				case VocabularyIssueKind.UnknownDimension:
+					ReportUnknownReference(context, dimensionsFile, issue);
+					break;
+
+				case VocabularyIssueKind.MissingVectorForm:
+					ReportFormMissing(context, dimensionsFile, issue);
+					break;
+
+				case VocabularyIssueKind.NoMagnitudeForm:
+					// Schema-level rather than physics: a dimension with no vector0 has nothing
+					// for its other forms to answer Magnitude() with, and now generates no types
+					// at all rather than generating some of them without it.
+					context.Report(SemanticsDiagnostics.MetadataValidationFailed, $"dimension '{issue.Subject}' {issue.Reason}");
+					break;
+
+				default:
+					context.Report(SemanticsDiagnostics.RelationshipNotDimensionallyTrue, issue.Subject, issue.Reason);
+					break;
+			}
+		}
+	}
+
+	/// <summary>
 	/// Reports SEM001 at the position in <c>dimensions.json</c> where the unknown name is written.
 	/// </summary>
 	/// <remarks>
@@ -549,85 +431,20 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	private static void ReportUnknownReference(
 		SourceProductionContext context,
 		MetadataFile? dimensionsFile,
-		string owningDimension,
-		string unknownReference,
-		string fieldPath) =>
+		VocabularyIssue issue)
+	{
+		IssueSite site = issue.Site!;
+
+		// The vocabulary checks "other" before "result" and stops at the first it cannot resolve,
+		// so the name it refused is whichever of the two it matches.
+		string field = string.Equals(site.Offending, site.Other, StringComparison.Ordinal) ? "other" : "result";
+
 		context.ReportAt(
 			SemanticsDiagnostics.UnknownDimensionReference,
-			dimensionsFile?.FindLocation(unknownReference),
-			owningDimension,
-			unknownReference,
-			fieldPath);
-
-	/// <summary>
-	/// One relationship, plus everything a diagnostic about it needs to say where it is.
-	/// </summary>
-	/// <param name="Context">The source production context to report to.</param>
-	/// <param name="File">The metadata file the relationship was read from, for locations.</param>
-	/// <param name="Owner">The dimension whose entry declares the relationship.</param>
-	/// <param name="Relationship">The relationship itself.</param>
-	/// <param name="FieldPath">The relationship's path in the metadata, for the message text.</param>
-	/// <remarks>
-	/// These five travel together through form resolution and reporting. Passed individually they
-	/// pushed <see cref="ResolveForms"/> to eight parameters, which is both over the analyzer's
-	/// limit and genuinely hard to read at the call site.
-	/// </remarks>
-	private readonly record struct RelationshipSite(
-		SourceProductionContext Context,
-		MetadataFile? File,
-		PhysicalDimension Owner,
-		RelationshipDefinition Relationship,
-		string FieldPath);
-
-	/// <summary>
-	/// Resolves the forms at which a relationship should emit operators. When the metadata
-	/// declares <see cref="RelationshipDefinition.Forms"/> explicitly, that list wins and
-	/// any form missing from one of the participating dimensions is reported as
-	/// <c>SEM003</c>. When the list is empty, returns <paramref name="defaultForms"/>
-	/// (which the caller filters silently — preserving the legacy behaviour for relationships
-	/// that haven't opted into form-specific declarations).
-	/// </summary>
-	private static int[] ResolveForms(
-		RelationshipSite site,
-		int[] defaultForms,
-		PhysicalDimension otherDim,
-		PhysicalDimension? resultDim = null)
-	{
-		if (site.Relationship.Forms.Count == 0)
-		{
-			return defaultForms;
-		}
-
-		List<int> kept = [];
-		foreach (int form in site.Relationship.Forms)
-		{
-			if (form < 0 || form > 4)
-			{
-				continue;
-			}
-
-			if (GetBaseTypeName(site.Owner, form) == null)
-			{
-				ReportFormMissing(site, form, site.Owner.Name);
-				continue;
-			}
-
-			if (GetBaseTypeName(otherDim, form) == null)
-			{
-				ReportFormMissing(site, form, otherDim.Name);
-				continue;
-			}
-
-			if (resultDim != null && GetBaseTypeName(resultDim, form) == null)
-			{
-				ReportFormMissing(site, form, resultDim.Name);
-				continue;
-			}
-
-			kept.Add(form);
-		}
-
-		return [.. kept];
+			dimensionsFile?.FindLocation(site.Offending),
+			site.Owner,
+			site.Offending,
+			$"{FieldPath(site)}.{field}");
 	}
 
 	/// <summary>
@@ -639,14 +456,42 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// dimension's own <c>"name"</c> property and then looking for the relationship's <c>"other"</c>
 	/// within it puts the location on the declaration that is actually wrong.
 	/// </remarks>
-	private static void ReportFormMissing(RelationshipSite site, int form, string offendingDimension) =>
-		site.Context.ReportAt(
+	private static void ReportFormMissing(
+		SourceProductionContext context,
+		MetadataFile? dimensionsFile,
+		VocabularyIssue issue)
+	{
+		IssueSite site = issue.Site!;
+
+		context.ReportAt(
 			SemanticsDiagnostics.RelationshipFormMissing,
-			site.File?.FindLocation($"\"name\": \"{site.Owner.Name}\"", $"\"other\": \"{site.Relationship.Other}\""),
-			site.Owner.Name,
-			site.FieldPath,
-			form,
-			offendingDimension);
+			dimensionsFile?.FindLocation($"\"name\": \"{site.Owner}\"", $"\"other\": \"{site.Other}\""),
+			site.Owner,
+			FieldPath(site),
+			site.Form,
+			site.Offending);
+	}
+
+	/// <summary>
+	/// Where a relationship is written in the metadata, in the form the diagnostics quote.
+	/// </summary>
+	/// <param name="site">The refusal's site.</param>
+	/// <returns>A path like <c>integrals[Time -&gt; Length]</c>.</returns>
+	/// <remarks>
+	/// The array names belong to this reader rather than to the vocabulary: the vocabulary knows a
+	/// product from a quotient, and <c>integrals</c> and <c>derivatives</c> are what
+	/// <c>dimensions.json</c> happens to call the two arrays they are read from.
+	/// </remarks>
+	private static string FieldPath(IssueSite site) =>
+		$"{ArrayName(site.Kind)}[{site.Other} -> {site.Result}]";
+
+	private static string ArrayName(RelationshipKind kind) => kind switch
+	{
+		RelationshipKind.Product => "integrals",
+		RelationshipKind.Quotient => "derivatives",
+		RelationshipKind.Cross => "crossProducts",
+		_ => "dotProducts",
+	};
 
 	private static Dictionary<string, UnitDefinition> BuildUnitMap(UnitsMetadata units)
 	{
@@ -731,7 +576,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	private static void AddUnitFactories(
 		ClassTemplate cls,
 		List<string> availableUnits,
-		Dictionary<string, UnitDefinition> unitMap,
+		IReadOnlyDictionary<string, UnitDefinition> unitMap,
 		string fullType,
 		string crefForComment,
 		bool applyV0Guard,
@@ -790,7 +635,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// base unit. Honours magnitude (<c>Kilo</c>, <c>Centi</c>, …), conversionFactor (lookup in
 	/// <see cref="ConversionConstants"/>), and offset (additive, after scaling).
 	/// </summary>
-	private static string BuildToBaseExpression(string unitName, Dictionary<string, UnitDefinition> unitMap)
+	private static string BuildToBaseExpression(string unitName, IReadOnlyDictionary<string, UnitDefinition> unitMap)
 	{
 		// If we don't have unit metadata, fall back to identity. The dimensions.json author is
 		// responsible for keeping availableUnits in sync with units.json; if a unit is missing,
@@ -1068,13 +913,11 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 	private void EmitV0BaseType(
 		SourceProductionContext context,
+		QuantityType type,
 		PhysicalDimension dim,
-		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
-		Dictionary<string, int> typeFormMap,
-		Dictionary<string, UnitDefinition> unitMap)
+		Emission emission)
 	{
-		VectorFormDefinition v0 = dim.Quantities.Vector0!;
-		string typeName = v0.Base;
+		string typeName = type.Name;
 		string fullType = $"{typeName}<T>";
 
 		using CodeBlocker cb = CreateCodeBlocker();
@@ -1120,7 +963,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		AddUnitFactories(
 			cls,
 			dim.AvailableUnits,
-			unitMap,
+			emission.Units,
 			fullType,
 			"<see cref=\"" + typeName + "{T}\"/>",
 			applyV0Guard: true);
@@ -1153,8 +996,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		});
 
 		// Cross-dimensional operators
-		EmitScalarOperators(cls, typeName, operatorsByOwner, typeFormMap);
-
+		EmitScalarOperators(cls, typeName, emission);
 
 		sourceFile.Classes.Add(cls);
 		WriteSourceFileTo(cb, sourceFile);
@@ -1163,15 +1005,16 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 	private void EmitV1BaseType(
 		SourceProductionContext context,
+		QuantityType type,
 		PhysicalDimension dim,
-		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
-		Dictionary<string, int> typeFormMap,
-		Dictionary<string, UnitDefinition> unitMap)
+		Emission emission)
 	{
-		VectorFormDefinition v1 = dim.Quantities.Vector1!;
-		string typeName = v1.Base;
+		string typeName = type.Name;
 		string fullType = $"{typeName}<T>";
-		string? v0TypeName = dim.Quantities.Vector0?.Base;
+
+		// Never absent: a dimension with no magnitude form generates no types at all, because
+		// there would be nothing for this one to answer Magnitude() with.
+		string v0TypeName = type.MagnitudeType;
 
 		using CodeBlocker cb = CreateCodeBlocker();
 
@@ -1214,7 +1057,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		AddUnitFactories(
 			cls,
 			dim.AvailableUnits,
-			unitMap,
+			emission.Units,
 			fullType,
 			"<see cref=\"" + typeName + "{T}\"/>",
 			applyV0Guard: false);
@@ -1223,26 +1066,23 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		AddDimensionAndInMembers(cls, dim);
 
 		// Magnitude method returning V0 base
-		if (v0TypeName != null)
+		cls.Members.Add(new MethodTemplate()
 		{
-			cls.Members.Add(new MethodTemplate()
+			Comments =
 			{
-				Comments =
-				{
-					Emit.SummaryOpen,
-					$"/// Gets the magnitude of this quantity as a <see cref=\"{v0TypeName}{{T}}\"/>.",
-					Emit.SummaryClose,
-					$"/// <returns>The non-negative magnitude.</returns>",
-				},
-				Keywords = {Emit.Public, $"{v0TypeName}<T>"},
-				Name = "Magnitude",
-				Parameters = {},
-				BodyFactory = (body) => body.Write($"=> {v0TypeName}<T>.Create(T.Abs(Value));"),
-			});
-		}
+				Emit.SummaryOpen,
+				$"/// Gets the magnitude of this quantity as a <see cref=\"{v0TypeName}{{T}}\"/>.",
+				Emit.SummaryClose,
+				$"/// <returns>The non-negative magnitude.</returns>",
+			},
+			Keywords = {Emit.Public, $"{v0TypeName}<T>"},
+			Name = "Magnitude",
+			Parameters = {},
+			BodyFactory = (body) => body.Write($"=> {v0TypeName}<T>.Create(T.Abs(Value));"),
+		});
 
 		// Cross-dimensional operators
-		EmitScalarOperators(cls, typeName, operatorsByOwner, typeFormMap);
+		EmitScalarOperators(cls, typeName, emission);
 
 		sourceFile.Classes.Add(cls);
 		WriteSourceFileTo(cb, sourceFile);
@@ -1251,25 +1091,17 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 	private static void EmitVectorType(
 		SourceProductionContext context,
+		QuantityType type,
 		PhysicalDimension dim,
-		int dims,
-		VectorFormDefinition form,
-		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
-		Dictionary<string, List<ProductInfo>> productsByOwner,
-		Dictionary<string, int> typeFormMap)
+		Emission emission)
 	{
-		string[] components = dims switch
-		{
-			2 => ["X", "Y"],
-			3 => ["X", "Y", "Z"],
-			4 => ["X", "Y", "Z", "W"],
-			_ => throw new ArgumentOutOfRangeException(nameof(dims)),
-		};
+		int dims = type.Form;
+		string[] components = Components(dims);
 
-		string typeName = form.Base;
+		string typeName = type.Name;
 		string fullType = $"{typeName}<T>";
 		string interfaceName = $"IVector{dims}<{fullType}, T>";
-		string? v0TypeName = dim.Quantities.Vector0?.Base;
+		string v0TypeName = type.MagnitudeType;
 
 		using CodeBlocker cb = CreateCodeBlocker();
 
@@ -1297,21 +1129,18 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			WriteVectorStaticProperties(cb, fullType, components);
 
 			// Typed Magnitude() method returning V0 base
-			if (v0TypeName != null)
-			{
-				cb.WriteLine($"/// <summary>Gets the magnitude as a <see cref=\"{v0TypeName}{{T}}\"/>.</summary>");
-				cb.WriteLine($"public {v0TypeName}<T> Magnitude() => {v0TypeName}<T>.Create(Length());");
-				cb.NewLine();
-			}
+			cb.WriteLine($"/// <summary>Gets the magnitude as a <see cref=\"{v0TypeName}{{T}}\"/>.</summary>");
+			cb.WriteLine($"public {v0TypeName}<T> Magnitude() => {v0TypeName}<T>.Create(Length());");
+			cb.NewLine();
 
 			WriteVectorMethods(cb, fullType, components, dims);
 			WriteVectorOperators(cb, fullType, components);
 
 			// Cross-dimensional operators (inlined for VN types)
-			EmitVectorCrossDimOperators(cb, typeName, operatorsByOwner, typeFormMap);
+			EmitVectorCrossDimOperators(cb, typeName, emission);
 
 			// Typed dot product methods
-			if (productsByOwner.TryGetValue(typeName, out List<ProductInfo>? products))
+			if (emission.ProductsByOwner.TryGetValue(typeName, out List<ProductInfo>? products))
 			{
 				foreach (ProductInfo prod in products)
 				{
@@ -1342,196 +1171,179 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 	private void EmitOverloadType(
 		SourceProductionContext context,
+		QuantityType type,
 		PhysicalDimension dim,
-		int vectorForm,
-		string baseTypeName,
-		OverloadDefinition overload,
-		Dictionary<string, UnitDefinition> unitMap)
+		Emission emission)
 	{
-		string typeName = overload.Name;
+		int vectorForm = type.Form;
+		string typeName = type.Name;
+		string baseTypeName = type.Refines!;
 		string fullType = $"{typeName}<T>";
 		string baseFullType = $"{baseTypeName}<T>";
 
-		// V0/V1 overloads inherit from PhysicalQuantity
-		if (vectorForm <= 1)
+		using CodeBlocker cb = CreateCodeBlocker();
+
+		string interfaceName = vectorForm == 0 ? $"IVector0<{fullType}, T>" : $"IVector1<{fullType}, T>";
+
+		SourceFileTemplate sourceFile = new()
 		{
-			using CodeBlocker cb = CreateCodeBlocker();
-
-			string interfaceName = vectorForm == 0 ? $"IVector0<{fullType}, T>" : $"IVector1<{fullType}, T>";
-
-			SourceFileTemplate sourceFile = new()
-			{
-				FileName = $"{typeName}.g.cs",
-				Namespace = "ktsu.Semantics.Quantities",
-				Usings = {"System.Numerics"},
-			};
-
-			ClassTemplate cls = new()
-			{
-				Comments =
-				{
-					Emit.SummaryOpen,
-					$"/// {overload.Description}",
-					$"/// Semantic overload of <see cref=\"{baseTypeName}{{T}}\"/>.",
-					Emit.SummaryClose,
-					"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
-				},
-				Kind = TypeKind.RecordStruct,
-				Keywords = {Emit.Public, "readonly", "partial"},
-				Name = fullType,
-				Interfaces = {interfaceName, $"IPhysicalQuantity<{fullType}, T>"},
-				Constraints = {"where T : struct, INumber<T>"},
-			};
-
-			// Everything a quantity used to inherit from the PhysicalQuantity record.
-			AddValueTypeCore(cls, fullType, isV0: vectorForm == 0);
-
-			// Zero property
-			cls.Members.Add(new FieldTemplate()
-			{
-				Comments = {"/// <summary>Gets a quantity with value zero.</summary>"},
-				Keywords = {Emit.Public, Emit.Static, fullType},
-				Name = "Zero => Create(T.Zero)",
-			});
-
-			// Factory methods for every available unit (#48); overloads inherit the dimension's
-			// units. V0 overloads enforce the same non-negativity invariant as their V0 base
-			// type (#50). V0 overloads that declare physicalConstraints.minExclusive in
-			// dimensions.json (#51, e.g. Wavelength, Period, HalfLife) get the stricter
-			// EnsurePositive guard so a zero input is rejected too. V1 overloads accept
-			// any sign.
-			bool strictPositive = vectorForm == 0
-				&& overload.PhysicalConstraints?.MinExclusive == "0";
-			AddUnitFactories(
-				cls,
-				dim.AvailableUnits,
-				unitMap,
-				fullType,
-				typeName,
-				applyV0Guard: vectorForm == 0,
-				strictPositive: strictPositive);
-
-			// Dimension override + typed In() (#59).
-			AddDimensionAndInMembers(cls, dim);
-
-			// Implicit widening to base type
-			cls.Members.Add(new MethodTemplate()
-			{
-				Comments = {$"/// <summary>Implicit conversion to {baseTypeName}.</summary>"},
-				Keywords = {Emit.Public, Emit.Static, "implicit", "operator"},
-				Name = baseFullType,
-				Parameters = {new ParameterTemplate { Type = fullType, Name = Emit.ValueParameter }},
-				BodyFactory = (body) => body.Write($"=> {baseFullType}.Create(value.Value);"),
-			});
-
-			// Explicit narrowing from base type
-			cls.Members.Add(new MethodTemplate()
-			{
-				Comments = {$"/// <summary>Explicit conversion from {baseTypeName}.</summary>"},
-				Keywords = {Emit.Public, Emit.Static, "explicit", "operator"},
-				Name = fullType,
-				Parameters = {new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }},
-				BodyFactory = (body) => body.Write($"=> Create(value.Value);"),
-			});
-
-			// Factory-style narrowing from base
-			cls.Members.Add(new MethodTemplate()
-			{
-				Comments = {$"/// <summary>Creates a {typeName} from a {baseTypeName} value.</summary>"},
-				Keywords = {Emit.Public, Emit.Static, fullType},
-				Name = "From",
-				Parameters = {new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }},
-				BodyFactory = (body) => body.Write("=> Create(value.Value);"),
-			});
-
-			// V0 overload subtraction returns the same V0 of T.Abs(left - right) (locked
-			// in #52). The overload-typed operator hides the base PhysicalQuantity's plain
-			// subtraction so overloads stay in their own type and the magnitude invariant
-			// is preserved.
-			if (vectorForm == 0)
-			{
-				cls.Members.Add(new MethodTemplate()
-				{
-					Comments = {$"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.</summary>"},
-					Attributes = {Emit.PhysicsOperatorSuppression},
-					Keywords = {Emit.Public, Emit.Static, fullType},
-					Name = "operator -",
-					Parameters =
-					{
-						new ParameterTemplate { Type = fullType, Name = "left" },
-						new ParameterTemplate { Type = fullType, Name = Emit.RightParameter },
-					},
-					BodyFactory = (body) => body.Write("=> Create(T.Abs(left.Quantity - right.Quantity));"),
-				});
-			}
-
-			// Relationship methods (e.g., Diameter.ToRadius(), Diameter.FromRadius())
-			foreach (KeyValuePair<string, string> rel in overload.Relationships)
-			{
-				// rel.Key is like "toRadius" or "fromRadius", rel.Value is the C# expression
-				string methodName = char.ToUpperInvariant(rel.Key[0]) + rel.Key.Substring(1);
-
-				if (methodName.StartsWith("To", StringComparison.Ordinal))
-				{
-					// Instance method: e.g., ToRadius() returns Radius<T>
-					string targetName = methodName.Substring(2);
-					string targetType = $"{targetName}<T>";
-					string expr = rel.Value; // uses "Value" referring to this instance
-					cls.Members.Add(new MethodTemplate()
-					{
-						Comments = {$"/// <summary>Converts this {typeName} to a {targetName}.</summary>"},
-						Keywords = {Emit.Public, targetType},
-						Name = methodName,
-						Parameters = {},
-						BodyFactory = (body) => body.Write($"=> {targetType}.Create({expr});"),
-					});
-				}
-				else if (methodName.StartsWith("From", StringComparison.Ordinal))
-				{
-					// Static factory: e.g., FromRadius(Radius<T> value) returns this type
-					string sourceName = methodName.Substring(4);
-					string sourceType = $"{sourceName}<T>";
-					// Replace "Value" with "source.Value" since this is a static method
-					string expr = rel.Value.Replace("Value", "source.Value");
-					cls.Members.Add(new MethodTemplate()
-					{
-						Comments = {$"/// <summary>Creates a {typeName} from a {sourceName} value.</summary>"},
-						Keywords = {Emit.Public, Emit.Static, fullType},
-						Name = methodName,
-						Parameters = {new ParameterTemplate { Type = sourceType, Name = "source" }},
-						BodyFactory = (body) => body.Write($"=> Create({expr});"),
-					});
-				}
-			}
-
-			sourceFile.Classes.Add(cls);
-			WriteSourceFileTo(cb, sourceFile);
-			context.AddSource(sourceFile.FileName, cb.ToString());
-		}
-		else
-		{
-			// V2/3/4 overloads: these are more complex, generate as standalone records
-			// For now, V2+ overloads are rare and can be added later
-			// The strategy document shows them mainly for V3 (Position3D, Translation3D)
-			EmitVectorOverloadType(context, vectorForm, baseTypeName, overload);
-		}
-	}
-
-	private static void EmitVectorOverloadType(
-		SourceProductionContext context,
-		int dims,
-		string baseTypeName,
-		OverloadDefinition overload)
-	{
-		string[] components = dims switch
-		{
-			2 => ["X", "Y"],
-			3 => ["X", "Y", "Z"],
-			4 => ["X", "Y", "Z", "W"],
-			_ => throw new ArgumentOutOfRangeException(nameof(dims)),
+			FileName = $"{typeName}.g.cs",
+			Namespace = "ktsu.Semantics.Quantities",
+			Usings = {"System.Numerics"},
 		};
 
-		string typeName = overload.Name;
+		ClassTemplate cls = new()
+		{
+			Comments =
+			{
+				Emit.SummaryOpen,
+				$"/// {type.Description}",
+				$"/// Semantic overload of <see cref=\"{baseTypeName}{{T}}\"/>.",
+				Emit.SummaryClose,
+				"/// <typeparam name=\"T\">The numeric storage type.</typeparam>",
+			},
+			Kind = TypeKind.RecordStruct,
+			Keywords = {Emit.Public, "readonly", "partial"},
+			Name = fullType,
+			Interfaces = {interfaceName, $"IPhysicalQuantity<{fullType}, T>"},
+			Constraints = {"where T : struct, INumber<T>"},
+		};
+
+		// Everything a quantity used to inherit from the PhysicalQuantity record.
+		AddValueTypeCore(cls, fullType, isV0: vectorForm == 0);
+
+		// Zero property
+		cls.Members.Add(new FieldTemplate()
+		{
+			Comments = {"/// <summary>Gets a quantity with value zero.</summary>"},
+			Keywords = {Emit.Public, Emit.Static, fullType},
+			Name = "Zero => Create(T.Zero)",
+		});
+
+		// Factory methods for every available unit (#48); overloads inherit the dimension's
+		// units. V0 overloads enforce the same non-negativity invariant as their V0 base
+		// type (#50). V0 overloads that declare physicalConstraints.minExclusive in
+		// dimensions.json (#51, e.g. Wavelength, Period, HalfLife) get the stricter
+		// EnsurePositive guard so a zero input is rejected too. V1 overloads accept
+		// any sign.
+		bool strictPositive = type.Magnitude == Magnitude.Positive;
+		AddUnitFactories(
+			cls,
+			dim.AvailableUnits,
+			emission.Units,
+			fullType,
+			typeName,
+			applyV0Guard: vectorForm == 0,
+			strictPositive: strictPositive);
+
+		// Dimension override + typed In() (#59).
+		AddDimensionAndInMembers(cls, dim);
+
+		// Implicit widening to base type
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments = {$"/// <summary>Implicit conversion to {baseTypeName}.</summary>"},
+			Keywords = {Emit.Public, Emit.Static, "implicit", "operator"},
+			Name = baseFullType,
+			Parameters = {new ParameterTemplate { Type = fullType, Name = Emit.ValueParameter }},
+			BodyFactory = (body) => body.Write($"=> {baseFullType}.Create(value.Value);"),
+		});
+
+		// Explicit narrowing from base type
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments = {$"/// <summary>Explicit conversion from {baseTypeName}.</summary>"},
+			Keywords = {Emit.Public, Emit.Static, "explicit", "operator"},
+			Name = fullType,
+			Parameters = {new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }},
+			BodyFactory = (body) => body.Write($"=> Create(value.Value);"),
+		});
+
+		// Factory-style narrowing from base
+		cls.Members.Add(new MethodTemplate()
+		{
+			Comments = {$"/// <summary>Creates a {typeName} from a {baseTypeName} value.</summary>"},
+			Keywords = {Emit.Public, Emit.Static, fullType},
+			Name = "From",
+			Parameters = {new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }},
+			BodyFactory = (body) => body.Write("=> Create(value.Value);"),
+		});
+
+		// V0 overload subtraction returns the same V0 of T.Abs(left - right) (locked
+		// in #52). The overload-typed operator hides the base PhysicalQuantity's plain
+		// subtraction so overloads stay in their own type and the magnitude invariant
+		// is preserved.
+		if (vectorForm == 0)
+		{
+			cls.Members.Add(new MethodTemplate()
+			{
+				Comments = {$"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.</summary>"},
+				Attributes = {Emit.PhysicsOperatorSuppression},
+				Keywords = {Emit.Public, Emit.Static, fullType},
+				Name = "operator -",
+				Parameters =
+				{
+					new ParameterTemplate { Type = fullType, Name = "left" },
+					new ParameterTemplate { Type = fullType, Name = Emit.RightParameter },
+				},
+				BodyFactory = (body) => body.Write("=> Create(T.Abs(left.Quantity - right.Quantity));"),
+			});
+		}
+
+		// Relationship methods (e.g., Diameter.ToRadius(), Diameter.FromRadius()). The one
+		// thing an overload declares that the vocabulary does not carry: these are C#
+		// expressions written in the metadata and pasted through, so there is nothing in
+		// them for a language-agnostic model to hold.
+		foreach (KeyValuePair<string, string> rel in emission.Overloads[typeName].Relationships)
+		{
+			// rel.Key is like "toRadius" or "fromRadius", rel.Value is the C# expression
+			string methodName = char.ToUpperInvariant(rel.Key[0]) + rel.Key.Substring(1);
+
+			if (methodName.StartsWith("To", StringComparison.Ordinal))
+			{
+				// Instance method: e.g., ToRadius() returns Radius<T>
+				string targetName = methodName.Substring(2);
+				string targetType = $"{targetName}<T>";
+				string expr = rel.Value; // uses "Value" referring to this instance
+				cls.Members.Add(new MethodTemplate()
+				{
+					Comments = {$"/// <summary>Converts this {typeName} to a {targetName}.</summary>"},
+					Keywords = {Emit.Public, targetType},
+					Name = methodName,
+					Parameters = {},
+					BodyFactory = (body) => body.Write($"=> {targetType}.Create({expr});"),
+				});
+			}
+			else if (methodName.StartsWith("From", StringComparison.Ordinal))
+			{
+				// Static factory: e.g., FromRadius(Radius<T> value) returns this type
+				string sourceName = methodName.Substring(4);
+				string sourceType = $"{sourceName}<T>";
+				// Replace "Value" with "source.Value" since this is a static method
+				string expr = rel.Value.Replace("Value", "source.Value");
+				cls.Members.Add(new MethodTemplate()
+				{
+					Comments = {$"/// <summary>Creates a {typeName} from a {sourceName} value.</summary>"},
+					Keywords = {Emit.Public, Emit.Static, fullType},
+					Name = methodName,
+					Parameters = {new ParameterTemplate { Type = sourceType, Name = "source" }},
+					BodyFactory = (body) => body.Write($"=> Create({expr});"),
+				});
+			}
+		}
+
+		sourceFile.Classes.Add(cls);
+		WriteSourceFileTo(cb, sourceFile);
+		context.AddSource(sourceFile.FileName, cb.ToString());
+	}
+
+	private static void EmitVectorOverloadType(SourceProductionContext context, QuantityType type)
+	{
+		int dims = type.Form;
+		string[] components = Components(dims);
+
+		string typeName = type.Name;
+		string baseTypeName = type.Refines!;
 		string fullType = $"{typeName}<T>";
 		string baseFullType = $"{baseTypeName}<T>";
 		string interfaceName = $"IVector{dims}<{fullType}, T>";
@@ -1550,7 +1362,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		cb.NewLine();
 
 		cb.WriteLine(Emit.SummaryOpen);
-		cb.WriteLine($"/// {overload.Description}");
+		cb.WriteLine($"/// {type.Description}");
 		cb.WriteLine($"/// Semantic overload of <see cref=\"{baseTypeName}{{T}}\"/>.");
 		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine($"public readonly partial record struct {fullType} : {interfaceName}");
@@ -1582,21 +1394,17 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 	#region Operator Emission Helpers
 
-	private static void EmitScalarOperators(
-		ClassTemplate cls,
-		string ownerTypeName,
-		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
-		Dictionary<string, int> typeFormMap)
+	private static void EmitScalarOperators(ClassTemplate cls, string ownerTypeName, Emission emission)
 	{
-		if (!operatorsByOwner.TryGetValue(ownerTypeName, out List<OperatorInfo>? ops))
+		if (!emission.OperatorsByOwner.TryGetValue(ownerTypeName, out List<OperatorInfo>? ops))
 		{
 			return;
 		}
 
 		foreach (OperatorInfo op in ops)
 		{
-			int leftForm = GetFormOrDefault(typeFormMap, op.LeftTypeName);
-			int rightForm = GetFormOrDefault(typeFormMap, op.RightTypeName);
+			int leftForm = GetFormOrDefault(emission.TypeFormMap, op.LeftTypeName);
+			int rightForm = GetFormOrDefault(emission.TypeFormMap, op.RightTypeName);
 
 			// For V0/V1 owner types, use Multiply/Divide helpers when both operands are V0/V1
 			if (leftForm <= 1 && rightForm <= 1)
@@ -1629,19 +1437,16 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				// One operand is V2+ (VN type, multi-component)
 				// The owner is V0/V1, the other operand is VN
 				// Generate inline: left.Value {op} right.X, etc. OR left.X {op} right.Value, etc.
-				EmitInlineCrossDimOp(cls, op, typeFormMap);
+				EmitInlineCrossDimOp(cls, op, emission);
 			}
 		}
 	}
 
-	private static void EmitInlineCrossDimOp(
-		ClassTemplate cls,
-		OperatorInfo op,
-		Dictionary<string, int> typeFormMap)
+	private static void EmitInlineCrossDimOp(ClassTemplate cls, OperatorInfo op, Emission emission)
 	{
-		int leftForm = GetFormOrDefault(typeFormMap, op.LeftTypeName);
-		int rightForm = GetFormOrDefault(typeFormMap, op.RightTypeName);
-		int resultForm = GetFormOrDefault(typeFormMap, op.ReturnTypeName);
+		int leftForm = GetFormOrDefault(emission.TypeFormMap, op.LeftTypeName);
+		int rightForm = GetFormOrDefault(emission.TypeFormMap, op.RightTypeName);
+		int resultForm = GetFormOrDefault(emission.TypeFormMap, op.ReturnTypeName);
 
 		string[] resultComponents = resultForm switch
 		{
@@ -1702,22 +1507,18 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		});
 	}
 
-	private static void EmitVectorCrossDimOperators(
-		CodeBlocker cb,
-		string ownerTypeName,
-		Dictionary<string, List<OperatorInfo>> operatorsByOwner,
-		Dictionary<string, int> typeFormMap)
+	private static void EmitVectorCrossDimOperators(CodeBlocker cb, string ownerTypeName, Emission emission)
 	{
-		if (!operatorsByOwner.TryGetValue(ownerTypeName, out List<OperatorInfo>? ops))
+		if (!emission.OperatorsByOwner.TryGetValue(ownerTypeName, out List<OperatorInfo>? ops))
 		{
 			return;
 		}
 
 		foreach (OperatorInfo op in ops)
 		{
-			int leftForm = GetFormOrDefault(typeFormMap, op.LeftTypeName);
-			int rightForm = GetFormOrDefault(typeFormMap, op.RightTypeName);
-			int resultForm = GetFormOrDefault(typeFormMap, op.ReturnTypeName);
+			int leftForm = GetFormOrDefault(emission.TypeFormMap, op.LeftTypeName);
+			int rightForm = GetFormOrDefault(emission.TypeFormMap, op.RightTypeName);
+			int resultForm = GetFormOrDefault(emission.TypeFormMap, op.ReturnTypeName);
 
 			string[] resultComponents = resultForm switch
 			{
@@ -1913,9 +1714,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		_ => null,
 	};
 
-	private static string? GetBaseTypeName(PhysicalDimension dim, int form) => GetFormDef(dim, form)?.Base;
-
-	private static int GetFormOrDefault(Dictionary<string, int> map, string key)
+	private static int GetFormOrDefault(IReadOnlyDictionary<string, int> map, string key)
 	{
 		if (map.TryGetValue(key, out int value))
 		{
@@ -1924,6 +1723,19 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 		return -1;
 	}
+
+	/// <summary>
+	/// What a vector type's components are called, by how many it has.
+	/// </summary>
+	/// <param name="dims">The component count, from two to four.</param>
+	/// <returns>The component names, in order.</returns>
+	private static string[] Components(int dims) => dims switch
+	{
+		2 => ["X", "Y"],
+		3 => ["X", "Y", "Z"],
+		4 => ["X", "Y", "Z", "W"],
+		_ => throw new ArgumentOutOfRangeException(nameof(dims)),
+	};
 
 	#endregion
 

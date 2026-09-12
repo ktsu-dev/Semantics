@@ -96,7 +96,4 @@ public readonly partial record struct Force2D<T> : IVector2<Force2D<T>, T>
 	/// <summary>Force2D * Duration = Momentum2D.</summary>
 	public static Momentum2D<T> operator *(Force2D<T> left, Duration<T> right) => new() { X = left.X * right.Value, Y = left.Y * right.Value };
 
-	/// <summary>Typed dot product: Force2D . Displacement2D = Energy.</summary>
-	public Energy<T> Dot(Displacement2D<T> other) => Energy<T>.Create((X * other.X) + (Y * other.Y));
-
 };

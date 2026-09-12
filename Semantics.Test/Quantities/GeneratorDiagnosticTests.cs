@@ -80,6 +80,67 @@ public class GeneratorDiagnosticTests
 		}
 		""";
 
+	/// <summary>
+	/// Three dimensions that make a real cross product: <c>Length x Force -&gt; Torque</c>, whose
+	/// exponents work out — <c>L</c> times <c>L M T⁻²</c> is <c>L² M T⁻²</c>.
+	/// </summary>
+	/// <param name="length">The vector forms Length declares.</param>
+	/// <param name="force">The vector forms Force declares.</param>
+	/// <param name="torque">The vector forms Torque declares.</param>
+	/// <returns>The document, with the cross product declared on Length at form 3.</returns>
+	/// <remarks>
+	/// The physics has to be right for this to test what its name says. A relationship the
+	/// exponents contradict is refused for that reason and never reaches the question of which
+	/// forms its participants declare, so a fixture that multiplied two lengths into a length
+	/// would report SEM008 and never SEM003, whatever forms it asked for.
+	/// <para>
+	/// Each participant's forms are a parameter because which one is short of the form is the
+	/// whole of what these tests vary: the relationship names three dimensions and the diagnostic
+	/// has to name the right one of them.
+	/// </para>
+	/// </remarks>
+	private static string CrossProductDocument(string length, string force, string torque) =>
+		$$"""
+		{
+		  "physicalDimensions": [
+		    {
+		      "name": "Length",
+		      "symbol": "L",
+		      "dimensionalFormula": { "length": 1 },
+		      "availableUnits": [ "Meter" ],
+		      "quantities": { {{length}} },
+		      "crossProducts": [ { "other": "Force", "result": "Torque", "forms": [ 3 ] } ]
+		    },
+		    {
+		      "name": "Force",
+		      "symbol": "F",
+		      "dimensionalFormula": { "length": 1, "mass": 1, "time": -2 },
+		      "availableUnits": [ "Newton" ],
+		      "quantities": { {{force}} }
+		    },
+		    {
+		      "name": "Torque",
+		      "symbol": "M",
+		      "dimensionalFormula": { "length": 2, "mass": 1, "time": -2 },
+		      "availableUnits": [ "NewtonMeter" ],
+		      "quantities": { {{torque}} }
+		    }
+		  ]
+		}
+		""";
+
+	/// <summary>A dimension that declares a magnitude form and nothing else.</summary>
+	private static string MagnitudeOnly(string name) => $$"""
+
+		      "vector0": { "base": "{{name}}" }
+		""";
+
+	/// <summary>A dimension that declares a magnitude form and a three-component one.</summary>
+	private static string WithVector3(string name) => $$"""
+
+		      "vector0": { "base": "{{name}}" }, "vector3": { "base": "{{name}}3D" }
+		""";
+
 	private static IReadOnlyList<Diagnostic> Run(string generatorMetadata, IIncrementalGenerator generator, string fileName) =>
 		[.. Harness.Run(generator, new Dictionary<string, string> { [fileName] = generatorMetadata }).Diagnostics];
 
@@ -121,6 +182,27 @@ public class GeneratorDiagnosticTests
 			expected,
 			metadata.Substring(span.Start, span.Length),
 			$"{id} pointed at the wrong place in the metadata.");
+	}
+
+	/// <summary>
+	/// Asserts that SEM003 was reported and that it names the participant that is short of the
+	/// form, rather than one of the other two.
+	/// </summary>
+	/// <param name="diagnostics">Everything the generator reported.</param>
+	/// <param name="expected">The dimension that does not declare the form.</param>
+	/// <remarks>
+	/// On the quoted clause rather than on the bare name, because all three participants are named
+	/// in the message either way — the field path spells the relationship out — so asserting that
+	/// the name appears somewhere would pass for a diagnostic blaming the wrong one.
+	/// </remarks>
+	private static void AssertNamesTheDimensionMissingTheForm(IReadOnlyList<Diagnostic> diagnostics, string expected)
+	{
+		AssertReports(diagnostics, "SEM003");
+
+		Assert.Contains(
+			$"but '{expected}' does not declare that form",
+			diagnostics.First(candidate => candidate.Id == "SEM003").GetMessage(),
+			"SEM003 named the wrong participant.");
 	}
 
 	[TestMethod]
@@ -195,63 +277,67 @@ public class GeneratorDiagnosticTests
 		AssertReports(Run(metadata, new QuantitiesGenerator(), "dimensions.json"), "SEM002");
 	}
 
+	/// <remarks>
+	/// The first of the three participants. Length declares a magnitude form and nothing else, so
+	/// the cross product it declares at V3 cannot be honoured by the dimension declaring it.
+	/// </remarks>
 	[TestMethod]
 	public void Sem003_IsReportedWhenARelationshipRequestsAnUndeclaredForm()
 	{
-		// Length declares vector0 and vector3; asking for the cross product at V2 cannot be honoured.
-		string metadata = DimensionsDocument(
-			relationships: ",\n      \"crossProducts\": [ { \"other\": \"Length\", \"result\": \"Length\", \"forms\": [ 2 ] } ]");
+		string metadata = CrossProductDocument(
+			MagnitudeOnly("Length"),
+			WithVector3("Force"),
+			WithVector3("Torque"));
 
-		AssertReports(Run(metadata, new QuantitiesGenerator(), "dimensions.json"), "SEM003");
+		AssertNamesTheDimensionMissingTheForm(Run(metadata, new QuantitiesGenerator(), "dimensions.json"), "Length");
 	}
 
 	[TestMethod]
 	public void Sem003_PointsAtTheRelationshipRatherThanAtNothing()
 	{
-		string metadata = DimensionsDocument(
-			relationships: ",\n      \"crossProducts\": [ { \"other\": \"Length\", \"result\": \"Length\", \"forms\": [ 2 ] } ]");
+		string metadata = CrossProductDocument(
+			MagnitudeOnly("Length"),
+			WithVector3("Force"),
+			WithVector3("Torque"));
 
-		// Not the bare name: "Length" is spelled correctly and appears several times before the
-		// relationship that is wrong. The location has to be the relationship's own "other".
+		// Not the bare name: "Force" is spelled correctly and appears as a dimension of its own
+		// further down the file. The location has to be the relationship's own "other".
 		AssertPointsAt(
 			metadata,
 			Run(metadata, new QuantitiesGenerator(), "dimensions.json"),
 			"SEM003",
-			"\"other\": \"Length\"");
+			"\"other\": \"Force\"");
 	}
 
 	/// <remarks>
-	/// The self branch is covered above. This is the second participant: Length has a vector3 and
-	/// Time does not, so the cross product cannot be honoured at form 3 — and the diagnostic has to
-	/// name Time rather than Length.
+	/// The second participant: Length has a vector3 and Force does not, so the cross product
+	/// cannot be honoured at form 3 — and the diagnostic has to name Force rather than Length.
 	/// </remarks>
 	[TestMethod]
 	public void Sem003_NamesTheOtherParticipantWhenItIsTheOneMissingTheForm()
 	{
-		string metadata = TwoDimensionsDocument(
-			",\n      \"crossProducts\": [ { \"other\": \"Time\", \"result\": \"Length\", \"forms\": [ 3 ] } ]");
+		string metadata = CrossProductDocument(
+			WithVector3("Length"),
+			MagnitudeOnly("Force"),
+			WithVector3("Torque"));
 
-		IReadOnlyList<Diagnostic> diagnostics = Run(metadata, new QuantitiesGenerator(), "dimensions.json");
-
-		AssertReports(diagnostics, "SEM003");
-		Assert.Contains("Time", diagnostics.First(candidate => candidate.Id == "SEM003").GetMessage());
+		AssertNamesTheDimensionMissingTheForm(Run(metadata, new QuantitiesGenerator(), "dimensions.json"), "Force");
 	}
 
 	/// <remarks>
-	/// The third participant. A cross product also needs its <em>result</em> to have the form —
-	/// Force x Length -> Torque at V2 fails because Torque has no V2, not because either operand
-	/// is missing one.
+	/// The third participant. A cross product also needs its <em>result</em> to have the form:
+	/// Length x Force -> Torque at V3 fails when Torque has no V3, not because either operand is
+	/// missing one.
 	/// </remarks>
 	[TestMethod]
 	public void Sem003_NamesTheResultWhenItIsTheOneMissingTheForm()
 	{
-		string metadata = TwoDimensionsDocument(
-			",\n      \"crossProducts\": [ { \"other\": \"Length\", \"result\": \"Time\", \"forms\": [ 3 ] } ]");
+		string metadata = CrossProductDocument(
+			WithVector3("Length"),
+			WithVector3("Force"),
+			MagnitudeOnly("Torque"));
 
-		IReadOnlyList<Diagnostic> diagnostics = Run(metadata, new QuantitiesGenerator(), "dimensions.json");
-
-		AssertReports(diagnostics, "SEM003");
-		Assert.Contains("Time", diagnostics.First(candidate => candidate.Id == "SEM003").GetMessage());
+		AssertNamesTheDimensionMissingTheForm(Run(metadata, new QuantitiesGenerator(), "dimensions.json"), "Torque");
 	}
 
 	[TestMethod]

@@ -112,7 +112,4 @@ public readonly partial record struct Force4D<T> : IVector4<Force4D<T>, T>
 	/// <summary>Force4D * Duration = Momentum4D.</summary>
 	public static Momentum4D<T> operator *(Force4D<T> left, Duration<T> right) => new() { X = left.X * right.Value, Y = left.Y * right.Value, Z = left.Z * right.Value, W = left.W * right.Value };
 
-	/// <summary>Typed dot product: Force4D . Displacement4D = Energy.</summary>
-	public Energy<T> Dot(Displacement4D<T> other) => Energy<T>.Create((X * other.X) + (Y * other.Y) + (Z * other.Z) + (W * other.W));
-
 };
