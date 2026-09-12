@@ -181,18 +181,6 @@ public readonly partial record struct Energy<T> : IVector0<Energy<T>, T>, IPhysi
 	public static Energy<T> operator -(Energy<T> left, Energy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 
 	/// <summary>
-	/// Divides Energy by Angle to produce TorqueMagnitude.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static TorqueMagnitude<T> operator /(Energy<T> left, Angle<T> right) => TorqueMagnitude<T>.Create(left.Quantity / right.Quantity);
-
-	/// <summary>
-	/// Divides Energy by TorqueMagnitude to produce Angle.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Angle<T> operator /(Energy<T> left, TorqueMagnitude<T> right) => Angle<T>.Create(left.Quantity / right.Quantity);
-
-	/// <summary>
 	/// Divides Energy by Length to produce ForceMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]

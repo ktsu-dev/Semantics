@@ -171,17 +171,5 @@ public readonly partial record struct VoltageMagnitude<T> : IVector0<VoltageMagn
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static MagneticFlux<T> operator *(VoltageMagnitude<T> left, Duration<T> right) => MagneticFlux<T>.Create(left.Quantity * right.Quantity);
-
-	/// <summary>
-	/// Divides VoltageMagnitude by Pressure to produce Sensitivity.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Sensitivity<T> operator /(VoltageMagnitude<T> left, Pressure<T> right) => Sensitivity<T>.Create(left.Quantity / right.Quantity);
-
-	/// <summary>
-	/// Divides VoltageMagnitude by Sensitivity to produce Pressure.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Pressure<T> operator /(VoltageMagnitude<T> left, Sensitivity<T> right) => Pressure<T>.Create(left.Quantity / right.Quantity);
 }
 

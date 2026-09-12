@@ -105,10 +105,18 @@ does not compile — which makes every claim in `integrals` and `derivatives` ch
 contradict is refused by name, with both dimensions written out, rather than emitted as something
 broken. Five are refused as the metadata stands.
 
-The check itself now lives in `Semantics.Vocabulary` and both generators run it. C++ refuses the
-five; C# reports them as SEM008 and emits the operators anyway, because removing an operator from a
-shipped package is a breaking change and fixing the metadata is a physics call. So the table below
-is what C++ does not write **and** what C# writes with a warning against its name:
+The check itself lives in `Semantics.Vocabulary`, and the vocabulary is what both generators emit
+*from* rather than merely check against — `QuantityVocabulary.Types` is the list of classes to write
+and `QuantityVocabulary.Relationships` the list of operators, on both sides. So a relationship the
+exponents refuse is not among the ones there are to write, in either target, and the table below is
+simply what neither writes. C# additionally reports each one as SEM008, having somewhere to report
+it to; C++ prints them.
+
+The two sides still differ in how many operators one relationship becomes, and that is the language
+rather than the physics: the vocabulary states each relationship once, in the direction the metadata
+declares it, and the C# generator expands it into the declared direction, its commutation and the
+divisions that undo it, because a caller who writes `duration * velocity` is not making a different
+claim. That expansion lives in `QuantitiesGenerator.CollectOperators`.
 
 | Refused | Why |
 |---|---|
@@ -286,7 +294,7 @@ var converted = sourceString.As<SourceType, TargetType>();
   - **SEM005** — schema-level validation issue in `logarithmic.json` (missing or duplicate scale names, a conversion with no linear type).
   - **SEM006** — a metadata file a generator declared in `MetadataFileNames` was not supplied as an `AdditionalFile`. Previously this produced no output and no explanation, which is indistinguishable from a generator that simply had nothing to emit.
   - **SEM007** — a metadata file could not be parsed. Replaces the base generator's `CONV001` in category `SourceGenerator`, and covers the path that used to swallow the exception, where a malformed `units.json` silently produced factories with no scale factor.
-  - **SEM008** — a relationship's declared result does not follow from the dimensions of its operands, or its value is signed and the declared result is a magnitude. The check comes from `Semantics.Vocabulary`, shared with the C++ projection; before that this side checked the names (SEM001) and the forms (SEM003) and then emitted the operator, so `Sensitivity * Pressure -> ElectricPotential` shipped as a working C# operator computing the wrong physics. The operator is **still emitted** — dropping it would be a breaking change to a shipped package, and the metadata's own bug is a physics call rather than a spelling one. Suppressed in `Semantics.Quantities.csproj` because ktsu.Sdk builds warnings as errors and the five below are outstanding; `UnkeepableRelationshipTests` pins the set so a sixth fails there rather than disappearing into the suppression.
+  - **SEM008** — a relationship's declared result does not follow from the dimensions of its operands, or its value is signed and the declared result is a magnitude. The check comes from `Semantics.Vocabulary`, shared with the C++ projection; before that this side checked the names (SEM001) and the forms (SEM003) and then emitted the operator, so `Sensitivity * Pressure -> ElectricPotential` shipped as a working C# operator computing the wrong physics. **No operator is generated** for a refused relationship, in any of the directions C# spells a product in — that followed from making the vocabulary drive emission rather than only check it, and the removal is documented in `docs/migration-guide-5.0.md`. Suppressed in `Semantics.Quantities.csproj` because ktsu.Sdk builds warnings as errors and the five below are outstanding; `UnkeepableRelationshipTests` pins the set, and asserts that none of them is in the compiled surface, so a sixth fails there rather than disappearing into the suppression.
   - Descriptors are allocated from `SemanticsDiagnostics`, which is the one place to add a new one. `AnalyzerReleaseTrackingTests` fails if the identifier is missing from `AnalyzerReleases.Unshipped.md`, so RS2008 no longer surfaces only after a push.
 - See `docs/physics-generator.md` for the full schema and an end-to-end "add a dimension" walk-through.
 
@@ -301,3 +309,5 @@ This file is the entry point. For deeper material:
 - `docs/migration-guide-2.0.md` — 1.x → 2.0 upgrade guide (renames, namespace moves, behavioral changes).
 - `docs/migration-guide-3.0.md` — 2.x → 3.0 upgrade guide (removed first-class .NET type attributes, chord flag enum renames).
 - `docs/migration-guide-3.1.md` — 3.0 → 3.1 upgrade guide (JSON converter is now opt-in, `PhysicalConstants` domain fields became generic accessors).
+- `docs/migration-guide-4.0.md` — 3.x → 4.0 upgrade guide (every quantity became a `readonly record struct`).
+- `docs/migration-guide-5.0.md` — 4.x → 5.0 upgrade guide (the five dimensionally unkeepable relationships no longer generate operators).

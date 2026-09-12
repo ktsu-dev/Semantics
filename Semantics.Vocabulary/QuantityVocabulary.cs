@@ -2,6 +2,7 @@
 
 namespace ktsu.Semantics.Vocabulary;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -37,6 +38,17 @@ internal enum Magnitude
 /// <param name="MagnitudeType">
 /// The name of the same dimension's magnitude form, which is what <c>magnitude()</c> answers with.
 /// </param>
+/// <param name="Owner">
+/// The dimension that declares it, as <c>dimensions.json</c> names it.
+/// </param>
+/// <remarks>
+/// <paramref name="Owner"/> is the one field here that is not physics: the exponents already say
+/// what the quantity <em>is</em>, and the name of the entry it was read from says nothing further
+/// about it. It is carried because a target spells a quantity using things the vocabulary has no
+/// opinion on -- which units it can be built from, what its symbol is -- and those live on the
+/// reader's own model of the dimension. Without a way back to that entry a consumer has to
+/// rediscover which dimension produced a type, which is the drift this exists to stop.
+/// </remarks>
 internal sealed record QuantityType(
 	string Name,
 	string Description,
@@ -44,7 +56,8 @@ internal sealed record QuantityType(
 	string? Refines,
 	Magnitude Magnitude,
 	int Form,
-	string MagnitudeType)
+	string MagnitudeType,
+	string Owner)
 {
 	/// <summary>Gets a value indicating whether this holds several components rather than one.</summary>
 	internal bool IsVector => Form >= 2;
@@ -107,10 +120,11 @@ internal sealed record QuantityRelationship(string Left, string Right, string Re
 /// Why something the metadata asked for was refused.
 /// </summary>
 /// <remarks>
-/// Carried so a consumer can report only what it does not already diagnose for itself. The C#
-/// generator has had its own diagnostics for an unknown dimension (SEM001) and a missing vector
-/// form (SEM003) since before this was shared, so it reports the two kinds that are genuinely new
-/// to it and leaves those alone; the C++ projection prints all of them, having no other channel.
+/// Carried so a consumer can report each kind the way it already reports that kind. The C#
+/// generator has a diagnostic per kind — SEM001 for an unknown dimension, SEM003 for a missing
+/// vector form, SEM002 for a dimension with no magnitude form, and SEM008 for the two the
+/// exponents refuse — and switches on this to pick between them; the C++ projection prints all of
+/// them together, having no other channel.
 /// </remarks>
 internal enum VocabularyIssueKind
 {
@@ -131,12 +145,49 @@ internal enum VocabularyIssueKind
 }
 
 /// <summary>
+/// Which part of the metadata a refusal is about, in the metadata's own names.
+/// </summary>
+/// <param name="Owner">The dimension whose entry declares the relationship.</param>
+/// <param name="Other">The dimension on the other side of the operator.</param>
+/// <param name="Result">The dimension the operator claims to produce.</param>
+/// <param name="Kind">How the two were to be combined.</param>
+/// <param name="Offending">
+/// The name the refusal is about: the one that could not be resolved, or the one that does not
+/// declare the form. Empty when the refusal is about the relationship as a whole rather than about
+/// one of its names.
+/// </param>
+/// <param name="Form">The form asked for, or -1 when the refusal is not about a form.</param>
+/// <remarks>
+/// <see cref="VocabularyIssue.Reason"/> is prose, which is all a consumer that prints its refusals
+/// needs. One that reports them as compiler diagnostics needs the pieces back: a message with the
+/// names in their own fields, and a position in the file to point at, which it finds by searching
+/// for the text it already knows. Re-parsing the prose to recover them would be the same drift in
+/// a new place.
+/// </remarks>
+internal sealed record IssueSite(
+	string Owner,
+	string Other,
+	string Result,
+	RelationshipKind Kind,
+	string Offending,
+	int Form);
+
+/// <summary>
 /// Something the metadata says that will not be emitted, and why.
 /// </summary>
 /// <param name="Kind">Which kind of problem it is, so a consumer can report only what it needs to.</param>
 /// <param name="Subject">What was refused, named the way the metadata names it.</param>
 /// <param name="Reason">Why, in terms a person editing the metadata can act on.</param>
-internal sealed record VocabularyIssue(VocabularyIssueKind Kind, string Subject, string Reason)
+/// <param name="Site">
+/// Where it came from, for a consumer that reports it against the file. Null when the refusal is
+/// about a dimension rather than about a relationship, which is the <see
+/// cref="VocabularyIssueKind.NoMagnitudeForm"/> case.
+/// </param>
+internal sealed record VocabularyIssue(
+	VocabularyIssueKind Kind,
+	string Subject,
+	string Reason,
+	IssueSite? Site = null)
 {
 	/// <inheritdoc />
 	public override string ToString() => $"{Subject}: {Reason}";
@@ -265,7 +316,8 @@ internal sealed class QuantityVocabulary
 			Refines: null,
 			form == 0 ? Magnitude.NonNegative : Magnitude.Signed,
 			form,
-			magnitudeType);
+			magnitudeType,
+			dimension.Name);
 
 		foreach (OverloadDeclaration overload in declared.Overloads)
 		{
@@ -276,7 +328,8 @@ internal sealed class QuantityVocabulary
 				Refines: declared.Base,
 				BoundOf(form, overload),
 				form,
-				magnitudeType);
+				magnitudeType,
+				dimension.Name);
 		}
 	}
 
@@ -361,7 +414,8 @@ internal sealed class QuantityVocabulary
 				refused.Add(new VocabularyIssue(
 					VocabularyIssueKind.UnknownDimension,
 					subject,
-					$"names '{named}', which dimensions.json does not declare."));
+					$"names '{named}', which dimensions.json does not declare.",
+					Site(dimension.Name, relationship, kind, named)));
 				return [];
 			}
 		}
@@ -376,7 +430,8 @@ internal sealed class QuantityVocabulary
 			refused.Add(new VocabularyIssue(
 				VocabularyIssueKind.NotDimensionallyTrue,
 				subject,
-				$"is not dimensionally true: {left} {(kind == RelationshipKind.Quotient ? "/" : "*")} {right} is {combined}, and {relationship.Result} is {result}."));
+				$"is not dimensionally true: {left} {(kind == RelationshipKind.Quotient ? "/" : "*")} {right} is {combined}, and {relationship.Result} is {result}.",
+				Site(dimension.Name, relationship, kind, string.Empty)));
 			return [];
 		}
 
@@ -388,7 +443,8 @@ internal sealed class QuantityVocabulary
 			refused.Add(new VocabularyIssue(
 				VocabularyIssueKind.SignedResultInMagnitudeForm,
 				subject,
-				$"reduces to a signed value -- two vectors that oppose each other give a negative one -- and '{relationship.Result}' declares only a magnitude form, which cannot be negative. A vector1 form on it is what would let this be generated."));
+				$"reduces to a signed value -- two vectors that oppose each other give a negative one -- and '{relationship.Result}' declares only a magnitude form, which cannot be negative. A vector1 form on it is what would let this be generated.",
+				Site(dimension.Name, relationship, kind, relationship.Result)));
 			return [];
 		}
 
@@ -438,11 +494,18 @@ internal sealed class QuantityVocabulary
 				if (relationship.Forms.Count > 0)
 				{
 					// The same gap SEM003 reports: a form asked for by name that one of the
-					// participants does not have.
-					refused.Add(new VocabularyIssue(
-						VocabularyIssueKind.MissingVectorForm,
-						subject,
-						$"is declared at vector{form.ToString(CultureInfo.InvariantCulture)}, which {Missing(declarations, form, self, relationship, crossed)} does not declare."));
+					// participants does not have. One refusal per participant rather than one
+					// naming them together, because each is its own thing to go and declare, and
+					// a consumer reporting these as diagnostics has a single name to put in each
+					// message rather than a list to phrase around.
+					foreach (string missing in Missing(declarations, form, self, relationship, crossed))
+					{
+						refused.Add(new VocabularyIssue(
+							VocabularyIssueKind.MissingVectorForm,
+							subject,
+							$"is declared at vector{form.ToString(CultureInfo.InvariantCulture)}, which {missing} does not declare.",
+							Site(self, relationship, kind, missing, form)));
+					}
 				}
 
 				continue;
@@ -475,19 +538,55 @@ internal sealed class QuantityVocabulary
 		return crossed ? [3] : [.. Enumerable.Range(0, DimensionDeclaration.FormCount)];
 	}
 
-	private static string Missing(
+	/// <summary>
+	/// The participants that cannot supply the form a relationship was declared at.
+	/// </summary>
+	/// <remarks>
+	/// Each participant is checked at the form it actually has to supply, which is not the same
+	/// form for all three: the right operand of a product or a quotient is the magnitude the
+	/// vector is scaled by, so what it needs is a <c>vector0</c>, however many components the
+	/// relationship is declared at. Checking it at the declared form instead would refuse
+	/// <c>Velocity3D * Duration</c> for the absence of a three-component duration, which is not a
+	/// thing to go and declare.
+	/// </remarks>
+	private static IEnumerable<string> Missing(
 		IReadOnlyDictionary<string, DimensionDeclaration> declarations,
 		int form,
 		string self,
 		RelationshipDeclaration relationship,
 		bool crossed)
 	{
-		IEnumerable<string> participants = crossed
-			? [self, relationship.Other, relationship.Result]
-			: [self, relationship.Result];
+		(string Name, int At)[] participants =
+		[
+			(self, form),
+			(relationship.Other, crossed ? form : 0),
+			(relationship.Result, form),
+		];
 
-		return string.Join(" and ", participants.Where(named => Base(declarations, named, form) is null));
+		return participants
+			.Where(participant => Base(declarations, participant.Name, participant.At) is null)
+			.Select(participant => participant.Name)
+			.Distinct(StringComparer.Ordinal);
 	}
+
+	/// <summary>
+	/// Where a refusal about one relationship came from.
+	/// </summary>
+	/// <param name="owner">The dimension whose entry declares it.</param>
+	/// <param name="relationship">The relationship itself.</param>
+	/// <param name="kind">How its two operands were to be combined.</param>
+	/// <param name="offending">
+	/// The name the refusal is about, or empty when it is about the relationship as a whole.
+	/// </param>
+	/// <param name="form">The form asked for, or -1 when the refusal is not about a form.</param>
+	/// <returns>The site.</returns>
+	private static IssueSite Site(
+		string owner,
+		RelationshipDeclaration relationship,
+		RelationshipKind kind,
+		string offending,
+		int form = -1) =>
+		new(owner, relationship.Other, relationship.Result, kind, offending, form);
 
 	private static string? Base(IReadOnlyDictionary<string, DimensionDeclaration> declarations, string dimension, int form)
 	{

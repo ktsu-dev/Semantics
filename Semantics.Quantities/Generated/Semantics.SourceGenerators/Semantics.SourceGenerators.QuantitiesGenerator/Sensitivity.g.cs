@@ -115,11 +115,5 @@ public readonly partial record struct Sensitivity<T> : IVector0<Sensitivity<T>, 
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Sensitivity<T> operator -(Sensitivity<T> left, Sensitivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
-
-	/// <summary>
-	/// Multiplies Sensitivity by Pressure to produce VoltageMagnitude.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator *(Sensitivity<T> left, Pressure<T> right) => VoltageMagnitude<T>.Create(left.Quantity * right.Quantity);
 }
 

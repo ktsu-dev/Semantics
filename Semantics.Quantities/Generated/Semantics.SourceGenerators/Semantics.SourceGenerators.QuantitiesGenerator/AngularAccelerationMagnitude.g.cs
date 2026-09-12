@@ -133,11 +133,5 @@ public readonly partial record struct AngularAccelerationMagnitude<T> : IVector0
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Duration<T> operator /(AngularAccelerationMagnitude<T> left, AngularJerkMagnitude<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
-
-	/// <summary>
-	/// Multiplies AngularAccelerationMagnitude by MomentOfInertia to produce TorqueMagnitude.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static TorqueMagnitude<T> operator *(AngularAccelerationMagnitude<T> left, MomentOfInertia<T> right) => TorqueMagnitude<T>.Create(left.Quantity * right.Quantity);
 }
 

@@ -167,11 +167,5 @@ public readonly partial record struct Pressure<T> : IVector0<Pressure<T>, T>, IP
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Energy<T> operator *(Pressure<T> left, Volume<T> right) => Energy<T>.Create(left.Quantity * right.Quantity);
-
-	/// <summary>
-	/// Multiplies Pressure by Sensitivity to produce VoltageMagnitude.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator *(Pressure<T> left, Sensitivity<T> right) => VoltageMagnitude<T>.Create(left.Quantity * right.Quantity);
 }
 
