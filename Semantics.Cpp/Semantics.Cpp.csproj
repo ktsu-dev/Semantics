@@ -10,6 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- The physics, shared with Semantics.SourceGenerators as source rather than as an assembly.
+         See Semantics.Vocabulary/README.md: the generator is a Roslyn component that bundles its
+         dependencies, and this project is packed, so an assembly would cost a load-time hazard on
+         one side and a published package on the other. -->
+    <Compile Include="..\Semantics.Vocabulary\*.cs" LinkBase="Vocabulary" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ktsu.Coder" />
     <PackageReference Include="Polyfill" PrivateAssets="all" />
   </ItemGroup>

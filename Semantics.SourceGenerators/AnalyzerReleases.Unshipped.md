@@ -12,3 +12,4 @@ SEM004  | Semantics.SourceGenerators | Warning | Reports a `dimensions.json` `av
 SEM005  | Semantics.SourceGenerators | Warning | Reports schema-level validation issues in logarithmic.json (missing or duplicate scale names, conversions with no linear type).
 SEM006  | Semantics.SourceGenerators | Warning | Reports a metadata file a generator declared that was not supplied as an AdditionalFile.
 SEM007  | Semantics.SourceGenerators | Error | Reports a metadata file that could not be parsed. Replaces the base generator's CONV001.
+SEM008  | Semantics.SourceGenerators | Warning | Reports a relationship whose declared result does not follow from the dimensions of its operands, or whose signed value cannot land in a magnitude result.

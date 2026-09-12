@@ -78,4 +78,25 @@ public static class SemanticsDiagnostics
 		7,
 		"A metadata file could not be parsed",
 		"Metadata file '{0}' could not be parsed: {1}");
+
+	/// <summary>
+	/// SEM008: a relationship's declared result does not follow from its operands.
+	/// </summary>
+	/// <remarks>
+	/// A relationship is a claim, and until this existed nothing on the C# side checked it. The
+	/// names were checked (SEM001) and the forms were checked (SEM003), and then the operator was
+	/// emitted — so <c>Sensitivity * Pressure -&gt; ElectricPotential</c>, whose exponents are off
+	/// by <c>M L⁴ T⁻⁵ I⁻²</c>, has been shipping as a working operator that computes the wrong
+	/// physics. The C++ projection had the check and refused it by name; the two now share it.
+	/// <para>
+	/// A warning rather than an error, and the operator is still emitted. Both of those are
+	/// deliberate: the metadata's own bug predates this, fixing it is a physics call rather than a
+	/// spelling one, and dropping an operator that is in a shipped package is a breaking change
+	/// nobody has asked for yet. What this buys is that the claim is no longer silent.
+	/// </para>
+	/// </remarks>
+	public static DiagnosticDescriptor RelationshipNotDimensionallyTrue { get; } = Catalog.Warning(
+		8,
+		"Physics relationship does not follow from the dimensions of its operands",
+		"Relationship {0} {1} The operator is still generated, so this is reported rather than dropped; fix dimensions.json.");
 }
