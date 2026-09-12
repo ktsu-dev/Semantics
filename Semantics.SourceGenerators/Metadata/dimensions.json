@@ -83,7 +83,9 @@
       ],
       "derivatives": [],
       "dotProducts": [],
-      "crossProducts": []
+      "crossProducts": [
+        { "other": "Force", "result": "Torque", "forms": [3] }
+      ]
     },
     {
       "name": "Mass",
@@ -574,9 +576,7 @@
       "dotProducts": [
         { "other": "Length", "result": "Energy" }
       ],
-      "crossProducts": [
-        { "other": "Length", "result": "Torque", "forms": [3] }
-      ]
+      "crossProducts": []
     },
     {
       "name": "Momentum",
@@ -1285,9 +1285,9 @@
     },
     {
       "name": "Sensitivity",
-      "symbol": "M⁻¹ L⁻¹ T² I",
+      "symbol": "L³ T⁻¹ I⁻¹",
       "dimensionalFormula": {
-        "mass": -1, "length": -1, "time": 2, "electricCurrent": 1
+        "length": 3, "time": -1, "electricCurrent": -1
       },
       "availableUnits": ["VoltPerPascal"],
       "quantities": {
