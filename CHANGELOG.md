@@ -1,6 +1,9 @@
-## v4.2.0
+## v4.3.0 (minor)
 
-No significant changes detected since v4.2.0.
+Changes since v4.2.0:
+
+- Join rather than Combine when reading the test's metadata ([@Claude](https://github.com/Claude))
+- [minor] Share the quantity vocabulary between both generators ([@Claude](https://github.com/Claude))
 
 ## v4.2.0 (minor)
 
