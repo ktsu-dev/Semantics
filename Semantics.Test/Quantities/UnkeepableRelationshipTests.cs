@@ -58,8 +58,11 @@ public sealed class UnkeepableRelationshipTests
 
 	private static QuantityVocabulary Vocabulary()
 	{
+		// Join rather than Combine: Combine discards everything before a rooted segment, which is
+		// what the quality analyzer objects to, and Join has no such rule. The same call in
+		// Semantics.Cpp.Test is already written this way.
 		string json = File.ReadAllText(
-			Path.Combine(AppContext.BaseDirectory, "GeneratorMetadata", "dimensions.json"));
+			Path.Join(AppContext.BaseDirectory, "GeneratorMetadata", "dimensions.json"));
 
 		DimensionsMetadata metadata = JsonSerializer.Deserialize<DimensionsMetadata>(json, ReaderOptions)
 			?? throw new InvalidOperationException("dimensions.json is empty.");
