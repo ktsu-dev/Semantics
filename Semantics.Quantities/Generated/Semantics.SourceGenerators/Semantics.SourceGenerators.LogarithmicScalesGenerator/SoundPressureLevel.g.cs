@@ -36,7 +36,6 @@ public readonly partial record struct SoundPressureLevel<T>(T Value) : IComparab
 	/// <returns>A new <see cref="SoundPressureLevel{T}"/>. A linear value of zero maps to negative infinity.</returns>
 	public static SoundPressureLevel<T> FromSoundPressure(SoundPressure<T> linear)
 	{
-		ArgumentNullException.ThrowIfNull(linear);
 		double linearValue = double.CreateChecked(linear.Value);
 		double reference = PhysicalConstants.Generic.ReferenceSoundPressure<double>();
 		return new(T.CreateChecked(20.0 * Math.Log10(linearValue / reference)));

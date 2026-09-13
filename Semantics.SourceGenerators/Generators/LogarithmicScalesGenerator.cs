@@ -148,7 +148,6 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 		cb.WriteLine($"public static {fullType} {fromName}({linear}<T> linear)");
 		using (new Scope(cb))
 		{
-			cb.WriteLine("ArgumentNullException.ThrowIfNull(linear);");
 			cb.WriteLine("double linearValue = double.CreateChecked(linear.Value);");
 			if (referenceExpr != null)
 			{

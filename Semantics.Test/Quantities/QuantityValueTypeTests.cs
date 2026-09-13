@@ -58,6 +58,7 @@ public sealed class QuantityValueTypeTests
 	{
 		Length<double> a = Length<double>.FromMeter(3.0);
 		Duration<double> t = Duration<double>.FromSecond(1.5);
+		Gain<double> gain = Gain<double>.Create(2.0);
 
 		Assert.AreEqual(0L, MeasureAllocation(() => (a + a).Value), "addition allocated");
 		Assert.AreEqual(0L, MeasureAllocation(() => (a - a).Value), "subtraction allocated");
@@ -66,6 +67,7 @@ public sealed class QuantityValueTypeTests
 		Assert.AreEqual(0L, MeasureAllocation(() => Length<double>.FromFoot(3.0).Value), "a converting factory allocated");
 		Assert.AreEqual(0L, MeasureAllocation(() => Length<double>.FromMeter(3.0).In(ktsu.Semantics.Quantities.Units.Units.Foot)), "converting to a unit allocated");
 		Assert.AreEqual(0L, MeasureAllocation(() => (a / t).Value), "a cross-dimensional operator allocated");
+		Assert.AreEqual(0L, MeasureAllocation(() => Decibels<double>.FromGain(gain).Value), "a logarithmic conversion allocated");
 	}
 
 	/// <summary>

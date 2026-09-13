@@ -36,7 +36,6 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// <returns>A new <see cref="Decibels{T}"/>. A linear value of zero maps to negative infinity.</returns>
 	public static Decibels<T> FromGain(Gain<T> linear)
 	{
-		ArgumentNullException.ThrowIfNull(linear);
 		double linearValue = double.CreateChecked(linear.Value);
 		return new(T.CreateChecked(20.0 * Math.Log10(linearValue)));
 	}
@@ -58,7 +57,6 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// <returns>A new <see cref="Decibels{T}"/>. A linear value of zero maps to negative infinity.</returns>
 	public static Decibels<T> FromPowerRatio(Ratio<T> linear)
 	{
-		ArgumentNullException.ThrowIfNull(linear);
 		double linearValue = double.CreateChecked(linear.Value);
 		return new(T.CreateChecked(10.0 * Math.Log10(linearValue)));
 	}
