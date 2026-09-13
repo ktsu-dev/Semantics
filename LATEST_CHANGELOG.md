@@ -1,6 +1,7 @@
-## v5.2.0 (minor)
+## v5.2.1 (patch)
 
-Changes since v5.1.0:
+Changes since v5.2.0:
 
-- [minor] Convert units exactly for every storage type ([@matt-edmondson](https://github.com/matt-edmondson))
+- Fix boxed null-check in generated logarithmic conversions ([@copilot-swe-agent[bot]](https://github.com/copilot-swe-agent[bot]))
+- Initial plan ([@copilot-swe-agent[bot]](https://github.com/copilot-swe-agent[bot]))
 
