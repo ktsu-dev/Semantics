@@ -1,4 +1,6 @@
-## v5.0.0
+## v5.0.1 (patch)
 
-No significant changes detected since v5.0.0.
+Changes since v5.0.0:
+
+- Report the dimension that has exponents when two claim a unit [patch] ([@Claude](https://github.com/Claude))
 
