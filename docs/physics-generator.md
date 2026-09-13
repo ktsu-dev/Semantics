@@ -179,6 +179,7 @@ type.
 
   Adding one means adding it to `SemanticsDiagnostics` and to `AnalyzerReleases.Unshipped.md`; `AnalyzerReleaseTrackingTests` fails if the second step is forgotten. `GeneratorDiagnosticTests` proves each one still fires on the input it is meant to catch.
 - `availableUnits` order matters: the first entry is treated as the SI base unit by `UnitsGenerator`.
+- A unit may appear in `availableUnits` on more than one dimension. It implements an `I{Dimension}Unit` marker for each, and its singular `Dimension` property reports the first claim whose `dimensionalFormula` is non-empty — falling back to the first claim of any kind. Without that preference a unit shared with `Dimensionless`, which is the first entry in the file, could never report anything else.
 - `relationships` expressions are emitted verbatim into method bodies. Use `Value` for the current quantity and `T.CreateChecked(...)` (not literal numerics) for constants so all storage types stay correct.
 - Generator output is committed. CI must catch metadata/code drift; `git status` should be clean after a build.
 

@@ -97,7 +97,18 @@ one driving it. Two layers, and both earn their place:
 `AngularDisplacement`, `AngularVelocity`, `AngularAcceleration` and `AngularJerk`, and that is the
 whole of it. Without it an angle is the same type as a ratio and an angular speed the same type as
 a frequency; with it, 61 distinct exponent vectors become 63. It is read by the C++ projection and
-carried through `DimensionInfo` on the .NET side, where nothing depends on it yet.
+carried through `DimensionInfo` on the .NET side, where `ktsu.Schema` reads it off a unit to fill
+the eight exponents in its C++ reflection table.
+
+**A unit claimed by two dimensions reports the one with exponents.** `Radian`, `Degree`, `Gradian`,
+`Milliradian` and `Revolution` are in `availableUnits` on both `AngularDisplacement` and
+`Dimensionless`, and the marker interfaces carry both — it is the singular `IUnit.Dimension` that
+has to pick one. Picking the first declared picked by file position, and `Dimensionless` is the
+first entry in `dimensions.json`, so every angular unit reported no exponents at all: the same
+answer a unitless count gives, which is the conflation the axis was added to prevent. A claim that
+says something now beats one that says nothing. Where several say something the first still wins,
+which decides the only other unit claimed twice: `SquareMeter` is `Area` and `NuclearCrossSection`,
+one of the 72-over-63 collisions, so the two answers differ in name and not in exponents.
 
 **A relationship is checked before it is emitted.** The operator is written as
 `Result{ lhs.value() * rhs.value() }`, so the exponents have to agree with the declared result or it

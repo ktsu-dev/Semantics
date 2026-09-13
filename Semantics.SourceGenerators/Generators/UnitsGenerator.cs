@@ -71,6 +71,8 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 			},
 		};
 
+		HashSet<string> withoutExponents = BuildDimensionsWithoutExponents(dimensions);
+
 		List<string> catalogueUnitNames = [];
 
 		foreach (UnitCategory category in units.UnitCategories)
@@ -79,7 +81,7 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 			{
 				List<string> dims = unitToDimensions.TryGetValue(unit.Name, out List<string>? d) ? d : [];
 
-				sourceFileTemplate.Classes.Add(BuildUnitClass(unit, dims));
+				sourceFileTemplate.Classes.Add(BuildUnitClass(unit, dims, withoutExponents));
 				catalogueUnitNames.Add(unit.Name);
 			}
 		}
@@ -115,10 +117,47 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 	}
 
 	/// <summary>
+	/// The dimensions whose <c>dimensionalFormula</c> is empty, which is to say the ones that
+	/// measure nothing.
+	/// </summary>
+	/// <remarks>
+	/// Today that is <c>Dimensionless</c> alone, and the set is built rather than named because a
+	/// second one would otherwise have to be remembered here.
+	/// </remarks>
+	private static HashSet<string> BuildDimensionsWithoutExponents(DimensionsMetadata dimensions) =>
+		new((dimensions.PhysicalDimensions ?? [])
+			.Where(static dim => dim.DimensionalFormula.Count == 0)
+			.Select(static dim => dim.Name));
+
+	/// <summary>
+	/// The one dimension a unit reports, out of every dimension that claims it.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// A unit may be claimed by several dimensions, and the marker interfaces carry all of them —
+	/// it is only the singular <c>Dimension</c> property that has to choose. Choosing the first
+	/// declared made that choice by file position: <c>Dimensionless</c> is the first entry in
+	/// <c>dimensions.json</c>, so a radian reported no exponents at all, which is the same answer
+	/// a unitless count gives. That is the conflation the <c>angle</c> axis was added to prevent,
+	/// and a consumer deriving a member's dimension from its unit — <c>ktsu.Schema</c>'s C++
+	/// reflection table does exactly that — could not tell an angle from a flag.
+	/// </para>
+	/// <para>
+	/// So a claim that says something is preferred to one that says nothing. Where several claims
+	/// say something the first still wins, which is right for the one case there is: a square metre
+	/// is claimed by <c>Area</c> and <c>NuclearCrossSection</c>, and those are the same exponents
+	/// under two names — one of the collisions the nominal layer exists for — so only the name
+	/// differs and neither answer is wrong.
+	/// </para>
+	/// </remarks>
+	private static string? ReportedDimension(List<string> dims, HashSet<string> withoutExponents) =>
+		dims.FirstOrDefault(dim => !withoutExponents.Contains(dim)) ?? dims.FirstOrDefault();
+
+	/// <summary>
 	/// Builds the sealed record for one unit, carrying its name, symbol, system, dimension, and
 	/// the affine to-base conversion (factor plus offset).
 	/// </summary>
-	private static ClassTemplate BuildUnitClass(UnitDefinition unit, List<string> dims)
+	private static ClassTemplate BuildUnitClass(UnitDefinition unit, List<string> dims, HashSet<string> withoutExponents)
 	{
 		List<string> interfaces = ["IUnit"];
 		foreach (string dimName in dims)
@@ -130,8 +169,8 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 		string offsetExpr = string.IsNullOrEmpty(unit.Offset) || unit.Offset == "0"
 			? "0d"
 			: unit.Offset;
-		string dimensionExpr = dims.Count > 0
-			? $"PhysicalDimensions.{dims[0]}"
+		string dimensionExpr = ReportedDimension(dims, withoutExponents) is string reported
+			? $"PhysicalDimensions.{reported}"
 			: "null!";
 
 		return new ClassTemplate

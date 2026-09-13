@@ -858,7 +858,7 @@ public sealed record Radian : IUnit, IDimensionlessUnit, IAngularDisplacementUni
 	public UnitSystem System => UnitSystem.SIDerived;
 
 	/// <summary>Gets the physical dimension this unit measures.</summary>
-	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+	public DimensionInfo Dimension => PhysicalDimensions.AngularDisplacement;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
 	public double ToBaseFactor => 1d;
@@ -885,7 +885,7 @@ public sealed record Degree : IUnit, IDimensionlessUnit, IAngularDisplacementUni
 	public UnitSystem System => UnitSystem.Other;
 
 	/// <summary>Gets the physical dimension this unit measures.</summary>
-	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+	public DimensionInfo Dimension => PhysicalDimensions.AngularDisplacement;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
 	public double ToBaseFactor => DegreeToRadians;
@@ -1398,7 +1398,7 @@ public sealed record Gradian : IUnit, IDimensionlessUnit, IAngularDisplacementUn
 	public UnitSystem System => UnitSystem.Other;
 
 	/// <summary>Gets the physical dimension this unit measures.</summary>
-	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+	public DimensionInfo Dimension => PhysicalDimensions.AngularDisplacement;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
 	public double ToBaseFactor => GradianToRadians;
@@ -1425,7 +1425,7 @@ public sealed record Revolution : IUnit, IDimensionlessUnit, IAngularDisplacemen
 	public UnitSystem System => UnitSystem.Other;
 
 	/// <summary>Gets the physical dimension this unit measures.</summary>
-	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+	public DimensionInfo Dimension => PhysicalDimensions.AngularDisplacement;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
 	public double ToBaseFactor => RevolutionToRadians;
@@ -1452,7 +1452,7 @@ public sealed record Milliradian : IUnit, IDimensionlessUnit, IAngularDisplaceme
 	public UnitSystem System => UnitSystem.SIDerived;
 
 	/// <summary>Gets the physical dimension this unit measures.</summary>
-	public DimensionInfo Dimension => PhysicalDimensions.Dimensionless;
+	public DimensionInfo Dimension => PhysicalDimensions.AngularDisplacement;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
 	public double ToBaseFactor => MetricMagnitudes.Milli;
