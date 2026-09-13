@@ -1,8 +1,6 @@
-## v5.1.0 (minor)
+## v5.2.0 (minor)
 
-Changes since v5.0.0:
+Changes since v5.1.0:
 
-- Repair a doc comment my own edit garbled ([@Claude](https://github.com/Claude))
-- Find out whether the quantities reach seven languages, not two ([@Claude](https://github.com/Claude))
-- Report the dimension that has exponents when two claim a unit [patch] ([@Claude](https://github.com/Claude))
+- [minor] Convert units exactly for every storage type ([@matt-edmondson](https://github.com/matt-edmondson))
 
