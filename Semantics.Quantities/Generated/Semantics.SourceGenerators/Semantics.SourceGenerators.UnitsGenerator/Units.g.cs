@@ -31,6 +31,12 @@ public sealed record Meter : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Meter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -58,6 +64,12 @@ public sealed record Kilometer : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilometer() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -85,6 +97,12 @@ public sealed record Centimeter : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Centimeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Centi;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -112,6 +130,12 @@ public sealed record Millimeter : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Millimeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Milli;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -139,6 +163,12 @@ public sealed record Foot : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Foot() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.FeetToMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -166,6 +196,12 @@ public sealed record Inch : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Inch() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.InchesToMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -193,6 +229,12 @@ public sealed record Micrometer : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Micrometer() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Micro;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -220,6 +262,12 @@ public sealed record Nanometer : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Nanometer() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Nano;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -247,6 +295,12 @@ public sealed record Angstrom : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Angstrom() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.AngstromToMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -274,6 +328,12 @@ public sealed record Yard : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Yard() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.YardToMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -301,6 +361,12 @@ public sealed record Mile : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Mile() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.MileToMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -328,6 +394,12 @@ public sealed record Kilogram : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilogram() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -355,6 +427,12 @@ public sealed record Gram : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Gram() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Milli;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -382,6 +460,12 @@ public sealed record Ton : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Ton() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.TonToKilograms;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -409,6 +493,12 @@ public sealed record Pound : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Pound() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.PoundToKilograms;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -436,6 +526,12 @@ public sealed record Ounce : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Ounce() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.OunceToKilograms;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -463,6 +559,12 @@ public sealed record Second : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Second() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -490,6 +592,12 @@ public sealed record Minute : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Minute() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.MinuteToSeconds;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -517,6 +625,12 @@ public sealed record Hour : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Hour() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.HourToSeconds;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -544,6 +658,12 @@ public sealed record Day : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Day() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.DayToSeconds;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -571,6 +691,12 @@ public sealed record Year : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Year() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.YearToSeconds;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -598,6 +724,12 @@ public sealed record Millisecond : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Millisecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Milli;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -625,6 +757,12 @@ public sealed record Microsecond : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Microsecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Micro;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -652,6 +790,12 @@ public sealed record SquareMeter : IUnit, IAreaUnit, INuclearCrossSectionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -679,6 +823,12 @@ public sealed record SquareFoot : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareFoot() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.SquareFootToSquareMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -706,6 +856,12 @@ public sealed record SquareInch : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareInch() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.SquareInchToSquareMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -733,6 +889,12 @@ public sealed record CubicMeter : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CubicMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -760,6 +922,12 @@ public sealed record Liter : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Liter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.LiterToCubicMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -787,6 +955,12 @@ public sealed record Milliliter : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Milliliter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Milli;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -814,6 +988,12 @@ public sealed record Gallon : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Gallon() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.GallonToCubicMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -841,6 +1021,12 @@ public sealed record Dimensionless : IUnit, IDimensionlessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Dimensionless() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -868,6 +1054,12 @@ public sealed record Radian : IUnit, IDimensionlessUnit, IAngularDisplacementUni
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Radian() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -895,6 +1087,12 @@ public sealed record Degree : IUnit, IDimensionlessUnit, IAngularDisplacementUni
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Degree() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.DegreeToRadians;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -922,6 +1120,12 @@ public sealed record NauticalMile : IUnit, ILengthUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public NauticalMile() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.NauticalMileToMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -949,6 +1153,12 @@ public sealed record Stone : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Stone() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.StoneToKilograms;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -976,6 +1186,12 @@ public sealed record ShortTon : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public ShortTon() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.ShortTonToKilograms;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1003,6 +1219,12 @@ public sealed record AtomicMassUnit : IUnit, IMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public AtomicMassUnit() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.AtomicMassUnitToKilograms;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1030,6 +1252,12 @@ public sealed record Week : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Week() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.WeekToSeconds;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1057,6 +1285,12 @@ public sealed record Nanosecond : IUnit, ITimeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Nanosecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Nano;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1084,6 +1318,12 @@ public sealed record SquareKilometer : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareKilometer() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.SquareKilometerToSquareMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1111,6 +1351,12 @@ public sealed record SquareCentimeter : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareCentimeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.SquareCentimeterToSquareMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1138,6 +1384,12 @@ public sealed record SquareMile : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareMile() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.SquareMileToSquareMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1165,6 +1417,12 @@ public sealed record Hectare : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Hectare() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.HectareToSquareMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1192,6 +1450,12 @@ public sealed record Acre : IUnit, IAreaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Acre() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.AcreToSquareMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1219,6 +1483,12 @@ public sealed record CubicCentimeter : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CubicCentimeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.CubicCentimeterToCubicMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1246,6 +1516,12 @@ public sealed record CubicFoot : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CubicFoot() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.CubicFootToCubicMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1273,6 +1549,12 @@ public sealed record CubicInch : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CubicInch() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.CubicInchToCubicMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1300,6 +1582,12 @@ public sealed record ImperialGallon : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public ImperialGallon() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.ImperialGallonToCubicMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1327,6 +1615,12 @@ public sealed record USQuart : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public USQuart() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.USQuartToCubicMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1354,6 +1648,12 @@ public sealed record USPint : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public USPint() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.USPintToCubicMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1381,6 +1681,12 @@ public sealed record USFluidOunce : IUnit, IVolumeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public USFluidOunce() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.USFluidOunceToCubicMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1408,6 +1714,12 @@ public sealed record Gradian : IUnit, IDimensionlessUnit, IAngularDisplacementUn
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Gradian() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.GradianToRadians;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1435,6 +1747,12 @@ public sealed record Revolution : IUnit, IDimensionlessUnit, IAngularDisplacemen
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Revolution() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.RevolutionToRadians;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1462,6 +1780,12 @@ public sealed record Milliradian : IUnit, IDimensionlessUnit, IAngularDisplaceme
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Milliradian() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Milli;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1489,6 +1813,12 @@ public sealed record Percent : IUnit, IDimensionlessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Percent() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.PercentToRatio;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1516,6 +1846,12 @@ public sealed record PartPerMillion : IUnit, IDimensionlessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PartPerMillion() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.PartPerMillionToRatio;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1543,6 +1879,12 @@ public sealed record PartPerBillion : IUnit, IDimensionlessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PartPerBillion() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.PartPerBillionToRatio;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1570,6 +1912,12 @@ public sealed record PercentByWeight : IUnit, IDimensionlessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PercentByWeight() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.PercentByWeightToRatio;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1597,6 +1945,12 @@ public sealed record Newton : IUnit, IForceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Newton() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1624,6 +1978,12 @@ public sealed record Pascal : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Pascal() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1651,6 +2011,12 @@ public sealed record MeterPerSecond : IUnit, IVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MeterPerSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1678,6 +2044,12 @@ public sealed record MeterPerSecondSquared : IUnit, IAccelerationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MeterPerSecondSquared() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1705,6 +2077,12 @@ public sealed record Bar : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Bar() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.BarToPascals;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1732,6 +2110,12 @@ public sealed record Atmosphere : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Atmosphere() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.AtmosphereToPascals;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1759,6 +2143,12 @@ public sealed record Psi : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Psi() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.PsiToPascals;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1786,6 +2176,12 @@ public sealed record KilometerPerHour : IUnit, IVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilometerPerHour() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.KilometerPerHourToMeterPerSecond;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1813,6 +2209,12 @@ public sealed record MilePerHour : IUnit, IVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MilePerHour() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.MilePerHourToMeterPerSecond;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1840,6 +2242,12 @@ public sealed record Joule : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Joule() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1867,6 +2275,12 @@ public sealed record Watt : IUnit, IPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Watt() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1894,6 +2308,12 @@ public sealed record Calorie : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Calorie() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.CalorieToJoules;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1921,6 +2341,12 @@ public sealed record KilowattHour : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilowattHour() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.KilowattHourToJoules;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1948,6 +2374,12 @@ public sealed record Horsepower : IUnit, IPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Horsepower() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.HorsepowerToWatts;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -1975,6 +2407,12 @@ public sealed record NewtonSecond : IUnit, IMomentumUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public NewtonSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2002,6 +2440,12 @@ public sealed record ElectronVolt : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public ElectronVolt() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.ElectronVoltToJoules;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2029,6 +2473,12 @@ public sealed record NewtonMeter : IUnit, ITorqueUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public NewtonMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2056,6 +2506,12 @@ public sealed record PoundFoot : IUnit, ITorqueUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PoundFoot() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.PoundFootToNewtonMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2083,6 +2539,12 @@ public sealed record KilogramMeterSquared : IUnit, IMomentOfInertiaUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramMeterSquared() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2110,6 +2572,12 @@ public sealed record KilogramMeterSquaredPerSecond : IUnit, IAngularMomentumUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramMeterSquaredPerSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2137,6 +2605,12 @@ public sealed record MeterPerSecondCubed : IUnit, IJerkUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MeterPerSecondCubed() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2164,6 +2638,12 @@ public sealed record MeterPerSecondQuartic : IUnit, ISnapUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MeterPerSecondQuartic() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2191,6 +2671,12 @@ public sealed record FootPerSecond : IUnit, IVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public FootPerSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.FootPerSecondToMeterPerSecond;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2218,6 +2704,12 @@ public sealed record Knot : IUnit, IVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Knot() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.KnotToMeterPerSecond;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2245,6 +2737,12 @@ public sealed record StandardGravity : IUnit, IAccelerationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public StandardGravity() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.StandardGravityToMeterPerSecondSquared;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2272,6 +2770,12 @@ public sealed record Kilonewton : IUnit, IForceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilonewton() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2299,6 +2803,12 @@ public sealed record Dyne : IUnit, IForceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Dyne() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.DyneToNewtons;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2326,6 +2836,12 @@ public sealed record PoundForce : IUnit, IForceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PoundForce() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.PoundForceToNewtons;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2353,6 +2869,12 @@ public sealed record Kilopascal : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilopascal() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2380,6 +2902,12 @@ public sealed record Torr : IUnit, IPressureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Torr() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.TorrToPascals;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2407,6 +2935,12 @@ public sealed record Kilojoule : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilojoule() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2434,6 +2968,12 @@ public sealed record Kilocalorie : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilocalorie() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.KilocalorieToJoules;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2461,6 +3001,12 @@ public sealed record WattHour : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public WattHour() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.WattHourToJoules;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2488,6 +3034,12 @@ public sealed record Erg : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Erg() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.ErgToJoules;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2515,6 +3067,12 @@ public sealed record Btu : IUnit, IEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Btu() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.BtuToJoules;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2542,6 +3100,12 @@ public sealed record Kilowatt : IUnit, IPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilowatt() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2569,6 +3133,12 @@ public sealed record Megawatt : IUnit, IPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Megawatt() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Mega;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2596,6 +3166,12 @@ public sealed record WattPerCubicMeter : IUnit, IElectricPowerDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public WattPerCubicMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2623,6 +3199,12 @@ public sealed record Kelvin : IUnit, ITemperatureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kelvin() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2650,6 +3232,12 @@ public sealed record Celsius : IUnit, ITemperatureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Celsius() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => ConversionConstants.Values<T>.CelsiusToKelvinOffset;
 }
 
 /// <summary>
@@ -2677,6 +3265,12 @@ public sealed record Fahrenheit : IUnit, ITemperatureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Fahrenheit() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.FahrenheitScale;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => ConversionConstants.Values<T>.FahrenheitToKelvinOffset;
 }
 
 /// <summary>
@@ -2704,6 +3298,12 @@ public sealed record JoulePerKelvin : IUnit, IEntropyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public JoulePerKelvin() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2731,6 +3331,12 @@ public sealed record JoulePerKilogramKelvin : IUnit, ISpecificHeatUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public JoulePerKilogramKelvin() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2758,6 +3364,12 @@ public sealed record WattPerMeterKelvin : IUnit, IThermalConductivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public WattPerMeterKelvin() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2785,6 +3397,12 @@ public sealed record WattPerSquareMeterKelvin : IUnit, IHeatTransferCoefficientU
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public WattPerSquareMeterKelvin() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2812,6 +3430,12 @@ public sealed record PerKelvin : IUnit, IThermalExpansionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PerKelvin() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2839,6 +3463,12 @@ public sealed record Rankine : IUnit, ITemperatureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Rankine() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.FahrenheitScale;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2866,6 +3496,12 @@ public sealed record KelvinPerWatt : IUnit, IThermalResistanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KelvinPerWatt() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2893,6 +3529,12 @@ public sealed record Ampere : IUnit, IElectricCurrentUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Ampere() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2920,6 +3562,12 @@ public sealed record Volt : IUnit, IElectricPotentialUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Volt() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2947,6 +3595,12 @@ public sealed record VoltPerMeter : IUnit, IElectricFieldUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public VoltPerMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -2974,6 +3628,12 @@ public sealed record Ohm : IUnit, IElectricResistanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Ohm() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3001,6 +3661,12 @@ public sealed record Coulomb : IUnit, IElectricChargeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Coulomb() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3028,6 +3694,12 @@ public sealed record Farad : IUnit, IElectricCapacitanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Farad() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3055,6 +3727,12 @@ public sealed record Siemens : IUnit, IElectricConductanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Siemens() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3082,6 +3760,12 @@ public sealed record Tesla : IUnit, IMagneticFluxDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Tesla() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3109,6 +3793,12 @@ public sealed record Gauss : IUnit, IMagneticFluxDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Gauss() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.GaussToTesla;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3136,6 +3826,12 @@ public sealed record Weber : IUnit, IMagneticFluxUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Weber() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3163,6 +3859,12 @@ public sealed record Henry : IUnit, IInductanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Henry() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3190,6 +3892,12 @@ public sealed record Milliampere : IUnit, IElectricCurrentUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Milliampere() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Milli;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3217,6 +3925,12 @@ public sealed record Kiloampere : IUnit, IElectricCurrentUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kiloampere() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3244,6 +3958,12 @@ public sealed record Kilovolt : IUnit, IElectricPotentialUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilovolt() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3271,6 +3991,12 @@ public sealed record Kilohm : IUnit, IElectricResistanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilohm() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3298,6 +4024,12 @@ public sealed record Megohm : IUnit, IElectricResistanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Megohm() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Mega;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3325,6 +4057,12 @@ public sealed record Microfarad : IUnit, IElectricCapacitanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Microfarad() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Micro;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3352,6 +4090,12 @@ public sealed record Nanofarad : IUnit, IElectricCapacitanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Nanofarad() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Nano;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3379,6 +4123,12 @@ public sealed record Picofarad : IUnit, IElectricCapacitanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Picofarad() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Pico;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3406,6 +4156,12 @@ public sealed record AmpereHour : IUnit, IElectricChargeUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public AmpereHour() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.AmpereHourToCoulombs;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3433,6 +4189,12 @@ public sealed record VoltMeter : IUnit, IElectricFluxUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public VoltMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3460,6 +4222,12 @@ public sealed record FaradPerMeter : IUnit, IPermittivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public FaradPerMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3487,6 +4255,12 @@ public sealed record SiemensPerMeter : IUnit, IElectricConductivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SiemensPerMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3514,6 +4288,12 @@ public sealed record VoltPerPascal : IUnit, ISensitivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public VoltPerPascal() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3541,6 +4321,12 @@ public sealed record RadianPerSecond : IUnit, IAngularVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public RadianPerSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3568,6 +4354,12 @@ public sealed record RevolutionPerMinute : IUnit, IAngularVelocityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public RevolutionPerMinute() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.RevolutionPerMinuteToRadianPerSecond;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3595,6 +4387,12 @@ public sealed record RadianPerSecondSquared : IUnit, IAngularAccelerationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public RadianPerSecondSquared() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3622,6 +4420,12 @@ public sealed record RadianPerSecondCubed : IUnit, IAngularJerkUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public RadianPerSecondCubed() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3649,6 +4453,12 @@ public sealed record Hertz : IUnit, IFrequencyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Hertz() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3676,6 +4486,12 @@ public sealed record Kilohertz : IUnit, IFrequencyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilohertz() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3703,6 +4519,12 @@ public sealed record Megahertz : IUnit, IFrequencyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Megahertz() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Mega;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3730,6 +4552,12 @@ public sealed record Sone : IUnit, ILoudnessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Sone() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3757,6 +4585,12 @@ public sealed record Acum : IUnit, ISharpnessUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Acum() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3784,6 +4618,12 @@ public sealed record Candela : IUnit, ILuminousIntensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Candela() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3811,6 +4651,12 @@ public sealed record Lumen : IUnit, ILuminousFluxUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Lumen() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3838,6 +4684,12 @@ public sealed record Lux : IUnit, IIlluminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Lux() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3865,6 +4717,12 @@ public sealed record Diopter : IUnit, IOpticalPowerUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Diopter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3892,6 +4750,12 @@ public sealed record Millicandela : IUnit, ILuminousIntensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Millicandela() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Milli;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3919,6 +4783,12 @@ public sealed record FootCandle : IUnit, IIlluminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public FootCandle() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.FootCandleToLux;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3946,6 +4816,12 @@ public sealed record CandelaPerSquareMeter : IUnit, ILuminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CandelaPerSquareMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -3973,6 +4849,12 @@ public sealed record Nit : IUnit, ILuminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Nit() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4000,6 +4882,12 @@ public sealed record FootLambert : IUnit, ILuminanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public FootLambert() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.FootLambertToCandelaPerSquareMeter;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4027,6 +4915,12 @@ public sealed record Becquerel : IUnit, IRadioactiveActivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Becquerel() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4054,6 +4948,12 @@ public sealed record Gray : IUnit, IAbsorbedDoseUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Gray() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4081,6 +4981,12 @@ public sealed record Sievert : IUnit, IEquivalentDoseUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Sievert() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4108,6 +5014,12 @@ public sealed record Barn : IUnit, INuclearCrossSectionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Barn() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.BarnToSquareMeters;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4135,6 +5047,12 @@ public sealed record CoulombPerKilogram : IUnit, IExposureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CoulombPerKilogram() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4162,6 +5080,12 @@ public sealed record Curie : IUnit, IRadioactiveActivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Curie() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.CurieToBecquerels;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4189,6 +5113,12 @@ public sealed record Rad : IUnit, IAbsorbedDoseUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Rad() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.RadToGrays;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4216,6 +5146,12 @@ public sealed record Rem : IUnit, IEquivalentDoseUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Rem() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.RemToSieverts;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4243,6 +5179,12 @@ public sealed record Roentgen : IUnit, IExposureUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Roentgen() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.RoentgenToCoulombsPerKilogram;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4270,6 +5212,12 @@ public sealed record KilogramPerCubicMeter : IUnit, IDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramPerCubicMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4297,6 +5245,12 @@ public sealed record GramPerCubicCentimeter : IUnit, IDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public GramPerCubicCentimeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.GramPerCubicCentimeterToKilogramPerCubicMeter;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4324,6 +5278,12 @@ public sealed record GramPerLiter : IUnit, IDensityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public GramPerLiter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.GramPerLiterToKilogramPerCubicMeter;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4351,6 +5311,12 @@ public sealed record Mole : IUnit, IAmountOfSubstanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Mole() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4378,6 +5344,12 @@ public sealed record MolePerCubicMeter : IUnit, IConcentrationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MolePerCubicMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4405,6 +5377,12 @@ public sealed record Molar : IUnit, IConcentrationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Molar() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.MolarToCubicMeter;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4432,6 +5410,12 @@ public sealed record Kilomole : IUnit, IAmountOfSubstanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Kilomole() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4459,6 +5443,12 @@ public sealed record Millimole : IUnit, IAmountOfSubstanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Millimole() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Milli;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4486,6 +5476,12 @@ public sealed record Millimolar : IUnit, IConcentrationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Millimolar() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.MillimolarToMolePerCubicMeter;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4513,6 +5509,12 @@ public sealed record Micromolar : IUnit, IConcentrationUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Micromolar() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.MicromolarToMolePerCubicMeter;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4540,6 +5542,12 @@ public sealed record SquareMeterPerSecond : IUnit, IKinematicViscosityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public SquareMeterPerSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4567,6 +5575,12 @@ public sealed record Stokes : IUnit, IKinematicViscosityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Stokes() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.StokesToSquareMeterPerSecond;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4594,6 +5608,12 @@ public sealed record PascalSecond : IUnit, IDynamicViscosityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PascalSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4621,6 +5641,12 @@ public sealed record Poise : IUnit, IDynamicViscosityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Poise() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.PoiseToPascalSecond;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4648,6 +5674,12 @@ public sealed record CubicMeterPerSecond : IUnit, IVolumetricFlowRateUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CubicMeterPerSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4675,6 +5707,12 @@ public sealed record LiterPerSecond : IUnit, IVolumetricFlowRateUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public LiterPerSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.LiterPerSecondToCubicMeterPerSecond;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4702,6 +5740,12 @@ public sealed record KilogramPerSecond : IUnit, IMassFlowRateUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramPerSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4729,6 +5773,12 @@ public sealed record NewtonPerMeter : IUnit, ISurfaceTensionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public NewtonPerMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4756,6 +5806,12 @@ public sealed record Centipoise : IUnit, IDynamicViscosityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Centipoise() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.CentipoiseToPascalSecond;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4783,6 +5839,12 @@ public sealed record DynePerCentimeter : IUnit, ISurfaceTensionUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public DynePerCentimeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.DynePerCentimeterToNewtonPerMeter;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4810,6 +5872,12 @@ public sealed record KilogramPerMole : IUnit, IMolarMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilogramPerMole() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4837,6 +5905,12 @@ public sealed record GramPerMole : IUnit, IMolarMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public GramPerMole() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.GramPerMoleToKilogramPerMole;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4864,6 +5938,12 @@ public sealed record Katal : IUnit, ICatalyticActivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Katal() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4891,6 +5971,12 @@ public sealed record MolePerCubicMeterSecond : IUnit, IReactionRateUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public MolePerCubicMeterSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4918,6 +6004,12 @@ public sealed record JoulePerMole : IUnit, IMolarEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public JoulePerMole() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4945,6 +6037,12 @@ public sealed record KilojoulePerMole : IUnit, IMolarEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public KilojoulePerMole() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.KilojoulePerMoleToJoulePerMole;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4972,6 +6070,12 @@ public sealed record CaloriePerMole : IUnit, IMolarEnergyUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public CaloriePerMole() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.CaloriePerMoleToJoulePerMole;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -4999,6 +6103,12 @@ public sealed record EnzymeUnit : IUnit, ICatalyticActivityUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public EnzymeUnit() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.EnzymeUnitToKatals;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -5026,6 +6136,12 @@ public sealed record Dalton : IUnit, IMolarMassUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public Dalton() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.GramPerMoleToKilogramPerMole;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -5053,6 +6169,12 @@ public sealed record PerSecond : IUnit, IRateConstantUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PerSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -5080,6 +6202,12 @@ public sealed record WattPerSquareMeter : IUnit, IIrradianceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public WattPerSquareMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>
@@ -5107,6 +6235,12 @@ public sealed record PascalSecondPerMeter : IUnit, IAcousticImpedanceUnit
 
 	/// <summary>Initializes a new instance of the unit.</summary>
 	public PascalSecondPerMeter() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
 }
 
 /// <summary>

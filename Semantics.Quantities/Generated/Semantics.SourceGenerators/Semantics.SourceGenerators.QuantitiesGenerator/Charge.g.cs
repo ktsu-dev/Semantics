@@ -109,7 +109,7 @@ public readonly partial record struct Charge<T> : IVector1<Charge<T>, T>, IPhysi
 	/// </summary>
 	/// <param name="value">The value in AmpereHour.</param>
 	/// <returns>A new <see cref="Charge{T}"/> instance.</returns>
-	public static Charge<T> FromAmpereHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.AmpereHourToCoulombs)));
+	public static Charge<T> FromAmpereHour(T value) => Create((value * Units.ConversionConstants.Values<T>.AmpereHourToCoulombs));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

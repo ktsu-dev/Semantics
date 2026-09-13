@@ -22,6 +22,13 @@ using System.Numerics;
 /// <c>ToBase</c> / <c>FromBase</c> are default-implemented; concrete units only
 /// have to provide <see cref="ToBaseFactor"/> and <see cref="ToBaseOffset"/>.
 /// </para>
+/// <para>
+/// The conversion itself reads <see cref="ToBaseFactorAs{T}"/> and <see cref="ToBaseOffsetAs{T}"/>,
+/// not the <see cref="double"/> properties. Their default implementations convert those properties,
+/// so a unit written outside this library behaves as it always did. The generated units override
+/// them with the factor materialised directly into the storage type, which is what gives a
+/// <see cref="decimal"/> quantity all 28 of its digits.
+/// </para>
 /// </remarks>
 public interface IUnit
 {
@@ -43,11 +50,27 @@ public interface IUnit
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
 	public double ToBaseOffset { get; }
 
+	/// <summary>
+	/// Gets the multiplication factor used in the to-base affine conversion, at the precision of a storage type.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <returns>The factor as <typeparamref name="T"/>. By default, <see cref="ToBaseFactor"/> converted with <c>T.CreateChecked</c>.</returns>
+	public T ToBaseFactorAs<T>() where T : struct, INumber<T>
+		=> T.CreateChecked(ToBaseFactor);
+
+	/// <summary>
+	/// Gets the additive offset used in the to-base affine conversion, at the precision of a storage type.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <returns>The offset as <typeparamref name="T"/>. By default, <see cref="ToBaseOffset"/> converted with <c>T.CreateChecked</c>.</returns>
+	public T ToBaseOffsetAs<T>() where T : struct, INumber<T>
+		=> T.CreateChecked(ToBaseOffset);
+
 	/// <summary>Converts a value expressed in this unit to the dimension's SI base unit.</summary>
 	public T ToBase<T>(T value) where T : struct, INumber<T>
-		=> (value * T.CreateChecked(ToBaseFactor)) + T.CreateChecked(ToBaseOffset);
+		=> (value * ToBaseFactorAs<T>()) + ToBaseOffsetAs<T>();
 
 	/// <summary>Converts a value expressed in the dimension's SI base unit to this unit.</summary>
 	public T FromBase<T>(T baseValue) where T : struct, INumber<T>
-		=> (baseValue - T.CreateChecked(ToBaseOffset)) / T.CreateChecked(ToBaseFactor);
+		=> (baseValue - ToBaseOffsetAs<T>()) / ToBaseFactorAs<T>();
 }

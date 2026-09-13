@@ -13,3 +13,4 @@ SEM005  | Semantics.SourceGenerators | Warning | Reports schema-level validation
 SEM006  | Semantics.SourceGenerators | Warning | Reports a metadata file a generator declared that was not supplied as an AdditionalFile.
 SEM007  | Semantics.SourceGenerators | Error | Reports a metadata file that could not be parsed. Replaces the base generator's CONV001.
 SEM008  | Semantics.SourceGenerators | Warning | Reports a relationship whose declared result does not follow from the dimensions of its operands, or whose signed value cannot land in a magnitude result.
+SEM009  | Semantics.SourceGenerators | Error | Reports a conversions.json factor whose value is neither a decimal literal nor a fraction of two decimal literals with a non-zero denominator.

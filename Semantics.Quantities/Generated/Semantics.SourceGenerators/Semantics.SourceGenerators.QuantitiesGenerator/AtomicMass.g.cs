@@ -108,7 +108,7 @@ public readonly partial record struct AtomicMass<T> : IVector0<AtomicMass<T>, T>
 	/// <param name="value">The value in Gram.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromGram(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static AtomicMass<T> FromGram(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Milli), nameof(value)));
 
 	/// <summary>
 	/// Creates a new AtomicMass from a value in Ton.
@@ -116,7 +116,7 @@ public readonly partial record struct AtomicMass<T> : IVector0<AtomicMass<T>, T>
 	/// <param name="value">The value in Ton.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromTon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.TonToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromTon(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.TonToKilograms), nameof(value)));
 
 	/// <summary>
 	/// Creates a new AtomicMass from a value in Pound.
@@ -124,7 +124,7 @@ public readonly partial record struct AtomicMass<T> : IVector0<AtomicMass<T>, T>
 	/// <param name="value">The value in Pound.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromPound(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromPound(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PoundToKilograms), nameof(value)));
 
 	/// <summary>
 	/// Creates a new AtomicMass from a value in Ounce.
@@ -132,7 +132,7 @@ public readonly partial record struct AtomicMass<T> : IVector0<AtomicMass<T>, T>
 	/// <param name="value">The value in Ounce.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromOunce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.OunceToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromOunce(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.OunceToKilograms), nameof(value)));
 
 	/// <summary>
 	/// Creates a new AtomicMass from a value in Stone.
@@ -140,7 +140,7 @@ public readonly partial record struct AtomicMass<T> : IVector0<AtomicMass<T>, T>
 	/// <param name="value">The value in Stone.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromStone(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.StoneToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromStone(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.StoneToKilograms), nameof(value)));
 
 	/// <summary>
 	/// Creates a new AtomicMass from a value in ShortTon.
@@ -148,7 +148,7 @@ public readonly partial record struct AtomicMass<T> : IVector0<AtomicMass<T>, T>
 	/// <param name="value">The value in ShortTon.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromShortTon(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ShortTonToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromShortTon(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.ShortTonToKilograms), nameof(value)));
 
 	/// <summary>
 	/// Creates a new AtomicMass from a value in AtomicMassUnit.
@@ -156,7 +156,7 @@ public readonly partial record struct AtomicMass<T> : IVector0<AtomicMass<T>, T>
 	/// <param name="value">The value in AtomicMassUnit.</param>
 	/// <returns>A new AtomicMass instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AtomicMass<T> FromAtomicMassUnit(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtomicMassUnitToKilograms)), nameof(value)));
+	public static AtomicMass<T> FromAtomicMassUnit(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.AtomicMassUnitToKilograms), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

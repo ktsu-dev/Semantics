@@ -107,7 +107,7 @@ public readonly partial record struct Capacitance<T> : IVector0<Capacitance<T>, 
 	/// <param name="value">The value in Microfarad.</param>
 	/// <returns>A new <see cref="Capacitance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Capacitance<T> FromMicrofarad(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+	public static Capacitance<T> FromMicrofarad(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Micro), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Capacitance{T}"/> from a value in Nanofarad.
@@ -115,7 +115,7 @@ public readonly partial record struct Capacitance<T> : IVector0<Capacitance<T>, 
 	/// <param name="value">The value in Nanofarad.</param>
 	/// <returns>A new <see cref="Capacitance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Capacitance<T> FromNanofarad(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
+	public static Capacitance<T> FromNanofarad(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Nano), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Capacitance{T}"/> from a value in Picofarad.
@@ -123,7 +123,7 @@ public readonly partial record struct Capacitance<T> : IVector0<Capacitance<T>, 
 	/// <param name="value">The value in Picofarad.</param>
 	/// <returns>A new <see cref="Capacitance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Capacitance<T> FromPicofarad(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Pico)), nameof(value)));
+	public static Capacitance<T> FromPicofarad(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Pico), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

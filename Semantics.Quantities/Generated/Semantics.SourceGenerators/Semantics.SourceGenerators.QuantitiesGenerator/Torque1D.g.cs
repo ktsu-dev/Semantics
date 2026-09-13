@@ -109,7 +109,7 @@ public readonly partial record struct Torque1D<T> : IVector1<Torque1D<T>, T>, IP
 	/// </summary>
 	/// <param name="value">The value in PoundFoot.</param>
 	/// <returns>A new <see cref="Torque1D{T}"/> instance.</returns>
-	public static Torque1D<T> FromPoundFoot(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PoundFootToNewtonMeters)));
+	public static Torque1D<T> FromPoundFoot(T value) => Create((value * Units.ConversionConstants.Values<T>.PoundFootToNewtonMeters));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

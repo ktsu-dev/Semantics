@@ -108,7 +108,7 @@ public readonly partial record struct Friction<T> : IVector0<Friction<T>, T>, IP
 	/// <param name="value">The value in Kilonewton.</param>
 	/// <returns>A new Friction instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Friction<T> FromKilonewton(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static Friction<T> FromKilonewton(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Friction from a value in Dyne.
@@ -116,7 +116,7 @@ public readonly partial record struct Friction<T> : IVector0<Friction<T>, T>, IP
 	/// <param name="value">The value in Dyne.</param>
 	/// <returns>A new Friction instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Friction<T> FromDyne(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DyneToNewtons)), nameof(value)));
+	public static Friction<T> FromDyne(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.DyneToNewtons), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Friction from a value in PoundForce.
@@ -124,7 +124,7 @@ public readonly partial record struct Friction<T> : IVector0<Friction<T>, T>, IP
 	/// <param name="value">The value in PoundForce.</param>
 	/// <returns>A new Friction instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Friction<T> FromPoundForce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundForceToNewtons)), nameof(value)));
+	public static Friction<T> FromPoundForce(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PoundForceToNewtons), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

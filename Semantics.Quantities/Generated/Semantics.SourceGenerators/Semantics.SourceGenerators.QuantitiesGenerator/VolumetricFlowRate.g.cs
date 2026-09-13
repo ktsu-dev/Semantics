@@ -107,7 +107,7 @@ public readonly partial record struct VolumetricFlowRate<T> : IVector0<Volumetri
 	/// <param name="value">The value in LiterPerSecond.</param>
 	/// <returns>A new <see cref="VolumetricFlowRate{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static VolumetricFlowRate<T> FromLiterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.LiterPerSecondToCubicMeterPerSecond)), nameof(value)));
+	public static VolumetricFlowRate<T> FromLiterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.LiterPerSecondToCubicMeterPerSecond), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

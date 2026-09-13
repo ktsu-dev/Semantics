@@ -109,21 +109,21 @@ public readonly partial record struct TemperatureDelta<T> : IVector1<Temperature
 	/// </summary>
 	/// <param name="value">The value in Celsius.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
-	public static TemperatureDelta<T> FromCelsius(T value) => Create((value + T.CreateChecked(Units.ConversionConstants.CelsiusToKelvinOffset)));
+	public static TemperatureDelta<T> FromCelsius(T value) => Create((value + Units.ConversionConstants.Values<T>.CelsiusToKelvinOffset));
 
 	/// <summary>
 	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Fahrenheit.
 	/// </summary>
 	/// <param name="value">The value in Fahrenheit.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
-	public static TemperatureDelta<T> FromFahrenheit(T value) => Create(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)));
+	public static TemperatureDelta<T> FromFahrenheit(T value) => Create(((value * Units.ConversionConstants.Values<T>.FahrenheitScale) + Units.ConversionConstants.Values<T>.FahrenheitToKelvinOffset));
 
 	/// <summary>
 	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Rankine.
 	/// </summary>
 	/// <param name="value">The value in Rankine.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
-	public static TemperatureDelta<T> FromRankine(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)));
+	public static TemperatureDelta<T> FromRankine(T value) => Create((value * Units.ConversionConstants.Values<T>.FahrenheitScale));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

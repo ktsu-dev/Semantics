@@ -41,8 +41,7 @@ public readonly partial record struct Jerk2D<T> : IVector2<Jerk2D<T>, T>
 	public T Length()
 	{
 		T sum = (X * X) + (Y * Y);
-		double asDouble = double.CreateChecked(sum);
-		return T.CreateChecked(Math.Sqrt(asDouble));
+		return StorageMath.Sqrt(sum);
 	}
 
 	/// <summary>Calculates the squared length of the vector.</summary>
@@ -57,8 +56,7 @@ public readonly partial record struct Jerk2D<T> : IVector2<Jerk2D<T>, T>
 		T dX = X - other.X;
 		T dY = Y - other.Y;
 		T sum = (dX * dX) + (dY * dY);
-		double asDouble = double.CreateChecked(sum);
-		return T.CreateChecked(Math.Sqrt(asDouble));
+		return StorageMath.Sqrt(sum);
 	}
 
 	/// <summary>Calculates the squared distance between two vectors.</summary>

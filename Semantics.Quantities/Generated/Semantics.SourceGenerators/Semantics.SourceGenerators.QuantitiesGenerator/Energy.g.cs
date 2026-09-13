@@ -107,7 +107,7 @@ public readonly partial record struct Energy<T> : IVector0<Energy<T>, T>, IPhysi
 	/// <param name="value">The value in Kilojoule.</param>
 	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Energy<T> FromKilojoule(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static Energy<T> FromKilojoule(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Energy{T}"/> from a value in ElectronVolt.
@@ -115,7 +115,7 @@ public readonly partial record struct Energy<T> : IVector0<Energy<T>, T>, IPhysi
 	/// <param name="value">The value in ElectronVolt.</param>
 	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Energy<T> FromElectronVolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ElectronVoltToJoules)), nameof(value)));
+	public static Energy<T> FromElectronVolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.ElectronVoltToJoules), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Energy{T}"/> from a value in Calorie.
@@ -123,7 +123,7 @@ public readonly partial record struct Energy<T> : IVector0<Energy<T>, T>, IPhysi
 	/// <param name="value">The value in Calorie.</param>
 	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Energy<T> FromCalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CalorieToJoules)), nameof(value)));
+	public static Energy<T> FromCalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.CalorieToJoules), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Energy{T}"/> from a value in Kilocalorie.
@@ -131,7 +131,7 @@ public readonly partial record struct Energy<T> : IVector0<Energy<T>, T>, IPhysi
 	/// <param name="value">The value in Kilocalorie.</param>
 	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Energy<T> FromKilocalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilocalorieToJoules)), nameof(value)));
+	public static Energy<T> FromKilocalorie(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.KilocalorieToJoules), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Energy{T}"/> from a value in KilowattHour.
@@ -139,7 +139,7 @@ public readonly partial record struct Energy<T> : IVector0<Energy<T>, T>, IPhysi
 	/// <param name="value">The value in KilowattHour.</param>
 	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Energy<T> FromKilowattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilowattHourToJoules)), nameof(value)));
+	public static Energy<T> FromKilowattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.KilowattHourToJoules), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Energy{T}"/> from a value in WattHour.
@@ -147,7 +147,7 @@ public readonly partial record struct Energy<T> : IVector0<Energy<T>, T>, IPhysi
 	/// <param name="value">The value in WattHour.</param>
 	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Energy<T> FromWattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.WattHourToJoules)), nameof(value)));
+	public static Energy<T> FromWattHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.WattHourToJoules), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Energy{T}"/> from a value in Erg.
@@ -155,7 +155,7 @@ public readonly partial record struct Energy<T> : IVector0<Energy<T>, T>, IPhysi
 	/// <param name="value">The value in Erg.</param>
 	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Energy<T> FromErg(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.ErgToJoules)), nameof(value)));
+	public static Energy<T> FromErg(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.ErgToJoules), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Energy{T}"/> from a value in Btu.
@@ -163,7 +163,7 @@ public readonly partial record struct Energy<T> : IVector0<Energy<T>, T>, IPhysi
 	/// <param name="value">The value in Btu.</param>
 	/// <returns>A new <see cref="Energy{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Energy<T> FromBtu(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BtuToJoules)), nameof(value)));
+	public static Energy<T> FromBtu(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.BtuToJoules), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

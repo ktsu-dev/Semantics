@@ -109,14 +109,14 @@ public readonly partial record struct Current1D<T> : IVector1<Current1D<T>, T>, 
 	/// </summary>
 	/// <param name="value">The value in Milliampere.</param>
 	/// <returns>A new <see cref="Current1D{T}"/> instance.</returns>
-	public static Current1D<T> FromMilliampere(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+	public static Current1D<T> FromMilliampere(T value) => Create((value * MetricMagnitudes.Values<T>.Milli));
 
 	/// <summary>
 	/// Creates a new <see cref="Current1D{T}"/> from a value in Kiloampere.
 	/// </summary>
 	/// <param name="value">The value in Kiloampere.</param>
 	/// <returns>A new <see cref="Current1D{T}"/> instance.</returns>
-	public static Current1D<T> FromKiloampere(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
+	public static Current1D<T> FromKiloampere(T value) => Create((value * MetricMagnitudes.Values<T>.Kilo));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

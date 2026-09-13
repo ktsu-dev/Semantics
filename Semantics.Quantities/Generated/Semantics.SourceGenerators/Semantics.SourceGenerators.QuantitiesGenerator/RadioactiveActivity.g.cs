@@ -107,7 +107,7 @@ public readonly partial record struct RadioactiveActivity<T> : IVector0<Radioact
 	/// <param name="value">The value in Curie.</param>
 	/// <returns>A new <see cref="RadioactiveActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static RadioactiveActivity<T> FromCurie(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CurieToBecquerels)), nameof(value)));
+	public static RadioactiveActivity<T> FromCurie(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.CurieToBecquerels), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

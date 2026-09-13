@@ -12,9 +12,34 @@ using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;
 /// <summary>
 /// Source generator that creates the ConversionConstants.cs file from JSON metadata.
 /// </summary>
+/// <remarks>
+/// <para>
+/// Each factor is emitted twice. The <see langword="double"/> constant backs the public
+/// <c>IUnit.ToBaseFactor</c> and <c>ToBaseOffset</c> properties. The nested <c>Values&lt;T&gt;</c>
+/// holder materialises the same literal into each storage type once, the way
+/// <see cref="PhysicalConstantsGenerator"/> does for constants, and that is what the generated
+/// factories and <c>In(unit)</c> read. Before the holder existed they reached every storage type
+/// through <c>T.CreateChecked(double)</c>, so a <see cref="decimal"/> quantity converted with 15
+/// significant digits of a 17-digit literal.
+/// </para>
+/// <para>
+/// A value is a decimal literal or an exact fraction of two, <c>"5/9"</c>. Anything else is reported
+/// as SEM009 and generates no constant.
+/// </para>
+/// </remarks>
 [Generator]
 public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 {
+	/// <summary>
+	/// Name of the nested holder that caches each factor materialised into a storage type.
+	/// </summary>
+	private const string HolderName = "Values";
+
+	/// <summary>
+	/// Constraint carried by the holder, matching the one on every generated quantity.
+	/// </summary>
+	private const string NumericConstraint = "where T : struct, INumber<T>";
+
 	public ConversionsGenerator() : base("conversions.json") { }
 
 	protected override void Generate(SourceProductionContext context, ConversionsMetadata metadata, CodeBlocker codeBlocker)
@@ -28,6 +53,10 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 		{
 			FileName = "ConversionConstants.g.cs",
 			Namespace = "ktsu.Semantics.Quantities.Units",
+			Usings =
+			{
+				"System.Numerics",
+			},
 		};
 
 		ClassTemplate constantsClass = new()
@@ -48,10 +77,35 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 			Name = "ConversionConstants",
 		};
 
+		ClassTemplate holderClass = new()
+		{
+			Comments =
+			{
+				Emit.SummaryOpen,
+				"/// Caches each conversion constant materialised into <typeparamref name=\"T\"/> at that type's own precision.",
+				Emit.SummaryClose,
+			},
+			Kind = TypeKind.Class,
+			Keywords =
+			{
+				"internal",
+				Emit.Static,
+			},
+			Name = $"{HolderName}<T>",
+			Constraints = {NumericConstraint},
+		};
+
 		foreach (ConversionCategory category in metadata.Conversions)
 		{
 			foreach (ConversionFactor factor in category.Factors)
 			{
+				ConversionValue? value = ConversionValue.Parse(factor.Value);
+				if (value is null)
+				{
+					context.Report(SemanticsDiagnostics.InvalidConversionFactor, factor.Name, factor.Value);
+					continue;
+				}
+
 				constantsClass.Members.Add(new FieldTemplate()
 				{
 					Comments =
@@ -65,9 +119,32 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 						"double",
 					},
 					Name = factor.Name,
-					DefaultValue = factor.Value,
+					DefaultValue = value.DoubleExpression,
+				});
+
+				// Qualified, because inside the holder the bare name is the field being declared.
+				holderClass.Members.Add(new FieldTemplate()
+				{
+					Comments =
+					{
+						$"/// <summary>{factor.Description}</summary>",
+					},
+					Keywords =
+					{
+						"internal",
+						Emit.Static,
+						"readonly",
+						"T",
+					},
+					Name = factor.Name,
+					DefaultValue = value.StorageExpression($"ConversionConstants.{factor.Name}"),
 				});
 			}
+		}
+
+		if (holderClass.Members.Count > 0)
+		{
+			constantsClass.NestedClasses.Add(holderClass);
 		}
 
 		sourceFileTemplate.Classes.Add(constantsClass);

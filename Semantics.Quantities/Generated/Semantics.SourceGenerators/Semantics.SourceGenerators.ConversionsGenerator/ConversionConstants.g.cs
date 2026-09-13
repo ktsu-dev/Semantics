@@ -3,6 +3,8 @@
 
 namespace ktsu.Semantics.Quantities.Units;
 
+using System.Numerics;
+
 /// <summary>
 /// Conversion constants used by generated unit definitions.
 /// Values sourced from conversions.json metadata.
@@ -93,20 +95,20 @@ internal static class ConversionConstants
 	/// <summary>Celsius to Kelvin temperature offset: 273.15 K (exact by definition)</summary>
 	internal const double CelsiusToKelvinOffset = 273.15;
 
-	/// <summary>Fahrenheit-to-Kelvin degree scale factor: 5/9 (exact)</summary>
-	internal const double FahrenheitScale = 0.5555555555555556;
+	/// <summary>Fahrenheit-to-Kelvin degree scale factor: 5/9 K/°F (exact, stored as a fraction)</summary>
+	internal const double FahrenheitScale = 5d / 9d;
 
-	/// <summary>Fahrenheit to Kelvin affine offset: 459.67 × 5/9 ≈ 255.372 K (exact)</summary>
-	internal const double FahrenheitToKelvinOffset = 255.37222222222223;
+	/// <summary>Fahrenheit to Kelvin affine offset: 459.67 × 5/9 = 45967/180 ≈ 255.372 K (exact, stored as a fraction)</summary>
+	internal const double FahrenheitToKelvinOffset = 45967d / 180d;
 
 	/// <summary>Degree to radian conversion: π/180 rad/° (exact)</summary>
 	internal const double DegreeToRadians = 0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983;
 
-	/// <summary>Gradian to radian conversion: π/200 rad/grad (exact)</summary>
-	internal const double GradianToRadians = 0.015707963267948966;
+	/// <summary>Gradian to radian conversion: π/200 rad/grad (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
+	internal const double GradianToRadians = 0.0157079632679489661923132169163975144209858469968755291048747229615390820314310449931401741267105876411909366360292356011914856685250059698650262847;
 
-	/// <summary>Revolution to radian conversion: 2π rad/rev (exact)</summary>
-	internal const double RevolutionToRadians = 6.283185307179586;
+	/// <summary>Revolution to radian conversion: 2π rad/rev (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
+	internal const double RevolutionToRadians = 6.28318530717958647692528676655900576839433879875021164194988918461563281257241799725606965068423505647637465441169424047659426741000238794601051388;
 
 	/// <summary>Calorie to joule conversion: 4.184 J/cal (exact, thermochemical calorie)</summary>
 	internal const double CalorieToJoules = 4.184;
@@ -114,8 +116,8 @@ internal static class ConversionConstants
 	/// <summary>Kilowatt-hour to joule conversion: 3600000 J/kWh (exact)</summary>
 	internal const double KilowattHourToJoules = 3600000;
 
-	/// <summary>Mechanical horsepower to watt conversion: 745.6998715822702 W/hp (exact)</summary>
-	internal const double HorsepowerToWatts = 745.6998715822702;
+	/// <summary>Mechanical horsepower to watt conversion: 550 ft⋅lbf/s = 550 × 0.3048 × 4.4482216152605 = 745.69987158227022 W/hp (exact)</summary>
+	internal const double HorsepowerToWatts = 745.69987158227022;
 
 	/// <summary>Electron volt to joule conversion: 1.602176634e-19 J/eV (exact, based on elementary charge)</summary>
 	internal const double ElectronVoltToJoules = 1.602176634e-19;
@@ -138,11 +140,11 @@ internal static class ConversionConstants
 	/// <summary>Atmosphere to pascal conversion: 101325 Pa/atm (exact by definition)</summary>
 	internal const double AtmosphereToPascals = 101325;
 
-	/// <summary>PSI to pascal conversion: 6894.757293168361 Pa/psi (exact)</summary>
-	internal const double PsiToPascals = 6894.757293168361;
+	/// <summary>PSI to pascal conversion: 4.4482216152605 N / 0.0254² m² = 8896443230521/1290320000 Pa/psi, written to 150 significant digits (a literal rather than the fraction, because float storage rounds that numerator before dividing)</summary>
+	internal const double PsiToPascals = 6894.75729316836133672267344534689069378138756277512555025110050220100440200880401760803521607043214086428172856345712691425382850765701531403062806126;
 
-	/// <summary>Torr to pascal conversion: 101325/760 ≈ 133.322 Pa/Torr (exact)</summary>
-	internal const double TorrToPascals = 133.32236842105263;
+	/// <summary>Torr to pascal conversion: 101325/760 = 20265/152 Pa/Torr (exact, stored as a fraction)</summary>
+	internal const double TorrToPascals = 20265d / 152d;
 
 	/// <summary>Square foot to square meter conversion: 0.09290304 m²/ft² (exact)</summary>
 	internal const double SquareFootToSquareMeters = 0.09290304;
@@ -168,8 +170,8 @@ internal static class ConversionConstants
 	/// <summary>Acre to square meter: 4046.8564224 m²/ac (exact)</summary>
 	internal const double AcreToSquareMeters = 4046.8564224;
 
-	/// <summary>Kilometers per hour to meters per second conversion: 0.2777777777777778 m/s per km/h (exact)</summary>
-	internal const double KilometerPerHourToMeterPerSecond = 0.2777777777777778;
+	/// <summary>Kilometers per hour to meters per second conversion: 1000/3600 = 5/18 m/s per km/h (exact, stored as a fraction)</summary>
+	internal const double KilometerPerHourToMeterPerSecond = 5d / 18d;
 
 	/// <summary>Miles per hour to meters per second conversion: 0.44704 m/s per mph (exact)</summary>
 	internal const double MilePerHourToMeterPerSecond = 0.44704;
@@ -177,11 +179,11 @@ internal static class ConversionConstants
 	/// <summary>Feet per second to meters per second: 0.3048 m/s per ft/s (exact)</summary>
 	internal const double FootPerSecondToMeterPerSecond = 0.3048;
 
-	/// <summary>Knot to meters per second: 1852/3600 ≈ 0.514444 m/s per kn (exact)</summary>
-	internal const double KnotToMeterPerSecond = 0.5144444444444445;
+	/// <summary>Knot to meters per second: 1852/3600 = 463/900 m/s per kn (exact, stored as a fraction)</summary>
+	internal const double KnotToMeterPerSecond = 463d / 900d;
 
-	/// <summary>RPM to rad/s conversion: π/30 rad/s per rpm (exact)</summary>
-	internal const double RevolutionPerMinuteToRadianPerSecond = 0.10471975511965977;
+	/// <summary>RPM to rad/s conversion: 2π/60 = π/30 rad/s per rpm (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
+	internal const double RevolutionPerMinuteToRadianPerSecond = 0.104719755119659774615421446109316762806572313312503527365831486410260546876206966620934494178070584274606244240194904007943237790166706465766841898;
 
 	/// <summary>Pound-foot to Newton-meter conversion: 1.3558179483314004 N⋅m per lb⋅ft (exact)</summary>
 	internal const double PoundFootToNewtonMeters = 1.3558179483314004;
@@ -231,8 +233,8 @@ internal static class ConversionConstants
 	/// <summary>Calorie per mole to joule per mole: 4.184 J/mol per cal/mol (exact, thermochemical)</summary>
 	internal const double CaloriePerMoleToJoulePerMole = 4.184;
 
-	/// <summary>Enzyme unit (1 μmol/min) to katal: 1/6e7 ≈ 1.6667e-8 kat/U (exact)</summary>
-	internal const double EnzymeUnitToKatals = 1.6666666666666667e-8;
+	/// <summary>Enzyme unit (1 μmol/min) to katal: 1e-6/60 = 1/60000000 kat/U (exact, stored as a fraction)</summary>
+	internal const double EnzymeUnitToKatals = 1d / 60000000d;
 
 	/// <summary>Standard gravity to meters per second squared: 9.80665 m/s² per g (exact by definition)</summary>
 	internal const double StandardGravityToMeterPerSecondSquared = 9.80665;
@@ -255,11 +257,11 @@ internal static class ConversionConstants
 	/// <summary>Roentgen to coulomb per kilogram: 2.58e-4 C/kg per R (exact by definition)</summary>
 	internal const double RoentgenToCoulombsPerKilogram = 2.58e-4;
 
-	/// <summary>Foot-candle to lux conversion: 1/0.09290304 ≈ 10.7639 lx/fc (exact)</summary>
-	internal const double FootCandleToLux = 10.763910416709722;
+	/// <summary>Foot-candle to lux conversion: 1 lm/ft² = 1/0.09290304 = 100000000/9290304 lx/fc (exact, stored as a fraction)</summary>
+	internal const double FootCandleToLux = 100000000d / 9290304d;
 
-	/// <summary>Foot-lambert to candela per square meter: 1/(π·0.09290304) ≈ 3.4263 cd/m² per fL (exact)</summary>
-	internal const double FootLambertToCandelaPerSquareMeter = 3.4262590996353905;
+	/// <summary>Foot-lambert to candela per square meter: 1/(π × 0.09290304) cd/m² per fL (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
+	internal const double FootLambertToCandelaPerSquareMeter = 3.42625909963539052691674596165021859423458362052428959800814578422615229026362399099348746319287426200971476339509417994666710818534309005070458689906;
 
 	/// <summary>Percent to ratio: 0.01 (exact by definition)</summary>
 	internal const double PercentToRatio = 0.01;
@@ -272,5 +274,276 @@ internal static class ConversionConstants
 
 	/// <summary>Percent by weight to mass-fraction ratio: 0.01 (exact by definition)</summary>
 	internal const double PercentByWeightToRatio = 0.01;
+
+	/// <summary>
+	/// Caches each conversion constant materialised into <typeparamref name="T"/> at that type's own precision.
+	/// </summary>
+	internal static class Values<T>
+		where T : struct, INumber<T>
+	{
+		/// <summary>Foot to meter conversion: 0.3048 m/ft (exact by definition)</summary>
+		internal static readonly T FeetToMeters = StorageLiteral.Parse<T>("0.3048", ConversionConstants.FeetToMeters);
+
+		/// <summary>Inch to meter conversion: 0.0254 m/in (exact by definition)</summary>
+		internal static readonly T InchesToMeters = StorageLiteral.Parse<T>("0.0254", ConversionConstants.InchesToMeters);
+
+		/// <summary>Yard to meter conversion: 0.9144 m/yd (exact by definition)</summary>
+		internal static readonly T YardToMeters = StorageLiteral.Parse<T>("0.9144", ConversionConstants.YardToMeters);
+
+		/// <summary>Mile to meter conversion: 1609.344 m/mi (exact by definition)</summary>
+		internal static readonly T MileToMeters = StorageLiteral.Parse<T>("1609.344", ConversionConstants.MileToMeters);
+
+		/// <summary>Angstrom to meter conversion: 1e-10 m/Å (exact by definition)</summary>
+		internal static readonly T AngstromToMeters = StorageLiteral.Parse<T>("1e-10", ConversionConstants.AngstromToMeters);
+
+		/// <summary>Nautical mile to meter conversion: 1852 m/nmi (exact by definition)</summary>
+		internal static readonly T NauticalMileToMeters = StorageLiteral.Parse<T>("1852", ConversionConstants.NauticalMileToMeters);
+
+		/// <summary>Pound mass to kilogram: 0.453592 kg/lb (exact)</summary>
+		internal static readonly T PoundMassToKilogram = StorageLiteral.Parse<T>("0.453592", ConversionConstants.PoundMassToKilogram);
+
+		/// <summary>Pound to kilogram conversion: 0.45359237 kg/lb (exact by definition)</summary>
+		internal static readonly T PoundToKilograms = StorageLiteral.Parse<T>("0.45359237", ConversionConstants.PoundToKilograms);
+
+		/// <summary>Ounce to kilogram conversion: 0.028349523125 kg/oz (exact)</summary>
+		internal static readonly T OunceToKilograms = StorageLiteral.Parse<T>("0.028349523125", ConversionConstants.OunceToKilograms);
+
+		/// <summary>Metric ton to kilogram conversion: 1000 kg/t (exact by definition)</summary>
+		internal static readonly T TonToKilograms = StorageLiteral.Parse<T>("1000", ConversionConstants.TonToKilograms);
+
+		/// <summary>Stone to kilogram conversion: 6.35029318 kg/st (14 lb, exact)</summary>
+		internal static readonly T StoneToKilograms = StorageLiteral.Parse<T>("6.35029318", ConversionConstants.StoneToKilograms);
+
+		/// <summary>Short ton to kilogram conversion: 907.18474 kg/ton (2000 lb, exact)</summary>
+		internal static readonly T ShortTonToKilograms = StorageLiteral.Parse<T>("907.18474", ConversionConstants.ShortTonToKilograms);
+
+		/// <summary>Atomic mass unit to kilogram: 1.66053906660e-27 kg/u (2018 CODATA)</summary>
+		internal static readonly T AtomicMassUnitToKilograms = StorageLiteral.Parse<T>("1.66053906660e-27", ConversionConstants.AtomicMassUnitToKilograms);
+
+		/// <summary>Liter to cubic meter conversion: 0.001 m³/L (exact by definition)</summary>
+		internal static readonly T LiterToCubicMeters = StorageLiteral.Parse<T>("0.001", ConversionConstants.LiterToCubicMeters);
+
+		/// <summary>US gallon to cubic meter conversion: 0.003785411784 m³/gal (exact)</summary>
+		internal static readonly T GallonToCubicMeters = StorageLiteral.Parse<T>("0.003785411784", ConversionConstants.GallonToCubicMeters);
+
+		/// <summary>Cubic centimeter to cubic meter: 1e-6 m³/cm³ (exact by definition)</summary>
+		internal static readonly T CubicCentimeterToCubicMeters = StorageLiteral.Parse<T>("1e-6", ConversionConstants.CubicCentimeterToCubicMeters);
+
+		/// <summary>Cubic foot to cubic meter: 0.028316846592 m³/ft³ (exact)</summary>
+		internal static readonly T CubicFootToCubicMeters = StorageLiteral.Parse<T>("0.028316846592", ConversionConstants.CubicFootToCubicMeters);
+
+		/// <summary>Cubic inch to cubic meter: 1.6387064e-5 m³/in³ (exact)</summary>
+		internal static readonly T CubicInchToCubicMeters = StorageLiteral.Parse<T>("1.6387064e-5", ConversionConstants.CubicInchToCubicMeters);
+
+		/// <summary>Imperial gallon to cubic meter: 0.00454609 m³/imp gal (exact by definition)</summary>
+		internal static readonly T ImperialGallonToCubicMeters = StorageLiteral.Parse<T>("0.00454609", ConversionConstants.ImperialGallonToCubicMeters);
+
+		/// <summary>US liquid quart to cubic meter: 0.000946352946 m³/qt (exact)</summary>
+		internal static readonly T USQuartToCubicMeters = StorageLiteral.Parse<T>("0.000946352946", ConversionConstants.USQuartToCubicMeters);
+
+		/// <summary>US liquid pint to cubic meter: 0.000473176473 m³/pt (exact)</summary>
+		internal static readonly T USPintToCubicMeters = StorageLiteral.Parse<T>("0.000473176473", ConversionConstants.USPintToCubicMeters);
+
+		/// <summary>US fluid ounce to cubic meter: 2.95735295625e-5 m³/fl oz (exact)</summary>
+		internal static readonly T USFluidOunceToCubicMeters = StorageLiteral.Parse<T>("2.95735295625e-5", ConversionConstants.USFluidOunceToCubicMeters);
+
+		/// <summary>Minute to second conversion: 60 s/min (exact)</summary>
+		internal static readonly T MinuteToSeconds = StorageLiteral.Parse<T>("60", ConversionConstants.MinuteToSeconds);
+
+		/// <summary>Hour to second conversion: 3600 s/h (exact)</summary>
+		internal static readonly T HourToSeconds = StorageLiteral.Parse<T>("3600", ConversionConstants.HourToSeconds);
+
+		/// <summary>Day to second conversion: 86400 s/day (exact)</summary>
+		internal static readonly T DayToSeconds = StorageLiteral.Parse<T>("86400", ConversionConstants.DayToSeconds);
+
+		/// <summary>Year to second conversion: 31557600 s/year (365.25 days, exact)</summary>
+		internal static readonly T YearToSeconds = StorageLiteral.Parse<T>("31557600", ConversionConstants.YearToSeconds);
+
+		/// <summary>Week to second conversion: 604800 s/wk (exact)</summary>
+		internal static readonly T WeekToSeconds = StorageLiteral.Parse<T>("604800", ConversionConstants.WeekToSeconds);
+
+		/// <summary>Celsius to Kelvin temperature offset: 273.15 K (exact by definition)</summary>
+		internal static readonly T CelsiusToKelvinOffset = StorageLiteral.Parse<T>("273.15", ConversionConstants.CelsiusToKelvinOffset);
+
+		/// <summary>Fahrenheit-to-Kelvin degree scale factor: 5/9 K/°F (exact, stored as a fraction)</summary>
+		internal static readonly T FahrenheitScale = StorageLiteral.Divide<T>("5", "9", ConversionConstants.FahrenheitScale);
+
+		/// <summary>Fahrenheit to Kelvin affine offset: 459.67 × 5/9 = 45967/180 ≈ 255.372 K (exact, stored as a fraction)</summary>
+		internal static readonly T FahrenheitToKelvinOffset = StorageLiteral.Divide<T>("45967", "180", ConversionConstants.FahrenheitToKelvinOffset);
+
+		/// <summary>Degree to radian conversion: π/180 rad/° (exact)</summary>
+		internal static readonly T DegreeToRadians = StorageLiteral.Parse<T>("0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983", ConversionConstants.DegreeToRadians);
+
+		/// <summary>Gradian to radian conversion: π/200 rad/grad (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
+		internal static readonly T GradianToRadians = StorageLiteral.Parse<T>("0.0157079632679489661923132169163975144209858469968755291048747229615390820314310449931401741267105876411909366360292356011914856685250059698650262847", ConversionConstants.GradianToRadians);
+
+		/// <summary>Revolution to radian conversion: 2π rad/rev (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
+		internal static readonly T RevolutionToRadians = StorageLiteral.Parse<T>("6.28318530717958647692528676655900576839433879875021164194988918461563281257241799725606965068423505647637465441169424047659426741000238794601051388", ConversionConstants.RevolutionToRadians);
+
+		/// <summary>Calorie to joule conversion: 4.184 J/cal (exact, thermochemical calorie)</summary>
+		internal static readonly T CalorieToJoules = StorageLiteral.Parse<T>("4.184", ConversionConstants.CalorieToJoules);
+
+		/// <summary>Kilowatt-hour to joule conversion: 3600000 J/kWh (exact)</summary>
+		internal static readonly T KilowattHourToJoules = StorageLiteral.Parse<T>("3600000", ConversionConstants.KilowattHourToJoules);
+
+		/// <summary>Mechanical horsepower to watt conversion: 550 ft⋅lbf/s = 550 × 0.3048 × 4.4482216152605 = 745.69987158227022 W/hp (exact)</summary>
+		internal static readonly T HorsepowerToWatts = StorageLiteral.Parse<T>("745.69987158227022", ConversionConstants.HorsepowerToWatts);
+
+		/// <summary>Electron volt to joule conversion: 1.602176634e-19 J/eV (exact, based on elementary charge)</summary>
+		internal static readonly T ElectronVoltToJoules = StorageLiteral.Parse<T>("1.602176634e-19", ConversionConstants.ElectronVoltToJoules);
+
+		/// <summary>Kilocalorie to joule conversion: 4184 J/kcal (exact, thermochemical)</summary>
+		internal static readonly T KilocalorieToJoules = StorageLiteral.Parse<T>("4184", ConversionConstants.KilocalorieToJoules);
+
+		/// <summary>Watt-hour to joule conversion: 3600 J/Wh (exact)</summary>
+		internal static readonly T WattHourToJoules = StorageLiteral.Parse<T>("3600", ConversionConstants.WattHourToJoules);
+
+		/// <summary>Erg to joule conversion: 1e-7 J/erg (exact by definition)</summary>
+		internal static readonly T ErgToJoules = StorageLiteral.Parse<T>("1e-7", ConversionConstants.ErgToJoules);
+
+		/// <summary>British thermal unit (IT) to joule conversion: 1055.05585262 J/BTU (exact)</summary>
+		internal static readonly T BtuToJoules = StorageLiteral.Parse<T>("1055.05585262", ConversionConstants.BtuToJoules);
+
+		/// <summary>Bar to pascal conversion: 100000 Pa/bar (exact by definition)</summary>
+		internal static readonly T BarToPascals = StorageLiteral.Parse<T>("100000", ConversionConstants.BarToPascals);
+
+		/// <summary>Atmosphere to pascal conversion: 101325 Pa/atm (exact by definition)</summary>
+		internal static readonly T AtmosphereToPascals = StorageLiteral.Parse<T>("101325", ConversionConstants.AtmosphereToPascals);
+
+		/// <summary>PSI to pascal conversion: 4.4482216152605 N / 0.0254² m² = 8896443230521/1290320000 Pa/psi, written to 150 significant digits (a literal rather than the fraction, because float storage rounds that numerator before dividing)</summary>
+		internal static readonly T PsiToPascals = StorageLiteral.Parse<T>("6894.75729316836133672267344534689069378138756277512555025110050220100440200880401760803521607043214086428172856345712691425382850765701531403062806126", ConversionConstants.PsiToPascals);
+
+		/// <summary>Torr to pascal conversion: 101325/760 = 20265/152 Pa/Torr (exact, stored as a fraction)</summary>
+		internal static readonly T TorrToPascals = StorageLiteral.Divide<T>("20265", "152", ConversionConstants.TorrToPascals);
+
+		/// <summary>Square foot to square meter conversion: 0.09290304 m²/ft² (exact)</summary>
+		internal static readonly T SquareFootToSquareMeters = StorageLiteral.Parse<T>("0.09290304", ConversionConstants.SquareFootToSquareMeters);
+
+		/// <summary>Square inch to square meter conversion: 0.00064516 m²/in² (exact)</summary>
+		internal static readonly T SquareInchToSquareMeters = StorageLiteral.Parse<T>("0.00064516", ConversionConstants.SquareInchToSquareMeters);
+
+		/// <summary>Barn to square meter conversion: 1e-28 m² (exact by definition)</summary>
+		internal static readonly T BarnToSquareMeters = StorageLiteral.Parse<T>("1e-28", ConversionConstants.BarnToSquareMeters);
+
+		/// <summary>Square kilometer to square meter: 1e6 m²/km² (exact by definition)</summary>
+		internal static readonly T SquareKilometerToSquareMeters = StorageLiteral.Parse<T>("1e6", ConversionConstants.SquareKilometerToSquareMeters);
+
+		/// <summary>Square centimeter to square meter: 1e-4 m²/cm² (exact by definition)</summary>
+		internal static readonly T SquareCentimeterToSquareMeters = StorageLiteral.Parse<T>("1e-4", ConversionConstants.SquareCentimeterToSquareMeters);
+
+		/// <summary>Square mile to square meter: 2589988.110336 m²/mi² (exact)</summary>
+		internal static readonly T SquareMileToSquareMeters = StorageLiteral.Parse<T>("2589988.110336", ConversionConstants.SquareMileToSquareMeters);
+
+		/// <summary>Hectare to square meter: 10000 m²/ha (exact by definition)</summary>
+		internal static readonly T HectareToSquareMeters = StorageLiteral.Parse<T>("10000", ConversionConstants.HectareToSquareMeters);
+
+		/// <summary>Acre to square meter: 4046.8564224 m²/ac (exact)</summary>
+		internal static readonly T AcreToSquareMeters = StorageLiteral.Parse<T>("4046.8564224", ConversionConstants.AcreToSquareMeters);
+
+		/// <summary>Kilometers per hour to meters per second conversion: 1000/3600 = 5/18 m/s per km/h (exact, stored as a fraction)</summary>
+		internal static readonly T KilometerPerHourToMeterPerSecond = StorageLiteral.Divide<T>("5", "18", ConversionConstants.KilometerPerHourToMeterPerSecond);
+
+		/// <summary>Miles per hour to meters per second conversion: 0.44704 m/s per mph (exact)</summary>
+		internal static readonly T MilePerHourToMeterPerSecond = StorageLiteral.Parse<T>("0.44704", ConversionConstants.MilePerHourToMeterPerSecond);
+
+		/// <summary>Feet per second to meters per second: 0.3048 m/s per ft/s (exact)</summary>
+		internal static readonly T FootPerSecondToMeterPerSecond = StorageLiteral.Parse<T>("0.3048", ConversionConstants.FootPerSecondToMeterPerSecond);
+
+		/// <summary>Knot to meters per second: 1852/3600 = 463/900 m/s per kn (exact, stored as a fraction)</summary>
+		internal static readonly T KnotToMeterPerSecond = StorageLiteral.Divide<T>("463", "900", ConversionConstants.KnotToMeterPerSecond);
+
+		/// <summary>RPM to rad/s conversion: 2π/60 = π/30 rad/s per rpm (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
+		internal static readonly T RevolutionPerMinuteToRadianPerSecond = StorageLiteral.Parse<T>("0.104719755119659774615421446109316762806572313312503527365831486410260546876206966620934494178070584274606244240194904007943237790166706465766841898", ConversionConstants.RevolutionPerMinuteToRadianPerSecond);
+
+		/// <summary>Pound-foot to Newton-meter conversion: 1.3558179483314004 N⋅m per lb⋅ft (exact)</summary>
+		internal static readonly T PoundFootToNewtonMeters = StorageLiteral.Parse<T>("1.3558179483314004", ConversionConstants.PoundFootToNewtonMeters);
+
+		/// <summary>Molar to cubic meter concentration conversion: 1000.0 mol/m³ per mol/L (exact)</summary>
+		internal static readonly T MolarToCubicMeter = StorageLiteral.Parse<T>("1000.0", ConversionConstants.MolarToCubicMeter);
+
+		/// <summary>Millimolar to mole per cubic meter: 1 mol/m³ per mM (exact)</summary>
+		internal static readonly T MillimolarToMolePerCubicMeter = StorageLiteral.Parse<T>("1.0", ConversionConstants.MillimolarToMolePerCubicMeter);
+
+		/// <summary>Micromolar to mole per cubic meter: 0.001 mol/m³ per μM (exact)</summary>
+		internal static readonly T MicromolarToMolePerCubicMeter = StorageLiteral.Parse<T>("0.001", ConversionConstants.MicromolarToMolePerCubicMeter);
+
+		/// <summary>Stokes to square meter per second: 1e-4 m²/s per St (exact by definition)</summary>
+		internal static readonly T StokesToSquareMeterPerSecond = StorageLiteral.Parse<T>("1e-4", ConversionConstants.StokesToSquareMeterPerSecond);
+
+		/// <summary>Poise to pascal second: 0.1 Pa·s per P (exact by definition)</summary>
+		internal static readonly T PoiseToPascalSecond = StorageLiteral.Parse<T>("0.1", ConversionConstants.PoiseToPascalSecond);
+
+		/// <summary>Liter per second to cubic meter per second: 0.001 m³/s per L/s (exact by definition)</summary>
+		internal static readonly T LiterPerSecondToCubicMeterPerSecond = StorageLiteral.Parse<T>("0.001", ConversionConstants.LiterPerSecondToCubicMeterPerSecond);
+
+		/// <summary>Centipoise to pascal second: 0.001 Pa·s per cP (exact by definition)</summary>
+		internal static readonly T CentipoiseToPascalSecond = StorageLiteral.Parse<T>("0.001", ConversionConstants.CentipoiseToPascalSecond);
+
+		/// <summary>Dyne per centimeter to newton per meter: 0.001 N/m per dyn/cm (exact)</summary>
+		internal static readonly T DynePerCentimeterToNewtonPerMeter = StorageLiteral.Parse<T>("0.001", ConversionConstants.DynePerCentimeterToNewtonPerMeter);
+
+		/// <summary>Gram per cubic centimeter to kilogram per cubic meter: 1000 kg/m³ per g/cm³ (exact)</summary>
+		internal static readonly T GramPerCubicCentimeterToKilogramPerCubicMeter = StorageLiteral.Parse<T>("1000", ConversionConstants.GramPerCubicCentimeterToKilogramPerCubicMeter);
+
+		/// <summary>Gram per liter to kilogram per cubic meter: 1 kg/m³ per g/L (exact)</summary>
+		internal static readonly T GramPerLiterToKilogramPerCubicMeter = StorageLiteral.Parse<T>("1.0", ConversionConstants.GramPerLiterToKilogramPerCubicMeter);
+
+		/// <summary>Gauss to Tesla: 1e-4 T per G (exact by definition)</summary>
+		internal static readonly T GaussToTesla = StorageLiteral.Parse<T>("1e-4", ConversionConstants.GaussToTesla);
+
+		/// <summary>Ampere-hour to coulomb conversion: 3600 C/Ah (exact)</summary>
+		internal static readonly T AmpereHourToCoulombs = StorageLiteral.Parse<T>("3600", ConversionConstants.AmpereHourToCoulombs);
+
+		/// <summary>Gram per mole to kilogram per mole: 0.001 kg/mol per g/mol (exact by definition)</summary>
+		internal static readonly T GramPerMoleToKilogramPerMole = StorageLiteral.Parse<T>("0.001", ConversionConstants.GramPerMoleToKilogramPerMole);
+
+		/// <summary>Kilojoule per mole to joule per mole: 1000 J/mol per kJ/mol (exact by definition)</summary>
+		internal static readonly T KilojoulePerMoleToJoulePerMole = StorageLiteral.Parse<T>("1000", ConversionConstants.KilojoulePerMoleToJoulePerMole);
+
+		/// <summary>Calorie per mole to joule per mole: 4.184 J/mol per cal/mol (exact, thermochemical)</summary>
+		internal static readonly T CaloriePerMoleToJoulePerMole = StorageLiteral.Parse<T>("4.184", ConversionConstants.CaloriePerMoleToJoulePerMole);
+
+		/// <summary>Enzyme unit (1 μmol/min) to katal: 1e-6/60 = 1/60000000 kat/U (exact, stored as a fraction)</summary>
+		internal static readonly T EnzymeUnitToKatals = StorageLiteral.Divide<T>("1", "60000000", ConversionConstants.EnzymeUnitToKatals);
+
+		/// <summary>Standard gravity to meters per second squared: 9.80665 m/s² per g (exact by definition)</summary>
+		internal static readonly T StandardGravityToMeterPerSecondSquared = StorageLiteral.Parse<T>("9.80665", ConversionConstants.StandardGravityToMeterPerSecondSquared);
+
+		/// <summary>Dyne to newton conversion: 1e-5 N/dyn (exact by definition)</summary>
+		internal static readonly T DyneToNewtons = StorageLiteral.Parse<T>("1e-5", ConversionConstants.DyneToNewtons);
+
+		/// <summary>Pound-force to newton conversion: 4.4482216152605 N/lbf (exact)</summary>
+		internal static readonly T PoundForceToNewtons = StorageLiteral.Parse<T>("4.4482216152605", ConversionConstants.PoundForceToNewtons);
+
+		/// <summary>Curie to becquerel conversion: 3.7e10 Bq/Ci (exact by definition)</summary>
+		internal static readonly T CurieToBecquerels = StorageLiteral.Parse<T>("3.7e10", ConversionConstants.CurieToBecquerels);
+
+		/// <summary>Rad to gray conversion: 0.01 Gy/rad (exact by definition)</summary>
+		internal static readonly T RadToGrays = StorageLiteral.Parse<T>("0.01", ConversionConstants.RadToGrays);
+
+		/// <summary>Rem to sievert conversion: 0.01 Sv/rem (exact by definition)</summary>
+		internal static readonly T RemToSieverts = StorageLiteral.Parse<T>("0.01", ConversionConstants.RemToSieverts);
+
+		/// <summary>Roentgen to coulomb per kilogram: 2.58e-4 C/kg per R (exact by definition)</summary>
+		internal static readonly T RoentgenToCoulombsPerKilogram = StorageLiteral.Parse<T>("2.58e-4", ConversionConstants.RoentgenToCoulombsPerKilogram);
+
+		/// <summary>Foot-candle to lux conversion: 1 lm/ft² = 1/0.09290304 = 100000000/9290304 lx/fc (exact, stored as a fraction)</summary>
+		internal static readonly T FootCandleToLux = StorageLiteral.Divide<T>("100000000", "9290304", ConversionConstants.FootCandleToLux);
+
+		/// <summary>Foot-lambert to candela per square meter: 1/(π × 0.09290304) cd/m² per fL (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
+		internal static readonly T FootLambertToCandelaPerSquareMeter = StorageLiteral.Parse<T>("3.42625909963539052691674596165021859423458362052428959800814578422615229026362399099348746319287426200971476339509417994666710818534309005070458689906", ConversionConstants.FootLambertToCandelaPerSquareMeter);
+
+		/// <summary>Percent to ratio: 0.01 (exact by definition)</summary>
+		internal static readonly T PercentToRatio = StorageLiteral.Parse<T>("0.01", ConversionConstants.PercentToRatio);
+
+		/// <summary>Parts per million to ratio: 1e-6 (exact by definition)</summary>
+		internal static readonly T PartPerMillionToRatio = StorageLiteral.Parse<T>("1e-6", ConversionConstants.PartPerMillionToRatio);
+
+		/// <summary>Parts per billion to ratio: 1e-9 (exact by definition)</summary>
+		internal static readonly T PartPerBillionToRatio = StorageLiteral.Parse<T>("1e-9", ConversionConstants.PartPerBillionToRatio);
+
+		/// <summary>Percent by weight to mass-fraction ratio: 0.01 (exact by definition)</summary>
+		internal static readonly T PercentByWeightToRatio = StorageLiteral.Parse<T>("0.01", ConversionConstants.PercentByWeightToRatio);
+	}
 }
 

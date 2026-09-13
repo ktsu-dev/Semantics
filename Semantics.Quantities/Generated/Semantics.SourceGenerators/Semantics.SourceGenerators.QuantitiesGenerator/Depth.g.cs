@@ -108,7 +108,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in Kilometer.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromKilometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static Depth<T> FromKilometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Depth from a value in Centimeter.
@@ -116,7 +116,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in Centimeter.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Centi)), nameof(value)));
+	public static Depth<T> FromCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Centi), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Depth from a value in Millimeter.
@@ -124,7 +124,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in Millimeter.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromMillimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static Depth<T> FromMillimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Milli), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Depth from a value in Micrometer.
@@ -132,7 +132,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in Micrometer.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromMicrometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+	public static Depth<T> FromMicrometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Micro), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Depth from a value in Nanometer.
@@ -140,7 +140,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in Nanometer.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromNanometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
+	public static Depth<T> FromNanometer(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Nano), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Depth from a value in Angstrom.
@@ -148,7 +148,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in Angstrom.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromAngstrom(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AngstromToMeters)), nameof(value)));
+	public static Depth<T> FromAngstrom(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.AngstromToMeters), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Depth from a value in Foot.
@@ -156,7 +156,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in Foot.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FeetToMeters)), nameof(value)));
+	public static Depth<T> FromFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.FeetToMeters), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Depth from a value in Inch.
@@ -164,7 +164,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in Inch.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.InchesToMeters)), nameof(value)));
+	public static Depth<T> FromInch(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.InchesToMeters), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Depth from a value in Yard.
@@ -172,7 +172,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in Yard.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromYard(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YardToMeters)), nameof(value)));
+	public static Depth<T> FromYard(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.YardToMeters), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Depth from a value in Mile.
@@ -180,7 +180,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in Mile.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromMile(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MileToMeters)), nameof(value)));
+	public static Depth<T> FromMile(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.MileToMeters), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Depth from a value in NauticalMile.
@@ -188,7 +188,7 @@ public readonly partial record struct Depth<T> : IVector0<Depth<T>, T>, IPhysica
 	/// <param name="value">The value in NauticalMile.</param>
 	/// <returns>A new Depth instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Depth<T> FromNauticalMile(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.NauticalMileToMeters)), nameof(value)));
+	public static Depth<T> FromNauticalMile(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.NauticalMileToMeters), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

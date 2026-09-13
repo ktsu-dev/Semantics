@@ -107,7 +107,7 @@ public readonly partial record struct SurfaceTension<T> : IVector0<SurfaceTensio
 	/// <param name="value">The value in DynePerCentimeter.</param>
 	/// <returns>A new <see cref="SurfaceTension{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SurfaceTension<T> FromDynePerCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DynePerCentimeterToNewtonPerMeter)), nameof(value)));
+	public static SurfaceTension<T> FromDynePerCentimeter(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.DynePerCentimeterToNewtonPerMeter), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

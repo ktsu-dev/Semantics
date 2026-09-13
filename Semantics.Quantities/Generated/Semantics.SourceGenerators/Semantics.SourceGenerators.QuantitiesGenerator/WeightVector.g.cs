@@ -44,8 +44,7 @@ public readonly partial record struct WeightVector<T> : IVector3<WeightVector<T>
 	public T Length()
 	{
 		T sum = (X * X) + (Y * Y) + (Z * Z);
-		double asDouble = double.CreateChecked(sum);
-		return T.CreateChecked(Math.Sqrt(asDouble));
+		return StorageMath.Sqrt(sum);
 	}
 
 	/// <summary>Calculates the squared length of the vector.</summary>
@@ -67,8 +66,7 @@ public readonly partial record struct WeightVector<T> : IVector3<WeightVector<T>
 		T dY = Y - other.Y;
 		T dZ = Z - other.Z;
 		T sum = (dX * dX) + (dY * dY) + (dZ * dZ);
-		double asDouble = double.CreateChecked(sum);
-		return T.CreateChecked(Math.Sqrt(asDouble));
+		return StorageMath.Sqrt(sum);
 	}
 
 	/// <summary>Calculates the squared distance between two vectors.</summary>

@@ -9,10 +9,10 @@ For the *why* (the unified vector model), see `docs/strategy-unified-vector-quan
 | Generator | Output | Notes |
 |---|---|---|
 | `DimensionsGenerator` | `PhysicalDimensions.g.cs` | One static record per dimension with its symbol and dimensional formula. |
-| `UnitsGenerator` | `Units.g.cs` | All declared units with their conversion factors. |
-| `ConversionsGenerator` | `ConversionConstants.g.cs` | Hard-coded conversion ratios (`FeetToMeters`, etc.) used by `Units` and operators. |
-| `MagnitudesGenerator` | `MetricMagnitudes.g.cs` | SI prefixes and their numeric magnitudes. |
-| `PrecisionGenerator` | `StorageTypes.g.cs` | The set of `INumber<T>` storage types the library opts into (`double`, `float`, `decimal`, …). |
+| `UnitsGenerator` | `Units.g.cs` | All declared units with their conversion factors, as `double` properties and as `IUnit.ToBaseFactorAs<T>()`/`ToBaseOffsetAs<T>()` explicit implementations that read the per-type values. |
+| `ConversionsGenerator` | `ConversionConstants.g.cs` | Conversion ratios (`FeetToMeters`, etc.) from `conversions.json`, as `double` constants plus a `Values<T>` holder that parses each one into the storage type. See [Conversion factor values](#conversion-factor-values). |
+| `MagnitudesGenerator` | `MetricMagnitudes.g.cs` | SI prefixes and their numeric magnitudes, as public `double` constants plus an internal `Values<T>` holder parsed per storage type. |
+| `PrecisionGenerator` | `StorageTypes.g.cs` | The storage types the alias packages cover (`decimal`, `double`, `float`), as a public `StorageTypes` class. Nothing in the library reads it. |
 | `PhysicalConstantsGenerator` | `PhysicalConstants.g.cs` | `PhysicalConstants.<Domain>.X<T>()`, `PhysicalConstants.Generic.X<T>()`, and `PhysicalConstants.Conversion.X<T>()` accessors; each literal is parsed straight into `T` and cached per closed generic type. |
 | `QuantitiesGenerator` | one `*.g.cs` file per emitted type | Vector0/V1/V2/V3/V4 bases, semantic overloads, factories, operators, magnitude extraction, dot/cross products. |
 | `LogarithmicScalesGenerator` | one `*.g.cs` file per logarithmic scale | Decibel levels, pitch intervals, and pH from `logarithmic.json`: standalone `readonly partial record struct`s with linear-quantity conversions, log-space arithmetic, and comparisons. |
@@ -161,6 +161,35 @@ go in a hand-written `partial` next to the generated core (see
 SEM005 flags missing or duplicate scale names and conversions with no linear
 type.
 
+## Conversion factor values
+
+Each factor in `conversions.json` has a `value` in one of two forms:
+
+| Form | Example | Use it for |
+|---|---|---|
+| Decimal literal | `"0.3048"`, `"1e-10"`, `"745.69987158227022"` | A factor with a terminating decimal definition, or a long literal for one built on π. |
+| Fraction of two decimal literals | `"5/9"`, `"20265/152"` | A repeating ratio. Write the exact fraction rather than its rounded decimal. |
+
+`ConversionsGenerator` emits each factor twice. The `double` constant (`5d / 9d` for a fraction)
+backs the public `IUnit.ToBaseFactor` and `ToBaseOffset` properties. The `Values<T>` holder calls
+`StorageLiteral.Parse<T>` or `StorageLiteral.Divide<T>` once per closed generic type, and the
+generated factories and `In(unit)` read that. So each storage type gets the factor at its own
+precision: `double` gets the correctly rounded value, and `decimal` gets 28 significant digits
+where `T.CreateChecked(double)` used to leave it 15. An integer storage type, or one that cannot
+parse the literal, falls back to converting the `double` constant, which is what every type did
+before.
+
+`MagnitudesGenerator` does the same for the SI prefixes, so `1e-2` reaches `decimal` as exactly a
+hundredth.
+
+A fraction is not always the better choice. `PsiToPascals` is written as a 150-digit literal rather
+than `8896443230521/1290320000`, because `float` storage rounds a numerator that large before
+dividing and lands further from the true value than parsing the literal does.
+
+Vector `Length()` and `Distance()` take their root through `StorageMath.Sqrt`. The binary floating
+point and integer primitives keep the `Math.Sqrt` round trip they always had. Other types refine
+that root with Newton steps in their own arithmetic.
+
 ## Validation, diagnostics, and gotchas
 
 - Unknown dimension references in `integrals` / `derivatives` / `dotProducts` / `crossProducts` report **SEM001** and the operator is dropped.
@@ -176,6 +205,7 @@ type.
   | SEM006 | A metadata file a generator declared that was not supplied as an `AdditionalFile`. |
   | SEM007 | A metadata file that could not be parsed. |
   | SEM008 | A relationship whose declared result does not follow from the dimensions of its operands, or whose signed value cannot land in a magnitude result. No operator is generated for it. |
+  | SEM009 | A `conversions.json` factor whose `value` is neither a decimal literal nor a fraction of two with a non-zero denominator. An error, and no constant is generated for it. |
 
   Adding one means adding it to `SemanticsDiagnostics` and to `AnalyzerReleases.Unshipped.md`; `AnalyzerReleaseTrackingTests` fails if the second step is forgotten. `GeneratorDiagnosticTests` proves each one still fires on the input it is meant to catch.
 - `availableUnits` order matters: the first entry is treated as the SI base unit by `UnitsGenerator`.

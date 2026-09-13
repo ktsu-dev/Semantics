@@ -166,9 +166,10 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 		}
 
 		string factorExpr = BuildToBaseFactorExpression(unit);
-		string offsetExpr = string.IsNullOrEmpty(unit.Offset) || unit.Offset == "0"
-			? "0d"
-			: unit.Offset;
+		bool hasOffset = !string.IsNullOrEmpty(unit.Offset) && unit.Offset != "0";
+		string offsetExpr = hasOffset ? unit.Offset : "0d";
+		string storageFactorExpr = BuildStorageFactorExpression(unit);
+		string storageOffsetExpr = hasOffset ? $"ConversionConstants.Values<T>.{unit.Offset}" : "T.Zero";
 		string dimensionExpr = ReportedDimension(dims, withoutExponents) is string reported
 			? $"PhysicalDimensions.{reported}"
 			: "null!";
@@ -227,6 +228,22 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 					Comments = {"/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>"},
 					Keywords = {Emit.Public, "double"},
 					Name = $"ToBaseOffset => {offsetExpr}",
+				},
+				// Explicit, so the unit's own surface is unchanged: these exist for IUnit.ToBase and
+				// FromBase to read, and they give each storage type the factor at its own precision.
+				new MethodTemplate()
+				{
+					Comments = {"/// <inheritdoc/>"},
+					Keywords = {"T"},
+					Name = "IUnit.ToBaseFactorAs<T>",
+					BodyFactory = (body) => body.Write($"=> {storageFactorExpr};"),
+				},
+				new MethodTemplate()
+				{
+					Comments = {"/// <inheritdoc/>"},
+					Keywords = {"T"},
+					Name = "IUnit.ToBaseOffsetAs<T>",
+					BodyFactory = (body) => body.Write($"=> {storageOffsetExpr};"),
 				},
 			},
 		}.WithInterfaces(interfaces);
@@ -292,5 +309,37 @@ public class UnitsGenerator : SemanticsMultiFileGenerator
 		}
 
 		return "1d";
+	}
+
+	/// <summary>
+	/// Builds the expression for the unit's to-base multiplication factor in the storage type <c>T</c>,
+	/// folding magnitude and conversion factor the same way <see cref="BuildToBaseFactorExpression"/> does.
+	/// </summary>
+	/// <remarks>
+	/// Reads the <c>Values&lt;T&gt;</c> holders, which parse each metadata literal into the storage
+	/// type once, so a <see cref="decimal"/> conversion is not limited by the <see cref="double"/>
+	/// constant the public <c>ToBaseFactor</c> property returns.
+	/// </remarks>
+	private static string BuildStorageFactorExpression(UnitDefinition unit)
+	{
+		bool hasMagnitude = !string.IsNullOrEmpty(unit.Magnitude) && unit.Magnitude != "1";
+		bool hasFactor = !string.IsNullOrEmpty(unit.ConversionFactor) && unit.ConversionFactor != "1";
+
+		if (hasMagnitude && hasFactor)
+		{
+			return $"MetricMagnitudes.Values<T>.{unit.Magnitude} * ConversionConstants.Values<T>.{unit.ConversionFactor}";
+		}
+
+		if (hasMagnitude)
+		{
+			return $"MetricMagnitudes.Values<T>.{unit.Magnitude}";
+		}
+
+		if (hasFactor)
+		{
+			return $"ConversionConstants.Values<T>.{unit.ConversionFactor}";
+		}
+
+		return "T.One";
 	}
 }

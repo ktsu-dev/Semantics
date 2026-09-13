@@ -107,7 +107,7 @@ public readonly partial record struct NuclearCrossSection<T> : IVector0<NuclearC
 	/// <param name="value">The value in Barn.</param>
 	/// <returns>A new <see cref="NuclearCrossSection{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static NuclearCrossSection<T> FromBarn(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarnToSquareMeters)), nameof(value)));
+	public static NuclearCrossSection<T> FromBarn(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.BarnToSquareMeters), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

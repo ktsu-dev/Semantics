@@ -107,7 +107,7 @@ public readonly partial record struct AccelerationMagnitude<T> : IVector0<Accele
 	/// <param name="value">The value in StandardGravity.</param>
 	/// <returns>A new <see cref="AccelerationMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AccelerationMagnitude<T> FromStandardGravity(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.StandardGravityToMeterPerSecondSquared)), nameof(value)));
+	public static AccelerationMagnitude<T> FromStandardGravity(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.StandardGravityToMeterPerSecondSquared), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

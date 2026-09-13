@@ -64,6 +64,7 @@ public sealed class QuantityValueTypeTests
 		Assert.AreEqual(0L, MeasureAllocation(() => (a * 2.0).Value), "scaling allocated");
 		Assert.AreEqual(0L, MeasureAllocation(() => Length<double>.FromMeter(3.0).Value), "a base-unit factory allocated");
 		Assert.AreEqual(0L, MeasureAllocation(() => Length<double>.FromFoot(3.0).Value), "a converting factory allocated");
+		Assert.AreEqual(0L, MeasureAllocation(() => Length<double>.FromMeter(3.0).In(ktsu.Semantics.Quantities.Units.Units.Foot)), "converting to a unit allocated");
 		Assert.AreEqual(0L, MeasureAllocation(() => (a / t).Value), "a cross-dimensional operator allocated");
 	}
 

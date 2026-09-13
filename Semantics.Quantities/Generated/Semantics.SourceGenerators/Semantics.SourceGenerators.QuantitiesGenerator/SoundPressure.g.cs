@@ -108,7 +108,7 @@ public readonly partial record struct SoundPressure<T> : IVector0<SoundPressure<
 	/// <param name="value">The value in Kilopascal.</param>
 	/// <returns>A new SoundPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPressure<T> FromKilopascal(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static SoundPressure<T> FromKilopascal(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Creates a new SoundPressure from a value in Bar.
@@ -116,7 +116,7 @@ public readonly partial record struct SoundPressure<T> : IVector0<SoundPressure<
 	/// <param name="value">The value in Bar.</param>
 	/// <returns>A new SoundPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPressure<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
+	public static SoundPressure<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.BarToPascals), nameof(value)));
 
 	/// <summary>
 	/// Creates a new SoundPressure from a value in Atmosphere.
@@ -124,7 +124,7 @@ public readonly partial record struct SoundPressure<T> : IVector0<SoundPressure<
 	/// <param name="value">The value in Atmosphere.</param>
 	/// <returns>A new SoundPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPressure<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
+	public static SoundPressure<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.AtmosphereToPascals), nameof(value)));
 
 	/// <summary>
 	/// Creates a new SoundPressure from a value in Psi.
@@ -132,7 +132,7 @@ public readonly partial record struct SoundPressure<T> : IVector0<SoundPressure<
 	/// <param name="value">The value in Psi.</param>
 	/// <returns>A new SoundPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPressure<T> FromPsi(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PsiToPascals)), nameof(value)));
+	public static SoundPressure<T> FromPsi(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PsiToPascals), nameof(value)));
 
 	/// <summary>
 	/// Creates a new SoundPressure from a value in Torr.
@@ -140,7 +140,7 @@ public readonly partial record struct SoundPressure<T> : IVector0<SoundPressure<
 	/// <param name="value">The value in Torr.</param>
 	/// <returns>A new SoundPressure instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPressure<T> FromTorr(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.TorrToPascals)), nameof(value)));
+	public static SoundPressure<T> FromTorr(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.TorrToPascals), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

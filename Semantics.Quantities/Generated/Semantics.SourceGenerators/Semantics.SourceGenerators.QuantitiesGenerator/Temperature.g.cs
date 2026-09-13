@@ -107,7 +107,7 @@ public readonly partial record struct Temperature<T> : IVector0<Temperature<T>, 
 	/// <param name="value">The value in Celsius.</param>
 	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Temperature<T> FromCelsius(T value) => Create(Vector0Guards.EnsureNonNegative((value + T.CreateChecked(Units.ConversionConstants.CelsiusToKelvinOffset)), nameof(value)));
+	public static Temperature<T> FromCelsius(T value) => Create(Vector0Guards.EnsureNonNegative((value + Units.ConversionConstants.Values<T>.CelsiusToKelvinOffset), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Temperature{T}"/> from a value in Fahrenheit.
@@ -115,7 +115,7 @@ public readonly partial record struct Temperature<T> : IVector0<Temperature<T>, 
 	/// <param name="value">The value in Fahrenheit.</param>
 	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Temperature<T> FromFahrenheit(T value) => Create(Vector0Guards.EnsureNonNegative(((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)) + T.CreateChecked(Units.ConversionConstants.FahrenheitToKelvinOffset)), nameof(value)));
+	public static Temperature<T> FromFahrenheit(T value) => Create(Vector0Guards.EnsureNonNegative(((value * Units.ConversionConstants.Values<T>.FahrenheitScale) + Units.ConversionConstants.Values<T>.FahrenheitToKelvinOffset), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Temperature{T}"/> from a value in Rankine.
@@ -123,7 +123,7 @@ public readonly partial record struct Temperature<T> : IVector0<Temperature<T>, 
 	/// <param name="value">The value in Rankine.</param>
 	/// <returns>A new <see cref="Temperature{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Temperature<T> FromRankine(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FahrenheitScale)), nameof(value)));
+	public static Temperature<T> FromRankine(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.FahrenheitScale), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

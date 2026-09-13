@@ -108,7 +108,7 @@ public readonly partial record struct EMF<T> : IVector0<EMF<T>, T>, IPhysicalQua
 	/// <param name="value">The value in Kilovolt.</param>
 	/// <returns>A new EMF instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static EMF<T> FromKilovolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static EMF<T> FromKilovolt(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

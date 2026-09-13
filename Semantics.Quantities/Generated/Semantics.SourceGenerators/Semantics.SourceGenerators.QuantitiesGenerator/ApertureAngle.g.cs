@@ -108,7 +108,7 @@ public readonly partial record struct ApertureAngle<T> : IVector0<ApertureAngle<
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new ApertureAngle instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ApertureAngle<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
+	public static ApertureAngle<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.DegreeToRadians), nameof(value)));
 
 	/// <summary>
 	/// Creates a new ApertureAngle from a value in Gradian.
@@ -116,7 +116,7 @@ public readonly partial record struct ApertureAngle<T> : IVector0<ApertureAngle<
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new ApertureAngle instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ApertureAngle<T> FromGradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
+	public static ApertureAngle<T> FromGradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.GradianToRadians), nameof(value)));
 
 	/// <summary>
 	/// Creates a new ApertureAngle from a value in Revolution.
@@ -124,7 +124,7 @@ public readonly partial record struct ApertureAngle<T> : IVector0<ApertureAngle<
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new ApertureAngle instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ApertureAngle<T> FromRevolution(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
+	public static ApertureAngle<T> FromRevolution(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.RevolutionToRadians), nameof(value)));
 
 	/// <summary>
 	/// Creates a new ApertureAngle from a value in Milliradian.
@@ -132,7 +132,7 @@ public readonly partial record struct ApertureAngle<T> : IVector0<ApertureAngle<
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new ApertureAngle instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ApertureAngle<T> FromMilliradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static ApertureAngle<T> FromMilliradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Milli), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

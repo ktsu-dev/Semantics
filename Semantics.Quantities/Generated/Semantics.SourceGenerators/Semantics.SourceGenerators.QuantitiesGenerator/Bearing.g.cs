@@ -110,28 +110,28 @@ public readonly partial record struct Bearing<T> : IVector1<Bearing<T>, T>, IPhy
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new Bearing instance.</returns>
-	public static Bearing<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static Bearing<T> FromDegree(T value) => Create((value * Units.ConversionConstants.Values<T>.DegreeToRadians));
 
 	/// <summary>
 	/// Creates a new Bearing from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new Bearing instance.</returns>
-	public static Bearing<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
+	public static Bearing<T> FromGradian(T value) => Create((value * Units.ConversionConstants.Values<T>.GradianToRadians));
 
 	/// <summary>
 	/// Creates a new Bearing from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new Bearing instance.</returns>
-	public static Bearing<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
+	public static Bearing<T> FromRevolution(T value) => Create((value * Units.ConversionConstants.Values<T>.RevolutionToRadians));
 
 	/// <summary>
 	/// Creates a new Bearing from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new Bearing instance.</returns>
-	public static Bearing<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+	public static Bearing<T> FromMilliradian(T value) => Create((value * MetricMagnitudes.Values<T>.Milli));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

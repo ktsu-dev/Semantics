@@ -108,7 +108,7 @@ public readonly partial record struct ActivationEnergy<T> : IVector0<ActivationE
 	/// <param name="value">The value in KilojoulePerMole.</param>
 	/// <returns>A new ActivationEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ActivationEnergy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilojoulePerMoleToJoulePerMole)), nameof(value)));
+	public static ActivationEnergy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.KilojoulePerMoleToJoulePerMole), nameof(value)));
 
 	/// <summary>
 	/// Creates a new ActivationEnergy from a value in CaloriePerMole.
@@ -116,7 +116,7 @@ public readonly partial record struct ActivationEnergy<T> : IVector0<ActivationE
 	/// <param name="value">The value in CaloriePerMole.</param>
 	/// <returns>A new ActivationEnergy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ActivationEnergy<T> FromCaloriePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CaloriePerMoleToJoulePerMole)), nameof(value)));
+	public static ActivationEnergy<T> FromCaloriePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.CaloriePerMoleToJoulePerMole), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

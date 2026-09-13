@@ -107,7 +107,7 @@ public readonly partial record struct Concentration<T> : IVector0<Concentration<
 	/// <param name="value">The value in Molar.</param>
 	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Concentration<T> FromMolar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MolarToCubicMeter)), nameof(value)));
+	public static Concentration<T> FromMolar(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.MolarToCubicMeter), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Concentration{T}"/> from a value in Millimolar.
@@ -115,7 +115,7 @@ public readonly partial record struct Concentration<T> : IVector0<Concentration<
 	/// <param name="value">The value in Millimolar.</param>
 	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Concentration<T> FromMillimolar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MillimolarToMolePerCubicMeter)), nameof(value)));
+	public static Concentration<T> FromMillimolar(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.MillimolarToMolePerCubicMeter), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Concentration{T}"/> from a value in Micromolar.
@@ -123,7 +123,7 @@ public readonly partial record struct Concentration<T> : IVector0<Concentration<
 	/// <param name="value">The value in Micromolar.</param>
 	/// <returns>A new <see cref="Concentration{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Concentration<T> FromMicromolar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MicromolarToMolePerCubicMeter)), nameof(value)));
+	public static Concentration<T> FromMicromolar(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.MicromolarToMolePerCubicMeter), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

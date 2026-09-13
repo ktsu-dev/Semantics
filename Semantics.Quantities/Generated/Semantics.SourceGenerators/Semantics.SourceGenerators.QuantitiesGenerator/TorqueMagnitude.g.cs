@@ -107,7 +107,7 @@ public readonly partial record struct TorqueMagnitude<T> : IVector0<TorqueMagnit
 	/// <param name="value">The value in PoundFoot.</param>
 	/// <returns>A new <see cref="TorqueMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static TorqueMagnitude<T> FromPoundFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundFootToNewtonMeters)), nameof(value)));
+	public static TorqueMagnitude<T> FromPoundFoot(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PoundFootToNewtonMeters), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

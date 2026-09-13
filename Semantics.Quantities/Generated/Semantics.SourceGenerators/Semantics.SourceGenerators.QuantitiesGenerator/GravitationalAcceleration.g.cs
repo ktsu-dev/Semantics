@@ -108,7 +108,7 @@ public readonly partial record struct GravitationalAcceleration<T> : IVector0<Gr
 	/// <param name="value">The value in StandardGravity.</param>
 	/// <returns>A new GravitationalAcceleration instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static GravitationalAcceleration<T> FromStandardGravity(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.StandardGravityToMeterPerSecondSquared)), nameof(value)));
+	public static GravitationalAcceleration<T> FromStandardGravity(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.StandardGravityToMeterPerSecondSquared), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

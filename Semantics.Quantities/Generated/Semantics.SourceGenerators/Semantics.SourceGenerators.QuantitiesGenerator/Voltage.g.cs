@@ -109,7 +109,7 @@ public readonly partial record struct Voltage<T> : IVector1<Voltage<T>, T>, IPhy
 	/// </summary>
 	/// <param name="value">The value in Kilovolt.</param>
 	/// <returns>A new <see cref="Voltage{T}"/> instance.</returns>
-	public static Voltage<T> FromKilovolt(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
+	public static Voltage<T> FromKilovolt(T value) => Create((value * MetricMagnitudes.Values<T>.Kilo));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
