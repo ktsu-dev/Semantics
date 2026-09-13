@@ -36,7 +36,6 @@ public readonly partial record struct Cents<T>(T Value) : IComparable<Cents<T>>
 	/// <returns>A new <see cref="Cents{T}"/>. A linear value of zero maps to negative infinity.</returns>
 	public static Cents<T> FromFrequencyRatio(Ratio<T> linear)
 	{
-		ArgumentNullException.ThrowIfNull(linear);
 		double linearValue = double.CreateChecked(linear.Value);
 		return new(T.CreateChecked(1200.0 * Math.Log2(linearValue)));
 	}

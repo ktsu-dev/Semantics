@@ -36,7 +36,6 @@ public readonly partial record struct PH<T>(T Value) : IComparable<PH<T>>
 	/// <returns>A new <see cref="PH{T}"/>. A linear value of zero maps to negative infinity.</returns>
 	public static PH<T> FromHydrogenConcentration(Concentration<T> linear)
 	{
-		ArgumentNullException.ThrowIfNull(linear);
 		double linearValue = double.CreateChecked(linear.Value);
 		double reference = 1000.0;
 		return new(T.CreateChecked(-1.0 * Math.Log10(linearValue / reference)));

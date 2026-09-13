@@ -36,7 +36,6 @@ public readonly partial record struct Semitones<T>(T Value) : IComparable<Semito
 	/// <returns>A new <see cref="Semitones{T}"/>. A linear value of zero maps to negative infinity.</returns>
 	public static Semitones<T> FromFrequencyRatio(Ratio<T> linear)
 	{
-		ArgumentNullException.ThrowIfNull(linear);
 		double linearValue = double.CreateChecked(linear.Value);
 		return new(T.CreateChecked(12.0 * Math.Log2(linearValue)));
 	}

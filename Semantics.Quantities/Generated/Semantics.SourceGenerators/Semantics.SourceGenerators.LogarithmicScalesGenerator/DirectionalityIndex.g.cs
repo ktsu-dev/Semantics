@@ -36,7 +36,6 @@ public readonly partial record struct DirectionalityIndex<T>(T Value) : ICompara
 	/// <returns>A new <see cref="DirectionalityIndex{T}"/>. A linear value of zero maps to negative infinity.</returns>
 	public static DirectionalityIndex<T> FromIntensityRatio(Ratio<T> linear)
 	{
-		ArgumentNullException.ThrowIfNull(linear);
 		double linearValue = double.CreateChecked(linear.Value);
 		return new(T.CreateChecked(10.0 * Math.Log10(linearValue)));
 	}

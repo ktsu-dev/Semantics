@@ -36,7 +36,6 @@ public readonly partial record struct SoundIntensityLevel<T>(T Value) : ICompara
 	/// <returns>A new <see cref="SoundIntensityLevel{T}"/>. A linear value of zero maps to negative infinity.</returns>
 	public static SoundIntensityLevel<T> FromSoundIntensity(SoundIntensity<T> linear)
 	{
-		ArgumentNullException.ThrowIfNull(linear);
 		double linearValue = double.CreateChecked(linear.Value);
 		double reference = PhysicalConstants.Generic.ReferenceSoundIntensity<double>();
 		return new(T.CreateChecked(10.0 * Math.Log10(linearValue / reference)));
