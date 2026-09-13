@@ -107,7 +107,7 @@ public readonly partial record struct ChargeMagnitude<T> : IVector0<ChargeMagnit
 	/// <param name="value">The value in AmpereHour.</param>
 	/// <returns>A new <see cref="ChargeMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ChargeMagnitude<T> FromAmpereHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AmpereHourToCoulombs)), nameof(value)));
+	public static ChargeMagnitude<T> FromAmpereHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.AmpereHourToCoulombs), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

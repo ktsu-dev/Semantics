@@ -109,7 +109,7 @@ public readonly partial record struct AngularVelocity1D<T> : IVector1<AngularVel
 	/// </summary>
 	/// <param name="value">The value in RevolutionPerMinute.</param>
 	/// <returns>A new <see cref="AngularVelocity1D{T}"/> instance.</returns>
-	public static AngularVelocity1D<T> FromRevolutionPerMinute(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionPerMinuteToRadianPerSecond)));
+	public static AngularVelocity1D<T> FromRevolutionPerMinute(T value) => Create((value * Units.ConversionConstants.Values<T>.RevolutionPerMinuteToRadianPerSecond));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

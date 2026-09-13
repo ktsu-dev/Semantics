@@ -107,7 +107,7 @@ public readonly partial record struct Illuminance<T> : IVector0<Illuminance<T>, 
 	/// <param name="value">The value in FootCandle.</param>
 	/// <returns>A new <see cref="Illuminance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Illuminance<T> FromFootCandle(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FootCandleToLux)), nameof(value)));
+	public static Illuminance<T> FromFootCandle(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.FootCandleToLux), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

@@ -107,7 +107,7 @@ public readonly partial record struct AmountOfSubstance<T> : IVector0<AmountOfSu
 	/// <param name="value">The value in Kilomole.</param>
 	/// <returns>A new <see cref="AmountOfSubstance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AmountOfSubstance<T> FromKilomole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static AmountOfSubstance<T> FromKilomole(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="AmountOfSubstance{T}"/> from a value in Millimole.
@@ -115,7 +115,7 @@ public readonly partial record struct AmountOfSubstance<T> : IVector0<AmountOfSu
 	/// <param name="value">The value in Millimole.</param>
 	/// <returns>A new <see cref="AmountOfSubstance{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AmountOfSubstance<T> FromMillimole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static AmountOfSubstance<T> FromMillimole(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Milli), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

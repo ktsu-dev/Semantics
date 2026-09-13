@@ -107,7 +107,7 @@ public readonly partial record struct AbsorbedDose<T> : IVector0<AbsorbedDose<T>
 	/// <param name="value">The value in Rad.</param>
 	/// <returns>A new <see cref="AbsorbedDose{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static AbsorbedDose<T> FromRad(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RadToGrays)), nameof(value)));
+	public static AbsorbedDose<T> FromRad(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.RadToGrays), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

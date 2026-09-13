@@ -108,7 +108,7 @@ public readonly partial record struct PhaseVelocity<T> : IVector0<PhaseVelocity<
 	/// <param name="value">The value in KilometerPerHour.</param>
 	/// <returns>A new PhaseVelocity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static PhaseVelocity<T> FromKilometerPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilometerPerHourToMeterPerSecond)), nameof(value)));
+	public static PhaseVelocity<T> FromKilometerPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.KilometerPerHourToMeterPerSecond), nameof(value)));
 
 	/// <summary>
 	/// Creates a new PhaseVelocity from a value in MilePerHour.
@@ -116,7 +116,7 @@ public readonly partial record struct PhaseVelocity<T> : IVector0<PhaseVelocity<
 	/// <param name="value">The value in MilePerHour.</param>
 	/// <returns>A new PhaseVelocity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static PhaseVelocity<T> FromMilePerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilePerHourToMeterPerSecond)), nameof(value)));
+	public static PhaseVelocity<T> FromMilePerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.MilePerHourToMeterPerSecond), nameof(value)));
 
 	/// <summary>
 	/// Creates a new PhaseVelocity from a value in FootPerSecond.
@@ -124,7 +124,7 @@ public readonly partial record struct PhaseVelocity<T> : IVector0<PhaseVelocity<
 	/// <param name="value">The value in FootPerSecond.</param>
 	/// <returns>A new PhaseVelocity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static PhaseVelocity<T> FromFootPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FootPerSecondToMeterPerSecond)), nameof(value)));
+	public static PhaseVelocity<T> FromFootPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.FootPerSecondToMeterPerSecond), nameof(value)));
 
 	/// <summary>
 	/// Creates a new PhaseVelocity from a value in Knot.
@@ -132,7 +132,7 @@ public readonly partial record struct PhaseVelocity<T> : IVector0<PhaseVelocity<
 	/// <param name="value">The value in Knot.</param>
 	/// <returns>A new PhaseVelocity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static PhaseVelocity<T> FromKnot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KnotToMeterPerSecond)), nameof(value)));
+	public static PhaseVelocity<T> FromKnot(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.KnotToMeterPerSecond), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

@@ -53,8 +53,7 @@ public readonly partial record struct Jerk4D<T> : IVector4<Jerk4D<T>, T>
 	public T Length()
 	{
 		T sum = (X * X) + (Y * Y) + (Z * Z) + (W * W);
-		double asDouble = double.CreateChecked(sum);
-		return T.CreateChecked(Math.Sqrt(asDouble));
+		return StorageMath.Sqrt(sum);
 	}
 
 	/// <summary>Calculates the squared length of the vector.</summary>
@@ -71,8 +70,7 @@ public readonly partial record struct Jerk4D<T> : IVector4<Jerk4D<T>, T>
 		T dZ = Z - other.Z;
 		T dW = W - other.W;
 		T sum = (dX * dX) + (dY * dY) + (dZ * dZ) + (dW * dW);
-		double asDouble = double.CreateChecked(sum);
-		return T.CreateChecked(Math.Sqrt(asDouble));
+		return StorageMath.Sqrt(sum);
 	}
 
 	/// <summary>Calculates the squared distance between two vectors.</summary>

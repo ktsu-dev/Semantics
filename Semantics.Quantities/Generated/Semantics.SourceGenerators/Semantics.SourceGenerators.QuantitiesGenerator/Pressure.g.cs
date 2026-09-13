@@ -107,7 +107,7 @@ public readonly partial record struct Pressure<T> : IVector0<Pressure<T>, T>, IP
 	/// <param name="value">The value in Kilopascal.</param>
 	/// <returns>A new <see cref="Pressure{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Pressure<T> FromKilopascal(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static Pressure<T> FromKilopascal(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Pressure{T}"/> from a value in Bar.
@@ -115,7 +115,7 @@ public readonly partial record struct Pressure<T> : IVector0<Pressure<T>, T>, IP
 	/// <param name="value">The value in Bar.</param>
 	/// <returns>A new <see cref="Pressure{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Pressure<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.BarToPascals)), nameof(value)));
+	public static Pressure<T> FromBar(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.BarToPascals), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Pressure{T}"/> from a value in Atmosphere.
@@ -123,7 +123,7 @@ public readonly partial record struct Pressure<T> : IVector0<Pressure<T>, T>, IP
 	/// <param name="value">The value in Atmosphere.</param>
 	/// <returns>A new <see cref="Pressure{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Pressure<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.AtmosphereToPascals)), nameof(value)));
+	public static Pressure<T> FromAtmosphere(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.AtmosphereToPascals), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Pressure{T}"/> from a value in Psi.
@@ -131,7 +131,7 @@ public readonly partial record struct Pressure<T> : IVector0<Pressure<T>, T>, IP
 	/// <param name="value">The value in Psi.</param>
 	/// <returns>A new <see cref="Pressure{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Pressure<T> FromPsi(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PsiToPascals)), nameof(value)));
+	public static Pressure<T> FromPsi(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PsiToPascals), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Pressure{T}"/> from a value in Torr.
@@ -139,7 +139,7 @@ public readonly partial record struct Pressure<T> : IVector0<Pressure<T>, T>, IP
 	/// <param name="value">The value in Torr.</param>
 	/// <returns>A new <see cref="Pressure{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Pressure<T> FromTorr(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.TorrToPascals)), nameof(value)));
+	public static Pressure<T> FromTorr(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.TorrToPascals), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

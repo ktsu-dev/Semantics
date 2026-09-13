@@ -115,7 +115,7 @@ public readonly partial record struct Ratio<T> : IVector0<Ratio<T>, T>, IPhysica
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Ratio<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)), nameof(value)));
+	public static Ratio<T> FromDegree(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.DegreeToRadians), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Ratio{T}"/> from a value in Gradian.
@@ -123,7 +123,7 @@ public readonly partial record struct Ratio<T> : IVector0<Ratio<T>, T>, IPhysica
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Ratio<T> FromGradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)), nameof(value)));
+	public static Ratio<T> FromGradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.GradianToRadians), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Ratio{T}"/> from a value in Revolution.
@@ -131,7 +131,7 @@ public readonly partial record struct Ratio<T> : IVector0<Ratio<T>, T>, IPhysica
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Ratio<T> FromRevolution(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)), nameof(value)));
+	public static Ratio<T> FromRevolution(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.RevolutionToRadians), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Ratio{T}"/> from a value in Milliradian.
@@ -139,7 +139,7 @@ public readonly partial record struct Ratio<T> : IVector0<Ratio<T>, T>, IPhysica
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Ratio<T> FromMilliradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static Ratio<T> FromMilliradian(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Milli), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Ratio{T}"/> from a value in Percent.
@@ -147,7 +147,7 @@ public readonly partial record struct Ratio<T> : IVector0<Ratio<T>, T>, IPhysica
 	/// <param name="value">The value in Percent.</param>
 	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Ratio<T> FromPercent(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)), nameof(value)));
+	public static Ratio<T> FromPercent(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PercentToRatio), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Ratio{T}"/> from a value in PartPerMillion.
@@ -155,7 +155,7 @@ public readonly partial record struct Ratio<T> : IVector0<Ratio<T>, T>, IPhysica
 	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Ratio<T> FromPartPerMillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)), nameof(value)));
+	public static Ratio<T> FromPartPerMillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PartPerMillionToRatio), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Ratio{T}"/> from a value in PartPerBillion.
@@ -163,7 +163,7 @@ public readonly partial record struct Ratio<T> : IVector0<Ratio<T>, T>, IPhysica
 	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Ratio<T> FromPartPerBillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)), nameof(value)));
+	public static Ratio<T> FromPartPerBillion(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PartPerBillionToRatio), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Ratio{T}"/> from a value in PercentByWeight.
@@ -171,7 +171,7 @@ public readonly partial record struct Ratio<T> : IVector0<Ratio<T>, T>, IPhysica
 	/// <param name="value">The value in PercentByWeight.</param>
 	/// <returns>A new <see cref="Ratio{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Ratio<T> FromPercentByWeight(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PercentByWeightToRatio)), nameof(value)));
+	public static Ratio<T> FromPercentByWeight(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PercentByWeightToRatio), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

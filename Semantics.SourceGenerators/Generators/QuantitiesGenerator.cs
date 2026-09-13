@@ -635,6 +635,12 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// base unit. Honours magnitude (<c>Kilo</c>, <c>Centi</c>, …), conversionFactor (lookup in
 	/// <see cref="ConversionConstants"/>), and offset (additive, after scaling).
 	/// </summary>
+	/// <remarks>
+	/// Each factor is read from the <c>Values&lt;T&gt;</c> holder that <see cref="MagnitudesGenerator"/>
+	/// and <see cref="ConversionsGenerator"/> emit, which parses the metadata literal into the storage
+	/// type once. It used to be <c>T.CreateChecked</c> of the <see langword="double"/> constant, which
+	/// capped every storage type at the precision of <see langword="double"/>.
+	/// </remarks>
 	private static string BuildToBaseExpression(string unitName, IReadOnlyDictionary<string, UnitDefinition> unitMap)
 	{
 		// If we don't have unit metadata, fall back to identity. The dimensions.json author is
@@ -652,17 +658,17 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 		if (hasMagnitude)
 		{
-			scaled = $"(value * T.CreateChecked(MetricMagnitudes.{unit.Magnitude}))";
+			scaled = $"(value * MetricMagnitudes.Values<T>.{unit.Magnitude})";
 		}
 		else if (hasFactor)
 		{
-			scaled = $"(value * T.CreateChecked(Units.ConversionConstants.{unit.ConversionFactor}))";
+			scaled = $"(value * Units.ConversionConstants.Values<T>.{unit.ConversionFactor})";
 		}
 
 		bool hasOffset = !string.IsNullOrEmpty(unit.Offset) && unit.Offset != "0";
 		if (hasOffset)
 		{
-			scaled = $"({scaled} + T.CreateChecked(Units.ConversionConstants.{unit.Offset}))";
+			scaled = $"({scaled} + Units.ConversionConstants.Values<T>.{unit.Offset})";
 		}
 
 		return scaled;
@@ -1597,8 +1603,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		using (new Scope(cb))
 		{
 			cb.WriteLine($"T sum = {sumOfSquares};");
-			cb.WriteLine("double asDouble = double.CreateChecked(sum);");
-			cb.WriteLine("return T.CreateChecked(Math.Sqrt(asDouble));");
+			cb.WriteLine("return StorageMath.Sqrt(sum);");
 		}
 
 		cb.NewLine();
@@ -1635,8 +1640,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 			string distSum = string.Join(" + ", components.Select(c => $"(d{c} * d{c})"));
 			cb.WriteLine($"T sum = {distSum};");
-			cb.WriteLine("double asDouble = double.CreateChecked(sum);");
-			cb.WriteLine("return T.CreateChecked(Math.Sqrt(asDouble));");
+			cb.WriteLine("return StorageMath.Sqrt(sum);");
 		}
 
 		cb.NewLine();

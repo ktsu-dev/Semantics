@@ -107,7 +107,7 @@ public readonly partial record struct MagneticFluxDensityMagnitude<T> : IVector0
 	/// <param name="value">The value in Gauss.</param>
 	/// <returns>A new <see cref="MagneticFluxDensityMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MagneticFluxDensityMagnitude<T> FromGauss(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.GaussToTesla)), nameof(value)));
+	public static MagneticFluxDensityMagnitude<T> FromGauss(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.GaussToTesla), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

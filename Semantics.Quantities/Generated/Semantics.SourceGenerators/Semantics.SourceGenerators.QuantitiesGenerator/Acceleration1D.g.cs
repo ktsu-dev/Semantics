@@ -109,7 +109,7 @@ public readonly partial record struct Acceleration1D<T> : IVector1<Acceleration1
 	/// </summary>
 	/// <param name="value">The value in StandardGravity.</param>
 	/// <returns>A new <see cref="Acceleration1D{T}"/> instance.</returns>
-	public static Acceleration1D<T> FromStandardGravity(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.StandardGravityToMeterPerSecondSquared)));
+	public static Acceleration1D<T> FromStandardGravity(T value) => Create((value * Units.ConversionConstants.Values<T>.StandardGravityToMeterPerSecondSquared));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

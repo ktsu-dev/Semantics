@@ -107,7 +107,7 @@ public readonly partial record struct EquivalentDose<T> : IVector0<EquivalentDos
 	/// <param name="value">The value in Rem.</param>
 	/// <returns>A new <see cref="EquivalentDose{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static EquivalentDose<T> FromRem(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.RemToSieverts)), nameof(value)));
+	public static EquivalentDose<T> FromRem(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.RemToSieverts), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

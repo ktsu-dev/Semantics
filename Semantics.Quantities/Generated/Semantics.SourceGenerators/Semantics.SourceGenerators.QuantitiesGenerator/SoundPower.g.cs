@@ -108,7 +108,7 @@ public readonly partial record struct SoundPower<T> : IVector0<SoundPower<T>, T>
 	/// <param name="value">The value in Kilowatt.</param>
 	/// <returns>A new SoundPower instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPower<T> FromKilowatt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static SoundPower<T> FromKilowatt(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Creates a new SoundPower from a value in Megawatt.
@@ -116,7 +116,7 @@ public readonly partial record struct SoundPower<T> : IVector0<SoundPower<T>, T>
 	/// <param name="value">The value in Megawatt.</param>
 	/// <returns>A new SoundPower instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPower<T> FromMegawatt(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
+	public static SoundPower<T> FromMegawatt(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Mega), nameof(value)));
 
 	/// <summary>
 	/// Creates a new SoundPower from a value in Horsepower.
@@ -124,7 +124,7 @@ public readonly partial record struct SoundPower<T> : IVector0<SoundPower<T>, T>
 	/// <param name="value">The value in Horsepower.</param>
 	/// <returns>A new SoundPower instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static SoundPower<T> FromHorsepower(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HorsepowerToWatts)), nameof(value)));
+	public static SoundPower<T> FromHorsepower(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.HorsepowerToWatts), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

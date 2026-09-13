@@ -11,6 +11,9 @@ using System.Collections.Generic;
 /// </summary>
 public static class StorageTypes
 {
+	/// <summary>The decimal storage type.</summary>
+	public static readonly Type DECIMAL = typeof(decimal);
+
 	/// <summary>The double storage type.</summary>
 	public static readonly Type DOUBLE = typeof(double);
 
@@ -18,9 +21,9 @@ public static class StorageTypes
 	public static readonly Type FLOAT = typeof(float);
 
 	/// <summary>Gets all available storage types.</summary>
-	public static readonly IReadOnlyList<Type> All = new List<Type> { DOUBLE, FLOAT };
+	public static readonly IReadOnlyList<Type> All = new List<Type> { DECIMAL, DOUBLE, FLOAT };
 
 	/// <summary>Gets the names of all available storage types.</summary>
-	public static readonly IReadOnlyList<string> Names = new List<string> { "double", "float" };
+	public static readonly IReadOnlyList<string> Names = new List<string> { "decimal", "double", "float" };
 }
 

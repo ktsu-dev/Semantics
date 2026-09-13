@@ -107,7 +107,7 @@ public readonly partial record struct DynamicViscosity<T> : IVector0<DynamicVisc
 	/// <param name="value">The value in Poise.</param>
 	/// <returns>A new <see cref="DynamicViscosity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DynamicViscosity<T> FromPoise(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoiseToPascalSecond)), nameof(value)));
+	public static DynamicViscosity<T> FromPoise(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PoiseToPascalSecond), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="DynamicViscosity{T}"/> from a value in Centipoise.
@@ -115,7 +115,7 @@ public readonly partial record struct DynamicViscosity<T> : IVector0<DynamicVisc
 	/// <param name="value">The value in Centipoise.</param>
 	/// <returns>A new <see cref="DynamicViscosity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static DynamicViscosity<T> FromCentipoise(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CentipoiseToPascalSecond)), nameof(value)));
+	public static DynamicViscosity<T> FromCentipoise(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.CentipoiseToPascalSecond), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

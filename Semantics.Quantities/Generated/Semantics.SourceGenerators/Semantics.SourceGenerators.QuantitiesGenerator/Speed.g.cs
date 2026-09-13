@@ -107,7 +107,7 @@ public readonly partial record struct Speed<T> : IVector0<Speed<T>, T>, IPhysica
 	/// <param name="value">The value in KilometerPerHour.</param>
 	/// <returns>A new <see cref="Speed{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Speed<T> FromKilometerPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilometerPerHourToMeterPerSecond)), nameof(value)));
+	public static Speed<T> FromKilometerPerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.KilometerPerHourToMeterPerSecond), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Speed{T}"/> from a value in MilePerHour.
@@ -115,7 +115,7 @@ public readonly partial record struct Speed<T> : IVector0<Speed<T>, T>, IPhysica
 	/// <param name="value">The value in MilePerHour.</param>
 	/// <returns>A new <see cref="Speed{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Speed<T> FromMilePerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MilePerHourToMeterPerSecond)), nameof(value)));
+	public static Speed<T> FromMilePerHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.MilePerHourToMeterPerSecond), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Speed{T}"/> from a value in FootPerSecond.
@@ -123,7 +123,7 @@ public readonly partial record struct Speed<T> : IVector0<Speed<T>, T>, IPhysica
 	/// <param name="value">The value in FootPerSecond.</param>
 	/// <returns>A new <see cref="Speed{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Speed<T> FromFootPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.FootPerSecondToMeterPerSecond)), nameof(value)));
+	public static Speed<T> FromFootPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.FootPerSecondToMeterPerSecond), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Speed{T}"/> from a value in Knot.
@@ -131,7 +131,7 @@ public readonly partial record struct Speed<T> : IVector0<Speed<T>, T>, IPhysica
 	/// <param name="value">The value in Knot.</param>
 	/// <returns>A new <see cref="Speed{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Speed<T> FromKnot(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KnotToMeterPerSecond)), nameof(value)));
+	public static Speed<T> FromKnot(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.KnotToMeterPerSecond), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

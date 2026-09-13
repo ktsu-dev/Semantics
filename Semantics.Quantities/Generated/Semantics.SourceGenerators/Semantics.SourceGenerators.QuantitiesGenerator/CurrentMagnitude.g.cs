@@ -107,7 +107,7 @@ public readonly partial record struct CurrentMagnitude<T> : IVector0<CurrentMagn
 	/// <param name="value">The value in Milliampere.</param>
 	/// <returns>A new <see cref="CurrentMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static CurrentMagnitude<T> FromMilliampere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static CurrentMagnitude<T> FromMilliampere(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Milli), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="CurrentMagnitude{T}"/> from a value in Kiloampere.
@@ -115,7 +115,7 @@ public readonly partial record struct CurrentMagnitude<T> : IVector0<CurrentMagn
 	/// <param name="value">The value in Kiloampere.</param>
 	/// <returns>A new <see cref="CurrentMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static CurrentMagnitude<T> FromKiloampere(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static CurrentMagnitude<T> FromKiloampere(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

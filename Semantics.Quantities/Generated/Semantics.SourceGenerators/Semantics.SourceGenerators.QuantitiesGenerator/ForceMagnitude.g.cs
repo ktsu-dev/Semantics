@@ -107,7 +107,7 @@ public readonly partial record struct ForceMagnitude<T> : IVector0<ForceMagnitud
 	/// <param name="value">The value in Kilonewton.</param>
 	/// <returns>A new <see cref="ForceMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ForceMagnitude<T> FromKilonewton(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static ForceMagnitude<T> FromKilonewton(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="ForceMagnitude{T}"/> from a value in Dyne.
@@ -115,7 +115,7 @@ public readonly partial record struct ForceMagnitude<T> : IVector0<ForceMagnitud
 	/// <param name="value">The value in Dyne.</param>
 	/// <returns>A new <see cref="ForceMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ForceMagnitude<T> FromDyne(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DyneToNewtons)), nameof(value)));
+	public static ForceMagnitude<T> FromDyne(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.DyneToNewtons), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="ForceMagnitude{T}"/> from a value in PoundForce.
@@ -123,7 +123,7 @@ public readonly partial record struct ForceMagnitude<T> : IVector0<ForceMagnitud
 	/// <param name="value">The value in PoundForce.</param>
 	/// <returns>A new <see cref="ForceMagnitude{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static ForceMagnitude<T> FromPoundForce(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.PoundForceToNewtons)), nameof(value)));
+	public static ForceMagnitude<T> FromPoundForce(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.PoundForceToNewtons), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

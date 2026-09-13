@@ -109,21 +109,21 @@ public readonly partial record struct Force1D<T> : IVector1<Force1D<T>, T>, IPhy
 	/// </summary>
 	/// <param name="value">The value in Kilonewton.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
-	public static Force1D<T> FromKilonewton(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Kilo)));
+	public static Force1D<T> FromKilonewton(T value) => Create((value * MetricMagnitudes.Values<T>.Kilo));
 
 	/// <summary>
 	/// Creates a new <see cref="Force1D{T}"/> from a value in Dyne.
 	/// </summary>
 	/// <param name="value">The value in Dyne.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
-	public static Force1D<T> FromDyne(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DyneToNewtons)));
+	public static Force1D<T> FromDyne(T value) => Create((value * Units.ConversionConstants.Values<T>.DyneToNewtons));
 
 	/// <summary>
 	/// Creates a new <see cref="Force1D{T}"/> from a value in PoundForce.
 	/// </summary>
 	/// <param name="value">The value in PoundForce.</param>
 	/// <returns>A new <see cref="Force1D{T}"/> instance.</returns>
-	public static Force1D<T> FromPoundForce(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PoundForceToNewtons)));
+	public static Force1D<T> FromPoundForce(T value) => Create((value * Units.ConversionConstants.Values<T>.PoundForceToNewtons));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

@@ -110,28 +110,28 @@ public readonly partial record struct Phase<T> : IVector1<Phase<T>, T>, IPhysica
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new Phase instance.</returns>
-	public static Phase<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static Phase<T> FromDegree(T value) => Create((value * Units.ConversionConstants.Values<T>.DegreeToRadians));
 
 	/// <summary>
 	/// Creates a new Phase from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new Phase instance.</returns>
-	public static Phase<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
+	public static Phase<T> FromGradian(T value) => Create((value * Units.ConversionConstants.Values<T>.GradianToRadians));
 
 	/// <summary>
 	/// Creates a new Phase from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new Phase instance.</returns>
-	public static Phase<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
+	public static Phase<T> FromRevolution(T value) => Create((value * Units.ConversionConstants.Values<T>.RevolutionToRadians));
 
 	/// <summary>
 	/// Creates a new Phase from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new Phase instance.</returns>
-	public static Phase<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+	public static Phase<T> FromMilliradian(T value) => Create((value * MetricMagnitudes.Values<T>.Milli));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

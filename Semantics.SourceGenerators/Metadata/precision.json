@@ -1,6 +1,7 @@
 {
   "storageTypes": [
     "float",
-    "double"
+    "double",
+    "decimal"
   ]
 }

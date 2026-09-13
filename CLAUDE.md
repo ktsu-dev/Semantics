@@ -249,6 +249,37 @@ is mandatory, not incidental: several literals are in exponent form (`6.62607015
 and the `Parse(string, IFormatProvider)` overload resolves to `NumberStyles.Number` for some
 numeric types, which rejects an exponent.
 
+### Conversion factors and square roots at the storage type's precision
+
+Unit conversion factors and metric magnitudes reach a storage type the same way constants do.
+`ConversionsGenerator` and `MagnitudesGenerator` still emit `double` constants, which back the
+public `IUnit.ToBaseFactor` and `ToBaseOffset` properties, and alongside them a `Values<T>` holder
+that calls `StorageLiteral.Parse<T>` or `StorageLiteral.Divide<T>` once per closed generic type. The
+generated `From{Unit}` factories multiply by `Values<T>`, and each generated unit implements
+`IUnit.ToBaseFactorAs<T>()` and `ToBaseOffsetAs<T>()` explicitly from it, which is what
+`ToBase`/`FromBase` and every `In(unit)` read. Before this, every factor went through
+`T.CreateChecked(double)`, so a `decimal` quantity converted with the 15 significant digits that
+conversion keeps.
+
+- A value in `conversions.json` is a decimal literal or an exact fraction of two, `"5/9"`. Write a
+  repeating ratio as the fraction, not as its rounded decimal, and anything built on π as a long
+  literal. SEM009 reports a value that is neither.
+- An integer storage type, or one that cannot parse the literal, falls back to the old
+  `T.CreateChecked(double)`, so `int` quantities convert exactly as they did.
+- `ToBaseFactorAs<T>()` and `ToBaseOffsetAs<T>()` are default-implemented on `IUnit`, so a unit
+  written outside the library needs nothing new. They are not named `Get…`, because CA1721 rejects
+  a `GetToBaseFactor` method next to the `ToBaseFactor` property.
+
+Vector `Length()` and `Distance()` call `StorageMath.Sqrt`. The binary floating point and integer
+primitives take the `Math.Sqrt` round trip the generated code always inlined, so their results are
+unchanged. Any other type is seeded from that root and refined with Newton steps in its own
+arithmetic, so a `decimal` length has 28 significant digits. The logarithmic scales and the
+hand-written audio types still compute through `double`.
+
+`StorageConversionTests<T>` runs the same conversions, relationships and vector lengths over
+`double` and `decimal`, exactly where the answer terminates and to a relative tolerance where it
+does not. Adding a storage type is one derived class.
+
 ### Operators and physics relationships
 
 Cross-dimensional relationships are also declared in `dimensions.json` (`integrals`, `derivatives`, `dotProducts`, `crossProducts`). The generator emits operators like:
@@ -337,6 +368,7 @@ var converted = sourceString.As<SourceType, TargetType>();
   - **SEM006** — a metadata file a generator declared in `MetadataFileNames` was not supplied as an `AdditionalFile`. Previously this produced no output and no explanation, which is indistinguishable from a generator that simply had nothing to emit.
   - **SEM007** — a metadata file could not be parsed. Replaces the base generator's `CONV001` in category `SourceGenerator`, and covers the path that used to swallow the exception, where a malformed `units.json` silently produced factories with no scale factor.
   - **SEM008** — a relationship's declared result does not follow from the dimensions of its operands, or its value is signed and the declared result is a magnitude. The check comes from `Semantics.Vocabulary`, shared with the C++ projection; before that this side checked the names (SEM001) and the forms (SEM003) and then emitted the operator, so `Sensitivity * Pressure -> ElectricPotential` shipped as a working C# operator computing the wrong physics — which is what found that bug, and it is now fixed. **No operator is generated** for a refused relationship, in any of the directions C# spells a product in — that followed from making the vocabulary drive emission rather than only check it, and the removal is documented in `docs/migration-guide-5.0.md`. Suppressed in `Semantics.Quantities.csproj` because ktsu.Sdk builds warnings as errors and the four below are outstanding; `UnkeepableRelationshipTests` pins the set, and asserts that none of them is in the compiled surface, so a fifth fails there rather than disappearing into the suppression.
+  - **SEM009**: a factor's `value` in `conversions.json` is neither a decimal literal nor a fraction of two with a non-zero denominator. An error, and no constant is generated for it, because every unit using the factor would otherwise fail to compile far from the metadata line that caused it.
   - Descriptors are allocated from `SemanticsDiagnostics`, which is the one place to add a new one. `AnalyzerReleaseTrackingTests` fails if the identifier is missing from `AnalyzerReleases.Unshipped.md`, so RS2008 no longer surfaces only after a push.
 - See `docs/physics-generator.md` for the full schema and an end-to-end "add a dimension" walk-through.
 

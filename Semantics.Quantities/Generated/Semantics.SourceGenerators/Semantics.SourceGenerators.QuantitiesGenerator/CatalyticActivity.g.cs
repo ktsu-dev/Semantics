@@ -107,7 +107,7 @@ public readonly partial record struct CatalyticActivity<T> : IVector0<CatalyticA
 	/// <param name="value">The value in EnzymeUnit.</param>
 	/// <returns>A new <see cref="CatalyticActivity{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static CatalyticActivity<T> FromEnzymeUnit(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.EnzymeUnitToKatals)), nameof(value)));
+	public static CatalyticActivity<T> FromEnzymeUnit(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.EnzymeUnitToKatals), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

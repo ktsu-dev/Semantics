@@ -393,6 +393,100 @@ public class GeneratorDiagnosticTests
 	}
 
 	/// <summary>
+	/// A conversions document with one factor whose value the test chooses.
+	/// </summary>
+	/// <param name="value">The factor's value, exactly as it would be written in the file.</param>
+	/// <returns>The document.</returns>
+	private static string ConversionsDocument(string value) =>
+		$$"""
+		{
+		  "conversions": [
+		    {
+		      "category": "Test",
+		      "description": "A category.",
+		      "factors": [ { "name": "Factor", "description": "A factor.", "value": "{{value}}" } ]
+		    }
+		  ]
+		}
+		""";
+
+	/// <summary>
+	/// SEM009 fires for a value that is neither a decimal literal nor a fraction of two.
+	/// </summary>
+	/// <param name="value">A malformed value.</param>
+	/// <remarks>
+	/// Each of these would otherwise become a C# constant or a <c>Parse</c> call that fails far from
+	/// the metadata: an empty operand, a zero denominator, a second slash, a trailing space, a name,
+	/// and a trailing decimal point, which C# does not accept as a literal.
+	/// </remarks>
+	[TestMethod]
+	[DataRow("5/")]
+	[DataRow("/9")]
+	[DataRow("1/0")]
+	[DataRow("1/0.0e5")]
+	[DataRow("1/2/3")]
+	[DataRow("0.3048 ")]
+	[DataRow("pi")]
+	[DataRow("1.")]
+	[DataRow("1e")]
+	[DataRow("")]
+	public void Sem009_IsReportedForAConversionValueThatIsNeitherALiteralNorAFraction(string value) =>
+		AssertReports(Run(ConversionsDocument(value), new ConversionsGenerator(), "conversions.json"), "SEM009");
+
+	/// <summary>
+	/// Every shape of value the metadata uses, or is meant to be able to use, passes.
+	/// </summary>
+	/// <param name="value">A well-formed value.</param>
+	[TestMethod]
+	[DataRow("0.3048")]
+	[DataRow("1e-10")]
+	[DataRow("3.7e10")]
+	[DataRow("1000.0")]
+	[DataRow("-273.15")]
+	[DataRow("5/9")]
+	[DataRow("4.4482216152605/0.00064516")]
+	[DataRow("1e-6/60")]
+	public void Sem009_IsNotReportedForAWellFormedConversionValue(string value)
+	{
+		IReadOnlyList<Diagnostic> diagnostics = Run(ConversionsDocument(value), new ConversionsGenerator(), "conversions.json");
+
+		Assert.IsEmpty(diagnostics.Where(static diagnostic => diagnostic.Id == "SEM009"));
+	}
+
+	/// <summary>
+	/// A fraction reaches the double constant as a division of two double literals, and each storage
+	/// type as a division in that type, rather than as a literal rounded before either sees it.
+	/// </summary>
+	[TestMethod]
+	public void AFractionIsDividedInTheStorageTypeRatherThanRoundedFirst()
+	{
+		GeneratorRunResult result = Harness.Run(
+			new ConversionsGenerator(),
+			new Dictionary<string, string> { ["conversions.json"] = ConversionsDocument("5/9") });
+
+		string source = result.GeneratedSources.Single().SourceText.ToString();
+
+		Assert.Contains("internal const double Factor = 5d / 9d;", source);
+		Assert.Contains("StorageLiteral.Divide<T>(\"5\", \"9\", ConversionConstants.Factor)", source);
+	}
+
+	/// <summary>
+	/// A plain literal is written into the double constant exactly as the metadata spells it, and parsed into each storage type.
+	/// </summary>
+	[TestMethod]
+	public void ALiteralIsParsedIntoTheStorageType()
+	{
+		GeneratorRunResult result = Harness.Run(
+			new ConversionsGenerator(),
+			new Dictionary<string, string> { ["conversions.json"] = ConversionsDocument("0.3048") });
+
+		string source = result.GeneratedSources.Single().SourceText.ToString();
+
+		Assert.Contains("internal const double Factor = 0.3048;", source);
+		Assert.Contains("StorageLiteral.Parse<T>(\"0.3048\", ConversionConstants.Factor)", source);
+	}
+
+	/// <summary>
 	/// The real metadata reports nothing except the relationships it is already known to get wrong.
 	/// </summary>
 	/// <remarks>

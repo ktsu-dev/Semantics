@@ -108,7 +108,7 @@ public readonly partial record struct Impedance<T> : IVector0<Impedance<T>, T>, 
 	/// <param name="value">The value in Kilohm.</param>
 	/// <returns>A new Impedance instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Impedance<T> FromKilohm(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Kilo)), nameof(value)));
+	public static Impedance<T> FromKilohm(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Impedance from a value in Megohm.
@@ -116,7 +116,7 @@ public readonly partial record struct Impedance<T> : IVector0<Impedance<T>, T>, 
 	/// <param name="value">The value in Megohm.</param>
 	/// <returns>A new Impedance instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Impedance<T> FromMegohm(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Mega)), nameof(value)));
+	public static Impedance<T> FromMegohm(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Mega), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

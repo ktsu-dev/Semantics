@@ -117,56 +117,56 @@ public readonly partial record struct ReflectionCoefficient<T> : IVector1<Reflec
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static ReflectionCoefficient<T> FromDegree(T value) => Create((value * Units.ConversionConstants.Values<T>.DegreeToRadians));
 
 	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
+	public static ReflectionCoefficient<T> FromGradian(T value) => Create((value * Units.ConversionConstants.Values<T>.GradianToRadians));
 
 	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
+	public static ReflectionCoefficient<T> FromRevolution(T value) => Create((value * Units.ConversionConstants.Values<T>.RevolutionToRadians));
 
 	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+	public static ReflectionCoefficient<T> FromMilliradian(T value) => Create((value * MetricMagnitudes.Values<T>.Milli));
 
 	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in Percent.
 	/// </summary>
 	/// <param name="value">The value in Percent.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromPercent(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentToRatio)));
+	public static ReflectionCoefficient<T> FromPercent(T value) => Create((value * Units.ConversionConstants.Values<T>.PercentToRatio));
 
 	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in PartPerMillion.
 	/// </summary>
 	/// <param name="value">The value in PartPerMillion.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromPartPerMillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartPerMillionToRatio)));
+	public static ReflectionCoefficient<T> FromPartPerMillion(T value) => Create((value * Units.ConversionConstants.Values<T>.PartPerMillionToRatio));
 
 	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in PartPerBillion.
 	/// </summary>
 	/// <param name="value">The value in PartPerBillion.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromPartPerBillion(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PartPerBillionToRatio)));
+	public static ReflectionCoefficient<T> FromPartPerBillion(T value) => Create((value * Units.ConversionConstants.Values<T>.PartPerBillionToRatio));
 
 	/// <summary>
 	/// Creates a new ReflectionCoefficient from a value in PercentByWeight.
 	/// </summary>
 	/// <param name="value">The value in PercentByWeight.</param>
 	/// <returns>A new ReflectionCoefficient instance.</returns>
-	public static ReflectionCoefficient<T> FromPercentByWeight(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.PercentByWeightToRatio)));
+	public static ReflectionCoefficient<T> FromPercentByWeight(T value) => Create((value * Units.ConversionConstants.Values<T>.PercentByWeightToRatio));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

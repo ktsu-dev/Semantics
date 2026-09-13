@@ -109,28 +109,28 @@ public readonly partial record struct Velocity1D<T> : IVector1<Velocity1D<T>, T>
 	/// </summary>
 	/// <param name="value">The value in KilometerPerHour.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
-	public static Velocity1D<T> FromKilometerPerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.KilometerPerHourToMeterPerSecond)));
+	public static Velocity1D<T> FromKilometerPerHour(T value) => Create((value * Units.ConversionConstants.Values<T>.KilometerPerHourToMeterPerSecond));
 
 	/// <summary>
 	/// Creates a new <see cref="Velocity1D{T}"/> from a value in MilePerHour.
 	/// </summary>
 	/// <param name="value">The value in MilePerHour.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
-	public static Velocity1D<T> FromMilePerHour(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.MilePerHourToMeterPerSecond)));
+	public static Velocity1D<T> FromMilePerHour(T value) => Create((value * Units.ConversionConstants.Values<T>.MilePerHourToMeterPerSecond));
 
 	/// <summary>
 	/// Creates a new <see cref="Velocity1D{T}"/> from a value in FootPerSecond.
 	/// </summary>
 	/// <param name="value">The value in FootPerSecond.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
-	public static Velocity1D<T> FromFootPerSecond(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.FootPerSecondToMeterPerSecond)));
+	public static Velocity1D<T> FromFootPerSecond(T value) => Create((value * Units.ConversionConstants.Values<T>.FootPerSecondToMeterPerSecond));
 
 	/// <summary>
 	/// Creates a new <see cref="Velocity1D{T}"/> from a value in Knot.
 	/// </summary>
 	/// <param name="value">The value in Knot.</param>
 	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
-	public static Velocity1D<T> FromKnot(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.KnotToMeterPerSecond)));
+	public static Velocity1D<T> FromKnot(T value) => Create((value * Units.ConversionConstants.Values<T>.KnotToMeterPerSecond));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

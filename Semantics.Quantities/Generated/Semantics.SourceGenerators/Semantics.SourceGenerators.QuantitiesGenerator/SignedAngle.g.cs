@@ -109,28 +109,28 @@ public readonly partial record struct SignedAngle<T> : IVector1<SignedAngle<T>, 
 	/// </summary>
 	/// <param name="value">The value in Degree.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromDegree(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.DegreeToRadians)));
+	public static SignedAngle<T> FromDegree(T value) => Create((value * Units.ConversionConstants.Values<T>.DegreeToRadians));
 
 	/// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Gradian.
 	/// </summary>
 	/// <param name="value">The value in Gradian.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromGradian(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.GradianToRadians)));
+	public static SignedAngle<T> FromGradian(T value) => Create((value * Units.ConversionConstants.Values<T>.GradianToRadians));
 
 	/// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Revolution.
 	/// </summary>
 	/// <param name="value">The value in Revolution.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromRevolution(T value) => Create((value * T.CreateChecked(Units.ConversionConstants.RevolutionToRadians)));
+	public static SignedAngle<T> FromRevolution(T value) => Create((value * Units.ConversionConstants.Values<T>.RevolutionToRadians));
 
 	/// <summary>
 	/// Creates a new <see cref="SignedAngle{T}"/> from a value in Milliradian.
 	/// </summary>
 	/// <param name="value">The value in Milliradian.</param>
 	/// <returns>A new <see cref="SignedAngle{T}"/> instance.</returns>
-	public static SignedAngle<T> FromMilliradian(T value) => Create((value * T.CreateChecked(MetricMagnitudes.Milli)));
+	public static SignedAngle<T> FromMilliradian(T value) => Create((value * MetricMagnitudes.Values<T>.Milli));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

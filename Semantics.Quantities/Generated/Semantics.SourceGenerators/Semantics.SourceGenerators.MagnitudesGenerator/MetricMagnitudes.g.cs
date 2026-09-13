@@ -3,6 +3,8 @@
 
 namespace ktsu.Semantics.Quantities;
 
+using System.Numerics;
+
 /// <summary>
 /// Metric magnitude constants for unit scaling.
 /// </summary>
@@ -70,5 +72,75 @@ public static class MetricMagnitudes
 
 	/// <summary>Yocto magnitude (y): 10^-24</summary>
 	public const double Yocto = 1e-24;
+
+	/// <summary>
+	/// Caches each magnitude materialised into <typeparamref name="T"/> at that type's own precision.
+	/// </summary>
+	internal static class Values<T>
+		where T : struct, INumber<T>
+	{
+		/// <summary>Yotta magnitude (Y): 10^24</summary>
+		internal static readonly T Yotta = StorageLiteral.Parse<T>("1e24", MetricMagnitudes.Yotta);
+
+		/// <summary>Zetta magnitude (Z): 10^21</summary>
+		internal static readonly T Zetta = StorageLiteral.Parse<T>("1e21", MetricMagnitudes.Zetta);
+
+		/// <summary>Exa magnitude (E): 10^18</summary>
+		internal static readonly T Exa = StorageLiteral.Parse<T>("1e18", MetricMagnitudes.Exa);
+
+		/// <summary>Peta magnitude (P): 10^15</summary>
+		internal static readonly T Peta = StorageLiteral.Parse<T>("1e15", MetricMagnitudes.Peta);
+
+		/// <summary>Tera magnitude (T): 10^12</summary>
+		internal static readonly T Tera = StorageLiteral.Parse<T>("1e12", MetricMagnitudes.Tera);
+
+		/// <summary>Giga magnitude (G): 10^9</summary>
+		internal static readonly T Giga = StorageLiteral.Parse<T>("1e9", MetricMagnitudes.Giga);
+
+		/// <summary>Mega magnitude (M): 10^6</summary>
+		internal static readonly T Mega = StorageLiteral.Parse<T>("1e6", MetricMagnitudes.Mega);
+
+		/// <summary>Kilo magnitude (k): 10^3</summary>
+		internal static readonly T Kilo = StorageLiteral.Parse<T>("1e3", MetricMagnitudes.Kilo);
+
+		/// <summary>Hecto magnitude (h): 10^2</summary>
+		internal static readonly T Hecto = StorageLiteral.Parse<T>("1e2", MetricMagnitudes.Hecto);
+
+		/// <summary>Deka magnitude (da): 10^1</summary>
+		internal static readonly T Deka = StorageLiteral.Parse<T>("1e1", MetricMagnitudes.Deka);
+
+		/// <summary>Unity magnitude (): 10^0</summary>
+		internal static readonly T Unity = StorageLiteral.Parse<T>("1.0", MetricMagnitudes.Unity);
+
+		/// <summary>Deci magnitude (d): 10^-1</summary>
+		internal static readonly T Deci = StorageLiteral.Parse<T>("1e-1", MetricMagnitudes.Deci);
+
+		/// <summary>Centi magnitude (c): 10^-2</summary>
+		internal static readonly T Centi = StorageLiteral.Parse<T>("1e-2", MetricMagnitudes.Centi);
+
+		/// <summary>Milli magnitude (m): 10^-3</summary>
+		internal static readonly T Milli = StorageLiteral.Parse<T>("1e-3", MetricMagnitudes.Milli);
+
+		/// <summary>Micro magnitude (μ): 10^-6</summary>
+		internal static readonly T Micro = StorageLiteral.Parse<T>("1e-6", MetricMagnitudes.Micro);
+
+		/// <summary>Nano magnitude (n): 10^-9</summary>
+		internal static readonly T Nano = StorageLiteral.Parse<T>("1e-9", MetricMagnitudes.Nano);
+
+		/// <summary>Pico magnitude (p): 10^-12</summary>
+		internal static readonly T Pico = StorageLiteral.Parse<T>("1e-12", MetricMagnitudes.Pico);
+
+		/// <summary>Femto magnitude (f): 10^-15</summary>
+		internal static readonly T Femto = StorageLiteral.Parse<T>("1e-15", MetricMagnitudes.Femto);
+
+		/// <summary>Atto magnitude (a): 10^-18</summary>
+		internal static readonly T Atto = StorageLiteral.Parse<T>("1e-18", MetricMagnitudes.Atto);
+
+		/// <summary>Zepto magnitude (z): 10^-21</summary>
+		internal static readonly T Zepto = StorageLiteral.Parse<T>("1e-21", MetricMagnitudes.Zepto);
+
+		/// <summary>Yocto magnitude (y): 10^-24</summary>
+		internal static readonly T Yocto = StorageLiteral.Parse<T>("1e-24", MetricMagnitudes.Yocto);
+	}
 }
 

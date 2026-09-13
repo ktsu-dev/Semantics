@@ -108,7 +108,7 @@ public readonly partial record struct Latency<T> : IVector0<Latency<T>, T>, IPhy
 	/// <param name="value">The value in Millisecond.</param>
 	/// <returns>A new Latency instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Latency<T> FromMillisecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Milli)), nameof(value)));
+	public static Latency<T> FromMillisecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Milli), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Latency from a value in Microsecond.
@@ -116,7 +116,7 @@ public readonly partial record struct Latency<T> : IVector0<Latency<T>, T>, IPhy
 	/// <param name="value">The value in Microsecond.</param>
 	/// <returns>A new Latency instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Latency<T> FromMicrosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Micro)), nameof(value)));
+	public static Latency<T> FromMicrosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Micro), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Latency from a value in Minute.
@@ -124,7 +124,7 @@ public readonly partial record struct Latency<T> : IVector0<Latency<T>, T>, IPhy
 	/// <param name="value">The value in Minute.</param>
 	/// <returns>A new Latency instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Latency<T> FromMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.MinuteToSeconds)), nameof(value)));
+	public static Latency<T> FromMinute(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.MinuteToSeconds), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Latency from a value in Hour.
@@ -132,7 +132,7 @@ public readonly partial record struct Latency<T> : IVector0<Latency<T>, T>, IPhy
 	/// <param name="value">The value in Hour.</param>
 	/// <returns>A new Latency instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Latency<T> FromHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.HourToSeconds)), nameof(value)));
+	public static Latency<T> FromHour(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.HourToSeconds), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Latency from a value in Day.
@@ -140,7 +140,7 @@ public readonly partial record struct Latency<T> : IVector0<Latency<T>, T>, IPhy
 	/// <param name="value">The value in Day.</param>
 	/// <returns>A new Latency instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Latency<T> FromDay(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.DayToSeconds)), nameof(value)));
+	public static Latency<T> FromDay(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.DayToSeconds), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Latency from a value in Year.
@@ -148,7 +148,7 @@ public readonly partial record struct Latency<T> : IVector0<Latency<T>, T>, IPhy
 	/// <param name="value">The value in Year.</param>
 	/// <returns>A new Latency instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Latency<T> FromYear(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.YearToSeconds)), nameof(value)));
+	public static Latency<T> FromYear(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.YearToSeconds), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Latency from a value in Week.
@@ -156,7 +156,7 @@ public readonly partial record struct Latency<T> : IVector0<Latency<T>, T>, IPhy
 	/// <param name="value">The value in Week.</param>
 	/// <returns>A new Latency instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Latency<T> FromWeek(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.WeekToSeconds)), nameof(value)));
+	public static Latency<T> FromWeek(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.WeekToSeconds), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Latency from a value in Nanosecond.
@@ -164,7 +164,7 @@ public readonly partial record struct Latency<T> : IVector0<Latency<T>, T>, IPhy
 	/// <param name="value">The value in Nanosecond.</param>
 	/// <returns>A new Latency instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Latency<T> FromNanosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(MetricMagnitudes.Nano)), nameof(value)));
+	public static Latency<T> FromNanosecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Nano), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.

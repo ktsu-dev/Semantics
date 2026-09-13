@@ -170,13 +170,13 @@
         },
         {
           "name": "FahrenheitScale",
-          "description": "Fahrenheit-to-Kelvin degree scale factor: 5/9 (exact)",
-          "value": "0.5555555555555556"
+          "description": "Fahrenheit-to-Kelvin degree scale factor: 5/9 K/°F (exact, stored as a fraction)",
+          "value": "5/9"
         },
         {
           "name": "FahrenheitToKelvinOffset",
-          "description": "Fahrenheit to Kelvin affine offset: 459.67 × 5/9 ≈ 255.372 K (exact)",
-          "value": "255.37222222222223"
+          "description": "Fahrenheit to Kelvin affine offset: 459.67 × 5/9 = 45967/180 ≈ 255.372 K (exact, stored as a fraction)",
+          "value": "45967/180"
         }
       ]
     },
@@ -191,13 +191,13 @@
         },
         {
           "name": "GradianToRadians",
-          "description": "Gradian to radian conversion: π/200 rad/grad (exact)",
-          "value": "0.015707963267948966"
+          "description": "Gradian to radian conversion: π/200 rad/grad (π to 150 significant digits, taken as DegreeToRadians × 180)",
+          "value": "0.0157079632679489661923132169163975144209858469968755291048747229615390820314310449931401741267105876411909366360292356011914856685250059698650262847"
         },
         {
           "name": "RevolutionToRadians",
-          "description": "Revolution to radian conversion: 2π rad/rev (exact)",
-          "value": "6.283185307179586"
+          "description": "Revolution to radian conversion: 2π rad/rev (π to 150 significant digits, taken as DegreeToRadians × 180)",
+          "value": "6.28318530717958647692528676655900576839433879875021164194988918461563281257241799725606965068423505647637465441169424047659426741000238794601051388"
         }
       ]
     },
@@ -217,8 +217,8 @@
         },
         {
           "name": "HorsepowerToWatts",
-          "description": "Mechanical horsepower to watt conversion: 745.6998715822702 W/hp (exact)",
-          "value": "745.6998715822702"
+          "description": "Mechanical horsepower to watt conversion: 550 ft⋅lbf/s = 550 × 0.3048 × 4.4482216152605 = 745.69987158227022 W/hp (exact)",
+          "value": "745.69987158227022"
         },
         {
           "name": "ElectronVoltToJoules",
@@ -263,13 +263,13 @@
         },
         {
           "name": "PsiToPascals",
-          "description": "PSI to pascal conversion: 6894.757293168361 Pa/psi (exact)",
-          "value": "6894.757293168361"
+          "description": "PSI to pascal conversion: 4.4482216152605 N / 0.0254² m² = 8896443230521/1290320000 Pa/psi, written to 150 significant digits (a literal rather than the fraction, because float storage rounds that numerator before dividing)",
+          "value": "6894.75729316836133672267344534689069378138756277512555025110050220100440200880401760803521607043214086428172856345712691425382850765701531403062806126"
         },
         {
           "name": "TorrToPascals",
-          "description": "Torr to pascal conversion: 101325/760 ≈ 133.322 Pa/Torr (exact)",
-          "value": "133.32236842105263"
+          "description": "Torr to pascal conversion: 101325/760 = 20265/152 Pa/Torr (exact, stored as a fraction)",
+          "value": "20265/152"
         }
       ]
     },
@@ -325,8 +325,8 @@
       "factors": [
         {
           "name": "KilometerPerHourToMeterPerSecond",
-          "description": "Kilometers per hour to meters per second conversion: 0.2777777777777778 m/s per km/h (exact)",
-          "value": "0.2777777777777778"
+          "description": "Kilometers per hour to meters per second conversion: 1000/3600 = 5/18 m/s per km/h (exact, stored as a fraction)",
+          "value": "5/18"
         },
         {
           "name": "MilePerHourToMeterPerSecond",
@@ -340,8 +340,8 @@
         },
         {
           "name": "KnotToMeterPerSecond",
-          "description": "Knot to meters per second: 1852/3600 ≈ 0.514444 m/s per kn (exact)",
-          "value": "0.5144444444444445"
+          "description": "Knot to meters per second: 1852/3600 = 463/900 m/s per kn (exact, stored as a fraction)",
+          "value": "463/900"
         }
       ]
     },
@@ -351,8 +351,8 @@
       "factors": [
         {
           "name": "RevolutionPerMinuteToRadianPerSecond",
-          "description": "RPM to rad/s conversion: π/30 rad/s per rpm (exact)",
-          "value": "0.10471975511965977"
+          "description": "RPM to rad/s conversion: 2π/60 = π/30 rad/s per rpm (π to 150 significant digits, taken as DegreeToRadians × 180)",
+          "value": "0.104719755119659774615421446109316762806572313312503527365831486410260546876206966620934494178070584274606244240194904007943237790166706465766841898"
         }
       ]
     },
@@ -466,8 +466,8 @@
         },
         {
           "name": "EnzymeUnitToKatals",
-          "description": "Enzyme unit (1 μmol/min) to katal: 1/6e7 ≈ 1.6667e-8 kat/U (exact)",
-          "value": "1.6666666666666667e-8"
+          "description": "Enzyme unit (1 μmol/min) to katal: 1e-6/60 = 1/60000000 kat/U (exact, stored as a fraction)",
+          "value": "1/60000000"
         }
       ]
     },
@@ -530,13 +530,13 @@
       "factors": [
         {
           "name": "FootCandleToLux",
-          "description": "Foot-candle to lux conversion: 1/0.09290304 ≈ 10.7639 lx/fc (exact)",
-          "value": "10.763910416709722"
+          "description": "Foot-candle to lux conversion: 1 lm/ft² = 1/0.09290304 = 100000000/9290304 lx/fc (exact, stored as a fraction)",
+          "value": "100000000/9290304"
         },
         {
           "name": "FootLambertToCandelaPerSquareMeter",
-          "description": "Foot-lambert to candela per square meter: 1/(π·0.09290304) ≈ 3.4263 cd/m² per fL (exact)",
-          "value": "3.4262590996353905"
+          "description": "Foot-lambert to candela per square meter: 1/(π × 0.09290304) cd/m² per fL (π to 150 significant digits, taken as DegreeToRadians × 180)",
+          "value": "3.42625909963539052691674596165021859423458362052428959800814578422615229026362399099348746319287426200971476339509417994666710818534309005070458689906"
         }
       ]
     },

@@ -108,7 +108,7 @@ public readonly partial record struct MolarEnthalpy<T> : IVector0<MolarEnthalpy<
 	/// <param name="value">The value in KilojoulePerMole.</param>
 	/// <returns>A new MolarEnthalpy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MolarEnthalpy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.KilojoulePerMoleToJoulePerMole)), nameof(value)));
+	public static MolarEnthalpy<T> FromKilojoulePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.KilojoulePerMoleToJoulePerMole), nameof(value)));
 
 	/// <summary>
 	/// Creates a new MolarEnthalpy from a value in CaloriePerMole.
@@ -116,7 +116,7 @@ public readonly partial record struct MolarEnthalpy<T> : IVector0<MolarEnthalpy<
 	/// <param name="value">The value in CaloriePerMole.</param>
 	/// <returns>A new MolarEnthalpy instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static MolarEnthalpy<T> FromCaloriePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * T.CreateChecked(Units.ConversionConstants.CaloriePerMoleToJoulePerMole)), nameof(value)));
+	public static MolarEnthalpy<T> FromCaloriePerMole(T value) => Create(Vector0Guards.EnsureNonNegative((value * Units.ConversionConstants.Values<T>.CaloriePerMoleToJoulePerMole), nameof(value)));
 
 	/// <summary>
 	/// Converts this quantity's SI-base value to the value in <paramref name="unit"/>.
