@@ -149,9 +149,8 @@ public sealed class SevenTargetProjectionTests
 	/// `IVector0&lt;Length&lt;T&gt;, T&gt;` is the self-type idiom every quantity here is declared
 	/// with, and it is what C# needs to give an interface a method returning the implementing type.
 	/// Python evaluates a base list eagerly, so `class Length(IVector0[Length[T], T])` raises
-	/// `NameError: name 'Length' is not defined` on import. A string annotation or
-	/// A string in the base list is the fix Python has for this, and it is not something the AST
-	/// currently says. ktsu-dev/Coder#64.
+	/// `NameError: name 'Length' is not defined` on import. A string in the base list is the fix
+	/// Python has for this, and it is not something the AST currently says. ktsu-dev/Coder#64.
 	/// </remarks>
 	[TestMethod]
 	public void PythonNamesTheClassInsideItsOwnBases()
