@@ -1,7 +1,6 @@
-## v5.2.1 (patch)
+## v5.2.2 (patch)
 
-Changes since v5.2.0:
+Changes since v5.2.1:
 
-- Fix boxed null-check in generated logarithmic conversions ([@copilot-swe-agent[bot]](https://github.com/copilot-swe-agent[bot]))
-- Initial plan ([@copilot-swe-agent[bot]](https://github.com/copilot-swe-agent[bot]))
+- ci: adopt the consolidated .NET workflow [patch] ([@Claude](https://github.com/Claude))
 
