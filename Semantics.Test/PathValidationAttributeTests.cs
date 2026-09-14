@@ -217,6 +217,113 @@ public class PathValidationAttributeTests
 		Assert.IsTrue(emptyPath.IsValid());
 	}
 
+	/// <summary>
+	/// A relative directory name must stay valid even when a file of the same name sits in the
+	/// process's current working directory.
+	/// </summary>
+	/// <remarks>
+	/// This is the failure mode reported in issue #196. On Linux .NET publishes an extensionless
+	/// apphost named exactly after the project, so a test project called <c>ktsu.BlastMerge.Test</c>
+	/// leaves a file called <c>ktsu.BlastMerge.Test</c> beside the test assembly. When
+	/// <c>ktsu.AppDataStorage</c> converted the app domain name to a <see cref="RelativeDirectoryPath"/>,
+	/// <c>File.Exists</c> resolved it against that directory, found the apphost, and rejected the name.
+	/// On Windows the apphost carries a <c>.exe</c> suffix, so the same string validated fine — the
+	/// verdict depended on unrelated files rather than on the path itself.
+	/// </remarks>
+	[TestMethod]
+	public void IsDirectoryPathAttribute_RelativeNameCollidingWithFileInWorkingDirectory_ShouldPass()
+	{
+		// Arrange - a file in the working directory named exactly like the directory we want to name
+		string collidingName = $"ktsu-semantics-196-dir-{Guid.NewGuid():N}";
+		string collidingFile = Path.Combine(Directory.GetCurrentDirectory(), collidingName);
+		File.WriteAllText(collidingFile, "");
+
+		try
+		{
+			// Act
+			TestDirectoryPath directoryPath = TestDirectoryPath.Create<TestDirectoryPath>(collidingName);
+
+			// Assert - validity is decided by the string, not by what sits in the working directory
+			Assert.IsTrue(directoryPath.IsValid());
+		}
+		finally
+		{
+			File.Delete(collidingFile);
+		}
+	}
+
+	/// <summary>
+	/// The mirror of <see cref="IsDirectoryPathAttribute_RelativeNameCollidingWithFileInWorkingDirectory_ShouldPass"/>:
+	/// a relative file name must stay valid when a directory of the same name sits in the working directory.
+	/// </summary>
+	[TestMethod]
+	public void IsFilePathAttribute_RelativeNameCollidingWithDirectoryInWorkingDirectory_ShouldPass()
+	{
+		// Arrange - a directory in the working directory named exactly like the file we want to name
+		string collidingName = $"ktsu-semantics-196-file-{Guid.NewGuid():N}";
+		string collidingDirectory = Path.Combine(Directory.GetCurrentDirectory(), collidingName);
+		Directory.CreateDirectory(collidingDirectory);
+
+		try
+		{
+			// Act
+			TestFilePath filePath = TestFilePath.Create<TestFilePath>(collidingName);
+
+			// Assert - validity is decided by the string, not by what sits in the working directory
+			Assert.IsTrue(filePath.IsValid());
+		}
+		finally
+		{
+			Directory.Delete(collidingDirectory);
+		}
+	}
+
+	/// <summary>
+	/// The existence check is kept where it is answerable: an absolute path names one location, so a
+	/// directory path that points at an existing file is still rejected.
+	/// </summary>
+	[TestMethod]
+	public void IsDirectoryPathAttribute_AbsolutePathOfExistingFile_ShouldFail()
+	{
+		// Arrange
+		string existingFile = Path.Combine(Path.GetTempPath(), $"ktsu-semantics-196-{Guid.NewGuid():N}.tmp");
+		File.WriteAllText(existingFile, "");
+
+		try
+		{
+			// Act & Assert
+			Assert.ThrowsExactly<ArgumentException>(() =>
+				TestDirectoryPath.Create<TestDirectoryPath>(existingFile));
+		}
+		finally
+		{
+			File.Delete(existingFile);
+		}
+	}
+
+	/// <summary>
+	/// The mirror of <see cref="IsDirectoryPathAttribute_AbsolutePathOfExistingFile_ShouldFail"/>: an
+	/// absolute file path that points at an existing directory is still rejected.
+	/// </summary>
+	[TestMethod]
+	public void IsFilePathAttribute_AbsolutePathOfExistingDirectory_ShouldFail()
+	{
+		// Arrange
+		string existingDirectory = Path.Combine(Path.GetTempPath(), $"ktsu-semantics-196-{Guid.NewGuid():N}");
+		Directory.CreateDirectory(existingDirectory);
+
+		try
+		{
+			// Act & Assert
+			Assert.ThrowsExactly<ArgumentException>(() =>
+				TestFilePath.Create<TestFilePath>(existingDirectory));
+		}
+		finally
+		{
+			Directory.Delete(existingDirectory);
+		}
+	}
+
 	[TestMethod]
 	public void DoesExistAttribute_NonExistentPath_ShouldFail()
 	{
