@@ -43,11 +43,14 @@ if ($typeNames.Count -eq 0) {
 	throw "No quantity types found under $generatedRoot. Build Semantics.Quantities first so the generated files exist."
 }
 
-# PascalCase project/package suffix => C# storage keyword.
+# PascalCase project/package suffix => the storage type as it is written in the alias.
+# A keyword for the built-in types; a fully qualified name for one that comes from a package,
+# since the alias is expanded in projects that have no using directives of ours.
 $storageTypes = [ordered]@{
 	'Double'  = 'double'
 	'Float'   = 'float'
 	'Decimal' = 'decimal'
+	'Precise' = 'ktsu.PreciseNumber.PreciseNumber'
 }
 
 foreach ($entry in $storageTypes.GetEnumerator()) {

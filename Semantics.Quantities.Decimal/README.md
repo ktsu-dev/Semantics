@@ -66,6 +66,7 @@ The aliases are project-wide global usings keyed on the bare type name (`Mass`, 
 - [`ktsu.Semantics.Quantities.Double`](../Semantics.Quantities.Double/README.md)
 - [`ktsu.Semantics.Quantities.Float`](../Semantics.Quantities.Float/README.md)
 - `ktsu.Semantics.Quantities.Decimal` (this package)
+- [`ktsu.Semantics.Quantities.Precise`](../Semantics.Quantities.Precise/README.md)
 
 A project that genuinely needs mixed storage types should skip the alias packages and reference `ktsu.Semantics.Quantities` directly, writing the closed generic (`Mass<decimal>`) explicitly.
 

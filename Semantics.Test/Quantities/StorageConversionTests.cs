@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using ktsu.PreciseNumber;
 using ktsu.Semantics.Quantities;
 using ktsu.Semantics.Quantities.Units;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,6 +23,22 @@ public sealed class DoubleStorageConversionTests() : StorageConversionTests<doub
 /// </summary>
 [TestClass]
 public sealed class DecimalStorageConversionTests() : StorageConversionTests<decimal>(tolerance: "1e-25", decimalExact: true);
+
+/// <summary>
+/// Runs <see cref="StorageConversionTests{T}"/> over <see cref="PreciseNumber"/>, the storage type the
+/// ktsu.Semantics.Quantities.Precise alias package binds to.
+/// </summary>
+/// <remarks>
+/// The tolerance is ten orders of magnitude tighter than <see cref="decimal"/>'s, so a factor that
+/// reached the type through a <see cref="double"/> — wrong from about the sixteenth digit — fails here
+/// by an enormous margin. It is not tighter still because the limit is the expected literals rather
+/// than the storage type: the knot is a repeating fraction written to 38 decimal places, and
+/// PreciseNumber answers it with 50 correct digits, so the residual being measured is the truncation
+/// of the reference value. Lengthening that literal is what would buy a tighter bound.
+/// </remarks>
+[TestClass]
+public sealed class PreciseNumberStorageConversionTests()
+	: StorageConversionTests<PreciseNumber>(tolerance: "1e-35", decimalExact: true);
 
 /// <summary>
 /// The same unit conversions, physics relationships and vector lengths, run over each storage type.

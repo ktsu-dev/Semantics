@@ -43,6 +43,10 @@
     <!-- SemanticStringJsonTests exercises the converter registration that consumers are
          expected to perform; Semantics.Strings itself no longer depends on this. -->
     <PackageReference Include="ktsu.RoundTripStringJsonConverter" />
+    <!-- PreciseNumberStorageConversionTests runs the shared conversion suite over PreciseNumber,
+         the storage type the Semantics.Quantities.Precise alias package binds to. Only the test
+         project references it; Semantics.Quantities does not. -->
+    <PackageReference Include="ktsu.PreciseNumber" />
   </ItemGroup>
 
   <ItemGroup>
