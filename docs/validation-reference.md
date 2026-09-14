@@ -114,8 +114,8 @@ These live in `Semantics.Paths` and require `using ktsu.Semantics.Paths;`.
 | `[IsValidPath]` | Stricter: also rejects reserved names. |
 | `[IsAbsolutePath]` | Fully qualified path. |
 | `[IsRelativePath]` | Not absolute. |
-| `[IsFilePath]` | Refers to a file (not a directory). |
-| `[IsDirectoryPath]` | Refers to a directory. |
+| `[IsFilePath]` | Refers to a file: a fully qualified path must not name an existing directory. |
+| `[IsDirectoryPath]` | Refers to a directory: a fully qualified path must not name an existing file. |
 | `[IsFileName]` | Filename without separators. |
 | `[IsValidFileName]` | Stricter filename validation. |
 | `[IsExtension]` | File extension including the leading dot. |
@@ -125,6 +125,13 @@ These live in `Semantics.Paths` and require `using ktsu.Semantics.Paths;`.
 [IsAbsolutePath, DoesExist]
 public sealed record ConfigFilePath : SemanticString<ConfigFilePath> { }
 ```
+
+`[IsFilePath]` and `[IsDirectoryPath]` consult the file system only for fully qualified paths. A path
+that is not fully qualified names no particular location until a caller supplies a base directory, so
+probing for it would resolve it against the process's current working directory — making the same
+string valid in one process and invalid in another depending on what files happen to sit beside them.
+Those paths are validated by shape alone. To ask the existence question about a relative path, resolve
+it first with `AsAbsolute(baseDirectory)` and validate the result.
 
 For most use cases, prefer the dedicated path types (`AbsoluteFilePath`, `RelativeDirectoryPath`, etc.) from `Semantics.Paths` — they bundle these attributes and provide rich path operations.
 

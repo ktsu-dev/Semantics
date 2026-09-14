@@ -29,12 +29,30 @@ public sealed class IsFilePathAttribute : NativeSemanticStringValidationAttribut
 		/// <param name="value">The string value to validate</param>
 		/// <returns>A validation result indicating success or failure</returns>
 		/// <remarks>
+		/// <para>
 		/// This validation passes if the path doesn't exist as a directory, allowing for non-existent files
 		/// and existing files. It only fails if the path exists and is specifically a directory.
+		/// </para>
+		/// <para>
+		/// The existence check applies only to fully qualified paths, for the same reason it does in
+		/// <see cref="IsDirectoryPathAttribute"/>: a path that is not fully qualified names no particular
+		/// location on disk until a caller supplies a base directory, so probing for it would resolve it
+		/// against the process's current working directory. Such paths are validated by shape alone.
+		/// </para>
 		/// </remarks>
 		protected override ValidationResult ValidateValue(string value)
 		{
 			if (string.IsNullOrEmpty(value))
+			{
+				return ValidationResult.Success();
+			}
+
+#if NETSTANDARD2_0
+			bool isFullyQualified = PathPolyfill.IsPathFullyQualified(value);
+#else
+			bool isFullyQualified = Path.IsPathFullyQualified(value);
+#endif
+			if (!isFullyQualified)
 			{
 				return ValidationResult.Success();
 			}
