@@ -1,6 +1,7 @@
-## v5.2.3 (patch)
+## v5.2.4 (patch)
 
-Changes since v5.2.2:
+Changes since v5.2.3:
 
-- Decide relative path validity from the string, not the working directory [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
+- [patch] Address code quality findings on the storage conversion fixes ([@Claude](https://github.com/Claude))
+- [patch] Fix storage conversion regressions from exact factors ([@matt-edmondson](https://github.com/matt-edmondson))
 
