@@ -12,88 +12,88 @@ using System.Numerics;
 internal static class ConversionConstants
 {
 	/// <summary>Foot to meter conversion: 0.3048 m/ft (exact by definition)</summary>
-	internal const double FeetToMeters = 0.3048;
+	internal const double FeetToMeters = 0.3048d;
 
 	/// <summary>Inch to meter conversion: 0.0254 m/in (exact by definition)</summary>
-	internal const double InchesToMeters = 0.0254;
+	internal const double InchesToMeters = 0.0254d;
 
 	/// <summary>Yard to meter conversion: 0.9144 m/yd (exact by definition)</summary>
-	internal const double YardToMeters = 0.9144;
+	internal const double YardToMeters = 0.9144d;
 
 	/// <summary>Mile to meter conversion: 1609.344 m/mi (exact by definition)</summary>
-	internal const double MileToMeters = 1609.344;
+	internal const double MileToMeters = 1609.344d;
 
 	/// <summary>Angstrom to meter conversion: 1e-10 m/Å (exact by definition)</summary>
-	internal const double AngstromToMeters = 1e-10;
+	internal const double AngstromToMeters = 1e-10d;
 
 	/// <summary>Nautical mile to meter conversion: 1852 m/nmi (exact by definition)</summary>
-	internal const double NauticalMileToMeters = 1852;
+	internal const double NauticalMileToMeters = 1852d;
 
 	/// <summary>Pound mass to kilogram: 0.453592 kg/lb (exact)</summary>
-	internal const double PoundMassToKilogram = 0.453592;
+	internal const double PoundMassToKilogram = 0.453592d;
 
 	/// <summary>Pound to kilogram conversion: 0.45359237 kg/lb (exact by definition)</summary>
-	internal const double PoundToKilograms = 0.45359237;
+	internal const double PoundToKilograms = 0.45359237d;
 
 	/// <summary>Ounce to kilogram conversion: 0.028349523125 kg/oz (exact)</summary>
-	internal const double OunceToKilograms = 0.028349523125;
+	internal const double OunceToKilograms = 0.028349523125d;
 
 	/// <summary>Metric ton to kilogram conversion: 1000 kg/t (exact by definition)</summary>
-	internal const double TonToKilograms = 1000;
+	internal const double TonToKilograms = 1000d;
 
 	/// <summary>Stone to kilogram conversion: 6.35029318 kg/st (14 lb, exact)</summary>
-	internal const double StoneToKilograms = 6.35029318;
+	internal const double StoneToKilograms = 6.35029318d;
 
 	/// <summary>Short ton to kilogram conversion: 907.18474 kg/ton (2000 lb, exact)</summary>
-	internal const double ShortTonToKilograms = 907.18474;
+	internal const double ShortTonToKilograms = 907.18474d;
 
 	/// <summary>Atomic mass unit to kilogram: 1.66053906660e-27 kg/u (2018 CODATA)</summary>
-	internal const double AtomicMassUnitToKilograms = 1.66053906660e-27;
+	internal const double AtomicMassUnitToKilograms = 1.66053906660e-27d;
 
 	/// <summary>Liter to cubic meter conversion: 0.001 m³/L (exact by definition)</summary>
-	internal const double LiterToCubicMeters = 0.001;
+	internal const double LiterToCubicMeters = 0.001d;
 
 	/// <summary>US gallon to cubic meter conversion: 0.003785411784 m³/gal (exact)</summary>
-	internal const double GallonToCubicMeters = 0.003785411784;
+	internal const double GallonToCubicMeters = 0.003785411784d;
 
 	/// <summary>Cubic centimeter to cubic meter: 1e-6 m³/cm³ (exact by definition)</summary>
-	internal const double CubicCentimeterToCubicMeters = 1e-6;
+	internal const double CubicCentimeterToCubicMeters = 1e-6d;
 
 	/// <summary>Cubic foot to cubic meter: 0.028316846592 m³/ft³ (exact)</summary>
-	internal const double CubicFootToCubicMeters = 0.028316846592;
+	internal const double CubicFootToCubicMeters = 0.028316846592d;
 
 	/// <summary>Cubic inch to cubic meter: 1.6387064e-5 m³/in³ (exact)</summary>
-	internal const double CubicInchToCubicMeters = 1.6387064e-5;
+	internal const double CubicInchToCubicMeters = 1.6387064e-5d;
 
 	/// <summary>Imperial gallon to cubic meter: 0.00454609 m³/imp gal (exact by definition)</summary>
-	internal const double ImperialGallonToCubicMeters = 0.00454609;
+	internal const double ImperialGallonToCubicMeters = 0.00454609d;
 
 	/// <summary>US liquid quart to cubic meter: 0.000946352946 m³/qt (exact)</summary>
-	internal const double USQuartToCubicMeters = 0.000946352946;
+	internal const double USQuartToCubicMeters = 0.000946352946d;
 
 	/// <summary>US liquid pint to cubic meter: 0.000473176473 m³/pt (exact)</summary>
-	internal const double USPintToCubicMeters = 0.000473176473;
+	internal const double USPintToCubicMeters = 0.000473176473d;
 
 	/// <summary>US fluid ounce to cubic meter: 2.95735295625e-5 m³/fl oz (exact)</summary>
-	internal const double USFluidOunceToCubicMeters = 2.95735295625e-5;
+	internal const double USFluidOunceToCubicMeters = 2.95735295625e-5d;
 
 	/// <summary>Minute to second conversion: 60 s/min (exact)</summary>
-	internal const double MinuteToSeconds = 60;
+	internal const double MinuteToSeconds = 60d;
 
 	/// <summary>Hour to second conversion: 3600 s/h (exact)</summary>
-	internal const double HourToSeconds = 3600;
+	internal const double HourToSeconds = 3600d;
 
 	/// <summary>Day to second conversion: 86400 s/day (exact)</summary>
-	internal const double DayToSeconds = 86400;
+	internal const double DayToSeconds = 86400d;
 
 	/// <summary>Year to second conversion: 31557600 s/year (365.25 days, exact)</summary>
-	internal const double YearToSeconds = 31557600;
+	internal const double YearToSeconds = 31557600d;
 
 	/// <summary>Week to second conversion: 604800 s/wk (exact)</summary>
-	internal const double WeekToSeconds = 604800;
+	internal const double WeekToSeconds = 604800d;
 
 	/// <summary>Celsius to Kelvin temperature offset: 273.15 K (exact by definition)</summary>
-	internal const double CelsiusToKelvinOffset = 273.15;
+	internal const double CelsiusToKelvinOffset = 273.15d;
 
 	/// <summary>Fahrenheit-to-Kelvin degree scale factor: 5/9 K/°F (exact, stored as a fraction)</summary>
 	internal const double FahrenheitScale = 5d / 9d;
@@ -101,179 +101,179 @@ internal static class ConversionConstants
 	/// <summary>Fahrenheit to Kelvin affine offset: 459.67 × 5/9 = 45967/180 ≈ 255.372 K (exact, stored as a fraction)</summary>
 	internal const double FahrenheitToKelvinOffset = 45967d / 180d;
 
-	/// <summary>Degree to radian conversion: π/180 rad/° (exact)</summary>
-	internal const double DegreeToRadians = 0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983;
+	/// <summary>Degree to radian conversion: π/180 rad/°, correctly rounded to 150 significant digits</summary>
+	internal const double DegreeToRadians = 0.0174532925199432957692369076848861271344287188854172545609719144017100911460344944368224156963450948221230449250737905924838546922752810123984742189340d;
 
-	/// <summary>Gradian to radian conversion: π/200 rad/grad (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
-	internal const double GradianToRadians = 0.0157079632679489661923132169163975144209858469968755291048747229615390820314310449931401741267105876411909366360292356011914856685250059698650262847;
+	/// <summary>Gradian to radian conversion: π/200 rad/grad, correctly rounded to 150 significant digits</summary>
+	internal const double GradianToRadians = 0.0157079632679489661923132169163975144209858469968755291048747229615390820314310449931401741267105853399107404325664115332354692230477529111586267970406d;
 
-	/// <summary>Revolution to radian conversion: 2π rad/rev (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
-	internal const double RevolutionToRadians = 6.28318530717958647692528676655900576839433879875021164194988918461563281257241799725606965068423505647637465441169424047659426741000238794601051388;
+	/// <summary>Revolution to radian conversion: 2π rad/rev, correctly rounded to 150 significant digits</summary>
+	internal const double RevolutionToRadians = 6.28318530717958647692528676655900576839433879875021164194988918461563281257241799725606965068423413596429617302656461329418768921910116446345071881626d;
 
 	/// <summary>Calorie to joule conversion: 4.184 J/cal (exact, thermochemical calorie)</summary>
-	internal const double CalorieToJoules = 4.184;
+	internal const double CalorieToJoules = 4.184d;
 
 	/// <summary>Kilowatt-hour to joule conversion: 3600000 J/kWh (exact)</summary>
-	internal const double KilowattHourToJoules = 3600000;
+	internal const double KilowattHourToJoules = 3600000d;
 
 	/// <summary>Mechanical horsepower to watt conversion: 550 ft⋅lbf/s = 550 × 0.3048 × 4.4482216152605 = 745.69987158227022 W/hp (exact)</summary>
-	internal const double HorsepowerToWatts = 745.69987158227022;
+	internal const double HorsepowerToWatts = 745.69987158227022d;
 
 	/// <summary>Electron volt to joule conversion: 1.602176634e-19 J/eV (exact, based on elementary charge)</summary>
-	internal const double ElectronVoltToJoules = 1.602176634e-19;
+	internal const double ElectronVoltToJoules = 1.602176634e-19d;
 
 	/// <summary>Kilocalorie to joule conversion: 4184 J/kcal (exact, thermochemical)</summary>
-	internal const double KilocalorieToJoules = 4184;
+	internal const double KilocalorieToJoules = 4184d;
 
 	/// <summary>Watt-hour to joule conversion: 3600 J/Wh (exact)</summary>
-	internal const double WattHourToJoules = 3600;
+	internal const double WattHourToJoules = 3600d;
 
 	/// <summary>Erg to joule conversion: 1e-7 J/erg (exact by definition)</summary>
-	internal const double ErgToJoules = 1e-7;
+	internal const double ErgToJoules = 1e-7d;
 
 	/// <summary>British thermal unit (IT) to joule conversion: 1055.05585262 J/BTU (exact)</summary>
-	internal const double BtuToJoules = 1055.05585262;
+	internal const double BtuToJoules = 1055.05585262d;
 
 	/// <summary>Bar to pascal conversion: 100000 Pa/bar (exact by definition)</summary>
-	internal const double BarToPascals = 100000;
+	internal const double BarToPascals = 100000d;
 
 	/// <summary>Atmosphere to pascal conversion: 101325 Pa/atm (exact by definition)</summary>
-	internal const double AtmosphereToPascals = 101325;
+	internal const double AtmosphereToPascals = 101325d;
 
 	/// <summary>PSI to pascal conversion: 4.4482216152605 N / 0.0254² m² = 8896443230521/1290320000 Pa/psi, written to 150 significant digits (a literal rather than the fraction, because float storage rounds that numerator before dividing)</summary>
-	internal const double PsiToPascals = 6894.75729316836133672267344534689069378138756277512555025110050220100440200880401760803521607043214086428172856345712691425382850765701531403062806126;
+	internal const double PsiToPascals = 6894.75729316836133672267344534689069378138756277512555025110050220100440200880401760803521607043214086428172856345712691425382850765701531403062806126d;
 
 	/// <summary>Torr to pascal conversion: 101325/760 = 20265/152 Pa/Torr (exact, stored as a fraction)</summary>
 	internal const double TorrToPascals = 20265d / 152d;
 
 	/// <summary>Square foot to square meter conversion: 0.09290304 m²/ft² (exact)</summary>
-	internal const double SquareFootToSquareMeters = 0.09290304;
+	internal const double SquareFootToSquareMeters = 0.09290304d;
 
 	/// <summary>Square inch to square meter conversion: 0.00064516 m²/in² (exact)</summary>
-	internal const double SquareInchToSquareMeters = 0.00064516;
+	internal const double SquareInchToSquareMeters = 0.00064516d;
 
 	/// <summary>Barn to square meter conversion: 1e-28 m² (exact by definition)</summary>
-	internal const double BarnToSquareMeters = 1e-28;
+	internal const double BarnToSquareMeters = 1e-28d;
 
 	/// <summary>Square kilometer to square meter: 1e6 m²/km² (exact by definition)</summary>
-	internal const double SquareKilometerToSquareMeters = 1e6;
+	internal const double SquareKilometerToSquareMeters = 1e6d;
 
 	/// <summary>Square centimeter to square meter: 1e-4 m²/cm² (exact by definition)</summary>
-	internal const double SquareCentimeterToSquareMeters = 1e-4;
+	internal const double SquareCentimeterToSquareMeters = 1e-4d;
 
 	/// <summary>Square mile to square meter: 2589988.110336 m²/mi² (exact)</summary>
-	internal const double SquareMileToSquareMeters = 2589988.110336;
+	internal const double SquareMileToSquareMeters = 2589988.110336d;
 
 	/// <summary>Hectare to square meter: 10000 m²/ha (exact by definition)</summary>
-	internal const double HectareToSquareMeters = 10000;
+	internal const double HectareToSquareMeters = 10000d;
 
 	/// <summary>Acre to square meter: 4046.8564224 m²/ac (exact)</summary>
-	internal const double AcreToSquareMeters = 4046.8564224;
+	internal const double AcreToSquareMeters = 4046.8564224d;
 
 	/// <summary>Kilometers per hour to meters per second conversion: 1000/3600 = 5/18 m/s per km/h (exact, stored as a fraction)</summary>
 	internal const double KilometerPerHourToMeterPerSecond = 5d / 18d;
 
 	/// <summary>Miles per hour to meters per second conversion: 0.44704 m/s per mph (exact)</summary>
-	internal const double MilePerHourToMeterPerSecond = 0.44704;
+	internal const double MilePerHourToMeterPerSecond = 0.44704d;
 
 	/// <summary>Feet per second to meters per second: 0.3048 m/s per ft/s (exact)</summary>
-	internal const double FootPerSecondToMeterPerSecond = 0.3048;
+	internal const double FootPerSecondToMeterPerSecond = 0.3048d;
 
 	/// <summary>Knot to meters per second: 1852/3600 = 463/900 m/s per kn (exact, stored as a fraction)</summary>
 	internal const double KnotToMeterPerSecond = 463d / 900d;
 
-	/// <summary>RPM to rad/s conversion: 2π/60 = π/30 rad/s per rpm (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
-	internal const double RevolutionPerMinuteToRadianPerSecond = 0.104719755119659774615421446109316762806572313312503527365831486410260546876206966620934494178070584274606244240194904007943237790166706465766841898;
+	/// <summary>RPM to rad/s conversion: 2π/60 = π/30 rad/s per rpm, correctly rounded to 150 significant digits</summary>
+	internal const double RevolutionPerMinuteToRadianPerSecond = 0.104719755119659774615421446109316762806572313312503527365831486410260546876206966620934494178070568932738269550442743554903128153651686074390845313604d;
 
 	/// <summary>Pound-foot to Newton-meter conversion: 1.3558179483314004 N⋅m per lb⋅ft (exact)</summary>
-	internal const double PoundFootToNewtonMeters = 1.3558179483314004;
+	internal const double PoundFootToNewtonMeters = 1.3558179483314004d;
 
 	/// <summary>Molar to cubic meter concentration conversion: 1000.0 mol/m³ per mol/L (exact)</summary>
-	internal const double MolarToCubicMeter = 1000.0;
+	internal const double MolarToCubicMeter = 1000.0d;
 
 	/// <summary>Millimolar to mole per cubic meter: 1 mol/m³ per mM (exact)</summary>
-	internal const double MillimolarToMolePerCubicMeter = 1.0;
+	internal const double MillimolarToMolePerCubicMeter = 1.0d;
 
 	/// <summary>Micromolar to mole per cubic meter: 0.001 mol/m³ per μM (exact)</summary>
-	internal const double MicromolarToMolePerCubicMeter = 0.001;
+	internal const double MicromolarToMolePerCubicMeter = 0.001d;
 
 	/// <summary>Stokes to square meter per second: 1e-4 m²/s per St (exact by definition)</summary>
-	internal const double StokesToSquareMeterPerSecond = 1e-4;
+	internal const double StokesToSquareMeterPerSecond = 1e-4d;
 
 	/// <summary>Poise to pascal second: 0.1 Pa·s per P (exact by definition)</summary>
-	internal const double PoiseToPascalSecond = 0.1;
+	internal const double PoiseToPascalSecond = 0.1d;
 
 	/// <summary>Liter per second to cubic meter per second: 0.001 m³/s per L/s (exact by definition)</summary>
-	internal const double LiterPerSecondToCubicMeterPerSecond = 0.001;
+	internal const double LiterPerSecondToCubicMeterPerSecond = 0.001d;
 
 	/// <summary>Centipoise to pascal second: 0.001 Pa·s per cP (exact by definition)</summary>
-	internal const double CentipoiseToPascalSecond = 0.001;
+	internal const double CentipoiseToPascalSecond = 0.001d;
 
 	/// <summary>Dyne per centimeter to newton per meter: 0.001 N/m per dyn/cm (exact)</summary>
-	internal const double DynePerCentimeterToNewtonPerMeter = 0.001;
+	internal const double DynePerCentimeterToNewtonPerMeter = 0.001d;
 
 	/// <summary>Gram per cubic centimeter to kilogram per cubic meter: 1000 kg/m³ per g/cm³ (exact)</summary>
-	internal const double GramPerCubicCentimeterToKilogramPerCubicMeter = 1000;
+	internal const double GramPerCubicCentimeterToKilogramPerCubicMeter = 1000d;
 
 	/// <summary>Gram per liter to kilogram per cubic meter: 1 kg/m³ per g/L (exact)</summary>
-	internal const double GramPerLiterToKilogramPerCubicMeter = 1.0;
+	internal const double GramPerLiterToKilogramPerCubicMeter = 1.0d;
 
 	/// <summary>Gauss to Tesla: 1e-4 T per G (exact by definition)</summary>
-	internal const double GaussToTesla = 1e-4;
+	internal const double GaussToTesla = 1e-4d;
 
 	/// <summary>Ampere-hour to coulomb conversion: 3600 C/Ah (exact)</summary>
-	internal const double AmpereHourToCoulombs = 3600;
+	internal const double AmpereHourToCoulombs = 3600d;
 
 	/// <summary>Gram per mole to kilogram per mole: 0.001 kg/mol per g/mol (exact by definition)</summary>
-	internal const double GramPerMoleToKilogramPerMole = 0.001;
+	internal const double GramPerMoleToKilogramPerMole = 0.001d;
 
 	/// <summary>Kilojoule per mole to joule per mole: 1000 J/mol per kJ/mol (exact by definition)</summary>
-	internal const double KilojoulePerMoleToJoulePerMole = 1000;
+	internal const double KilojoulePerMoleToJoulePerMole = 1000d;
 
 	/// <summary>Calorie per mole to joule per mole: 4.184 J/mol per cal/mol (exact, thermochemical)</summary>
-	internal const double CaloriePerMoleToJoulePerMole = 4.184;
+	internal const double CaloriePerMoleToJoulePerMole = 4.184d;
 
 	/// <summary>Enzyme unit (1 μmol/min) to katal: 1e-6/60 = 1/60000000 kat/U (exact, stored as a fraction)</summary>
 	internal const double EnzymeUnitToKatals = 1d / 60000000d;
 
 	/// <summary>Standard gravity to meters per second squared: 9.80665 m/s² per g (exact by definition)</summary>
-	internal const double StandardGravityToMeterPerSecondSquared = 9.80665;
+	internal const double StandardGravityToMeterPerSecondSquared = 9.80665d;
 
 	/// <summary>Dyne to newton conversion: 1e-5 N/dyn (exact by definition)</summary>
-	internal const double DyneToNewtons = 1e-5;
+	internal const double DyneToNewtons = 1e-5d;
 
 	/// <summary>Pound-force to newton conversion: 4.4482216152605 N/lbf (exact)</summary>
-	internal const double PoundForceToNewtons = 4.4482216152605;
+	internal const double PoundForceToNewtons = 4.4482216152605d;
 
 	/// <summary>Curie to becquerel conversion: 3.7e10 Bq/Ci (exact by definition)</summary>
-	internal const double CurieToBecquerels = 3.7e10;
+	internal const double CurieToBecquerels = 3.7e10d;
 
 	/// <summary>Rad to gray conversion: 0.01 Gy/rad (exact by definition)</summary>
-	internal const double RadToGrays = 0.01;
+	internal const double RadToGrays = 0.01d;
 
 	/// <summary>Rem to sievert conversion: 0.01 Sv/rem (exact by definition)</summary>
-	internal const double RemToSieverts = 0.01;
+	internal const double RemToSieverts = 0.01d;
 
 	/// <summary>Roentgen to coulomb per kilogram: 2.58e-4 C/kg per R (exact by definition)</summary>
-	internal const double RoentgenToCoulombsPerKilogram = 2.58e-4;
+	internal const double RoentgenToCoulombsPerKilogram = 2.58e-4d;
 
 	/// <summary>Foot-candle to lux conversion: 1 lm/ft² = 1/0.09290304 = 100000000/9290304 lx/fc (exact, stored as a fraction)</summary>
 	internal const double FootCandleToLux = 100000000d / 9290304d;
 
-	/// <summary>Foot-lambert to candela per square meter: 1/(π × 0.09290304) cd/m² per fL (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
-	internal const double FootLambertToCandelaPerSquareMeter = 3.42625909963539052691674596165021859423458362052428959800814578422615229026362399099348746319287426200971476339509417994666710818534309005070458689906;
+	/// <summary>Foot-lambert to candela per square meter: 1/(π × 0.09290304) cd/m² per fL, correctly rounded to 150 significant digits</summary>
+	internal const double FootLambertToCandelaPerSquareMeter = 3.42625909963539052691674596165021859423458362052428959800814578422615229026362399099348746319287476397054052755987227192765515199749284098513821314634d;
 
 	/// <summary>Percent to ratio: 0.01 (exact by definition)</summary>
-	internal const double PercentToRatio = 0.01;
+	internal const double PercentToRatio = 0.01d;
 
 	/// <summary>Parts per million to ratio: 1e-6 (exact by definition)</summary>
-	internal const double PartPerMillionToRatio = 1e-6;
+	internal const double PartPerMillionToRatio = 1e-6d;
 
 	/// <summary>Parts per billion to ratio: 1e-9 (exact by definition)</summary>
-	internal const double PartPerBillionToRatio = 1e-9;
+	internal const double PartPerBillionToRatio = 1e-9d;
 
 	/// <summary>Percent by weight to mass-fraction ratio: 0.01 (exact by definition)</summary>
-	internal const double PercentByWeightToRatio = 0.01;
+	internal const double PercentByWeightToRatio = 0.01d;
 
 	/// <summary>
 	/// Caches each conversion constant materialised into <typeparamref name="T"/> at that type's own precision.
@@ -282,268 +282,532 @@ internal static class ConversionConstants
 		where T : struct, INumber<T>
 	{
 		/// <summary>Foot to meter conversion: 0.3048 m/ft (exact by definition)</summary>
-		internal static readonly T FeetToMeters = StorageLiteral.Parse<T>("0.3048", ConversionConstants.FeetToMeters);
+		internal static T FeetToMeters => ParsedFeetToMeters ?? T.CreateChecked(ConversionConstants.FeetToMeters);
+
+		/// <summary>FeetToMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedFeetToMeters = StorageLiteral.Parse<T>("0.3048");
 
 		/// <summary>Inch to meter conversion: 0.0254 m/in (exact by definition)</summary>
-		internal static readonly T InchesToMeters = StorageLiteral.Parse<T>("0.0254", ConversionConstants.InchesToMeters);
+		internal static T InchesToMeters => ParsedInchesToMeters ?? T.CreateChecked(ConversionConstants.InchesToMeters);
+
+		/// <summary>InchesToMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedInchesToMeters = StorageLiteral.Parse<T>("0.0254");
 
 		/// <summary>Yard to meter conversion: 0.9144 m/yd (exact by definition)</summary>
-		internal static readonly T YardToMeters = StorageLiteral.Parse<T>("0.9144", ConversionConstants.YardToMeters);
+		internal static T YardToMeters => ParsedYardToMeters ?? T.CreateChecked(ConversionConstants.YardToMeters);
+
+		/// <summary>YardToMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedYardToMeters = StorageLiteral.Parse<T>("0.9144");
 
 		/// <summary>Mile to meter conversion: 1609.344 m/mi (exact by definition)</summary>
-		internal static readonly T MileToMeters = StorageLiteral.Parse<T>("1609.344", ConversionConstants.MileToMeters);
+		internal static T MileToMeters => ParsedMileToMeters ?? T.CreateChecked(ConversionConstants.MileToMeters);
+
+		/// <summary>MileToMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedMileToMeters = StorageLiteral.Parse<T>("1609.344");
 
 		/// <summary>Angstrom to meter conversion: 1e-10 m/Å (exact by definition)</summary>
-		internal static readonly T AngstromToMeters = StorageLiteral.Parse<T>("1e-10", ConversionConstants.AngstromToMeters);
+		internal static T AngstromToMeters => ParsedAngstromToMeters ?? T.CreateChecked(ConversionConstants.AngstromToMeters);
+
+		/// <summary>AngstromToMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedAngstromToMeters = StorageLiteral.Parse<T>("1e-10");
 
 		/// <summary>Nautical mile to meter conversion: 1852 m/nmi (exact by definition)</summary>
-		internal static readonly T NauticalMileToMeters = StorageLiteral.Parse<T>("1852", ConversionConstants.NauticalMileToMeters);
+		internal static T NauticalMileToMeters => ParsedNauticalMileToMeters ?? T.CreateChecked(ConversionConstants.NauticalMileToMeters);
+
+		/// <summary>NauticalMileToMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedNauticalMileToMeters = StorageLiteral.Parse<T>("1852");
 
 		/// <summary>Pound mass to kilogram: 0.453592 kg/lb (exact)</summary>
-		internal static readonly T PoundMassToKilogram = StorageLiteral.Parse<T>("0.453592", ConversionConstants.PoundMassToKilogram);
+		internal static T PoundMassToKilogram => ParsedPoundMassToKilogram ?? T.CreateChecked(ConversionConstants.PoundMassToKilogram);
+
+		/// <summary>PoundMassToKilogram parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPoundMassToKilogram = StorageLiteral.Parse<T>("0.453592");
 
 		/// <summary>Pound to kilogram conversion: 0.45359237 kg/lb (exact by definition)</summary>
-		internal static readonly T PoundToKilograms = StorageLiteral.Parse<T>("0.45359237", ConversionConstants.PoundToKilograms);
+		internal static T PoundToKilograms => ParsedPoundToKilograms ?? T.CreateChecked(ConversionConstants.PoundToKilograms);
+
+		/// <summary>PoundToKilograms parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPoundToKilograms = StorageLiteral.Parse<T>("0.45359237");
 
 		/// <summary>Ounce to kilogram conversion: 0.028349523125 kg/oz (exact)</summary>
-		internal static readonly T OunceToKilograms = StorageLiteral.Parse<T>("0.028349523125", ConversionConstants.OunceToKilograms);
+		internal static T OunceToKilograms => ParsedOunceToKilograms ?? T.CreateChecked(ConversionConstants.OunceToKilograms);
+
+		/// <summary>OunceToKilograms parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedOunceToKilograms = StorageLiteral.Parse<T>("0.028349523125");
 
 		/// <summary>Metric ton to kilogram conversion: 1000 kg/t (exact by definition)</summary>
-		internal static readonly T TonToKilograms = StorageLiteral.Parse<T>("1000", ConversionConstants.TonToKilograms);
+		internal static T TonToKilograms => ParsedTonToKilograms ?? T.CreateChecked(ConversionConstants.TonToKilograms);
+
+		/// <summary>TonToKilograms parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedTonToKilograms = StorageLiteral.Parse<T>("1000");
 
 		/// <summary>Stone to kilogram conversion: 6.35029318 kg/st (14 lb, exact)</summary>
-		internal static readonly T StoneToKilograms = StorageLiteral.Parse<T>("6.35029318", ConversionConstants.StoneToKilograms);
+		internal static T StoneToKilograms => ParsedStoneToKilograms ?? T.CreateChecked(ConversionConstants.StoneToKilograms);
+
+		/// <summary>StoneToKilograms parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedStoneToKilograms = StorageLiteral.Parse<T>("6.35029318");
 
 		/// <summary>Short ton to kilogram conversion: 907.18474 kg/ton (2000 lb, exact)</summary>
-		internal static readonly T ShortTonToKilograms = StorageLiteral.Parse<T>("907.18474", ConversionConstants.ShortTonToKilograms);
+		internal static T ShortTonToKilograms => ParsedShortTonToKilograms ?? T.CreateChecked(ConversionConstants.ShortTonToKilograms);
+
+		/// <summary>ShortTonToKilograms parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedShortTonToKilograms = StorageLiteral.Parse<T>("907.18474");
 
 		/// <summary>Atomic mass unit to kilogram: 1.66053906660e-27 kg/u (2018 CODATA)</summary>
-		internal static readonly T AtomicMassUnitToKilograms = StorageLiteral.Parse<T>("1.66053906660e-27", ConversionConstants.AtomicMassUnitToKilograms);
+		internal static T AtomicMassUnitToKilograms => ParsedAtomicMassUnitToKilograms ?? T.CreateChecked(ConversionConstants.AtomicMassUnitToKilograms);
+
+		/// <summary>AtomicMassUnitToKilograms parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedAtomicMassUnitToKilograms = StorageLiteral.Parse<T>("1.66053906660e-27");
 
 		/// <summary>Liter to cubic meter conversion: 0.001 m³/L (exact by definition)</summary>
-		internal static readonly T LiterToCubicMeters = StorageLiteral.Parse<T>("0.001", ConversionConstants.LiterToCubicMeters);
+		internal static T LiterToCubicMeters => ParsedLiterToCubicMeters ?? T.CreateChecked(ConversionConstants.LiterToCubicMeters);
+
+		/// <summary>LiterToCubicMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedLiterToCubicMeters = StorageLiteral.Parse<T>("0.001");
 
 		/// <summary>US gallon to cubic meter conversion: 0.003785411784 m³/gal (exact)</summary>
-		internal static readonly T GallonToCubicMeters = StorageLiteral.Parse<T>("0.003785411784", ConversionConstants.GallonToCubicMeters);
+		internal static T GallonToCubicMeters => ParsedGallonToCubicMeters ?? T.CreateChecked(ConversionConstants.GallonToCubicMeters);
+
+		/// <summary>GallonToCubicMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedGallonToCubicMeters = StorageLiteral.Parse<T>("0.003785411784");
 
 		/// <summary>Cubic centimeter to cubic meter: 1e-6 m³/cm³ (exact by definition)</summary>
-		internal static readonly T CubicCentimeterToCubicMeters = StorageLiteral.Parse<T>("1e-6", ConversionConstants.CubicCentimeterToCubicMeters);
+		internal static T CubicCentimeterToCubicMeters => ParsedCubicCentimeterToCubicMeters ?? T.CreateChecked(ConversionConstants.CubicCentimeterToCubicMeters);
+
+		/// <summary>CubicCentimeterToCubicMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedCubicCentimeterToCubicMeters = StorageLiteral.Parse<T>("1e-6");
 
 		/// <summary>Cubic foot to cubic meter: 0.028316846592 m³/ft³ (exact)</summary>
-		internal static readonly T CubicFootToCubicMeters = StorageLiteral.Parse<T>("0.028316846592", ConversionConstants.CubicFootToCubicMeters);
+		internal static T CubicFootToCubicMeters => ParsedCubicFootToCubicMeters ?? T.CreateChecked(ConversionConstants.CubicFootToCubicMeters);
+
+		/// <summary>CubicFootToCubicMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedCubicFootToCubicMeters = StorageLiteral.Parse<T>("0.028316846592");
 
 		/// <summary>Cubic inch to cubic meter: 1.6387064e-5 m³/in³ (exact)</summary>
-		internal static readonly T CubicInchToCubicMeters = StorageLiteral.Parse<T>("1.6387064e-5", ConversionConstants.CubicInchToCubicMeters);
+		internal static T CubicInchToCubicMeters => ParsedCubicInchToCubicMeters ?? T.CreateChecked(ConversionConstants.CubicInchToCubicMeters);
+
+		/// <summary>CubicInchToCubicMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedCubicInchToCubicMeters = StorageLiteral.Parse<T>("1.6387064e-5");
 
 		/// <summary>Imperial gallon to cubic meter: 0.00454609 m³/imp gal (exact by definition)</summary>
-		internal static readonly T ImperialGallonToCubicMeters = StorageLiteral.Parse<T>("0.00454609", ConversionConstants.ImperialGallonToCubicMeters);
+		internal static T ImperialGallonToCubicMeters => ParsedImperialGallonToCubicMeters ?? T.CreateChecked(ConversionConstants.ImperialGallonToCubicMeters);
+
+		/// <summary>ImperialGallonToCubicMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedImperialGallonToCubicMeters = StorageLiteral.Parse<T>("0.00454609");
 
 		/// <summary>US liquid quart to cubic meter: 0.000946352946 m³/qt (exact)</summary>
-		internal static readonly T USQuartToCubicMeters = StorageLiteral.Parse<T>("0.000946352946", ConversionConstants.USQuartToCubicMeters);
+		internal static T USQuartToCubicMeters => ParsedUSQuartToCubicMeters ?? T.CreateChecked(ConversionConstants.USQuartToCubicMeters);
+
+		/// <summary>USQuartToCubicMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedUSQuartToCubicMeters = StorageLiteral.Parse<T>("0.000946352946");
 
 		/// <summary>US liquid pint to cubic meter: 0.000473176473 m³/pt (exact)</summary>
-		internal static readonly T USPintToCubicMeters = StorageLiteral.Parse<T>("0.000473176473", ConversionConstants.USPintToCubicMeters);
+		internal static T USPintToCubicMeters => ParsedUSPintToCubicMeters ?? T.CreateChecked(ConversionConstants.USPintToCubicMeters);
+
+		/// <summary>USPintToCubicMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedUSPintToCubicMeters = StorageLiteral.Parse<T>("0.000473176473");
 
 		/// <summary>US fluid ounce to cubic meter: 2.95735295625e-5 m³/fl oz (exact)</summary>
-		internal static readonly T USFluidOunceToCubicMeters = StorageLiteral.Parse<T>("2.95735295625e-5", ConversionConstants.USFluidOunceToCubicMeters);
+		internal static T USFluidOunceToCubicMeters => ParsedUSFluidOunceToCubicMeters ?? T.CreateChecked(ConversionConstants.USFluidOunceToCubicMeters);
+
+		/// <summary>USFluidOunceToCubicMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedUSFluidOunceToCubicMeters = StorageLiteral.Parse<T>("2.95735295625e-5");
 
 		/// <summary>Minute to second conversion: 60 s/min (exact)</summary>
-		internal static readonly T MinuteToSeconds = StorageLiteral.Parse<T>("60", ConversionConstants.MinuteToSeconds);
+		internal static T MinuteToSeconds => ParsedMinuteToSeconds ?? T.CreateChecked(ConversionConstants.MinuteToSeconds);
+
+		/// <summary>MinuteToSeconds parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedMinuteToSeconds = StorageLiteral.Parse<T>("60");
 
 		/// <summary>Hour to second conversion: 3600 s/h (exact)</summary>
-		internal static readonly T HourToSeconds = StorageLiteral.Parse<T>("3600", ConversionConstants.HourToSeconds);
+		internal static T HourToSeconds => ParsedHourToSeconds ?? T.CreateChecked(ConversionConstants.HourToSeconds);
+
+		/// <summary>HourToSeconds parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedHourToSeconds = StorageLiteral.Parse<T>("3600");
 
 		/// <summary>Day to second conversion: 86400 s/day (exact)</summary>
-		internal static readonly T DayToSeconds = StorageLiteral.Parse<T>("86400", ConversionConstants.DayToSeconds);
+		internal static T DayToSeconds => ParsedDayToSeconds ?? T.CreateChecked(ConversionConstants.DayToSeconds);
+
+		/// <summary>DayToSeconds parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedDayToSeconds = StorageLiteral.Parse<T>("86400");
 
 		/// <summary>Year to second conversion: 31557600 s/year (365.25 days, exact)</summary>
-		internal static readonly T YearToSeconds = StorageLiteral.Parse<T>("31557600", ConversionConstants.YearToSeconds);
+		internal static T YearToSeconds => ParsedYearToSeconds ?? T.CreateChecked(ConversionConstants.YearToSeconds);
+
+		/// <summary>YearToSeconds parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedYearToSeconds = StorageLiteral.Parse<T>("31557600");
 
 		/// <summary>Week to second conversion: 604800 s/wk (exact)</summary>
-		internal static readonly T WeekToSeconds = StorageLiteral.Parse<T>("604800", ConversionConstants.WeekToSeconds);
+		internal static T WeekToSeconds => ParsedWeekToSeconds ?? T.CreateChecked(ConversionConstants.WeekToSeconds);
+
+		/// <summary>WeekToSeconds parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedWeekToSeconds = StorageLiteral.Parse<T>("604800");
 
 		/// <summary>Celsius to Kelvin temperature offset: 273.15 K (exact by definition)</summary>
-		internal static readonly T CelsiusToKelvinOffset = StorageLiteral.Parse<T>("273.15", ConversionConstants.CelsiusToKelvinOffset);
+		internal static T CelsiusToKelvinOffset => ParsedCelsiusToKelvinOffset ?? T.CreateChecked(ConversionConstants.CelsiusToKelvinOffset);
+
+		/// <summary>CelsiusToKelvinOffset parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedCelsiusToKelvinOffset = StorageLiteral.Parse<T>("273.15");
 
 		/// <summary>Fahrenheit-to-Kelvin degree scale factor: 5/9 K/°F (exact, stored as a fraction)</summary>
-		internal static readonly T FahrenheitScale = StorageLiteral.Divide<T>("5", "9", ConversionConstants.FahrenheitScale);
+		internal static T FahrenheitScale => ParsedFahrenheitScale ?? T.CreateChecked(ConversionConstants.FahrenheitScale);
+
+		/// <summary>FahrenheitScale parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedFahrenheitScale = StorageLiteral.Divide<T>("5", "9");
 
 		/// <summary>Fahrenheit to Kelvin affine offset: 459.67 × 5/9 = 45967/180 ≈ 255.372 K (exact, stored as a fraction)</summary>
-		internal static readonly T FahrenheitToKelvinOffset = StorageLiteral.Divide<T>("45967", "180", ConversionConstants.FahrenheitToKelvinOffset);
+		internal static T FahrenheitToKelvinOffset => ParsedFahrenheitToKelvinOffset ?? T.CreateChecked(ConversionConstants.FahrenheitToKelvinOffset);
 
-		/// <summary>Degree to radian conversion: π/180 rad/° (exact)</summary>
-		internal static readonly T DegreeToRadians = StorageLiteral.Parse<T>("0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983", ConversionConstants.DegreeToRadians);
+		/// <summary>FahrenheitToKelvinOffset parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedFahrenheitToKelvinOffset = StorageLiteral.Divide<T>("45967", "180");
 
-		/// <summary>Gradian to radian conversion: π/200 rad/grad (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
-		internal static readonly T GradianToRadians = StorageLiteral.Parse<T>("0.0157079632679489661923132169163975144209858469968755291048747229615390820314310449931401741267105876411909366360292356011914856685250059698650262847", ConversionConstants.GradianToRadians);
+		/// <summary>Degree to radian conversion: π/180 rad/°, correctly rounded to 150 significant digits</summary>
+		internal static T DegreeToRadians => ParsedDegreeToRadians ?? T.CreateChecked(ConversionConstants.DegreeToRadians);
 
-		/// <summary>Revolution to radian conversion: 2π rad/rev (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
-		internal static readonly T RevolutionToRadians = StorageLiteral.Parse<T>("6.28318530717958647692528676655900576839433879875021164194988918461563281257241799725606965068423505647637465441169424047659426741000238794601051388", ConversionConstants.RevolutionToRadians);
+		/// <summary>DegreeToRadians parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedDegreeToRadians = StorageLiteral.Parse<T>("0.0174532925199432957692369076848861271344287188854172545609719144017100911460344944368224156963450948221230449250737905924838546922752810123984742189340");
+
+		/// <summary>Gradian to radian conversion: π/200 rad/grad, correctly rounded to 150 significant digits</summary>
+		internal static T GradianToRadians => ParsedGradianToRadians ?? T.CreateChecked(ConversionConstants.GradianToRadians);
+
+		/// <summary>GradianToRadians parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedGradianToRadians = StorageLiteral.Parse<T>("0.0157079632679489661923132169163975144209858469968755291048747229615390820314310449931401741267105853399107404325664115332354692230477529111586267970406");
+
+		/// <summary>Revolution to radian conversion: 2π rad/rev, correctly rounded to 150 significant digits</summary>
+		internal static T RevolutionToRadians => ParsedRevolutionToRadians ?? T.CreateChecked(ConversionConstants.RevolutionToRadians);
+
+		/// <summary>RevolutionToRadians parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedRevolutionToRadians = StorageLiteral.Parse<T>("6.28318530717958647692528676655900576839433879875021164194988918461563281257241799725606965068423413596429617302656461329418768921910116446345071881626");
 
 		/// <summary>Calorie to joule conversion: 4.184 J/cal (exact, thermochemical calorie)</summary>
-		internal static readonly T CalorieToJoules = StorageLiteral.Parse<T>("4.184", ConversionConstants.CalorieToJoules);
+		internal static T CalorieToJoules => ParsedCalorieToJoules ?? T.CreateChecked(ConversionConstants.CalorieToJoules);
+
+		/// <summary>CalorieToJoules parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedCalorieToJoules = StorageLiteral.Parse<T>("4.184");
 
 		/// <summary>Kilowatt-hour to joule conversion: 3600000 J/kWh (exact)</summary>
-		internal static readonly T KilowattHourToJoules = StorageLiteral.Parse<T>("3600000", ConversionConstants.KilowattHourToJoules);
+		internal static T KilowattHourToJoules => ParsedKilowattHourToJoules ?? T.CreateChecked(ConversionConstants.KilowattHourToJoules);
+
+		/// <summary>KilowattHourToJoules parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedKilowattHourToJoules = StorageLiteral.Parse<T>("3600000");
 
 		/// <summary>Mechanical horsepower to watt conversion: 550 ft⋅lbf/s = 550 × 0.3048 × 4.4482216152605 = 745.69987158227022 W/hp (exact)</summary>
-		internal static readonly T HorsepowerToWatts = StorageLiteral.Parse<T>("745.69987158227022", ConversionConstants.HorsepowerToWatts);
+		internal static T HorsepowerToWatts => ParsedHorsepowerToWatts ?? T.CreateChecked(ConversionConstants.HorsepowerToWatts);
+
+		/// <summary>HorsepowerToWatts parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedHorsepowerToWatts = StorageLiteral.Parse<T>("745.69987158227022");
 
 		/// <summary>Electron volt to joule conversion: 1.602176634e-19 J/eV (exact, based on elementary charge)</summary>
-		internal static readonly T ElectronVoltToJoules = StorageLiteral.Parse<T>("1.602176634e-19", ConversionConstants.ElectronVoltToJoules);
+		internal static T ElectronVoltToJoules => ParsedElectronVoltToJoules ?? T.CreateChecked(ConversionConstants.ElectronVoltToJoules);
+
+		/// <summary>ElectronVoltToJoules parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedElectronVoltToJoules = StorageLiteral.Parse<T>("1.602176634e-19");
 
 		/// <summary>Kilocalorie to joule conversion: 4184 J/kcal (exact, thermochemical)</summary>
-		internal static readonly T KilocalorieToJoules = StorageLiteral.Parse<T>("4184", ConversionConstants.KilocalorieToJoules);
+		internal static T KilocalorieToJoules => ParsedKilocalorieToJoules ?? T.CreateChecked(ConversionConstants.KilocalorieToJoules);
+
+		/// <summary>KilocalorieToJoules parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedKilocalorieToJoules = StorageLiteral.Parse<T>("4184");
 
 		/// <summary>Watt-hour to joule conversion: 3600 J/Wh (exact)</summary>
-		internal static readonly T WattHourToJoules = StorageLiteral.Parse<T>("3600", ConversionConstants.WattHourToJoules);
+		internal static T WattHourToJoules => ParsedWattHourToJoules ?? T.CreateChecked(ConversionConstants.WattHourToJoules);
+
+		/// <summary>WattHourToJoules parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedWattHourToJoules = StorageLiteral.Parse<T>("3600");
 
 		/// <summary>Erg to joule conversion: 1e-7 J/erg (exact by definition)</summary>
-		internal static readonly T ErgToJoules = StorageLiteral.Parse<T>("1e-7", ConversionConstants.ErgToJoules);
+		internal static T ErgToJoules => ParsedErgToJoules ?? T.CreateChecked(ConversionConstants.ErgToJoules);
+
+		/// <summary>ErgToJoules parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedErgToJoules = StorageLiteral.Parse<T>("1e-7");
 
 		/// <summary>British thermal unit (IT) to joule conversion: 1055.05585262 J/BTU (exact)</summary>
-		internal static readonly T BtuToJoules = StorageLiteral.Parse<T>("1055.05585262", ConversionConstants.BtuToJoules);
+		internal static T BtuToJoules => ParsedBtuToJoules ?? T.CreateChecked(ConversionConstants.BtuToJoules);
+
+		/// <summary>BtuToJoules parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedBtuToJoules = StorageLiteral.Parse<T>("1055.05585262");
 
 		/// <summary>Bar to pascal conversion: 100000 Pa/bar (exact by definition)</summary>
-		internal static readonly T BarToPascals = StorageLiteral.Parse<T>("100000", ConversionConstants.BarToPascals);
+		internal static T BarToPascals => ParsedBarToPascals ?? T.CreateChecked(ConversionConstants.BarToPascals);
+
+		/// <summary>BarToPascals parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedBarToPascals = StorageLiteral.Parse<T>("100000");
 
 		/// <summary>Atmosphere to pascal conversion: 101325 Pa/atm (exact by definition)</summary>
-		internal static readonly T AtmosphereToPascals = StorageLiteral.Parse<T>("101325", ConversionConstants.AtmosphereToPascals);
+		internal static T AtmosphereToPascals => ParsedAtmosphereToPascals ?? T.CreateChecked(ConversionConstants.AtmosphereToPascals);
+
+		/// <summary>AtmosphereToPascals parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedAtmosphereToPascals = StorageLiteral.Parse<T>("101325");
 
 		/// <summary>PSI to pascal conversion: 4.4482216152605 N / 0.0254² m² = 8896443230521/1290320000 Pa/psi, written to 150 significant digits (a literal rather than the fraction, because float storage rounds that numerator before dividing)</summary>
-		internal static readonly T PsiToPascals = StorageLiteral.Parse<T>("6894.75729316836133672267344534689069378138756277512555025110050220100440200880401760803521607043214086428172856345712691425382850765701531403062806126", ConversionConstants.PsiToPascals);
+		internal static T PsiToPascals => ParsedPsiToPascals ?? T.CreateChecked(ConversionConstants.PsiToPascals);
+
+		/// <summary>PsiToPascals parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPsiToPascals = StorageLiteral.Parse<T>("6894.75729316836133672267344534689069378138756277512555025110050220100440200880401760803521607043214086428172856345712691425382850765701531403062806126");
 
 		/// <summary>Torr to pascal conversion: 101325/760 = 20265/152 Pa/Torr (exact, stored as a fraction)</summary>
-		internal static readonly T TorrToPascals = StorageLiteral.Divide<T>("20265", "152", ConversionConstants.TorrToPascals);
+		internal static T TorrToPascals => ParsedTorrToPascals ?? T.CreateChecked(ConversionConstants.TorrToPascals);
+
+		/// <summary>TorrToPascals parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedTorrToPascals = StorageLiteral.Divide<T>("20265", "152");
 
 		/// <summary>Square foot to square meter conversion: 0.09290304 m²/ft² (exact)</summary>
-		internal static readonly T SquareFootToSquareMeters = StorageLiteral.Parse<T>("0.09290304", ConversionConstants.SquareFootToSquareMeters);
+		internal static T SquareFootToSquareMeters => ParsedSquareFootToSquareMeters ?? T.CreateChecked(ConversionConstants.SquareFootToSquareMeters);
+
+		/// <summary>SquareFootToSquareMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedSquareFootToSquareMeters = StorageLiteral.Parse<T>("0.09290304");
 
 		/// <summary>Square inch to square meter conversion: 0.00064516 m²/in² (exact)</summary>
-		internal static readonly T SquareInchToSquareMeters = StorageLiteral.Parse<T>("0.00064516", ConversionConstants.SquareInchToSquareMeters);
+		internal static T SquareInchToSquareMeters => ParsedSquareInchToSquareMeters ?? T.CreateChecked(ConversionConstants.SquareInchToSquareMeters);
+
+		/// <summary>SquareInchToSquareMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedSquareInchToSquareMeters = StorageLiteral.Parse<T>("0.00064516");
 
 		/// <summary>Barn to square meter conversion: 1e-28 m² (exact by definition)</summary>
-		internal static readonly T BarnToSquareMeters = StorageLiteral.Parse<T>("1e-28", ConversionConstants.BarnToSquareMeters);
+		internal static T BarnToSquareMeters => ParsedBarnToSquareMeters ?? T.CreateChecked(ConversionConstants.BarnToSquareMeters);
+
+		/// <summary>BarnToSquareMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedBarnToSquareMeters = StorageLiteral.Parse<T>("1e-28");
 
 		/// <summary>Square kilometer to square meter: 1e6 m²/km² (exact by definition)</summary>
-		internal static readonly T SquareKilometerToSquareMeters = StorageLiteral.Parse<T>("1e6", ConversionConstants.SquareKilometerToSquareMeters);
+		internal static T SquareKilometerToSquareMeters => ParsedSquareKilometerToSquareMeters ?? T.CreateChecked(ConversionConstants.SquareKilometerToSquareMeters);
+
+		/// <summary>SquareKilometerToSquareMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedSquareKilometerToSquareMeters = StorageLiteral.Parse<T>("1e6");
 
 		/// <summary>Square centimeter to square meter: 1e-4 m²/cm² (exact by definition)</summary>
-		internal static readonly T SquareCentimeterToSquareMeters = StorageLiteral.Parse<T>("1e-4", ConversionConstants.SquareCentimeterToSquareMeters);
+		internal static T SquareCentimeterToSquareMeters => ParsedSquareCentimeterToSquareMeters ?? T.CreateChecked(ConversionConstants.SquareCentimeterToSquareMeters);
+
+		/// <summary>SquareCentimeterToSquareMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedSquareCentimeterToSquareMeters = StorageLiteral.Parse<T>("1e-4");
 
 		/// <summary>Square mile to square meter: 2589988.110336 m²/mi² (exact)</summary>
-		internal static readonly T SquareMileToSquareMeters = StorageLiteral.Parse<T>("2589988.110336", ConversionConstants.SquareMileToSquareMeters);
+		internal static T SquareMileToSquareMeters => ParsedSquareMileToSquareMeters ?? T.CreateChecked(ConversionConstants.SquareMileToSquareMeters);
+
+		/// <summary>SquareMileToSquareMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedSquareMileToSquareMeters = StorageLiteral.Parse<T>("2589988.110336");
 
 		/// <summary>Hectare to square meter: 10000 m²/ha (exact by definition)</summary>
-		internal static readonly T HectareToSquareMeters = StorageLiteral.Parse<T>("10000", ConversionConstants.HectareToSquareMeters);
+		internal static T HectareToSquareMeters => ParsedHectareToSquareMeters ?? T.CreateChecked(ConversionConstants.HectareToSquareMeters);
+
+		/// <summary>HectareToSquareMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedHectareToSquareMeters = StorageLiteral.Parse<T>("10000");
 
 		/// <summary>Acre to square meter: 4046.8564224 m²/ac (exact)</summary>
-		internal static readonly T AcreToSquareMeters = StorageLiteral.Parse<T>("4046.8564224", ConversionConstants.AcreToSquareMeters);
+		internal static T AcreToSquareMeters => ParsedAcreToSquareMeters ?? T.CreateChecked(ConversionConstants.AcreToSquareMeters);
+
+		/// <summary>AcreToSquareMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedAcreToSquareMeters = StorageLiteral.Parse<T>("4046.8564224");
 
 		/// <summary>Kilometers per hour to meters per second conversion: 1000/3600 = 5/18 m/s per km/h (exact, stored as a fraction)</summary>
-		internal static readonly T KilometerPerHourToMeterPerSecond = StorageLiteral.Divide<T>("5", "18", ConversionConstants.KilometerPerHourToMeterPerSecond);
+		internal static T KilometerPerHourToMeterPerSecond => ParsedKilometerPerHourToMeterPerSecond ?? T.CreateChecked(ConversionConstants.KilometerPerHourToMeterPerSecond);
+
+		/// <summary>KilometerPerHourToMeterPerSecond parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedKilometerPerHourToMeterPerSecond = StorageLiteral.Divide<T>("5", "18");
 
 		/// <summary>Miles per hour to meters per second conversion: 0.44704 m/s per mph (exact)</summary>
-		internal static readonly T MilePerHourToMeterPerSecond = StorageLiteral.Parse<T>("0.44704", ConversionConstants.MilePerHourToMeterPerSecond);
+		internal static T MilePerHourToMeterPerSecond => ParsedMilePerHourToMeterPerSecond ?? T.CreateChecked(ConversionConstants.MilePerHourToMeterPerSecond);
+
+		/// <summary>MilePerHourToMeterPerSecond parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedMilePerHourToMeterPerSecond = StorageLiteral.Parse<T>("0.44704");
 
 		/// <summary>Feet per second to meters per second: 0.3048 m/s per ft/s (exact)</summary>
-		internal static readonly T FootPerSecondToMeterPerSecond = StorageLiteral.Parse<T>("0.3048", ConversionConstants.FootPerSecondToMeterPerSecond);
+		internal static T FootPerSecondToMeterPerSecond => ParsedFootPerSecondToMeterPerSecond ?? T.CreateChecked(ConversionConstants.FootPerSecondToMeterPerSecond);
+
+		/// <summary>FootPerSecondToMeterPerSecond parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedFootPerSecondToMeterPerSecond = StorageLiteral.Parse<T>("0.3048");
 
 		/// <summary>Knot to meters per second: 1852/3600 = 463/900 m/s per kn (exact, stored as a fraction)</summary>
-		internal static readonly T KnotToMeterPerSecond = StorageLiteral.Divide<T>("463", "900", ConversionConstants.KnotToMeterPerSecond);
+		internal static T KnotToMeterPerSecond => ParsedKnotToMeterPerSecond ?? T.CreateChecked(ConversionConstants.KnotToMeterPerSecond);
 
-		/// <summary>RPM to rad/s conversion: 2π/60 = π/30 rad/s per rpm (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
-		internal static readonly T RevolutionPerMinuteToRadianPerSecond = StorageLiteral.Parse<T>("0.104719755119659774615421446109316762806572313312503527365831486410260546876206966620934494178070584274606244240194904007943237790166706465766841898", ConversionConstants.RevolutionPerMinuteToRadianPerSecond);
+		/// <summary>KnotToMeterPerSecond parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedKnotToMeterPerSecond = StorageLiteral.Divide<T>("463", "900");
+
+		/// <summary>RPM to rad/s conversion: 2π/60 = π/30 rad/s per rpm, correctly rounded to 150 significant digits</summary>
+		internal static T RevolutionPerMinuteToRadianPerSecond => ParsedRevolutionPerMinuteToRadianPerSecond ?? T.CreateChecked(ConversionConstants.RevolutionPerMinuteToRadianPerSecond);
+
+		/// <summary>RevolutionPerMinuteToRadianPerSecond parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedRevolutionPerMinuteToRadianPerSecond = StorageLiteral.Parse<T>("0.104719755119659774615421446109316762806572313312503527365831486410260546876206966620934494178070568932738269550442743554903128153651686074390845313604");
 
 		/// <summary>Pound-foot to Newton-meter conversion: 1.3558179483314004 N⋅m per lb⋅ft (exact)</summary>
-		internal static readonly T PoundFootToNewtonMeters = StorageLiteral.Parse<T>("1.3558179483314004", ConversionConstants.PoundFootToNewtonMeters);
+		internal static T PoundFootToNewtonMeters => ParsedPoundFootToNewtonMeters ?? T.CreateChecked(ConversionConstants.PoundFootToNewtonMeters);
+
+		/// <summary>PoundFootToNewtonMeters parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPoundFootToNewtonMeters = StorageLiteral.Parse<T>("1.3558179483314004");
 
 		/// <summary>Molar to cubic meter concentration conversion: 1000.0 mol/m³ per mol/L (exact)</summary>
-		internal static readonly T MolarToCubicMeter = StorageLiteral.Parse<T>("1000.0", ConversionConstants.MolarToCubicMeter);
+		internal static T MolarToCubicMeter => ParsedMolarToCubicMeter ?? T.CreateChecked(ConversionConstants.MolarToCubicMeter);
+
+		/// <summary>MolarToCubicMeter parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedMolarToCubicMeter = StorageLiteral.Parse<T>("1000.0");
 
 		/// <summary>Millimolar to mole per cubic meter: 1 mol/m³ per mM (exact)</summary>
-		internal static readonly T MillimolarToMolePerCubicMeter = StorageLiteral.Parse<T>("1.0", ConversionConstants.MillimolarToMolePerCubicMeter);
+		internal static T MillimolarToMolePerCubicMeter => ParsedMillimolarToMolePerCubicMeter ?? T.CreateChecked(ConversionConstants.MillimolarToMolePerCubicMeter);
+
+		/// <summary>MillimolarToMolePerCubicMeter parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedMillimolarToMolePerCubicMeter = StorageLiteral.Parse<T>("1.0");
 
 		/// <summary>Micromolar to mole per cubic meter: 0.001 mol/m³ per μM (exact)</summary>
-		internal static readonly T MicromolarToMolePerCubicMeter = StorageLiteral.Parse<T>("0.001", ConversionConstants.MicromolarToMolePerCubicMeter);
+		internal static T MicromolarToMolePerCubicMeter => ParsedMicromolarToMolePerCubicMeter ?? T.CreateChecked(ConversionConstants.MicromolarToMolePerCubicMeter);
+
+		/// <summary>MicromolarToMolePerCubicMeter parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedMicromolarToMolePerCubicMeter = StorageLiteral.Parse<T>("0.001");
 
 		/// <summary>Stokes to square meter per second: 1e-4 m²/s per St (exact by definition)</summary>
-		internal static readonly T StokesToSquareMeterPerSecond = StorageLiteral.Parse<T>("1e-4", ConversionConstants.StokesToSquareMeterPerSecond);
+		internal static T StokesToSquareMeterPerSecond => ParsedStokesToSquareMeterPerSecond ?? T.CreateChecked(ConversionConstants.StokesToSquareMeterPerSecond);
+
+		/// <summary>StokesToSquareMeterPerSecond parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedStokesToSquareMeterPerSecond = StorageLiteral.Parse<T>("1e-4");
 
 		/// <summary>Poise to pascal second: 0.1 Pa·s per P (exact by definition)</summary>
-		internal static readonly T PoiseToPascalSecond = StorageLiteral.Parse<T>("0.1", ConversionConstants.PoiseToPascalSecond);
+		internal static T PoiseToPascalSecond => ParsedPoiseToPascalSecond ?? T.CreateChecked(ConversionConstants.PoiseToPascalSecond);
+
+		/// <summary>PoiseToPascalSecond parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPoiseToPascalSecond = StorageLiteral.Parse<T>("0.1");
 
 		/// <summary>Liter per second to cubic meter per second: 0.001 m³/s per L/s (exact by definition)</summary>
-		internal static readonly T LiterPerSecondToCubicMeterPerSecond = StorageLiteral.Parse<T>("0.001", ConversionConstants.LiterPerSecondToCubicMeterPerSecond);
+		internal static T LiterPerSecondToCubicMeterPerSecond => ParsedLiterPerSecondToCubicMeterPerSecond ?? T.CreateChecked(ConversionConstants.LiterPerSecondToCubicMeterPerSecond);
+
+		/// <summary>LiterPerSecondToCubicMeterPerSecond parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedLiterPerSecondToCubicMeterPerSecond = StorageLiteral.Parse<T>("0.001");
 
 		/// <summary>Centipoise to pascal second: 0.001 Pa·s per cP (exact by definition)</summary>
-		internal static readonly T CentipoiseToPascalSecond = StorageLiteral.Parse<T>("0.001", ConversionConstants.CentipoiseToPascalSecond);
+		internal static T CentipoiseToPascalSecond => ParsedCentipoiseToPascalSecond ?? T.CreateChecked(ConversionConstants.CentipoiseToPascalSecond);
+
+		/// <summary>CentipoiseToPascalSecond parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedCentipoiseToPascalSecond = StorageLiteral.Parse<T>("0.001");
 
 		/// <summary>Dyne per centimeter to newton per meter: 0.001 N/m per dyn/cm (exact)</summary>
-		internal static readonly T DynePerCentimeterToNewtonPerMeter = StorageLiteral.Parse<T>("0.001", ConversionConstants.DynePerCentimeterToNewtonPerMeter);
+		internal static T DynePerCentimeterToNewtonPerMeter => ParsedDynePerCentimeterToNewtonPerMeter ?? T.CreateChecked(ConversionConstants.DynePerCentimeterToNewtonPerMeter);
+
+		/// <summary>DynePerCentimeterToNewtonPerMeter parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedDynePerCentimeterToNewtonPerMeter = StorageLiteral.Parse<T>("0.001");
 
 		/// <summary>Gram per cubic centimeter to kilogram per cubic meter: 1000 kg/m³ per g/cm³ (exact)</summary>
-		internal static readonly T GramPerCubicCentimeterToKilogramPerCubicMeter = StorageLiteral.Parse<T>("1000", ConversionConstants.GramPerCubicCentimeterToKilogramPerCubicMeter);
+		internal static T GramPerCubicCentimeterToKilogramPerCubicMeter => ParsedGramPerCubicCentimeterToKilogramPerCubicMeter ?? T.CreateChecked(ConversionConstants.GramPerCubicCentimeterToKilogramPerCubicMeter);
+
+		/// <summary>GramPerCubicCentimeterToKilogramPerCubicMeter parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedGramPerCubicCentimeterToKilogramPerCubicMeter = StorageLiteral.Parse<T>("1000");
 
 		/// <summary>Gram per liter to kilogram per cubic meter: 1 kg/m³ per g/L (exact)</summary>
-		internal static readonly T GramPerLiterToKilogramPerCubicMeter = StorageLiteral.Parse<T>("1.0", ConversionConstants.GramPerLiterToKilogramPerCubicMeter);
+		internal static T GramPerLiterToKilogramPerCubicMeter => ParsedGramPerLiterToKilogramPerCubicMeter ?? T.CreateChecked(ConversionConstants.GramPerLiterToKilogramPerCubicMeter);
+
+		/// <summary>GramPerLiterToKilogramPerCubicMeter parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedGramPerLiterToKilogramPerCubicMeter = StorageLiteral.Parse<T>("1.0");
 
 		/// <summary>Gauss to Tesla: 1e-4 T per G (exact by definition)</summary>
-		internal static readonly T GaussToTesla = StorageLiteral.Parse<T>("1e-4", ConversionConstants.GaussToTesla);
+		internal static T GaussToTesla => ParsedGaussToTesla ?? T.CreateChecked(ConversionConstants.GaussToTesla);
+
+		/// <summary>GaussToTesla parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedGaussToTesla = StorageLiteral.Parse<T>("1e-4");
 
 		/// <summary>Ampere-hour to coulomb conversion: 3600 C/Ah (exact)</summary>
-		internal static readonly T AmpereHourToCoulombs = StorageLiteral.Parse<T>("3600", ConversionConstants.AmpereHourToCoulombs);
+		internal static T AmpereHourToCoulombs => ParsedAmpereHourToCoulombs ?? T.CreateChecked(ConversionConstants.AmpereHourToCoulombs);
+
+		/// <summary>AmpereHourToCoulombs parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedAmpereHourToCoulombs = StorageLiteral.Parse<T>("3600");
 
 		/// <summary>Gram per mole to kilogram per mole: 0.001 kg/mol per g/mol (exact by definition)</summary>
-		internal static readonly T GramPerMoleToKilogramPerMole = StorageLiteral.Parse<T>("0.001", ConversionConstants.GramPerMoleToKilogramPerMole);
+		internal static T GramPerMoleToKilogramPerMole => ParsedGramPerMoleToKilogramPerMole ?? T.CreateChecked(ConversionConstants.GramPerMoleToKilogramPerMole);
+
+		/// <summary>GramPerMoleToKilogramPerMole parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedGramPerMoleToKilogramPerMole = StorageLiteral.Parse<T>("0.001");
 
 		/// <summary>Kilojoule per mole to joule per mole: 1000 J/mol per kJ/mol (exact by definition)</summary>
-		internal static readonly T KilojoulePerMoleToJoulePerMole = StorageLiteral.Parse<T>("1000", ConversionConstants.KilojoulePerMoleToJoulePerMole);
+		internal static T KilojoulePerMoleToJoulePerMole => ParsedKilojoulePerMoleToJoulePerMole ?? T.CreateChecked(ConversionConstants.KilojoulePerMoleToJoulePerMole);
+
+		/// <summary>KilojoulePerMoleToJoulePerMole parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedKilojoulePerMoleToJoulePerMole = StorageLiteral.Parse<T>("1000");
 
 		/// <summary>Calorie per mole to joule per mole: 4.184 J/mol per cal/mol (exact, thermochemical)</summary>
-		internal static readonly T CaloriePerMoleToJoulePerMole = StorageLiteral.Parse<T>("4.184", ConversionConstants.CaloriePerMoleToJoulePerMole);
+		internal static T CaloriePerMoleToJoulePerMole => ParsedCaloriePerMoleToJoulePerMole ?? T.CreateChecked(ConversionConstants.CaloriePerMoleToJoulePerMole);
+
+		/// <summary>CaloriePerMoleToJoulePerMole parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedCaloriePerMoleToJoulePerMole = StorageLiteral.Parse<T>("4.184");
 
 		/// <summary>Enzyme unit (1 μmol/min) to katal: 1e-6/60 = 1/60000000 kat/U (exact, stored as a fraction)</summary>
-		internal static readonly T EnzymeUnitToKatals = StorageLiteral.Divide<T>("1", "60000000", ConversionConstants.EnzymeUnitToKatals);
+		internal static T EnzymeUnitToKatals => ParsedEnzymeUnitToKatals ?? T.CreateChecked(ConversionConstants.EnzymeUnitToKatals);
+
+		/// <summary>EnzymeUnitToKatals parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedEnzymeUnitToKatals = StorageLiteral.Divide<T>("1", "60000000");
 
 		/// <summary>Standard gravity to meters per second squared: 9.80665 m/s² per g (exact by definition)</summary>
-		internal static readonly T StandardGravityToMeterPerSecondSquared = StorageLiteral.Parse<T>("9.80665", ConversionConstants.StandardGravityToMeterPerSecondSquared);
+		internal static T StandardGravityToMeterPerSecondSquared => ParsedStandardGravityToMeterPerSecondSquared ?? T.CreateChecked(ConversionConstants.StandardGravityToMeterPerSecondSquared);
+
+		/// <summary>StandardGravityToMeterPerSecondSquared parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedStandardGravityToMeterPerSecondSquared = StorageLiteral.Parse<T>("9.80665");
 
 		/// <summary>Dyne to newton conversion: 1e-5 N/dyn (exact by definition)</summary>
-		internal static readonly T DyneToNewtons = StorageLiteral.Parse<T>("1e-5", ConversionConstants.DyneToNewtons);
+		internal static T DyneToNewtons => ParsedDyneToNewtons ?? T.CreateChecked(ConversionConstants.DyneToNewtons);
+
+		/// <summary>DyneToNewtons parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedDyneToNewtons = StorageLiteral.Parse<T>("1e-5");
 
 		/// <summary>Pound-force to newton conversion: 4.4482216152605 N/lbf (exact)</summary>
-		internal static readonly T PoundForceToNewtons = StorageLiteral.Parse<T>("4.4482216152605", ConversionConstants.PoundForceToNewtons);
+		internal static T PoundForceToNewtons => ParsedPoundForceToNewtons ?? T.CreateChecked(ConversionConstants.PoundForceToNewtons);
+
+		/// <summary>PoundForceToNewtons parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPoundForceToNewtons = StorageLiteral.Parse<T>("4.4482216152605");
 
 		/// <summary>Curie to becquerel conversion: 3.7e10 Bq/Ci (exact by definition)</summary>
-		internal static readonly T CurieToBecquerels = StorageLiteral.Parse<T>("3.7e10", ConversionConstants.CurieToBecquerels);
+		internal static T CurieToBecquerels => ParsedCurieToBecquerels ?? T.CreateChecked(ConversionConstants.CurieToBecquerels);
+
+		/// <summary>CurieToBecquerels parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedCurieToBecquerels = StorageLiteral.Parse<T>("3.7e10");
 
 		/// <summary>Rad to gray conversion: 0.01 Gy/rad (exact by definition)</summary>
-		internal static readonly T RadToGrays = StorageLiteral.Parse<T>("0.01", ConversionConstants.RadToGrays);
+		internal static T RadToGrays => ParsedRadToGrays ?? T.CreateChecked(ConversionConstants.RadToGrays);
+
+		/// <summary>RadToGrays parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedRadToGrays = StorageLiteral.Parse<T>("0.01");
 
 		/// <summary>Rem to sievert conversion: 0.01 Sv/rem (exact by definition)</summary>
-		internal static readonly T RemToSieverts = StorageLiteral.Parse<T>("0.01", ConversionConstants.RemToSieverts);
+		internal static T RemToSieverts => ParsedRemToSieverts ?? T.CreateChecked(ConversionConstants.RemToSieverts);
+
+		/// <summary>RemToSieverts parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedRemToSieverts = StorageLiteral.Parse<T>("0.01");
 
 		/// <summary>Roentgen to coulomb per kilogram: 2.58e-4 C/kg per R (exact by definition)</summary>
-		internal static readonly T RoentgenToCoulombsPerKilogram = StorageLiteral.Parse<T>("2.58e-4", ConversionConstants.RoentgenToCoulombsPerKilogram);
+		internal static T RoentgenToCoulombsPerKilogram => ParsedRoentgenToCoulombsPerKilogram ?? T.CreateChecked(ConversionConstants.RoentgenToCoulombsPerKilogram);
+
+		/// <summary>RoentgenToCoulombsPerKilogram parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedRoentgenToCoulombsPerKilogram = StorageLiteral.Parse<T>("2.58e-4");
 
 		/// <summary>Foot-candle to lux conversion: 1 lm/ft² = 1/0.09290304 = 100000000/9290304 lx/fc (exact, stored as a fraction)</summary>
-		internal static readonly T FootCandleToLux = StorageLiteral.Divide<T>("100000000", "9290304", ConversionConstants.FootCandleToLux);
+		internal static T FootCandleToLux => ParsedFootCandleToLux ?? T.CreateChecked(ConversionConstants.FootCandleToLux);
 
-		/// <summary>Foot-lambert to candela per square meter: 1/(π × 0.09290304) cd/m² per fL (π to 150 significant digits, taken as DegreeToRadians × 180)</summary>
-		internal static readonly T FootLambertToCandelaPerSquareMeter = StorageLiteral.Parse<T>("3.42625909963539052691674596165021859423458362052428959800814578422615229026362399099348746319287426200971476339509417994666710818534309005070458689906", ConversionConstants.FootLambertToCandelaPerSquareMeter);
+		/// <summary>FootCandleToLux parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedFootCandleToLux = StorageLiteral.Divide<T>("100000000", "9290304");
+
+		/// <summary>Foot-lambert to candela per square meter: 1/(π × 0.09290304) cd/m² per fL, correctly rounded to 150 significant digits</summary>
+		internal static T FootLambertToCandelaPerSquareMeter => ParsedFootLambertToCandelaPerSquareMeter ?? T.CreateChecked(ConversionConstants.FootLambertToCandelaPerSquareMeter);
+
+		/// <summary>FootLambertToCandelaPerSquareMeter parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedFootLambertToCandelaPerSquareMeter = StorageLiteral.Parse<T>("3.42625909963539052691674596165021859423458362052428959800814578422615229026362399099348746319287476397054052755987227192765515199749284098513821314634");
 
 		/// <summary>Percent to ratio: 0.01 (exact by definition)</summary>
-		internal static readonly T PercentToRatio = StorageLiteral.Parse<T>("0.01", ConversionConstants.PercentToRatio);
+		internal static T PercentToRatio => ParsedPercentToRatio ?? T.CreateChecked(ConversionConstants.PercentToRatio);
+
+		/// <summary>PercentToRatio parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPercentToRatio = StorageLiteral.Parse<T>("0.01");
 
 		/// <summary>Parts per million to ratio: 1e-6 (exact by definition)</summary>
-		internal static readonly T PartPerMillionToRatio = StorageLiteral.Parse<T>("1e-6", ConversionConstants.PartPerMillionToRatio);
+		internal static T PartPerMillionToRatio => ParsedPartPerMillionToRatio ?? T.CreateChecked(ConversionConstants.PartPerMillionToRatio);
+
+		/// <summary>PartPerMillionToRatio parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPartPerMillionToRatio = StorageLiteral.Parse<T>("1e-6");
 
 		/// <summary>Parts per billion to ratio: 1e-9 (exact by definition)</summary>
-		internal static readonly T PartPerBillionToRatio = StorageLiteral.Parse<T>("1e-9", ConversionConstants.PartPerBillionToRatio);
+		internal static T PartPerBillionToRatio => ParsedPartPerBillionToRatio ?? T.CreateChecked(ConversionConstants.PartPerBillionToRatio);
+
+		/// <summary>PartPerBillionToRatio parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPartPerBillionToRatio = StorageLiteral.Parse<T>("1e-9");
 
 		/// <summary>Percent by weight to mass-fraction ratio: 0.01 (exact by definition)</summary>
-		internal static readonly T PercentByWeightToRatio = StorageLiteral.Parse<T>("0.01", ConversionConstants.PercentByWeightToRatio);
+		internal static T PercentByWeightToRatio => ParsedPercentByWeightToRatio ?? T.CreateChecked(ConversionConstants.PercentByWeightToRatio);
+
+		/// <summary>PercentByWeightToRatio parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPercentByWeightToRatio = StorageLiteral.Parse<T>("0.01");
 	}
 }
 

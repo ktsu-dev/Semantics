@@ -54,13 +54,13 @@ public static class PhysicalConstants
 	/// </summary>
 	public static class AngularMechanics
 	{
-		/// <summary>Degrees per radian: 180/π ≈ 57.29577951308232</summary>
+		/// <summary>Degrees per radian: 180/π ≈ 57.29577951308232 (correctly rounded to 150 significant digits)</summary>
 		public static T DegreesPerRadian<T>()  where T : struct, INumber<T> => Values<T>.DegreesPerRadian;
 
-		/// <summary>Radians per degree: π/180 ≈ 0.017453292519943295</summary>
+		/// <summary>Radians per degree: π/180 ≈ 0.017453292519943295 (correctly rounded to 150 significant digits)</summary>
 		public static T RadiansPerDegree<T>()  where T : struct, INumber<T> => Values<T>.RadiansPerDegree;
 
-		/// <summary>2π - Full rotation in radians: 6.283185307179586</summary>
+		/// <summary>2π, a full rotation in radians: 6.283185307179586 (correctly rounded to 150 significant digits)</summary>
 		public static T TwoPi<T>()  where T : struct, INumber<T> => Values<T>.TwoPi;
 
 		/// <summary>
@@ -69,14 +69,14 @@ public static class PhysicalConstants
 		private static class Values<T>
 			where T : struct, INumber<T>
 		{
-			/// <summary>Degrees per radian: 180/π ≈ 57.29577951308232</summary>
-			internal static readonly T DegreesPerRadian = T.Parse("57.29577951308232087679815481410517033240547246656432154916024386120284714832155263244096899585111094418897585567892854596978524038074810298080734906", NumberStyles.Float, CultureInfo.InvariantCulture);
+			/// <summary>Degrees per radian: 180/π ≈ 57.29577951308232 (correctly rounded to 150 significant digits)</summary>
+			internal static readonly T DegreesPerRadian = T.Parse("57.2957795130823208767981548141051703324054724665643215491602438612028471483215526324409689958511109441862233816328648932814482646012483150360682678634", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-			/// <summary>Radians per degree: π/180 ≈ 0.017453292519943295</summary>
-			internal static readonly T RadiansPerDegree = T.Parse("0.017453292519943295769236907684886127134428718885417254560971914401710091146034494436822415696345097379101040706699150667990539631694451077627806983", NumberStyles.Float, CultureInfo.InvariantCulture);
+			/// <summary>Radians per degree: π/180 ≈ 0.017453292519943295 (correctly rounded to 150 significant digits)</summary>
+			internal static readonly T RadiansPerDegree = T.Parse("0.0174532925199432957692369076848861271344287188854172545609719144017100911460344944368224156963450948221230449250737905924838546922752810123984742189340", NumberStyles.Float, CultureInfo.InvariantCulture);
 
-			/// <summary>2π - Full rotation in radians: 6.283185307179586</summary>
-			internal static readonly T TwoPi = T.Parse("6.283185307179586476925286766559005768394338798750211641949889184615632812572417997256069650684234135964735462226659258240820374631042607435096896808248", NumberStyles.Float, CultureInfo.InvariantCulture);
+			/// <summary>2π, a full rotation in radians: 6.283185307179586 (correctly rounded to 150 significant digits)</summary>
+			internal static readonly T TwoPi = T.Parse("6.28318530717958647692528676655900576839433879875021164194988918461563281257241799725606965068423413596429617302656461329418768921910116446345071881626", NumberStyles.Float, CultureInfo.InvariantCulture);
 		}
 	}
 
@@ -338,7 +338,7 @@ public static class PhysicalConstants
 		/// <summary>Gets boltzmann constant: 1.380649 × 10⁻²³ j/k (exact, si defining constant) as type T.</summary>
 		public static T BoltzmannConstant<T>()  where T : struct, INumber<T> => Fundamental.BoltzmannConstant<T>();
 
-		/// <summary>Gets degrees per radian: 180/π ≈ 57.29577951308232 as type T.</summary>
+		/// <summary>Gets degrees per radian: 180/π ≈ 57.29577951308232 (correctly rounded to 150 significant digits) as type T.</summary>
 		public static T DegreesPerRadian<T>()  where T : struct, INumber<T> => AngularMechanics.DegreesPerRadian<T>();
 
 		/// <summary>Gets elementary charge: 1.602176634 × 10⁻¹⁹ c (exact, si defining constant) as type T.</summary>
@@ -377,7 +377,7 @@ public static class PhysicalConstants
 		/// <summary>Gets planck constant: 6.62607015 × 10⁻³⁴ j·s (exact, si defining constant) as type T.</summary>
 		public static T PlanckConstant<T>()  where T : struct, INumber<T> => Fundamental.PlanckConstant<T>();
 
-		/// <summary>Gets radians per degree: π/180 ≈ 0.017453292519943295 as type T.</summary>
+		/// <summary>Gets radians per degree: π/180 ≈ 0.017453292519943295 (correctly rounded to 150 significant digits) as type T.</summary>
 		public static T RadiansPerDegree<T>()  where T : struct, INumber<T> => AngularMechanics.RadiansPerDegree<T>();
 
 		/// <summary>Gets reference sound intensity: 1 × 10⁻¹² w/m² (threshold of hearing) as type T.</summary>
@@ -407,7 +407,7 @@ public static class PhysicalConstants
 		/// <summary>Gets standard temperature (stp): 273.15 k (0°c) as type T.</summary>
 		public static T StandardTemperature<T>()  where T : struct, INumber<T> => Thermodynamics.StandardTemperature<T>();
 
-		/// <summary>Gets 2π - full rotation in radians: 6.283185307179586 as type T.</summary>
+		/// <summary>Gets 2π, a full rotation in radians: 6.283185307179586 (correctly rounded to 150 significant digits) as type T.</summary>
 		public static T TwoPi<T>()  where T : struct, INumber<T> => AngularMechanics.TwoPi<T>();
 
 		/// <summary>Gets water boiling point at 1 atm: 373.15 k (100°c) as type T.</summary>

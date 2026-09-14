@@ -5,6 +5,7 @@ namespace ktsu.Semantics.Test.Quantities;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using global::Semantics.SourceGenerators;
@@ -467,11 +468,12 @@ public class GeneratorDiagnosticTests
 		string source = result.GeneratedSources.Single().SourceText.ToString();
 
 		Assert.Contains("internal const double Factor = 5d / 9d;", source);
-		Assert.Contains("StorageLiteral.Divide<T>(\"5\", \"9\", ConversionConstants.Factor)", source);
+		Assert.Contains("StorageLiteral.Divide<T>(\"5\", \"9\")", source);
 	}
 
 	/// <summary>
-	/// A plain literal is written into the double constant exactly as the metadata spells it, and parsed into each storage type.
+	/// A plain literal is written into the double constant with a <c>d</c> suffix, parsed into each storage
+	/// type, and converted from the double at each read by a type that does not parse it.
 	/// </summary>
 	[TestMethod]
 	public void ALiteralIsParsedIntoTheStorageType()
@@ -482,8 +484,113 @@ public class GeneratorDiagnosticTests
 
 		string source = result.GeneratedSources.Single().SourceText.ToString();
 
-		Assert.Contains("internal const double Factor = 0.3048;", source);
-		Assert.Contains("StorageLiteral.Parse<T>(\"0.3048\", ConversionConstants.Factor)", source);
+		Assert.Contains("internal const double Factor = 0.3048d;", source);
+		Assert.Contains("private static readonly T? ParsedFactor = StorageLiteral.Parse<T>(\"0.3048\");", source);
+		Assert.Contains("internal static T Factor => ParsedFactor ?? T.CreateChecked(ConversionConstants.Factor);", source);
+	}
+
+	/// <summary>
+	/// SEM009 fires for a value a <see cref="double"/> constant cannot hold: a literal or a fraction's
+	/// operand beyond its range, a quotient that overflows, or a non-zero value that rounds to zero.
+	/// </summary>
+	/// <param name="value">A value outside the finite range of <see cref="double"/>.</param>
+	[TestMethod]
+	[DataRow("1e400")]
+	[DataRow("-1e400")]
+	[DataRow("1e-400")]
+	[DataRow("1e400/2")]
+	[DataRow("2/1e400")]
+	[DataRow("1e300/1e-300")]
+	[DataRow("1e-300/1e300")]
+	public void Sem009_IsReportedForAConversionValueOutsideTheRangeOfDouble(string value) =>
+		AssertReports(Run(ConversionsDocument(value), new ConversionsGenerator(), "conversions.json"), "SEM009");
+
+	/// <summary>
+	/// Every value SEM009 accepts becomes a <see cref="double"/> constant that compiles. A long integer
+	/// literal without a suffix is an integer literal too large for any integer type (CS1021).
+	/// </summary>
+	/// <param name="value">A well-formed value.</param>
+	[TestMethod]
+	[DataRow("100000000000000000000")]
+	[DataRow("1e308")]
+	[DataRow("0.3048")]
+	[DataRow("-273.15")]
+	[DataRow("1000.0")]
+	[DataRow("0")]
+	[DataRow("5/9")]
+	[DataRow("1e-6/60")]
+	public void TheDoubleConstantCompilesForEveryAcceptedValue(string value)
+	{
+		GeneratorRunResult result = Harness.Run(
+			new ConversionsGenerator(),
+			new Dictionary<string, string> { ["conversions.json"] = ConversionsDocument(value) });
+
+		const string Declaration = "internal const double Factor = ";
+		string source = result.GeneratedSources.Single().SourceText.ToString();
+		int start = source.IndexOf(Declaration, StringComparison.Ordinal);
+		Assert.IsGreaterThanOrEqualTo(0, start, $"No double constant was generated for {value}.");
+
+		start += Declaration.Length;
+		List<string> errors = CompileDoubleConstant(source[start..source.IndexOf(';', start)]);
+
+		Assert.IsEmpty(errors, $"The constant for {value} does not compile: {string.Join("; ", errors)}");
+	}
+
+	/// <summary>
+	/// Compiles a <see cref="double"/> constant declaration on its own.
+	/// </summary>
+	/// <param name="expression">The constant's initializer, as generated.</param>
+	/// <returns>The compiler errors, empty when the declaration compiles.</returns>
+	private static List<string> CompileDoubleConstant(string expression)
+	{
+		CSharpCompilation compilation = CSharpCompilation.Create(
+			"ConstantProbe",
+			[CSharpSyntaxTree.ParseText($"internal static class Probe {{ internal const double Factor = {expression}; }}")],
+			[MetadataReference.CreateFromFile(typeof(object).Assembly.Location)],
+			new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+		return
+		[
+			.. compilation.GetDiagnostics()
+				.Where(static diagnostic => diagnostic.Severity == DiagnosticSeverity.Error)
+				.Select(static diagnostic => diagnostic.ToString()),
+		];
+	}
+
+	/// <summary>
+	/// A unit declaring both a metric magnitude and a conversion factor scales by their product in its
+	/// generated factory, exactly as its <c>IUnit</c> implementation does, so the two cannot disagree.
+	/// </summary>
+	[TestMethod]
+	public void AUnitWithAMagnitudeAndAFactorAppliesBothInItsFactoryAndItsUnit()
+	{
+		const string UnitsDocument =
+			"""
+			{
+			  "unitCategories": [
+			    {
+			      "name": "Test",
+			      "description": "A category.",
+			      "units": [
+			        { "name": "Meter", "symbol": "m", "description": "Meter.", "system": "SIBase" },
+			        { "name": "Kilofoot", "symbol": "kft", "description": "A thousand feet.", "system": "Imperial", "magnitude": "Kilo", "conversionFactor": "FeetToMeters" }
+			      ]
+			    }
+			  ]
+			}
+			""";
+
+		Dictionary<string, string> metadata = new()
+		{
+			["dimensions.json"] = DimensionsDocument(availableUnits: "\"Meter\", \"Kilofoot\""),
+			["units.json"] = UnitsDocument,
+		};
+
+		string quantities = string.Join("\n", Harness.Run(new QuantitiesGenerator(), metadata).GeneratedSources.Select(static source => source.SourceText.ToString()));
+		string units = string.Join("\n", Harness.Run(new UnitsGenerator(), metadata).GeneratedSources.Select(static source => source.SourceText.ToString()));
+
+		Assert.Contains("(value * (MetricMagnitudes.Values<T>.Kilo * Units.ConversionConstants.Values<T>.FeetToMeters))", quantities);
+		Assert.Contains("=> MetricMagnitudes.Values<T>.Kilo * ConversionConstants.Values<T>.FeetToMeters;", units);
 	}
 
 	/// <summary>

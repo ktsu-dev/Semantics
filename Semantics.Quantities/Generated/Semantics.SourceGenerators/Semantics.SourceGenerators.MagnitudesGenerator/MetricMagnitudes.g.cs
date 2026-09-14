@@ -80,67 +80,130 @@ public static class MetricMagnitudes
 		where T : struct, INumber<T>
 	{
 		/// <summary>Yotta magnitude (Y): 10^24</summary>
-		internal static readonly T Yotta = StorageLiteral.Parse<T>("1e24", MetricMagnitudes.Yotta);
+		internal static T Yotta => ParsedYotta ?? T.CreateChecked(MetricMagnitudes.Yotta);
+
+		/// <summary>Yotta parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedYotta = StorageLiteral.Parse<T>("1e24");
 
 		/// <summary>Zetta magnitude (Z): 10^21</summary>
-		internal static readonly T Zetta = StorageLiteral.Parse<T>("1e21", MetricMagnitudes.Zetta);
+		internal static T Zetta => ParsedZetta ?? T.CreateChecked(MetricMagnitudes.Zetta);
+
+		/// <summary>Zetta parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedZetta = StorageLiteral.Parse<T>("1e21");
 
 		/// <summary>Exa magnitude (E): 10^18</summary>
-		internal static readonly T Exa = StorageLiteral.Parse<T>("1e18", MetricMagnitudes.Exa);
+		internal static T Exa => ParsedExa ?? T.CreateChecked(MetricMagnitudes.Exa);
+
+		/// <summary>Exa parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedExa = StorageLiteral.Parse<T>("1e18");
 
 		/// <summary>Peta magnitude (P): 10^15</summary>
-		internal static readonly T Peta = StorageLiteral.Parse<T>("1e15", MetricMagnitudes.Peta);
+		internal static T Peta => ParsedPeta ?? T.CreateChecked(MetricMagnitudes.Peta);
+
+		/// <summary>Peta parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPeta = StorageLiteral.Parse<T>("1e15");
 
 		/// <summary>Tera magnitude (T): 10^12</summary>
-		internal static readonly T Tera = StorageLiteral.Parse<T>("1e12", MetricMagnitudes.Tera);
+		internal static T Tera => ParsedTera ?? T.CreateChecked(MetricMagnitudes.Tera);
+
+		/// <summary>Tera parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedTera = StorageLiteral.Parse<T>("1e12");
 
 		/// <summary>Giga magnitude (G): 10^9</summary>
-		internal static readonly T Giga = StorageLiteral.Parse<T>("1e9", MetricMagnitudes.Giga);
+		internal static T Giga => ParsedGiga ?? T.CreateChecked(MetricMagnitudes.Giga);
+
+		/// <summary>Giga parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedGiga = StorageLiteral.Parse<T>("1e9");
 
 		/// <summary>Mega magnitude (M): 10^6</summary>
-		internal static readonly T Mega = StorageLiteral.Parse<T>("1e6", MetricMagnitudes.Mega);
+		internal static T Mega => ParsedMega ?? T.CreateChecked(MetricMagnitudes.Mega);
+
+		/// <summary>Mega parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedMega = StorageLiteral.Parse<T>("1e6");
 
 		/// <summary>Kilo magnitude (k): 10^3</summary>
-		internal static readonly T Kilo = StorageLiteral.Parse<T>("1e3", MetricMagnitudes.Kilo);
+		internal static T Kilo => ParsedKilo ?? T.CreateChecked(MetricMagnitudes.Kilo);
+
+		/// <summary>Kilo parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedKilo = StorageLiteral.Parse<T>("1e3");
 
 		/// <summary>Hecto magnitude (h): 10^2</summary>
-		internal static readonly T Hecto = StorageLiteral.Parse<T>("1e2", MetricMagnitudes.Hecto);
+		internal static T Hecto => ParsedHecto ?? T.CreateChecked(MetricMagnitudes.Hecto);
+
+		/// <summary>Hecto parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedHecto = StorageLiteral.Parse<T>("1e2");
 
 		/// <summary>Deka magnitude (da): 10^1</summary>
-		internal static readonly T Deka = StorageLiteral.Parse<T>("1e1", MetricMagnitudes.Deka);
+		internal static T Deka => ParsedDeka ?? T.CreateChecked(MetricMagnitudes.Deka);
+
+		/// <summary>Deka parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedDeka = StorageLiteral.Parse<T>("1e1");
 
 		/// <summary>Unity magnitude (): 10^0</summary>
-		internal static readonly T Unity = StorageLiteral.Parse<T>("1.0", MetricMagnitudes.Unity);
+		internal static T Unity => ParsedUnity ?? T.CreateChecked(MetricMagnitudes.Unity);
+
+		/// <summary>Unity parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedUnity = StorageLiteral.Parse<T>("1.0");
 
 		/// <summary>Deci magnitude (d): 10^-1</summary>
-		internal static readonly T Deci = StorageLiteral.Parse<T>("1e-1", MetricMagnitudes.Deci);
+		internal static T Deci => ParsedDeci ?? T.CreateChecked(MetricMagnitudes.Deci);
+
+		/// <summary>Deci parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedDeci = StorageLiteral.Parse<T>("1e-1");
 
 		/// <summary>Centi magnitude (c): 10^-2</summary>
-		internal static readonly T Centi = StorageLiteral.Parse<T>("1e-2", MetricMagnitudes.Centi);
+		internal static T Centi => ParsedCenti ?? T.CreateChecked(MetricMagnitudes.Centi);
+
+		/// <summary>Centi parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedCenti = StorageLiteral.Parse<T>("1e-2");
 
 		/// <summary>Milli magnitude (m): 10^-3</summary>
-		internal static readonly T Milli = StorageLiteral.Parse<T>("1e-3", MetricMagnitudes.Milli);
+		internal static T Milli => ParsedMilli ?? T.CreateChecked(MetricMagnitudes.Milli);
+
+		/// <summary>Milli parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedMilli = StorageLiteral.Parse<T>("1e-3");
 
 		/// <summary>Micro magnitude (μ): 10^-6</summary>
-		internal static readonly T Micro = StorageLiteral.Parse<T>("1e-6", MetricMagnitudes.Micro);
+		internal static T Micro => ParsedMicro ?? T.CreateChecked(MetricMagnitudes.Micro);
+
+		/// <summary>Micro parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedMicro = StorageLiteral.Parse<T>("1e-6");
 
 		/// <summary>Nano magnitude (n): 10^-9</summary>
-		internal static readonly T Nano = StorageLiteral.Parse<T>("1e-9", MetricMagnitudes.Nano);
+		internal static T Nano => ParsedNano ?? T.CreateChecked(MetricMagnitudes.Nano);
+
+		/// <summary>Nano parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedNano = StorageLiteral.Parse<T>("1e-9");
 
 		/// <summary>Pico magnitude (p): 10^-12</summary>
-		internal static readonly T Pico = StorageLiteral.Parse<T>("1e-12", MetricMagnitudes.Pico);
+		internal static T Pico => ParsedPico ?? T.CreateChecked(MetricMagnitudes.Pico);
+
+		/// <summary>Pico parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedPico = StorageLiteral.Parse<T>("1e-12");
 
 		/// <summary>Femto magnitude (f): 10^-15</summary>
-		internal static readonly T Femto = StorageLiteral.Parse<T>("1e-15", MetricMagnitudes.Femto);
+		internal static T Femto => ParsedFemto ?? T.CreateChecked(MetricMagnitudes.Femto);
+
+		/// <summary>Femto parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedFemto = StorageLiteral.Parse<T>("1e-15");
 
 		/// <summary>Atto magnitude (a): 10^-18</summary>
-		internal static readonly T Atto = StorageLiteral.Parse<T>("1e-18", MetricMagnitudes.Atto);
+		internal static T Atto => ParsedAtto ?? T.CreateChecked(MetricMagnitudes.Atto);
+
+		/// <summary>Atto parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedAtto = StorageLiteral.Parse<T>("1e-18");
 
 		/// <summary>Zepto magnitude (z): 10^-21</summary>
-		internal static readonly T Zepto = StorageLiteral.Parse<T>("1e-21", MetricMagnitudes.Zepto);
+		internal static T Zepto => ParsedZepto ?? T.CreateChecked(MetricMagnitudes.Zepto);
+
+		/// <summary>Zepto parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedZepto = StorageLiteral.Parse<T>("1e-21");
 
 		/// <summary>Yocto magnitude (y): 10^-24</summary>
-		internal static readonly T Yocto = StorageLiteral.Parse<T>("1e-24", MetricMagnitudes.Yocto);
+		internal static T Yocto => ParsedYocto ?? T.CreateChecked(MetricMagnitudes.Yocto);
+
+		/// <summary>Yocto parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedYocto = StorageLiteral.Parse<T>("1e-24");
 	}
 }
 

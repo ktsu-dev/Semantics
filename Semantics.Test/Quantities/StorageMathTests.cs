@@ -97,4 +97,35 @@ public sealed class StorageMathTests
 		Assert.AreEqual(tenToTheTwenty, StorageMath.Sqrt(tenToTheForty));
 		Assert.AreEqual(tenToTheTwenty, StorageMath.Sqrt(tenToTheForty + BigInteger.One));
 	}
+
+	/// <summary>
+	/// A <see cref="BigInteger"/> too large for <see cref="double"/> still gets its exact root, where a
+	/// start from the value itself used to run out of Newton steps and return a far larger number.
+	/// </summary>
+	[TestMethod]
+	public void BigIntegerBeyondTheRangeOfDoubleHasItsExactRoot()
+	{
+		BigInteger tenToTheTwoHundred = BigInteger.Pow(10, 200);
+
+		Assert.AreEqual(BigInteger.Pow(2, 1024), StorageMath.Sqrt(BigInteger.Pow(2, 2048)));
+		Assert.AreEqual(tenToTheTwoHundred, StorageMath.Sqrt(BigInteger.Pow(10, 400)));
+		Assert.AreEqual(tenToTheTwoHundred, StorageMath.Sqrt(BigInteger.Pow(10, 400) + BigInteger.One));
+		Assert.AreEqual(tenToTheTwoHundred - BigInteger.One, StorageMath.Sqrt(BigInteger.Pow(10, 400) - BigInteger.One));
+	}
+
+	[TestMethod]
+	public void BigIntegerZeroIsZero() => Assert.AreEqual(BigInteger.Zero, StorageMath.Sqrt(BigInteger.Zero));
+
+	/// <summary>
+	/// The smallest positive <see cref="decimal"/> has an exact root, and the largest has one correct to the last place the type holds.
+	/// </summary>
+	[TestMethod]
+	public void DecimalExtremesHaveTheirRoots()
+	{
+		// The root of decimal.MaxValue is 281474976710655.9999999999999982236..., within 2e-15 of this.
+		const decimal RootOfMaxValue = 281474976710656m;
+
+		Assert.AreEqual(0.00000000000001m, StorageMath.Sqrt(0.0000000000000000000000000001m));
+		Assert.IsLessThanOrEqualTo(0.00000000000002m, Math.Abs(StorageMath.Sqrt(decimal.MaxValue) - RootOfMaxValue));
+	}
 }

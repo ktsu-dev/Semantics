@@ -128,7 +128,7 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 				holderClass.Members.Add(new FieldTemplate()
 				{
 					Comments = {$"/// <summary>{constant.Description}</summary>"},
-					Keywords = {"internal", Emit.Static, "readonly", "T"},
+					Keywords = {Emit.Internal, Emit.Static, "readonly", "T"},
 					Name = constant.Name,
 					DefaultValue = $"T.Parse(\"{constant.Value}\", {ParseStyles}, CultureInfo.InvariantCulture)",
 				});

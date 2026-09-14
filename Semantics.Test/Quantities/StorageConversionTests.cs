@@ -102,10 +102,20 @@ public abstract class StorageConversionTests<T>(string tolerance, bool decimalEx
 		AssertValue("101325", Pressure<T>.FromTorr(Of("760")).Value, terminates: false);
 	}
 
+	/// <summary>
+	/// A metric magnitude combined with a factor of more significant digits than a <see cref="double"/>
+	/// conversion keeps is exact.
+	/// </summary>
+	/// <remarks>
+	/// A power of ten alone cannot tell the two routes apart, because converting <c>1e-2</c> from
+	/// <see cref="double"/> to <see cref="decimal"/> already gives exactly 0.01. The 17 significant digits
+	/// of these factors are what the old route rounded to 15.
+	/// </remarks>
 	[TestMethod]
-	public void AMetricMagnitudeIsExact()
+	public void AMetricMagnitudeCombinedWithALongFactorIsExact()
 	{
-		AssertValue("0.01", Length<T>.FromCentimeter(T.One).Value, terminates: true);
+		AssertValue("1355.8179483314004", TorqueMagnitude<T>.FromPoundFoot(Of("1000")).Value, terminates: true);
+		AssertValue("0.00000074569987158227022", Power<T>.FromHorsepower(Of("0.000001")).In(Units.Kilowatt), terminates: true);
 		AssertValue("36000", Length<T>.FromKilometer(Of("36")).Value, terminates: true);
 	}
 

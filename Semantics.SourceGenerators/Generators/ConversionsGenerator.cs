@@ -23,13 +23,25 @@ using TypeKind = ktsu.CodeBlocker.Templates.TypeKind;
 /// significant digits of a 17-digit literal.
 /// </para>
 /// <para>
-/// A value is a decimal literal or an exact fraction of two, <c>"5/9"</c>. Anything else is reported
-/// as SEM009 and generates no constant.
+/// Each factor in the holder is a property over a nullable parsed value. A storage type that does not
+/// parse it, such as an integer, converts the <see langword="double"/> at each read, so a factor too
+/// large for the type throws <see cref="System.OverflowException"/> from the factory that uses it and
+/// leaves the others working, as before 5.2.0. Converting in the static initializer instead made one
+/// overflow, <c>CurieToBecquerels</c> into <see cref="int"/>, fail every factor for the type.
+/// </para>
+/// <para>
+/// A value is a decimal literal or an exact fraction of two, <c>"5/9"</c>, that a <see langword="double"/>
+/// can hold. Anything else is reported as SEM009 and generates no constant.
 /// </para>
 /// </remarks>
 [Generator]
 public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 {
+	/// <summary>
+	/// Prefix of the private field holding each factor parsed into the storage type.
+	/// </summary>
+	private const string ParsedPrefix = "Parsed";
+
 	/// <summary>
 	/// Name of the nested holder that caches each factor materialised into a storage type.
 	/// </summary>
@@ -71,7 +83,7 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 			Kind = TypeKind.Class,
 			Keywords =
 			{
-				"internal",
+				Emit.Internal,
 				Emit.Static,
 			},
 			Name = "ConversionConstants",
@@ -88,7 +100,7 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 			Kind = TypeKind.Class,
 			Keywords =
 			{
-				"internal",
+				Emit.Internal,
 				Emit.Static,
 			},
 			Name = $"{HolderName}<T>",
@@ -114,7 +126,7 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 					},
 					Keywords =
 					{
-						"internal",
+						Emit.Internal,
 						"const",
 						"double",
 					},
@@ -122,7 +134,7 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 					DefaultValue = value.DoubleExpression,
 				});
 
-				// Qualified, because inside the holder the bare name is the field being declared.
+				// Qualified, because inside the holder the bare name is the property being declared.
 				holderClass.Members.Add(new FieldTemplate()
 				{
 					Comments =
@@ -131,13 +143,28 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 					},
 					Keywords =
 					{
-						"internal",
+						Emit.Internal,
 						Emit.Static,
-						"readonly",
 						"T",
 					},
-					Name = factor.Name,
-					DefaultValue = value.StorageExpression($"ConversionConstants.{factor.Name}"),
+					Name = $"{factor.Name} => {ParsedPrefix}{factor.Name} ?? T.CreateChecked(ConversionConstants.{factor.Name})",
+				});
+
+				holderClass.Members.Add(new FieldTemplate()
+				{
+					Comments =
+					{
+						$"/// <summary>{factor.Name} parsed into <typeparamref name=\"T\"/>, or <see langword=\"null\"/> when the <see langword=\"double\"/> is converted at each read.</summary>",
+					},
+					Keywords =
+					{
+						"private",
+						Emit.Static,
+						"readonly",
+						"T?",
+					},
+					Name = $"{ParsedPrefix}{factor.Name}",
+					DefaultValue = value.StorageExpression,
 				});
 			}
 		}

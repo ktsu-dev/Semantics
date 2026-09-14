@@ -11,12 +11,13 @@ using System.Numerics;
 internal static class StorageMath
 {
 	/// <summary>
-	/// The most Newton steps taken before the current estimate is returned as it stands.
+	/// The most Newton steps taken before the root is reported as not converging.
 	/// </summary>
 	/// <remarks>
-	/// From a <see cref="double"/> seed each step roughly doubles the number of correct digits, so a
-	/// handful suffice. The cap matters only when no seed could be taken and the estimate starts at
-	/// the value itself, where the early steps halve it rather than refine it.
+	/// The seed is always within a factor of two of the root, and from there each step roughly doubles
+	/// the number of correct digits, so a type would need far more digits than any real one holds to come
+	/// near the cap. Reaching it means the estimate is cycling rather than settling, and the estimate at
+	/// that point is not the root, so it is an error rather than an answer.
 	/// </remarks>
 	private const int MaximumIterations = 256;
 
@@ -25,9 +26,12 @@ internal static class StorageMath
 	/// </summary>
 	/// <typeparam name="T">The numeric storage type.</typeparam>
 	/// <param name="value">The value to take the root of. Generated callers pass a sum of squares, which is never negative.</param>
-	/// <returns>The square root of <paramref name="value"/>.</returns>
+	/// <returns>The square root of <paramref name="value"/>, or its floor for an integer type.</returns>
 	/// <exception cref="OverflowException">
 	/// <paramref name="value"/> is negative and <typeparamref name="T"/> cannot represent the <see cref="double.NaN"/> that results.
+	/// </exception>
+	/// <exception cref="ArithmeticException">
+	/// The Newton steps do not settle on a root within <see cref="MaximumIterations"/>.
 	/// </exception>
 	/// <remarks>
 	/// <para>
@@ -37,12 +41,11 @@ internal static class StorageMath
 	/// already as precise as the type.
 	/// </para>
 	/// <para>
-	/// Any other type is refined in its own arithmetic: seeded from that same <see cref="double"/>
-	/// root, then Newton steps <c>x = (x + value / x) / 2</c> until the estimate stops changing. A
-	/// <see cref="decimal"/> root therefore has 28 significant digits rather than the 15 its
-	/// conversion from <see cref="double"/> keeps, and no constraint beyond <see cref="INumber{TSelf}"/>
-	/// is needed, which <see cref="decimal"/> could not meet had this required
-	/// <see cref="IRootFunctions{TSelf}"/>.
+	/// Any other type is refined in its own arithmetic: seeded near the root, then Newton steps
+	/// <c>x = (x + value / x) / 2</c> until the estimate stops changing. A <see cref="decimal"/> root
+	/// therefore has 28 significant digits rather than the 15 its conversion from <see cref="double"/>
+	/// keeps, and no constraint beyond <see cref="INumber{TSelf}"/> is needed, which
+	/// <see cref="decimal"/> could not meet had this required <see cref="IRootFunctions{TSelf}"/>.
 	/// </para>
 	/// <para>
 	/// A negative input keeps its old behaviour too, <see cref="double.NaN"/> where the type has
@@ -63,7 +66,7 @@ internal static class StorageMath
 		}
 
 		T two = T.One + T.One;
-		T estimate = Seed(value);
+		T estimate = Seed(value, two);
 		T previous = estimate;
 
 		for (int iteration = 0; iteration < MaximumIterations; iteration++)
@@ -85,7 +88,7 @@ internal static class StorageMath
 			estimate = next;
 		}
 
-		return estimate;
+		throw new ArithmeticException($"The square root did not settle within {MaximumIterations} Newton steps.");
 	}
 
 	/// <summary>
@@ -121,36 +124,94 @@ internal static class StorageMath
 	/// </summary>
 	/// <typeparam name="T">The numeric storage type.</typeparam>
 	/// <param name="value">The positive value whose root is wanted.</param>
-	/// <returns>The <see cref="double"/> root converted to <typeparamref name="T"/> when both conversions succeed, otherwise the larger of <paramref name="value"/> and one.</returns>
+	/// <param name="two">Two, in <typeparamref name="T"/>.</param>
+	/// <returns>An estimate within a factor of two of the root.</returns>
 	/// <remarks>
-	/// Any positive start converges, because Newton's method for a square root approaches from above
-	/// after its first step. The fallback exists for a type that will not convert to or from
-	/// <see cref="double"/>, or whose value is outside its range.
+	/// <para>
+	/// The <see cref="double"/> root is used directly when <paramref name="value"/> converts to a normal
+	/// <see cref="double"/>. Otherwise the value is outside the range of <see cref="double"/>, or too
+	/// small for a <see cref="double"/> to hold with any precision, or the type does not convert at all.
+	/// It is then scaled by powers of four into [1, 4), which every type holds, the root is taken there,
+	/// and that root is scaled back by the matching power of two.
+	/// </para>
+	/// <para>
+	/// This used to start from the value itself. Newton's method still converges from there, but each
+	/// early step only halves the estimate, so a <see cref="System.Numerics.BigInteger"/> of 2^2048 used
+	/// every step on halving and returned about 2^1792 as its root.
+	/// </para>
 	/// </remarks>
-	private static T Seed<T>(T value)
+	private static T Seed<T>(T value, T two)
+		where T : struct, INumber<T>
+	{
+		if (TryRootThroughDouble(value, out T direct))
+		{
+			return direct;
+		}
+
+		T four = two * two;
+		T scaled = value;
+		int powerOfTwo = 0;
+
+		while (scaled >= four)
+		{
+			scaled /= four;
+			powerOfTwo++;
+		}
+
+		while (scaled < T.One)
+		{
+			scaled *= four;
+			powerOfTwo--;
+		}
+
+		T root = TryRootThroughDouble(scaled, out T scaledRoot) ? scaledRoot : T.One;
+
+		for (; powerOfTwo > 0; powerOfTwo--)
+		{
+			root *= two;
+		}
+
+		for (; powerOfTwo < 0; powerOfTwo++)
+		{
+			root /= two;
+		}
+
+		return root;
+	}
+
+	/// <summary>
+	/// Takes the root of a value through <see cref="double"/> when the value converts to a normal
+	/// <see cref="double"/> and the root converts back to something other than zero.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <param name="value">The positive value.</param>
+	/// <param name="root">The root in <typeparamref name="T"/>, or the default when this fails.</param>
+	/// <returns><see langword="true"/> when <paramref name="root"/> holds a usable estimate.</returns>
+	private static bool TryRootThroughDouble<T>(T value, out T root)
 		where T : struct, INumber<T>
 	{
 		try
 		{
-			double root = Math.Sqrt(double.CreateChecked(value));
-			if (double.IsFinite(root) && root > 0d)
+			double asDouble = double.CreateChecked(value);
+			if (double.IsNormal(asDouble))
 			{
-				T seed = T.CreateChecked(root);
-				if (!T.IsZero(seed))
+				root = T.CreateChecked(Math.Sqrt(asDouble));
+				if (!T.IsZero(root))
 				{
-					return seed;
+					return true;
 				}
 			}
 		}
 		catch (NotSupportedException)
 		{
-			// The type does not convert through double. The fallback below still converges.
+			// The type does not convert through double. The caller scales into a range that needs no conversion.
 		}
 		catch (OverflowException)
 		{
-			// The value or its root is outside the range of double or of the type. The fallback below still converges.
+			// The value or its root is outside the range of double or of the type. The caller scales it.
 		}
 
-		return value > T.One ? value : T.One;
+		root = default;
+		return false;
 	}
 }

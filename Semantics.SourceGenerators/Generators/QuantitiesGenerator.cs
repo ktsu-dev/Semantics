@@ -633,7 +633,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// <summary>
 	/// Builds the C# expression converting <c>value</c> in <paramref name="unitName"/> to the SI
 	/// base unit. Honours magnitude (<c>Kilo</c>, <c>Centi</c>, …), conversionFactor (lookup in
-	/// <see cref="ConversionConstants"/>), and offset (additive, after scaling).
+	/// <see cref="ConversionConstants"/>), their product when a unit declares both, and offset
+	/// (additive, after scaling).
 	/// </summary>
 	/// <remarks>
 	/// Each factor is read from the <c>Values&lt;T&gt;</c> holder that <see cref="MagnitudesGenerator"/>
@@ -656,7 +657,13 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		bool hasMagnitude = !string.IsNullOrEmpty(unit.Magnitude) && unit.Magnitude != "1";
 		bool hasFactor = !string.IsNullOrEmpty(unit.ConversionFactor) && unit.ConversionFactor != "1";
 
-		if (hasMagnitude)
+		// Both, multiplied together first, so the factory scales by exactly the factor the unit's
+		// IUnit.ToBaseFactorAs<T>() reports (UnitsGenerator.BuildStorageFactorExpression).
+		if (hasMagnitude && hasFactor)
+		{
+			scaled = $"(value * (MetricMagnitudes.Values<T>.{unit.Magnitude} * Units.ConversionConstants.Values<T>.{unit.ConversionFactor}))";
+		}
+		else if (hasMagnitude)
 		{
 			scaled = $"(value * MetricMagnitudes.Values<T>.{unit.Magnitude})";
 		}
