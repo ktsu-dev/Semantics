@@ -76,7 +76,7 @@ public class MagnitudesGenerator : SemanticsGenerator<MagnitudesMetadata>
 				Emit.SummaryClose,
 			},
 			Kind = TypeKind.Class,
-			Keywords = {"internal", Emit.Static},
+			Keywords = {Emit.Internal, Emit.Static},
 			Name = "Values<T>",
 			Constraints = {"where T : struct, INumber<T>"},
 		};
@@ -103,7 +103,7 @@ public class MagnitudesGenerator : SemanticsGenerator<MagnitudesMetadata>
 			holderClass.Members.Add(new FieldTemplate()
 			{
 				Comments = {comment},
-				Keywords = {"internal", Emit.Static, "T"},
+				Keywords = {Emit.Internal, Emit.Static, "T"},
 				Name = $"{magnitude.Name} => {ParsedPrefix}{magnitude.Name} ?? T.CreateChecked(MetricMagnitudes.{magnitude.Name})",
 			});
 

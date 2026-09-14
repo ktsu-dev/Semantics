@@ -106,13 +106,15 @@ public sealed class PiLiteralTests
 		BigInteger power = unity / x;
 		BigInteger sum = power;
 		bool subtract = true;
+		int n = 3;
 
-		for (int n = 3; !power.IsZero; n += 2)
+		while (!power.IsZero)
 		{
 			power /= xSquared;
 			BigInteger term = power / n;
 			sum = subtract ? sum - term : sum + term;
 			subtract = !subtract;
+			n += 2;
 		}
 
 		return sum;

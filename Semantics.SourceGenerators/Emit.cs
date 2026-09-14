@@ -18,6 +18,12 @@ internal static class Emit
 	/// <summary>The <c>public</c> modifier.</summary>
 	internal const string Public = CSharpKeywords.Public;
 
+	/// <summary>
+	/// The <c>internal</c> modifier. Spelled out here rather than taken from <c>CSharpKeywords</c>,
+	/// which does not carry it; the generators need one name for it rather than a literal per use.
+	/// </summary>
+	internal const string Internal = "internal";
+
 	/// <summary>The <c>static</c> modifier.</summary>
 	internal const string Static = CSharpKeywords.Static;
 

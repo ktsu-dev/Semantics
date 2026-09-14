@@ -2,6 +2,7 @@
 
 namespace Semantics.SourceGenerators;
 
+using System;
 using System.Globalization;
 
 /// <summary>
@@ -116,8 +117,13 @@ internal sealed class ConversionValue(string numerator, string? denominator)
 	/// <param name="value">The value as a <see cref="double"/>.</param>
 	/// <param name="isZero">Whether the exact value is zero.</param>
 	/// <returns><see langword="true"/> when <paramref name="value"/> is usable as the constant.</returns>
+	/// <remarks>
+	/// The underflow test is written as a magnitude above zero rather than as an inequality against zero:
+	/// it is the same test once NaN is excluded, and comparing a <see cref="double"/> for equality is
+	/// flagged wherever it appears, however exact the intent.
+	/// </remarks>
 	private static bool IsHeldByDouble(double value, bool isZero)
-		=> !double.IsInfinity(value) && !double.IsNaN(value) && (isZero || value != 0d);
+		=> !double.IsInfinity(value) && !double.IsNaN(value) && (isZero || Math.Abs(value) > 0d);
 
 	/// <summary>
 	/// Reports whether <paramref name="text"/> is a decimal literal that is valid both in C# and in
@@ -129,44 +135,65 @@ internal sealed class ConversionValue(string numerator, string? denominator)
 	private static bool IsDecimalLiteral(string text)
 	{
 		int index = 0;
+		SkipSign(text, ref index);
+
+		int digits = CountDigits(text, ref index);
+
+		return TryPassFraction(text, ref index, ref digits)
+			&& digits != 0
+			&& TryPassExponent(text, ref index)
+			&& index == text.Length;
+	}
+
+	/// <summary>
+	/// Advances past an optional leading sign.
+	/// </summary>
+	/// <param name="text">The text being scanned.</param>
+	/// <param name="index">The position to start at, moved past the sign when there is one.</param>
+	private static void SkipSign(string text, ref int index)
+	{
 		if (index < text.Length && (text[index] == '+' || text[index] == '-'))
 		{
 			index++;
 		}
+	}
 
-		int integerDigits = CountDigits(text, ref index);
-		int fractionDigits = 0;
-
-		if (index < text.Length && text[index] == '.')
+	/// <summary>
+	/// Advances past an optional fractional part, counting its digits.
+	/// </summary>
+	/// <param name="text">The text being scanned.</param>
+	/// <param name="index">The position to start at, moved past the fractional part when there is one.</param>
+	/// <param name="digits">The running digit count, increased by the digits after the point.</param>
+	/// <returns><see langword="false"/> when a point is present with no digits after it.</returns>
+	private static bool TryPassFraction(string text, ref int index, ref int digits)
+	{
+		if (index == text.Length || text[index] != '.')
 		{
-			index++;
-			fractionDigits = CountDigits(text, ref index);
-			if (fractionDigits == 0)
-			{
-				return false;
-			}
+			return true;
 		}
 
-		if (integerDigits + fractionDigits == 0)
+		index++;
+		int fractionDigits = CountDigits(text, ref index);
+		digits += fractionDigits;
+		return fractionDigits != 0;
+	}
+
+	/// <summary>
+	/// Advances past an optional exponent.
+	/// </summary>
+	/// <param name="text">The text being scanned.</param>
+	/// <param name="index">The position to start at, moved past the exponent when there is one.</param>
+	/// <returns><see langword="false"/> when an exponent marker is present with no digits after it.</returns>
+	private static bool TryPassExponent(string text, ref int index)
+	{
+		if (index == text.Length || (text[index] != 'e' && text[index] != 'E'))
 		{
-			return false;
+			return true;
 		}
 
-		if (index < text.Length && (text[index] == 'e' || text[index] == 'E'))
-		{
-			index++;
-			if (index < text.Length && (text[index] == '+' || text[index] == '-'))
-			{
-				index++;
-			}
-
-			if (CountDigits(text, ref index) == 0)
-			{
-				return false;
-			}
-		}
-
-		return index == text.Length;
+		index++;
+		SkipSign(text, ref index);
+		return CountDigits(text, ref index) != 0;
 	}
 
 	/// <summary>

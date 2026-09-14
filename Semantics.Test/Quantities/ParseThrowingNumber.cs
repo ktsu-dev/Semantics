@@ -26,6 +26,13 @@ internal readonly record struct ParseThrowingNumber<TException>(double Inner) : 
 
 	public static ParseThrowingNumber<TException> MultiplicativeIdentity => One;
 
+	/// <summary>
+	/// Invokes <see cref="INumberBase{TSelf}.IsZero"/> on the backing type. A static abstract interface
+	/// member is reachable only through a constrained type parameter, so the framework's zero predicate
+	/// needs this hop; the alternative is comparing a <see cref="double"/> for equality.
+	/// </summary>
+	private static bool IsZeroValue<T>(T value) where T : INumberBase<T> => T.IsZero(value);
+
 	public static ParseThrowingNumber<TException> Abs(ParseThrowingNumber<TException> value) => new(Math.Abs(value.Inner));
 
 	public static bool IsCanonical(ParseThrowingNumber<TException> value) => true;
@@ -60,7 +67,7 @@ internal readonly record struct ParseThrowingNumber<TException>(double Inner) : 
 
 	public static bool IsSubnormal(ParseThrowingNumber<TException> value) => double.IsSubnormal(value.Inner);
 
-	public static bool IsZero(ParseThrowingNumber<TException> value) => value.Inner == 0d;
+	public static bool IsZero(ParseThrowingNumber<TException> value) => IsZeroValue(value.Inner);
 
 	public static ParseThrowingNumber<TException> MaxMagnitude(ParseThrowingNumber<TException> x, ParseThrowingNumber<TException> y) => new(double.MaxMagnitude(x.Inner, y.Inner));
 

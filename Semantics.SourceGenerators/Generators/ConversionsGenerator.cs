@@ -83,7 +83,7 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 			Kind = TypeKind.Class,
 			Keywords =
 			{
-				"internal",
+				Emit.Internal,
 				Emit.Static,
 			},
 			Name = "ConversionConstants",
@@ -100,7 +100,7 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 			Kind = TypeKind.Class,
 			Keywords =
 			{
-				"internal",
+				Emit.Internal,
 				Emit.Static,
 			},
 			Name = $"{HolderName}<T>",
@@ -126,7 +126,7 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 					},
 					Keywords =
 					{
-						"internal",
+						Emit.Internal,
 						"const",
 						"double",
 					},
@@ -143,7 +143,7 @@ public class ConversionsGenerator : SemanticsGenerator<ConversionsMetadata>
 					},
 					Keywords =
 					{
-						"internal",
+						Emit.Internal,
 						Emit.Static,
 						"T",
 					},
