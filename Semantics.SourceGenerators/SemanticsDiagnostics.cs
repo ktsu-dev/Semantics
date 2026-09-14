@@ -107,16 +107,19 @@ public static class SemanticsDiagnostics
 		"Relationship {0} {1} No operator is generated for it; fix dimensions.json.");
 
 	/// <summary>
-	/// SEM009: a conversion factor's value is neither a decimal literal nor a fraction of two.
+	/// SEM009: a conversion factor's value is neither a decimal literal nor a fraction of two, or a
+	/// <see cref="double"/> cannot hold it.
 	/// </summary>
 	/// <remarks>
-	/// A factor is emitted as a C# constant and parsed into every storage type, so a value that is
-	/// neither form would otherwise surface as a compile error in generated code, far from the line in
-	/// <c>conversions.json</c> that caused it. An error rather than a warning, because every unit using
-	/// the factor fails to compile without its constant.
+	/// A factor is emitted as a C# <see cref="double"/> constant and parsed into every storage type, so a
+	/// value that is neither form would otherwise surface as a compile error in generated code, far from
+	/// the line in <c>conversions.json</c> that caused it. So would a literal beyond the range of
+	/// <see cref="double"/> (CS0594), and a non-zero value that rounds to zero or a quotient that
+	/// overflows would compile into a factor that is silently wrong. An error rather than a warning,
+	/// because every unit using the factor fails to compile without its constant.
 	/// </remarks>
 	public static DiagnosticDescriptor InvalidConversionFactor { get; } = Catalog.Error(
 		9,
 		"conversions.json factor value is malformed",
-		"Conversion factor '{0}' has value '{1}', which is neither a decimal literal such as \"0.3048\" nor a fraction of two such as \"5/9\" with a non-zero denominator. No constant is generated for it. Fix conversions.json.");
+		"Conversion factor '{0}' has value '{1}', which is not a decimal literal such as \"0.3048\" or a fraction of two such as \"5/9\" with a non-zero denominator, that a double can hold without overflowing or rounding to zero. No constant is generated for it. Fix conversions.json.");
 }

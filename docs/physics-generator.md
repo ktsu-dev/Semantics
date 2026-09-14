@@ -170,17 +170,40 @@ Each factor in `conversions.json` has a `value` in one of two forms:
 | Decimal literal | `"0.3048"`, `"1e-10"`, `"745.69987158227022"` | A factor with a terminating decimal definition, or a long literal for one built on π. |
 | Fraction of two decimal literals | `"5/9"`, `"20265/152"` | A repeating ratio. Write the exact fraction rather than its rounded decimal. |
 
-`ConversionsGenerator` emits each factor twice. The `double` constant (`5d / 9d` for a fraction)
-backs the public `IUnit.ToBaseFactor` and `ToBaseOffset` properties. The `Values<T>` holder calls
-`StorageLiteral.Parse<T>` or `StorageLiteral.Divide<T>` once per closed generic type, and the
-generated factories and `In(unit)` read that. So each storage type gets the factor at its own
-precision: `double` gets the correctly rounded value, and `decimal` gets 28 significant digits
-where `T.CreateChecked(double)` used to leave it 15. An integer storage type, or one that cannot
-parse the literal, falls back to converting the `double` constant, which is what every type did
-before.
+Either form must be something a `double` holds: SEM009 rejects a literal, operand, or quotient beyond
+the range of `double`, and a non-zero value that rounds to zero in it.
+
+Compute a literal built on π from π itself, correctly rounded to 150 significant digits, rather than
+from another literal. The π literals in `conversions.json` and `domains.json` are written that way, and
+`PiLiteralTests` checks each one to its last digit against π computed by Machin's formula.
+
+`ConversionsGenerator` emits each factor twice. The `double` constant (`0.3048d`, or `5d / 9d` for a
+fraction) backs the public `IUnit.ToBaseFactor` and `ToBaseOffset` properties. Every operand carries
+the `d` suffix, because a literal such as `100000000000000000000` is otherwise an integer literal the
+compiler rejects. The `Values<T>` holder parses the value with `StorageLiteral.Parse<T>` or
+`StorageLiteral.Divide<T>` once per closed generic type into a private nullable field, and the
+generated factories and `In(unit)` read it through a property. So each storage type gets the factor at
+its own precision: `double` gets the correctly rounded value, and `decimal` gets 28 significant digits
+where `T.CreateChecked(double)` used to leave it 15.
+
+An integer storage type, or one that cannot parse the literal, leaves the field null, and the property
+converts the `double` constant each time it is read, which is what every type did before 5.2.0. The
+conversion stays out of the static initializer so that each value succeeds or fails on its own: a
+factor too large for the type throws `OverflowException` from the factory that uses it, and the rest
+keep working. 5.2.0 did convert in the initializer, and one overflow (`CurieToBecquerels` for `int`,
+`Yotta` for `long`) made every factor or magnitude for that type throw `TypeInitializationException`.
+A parse that throws `NotSupportedException` or `ArgumentException` for `NumberStyles.Float` counts as
+one that cannot parse the literal.
 
 `MagnitudesGenerator` does the same for the SI prefixes, so `1e-2` reaches `decimal` as exactly a
 hundredth.
+
+Writing a factor as its exact definition can move its `double` constant to the adjacent representable
+value, because a rounded 17-digit literal is not always the `double` nearest the true value. 5.2.0
+moved two constants this way, each closer to the true value than before: `PsiToPascals` from
+6894.757293168361 to 6894.757293168362, and `RevolutionPerMinuteToRadianPerSecond` from
+0.10471975511965977 to 0.10471975511965978. The public `IUnit.ToBaseFactor` of `Psi` and
+`RevolutionPerMinute` moved with them. Every other constant kept its value.
 
 A fraction is not always the better choice. `PsiToPascals` is written as a 150-digit literal rather
 than `8896443230521/1290320000`, because `float` storage rounds a numerator that large before
@@ -188,7 +211,9 @@ dividing and lands further from the true value than parsing the literal does.
 
 Vector `Length()` and `Distance()` take their root through `StorageMath.Sqrt`. The binary floating
 point and integer primitives keep the `Math.Sqrt` round trip they always had. Other types refine
-that root with Newton steps in their own arithmetic.
+that root with Newton steps in their own arithmetic. A value a `double` cannot hold is scaled by powers
+of four into [1, 4) for the seed, and a root that does not settle throws `ArithmeticException` rather
+than returning an estimate.
 
 ## Validation, diagnostics, and gotchas
 
@@ -205,7 +230,7 @@ that root with Newton steps in their own arithmetic.
   | SEM006 | A metadata file a generator declared that was not supplied as an `AdditionalFile`. |
   | SEM007 | A metadata file that could not be parsed. |
   | SEM008 | A relationship whose declared result does not follow from the dimensions of its operands, or whose signed value cannot land in a magnitude result. No operator is generated for it. |
-  | SEM009 | A `conversions.json` factor whose `value` is neither a decimal literal nor a fraction of two with a non-zero denominator. An error, and no constant is generated for it. |
+  | SEM009 | A `conversions.json` factor whose `value` is neither a decimal literal nor a fraction of two with a non-zero denominator, or that a `double` cannot hold. An error, and no constant is generated for it. |
 
   Adding one means adding it to `SemanticsDiagnostics` and to `AnalyzerReleases.Unshipped.md`; `AnalyzerReleaseTrackingTests` fails if the second step is forgotten. `GeneratorDiagnosticTests` proves each one still fires on the input it is meant to catch.
 - `availableUnits` order matters: the first entry is treated as the SI base unit by `UnitsGenerator`.
