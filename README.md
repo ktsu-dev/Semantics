@@ -29,6 +29,7 @@ Each package has its own README with the full API surface, examples, and referen
 | [`ktsu.Semantics.Quantities.Double`](Semantics.Quantities.Double/README.md) | `double` storage-type aliases | [README](Semantics.Quantities.Double/README.md) |
 | [`ktsu.Semantics.Quantities.Float`](Semantics.Quantities.Float/README.md) | `float` storage-type aliases | [README](Semantics.Quantities.Float/README.md) |
 | [`ktsu.Semantics.Quantities.Decimal`](Semantics.Quantities.Decimal/README.md) | `decimal` storage-type aliases | [README](Semantics.Quantities.Decimal/README.md) |
+| [`ktsu.Semantics.Quantities.Precise`](Semantics.Quantities.Precise/README.md) | `ktsu.PreciseNumber` storage-type aliases | [README](Semantics.Quantities.Precise/README.md) |
 | [`ktsu.Semantics.Music`](Semantics.Music/README.md) | Musical value types and harmonic analysis | [README](Semantics.Music/README.md) |
 | [`ktsu.Semantics.Color`](Semantics.Color/README.md) | Linear/perceptual color with accessibility tooling | [README](Semantics.Color/README.md) |
 
