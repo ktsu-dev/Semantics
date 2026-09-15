@@ -31,32 +31,52 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
-    # Only a successful CI run on a Dependabot pull request is a reason to look at all. A
-    # failed run is not merely "not yet" — it must never reach the merge step below.
-    #
-    # The branch prefix is checked as well as the actor because a re-run re-attributes the
-    # run to whoever pressed the button. Requiring both means a human re-run leaves the PR
-    # to be merged by hand, which is the safe direction to fail in.
+    # Only what the event itself is, never who it claims to be. A successful CI run on a pull
+    # request is the cheap pre-filter; whose pull request it is gets decided in the step below,
+    # from the API. A failed run is not merely "not yet" — it must never reach the merge step.
     if: >
       github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.actor.login == 'dependabot[bot]' &&
-      startsWith(github.event.workflow_run.head_branch, 'dependabot/')
+      github.event.workflow_run.conclusion == 'success'
 
     steps:
-      - name: Merge if every check on the commit is green
+      - name: Merge if Dependabot opened it and every check on the commit is green
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: ${{ github.event.workflow_run.head_branch }}
           SHA: ${{ github.event.workflow_run.head_sha }}
           SELF: Merge green Dependabot PR
         run: |
           set -euo pipefail
 
-          PR=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" \
-                 --state open --json number --jq '.[0].number // empty')
-          if [ -z "$PR" ]; then
-            echo "No open pull request on $BRANCH; nothing to merge."
+          # The workflow_run payload says who triggered the run, and that is not an
+          # authenticated statement about who opened the pull request: a re-run re-attributes
+          # it to whoever pressed the button, and nothing in the payload is signed. Trusting
+          # `actor.login` or the `dependabot/` branch prefix to decide what may be merged is
+          # githubactions:S8232. So the payload is used only to locate the pull request, and
+          # GitHub is asked who actually opened it.
+          #
+          # Matching on the head SHA rather than the branch name also buys the property this
+          # workflow exists for: the only pull request that can match is one whose head is the
+          # exact commit CI just reported on. A commit pushed after CI finished moves the head,
+          # nothing matches, and nothing is merged — instead of merging code CI never saw.
+          case "$SHA" in
+            "" | *[!0-9a-f]*) echo "Head SHA is not a hex digest; refusing to continue." >&2; exit 1 ;;
+          esac
+
+          FOUND=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls?state=open&per_page=100" \
+            --jq "[.[] | select(.head.sha == \"$SHA\")][0]
+                  | select(. != null)
+                  | [.number, .user.login] | @tsv")
+
+          if [ -z "$FOUND" ]; then
+            echo "No open pull request whose head is $SHA; nothing to merge."
+            exit 0
+          fi
+
+          PR=$(printf '%s' "$FOUND" | cut -f1)
+          AUTHOR=$(printf '%s' "$FOUND" | cut -f2)
+
+          if [ "$AUTHOR" != "dependabot[bot]" ]; then
+            echo "PR #$PR was opened by $AUTHOR, not Dependabot. Leaving it alone."
             exit 0
           fi
 
@@ -84,5 +104,5 @@ jobs:
             exit 0
           fi
 
-          echo "Every check on $SHA is green. Merging PR #$PR."
+          echo "PR #$PR is Dependabot's and every check on $SHA is green. Merging."
           gh pr merge --merge "$PR"
