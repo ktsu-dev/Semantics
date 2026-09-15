@@ -1,31 +1,88 @@
 name: Dependabot auto-merge
-on: pull_request
+
+# Merges a Dependabot PR only once CI has actually reported green.
+#
+# This used to run `on: pull_request` and call `gh pr merge --auto`. That flag reads like
+# "merge when green", but it means "merge when branch protection is satisfied" — it delegates
+# the waiting entirely to required status checks. `main` is unprotected and declares none, so
+# the condition was vacuously true the instant the PR opened and the merge landed immediately.
+# PR #233 was opened at 04:18:08 and merged at 04:18:20; its test jobs did not start until
+# 04:18:34 and went red at 04:21. That is how a failing dependency bump reached main.
+#
+# Rather than turn on branch protection, the list of checks that must be green lives here.
+# Firing on workflow_run instead of pull_request is what makes that possible: the merge is
+# decided after CI reports, so there is no check to wait on that is waiting on us, and no
+# runner sits idle for the duration of the build.
+
+on:
+  workflow_run:
+    workflows:
+      - ".NET Workflow"
+      - "Verify Generated Files"
+    types: [completed]
 
 permissions:
   contents: write
   pull-requests: write
-  packages: read
 
 jobs:
-  dependabot:
-    name: Process Dependabot PR
+  merge:
+    name: Merge green Dependabot PR
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
     timeout-minutes: 5
 
-    steps:
-      - name: Fetch Dependabot metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+    # Only a successful CI run on a Dependabot pull request is a reason to look at all. A
+    # failed run is not merely "not yet" — it must never reach the merge step below.
+    #
+    # The branch prefix is checked as well as the actor because a re-run re-attributes the
+    # run to whoever pressed the button. Requiring both means a human re-run leaves the PR
+    # to be merged by hand, which is the safe direction to fail in.
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.actor.login == 'dependabot[bot]' &&
+      startsWith(github.event.workflow_run.head_branch, 'dependabot/')
 
-      - name: Enable auto-merge for Dependabot PRs
-        if: steps.metadata.outputs.update-type == 'version-update:semver-major' || steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch'
+    steps:
+      - name: Merge if every check on the commit is green
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          SELF: Merge green Dependabot PR
         run: |
-          set -e
-          echo "Processing PR: $PR_URL"
-          gh pr merge --auto --merge "$PR_URL"
+          set -euo pipefail
+
+          PR=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" \
+                 --state open --json number --jq '.[0].number // empty')
+          if [ -z "$PR" ]; then
+            echo "No open pull request on $BRANCH; nothing to merge."
+            exit 0
+          fi
+
+          # The workflow that triggered us is green, but it is not the only one. Ask the
+          # commit what every check says, and treat anything still running as a reason to
+          # wait rather than a reason to merge. A check that is absent entirely is not
+          # counted: Verify Generated Files skips a markdown-only bump by design.
+          #
+          # skipped and neutral count as green. dotnet.yml skips Analyze & Release and
+          # Security Scanning on a pull request, and CodeQL reports neutral there.
+          gh api --paginate "repos/$GITHUB_REPOSITORY/commits/$SHA/check-runs" \
+            --jq ".check_runs[]
+                  | select(.name != \"$SELF\")
+                  | select(.status != \"completed\"
+                        or (.conclusion != \"success\"
+                        and .conclusion != \"skipped\"
+                        and .conclusion != \"neutral\"))
+                  | \"  \(.name): \(.status)/\(.conclusion // \"pending\")\"" > "$RUNNER_TEMP/not-green.txt"
+
+          if [ -s "$RUNNER_TEMP/not-green.txt" ]; then
+            echo "Not merging PR #$PR. These checks are not green:"
+            cat "$RUNNER_TEMP/not-green.txt"
+            # Not a failure of this workflow: whichever run finishes last fires it again,
+            # and the merge happens on that pass.
+            exit 0
+          fi
+
+          echo "Every check on $SHA is green. Merging PR #$PR."
+          gh pr merge --merge "$PR"
