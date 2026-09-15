@@ -32,10 +32,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// before a neutral projection could be a project of its own.
 /// </para>
 /// <para>
-/// <b>Two targets are known to produce source their own toolchain refuses</b>, and the tests below
-/// pin that rather than skipping it, so the day either is fixed upstream the test fails and says
-/// so. Both are recorded against ktsu.Coder — ktsu-dev/Coder#63 and ktsu-dev/Coder#64 — and
-/// neither is anything this repository can fix.
+/// <b>One target is still known to produce source its own toolchain refuses</b>, and the test
+/// below pins that rather than skipping it, so the day it is fixed upstream the test fails and
+/// says so. It is recorded against ktsu.Coder as ktsu-dev/Coder#63 and is not anything this
+/// repository can fix. Python was the second such target until ktsu-dev/Coder#64 was fixed; its
+/// pin failed exactly as intended, and it now asserts the fix.
 /// </para>
 /// </remarks>
 [TestClass]
@@ -142,20 +143,25 @@ public sealed class SevenTargetProjectionTests
 	}
 
 	/// <summary>
-	/// Python writes a base that names the class being declared, which Python evaluates before the
-	/// class exists.
+	/// Python quotes the self-type in its own base list, which is what makes the class importable.
 	/// </summary>
 	/// <remarks>
 	/// `IVector0&lt;Length&lt;T&gt;, T&gt;` is the self-type idiom every quantity here is declared
 	/// with, and it is what C# needs to give an interface a method returning the implementing type.
-	/// Python evaluates a base list eagerly, so `class Length(IVector0[Length[T], T])` raises
-	/// `NameError: name 'Length' is not defined` on import. A string in the base list is the fix
-	/// Python has for this, and it is not something the AST currently says. ktsu-dev/Coder#64.
+	/// Python evaluates a base list eagerly, so naming the class inside its own bases —
+	/// `IVector0[Length[T], T]` — raises `NameError: name 'Length' is not defined` on import. A
+	/// string is the forward reference Python has for exactly this, and ktsu.Coder now writes one.
+	/// <para>
+	/// This was pinned as a defect until ktsu-dev/Coder#64 was fixed, which the bump from
+	/// ktsu.Coder 3.14.0 to 3.14.3 brought in. The pin failed, as it was written to, and asserts
+	/// the fix instead. Keeping it pins the fix the same way round, so a regression upstream fails
+	/// here rather than shipping a module that cannot be imported.
+	/// </para>
 	/// </remarks>
 	[TestMethod]
-	public void PythonNamesTheClassInsideItsOwnBases()
+	public void PythonQuotesTheClassInsideItsOwnBases()
 	{
-		Assert.Contains("class Length(IVector0[Length[T], T])", Written["python"]);
+		Assert.Contains("class Length(IVector0[\"Length[T]\", T])", Written["python"]);
 	}
 
 	/// <summary>

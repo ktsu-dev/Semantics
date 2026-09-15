@@ -200,7 +200,7 @@ forms as well, and matching it is a change to every form at once rather than par
 
 ### Can the quantities be generated for languages other than C# and C++?
 
-`SevenTargetProjectionTests` is the probe that answers it, and the answer so far is **five of
+`SevenTargetProjectionTests` is the probe that answers it, and the answer so far is **six of
 seven**. It builds one quantity — the magnitude form of `Length`, read from the real
 `dimensions.json` — as a language-agnostic `ktsu.Coder` AST and writes it in all seven of that
 library's targets. The neutral shape is the whole of what a generated magnitude is: a record struct
@@ -210,16 +210,21 @@ C# comes out as exactly what `QuantitiesGenerator` writes today, which is the re
 the AST is expressive enough for the quantities, so what the other six do is a question about those
 languages rather than about the model.
 
-**Two targets write source their own toolchain refuses**, both recorded upstream and neither fixable
-here:
+**One target writes source its own toolchain refuses**, recorded upstream and not fixable here:
 
 | Target | What comes out | Why |
 |---|---|---|
 | Go | `type Length struct` with no parameters, then `func LengthFromMeter(value T) Length[T]` | ktsu-dev/Coder#63 — a generic type is deliberately written down rather than emitted, and the constructor was not given the same treatment. `go vet` says `undefined: T`. |
-| Python | `class Length(IVector0[Length[T], T])` | ktsu-dev/Coder#64 — Python evaluates a base list eagerly, so the self-type idiom every quantity is declared with raises `NameError` on import. |
 
-The tests **pin** both rather than skipping them, so the day either is fixed upstream the test fails
-and is updated to assert the fix.
+The test **pins** it rather than skipping it, so the day it is fixed upstream the test fails and is
+updated to assert the fix.
+
+**Python was the second, and the pin is what caught the fix.** It wrote
+`class Length(IVector0[Length[T], T])`, which raises `NameError` on import because Python evaluates
+a base list eagerly. ktsu-dev/Coder#64 fixed that to the string forward reference
+`IVector0["Length[T]", T]`, and the first build after the bump from ktsu.Coder 3.14.0 to 3.14.3
+failed here — which is the whole point of pinning rather than skipping, and is how the fix was
+noticed at all. The test asserts the fix now, so a regression upstream fails the same way round.
 
 The probe lives in `Semantics.Cpp.Test` because that is where the reader of `dimensions.json` is,
 and that is itself the finding about this repository: `QuantityMetadata` and `MetadataProjection`
