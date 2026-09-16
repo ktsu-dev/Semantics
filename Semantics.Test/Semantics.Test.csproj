@@ -21,11 +21,9 @@
     <ProjectReference Include="..\Semantics.Strings.Identifiers\Semantics.Strings.Identifiers.csproj" />
     <!-- Referenced as a plain library, not OutputItemType="Analyzer": SourceGeneratorTests drives
          the generators explicitly through CSharpGeneratorDriver rather than having them run against
-         this project. BundleAnalyzerDependencies=false stops the generator's GetDependencyTargetPaths
-         target from pushing its bundled netstandard2.0 facades into our compile references, where
-         they collide with the in-box types (CS0433 on ReadOnlySpan<T>, Vector4, ...). -->
-    <ProjectReference Include="..\Semantics.SourceGenerators\Semantics.SourceGenerators.csproj"
-                      AdditionalProperties="BundleAnalyzerDependencies=false" />
+         this project. Only the generator assembly itself is wanted here; DropBundledGeneratorDependencies
+         below drops the rest. -->
+    <ProjectReference Include="..\Semantics.SourceGenerators\Semantics.SourceGenerators.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,5 +54,33 @@
           Link="GeneratorMetadata\%(Filename)%(Extension)"
           CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
+  <!-- The generator bundles its dependencies alongside itself so that they are present when a
+       compiler loads it as an analyzer. This project loads it as an ordinary assembly instead, so
+       that bundle arrives as compile references it did not ask for, and the netstandard2.0 builds
+       of System.Memory and System.Numerics.Vectors in it define types that .NET 10 has in the box:
+       CS0433 on Span<T>, ReadOnlySpan<T>, Vector4. Everything the tests genuinely need from those
+       packages is a PackageReference above, resolved for this project's own framework.
+
+       So: keep the generator assembly, drop what rode along with it. Anything else resolved from
+       that project is a bundled dependency by construction, since a project contributes exactly one
+       assembly of its own.
+
+       This used to be done by passing the generator AdditionalProperties="BundleAnalyzerDependencies=false",
+       which asked MSBuild for a second instance of that project, built concurrently with the first
+       and into the same output directory. See the comment on GetDependencyTargetPaths for the cost.
+       Filtering here asks for no second instance, so it cannot recur. -->
+  <Target Name="DropBundledGeneratorDependencies" AfterTargets="ResolveProjectReferences">
+    <PropertyGroup>
+      <!-- Matched as a full path rather than by file name, so this cannot quietly start dropping
+           references from some other project that happens to share a name. -->
+      <_SemanticsGeneratorProject>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..', 'Semantics.SourceGenerators', 'Semantics.SourceGenerators.csproj'))</_SemanticsGeneratorProject>
+    </PropertyGroup>
+    <ItemGroup>
+      <_ResolvedProjectReferencePaths
+        Remove="@(_ResolvedProjectReferencePaths)"
+        Condition="'%(MSBuildSourceProjectFile)' == '$(_SemanticsGeneratorProject)' And '%(Filename)' != 'Semantics.SourceGenerators'" />
+    </ItemGroup>
+  </Target>
 
 </Project>

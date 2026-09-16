@@ -44,12 +44,21 @@
   </ItemGroup>
 
   <!-- Bundle all dependencies alongside the generator so they're available at analyzer load time.
-       A consumer that references this project as a plain library rather than as an analyzer (the
-       test project, which drives the generators through CSharpGeneratorDriver) must opt out via
-       AdditionalProperties="BundleAnalyzerDependencies=false": the bundled netstandard2.0 facades
-       otherwise land in that consumer's compile references and collide with the in-box types
-       (CS0433 on ReadOnlySpan<T>, Vector4, and friends). -->
-  <Target Name="GetDependencyTargetPaths" Condition="'$(BundleAnalyzerDependencies)' != 'false'">
+
+       Unconditional, and it has to stay that way. This was once switchable per consumer through
+       AdditionalProperties="BundleAnalyzerDependencies=false", which MSBuild turns into a global
+       property, and global properties are what key its project-instance cache. Two consumers
+       asking for this project with different global properties are two instances of it, and both
+       of them build, concurrently, into this one bin\Release\netstandard2.0 directory. A third
+       node reading Semantics.SourceGenerators.dll as an analyzer while one of those copies is in
+       flight fails with CS0006 "Metadata file could not be found", naming the generator from a
+       project that has nothing wrong with it. That is a race, so it struck on CI and never
+       locally.
+
+       A consumer that wants the assembly without the bundle now filters its own compile
+       references instead; Semantics.Test carries that target and explains it. Filtering is a
+       consumer's own business and forks nothing. -->
+  <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
       <TargetPathWithTargetPlatformMoniker Include="@(ResolvedCompileFileDefinitions)" IncludeRuntimeDependency="false" />
     </ItemGroup>
