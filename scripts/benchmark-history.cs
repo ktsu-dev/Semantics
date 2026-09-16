@@ -69,12 +69,41 @@ internal static partial class BenchmarkHistory
 	/// </summary>
 	private static readonly Dictionary<string, Theme> Themes = new(StringComparer.Ordinal)
 	{
-		["light"] = new("#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df", "#2a78d6", "#eb6834"),
-		["dark"] = new("#1a1a19", "#ffffff", "#c3c2b7", "#333330", "#3987e5", "#d95926"),
+		["light"] = new("#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df", "#2a78d6", "#eb6834", "#2e8b57"),
+		["dark"] = new("#1a1a19", "#ffffff", "#c3c2b7", "#333330", "#3987e5", "#d95926", "#3faa71"),
 	};
 
 	private sealed record Theme(
-		string Surface, string Ink, string Muted, string Grid, string Alloc, string Time);
+		string Surface, string Ink, string Muted, string Grid, string Alloc, string Time, string Cost);
+
+	/// <summary>Which of the three things a section draws.</summary>
+	private enum Measure
+	{
+		/// <summary>Bytes allocated per operation, as stored.</summary>
+		Allocation,
+
+		/// <summary>Time, divided by the reference workload from the same job.</summary>
+		Time,
+
+		/// <summary>Time, divided by the paired bare-double benchmark from the same entry.</summary>
+		Cost,
+	}
+
+	/// <summary>
+	/// The paired benchmarks the cost section draws, as (measured, baseline, label).
+	/// </summary>
+	/// <remarks>
+	/// Both halves are stored like any other benchmark; the ratio is computed here rather than
+	/// recorded, so an entry gathered before this section existed still draws once its run
+	/// includes the pair, and no history has to be rewritten to change what the section shows.
+	/// </remarks>
+	private static readonly (string Key, string Baseline, string Label)[] CostHeadline =
+	[
+		("AbstractionCostBenchmarks<Double>.QuantityAdd", "AbstractionCostBenchmarks<Double>.BareAdd", "Add (double)"),
+		("AbstractionCostBenchmarks<Double>.QuantityMultiply", "AbstractionCostBenchmarks<Double>.BareMultiply", "Multiply (double)"),
+		("AbstractionCostBenchmarks<Decimal>.QuantityMultiply", "AbstractionCostBenchmarks<Decimal>.BareMultiply", "Multiply (decimal)"),
+		("AbstractionCostBenchmarks<PreciseNumber>.QuantityMultiply", "AbstractionCostBenchmarks<PreciseNumber>.BareMultiply", "Multiply (precise)"),
+	];
 
 	internal static int Run(string[] args)
 	{
@@ -422,16 +451,17 @@ internal static partial class BenchmarkHistory
 		string[] labels = [.. entries.Select(entry => entry!["version"]?.GetValue<string>() ?? "?")];
 		int width = Left + (Columns * CellWidth) + 24;
 		int rows = (Headline.Length + Columns - 1) / Columns;
-		int height = 72 + (((34 + (rows * CellHeight)) * 2) + 54);
+		int costRows = (CostHeadline.Length + Columns - 1) / Columns;
+		int height = 72 + ((34 + (rows * CellHeight)) * 2) + 34 + (costRows * CellHeight) + 54;
 
 		StringBuilder svg = new();
 		Preamble(svg, theme, width, height, entries);
 
 		int y = 72;
-		foreach (bool isTime in (bool[])[false, true])
+		foreach (Measure measure in (Measure[])[Measure.Allocation, Measure.Time, Measure.Cost])
 		{
-			Section(svg, theme, entries, labels.Length, y, isTime);
-			y += 34 + (rows * CellHeight);
+			Section(svg, theme, entries, labels.Length, y, measure);
+			y += 34 + ((measure == Measure.Cost ? costRows : rows) * CellHeight);
 		}
 
 		Footer(svg, entries, labels, y - 4);
@@ -461,20 +491,53 @@ internal static partial class BenchmarkHistory
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left}" y="45" class="caption">{entries.Count} releases · newest {Escape(latest["version"]?.GetValue<string>() ?? "?")}{suffix}</text>""");
 	}
 
-	private static void Section(StringBuilder svg, Theme theme, JsonArray entries, int points, int y, bool isTime)
+	private static void Section(StringBuilder svg, Theme theme, JsonArray entries, int points, int y, Measure measure)
 	{
-		string colour = isTime ? theme.Time : theme.Alloc;
-		string title = isTime
-			? "Time, as a multiple of a fixed reference workload"
-			: "Allocated bytes per operation";
-		string note = isTime
-			? "Divided by a reference loop measured in the same job, which cancels most of the difference between CI runners. Lower is faster."
-			: "Deterministic: the same code allocates the same bytes on any machine.";
+		string colour = measure switch
+		{
+			Measure.Time => theme.Time,
+			Measure.Cost => theme.Cost,
+			_ => theme.Alloc,
+		};
+		string title = measure switch
+		{
+			Measure.Time => "Time, as a multiple of a fixed reference workload",
+			Measure.Cost => "Cost of the quantity wrapper over the bare storage type",
+			_ => "Allocated bytes per operation",
+		};
+		string note = measure switch
+		{
+			Measure.Time => "Divided by a reference loop measured in the same job, which cancels most of the difference between CI runners. Lower is faster.",
+			Measure.Cost => "Divided by the identical loop on the bare storage type, measured beside it. A quantity holds one value and adds no work of its own, so this belongs at 1.",
+			_ => "Deterministic: the same code allocates the same bytes on any machine.",
+		};
 
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<rect x="{Left}" y="{y - 10}" width="9" height="9" rx="2" fill="{colour}" />""");
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left + 15}" y="{y - 2}" class="section">{Escape(title)}</text>""");
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left + 15}" y="{y + 12}" class="caption">{Escape(note)}</text>""");
 
+		if (measure == Measure.Cost)
+		{
+			for (int position = 0; position < CostHeadline.Length; position++)
+			{
+				(string key, string baseline, string label) = CostHeadline[position];
+				double?[] values = [.. entries.Select(entry => Cost(entry!, key, baseline))];
+				Panel(
+					svg,
+					Left + (position % Columns * CellWidth),
+					y + 26 + (position / Columns * CellHeight),
+					label,
+					points,
+					values,
+					true,
+					colour,
+					theme);
+			}
+
+			return;
+		}
+
+		bool isTime = measure == Measure.Time;
 		for (int position = 0; position < Headline.Length; position++)
 		{
 			(string key, string? parameters, string label) = Headline[position];
@@ -491,6 +554,25 @@ internal static partial class BenchmarkHistory
 				theme);
 		}
 	}
+
+	/// <summary>
+	/// One benchmark's mean divided by the mean of the bare-double benchmark beside it.
+	/// </summary>
+	/// <remarks>
+	/// Both were measured in the same job on the same machine, so unlike the time section this
+	/// needs no reference workload to be comparable across runs: the denominator is the reference.
+	/// </remarks>
+	private static double? Cost(JsonNode entry, string key, string baseline)
+	{
+		double? measured = Mean(entry, key);
+		double? divisor = Mean(entry, baseline);
+		return measured is not null && divisor is > 0 ? measured / divisor : null;
+	}
+
+	private static double? Mean(JsonNode entry, string key) =>
+		entry["benchmarks"]?[key] is JsonObject cases && cases.Count > 0
+			? cases.First().Value?["meanNs"]?.GetValue<double>()
+			: null;
 
 	private static double? Value(JsonNode entry, string key, string? parameters, bool isTime)
 	{
