@@ -124,6 +124,7 @@ ForceMagnitude<double> weight = Mass<double>.FromKilogram(70.0) * AccelerationMa
 | `IVector2` / `IVector3` / `IVector4` | Directional vectors with `X`/`Y`/`Z`/`W`, `Length()`, `LengthSquared()`, `Dot`, `Distance`, `Normalize`; `IVector3` adds `Cross`. |
 | `Vector0Guards` | `EnsureNonNegative(value, name)` and `EnsurePositive(value, name)`, used by generated `From{Unit}` factories. |
 | `UnitSystem` | enum classifying units (`SIBase`, `SIDerived`, `Metric`, `Imperial`, ...). |
+| `StorageMath` | `Sqrt`, `Cbrt`, `RootN` and `Hypot` over any `T : struct, INumber<T>`, with no `IRootFunctions<T>` constraint, which `decimal` could not meet. Generated `Length()` and `Distance()` use them; an application computing a norm the generator does not emit can too. |
 
 ### Generated quantity types
 

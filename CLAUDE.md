@@ -305,6 +305,18 @@ back by the matching power of two. A root that does not settle throws `Arithmeti
 than returning an estimate. The logarithmic scales and the hand-written audio types still compute
 through `double`.
 
+`StorageMath` is public API, not just the generator's helper (#239): an application doing its own
+vector math over quantities would otherwise reimplement the root, and worse. `Cbrt`, `RootN` and
+`Hypot` ship alongside `Sqrt` on the same seeding and the same Newton loop. `Sqrt` keeps its round
+trip through `double` for every primitive, integers included, because the generated code always
+inlined it; `Cbrt` and `RootN` take that route only for the binary floating point primitives and
+refine every integer type in integer arithmetic, so their floor is exact rather than whatever
+`Math.Pow` rounded to. `Hypot` computes a fractional type from the ratio of its legs, so a pair whose
+squares leave the type still has its hypotenuse, and squares an integer type directly, since the
+ratio of two integers is not a ratio. The seeding, the double round trip and the Newton loop itself
+stay private — `StorageMathTests.TheRootsArePublicAndTheirWorkingsAreNot` pins both halves of that,
+since this is a package with a compatibility baseline and the shape is frozen once it ships.
+
 `StorageConversionTests<T>` runs the same conversions, relationships and vector lengths over
 `double` and `decimal`, exactly where the answer terminates and to a relative tolerance where it
 does not. Adding a storage type is one derived class.
