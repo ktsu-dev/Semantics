@@ -11,6 +11,14 @@
          same way a consumer is expected to. Not referenced by any shipping project. -->
     <PackageVersion Include="ktsu.RoundTripStringJsonConverter" Version="1.0.60" />
     <PackageVersion Include="ktsu.PreciseNumber" Version="2.0.3" />
+    <!-- Benchmark-only. -->
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageVersion Include="BenchmarkDotNet.Annotations" Version="0.15.8" />
+    <!-- Only Semantics.Benchmarks references this, and only when BenchmarkAgainstVersion asks it
+         to measure a published release rather than the working copy. The version here is a
+         placeholder that VersionOverride replaces; central package management requires the entry
+         to exist before a project may override it. -->
+    <PackageVersion Include="ktsu.Semantics.Quantities" Version="5.3.2" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.6.1" />

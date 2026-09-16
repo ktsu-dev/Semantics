@@ -160,6 +160,19 @@ public class UserService(ISemanticStringFactory<EmailAddress> emails)
 }
 ```
 
+## Performance
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/benchmarks/performance-dark.svg">
+  <img alt="Allocated bytes per operation, and time relative to a fixed reference workload, for each Semantics.Quantities release" src="docs/benchmarks/performance.svg">
+</picture>
+
+Every release measures a fixed set of benchmarks and adds a point to the chart; the numbers behind it are in [`docs/benchmarks/history.json`](docs/benchmarks/history.json), and the suite is [`Semantics.Benchmarks`](Semantics.Benchmarks/README.md).
+
+The grid is one operation per storage type rather than every operation at one storage type. A quantity is a `readonly record struct` over its `T` and does almost nothing of its own — a value is held in the SI base unit, so an operator is the storage type's arithmetic and a struct initialiser — so the same line of user code costs different things depending on the `T` it was written against, and a release changes it per `T`.
+
+Read the two halves differently. **Allocation is exact** — the same code allocates the same bytes on any machine, so a step in the top row is always a real change. **Time is measured on shared CI runners**, where the host a job happens to land on varies more than most releases do, so each time is divided by a reference workload measured in the same job. That cancels most of the difference between machines; what is left is indicative rather than precise.
+
 ## Architecture
 
 The quantity system is metadata-driven. The single source of truth is `Semantics.SourceGenerators/Metadata/dimensions.json` (with `units.json`, `magnitudes.json`, `conversions.json`, `domains.json`, and `logarithmic.json` alongside it), and a Roslyn incremental generator emits the quantity records, unit-conversion factories, cross-dimensional operators, and physical constants. Generated output is committed to `Semantics.Quantities/Generated/` so the project compiles without first running the generator.

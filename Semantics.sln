@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Semantics.Cpp.Test", "Seman
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Semantics.Quantities.Precise", "Semantics.Quantities.Precise\Semantics.Quantities.Precise.csproj", "{5A67DFC3-E2D2-41B9-9E42-0B4727AF0C7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Semantics.Benchmarks", "Semantics.Benchmarks\Semantics.Benchmarks.csproj", "{7F2A4C61-8D35-4B90-A6E2-1C0F5D3B8E47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -209,6 +211,10 @@ Global
 		{5A67DFC3-E2D2-41B9-9E42-0B4727AF0C7D}.Release|x64.Build.0 = Release|Any CPU
 		{5A67DFC3-E2D2-41B9-9E42-0B4727AF0C7D}.Release|x86.ActiveCfg = Release|Any CPU
 		{5A67DFC3-E2D2-41B9-9E42-0B4727AF0C7D}.Release|x86.Build.0 = Release|Any CPU
+		{7F2A4C61-8D35-4B90-A6E2-1C0F5D3B8E47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F2A4C61-8D35-4B90-A6E2-1C0F5D3B8E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F2A4C61-8D35-4B90-A6E2-1C0F5D3B8E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F2A4C61-8D35-4B90-A6E2-1C0F5D3B8E47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

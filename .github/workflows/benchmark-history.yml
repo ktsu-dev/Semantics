@@ -1,0 +1,203 @@
+name: Benchmark History
+
+# Measures a small, fixed set of benchmarks once per release, appends the numbers to a committed
+# history file, and redraws the chart the README shows.
+#
+# Two ways in:
+#   * a published release, which measures that version and adds one point;
+#   * a manual dispatch listing versions, which measures each of them in ONE job and backfills.
+#
+# A backfill version is measured as a published package, through BenchmarkAgainstVersion: no tag
+# before this workflow carries a benchmark project, so there is no older source to run. A release
+# from now on does carry one, and is measured from its own tag through a worktree -- which is also
+# what keeps the release path off a race, since the package for a tag is not necessarily on
+# nuget.org yet at the moment its release is published.
+#
+# The backfill running as a single job still matters: separate runs land on different CI hosts,
+# and that difference is larger than most releases are. Within one job the points are comparable
+# as they stand; across jobs, BaselineBenchmarks is what ties them together.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      versions:
+        description: "Space-separated released versions of ktsu.Semantics.Quantities to backfill, oldest first"
+        required: false
+        default: "3.3.1 4.0.0 4.1.0 4.2.0 4.3.2 5.0.0 5.1.0 5.2.0 5.2.4 5.3.2"
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: benchmark-history
+  cancel-in-progress: false
+
+env:
+  DOTNET_VERSION: "10.0"
+  HISTORY: docs/benchmarks/history.json
+  CHART: docs/benchmarks/performance.svg
+  # Already ignored, and ktsu.Sdk regenerates .gitignore on build so a new entry would not last.
+  RUNS: BenchmarkDotNet.Artifacts
+  # The set drawn in the README. One operation per storage type rather than every operation at one
+  # storage type: a quantity is a value type over T and does almost nothing of its own, so what a
+  # release changes it changes per storage type.
+  HEADLINE_FILTER: >-
+    *ConstructionBenchmarks*FromNauticalMile
+    *UnitConversionBenchmarks*InNauticalMile
+    *OperatorBenchmarks*LengthTimesLength
+    *VectorBenchmarks*.Length
+    *ComparisonBenchmarks*CompareToInterface
+  # Short runs: three iterations is enough for a trend line, and a release should not tie up a
+  # runner for half an hour.
+  BENCHMARK_JOB: short
+
+jobs:
+  measure:
+    name: Measure and chart
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          # The default branch, not the released tag: the results are committed back here, and a
+          # release event would otherwise leave the checkout detached at the tag, so the push at
+          # the end would be asking the default branch to move backwards.
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}.x
+
+      # Measured from this checkout, and stamped onto every entry this job produces: everything
+      # here shares one runner, so one reading of that runner describes all of it.
+      - name: Measure the reference workload
+        id: baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          dotnet run -c Release --project Semantics.Benchmarks -- \
+            --filter '*BaselineBenchmarks.ReferenceWork' \
+            --job "$BENCHMARK_JOB" \
+            --artifacts "$GITHUB_WORKSPACE/$RUNS/baseline"
+          ns=$(dotnet run scripts/benchmark-history.cs -- baseline --results "$RUNS/baseline")
+          echo "Reference workload: $ns ns"
+          echo "ns=$ns" >> "$GITHUB_OUTPUT"
+
+      - name: Measure the released version
+        if: github.event_name == 'release'
+        shell: bash
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          version="${TAG#v}"
+          work="${RUNNER_TEMP}/bench-$version"
+          git worktree add --detach "$work" "$TAG"
+
+          (cd "$work" && dotnet run -c Release --project Semantics.Benchmarks -- \
+            --filter $HEADLINE_FILTER \
+            --job "$BENCHMARK_JOB" \
+            --artifacts "$GITHUB_WORKSPACE/$RUNS/$version")
+
+          dotnet run scripts/benchmark-history.cs -- ingest \
+            --history "$HISTORY" \
+            --results "$RUNS/$version" \
+            --version "$version" \
+            --commit "$(git rev-parse --short "$TAG^{commit}")" \
+            --date "$(git log -1 --format=%cs "$TAG")" \
+            --run-id "${{ github.run_id }}" \
+            --baseline-ns "${{ steps.baseline.outputs.ns }}"
+
+          git worktree remove --force "$work"
+
+      - name: Measure each backfill version
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        env:
+          VERSIONS: ${{ inputs.versions }}
+          BASELINE_NS: ${{ steps.baseline.outputs.ns }}
+        run: |
+          set -euo pipefail
+          read -ra versions <<< "$VERSIONS"
+
+          for version in "${versions[@]}"; do
+            echo "::group::$version"
+            # Through the environment rather than a -p: switch, because BenchmarkDotNet generates
+            # and builds a project of its own per run, which a property passed on the command line
+            # does not reach. MSBuild reads environment variables as properties in every project.
+            #
+            # A version whose API the current benchmarks cannot express is reported and skipped,
+            # rather than failing the whole backfill after the ones before it have been measured.
+            if ! BenchmarkAgainstVersion="$version" dotnet run -c Release --project Semantics.Benchmarks -- \
+                 --filter $HEADLINE_FILTER \
+                 --job "$BENCHMARK_JOB" \
+                 --artifacts "$GITHUB_WORKSPACE/$RUNS/$version"; then
+              echo "::warning::$version could not be benchmarked by the current suite; skipping"
+              echo "::endgroup::"
+              continue
+            fi
+
+            tag="v$version"
+            commit=""
+            date=""
+            if git rev-parse -q --verify "$tag^{commit}" >/dev/null; then
+              commit="$(git rev-parse --short "$tag^{commit}")"
+              date="$(git log -1 --format=%cs "$tag")"
+            fi
+
+            # Skipped here too, and for the same reason: a package can build against these
+            # benchmarks and still throw from every one of them at run time, which BenchmarkDotNet
+            # reports as a table of NA rather than as a failure. Ingest refuses such a run, and
+            # the backfill carries on to the next version.
+            if ! dotnet run scripts/benchmark-history.cs -- ingest \
+                 --history "$HISTORY" \
+                 --results "$RUNS/$version" \
+                 --version "$version" \
+                 --commit "$commit" \
+                 --date "$date" \
+                 --run-id "${{ github.run_id }}" \
+                 --baseline-ns "$BASELINE_NS"; then
+              echo "::warning::$version produced no usable measurement; skipping"
+            fi
+            echo "::endgroup::"
+          done
+
+      - name: Redraw the chart
+        shell: bash
+        run: dotnet run scripts/benchmark-history.cs -- render --history "$HISTORY" --out "$CHART"
+
+      - name: Commit the history and the chart
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Staged first, then compared against the index: on the first run these files are new,
+          # and `git diff` alone does not see an untracked file, so the run would push nothing and
+          # still report success.
+          git add "$HISTORY" "${CHART%.svg}"*.svg
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          # [skip ci] so that committing results does not start the pipeline over again.
+          git commit -m "[bot][skip ci] Update benchmark history"
+          branch="${{ github.event.repository.default_branch }}"
+          git pull --rebase origin "$branch"
+          git push origin "HEAD:$branch"
+
+      - name: Upload the raw reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: benchmark-history-${{ github.run_id }}
+          path: ${{ env.RUNS }}/
+          retention-days: 30
+          if-no-files-found: warn
