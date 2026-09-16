@@ -1,7 +1,4 @@
-## v5.3.4 (patch)
+## v5.3.4
 
-Changes since v5.3.3:
-
-- Measure the quantity types against the bare storage type [patch] ([@Claude](https://github.com/Claude))
-- Build the source generator once, not twice into one directory [patch] ([@Claude](https://github.com/Claude))
+No significant changes detected since v5.3.4.
 
