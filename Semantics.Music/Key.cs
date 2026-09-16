@@ -101,11 +101,29 @@ public sealed record Key
 	/// cased upper for major/augmented and lower for minor/diminished, then a quality suffix.
 	/// </returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="chord"/> is null.</exception>
+	/// <exception cref="ArgumentException">
+	/// Thrown when the chord's root resolves to a scale degree beyond the seventh. Roman-numeral
+	/// analysis only spells seven degrees, so the eighth degree onwards — reachable in
+	/// <see cref="Mode.OctatonicHalfWhole"/>, <see cref="Mode.OctatonicWholeHalf"/> and
+	/// <see cref="Mode.Chromatic"/> — has no numeral to be given.
+	/// </exception>
 	public string RomanNumeralOf(Chord chord)
 	{
 		Ensure.NotNull(chord);
 
 		ScaleDegree degree = Scale.DegreeOf(chord.Root);
+
+		// Wrapping the degree onto the seven-entry table would hand two distinct degrees the same
+		// numeral, silently. Refuse instead, which is also what ChordFromRomanNumeral already does
+		// in the other direction rather than wrapping.
+		if (degree.Degree > RomanNumerals.Length)
+		{
+			throw new ArgumentException(
+				$"Degree {degree.Degree} of {Mode.Name} has no roman numeral: roman-numeral analysis " +
+				$"spells only {RomanNumerals.Length} degrees.",
+				nameof(chord));
+		}
+
 		StringBuilder sb = new();
 
 		if (degree.Alteration < 0)
@@ -117,7 +135,7 @@ public sealed record Key
 			_ = sb.Append('#', degree.Alteration);
 		}
 
-		string numeral = RomanNumerals[(degree.Degree - 1) % RomanNumerals.Length];
+		string numeral = RomanNumerals[degree.Degree - 1];
 		bool lowerCase = chord.Quality is ChordQuality.Minor or ChordQuality.Diminished;
 		_ = sb.Append(lowerCase ? numeral.ToLowerInvariant() : numeral);
 
