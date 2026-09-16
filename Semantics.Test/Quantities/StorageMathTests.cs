@@ -143,7 +143,7 @@ public sealed class StorageMathTests
 		Assert.IsTrue(typeof(StorageMath).IsPublic, "StorageMath itself has to be reachable from outside the assembly.");
 
 		string[] contract = [nameof(StorageMath.Sqrt), nameof(StorageMath.Cbrt), nameof(StorageMath.RootN), nameof(StorageMath.Hypot)];
-		string[] workings = ["IsRoundedThroughDouble", "IsBinaryFloatingPoint", "HasFloorDivision", "Seed", "SeedForRoot", "TryRootThroughDouble", "RootThroughDouble", "RootByNewton", "TryPower"];
+		string[] workings = ["IsRoundedThroughDouble", "IsBinaryFloatingPoint", "HasFloorDivision", "Seed", "SeedForRoot", "TryRootThroughDouble", "RootThroughDouble", "RootByNewton", "RootByDescent", "RootBySettling", "TryPower"];
 
 		foreach (string name in contract)
 		{

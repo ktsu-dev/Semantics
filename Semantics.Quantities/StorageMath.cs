@@ -461,7 +461,8 @@ public static class StorageMath
 
 	/// <summary>
 	/// Refines the <paramref name="degree"/>th root of a positive value by Newton steps in
-	/// <typeparamref name="T"/>'s own arithmetic.
+	/// <typeparamref name="T"/>'s own arithmetic, by whichever of the two disciplines the type's
+	/// division calls for.
 	/// </summary>
 	/// <typeparam name="T">The numeric storage type.</typeparam>
 	/// <param name="value">The value to take the root of, greater than zero and not one.</param>
@@ -469,74 +470,111 @@ public static class StorageMath
 	/// <returns>The root, or its floor for a type whose division floors.</returns>
 	/// <exception cref="ArithmeticException">The estimate does not settle within <see cref="MaximumIterations"/> steps.</exception>
 	/// <remarks>
-	/// <para>
-	/// A type whose division floors descends: from an estimate at or above the root every step lands no
-	/// lower than the floor of the root, so the first step that does not descend has passed it and the
-	/// estimate before it is the answer. The seed is lifted to at or above the root first, since a
-	/// descent that starts below it would stop on the first step and answer with the seed.
-	/// </para>
-	/// <para>
-	/// Any other type settles instead, on the same terms as <see cref="Sqrt{T}(T)"/>: an estimate that
-	/// stops changing is the root, and one alternating between two neighbours is rounding, so the
-	/// smaller of the two is taken.
-	/// </para>
-	/// <para>
-	/// Every power is taken checked, because a narrow type can hold a value whose <c>estimate^(n-1)</c>
-	/// it cannot, and an estimate that wraps sends the steps somewhere arbitrary. A degree so high that
-	/// the type cannot hold <c>2^degree</c> is answered before any of that: no value the type holds has
-	/// a root of two or more, so the answer is one.
-	/// </para>
+	/// Every power either loop takes is checked, because a narrow type can hold a value whose
+	/// <c>estimate^(degree - 1)</c> it cannot, and an estimate that wraps sends the steps somewhere
+	/// arbitrary. The step itself is <c>x = (((degree - 1) * x) + (value / x^(degree - 1))) / degree</c>
+	/// in both.
 	/// </remarks>
 	private static T RootByNewton<T>(T value, int degree)
 		where T : struct, INumber<T>
 	{
 		T two = T.One + T.One;
-		T count = T.CreateChecked(degree);
-		T countLessOne = count - T.One;
-		bool floors = HasFloorDivision<T>();
-		T estimate = SeedForRoot(value, degree, two);
 
-		if (floors)
+		return HasFloorDivision<T>()
+			? RootByDescent(value, degree, two)
+			: RootBySettling(value, degree, two);
+	}
+
+	/// <summary>
+	/// Takes the root in a type whose division floors, by descending to it.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type, whose division floors.</typeparam>
+	/// <param name="value">The value to take the root of, greater than one.</param>
+	/// <param name="degree">The degree of the root, three or more.</param>
+	/// <param name="two">Two, in <typeparamref name="T"/>.</param>
+	/// <returns>The floor of the root.</returns>
+	/// <exception cref="ArithmeticException">The descent does not reach the root within <see cref="MaximumIterations"/> steps.</exception>
+	/// <remarks>
+	/// From an estimate at or above the root every step lands no lower than the floor of the root, so
+	/// the first step that does not descend has passed it and the estimate before it is the answer. The
+	/// seed is lifted to at or above the root first, since a descent that starts below it would stop on
+	/// the first step and answer with the seed. A degree so high that the type cannot hold
+	/// <c>2^degree</c> is answered before any of that: no value the type holds has a root of two or
+	/// more, and the values with a root below one were answered before this was called.
+	/// </remarks>
+	private static T RootByDescent<T>(T value, int degree, T two)
+		where T : struct, INumber<T>
+	{
+		if (!TryPower(two, degree, out _))
 		{
-			if (!TryPower(two, degree, out _))
-			{
-				// Two raised to this degree leaves the type, so no value the type holds has a root of two
-				// or more, and the values with a root below one were answered before this was called.
-				return T.One;
-			}
-
-			// An estimate whose own power overflows is above the root, since the root's power divides
-			// a value the type holds, so the lift stops there as well as on a power that exceeds the value.
-			while (TryPower(estimate, degree, out T raised) && raised < value)
-			{
-				estimate *= two;
-			}
+			return T.One;
 		}
 
-		T previous = estimate;
+		T count = T.CreateChecked(degree);
+		T countLessOne = count - T.One;
+		T estimate = SeedForRoot(value, degree, two);
+
+		// An estimate whose own power overflows is above the root, since the root's power divides a
+		// value the type holds, so the lift stops there as well as on a power that exceeds the value.
+		while (TryPower(estimate, degree, out T raised) && raised < value)
+		{
+			estimate *= two;
+		}
 
 		for (int iteration = 0; iteration < MaximumIterations; iteration++)
 		{
 			if (!TryPower(estimate, degree - 1, out T power) || T.IsZero(power))
 			{
 				// The estimate is too large for its own power to be taken in the type. Halving reaches a
-				// range the type holds, and for a type that floors it stays at or above the root.
+				// range the type holds, and stays at or above the root.
 				estimate = (estimate + T.One) / two;
 				continue;
 			}
 
 			T next = ((countLessOne * estimate) + (value / power)) / count;
 
-			if (floors)
+			if (next >= estimate)
 			{
-				if (next >= estimate)
-				{
-					return estimate;
-				}
+				return estimate;
+			}
 
-				estimate = next;
+			estimate = next;
+		}
+
+		throw new ArithmeticException($"The root of degree {degree} did not reach its floor within {MaximumIterations} Newton steps.");
+	}
+
+	/// <summary>
+	/// Takes the root in a type that keeps a fractional part, by settling on it.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <param name="value">The value to take the root of, greater than zero and not one.</param>
+	/// <param name="degree">The degree of the root, three or more.</param>
+	/// <param name="two">Two, in <typeparamref name="T"/>.</param>
+	/// <returns>The root, to the precision the type holds.</returns>
+	/// <exception cref="ArithmeticException">The estimate does not settle within <see cref="MaximumIterations"/> steps.</exception>
+	/// <remarks>
+	/// On the same terms as <see cref="Sqrt{T}(T)"/>: an estimate that stops changing is the root, and
+	/// one alternating between two neighbours is rounding, so the smaller of the two is taken.
+	/// </remarks>
+	private static T RootBySettling<T>(T value, int degree, T two)
+		where T : struct, INumber<T>
+	{
+		T count = T.CreateChecked(degree);
+		T countLessOne = count - T.One;
+		T estimate = SeedForRoot(value, degree, two);
+		T previous = estimate;
+
+		for (int iteration = 0; iteration < MaximumIterations; iteration++)
+		{
+			if (!TryPower(estimate, degree - 1, out T power) || T.IsZero(power))
+			{
+				// The estimate is too far from the root for its own power to be taken in the type.
+				estimate = (estimate + T.One) / two;
 				continue;
 			}
+
+			T next = ((countLessOne * estimate) + (value / power)) / count;
 
 			if (next == estimate)
 			{
