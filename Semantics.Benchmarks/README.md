@@ -36,6 +36,9 @@ dotnet run -c Release --project Semantics.Benchmarks -- --filter '*'
 # One class across all four storage types, or one storage type across all classes
 dotnet run -c Release --project Semantics.Benchmarks -- --filter '*VectorBenchmarks*'
 dotnet run -c Release --project Semantics.Benchmarks -- --filter '*<Decimal>*'
+
+# What the quantity types cost over the bare storage type
+dotnet run -c Release --project Semantics.Benchmarks -- --filter '*AbstractionCostBenchmarks*'
 ```
 
 ## Measuring a published release
@@ -73,7 +76,49 @@ working copy.
 | `OperatorBenchmarks` | The generated physics relationships. `Add` is the control, being the one operation that changes no dimension. |
 | `VectorBenchmarks` | Componentwise arithmetic, and the square root two of the operations need. `LengthSquared` is `Length` without the root, so the gap between them is the root alone — which for `decimal` and `PreciseNumber` is a Newton refinement rather than a hardware instruction. |
 | `ComparisonBenchmarks` | The two comparison routes. The operators are the storage type's own; `CompareTo` and the `IPhysicalQuantity<T>` overload of `Equals` box the argument and check dimensions first, which is what buys the ability to refuse a length against a mass. |
+| `AbstractionCostBenchmarks` | The same arithmetic twice, once on the bare storage type and once on quantities over it, paired so BenchmarkDotNet reports the ratio. See below. |
 | `BaselineBenchmarks` | Touches none of this library. It exists so that timings taken in different CI jobs can be compared; see its remarks, and do not edit its body. |
+
+### What the quantity types cost over the bare storage type
+
+`AbstractionCostBenchmarks` is the one that answers the question the rest of the suite only implies:
+a quantity is a `readonly record struct` holding one value in the SI base unit, so an operator on it
+should be the storage type's own arithmetic and a struct initialiser, and nothing more once the JIT
+has inlined it. The C++ projection has always been held to that against bare floats. This holds the
+.NET side to it the same way.
+
+Each pair runs identical arithmetic on `T` and on quantities over `T`, with the bare one marked
+`Baseline = true`, so the answer is the `Ratio` column rather than two rows divided by hand:
+
+| storage | `Add` | `Multiply` (to `Area`) | allocation |
+|---|---|---|---|
+| `float` | 1.00 | 0.94 | none either side |
+| `double` | 1.02 | 0.94 | none either side |
+| `decimal` | 1.04 | 0.90 | none either side |
+| `PreciseNumber` | 1.03 | 1.03 | 193 B either side, ratio 1.00 |
+
+The wrapper is free. Read the ratios below 1.00 as noise and code layout rather than as the quantity
+being faster than the number inside it — the spread across three short-run iterations covers that
+much, and there is no mechanism by which it could be.
+
+The `PreciseNumber` row is the one that says it most precisely, because it is the only storage type
+here that allocates at all: **the allocation ratio is exactly 1.00**. Every byte belongs to the
+`BigInteger` inside, and the quantity adds none of its own.
+
+**These are loops, and that is deliberate.** A single operator over operands that do not change is
+loop-invariant and the JIT hoists it out, which is exactly what makes `OperatorBenchmarks` report
+ZeroMeasurement for `double` and `float` — and a ratio between two hoisted methods would mean
+nothing. Here each iteration feeds the next, so there is nothing to hoist and both sides of a pair
+are measurable for every storage type.
+
+**The loop's own cost biases toward 1.00, not away from it.** Both sides pay the same counter and
+branch; it is a dependency chain, so most of that overlaps the arithmetic, and whatever does not is
+added equally to numerator and denominator. So a ratio at 1.00 is the claim kept, and a ratio above
+it is a floor on the real cost rather than the whole of it.
+
+**The operands stay bounded on purpose.** `PreciseNumber` carries as many digits as the arithmetic
+produces, so a chain that compounds its operand would measure digit growth instead of the operation.
+Both loops accumulate rather than compound.
 
 ### An operator on a `double` is below the floor
 
