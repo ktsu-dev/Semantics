@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Linq;
 
 /// <summary>
-/// A chord parsed from a symbol such as "Cmaj7", "Dm7", "E7b9", "Cm7b5", "Cmmaj7", "C6", or "C/G".
+/// A chord parsed from a symbol such as "Cmaj7", "Dm7", "E7b9", "Cm7b5", "Cmmaj7", "C6", "C6/9", or "C/G".
 /// </summary>
 public sealed record Chord
 {
@@ -101,16 +101,49 @@ public sealed record Chord
 		if (slash >= 0)
 		{
 			int bassIndex = 0;
-			if (!TryParseRoot(symbol[(slash + 1)..], ref bassIndex, out PitchClass? parsedBass))
+			if (TryParseRoot(symbol[(slash + 1)..], ref bassIndex, out PitchClass? parsedBass))
 			{
-				return false;
+				bass = parsedBass;
+				head = symbol[..slash];
 			}
-
-			bass = parsedBass;
-			head = symbol[..slash];
+			else
+			{
+				// Not a bass note. The other thing a slash spells is the "six-nine" idiom, where
+				// the "/9" stacks an added ninth on a sixth chord instead of overriding the bass.
+				// Rewrite it and read the result, which may still carry a real slash bass.
+				return TryRewriteSixNine(symbol, slash, out string? rewritten)
+					&& TryReadRoot(rewritten, out bass, out head, out index, out root);
+			}
 		}
 
 		return TryParseRoot(head, ref index, out root);
+	}
+
+	/// <summary>
+	/// Rewrites the "six-nine" idiom — a bare "9" directly after a "6", as in "C6/9" — into the
+	/// equivalent "add9" spelling ("C6add9") that the modifier reader already understands. The
+	/// ninth is an addition there, so it must not imply a seventh the way a bare "9" would.
+	/// </summary>
+	/// <param name="symbol">The chord symbol being read.</param>
+	/// <param name="slash">The index of the slash under consideration.</param>
+	/// <param name="rewritten">The rewritten symbol, or null when the symbol is not the idiom.</param>
+	/// <returns><see langword="true"/> when the symbol was rewritten.</returns>
+	private static bool TryRewriteSixNine(string symbol, int slash, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out string? rewritten)
+	{
+		rewritten = null;
+
+		bool sixBeforeSlash = slash > 0 && symbol[slash - 1] == '6';
+		bool nineAfterSlash = slash + 1 < symbol.Length && symbol[slash + 1] == '9';
+
+		// A following digit would make it some other extension ("/91"), not the bare ninth.
+		bool bareNine = nineAfterSlash && (slash + 2 >= symbol.Length || symbol[slash + 2] is < '0' or > '9');
+		if (!sixBeforeSlash || !bareNine)
+		{
+			return false;
+		}
+
+		rewritten = symbol[..slash] + "add9" + symbol[(slash + 2)..];
+		return true;
 	}
 
 	private static bool TryParseRoot(string symbol, ref int index, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out PitchClass? root)
