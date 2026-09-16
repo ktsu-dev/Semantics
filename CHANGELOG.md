@@ -1,6 +1,8 @@
-## v5.3.1
+## v5.3.2 (patch)
 
-No significant changes detected since v5.3.1.
+Changes since v5.3.1:
+
+- Gate Dependabot auto-merge on CI actually being green ([@Claude](https://github.com/Claude))
 
 ## v5.3.1 (patch)
 
