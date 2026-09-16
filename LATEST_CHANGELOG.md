@@ -1,6 +1,7 @@
-## v5.3.2 (patch)
+## v5.3.3 (patch)
 
-Changes since v5.3.1:
+Changes since v5.3.2:
 
-- Gate Dependabot auto-merge on CI actually being green ([@Claude](https://github.com/Claude))
+- Seed the chart with every release the suite can measure [patch] ([@Claude](https://github.com/Claude))
+- Chart performance per release, and show it in the README [patch] ([@Claude](https://github.com/Claude))
 
