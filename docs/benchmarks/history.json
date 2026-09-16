@@ -1,0 +1,1315 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "version": "3.3.1",
+      "commit": "fffa086",
+      "date": "2026-09-09",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 454.7423,
+      "runId": "local-seed",
+      "benchmarks": {
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 8.6608,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 4.7739,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 11.5986,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 5.6374,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 43.4281,
+            "allocatedBytes": 64
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 27.3741,
+            "allocatedBytes": 48
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 519.2756,
+            "allocatedBytes": 120
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 28.3839,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 81.1407,
+            "allocatedBytes": 64
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 35.0934,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 231.1584,
+            "allocatedBytes": 128
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 28.2983,
+            "allocatedBytes": 48
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 71.2753,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.3582,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 989.1301,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.1397,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 163.2781,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 1.002,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1827.4723,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.8253,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "4.0.0",
+      "commit": "496d895",
+      "date": "2026-09-10",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 454.7423,
+      "runId": "local-seed",
+      "benchmarks": {
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 20.3958,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.2212,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 34.4273,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.928,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 9.117,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 3.364,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 443.2553,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 0.9414,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 49.7154,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0007,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 169.1601,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 70.1256,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 8.4243,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 1045.9718,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.1489,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 162.9532,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.2999,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1791.7621,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.7062,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "4.1.0",
+      "commit": "fa79094",
+      "date": "2026-09-11",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 454.7423,
+      "runId": "local-seed",
+      "benchmarks": {
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 19.4354,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.2071,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 32.335,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.1068,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 9.0262,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 3.3646,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 458.7913,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 1.1227,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 49.6151,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.021,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 169.2628,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0038,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 70.5234,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.5685,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 999.187,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.9879,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 165.9375,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.3614,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1799.8658,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.7097,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "4.2.0",
+      "commit": "5e19d32",
+      "date": "2026-09-11",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 454.7423,
+      "runId": "local-seed",
+      "benchmarks": {
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 19.3255,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.9245,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 34.1165,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.375,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 9.3505,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 3.3425,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 444.181,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 1.0971,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 49.8869,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.5551,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 171.1742,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0061,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 73.8065,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.9266,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 1027.7254,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.0378,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 164.2486,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.4013,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1808.3943,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.772,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "4.3.2",
+      "commit": "256def6",
+      "date": "2026-09-12",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 454.7423,
+      "runId": "local-seed",
+      "benchmarks": {
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 19.7476,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.1942,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 31.7734,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.6629,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 9.1464,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 3.3107,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 439.0509,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 1.0845,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 49.6864,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0064,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 153.0474,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0215,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 73.5654,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 6.9238,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 999.566,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.4833,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 164.8533,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.4858,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1791.8562,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.83,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "5.0.0",
+      "commit": "bb69de0",
+      "date": "2026-09-12",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 454.7423,
+      "runId": "local-seed",
+      "benchmarks": {
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 17.0531,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.1983,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 27.5663,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 12.3376,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 9.1429,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.1024,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 440.8756,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 1.1355,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 48.7206,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.001,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 167.6413,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.5091,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 76.0165,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 6.8443,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 1014.094,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.7742,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 161.0405,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.4173,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1778.1463,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.6495,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "5.1.0",
+      "commit": "4c71e14",
+      "date": "2026-09-13",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 454.7423,
+      "runId": "local-seed",
+      "benchmarks": {
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 17.2642,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.6504,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 28.4428,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.593,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 9.0442,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.1058,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 443.6043,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 1.047,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 49.4833,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0023,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 168.0931,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0017,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 70.3008,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 6.8747,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 997.1396,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 8.6266,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 169.2199,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.3754,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1780.1261,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.7037,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "5.2.0",
+      "commit": "eda9fc8",
+      "date": "2026-09-13",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 454.7423,
+      "runId": "local-seed",
+      "benchmarks": {
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 19.0621,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.6742,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 28.8963,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.1918,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 7.6477,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.035,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 106.7759,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 0.8308,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 49.7014,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0023,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 175.7197,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.5194,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 79.1666,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 22.796,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 637.7155,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 19.5547,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 506.5822,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.9443,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 6588.3068,
+            "allocatedBytes": 1760
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.9528,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "5.2.4",
+      "commit": "cbc914c",
+      "date": "2026-09-14",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 454.7423,
+      "runId": "local-seed",
+      "benchmarks": {
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 19.0401,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.9626,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 30.4436,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 15.0078,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 15.3305,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 3.3693,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 119.6968,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.0236,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 48.7248,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0535,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 168.3563,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0685,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 81.7809,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 20.0893,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 634.1803,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 17.9519,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 515.3732,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.8839,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 6395.2321,
+            "allocatedBytes": 1760
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 1.0075,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "5.3.2",
+      "commit": "2a3e53b",
+      "date": "2026-09-16",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 454.7423,
+      "runId": "local-seed",
+      "benchmarks": {
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 18.7366,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.152,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 28.5365,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.502,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 15.5335,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 3.3758,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 119.0305,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.0081,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 48.593,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.5216,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 169.8841,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0431,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 82.7255,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 17.6686,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 631.3755,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 18.8093,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 512.9149,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 1.0452,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 6547.0307,
+            "allocatedBytes": 1760
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 1.0098,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    }
+  ]
+}
