@@ -2,6 +2,233 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "version": "3.3.1",
+      "commit": "fffa086",
+      "date": "2026-09-09",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 453.7426,
+      "runId": "local-seed",
+      "benchmarks": {
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareAdd": {
+          "": {
+            "meanNs": 8.687,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareMultiply": {
+          "": {
+            "meanNs": 82.0312,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 39.4121,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 186.5101,
+            "allocatedBytes": 192
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9894,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3585,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 27.5482,
+            "allocatedBytes": 48
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 76.5788,
+            "allocatedBytes": 144
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareAdd": {
+          "": {
+            "meanNs": 98.6858,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareMultiply": {
+          "": {
+            "meanNs": 470.7615,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 164.6354,
+            "allocatedBytes": 144
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 626.2963,
+            "allocatedBytes": 433
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareAdd": {
+          "": {
+            "meanNs": 1.0001,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3697,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 26.7098,
+            "allocatedBytes": 48
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 83.8432,
+            "allocatedBytes": 144
+          }
+        },
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 8.5663,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 4.4442,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 11.5848,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 5.1784,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 46.7546,
+            "allocatedBytes": 64
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 30.6769,
+            "allocatedBytes": 48
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 512.979,
+            "allocatedBytes": 120
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 29.3538,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 81.617,
+            "allocatedBytes": 64
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 29.4845,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 230.0481,
+            "allocatedBytes": 128
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 27.9655,
+            "allocatedBytes": 48
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 70.8902,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 6.953,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 1000.3666,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.1579,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 162.7914,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.4212,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1841.7999,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.832,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
       "version": "4.0.0",
       "commit": "496d895",
       "date": "2026-09-10",
@@ -450,6 +677,1595 @@
         "VectorBenchmarks\u003CSingle\u003E.Length": {
           "": {
             "meanNs": 0.762,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "4.2.0",
+      "commit": "5e19d32",
+      "date": "2026-09-11",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 453.7426,
+      "runId": "local-seed",
+      "benchmarks": {
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareAdd": {
+          "": {
+            "meanNs": 8.68,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareMultiply": {
+          "": {
+            "meanNs": 84.0068,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 9.2045,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 71.8109,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareAdd": {
+          "": {
+            "meanNs": 1.0091,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3738,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9941,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2689,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareAdd": {
+          "": {
+            "meanNs": 101.4151,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareMultiply": {
+          "": {
+            "meanNs": 477.1438,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 102.5898,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 487.1803,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9839,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3549,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9852,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2715,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 19.1929,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.5433,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 33.9785,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.297,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 9.3677,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.079,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 443.2349,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 0.9476,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 48.5374,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0001,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 168.0467,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.5161,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 72.5976,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.2387,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 993.1048,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.3354,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 164.0669,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.377,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1767.0203,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.7242,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "4.3.2",
+      "commit": "256def6",
+      "date": "2026-09-12",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 453.7426,
+      "runId": "local-seed",
+      "benchmarks": {
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareAdd": {
+          "": {
+            "meanNs": 9.0038,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareMultiply": {
+          "": {
+            "meanNs": 82.6392,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 9.0283,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 71.2162,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9897,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.364,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9848,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2799,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareAdd": {
+          "": {
+            "meanNs": 99.9605,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareMultiply": {
+          "": {
+            "meanNs": 459.8805,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 98.1587,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 484.7496,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9964,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3703,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9913,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2788,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 18.5495,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.2511,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 30.0153,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.8488,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 9.1867,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.0466,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 440.2176,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 0.9164,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 50.5161,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0044,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 167.7351,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.5166,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 73.2662,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 6.7707,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 986.6059,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.0707,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 162.5991,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.386,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1812.5825,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.7382,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "5.0.0",
+      "commit": "bb69de0",
+      "date": "2026-09-12",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 453.7426,
+      "runId": "local-seed",
+      "benchmarks": {
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareAdd": {
+          "": {
+            "meanNs": 9.0051,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareMultiply": {
+          "": {
+            "meanNs": 81.7243,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 9.3653,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 74.0881,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9876,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3699,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9951,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2741,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareAdd": {
+          "": {
+            "meanNs": 99.4237,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareMultiply": {
+          "": {
+            "meanNs": 471.3418,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 99.6223,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 480.1541,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9839,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3656,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9867,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2713,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 19.0738,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.8661,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 29.2044,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.5723,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 9.2106,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.1179,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 443.9862,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 0.9297,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 49.1925,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 169.9505,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0022,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 70.5056,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 6.8206,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 983.3212,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.3736,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 162.6187,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.3811,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1830.3698,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.7777,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "5.1.0",
+      "commit": "4c71e14",
+      "date": "2026-09-13",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 453.7426,
+      "runId": "local-seed",
+      "benchmarks": {
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareAdd": {
+          "": {
+            "meanNs": 8.5973,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareMultiply": {
+          "": {
+            "meanNs": 82.0963,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 9.1455,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 71.7464,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9877,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3571,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9909,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.273,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareAdd": {
+          "": {
+            "meanNs": 97.5927,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareMultiply": {
+          "": {
+            "meanNs": 469.9466,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 97.6082,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 493.8879,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9983,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3533,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9883,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2692,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 18.7677,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.2,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 33.6128,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.8604,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 9.1531,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.0603,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 452.3783,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 0.9557,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 49.0283,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.5081,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 176.6406,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0023,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 70.6187,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.0158,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 1006.533,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 7.287,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 161.1028,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.3802,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 1759.7936,
+            "allocatedBytes": 312
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.7501,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "5.2.0",
+      "commit": "eda9fc8",
+      "date": "2026-09-13",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 453.7426,
+      "runId": "local-seed",
+      "benchmarks": {
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareAdd": {
+          "": {
+            "meanNs": 8.6999,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareMultiply": {
+          "": {
+            "meanNs": 83.8402,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 9.1445,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 71.8414,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9906,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3557,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9959,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2703,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareAdd": {
+          "": {
+            "meanNs": 98.1186,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareMultiply": {
+          "": {
+            "meanNs": 482.7433,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 99.6921,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 491.7768,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.996,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3552,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 1.0292,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2945,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 19.0692,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 14.8967,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 30.4616,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.6837,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 7.9634,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.0738,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 105.7268,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 0.9101,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 51.1049,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.5461,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 169.9915,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0143,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 80.3569,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 17.4057,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 658.122,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 21.0595,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 511.343,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 1.0068,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 6467.5104,
+            "allocatedBytes": 1760
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 1.0074,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "5.2.4",
+      "commit": "cbc914c",
+      "date": "2026-09-14",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 453.7426,
+      "runId": "local-seed",
+      "benchmarks": {
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareAdd": {
+          "": {
+            "meanNs": 8.5802,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareMultiply": {
+          "": {
+            "meanNs": 82.3614,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 8.9643,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 72.0014,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9861,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3742,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.984,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2717,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareAdd": {
+          "": {
+            "meanNs": 96.1031,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareMultiply": {
+          "": {
+            "meanNs": 499.0323,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 98.6081,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 489.1922,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9829,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3593,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9946,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2711,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 18.8546,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.4705,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 28.5842,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.3108,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 16.0457,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 3.7591,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 118.9315,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.0821,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 49.5242,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0007,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 171.823,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.5446,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 81.1356,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 18.9727,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 643.2338,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 19.613,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 523.8651,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 1.0053,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 6455.894,
+            "allocatedBytes": 1760
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.972,
+            "allocatedBytes": 0
+          }
+        }
+      }
+    },
+    {
+      "version": "5.3.2",
+      "commit": "2a3e53b",
+      "date": "2026-09-16",
+      "cpu": "Intel Xeon Processor 2.80GHz",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 453.7426,
+      "runId": "local-seed",
+      "benchmarks": {
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareAdd": {
+          "": {
+            "meanNs": 8.6763,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.BareMultiply": {
+          "": {
+            "meanNs": 82.6289,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 8.9875,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDecimal\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 70.95,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.9939,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3535,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9884,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CDouble\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2791,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareAdd": {
+          "": {
+            "meanNs": 97.9298,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.BareMultiply": {
+          "": {
+            "meanNs": 470.9339,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 98.1314,
+            "allocatedBytes": 64
+          }
+        },
+        "AbstractionCostBenchmarks\u003CPreciseNumber\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 485.8132,
+            "allocatedBytes": 193
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareAdd": {
+          "": {
+            "meanNs": 0.992,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.BareMultiply": {
+          "": {
+            "meanNs": 1.3621,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityAdd": {
+          "": {
+            "meanNs": 0.9919,
+            "allocatedBytes": 0
+          }
+        },
+        "AbstractionCostBenchmarks\u003CSingle\u003E.QuantityMultiply": {
+          "": {
+            "meanNs": 1.2794,
+            "allocatedBytes": 0
+          }
+        },
+        "ComparisonBenchmarks\u003CDecimal\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 18.179,
+            "allocatedBytes": 32
+          }
+        },
+        "ComparisonBenchmarks\u003CDouble\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 13.9138,
+            "allocatedBytes": 24
+          }
+        },
+        "ComparisonBenchmarks\u003CPreciseNumber\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 28.6637,
+            "allocatedBytes": 40
+          }
+        },
+        "ComparisonBenchmarks\u003CSingle\u003E.CompareToInterface": {
+          "": {
+            "meanNs": 12.9947,
+            "allocatedBytes": 24
+          }
+        },
+        "ConstructionBenchmarks\u003CDecimal\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 15.3997,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CDouble\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 3.2909,
+            "allocatedBytes": 0
+          }
+        },
+        "ConstructionBenchmarks\u003CPreciseNumber\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 119.6148,
+            "allocatedBytes": 40
+          }
+        },
+        "ConstructionBenchmarks\u003CSingle\u003E.FromNauticalMile": {
+          "": {
+            "meanNs": 2.0393,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDecimal\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 49.2968,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CDouble\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0,
+            "allocatedBytes": 0
+          }
+        },
+        "OperatorBenchmarks\u003CPreciseNumber\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 171.2329,
+            "allocatedBytes": 48
+          }
+        },
+        "OperatorBenchmarks\u003CSingle\u003E.LengthTimesLength": {
+          "": {
+            "meanNs": 0.0246,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDecimal\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 82.4458,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CDouble\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 19.7129,
+            "allocatedBytes": 0
+          }
+        },
+        "UnitConversionBenchmarks\u003CPreciseNumber\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 639.269,
+            "allocatedBytes": 232
+          }
+        },
+        "UnitConversionBenchmarks\u003CSingle\u003E.InNauticalMile": {
+          "": {
+            "meanNs": 23.0065,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDecimal\u003E.Length": {
+          "": {
+            "meanNs": 526.858,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CDouble\u003E.Length": {
+          "": {
+            "meanNs": 0.9356,
+            "allocatedBytes": 0
+          }
+        },
+        "VectorBenchmarks\u003CPreciseNumber\u003E.Length": {
+          "": {
+            "meanNs": 6434.8509,
+            "allocatedBytes": 1760
+          }
+        },
+        "VectorBenchmarks\u003CSingle\u003E.Length": {
+          "": {
+            "meanNs": 0.9459,
             "allocatedBytes": 0
           }
         }
