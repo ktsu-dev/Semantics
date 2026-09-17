@@ -215,6 +215,10 @@ that root with Newton steps in their own arithmetic. A value a `double` cannot h
 of four into [1, 4) for the seed, and a root that does not settle throws `ArithmeticException` rather
 than returning an estimate.
 
+`StorageMath` is public, alongside `Cbrt`, `RootN` and `Hypot` on the same seeding and the same loop,
+so an application computing a norm the generator does not emit reaches them rather than reimplementing
+them. See the type's own documentation for what each one guarantees.
+
 ## Validation, diagnostics, and gotchas
 
 - Unknown dimension references in `integrals` / `derivatives` / `dotProducts` / `crossProducts` report **SEM001** and the operator is dropped.
