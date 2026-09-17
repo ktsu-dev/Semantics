@@ -41,10 +41,14 @@ internal static class MetadataProjection
 	// A constraint is carried as the flag the vocabulary reads rather than as its value: only a
 	// strict-positive floor is declared anywhere, and what the vocabulary needs is whether it is
 	// there. The value itself is the C# generator's business, which is where the guard is emitted.
-	// Read off the constraint's value rather than off the presence of the object holding it, so a
-	// constraint of some other kind, when one is added, does not silently turn the strict floor on.
+	// Which values mean "strict" is the vocabulary's rule rather than this reader's, so it is asked
+	// rather than restated: reading the presence of the object instead of its value is #218, and a
+	// copy of the rule per reader is how the two projections got to hold different ones.
 	private static OverloadDeclaration Overload(MetadataOverload overload) =>
-		new(overload.Name, overload.Description, overload.PhysicalConstraints?.MinExclusive == "0");
+		new(
+			overload.Name,
+			overload.Description,
+			OverloadDeclaration.IsStrictFloor(overload.PhysicalConstraints?.MinExclusive));
 
 	private static RelationshipDeclaration Relationship(MetadataRelationship relationship) =>
 		new(relationship.Other, relationship.Result, [.. relationship.Forms]);
