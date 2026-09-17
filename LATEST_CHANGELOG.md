@@ -1,6 +1,4 @@
-## v5.4.1 (patch)
+## v5.4.1
 
-Changes since v5.4.0:
-
-- State the strict-floor rule once, and pin it [patch] ([@Claude](https://github.com/Claude))
+No significant changes detected since v5.4.1.
 
