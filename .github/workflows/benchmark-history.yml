@@ -50,6 +50,7 @@ env:
     *OperatorBenchmarks*LengthTimesLength
     *VectorBenchmarks*.Length
     *ComparisonBenchmarks*CompareToInterface
+    *AbstractionCostBenchmarks*
   # Short runs: three iterations is enough for a trend line, and a release should not tie up a
   # runner for half an hour.
   BENCHMARK_JOB: short
