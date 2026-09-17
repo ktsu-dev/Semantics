@@ -82,6 +82,61 @@ public class ChordTests
 	}
 
 	[TestMethod]
+	public void Parse_SixNine_IsAnAddedNinthOverASixth_NotASlashBass()
+	{
+		Chord c = Chord.Parse("C6/9");
+		Assert.AreEqual(0, c.Root.Value);
+		Assert.IsNull(c.Bass);
+		Assert.AreEqual(ChordQuality.Major, c.Quality);
+		Assert.AreEqual(SixthType.Natural, c.Sixth);
+		Assert.IsTrue(c.Tensions.HasFlag(ChordTensions.Nine));
+
+		// The ninth is added, so it must not imply a seventh the way a bare "9" would.
+		Assert.AreEqual(SeventhType.None, c.Seventh);
+	}
+
+	[TestMethod]
+	public void ChordTones_SixNine_IsAdd9PlusTheNaturalSixth()
+	{
+		int[] expected = [.. Chord.Parse("Cadd9").ChordTones().Append(9).Order()];
+		int[] actual = [.. Chord.Parse("C6/9").ChordTones()];
+		Assert.AreSequenceEqual(expected, actual, "C6/9 should be Cadd9 plus the natural sixth.");
+	}
+
+	[TestMethod]
+	public void Parse_MinorSixNine()
+	{
+		Chord c = Chord.Parse("Cm6/9");
+		Assert.AreEqual(ChordQuality.Minor, c.Quality);
+		Assert.AreEqual(SixthType.Natural, c.Sixth);
+		Assert.IsTrue(c.Tensions.HasFlag(ChordTensions.Nine));
+		Assert.AreEqual(SeventhType.None, c.Seventh);
+		Assert.IsNull(c.Bass);
+	}
+
+	[TestMethod]
+	public void Parse_SixNine_OverASlashBass()
+	{
+		// The second slash is the bass override; the first is the six-nine idiom.
+		Chord c = Chord.Parse("C6/9/G");
+		Assert.AreEqual(SixthType.Natural, c.Sixth);
+		Assert.IsTrue(c.Tensions.HasFlag(ChordTensions.Nine));
+		Assert.IsNotNull(c.Bass);
+		Assert.AreEqual(7, c.Bass!.Value);
+	}
+
+	[TestMethod]
+	public void Parse_SlashOverANonNoteStillFails()
+	{
+		// Only a bare "9" directly after a "6" is the idiom; everything else after a slash is
+		// still required to be a note letter.
+		Assert.IsFalse(Chord.TryParse("C/9", out Chord? afterNonSix));
+		Assert.IsNull(afterNonSix);
+		Assert.IsFalse(Chord.TryParse("C6/11", out Chord? afterLongerExtension));
+		Assert.IsNull(afterLongerExtension);
+	}
+
+	[TestMethod]
 	public void Parse_RejectsEmpty()
 	{
 		_ = Assert.ThrowsExactly<FormatException>(() => Chord.Parse(""));

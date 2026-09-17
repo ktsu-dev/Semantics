@@ -22,7 +22,7 @@ Above the single-event types sits an analysis layer that models harmony nested i
 
 - **Pitch and interval types**: `PitchClass`, `Pitch` (MIDI, with name and frequency conversion), `Interval` (signed semitones, cents, folding).
 - **Scales and modes**: `Mode` with roughly 29 presets (diatonic, jazz, symmetric, pentatonic, blues), `Scale` rooting a mode at a pitch class, with `Contains` and `DegreeOf`.
-- **Chord-symbol parsing**: `Chord.Parse` handles triads, sixths, sevenths (including `m7b5` and `mmaj7`), extensions and altered tensions (`9`/`11`/`13`, `b9`/`#9`/`#11`/`b13`), suspensions, power chords, omissions (`no3`/`no5`), and slash bass.
+- **Chord-symbol parsing**: `Chord.Parse` handles triads, sixths, sevenths (including `m7b5` and `mmaj7`), extensions and altered tensions (`9`/`11`/`13`, `b9`/`#9`/`#11`/`b13`), suspensions, power chords, omissions (`no3`/`no5`), the six-nine idiom (`C6/9`), and slash bass.
 - **Chord realization**: `ChordTones()` and `Voice(octave)` / `Voice(octave, inversion)`, plus `Transpose`.
 - **Roman-numeral analysis both directions**: `Key.RomanNumeralOf(chord)` and `Key.ChordFromRomanNumeral(numeral)`.
 - **Rhythm and real time**: rational `Duration`, `TimeSignature`, `Tempo`, and `Note` / `Rest` / `ChordEvent` events that convert to seconds.
