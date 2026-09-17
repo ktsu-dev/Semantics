@@ -37,6 +37,44 @@ public class KeyTests
 	}
 
 	[TestMethod]
+	public void RomanNumeral_DistinctDegreesNeverShareALabel()
+	{
+		// The roman numeral table only spells seven degrees, so a mode with more of them has no
+		// label left for the eighth onwards. Wrapping would hand two distinct degrees the same
+		// string; the guard refuses instead, matching ChordFromRomanNumeral's own bounds check.
+		foreach (Mode mode in new[] { Mode.Chromatic, Mode.OctatonicHalfWhole, Mode.OctatonicWholeHalf })
+		{
+			Key key = Key.Create(PitchClass.Create(0), mode);
+			HashSet<string> seen = [];
+
+			for (int degree = 1; degree <= mode.DegreeCount; degree++)
+			{
+				Chord chord = Chord.Parse(key.Scale.PitchClasses[degree - 1].Name);
+
+				if (degree > 7)
+				{
+					_ = Assert.ThrowsExactly<ArgumentException>(
+						() => key.RomanNumeralOf(chord),
+						$"{mode.Name} degree {degree} has no roman numeral, so it must not be labelled.");
+					continue;
+				}
+
+				string numeral = key.RomanNumeralOf(chord);
+				Assert.IsTrue(seen.Add(numeral), $"{mode.Name} degree {degree} reuses the label '{numeral}'.");
+			}
+		}
+	}
+
+	[TestMethod]
+	public void RomanNumeral_ChromaticKeyStillLabelsTheFirstSevenDegrees()
+	{
+		Key chromatic = Key.Create(PitchClass.Create(0), Mode.Chromatic);
+		Assert.AreEqual("I", chromatic.RomanNumeralOf(Chord.Parse("C")));
+		Assert.AreEqual("II", chromatic.RomanNumeralOf(Chord.Parse("C#")));
+		Assert.AreEqual("VII", chromatic.RomanNumeralOf(Chord.Parse("F#")));
+	}
+
+	[TestMethod]
 	public void FunctionOf_ReturnsScaleDegree()
 	{
 		ScaleDegree fifth = CMajor.FunctionOf(PitchClass.Create(7));
