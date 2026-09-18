@@ -1461,7 +1461,14 @@ Extend the `Subjects` XML documentation with two paragraphs, placed after the ex
 	/// creation, so the top row walks from the reflection machinery alone up through a character
 	/// set check, a format check and a mod-97 check. The bottom row is what a caller pays around
 	/// that: both failure paths, the cross-type conversion that is secretly another creation, and
-	/// an ordering that should be the underlying string's own.
+	/// the hash a dictionary of semantic strings pays on every lookup.
+	/// </para>
+	/// <para>
+	/// Ordering is measured and stored, and deliberately not drawn. A semantic string's
+	/// <c>CompareTo</c> is the underlying string's own, over operands a loop does not change, so
+	/// the JIT hoists it and BenchmarkDotNet reports it as indistinguishable from an empty method —
+	/// the same reason no bare quantity operator is drawn above. A panel of it would chart the
+	/// harness's resolution rather than any release.
 	/// </para>
 	/// <para>
 	/// <b>Paths</b> is the same shape: build each kind, then operate on one. The two file name
