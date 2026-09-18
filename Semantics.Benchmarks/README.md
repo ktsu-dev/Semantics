@@ -4,7 +4,9 @@ A [BenchmarkDotNet](https://benchmarkdotnet.org) suite covering the quantity sys
 quantity from a unit, reading it back out in one, the generated physics operators, the
 componentwise vector operations, and comparison.
 
-## The axis that matters here is the storage type
+## Quantities
+
+### The axis that matters here is the storage type
 
 Every generated quantity is a `readonly record struct` over a storage type — `Length<double>`,
 `Length<decimal>`, `Length<PreciseNumber>` — and it does almost nothing of its own. A value is held
@@ -41,6 +43,13 @@ dotnet run -c Release --project Semantics.Benchmarks -- --filter '*<Decimal>*'
 dotnet run -c Release --project Semantics.Benchmarks -- --filter '*AbstractionCostBenchmarks*'
 ```
 
+The suite covers three libraries, and `--filter` is how one is picked:
+
+```bash
+dotnet run -c Release --project Semantics.Benchmarks -- --filter '*String*Benchmarks*'
+dotnet run -c Release --project Semantics.Benchmarks -- --filter '*Path*Benchmarks*'
+```
+
 ## Measuring a published release
 
 Set `BenchmarkAgainstVersion` and the suite measures that package instead of the working copy:
@@ -54,6 +63,9 @@ its own for each run, and a property passed on the command line does not reach t
 would build the benchmark assembly against the version you asked for and the harness against the
 one pinned centrally, which fails to compile if a type changed shape between them. MSBuild reads
 environment variables as properties in every project, so the environment form reaches both.
+`BenchmarkAgainstVersion` swaps all four shipped packages, `Quantities`, `Strings`,
+`Strings.Identifiers` and `Paths`, at the one version, which is correct because this repository
+ships one version across every package.
 
 This switch is how `docs/benchmarks/` is filled. No tag in this repository carries a benchmark
 project, so there is no older source to check out and run; and measuring packages is the better
@@ -63,11 +75,20 @@ reported and skipped rather than failing the backfill — 4.0 made every quantit
 5.0 removed four operators, so reaching back far enough eventually finds a version this suite
 cannot ask.
 
+That skip is also shared across subjects in a way worth naming, because it is the reason the strings
+and paths charts start at 4.0.0 with no 3.3.1 point. All three subjects live in one project, so a
+compile error in any one file blocks every subject's run regardless of `--filter`. Against packages
+older than 4.0.0, `AbstractionCostBenchmarks.cs` — a quantities-only file — fails to build, because
+it declares a `Length<T>` field with no initializer, which is only an error once `Length<T>` becomes
+a `readonly record struct`; before that migration it was a reference type and the field was valid.
+`docs/benchmarks/history.json` still carries a 3.3.1 entry from before that file existed in its
+current form, but the current suite cannot regenerate it for any subject.
+
 It is also why nothing here touches an internal member: the `InternalsVisibleTo` that would expose
 one names the test assembly, and a benchmark built on internals could only ever measure the
 working copy.
 
-## What each class is for
+### What each class is for
 
 | Class | What it isolates |
 |---|---|
@@ -79,7 +100,7 @@ working copy.
 | `AbstractionCostBenchmarks` | The same arithmetic twice, once on the bare storage type and once on quantities over it, paired so BenchmarkDotNet reports the ratio. See below. |
 | `BaselineBenchmarks` | Touches none of this library. It exists so that timings taken in different CI jobs can be compared; see its remarks, and do not edit its body. |
 
-### What the quantity types cost over the bare storage type
+#### What the quantity types cost over the bare storage type
 
 `AbstractionCostBenchmarks` is the one that answers the question the rest of the suite only implies:
 a quantity is a `readonly record struct` holding one value in the SI base unit, so an operator on it
@@ -120,7 +141,7 @@ it is a floor on the real cost rather than the whole of it.
 produces, so a chain that compounds its operand would measure digit growth instead of the operation.
 Both loops accumulate rather than compound.
 
-### An operator on a `double` is below the floor
+#### An operator on a `double` is below the floor
 
 `OperatorBenchmarks` over `double` and `float` comes back with a ZeroMeasurement warning: the
 method is indistinguishable from an empty one. That is not a broken benchmark, it is the answer.
@@ -132,6 +153,79 @@ load, a mutated field adds a store, and either would swamp the instruction being
 those rows are read as "below what the harness resolves" rather than as numbers, the `decimal` and
 `PreciseNumber` rows in the same table are the ones that mean something, and the release chart
 draws no operator panel at all.
+
+## Strings
+
+A suite covering three things: building a semantic string across a ladder of validators, what a
+value costs once it exists, and what the type costs over the code a caller would otherwise write.
+
+### What each class is for
+
+| Class | What it isolates |
+|---|---|
+| `StringCreationBenchmarks` | Creation across a ladder of validators. `Unvalidated` is the reflection floor alone (`Activator.CreateInstance`, a `PropertyInfo.SetValue`, and a strategy lookup that finds nothing), and `CharsetRegex`, `FormatRegex`, `Checksum` and `Mod97` each add one validator on top of it. `TryCreateRejects` and `CreateThrows` are both failure paths, measured side by side. |
+| `StringOperationBenchmarks` | What a value costs after creation: equality, ordering, hashing, and two calls that look like field access at a call site but are a full creation in disguise, `AsConversion` and `WithSuffix`. |
+| `StringAbstractionCostBenchmarks` | The same operation written twice, once by hand at a boundary and once through the type, paired so BenchmarkDotNet reports the ratio directly. See below. |
+
+Four structurally different validators land within about 340 ns of each other on a floor of roughly
+1,650 ns. A Luhn pass, a character-set regular expression, a mod-97 pass and a format regular
+expression cost 0.93, 1.06, 1.26 and 1.27 microseconds on top of that floor, so the validator is a
+minor term and the reflection machinery is the bill. The last two are a near-tie, worth naming
+because the mod-97 check was expected to dominate going in, and it does not.
+
+### What the type costs over the code a caller would otherwise write
+
+| pair | ratio | allocation, bare | allocation, semantic |
+|---|---|---|---|
+| Validate at a boundary | 12.94 | 0 B | 928 B |
+| Reject without throwing | 164.98 | 0 B | 1424 B |
+| Equality | 2.53 | 0 B | 0 B |
+| Ordering | 1.11 | 0 B | 0 B |
+
+The Reject ratio is the most actionable number in the table. `SemanticString.TryFromString` is
+implemented as a `Create` call wrapped in a `try`/`catch` for `ArgumentException`, so a rejection
+pays a full .NET exception where the hand-written pattern match returns a plain `false`. At a
+boundary that rejects often, `TryCreate` should be read as costing an exception every time, not as
+the cheap option its name suggests.
+
+Equality and ordering are a fair pair only once each baseline is pinned to the rule the semantic side
+actually follows. Record equality on a semantic string uses `EqualityComparer<string>.Default`,
+which is ordinal, while `CompareTo` forwards to `string.CompareTo(string)`, which is
+current-culture collation. Two values can therefore compare equal under `==` and still sort by a
+different rule. Nothing here changes that behavior. It is reported because it is easy to assume the
+two follow the same rule.
+
+## Paths
+
+A suite covering building each path type from a string, operating on a path once it exists, and what
+the type costs over `System.IO.Path` doing the same work.
+
+### What each class is for
+
+| Class | What it isolates |
+|---|---|
+| `PathCreationBenchmarks` | Building each path type from a well-formed string. A path type is a semantic string whose validator asks the runtime a question about the shape of the value, so each row is the reflection floor plus one such question. |
+| `PathOperationBenchmarks` | What a path costs once it exists. `FileNameWithoutExtension` caches into a field and reads it back; `FileName` rebuilds and revalidates on every read. Both are properties and both look like field access at a call site. |
+| `PathAbstractionCostBenchmarks` | The same operation written twice, once against `System.IO.Path` and once through the type, paired so BenchmarkDotNet reports the ratio directly. See below. |
+
+### What the type costs over `System.IO.Path`
+
+| pair | ratio | allocation, bare | allocation, semantic |
+|---|---|---|---|
+| FileName | 130.22 | 48 B | 944 B |
+| AsAbsolute | 15.69 | 256 B | 1944 B |
+| AsRelative | 10.35 | 80 B | 1728 B |
+| Create | 1,810.28 | 0 B | 1816 B |
+
+The Create ratio needs its own framing stated next to it, because on its own the number overstates
+what changed. It is large because its baseline is cheap, a single boolean check, not because
+creation itself is unusually expensive: the semantic side costs roughly the same 4.7 microseconds
+across all four categories, and almost all of the spread between the ratios comes from what each one
+happens to be divided by. The baseline also deliberately leaves out the separator concatenation
+`IsAbsolutePathAttribute` performs before asking the same question, because a baseline in this class
+means the code a caller would otherwise write, and a caller checking whether a path is absolute
+writes the plain check rather than the library's own way of handling edge cases. That one choice
+accounts for roughly a fourteenfold difference in the reported ratio on its own.
 
 ## Reading the results
 
