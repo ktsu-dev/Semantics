@@ -16,6 +16,14 @@ name: Benchmark History
 # The backfill running as a single job still matters: separate runs land on different CI hosts,
 # and that difference is larger than most releases are. Within one job the points are comparable
 # as they stand; across jobs, BaselineBenchmarks is what ties them together.
+#
+# Three subjects share one job: quantities, strings, and paths. One job rather than a matrix so
+# that the reference workload is measured once and stamped on every entry the run produces -- which
+# is what lets a strings point and a quantities point from the same run be compared at all. It also
+# keeps the results to a single push.
+#
+# The cost is wall clock, and `subjects` on the dispatch is the answer to that: a long backfill is
+# split by subject across runs rather than by raising the timeout.
 
 on:
   release:
@@ -27,6 +35,11 @@ on:
         required: false
         default: "3.3.1 4.0.0 4.1.0 4.2.0 4.3.2 5.0.0 5.1.0 5.2.0 5.2.4 5.3.2"
         type: string
+      subjects:
+        description: "Space-separated subjects to measure: quantities strings paths"
+        required: false
+        default: "quantities strings paths"
+        type: string
 
 permissions:
   contents: write
@@ -37,28 +50,30 @@ concurrency:
 
 env:
   DOTNET_VERSION: "10.0"
-  HISTORY: docs/benchmarks/history.json
-  CHART: docs/benchmarks/performance.svg
   # Already ignored, and ktsu.Sdk regenerates .gitignore on build so a new entry would not last.
   RUNS: BenchmarkDotNet.Artifacts
-  # The set drawn in the README. One operation per storage type rather than every operation at one
-  # storage type: a quantity is a value type over T and does almost nothing of its own, so what a
-  # release changes it changes per storage type.
-  HEADLINE_FILTER: >-
-    *ConstructionBenchmarks*FromNauticalMile
-    *UnitConversionBenchmarks*InNauticalMile
-    *OperatorBenchmarks*LengthTimesLength
-    *VectorBenchmarks*.Length
-    *ComparisonBenchmarks*CompareToInterface
   # Short runs: three iterations is enough for a trend line, and a release should not tie up a
   # runner for half an hour.
   BENCHMARK_JOB: short
+  # One line per chart: name|history|chart|filter. An environment variable cannot hold an array,
+  # and three steps need the same three triples, so this is the one place they are written.
+  #
+  # Each filter is one operation per panel drawn. What varies between subjects is the axis: a
+  # quantity is a value type over T and does almost nothing of its own, so its release changes land
+  # per storage type; a semantic string spends its cost at creation, so its axis is how much
+  # validation the type declares.
+  SUBJECTS: |
+    quantities|docs/benchmarks/history.json|docs/benchmarks/performance.svg|*ConstructionBenchmarks*FromNauticalMile *UnitConversionBenchmarks*InNauticalMile *OperatorBenchmarks*LengthTimesLength *VectorBenchmarks*.Length *ComparisonBenchmarks*CompareToInterface
+    strings|docs/benchmarks/strings-history.json|docs/benchmarks/strings-performance.svg|*StringCreationBenchmarks* *StringOperationBenchmarks*
+    paths|docs/benchmarks/paths-history.json|docs/benchmarks/paths-performance.svg|*PathCreationBenchmarks* *PathOperationBenchmarks*
 
 jobs:
   measure:
     name: Measure and chart
     runs-on: ubuntu-latest
-    timeout-minutes: 240
+    # Three subjects rather than one. The dispatch's `subjects` input is the intended way to split
+    # a long backfill across runs; raising this number further is not.
+    timeout-minutes: 360
 
     steps:
       - name: Checkout Repository
@@ -101,19 +116,24 @@ jobs:
           work="${RUNNER_TEMP}/bench-$version"
           git worktree add --detach "$work" "$TAG"
 
-          (cd "$work" && dotnet run -c Release --project Semantics.Benchmarks -- \
-            --filter $HEADLINE_FILTER \
-            --job "$BENCHMARK_JOB" \
-            --artifacts "$GITHUB_WORKSPACE/$RUNS/$version")
+          while IFS='|' read -r subject history chart filter; do
+            [ -n "$subject" ] || continue
+            echo "::group::$subject $version"
+            (cd "$work" && dotnet run -c Release --project Semantics.Benchmarks -- \
+              --filter $filter \
+              --job "$BENCHMARK_JOB" \
+              --artifacts "$GITHUB_WORKSPACE/$RUNS/$subject/$version")
 
-          dotnet run scripts/benchmark-history.cs -- ingest \
-            --history "$HISTORY" \
-            --results "$RUNS/$version" \
-            --version "$version" \
-            --commit "$(git rev-parse --short "$TAG^{commit}")" \
-            --date "$(git log -1 --format=%cs "$TAG")" \
-            --run-id "${{ github.run_id }}" \
-            --baseline-ns "${{ steps.baseline.outputs.ns }}"
+            dotnet run scripts/benchmark-history.cs -- ingest \
+              --history "$history" \
+              --results "$RUNS/$subject/$version" \
+              --version "$version" \
+              --commit "$(git rev-parse --short "$TAG^{commit}")" \
+              --date "$(git log -1 --format=%cs "$TAG")" \
+              --run-id "${{ github.run_id }}" \
+              --baseline-ns "${{ steps.baseline.outputs.ns }}"
+            echo "::endgroup::"
+          done <<< "$SUBJECTS"
 
           git worktree remove --force "$work"
 
@@ -122,56 +142,70 @@ jobs:
         shell: bash
         env:
           VERSIONS: ${{ inputs.versions }}
+          SUBJECTS_WANTED: ${{ inputs.subjects }}
           BASELINE_NS: ${{ steps.baseline.outputs.ns }}
         run: |
           set -euo pipefail
           read -ra versions <<< "$VERSIONS"
+          read -ra wanted <<< "$SUBJECTS_WANTED"
 
           for version in "${versions[@]}"; do
-            echo "::group::$version"
-            # Through the environment rather than a -p: switch, because BenchmarkDotNet generates
-            # and builds a project of its own per run, which a property passed on the command line
-            # does not reach. MSBuild reads environment variables as properties in every project.
-            #
-            # A version whose API the current benchmarks cannot express is reported and skipped,
-            # rather than failing the whole backfill after the ones before it have been measured.
-            if ! BenchmarkAgainstVersion="$version" dotnet run -c Release --project Semantics.Benchmarks -- \
-                 --filter $HEADLINE_FILTER \
-                 --job "$BENCHMARK_JOB" \
-                 --artifacts "$GITHUB_WORKSPACE/$RUNS/$version"; then
-              echo "::warning::$version could not be benchmarked by the current suite; skipping"
+            while IFS='|' read -r subject history chart filter; do
+              [ -n "$subject" ] || continue
+              # Skip a subject the dispatch did not ask for.
+              case " ${wanted[*]} " in *" $subject "*) ;; *) continue ;; esac
+
+              echo "::group::$subject $version"
+              # Through the environment rather than a -p: switch, because BenchmarkDotNet generates
+              # and builds a project of its own per run, which a property passed on the command line
+              # does not reach. MSBuild reads environment variables as properties in every project.
+              if ! BenchmarkAgainstVersion="$version" dotnet run -c Release --project Semantics.Benchmarks -- \
+                   --filter $filter \
+                   --job "$BENCHMARK_JOB" \
+                   --artifacts "$GITHUB_WORKSPACE/$RUNS/$subject/$version"; then
+                echo "::warning::$subject $version could not be benchmarked by the current suite; skipping"
+                echo "::endgroup::"
+                continue
+              fi
+
+              tag="v$version"
+              commit=""
+              date=""
+              if git rev-parse -q --verify "$tag^{commit}" >/dev/null; then
+                commit="$(git rev-parse --short "$tag^{commit}")"
+                date="$(git log -1 --format=%cs "$tag")"
+              fi
+
+              # Skipped here too: a package can build against these benchmarks and still throw from
+              # every one of them at run time, which BenchmarkDotNet reports as a table of NA rather
+              # than as a failure. Ingest refuses such a run, and the backfill carries on.
+              if ! dotnet run scripts/benchmark-history.cs -- ingest \
+                   --history "$history" \
+                   --results "$RUNS/$subject/$version" \
+                   --version "$version" \
+                   --commit "$commit" \
+                   --date "$date" \
+                   --run-id "${{ github.run_id }}" \
+                   --baseline-ns "$BASELINE_NS"; then
+                echo "::warning::$subject $version produced no usable measurement; skipping"
+              fi
               echo "::endgroup::"
-              continue
-            fi
-
-            tag="v$version"
-            commit=""
-            date=""
-            if git rev-parse -q --verify "$tag^{commit}" >/dev/null; then
-              commit="$(git rev-parse --short "$tag^{commit}")"
-              date="$(git log -1 --format=%cs "$tag")"
-            fi
-
-            # Skipped here too, and for the same reason: a package can build against these
-            # benchmarks and still throw from every one of them at run time, which BenchmarkDotNet
-            # reports as a table of NA rather than as a failure. Ingest refuses such a run, and
-            # the backfill carries on to the next version.
-            if ! dotnet run scripts/benchmark-history.cs -- ingest \
-                 --history "$HISTORY" \
-                 --results "$RUNS/$version" \
-                 --version "$version" \
-                 --commit "$commit" \
-                 --date "$date" \
-                 --run-id "${{ github.run_id }}" \
-                 --baseline-ns "$BASELINE_NS"; then
-              echo "::warning::$version produced no usable measurement; skipping"
-            fi
-            echo "::endgroup::"
+            done <<< "$SUBJECTS"
           done
 
-      - name: Redraw the chart
+      - name: Redraw the charts
         shell: bash
-        run: dotnet run scripts/benchmark-history.cs -- render --history "$HISTORY" --out "$CHART"
+        run: |
+          set -euo pipefail
+          while IFS='|' read -r subject history chart filter; do
+            [ -n "$subject" ] || continue
+            if [ ! -f "$history" ]; then
+              echo "No history for $subject yet; nothing to draw."
+              continue
+            fi
+            dotnet run scripts/benchmark-history.cs -- render \
+              --subject "$subject" --history "$history" --out "$chart"
+          done <<< "$SUBJECTS"
 
       - name: Commit the history and the chart
         shell: bash
@@ -182,7 +216,7 @@ jobs:
           # Staged first, then compared against the index: on the first run these files are new,
           # and `git diff` alone does not see an untracked file, so the run would push nothing and
           # still report success.
-          git add "$HISTORY" "${CHART%.svg}"*.svg
+          git add docs/benchmarks/
           if git diff --cached --quiet; then
             echo "Nothing changed."
             exit 0
