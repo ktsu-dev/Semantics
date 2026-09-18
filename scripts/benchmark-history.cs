@@ -62,6 +62,19 @@ internal static partial class BenchmarkHistory
 	/// unit, reading it back out in one, a vector length, a comparison — all of which are far
 	/// enough above that floor to move when the library does.
 	/// </para>
+	/// <para>
+	/// <b>Strings</b> is drawn along validation weight, because that is the axis there is. A
+	/// semantic string is a record wrapping a <see cref="string"/> and its cost is concentrated at
+	/// creation, so the top row walks from the reflection machinery alone up through a character
+	/// set check, a format check and a mod-97 check. The bottom row is what a caller pays around
+	/// that: both failure paths, the cross-type conversion that is secretly another creation, and
+	/// an ordering that should be the underlying string's own.
+	/// </para>
+	/// <para>
+	/// <b>Paths</b> is the same shape: build each kind, then operate on one. The two file name
+	/// panels sit next to each other because one caches into a field and one rebuilds and
+	/// revalidates on every read, and both look like field access at a call site.
+	/// </para>
 	/// </remarks>
 	private static readonly Dictionary<string, Subject> Subjects = new(StringComparer.Ordinal)
 	{
@@ -75,6 +88,28 @@ internal static partial class BenchmarkHistory
 			new PanelSpec("UnitConversionBenchmarks<PreciseNumber>.InNauticalMile", null, "Read back (precise)"),
 			new PanelSpec("VectorBenchmarks<Decimal>.Length", null, "Vector length (decimal)"),
 			new PanelSpec("ComparisonBenchmarks<Double>.CompareToInterface", null, "CompareTo (double)"),
+		]),
+		["strings"] = new("Semantics.Strings", 4,
+		[
+			new("StringCreationBenchmarks.Unvalidated", null, "Create (no validation)"),
+			new("StringCreationBenchmarks.CharsetRegex", null, "Create (charset regex)"),
+			new("StringCreationBenchmarks.FormatRegex", null, "Create (format regex)"),
+			new("StringCreationBenchmarks.Mod97", null, "Create (mod-97)"),
+			new("StringCreationBenchmarks.TryCreateRejects", null, "TryCreate (rejects)"),
+			new("StringCreationBenchmarks.CreateThrows", null, "Create (throws)"),
+			new("StringOperationBenchmarks.AsConversion", null, "As<T> conversion"),
+			new("StringOperationBenchmarks.HashCode", null, "GetHashCode"),
+		]),
+		["paths"] = new("Semantics.Paths", 4,
+		[
+			new("PathCreationBenchmarks.AbsoluteFilePath", null, "Create (absolute file)"),
+			new("PathCreationBenchmarks.RelativeFilePath", null, "Create (relative file)"),
+			new("PathCreationBenchmarks.FileNameType", null, "Create (file name)"),
+			new("PathOperationBenchmarks.FileName", null, "FileName (uncached)"),
+			new("PathOperationBenchmarks.FileNameWithoutExtension", null, "FileName (cached)"),
+			new("PathOperationBenchmarks.AsAbsolute", null, "AsAbsolute (from relative)"),
+			new("PathOperationBenchmarks.AsRelative", null, "AsRelative (from absolute)"),
+			new("PathOperationBenchmarks.RemoveExtension", null, "RemoveExtension"),
 		]),
 	};
 
