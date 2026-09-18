@@ -3,7 +3,6 @@
 namespace ktsu.Semantics.Benchmarks.Paths;
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 /// <summary>
@@ -43,13 +42,7 @@ internal static class PathSpecimens
 		Path.Combine(Root, "semantics", "src");
 
 	/// <summary>A relative file path. Forward slashes are accepted on both platforms.</summary>
-	[SuppressMessage(
-		"Performance",
-		"CA1802:Use literals where appropriate",
-		Justification = "Kept as a readonly field, alongside AbsoluteFile and AbsoluteDirectory " +
-			"which cannot be const, so the three path specimens declare uniformly; only the bare " +
-			"FileNameOnly is a true const.")]
-	internal static readonly string RelativeFile = "Semantics.Paths/FilePath.cs";
+	internal const string RelativeFile = "Semantics.Paths/FilePath.cs";
 
 	/// <summary>A bare file name, with no separator in it.</summary>
 	internal const string FileNameOnly = "FilePath.cs";
