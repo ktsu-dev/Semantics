@@ -1822,7 +1822,7 @@ Expected: each prints `ingested 5.3.4: N benchmarks, baseline <NS> ns, cpu ...`.
 |---|---|
 | `StringCreationBenchmarks.Unvalidated` is the fastest creation row | It is the reflection machinery with no validator. Anything faster means another row is not running its validator. |
 | `StringCreationBenchmarks.Mod97` is the slowest creation row | `Iban` is the heaviest shipped validator. |
-| `CreateThrows` costs far more than `TryCreateRejects` | A .NET exception throw and catch is orders of magnitude above a regular expression match. If they are close, the throw is not happening, which means the specimen is being accepted. |
+| `CreateThrows` and `TryCreateRejects` cost about the same, and both cost far more than any success row | Established by measurement in Task 2, and it is a property of the library rather than of the benchmark: `SemanticString.TryFromString` is implemented as `try { Create(...) } catch (ArgumentException) { return false; }`, so `TryCreate` throws and catches internally on every rejection. Both rows therefore pay a full .NET exception. **If instead either row is cheap and close to a success row, the specimen is being accepted and the rejection is not happening** — that is the failure mode to watch for. |
 | Every string creation row allocates more than 0 bytes | A semantic string is a reference type. A zero here means the allocation is not being counted and `[MemoryDiagnoser]` is missing or the row did not run. |
 | `PathOperationBenchmarks.FileNameWithoutExtension` is far cheaper than `.FileName` | One caches into a field, the other rebuilds and revalidates. |
 | Every path row allocates more than 0 bytes except `FileNameWithoutExtension` | Same reasoning, and the cached one returns an existing reference. |
