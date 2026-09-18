@@ -388,7 +388,7 @@ using ktsu.Semantics.Strings.Identifiers;
 /// actually holds. They also happen to span the interesting ground: <see cref="CharsetRegex"/> and
 /// <see cref="FormatRegex"/> are interpreted regular expressions looked up from the static cache
 /// on every call and carrying a one-second timeout, <see cref="Checksum"/> is a hand-written Luhn
-/// pass over the same sort of input, and <see cref="Mod97"/> is the heaviest shipped validator.
+/// pass over the same sort of input, and <see cref="Mod97"/> a rearrange-expand-and-modulo pass.
 /// </para>
 /// <para>
 /// <b>Both failure paths are here.</b> <see cref="TryCreateRejects"/> and
@@ -440,7 +440,7 @@ public class StringCreationBenchmarks
 	[Benchmark]
 	public CreditCardNumber Checksum() => CreditCardNumber.Create(card);
 
-	/// <summary>The heaviest shipped validator: rearrangement, expansion, modular arithmetic.</summary>
+	/// <summary>A rearrangement, a character-to-digit expansion, and modular arithmetic.</summary>
 	/// <returns>The created value.</returns>
 	[Benchmark]
 	public Iban Mod97() => Iban.Create(iban);
@@ -1842,7 +1842,7 @@ Expected: each prints `ingested 5.3.4: N benchmarks, baseline <NS> ns, cpu ...`.
 | Expectation | Why it must hold |
 |---|---|
 | `StringCreationBenchmarks.Unvalidated` is the fastest creation row | It is the reflection machinery with no validator. Anything faster means another row is not running its validator. |
-| `StringCreationBenchmarks.Mod97` is the slowest creation row | `Iban` is the heaviest shipped validator. |
+| The four validator rows all land within ~340 ns of each other, on a floor of ~1,650 ns | Measured in Task 9. The validator is a minor term and the reflection machinery is the bill. `Mod97` and `FormatRegex` are a tie within noise, so do not expect a stable ordering between them. **The failure mode to watch for is a validator row at or near the unvalidated floor**, which would mean its validator is not running. |
 | `CreateThrows` and `TryCreateRejects` cost about the same, and both cost far more than any success row | Established by measurement in Task 2, and it is a property of the library rather than of the benchmark: `SemanticString.TryFromString` is implemented as `try { Create(...) } catch (ArgumentException) { return false; }`, so `TryCreate` throws and catches internally on every rejection. Both rows therefore pay a full .NET exception. **If instead either row is cheap and close to a success row, the specimen is being accepted and the rejection is not happening** — that is the failure mode to watch for. |
 | Every string creation row allocates more than 0 bytes | A semantic string is a reference type. A zero here means the allocation is not being counted and `[MemoryDiagnoser]` is missing or the row did not run. |
 | `PathOperationBenchmarks.FileNameWithoutExtension` is far cheaper than `.FileName` | One caches into a field, the other rebuilds and revalidates. |

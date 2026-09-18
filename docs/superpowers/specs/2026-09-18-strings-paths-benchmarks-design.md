@@ -79,7 +79,7 @@ interpreted regular expressions, hand-written checksums, and modular arithmetic.
 | `CharsetRegex` | `Ulid` | That floor plus an interpreted `Regex.IsMatch` over a fixed character set. |
 | `FormatRegex` | `Uuid` | The same, over a pattern with groups and separators. |
 | `Checksum` | `CreditCardNumber` | The floor plus a hand-written Luhn pass. Paired against the two above, this is regular expressions against arithmetic at comparable input lengths. |
-| `Mod97` | `Iban` | The heaviest shipped validator: rearrangement, character-to-digit expansion, modular arithmetic. |
+| `Mod97` | `Iban` | A rearrangement, a character-to-digit expansion, and modular arithmetic. Predicted to be the heaviest validator; measured as a tie with `FormatRegex`. |
 | `TryCreateRejects` | `Uuid` | The failure path that does not throw. |
 | `CreateThrows` | `Uuid` | The failure path that does, so the cost of choosing `Create` over `TryCreate` at a boundary that sees bad input is a number rather than a guess. |
 
