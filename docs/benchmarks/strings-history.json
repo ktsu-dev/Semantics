@@ -1,0 +1,984 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "version": "3.3.1",
+      "commit": "fffa086",
+      "date": "2026-09-09",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2753.4231,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2542.6661,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 7745.7606,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 2879.4108,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 2834.641,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 6681.0384,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1659.7438,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1660.2821,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 1.0335,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 0.5191,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 42.7122,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 0.9671,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1752.3707,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    },
+    {
+      "version": "4.0.0",
+      "commit": "496d895",
+      "date": "2026-09-10",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2754.1835,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2564.8275,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 6692.7511,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 2844.0389,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 2899.4436,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 6770.7062,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1686.0263,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1686.9087,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.4821,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 1.0502,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 42.4328,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 0,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1778.0575,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    },
+    {
+      "version": "4.1.0",
+      "commit": "fa79094",
+      "date": "2026-09-11",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2748.4431,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2612.7986,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 6755.5278,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 2894.4377,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 2889.1551,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 6771.3933,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1636.4607,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1643.848,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.666,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 1.1026,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 45.7944,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 0.9802,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1758.5668,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    },
+    {
+      "version": "4.2.0",
+      "commit": "5e19d32",
+      "date": "2026-09-11",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2995.0653,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2585.8948,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 6939.1083,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 2902.3132,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 2898.1583,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 6731.0313,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1663.8268,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1739.0472,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.5063,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 1.0308,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 42.7399,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 0.4088,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1740.1211,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    },
+    {
+      "version": "4.3.2",
+      "commit": "256def6",
+      "date": "2026-09-12",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2794.1538,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2598.2615,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 6708.6965,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 3133.8379,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 2944.838,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 6746.1594,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1678.2132,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1648.0204,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.5447,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 1.0209,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 42.7824,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 1.4598,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1754.1719,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    },
+    {
+      "version": "5.0.0",
+      "commit": "bb69de0",
+      "date": "2026-09-12",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2745.8506,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2623.4472,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 6759.5576,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 3120.2199,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 2895.1233,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 6732.017,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1639.5547,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1738.3368,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.5235,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 1.0378,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 42.3489,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 0.937,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1749.8879,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    },
+    {
+      "version": "5.1.0",
+      "commit": "4c71e14",
+      "date": "2026-09-13",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2761.4034,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2598.5987,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 7152.223,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 2902.9093,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 2901.0132,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 6859.3948,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1652.9215,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1735.8643,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.5267,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 1.0443,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 43.7689,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 0,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1777.9709,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    },
+    {
+      "version": "5.2.0",
+      "commit": "eda9fc8",
+      "date": "2026-09-13",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2798.642,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2570.9897,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 6823.0708,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 2851.988,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 2876.4201,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 7193.4514,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1655.2476,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1660.2755,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.5799,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 1.0319,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 42.6665,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 1.0938,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1760.7339,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    },
+    {
+      "version": "5.2.4",
+      "commit": "cbc914c",
+      "date": "2026-09-14",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2894.3103,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2552.5675,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 6791.7066,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 3205.3452,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 3099.5834,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 9578.7145,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1675.0594,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1649.6442,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.5197,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 0.9831,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 42.6705,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 1.0737,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1745.6762,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    },
+    {
+      "version": "5.3.2",
+      "commit": "2a3e53b",
+      "date": "2026-09-16",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2898.5174,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2630.5242,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 7235.4894,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 3027.9012,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 3027.6426,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 6872.9309,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1672.3486,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1648.6234,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.4969,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 1.0098,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 42.4777,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 0,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1735.742,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    },
+    {
+      "version": "5.3.4",
+      "commit": "8e401ee",
+      "date": "2026-09-16",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2712.9913,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2578.7094,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 6807.6602,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 2920.1192,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 2912.5356,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 6811.9949,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1652.5791,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1655.4552,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.5027,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 1.0221,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 42.5549,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 1.0345,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1753.4582,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    }
+  ]
+}

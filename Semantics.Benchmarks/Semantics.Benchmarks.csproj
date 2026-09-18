@@ -42,9 +42,15 @@
        could only ever measure the working copy. -->
   <ItemGroup Condition="'$(BenchmarkAgainstVersion)' == ''">
     <ProjectReference Include="..\Semantics.Quantities\Semantics.Quantities.csproj" />
+    <ProjectReference Include="..\Semantics.Strings\Semantics.Strings.csproj" />
+    <ProjectReference Include="..\Semantics.Strings.Identifiers\Semantics.Strings.Identifiers.csproj" />
+    <ProjectReference Include="..\Semantics.Paths\Semantics.Paths.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(BenchmarkAgainstVersion)' != ''">
     <PackageReference Include="ktsu.Semantics.Quantities" VersionOverride="$(BenchmarkAgainstVersion)" />
+    <PackageReference Include="ktsu.Semantics.Strings" VersionOverride="$(BenchmarkAgainstVersion)" />
+    <PackageReference Include="ktsu.Semantics.Strings.Identifiers" VersionOverride="$(BenchmarkAgainstVersion)" />
+    <PackageReference Include="ktsu.Semantics.Paths" VersionOverride="$(BenchmarkAgainstVersion)" />
   </ItemGroup>
 
 </Project>

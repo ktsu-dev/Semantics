@@ -22,23 +22,45 @@ internal static partial class BenchmarkHistory
 {
 	private const int SchemaVersion = 1;
 	private const string BaselineKey = "BaselineBenchmarks.ReferenceWork";
-	private const int Columns = 4;
 	private const int CellWidth = 228;
 	private const int CellHeight = 132;
 	private const int Left = 56;
 
-	/// <summary>The benchmarks the README draws, in order.</summary>
+	/// <summary>One drawable chart: its title, its grid width, and the panels it shows.</summary>
+	/// <param name="Title">The library the chart is about, used in the heading and the aria-label.</param>
+	/// <param name="Columns">Panels per row.</param>
+	/// <param name="Headline">The panels of the allocation and time sections, in reading order.</param>
+	/// <param name="Cost">
+	/// The paired benchmarks the cost section draws. Empty for a subject whose history carries no
+	/// bare-baseline pair, and that subject's chart then has two sections rather than three.
+	/// </param>
+	private sealed record Subject(string Title, int Columns, PanelSpec[] Headline, CostPair[] Cost);
+
+	/// <summary>One panel: which benchmark it draws, and what to call it.</summary>
+	/// <param name="Key">The benchmark key as <c>ingest</c> stores it.</param>
+	/// <param name="Parameters">The parameter case to draw, or null when the benchmark has none.</param>
+	/// <param name="Label">The panel heading.</param>
+	private sealed record PanelSpec(string Key, string? Parameters, string Label);
+
+	/// <summary>One cost panel: a measured benchmark over the bare baseline it is paired with.</summary>
+	/// <param name="Key">The benchmark measuring the wrapped type.</param>
+	/// <param name="Baseline">The benchmark measuring the same work on the bare type.</param>
+	/// <param name="Label">The panel heading.</param>
+	private sealed record CostPair(string Key, string Baseline, string Label);
+
+	/// <summary>The charts this script can draw, by the name <c>--subject</c> takes.</summary>
 	/// <remarks>
 	/// <para>
-	/// Everything measured is stored; this only decides what the picture shows, so it can change
+	/// Everything measured is stored; this only decides what each picture shows, so it can change
 	/// without re-running anything.
 	/// </para>
 	/// <para>
-	/// Drawn as a grid of one operation per storage type rather than of every operation at one
-	/// storage type. A quantity is a value type over <c>T</c> and does almost nothing of its own,
-	/// so what a release changes it changes per storage type — and the same line of user code costs
-	/// four different things depending on the <c>T</c> it was written against. The top row is one
-	/// construction across the four, so that row reads as the comparison it is.
+	/// <b>Quantities</b> is drawn as a grid of one operation per storage type rather than of every
+	/// operation at one storage type. A quantity is a value type over <c>T</c> and does almost
+	/// nothing of its own, so what a release changes it changes per storage type — and the same
+	/// line of user code costs four different things depending on the <c>T</c> it was written
+	/// against. The top row is one construction across the four, so that row reads as the
+	/// comparison it is.
 	/// </para>
 	/// <para>
 	/// None of the eight is a bare operator, although the suite measures those too. A relationship
@@ -50,18 +72,75 @@ internal static partial class BenchmarkHistory
 	/// unit, reading it back out in one, a vector length, a comparison — all of which are far
 	/// enough above that floor to move when the library does.
 	/// </para>
+	/// <para>
+	/// <b>Strings</b> is drawn along validation weight, because that is the axis there is. A
+	/// semantic string is a record wrapping a <see cref="string"/> and its cost is concentrated at
+	/// creation, so the top row walks from the reflection machinery alone up through a character
+	/// set check, a format check and a mod-97 check. The bottom row is what a caller pays around
+	/// that: both failure paths, the cross-type conversion that is secretly another creation, and
+	/// the hash a dictionary of semantic strings pays on every lookup.
+	/// </para>
+	/// <para>
+	/// Ordering is measured and stored, and deliberately not drawn. A semantic string's
+	/// <c>CompareTo</c> is the underlying string's own, over operands a loop does not change, so
+	/// the JIT hoists it and BenchmarkDotNet reports it as indistinguishable from an empty method —
+	/// the same reason no bare quantity operator is drawn above. A panel of it would chart the
+	/// harness's resolution rather than any release.
+	/// </para>
+	/// <para>
+	/// <b>Paths</b> is the same shape: build each kind, then operate on one. The two file name
+	/// panels sit next to each other because one caches into a field and one rebuilds and
+	/// revalidates on every read, and both look like field access at a call site.
+	/// </para>
 	/// </remarks>
-	private static readonly (string Key, string? Parameters, string Label)[] Headline =
-	[
-		("ConstructionBenchmarks<Double>.FromNauticalMile", null, "Construct (double)"),
-		("ConstructionBenchmarks<Single>.FromNauticalMile", null, "Construct (float)"),
-		("ConstructionBenchmarks<Decimal>.FromNauticalMile", null, "Construct (decimal)"),
-		("ConstructionBenchmarks<PreciseNumber>.FromNauticalMile", null, "Construct (precise)"),
-		("UnitConversionBenchmarks<Decimal>.InNauticalMile", null, "Read back (decimal)"),
-		("UnitConversionBenchmarks<PreciseNumber>.InNauticalMile", null, "Read back (precise)"),
-		("VectorBenchmarks<Decimal>.Length", null, "Vector length (decimal)"),
-		("ComparisonBenchmarks<Double>.CompareToInterface", null, "CompareTo (double)"),
-	];
+	private static readonly Dictionary<string, Subject> Subjects = new(StringComparer.Ordinal)
+	{
+		["quantities"] = new("Semantics.Quantities", 4,
+		[
+			new PanelSpec("ConstructionBenchmarks<Double>.FromNauticalMile", null, "Construct (double)"),
+			new PanelSpec("ConstructionBenchmarks<Single>.FromNauticalMile", null, "Construct (float)"),
+			new PanelSpec("ConstructionBenchmarks<Decimal>.FromNauticalMile", null, "Construct (decimal)"),
+			new PanelSpec("ConstructionBenchmarks<PreciseNumber>.FromNauticalMile", null, "Construct (precise)"),
+			new PanelSpec("UnitConversionBenchmarks<Decimal>.InNauticalMile", null, "Read back (decimal)"),
+			new PanelSpec("UnitConversionBenchmarks<PreciseNumber>.InNauticalMile", null, "Read back (precise)"),
+			new PanelSpec("VectorBenchmarks<Decimal>.Length", null, "Vector length (decimal)"),
+			new PanelSpec("ComparisonBenchmarks<Double>.CompareToInterface", null, "CompareTo (double)"),
+		],
+		[
+			// Both halves of each pair are stored like any other benchmark; the ratio is computed at
+			// render time rather than recorded, so an entry gathered before this section existed draws
+			// as soon as its run includes the pair, and no history has to be rewritten to change what
+			// the section shows.
+			new CostPair("AbstractionCostBenchmarks<Double>.QuantityAdd", "AbstractionCostBenchmarks<Double>.BareAdd", "Add (double)"),
+			new CostPair("AbstractionCostBenchmarks<Double>.QuantityMultiply", "AbstractionCostBenchmarks<Double>.BareMultiply", "Multiply (double)"),
+			new CostPair("AbstractionCostBenchmarks<Decimal>.QuantityMultiply", "AbstractionCostBenchmarks<Decimal>.BareMultiply", "Multiply (decimal)"),
+			new CostPair("AbstractionCostBenchmarks<PreciseNumber>.QuantityMultiply", "AbstractionCostBenchmarks<PreciseNumber>.BareMultiply", "Multiply (precise)"),
+		]),
+		["strings"] = new("Semantics.Strings", 4,
+		[
+			new("StringCreationBenchmarks.Unvalidated", null, "Create (no validation)"),
+			new("StringCreationBenchmarks.CharsetRegex", null, "Create (charset regex)"),
+			new("StringCreationBenchmarks.FormatRegex", null, "Create (format regex)"),
+			new("StringCreationBenchmarks.Mod97", null, "Create (mod-97)"),
+			new("StringCreationBenchmarks.TryCreateRejects", null, "TryCreate (rejects)"),
+			new("StringCreationBenchmarks.CreateThrows", null, "Create (throws)"),
+			new("StringOperationBenchmarks.AsConversion", null, "As<T> conversion"),
+			new("StringOperationBenchmarks.HashCode", null, "GetHashCode"),
+		],
+			[]),
+		["paths"] = new("Semantics.Paths", 4,
+		[
+			new("PathCreationBenchmarks.AbsoluteFilePath", null, "Create (absolute file)"),
+			new("PathCreationBenchmarks.RelativeFilePath", null, "Create (relative file)"),
+			new("PathCreationBenchmarks.FileNameType", null, "Create (file name)"),
+			new("PathOperationBenchmarks.FileName", null, "FileName (uncached)"),
+			new("PathOperationBenchmarks.FileNameWithoutExtension", null, "FileName (cached)"),
+			new("PathOperationBenchmarks.AsAbsolute", null, "AsAbsolute (from relative)"),
+			new("PathOperationBenchmarks.AsRelative", null, "AsRelative (from absolute)"),
+			new("PathOperationBenchmarks.RemoveExtension", null, "RemoveExtension"),
+		],
+			[]),
+	};
 
 	/// <summary>
 	/// Validated for colour-vision separation against both surfaces: every check passes, worst
@@ -88,22 +167,6 @@ internal static partial class BenchmarkHistory
 		/// <summary>Time, divided by the paired bare-double benchmark from the same entry.</summary>
 		Cost,
 	}
-
-	/// <summary>
-	/// The paired benchmarks the cost section draws, as (measured, baseline, label).
-	/// </summary>
-	/// <remarks>
-	/// Both halves are stored like any other benchmark; the ratio is computed here rather than
-	/// recorded, so an entry gathered before this section existed still draws once its run
-	/// includes the pair, and no history has to be rewritten to change what the section shows.
-	/// </remarks>
-	private static readonly (string Key, string Baseline, string Label)[] CostHeadline =
-	[
-		("AbstractionCostBenchmarks<Double>.QuantityAdd", "AbstractionCostBenchmarks<Double>.BareAdd", "Add (double)"),
-		("AbstractionCostBenchmarks<Double>.QuantityMultiply", "AbstractionCostBenchmarks<Double>.BareMultiply", "Multiply (double)"),
-		("AbstractionCostBenchmarks<Decimal>.QuantityMultiply", "AbstractionCostBenchmarks<Decimal>.BareMultiply", "Multiply (decimal)"),
-		("AbstractionCostBenchmarks<PreciseNumber>.QuantityMultiply", "AbstractionCostBenchmarks<PreciseNumber>.BareMultiply", "Multiply (precise)"),
-	];
 
 	internal static int Run(string[] args)
 	{
@@ -420,6 +483,13 @@ internal static partial class BenchmarkHistory
 	private static int Render(Dictionary<string, string> options)
 	{
 		string historyPath = Required(options, "history");
+		string subjectName = Required(options, "subject");
+		if (!Subjects.TryGetValue(subjectName, out Subject? subject))
+		{
+			throw new InvalidOperationException(
+				$"Unknown subject '{subjectName}'. Known: {string.Join(", ", Subjects.Keys)}");
+		}
+
 		JsonArray entries = LoadHistory(historyPath)["entries"]!.AsArray();
 		if (entries.Count == 0)
 		{
@@ -438,7 +508,7 @@ internal static partial class BenchmarkHistory
 			string path = string.Equals(name, "light", StringComparison.Ordinal)
 				? output
 				: $"{stem}-dark{extension}";
-			File.WriteAllText(path, Draw(entries, Themes[name]));
+			File.WriteAllText(path, Draw(entries, Themes[name], subject));
 			written.Add(path);
 		}
 
@@ -446,21 +516,30 @@ internal static partial class BenchmarkHistory
 		return 0;
 	}
 
-	private static string Draw(JsonArray entries, Theme theme)
+	private static string Draw(JsonArray entries, Theme theme, Subject subject)
 	{
 		string[] labels = [.. entries.Select(entry => entry!["version"]?.GetValue<string>() ?? "?")];
-		int width = Left + (Columns * CellWidth) + 24;
-		int rows = (Headline.Length + Columns - 1) / Columns;
-		int costRows = (CostHeadline.Length + Columns - 1) / Columns;
-		int height = 72 + ((34 + (rows * CellHeight)) * 2) + 34 + (costRows * CellHeight) + 54;
+		int width = Left + (subject.Columns * CellWidth) + 24;
+		int rows = (subject.Headline.Length + subject.Columns - 1) / subject.Columns;
+		int costRows = (subject.Cost.Length + subject.Columns - 1) / subject.Columns;
+
+		// A subject with no cost pairs draws two sections rather than three, and reserves no height
+		// for the third. Only the quantities suite measures a bare-storage-type baseline beside each
+		// operation; the strings and paths cost classes exist but are not run by the release workflow,
+		// so their histories carry no pair to divide.
+		Measure[] measures = subject.Cost.Length > 0
+			? [Measure.Allocation, Measure.Time, Measure.Cost]
+			: [Measure.Allocation, Measure.Time];
+		int height = 72 + ((34 + (rows * CellHeight)) * 2)
+			+ (costRows > 0 ? 34 + (costRows * CellHeight) : 0) + 54;
 
 		StringBuilder svg = new();
-		Preamble(svg, theme, width, height, entries);
+		Preamble(svg, theme, width, height, entries, subject);
 
 		int y = 72;
-		foreach (Measure measure in (Measure[])[Measure.Allocation, Measure.Time, Measure.Cost])
+		foreach (Measure measure in measures)
 		{
-			Section(svg, theme, entries, labels.Length, y, measure);
+			Section(svg, theme, entries, labels.Length, y, measure, subject);
 			y += 34 + ((measure == Measure.Cost ? costRows : rows) * CellHeight);
 		}
 
@@ -469,9 +548,10 @@ internal static partial class BenchmarkHistory
 		return svg.ToString();
 	}
 
-	private static void Preamble(StringBuilder svg, Theme theme, int width, int height, JsonArray entries)
+	private static void Preamble(
+		StringBuilder svg, Theme theme, int width, int height, JsonArray entries, Subject subject)
 	{
-		svg.AppendLine(CultureInfo.InvariantCulture, $"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="Semantics.Quantities allocation and relative time per release">""");
+		svg.AppendLine(CultureInfo.InvariantCulture, $"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{Escape(subject.Title)} allocation and relative time per release">""");
 		svg.AppendLine("<style>");
 		svg.AppendLine(CultureInfo.InvariantCulture, $"  text {{ font-family: ui-sans-serif, -apple-system, 'Segoe UI', Roboto, sans-serif; fill: {theme.Ink}; }}");
 		svg.AppendLine("  .title { font-size: 15px; font-weight: 600; }");
@@ -483,7 +563,7 @@ internal static partial class BenchmarkHistory
 		svg.AppendLine(CultureInfo.InvariantCulture, $"  .axis {{ stroke: {theme.Grid}; stroke-width: 1; }}");
 		svg.AppendLine("</style>");
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<rect width="{width}" height="{height}" fill="{theme.Surface}" />""");
-		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left}" y="28" class="title">Semantics.Quantities performance by release</text>""");
+		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left}" y="28" class="title">{Escape(subject.Title)} performance by release</text>""");
 
 		JsonNode latest = entries[^1]!;
 		string date = latest["date"]?.GetValue<string>() ?? "";
@@ -491,7 +571,8 @@ internal static partial class BenchmarkHistory
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left}" y="45" class="caption">{entries.Count} releases · newest {Escape(latest["version"]?.GetValue<string>() ?? "?")}{suffix}</text>""");
 	}
 
-	private static void Section(StringBuilder svg, Theme theme, JsonArray entries, int points, int y, Measure measure)
+	private static void Section(
+		StringBuilder svg, Theme theme, JsonArray entries, int points, int y, Measure measure, Subject subject)
 	{
 		string colour = measure switch
 		{
@@ -518,14 +599,14 @@ internal static partial class BenchmarkHistory
 
 		if (measure == Measure.Cost)
 		{
-			for (int position = 0; position < CostHeadline.Length; position++)
+			for (int position = 0; position < subject.Cost.Length; position++)
 			{
-				(string key, string baseline, string label) = CostHeadline[position];
+				(string key, string baseline, string label) = subject.Cost[position];
 				double?[] values = [.. entries.Select(entry => Cost(entry!, key, baseline))];
 				Panel(
 					svg,
-					Left + (position % Columns * CellWidth),
-					y + 26 + (position / Columns * CellHeight),
+					Left + (position % subject.Columns * CellWidth),
+					y + 26 + (position / subject.Columns * CellHeight),
 					label,
 					points,
 					values,
@@ -538,14 +619,14 @@ internal static partial class BenchmarkHistory
 		}
 
 		bool isTime = measure == Measure.Time;
-		for (int position = 0; position < Headline.Length; position++)
+		for (int position = 0; position < subject.Headline.Length; position++)
 		{
-			(string key, string? parameters, string label) = Headline[position];
+			(string key, string? parameters, string label) = subject.Headline[position];
 			double?[] values = [.. entries.Select(entry => Value(entry!, key, parameters, isTime))];
 			Panel(
 				svg,
-				Left + (position % Columns * CellWidth),
-				y + 26 + (position / Columns * CellHeight),
+				Left + (position % subject.Columns * CellWidth),
+				y + 26 + (position / subject.Columns * CellHeight),
 				label + (parameters is null ? "" : $" ({parameters} digits)"),
 				points,
 				values,

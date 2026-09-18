@@ -162,16 +162,62 @@ public class UserService(ISemanticStringFactory<EmailAddress> emails)
 
 ## Performance
 
+Every release measures a fixed set of benchmarks and adds a point to a chart per library. The numbers
+behind them are in [`docs/benchmarks/`](docs/benchmarks/), and the suite is
+[`Semantics.Benchmarks`](Semantics.Benchmarks/README.md).
+
+Read the two halves of every chart differently. **Allocation is exact** — the same code allocates the
+same bytes on any machine, so a step in the top row is always a real change. **Time is measured on
+shared CI runners**, where the host a job happens to land on varies more than most releases do, so
+each time is divided by a reference workload measured in the same job. That cancels most of the
+difference between machines; what is left is indicative rather than precise. One caveat on the paths
+chart: its inputs are built per platform, because whether a path is absolute is a question the
+operating system answers differently, so its allocation row can step when the measuring host changes
+rather than when the library does. The other two charts take their inputs from compile-time constants
+and do not have that exposure.
+
+### Quantities
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/benchmarks/performance-dark.svg">
   <img alt="Allocated bytes per operation, and time relative to a fixed reference workload, for each Semantics.Quantities release" src="docs/benchmarks/performance.svg">
 </picture>
 
-Every release measures a fixed set of benchmarks and adds a point to the chart; the numbers behind it are in [`docs/benchmarks/history.json`](docs/benchmarks/history.json), and the suite is [`Semantics.Benchmarks`](Semantics.Benchmarks/README.md).
+The grid is one operation per storage type rather than every operation at one storage type. A quantity
+is a `readonly record struct` over its `T` and does almost nothing of its own — a value is held in the
+SI base unit, so an operator is the storage type's arithmetic and a struct initialiser — so the same
+line of user code costs different things depending on the `T` it was written against, and a release
+changes it per `T`.
 
-The grid is one operation per storage type rather than every operation at one storage type. A quantity is a `readonly record struct` over its `T` and does almost nothing of its own — a value is held in the SI base unit, so an operator is the storage type's arithmetic and a struct initialiser — so the same line of user code costs different things depending on the `T` it was written against, and a release changes it per `T`.
+### Strings
 
-Read the two halves differently. **Allocation is exact** — the same code allocates the same bytes on any machine, so a step in the top row is always a real change. **Time is measured on shared CI runners**, where the host a job happens to land on varies more than most releases do, so each time is divided by a reference workload measured in the same job. That cancels most of the difference between machines; what is left is indicative rather than precise.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/benchmarks/strings-performance-dark.svg">
+  <img alt="Allocated bytes per operation, and time relative to a fixed reference workload, for each Semantics.Strings release" src="docs/benchmarks/strings-performance.svg">
+</picture>
+
+The axis here is validation weight, because that is where a semantic string spends. `Create` goes
+through `Activator.CreateInstance`, a `PropertyInfo.SetValue`, and a reflective walk of the type's
+validation attributes on every call, so the top row walks from that machinery alone up through a
+character set check, a format check, and a mod-97 check. The bottom row is what surrounds it: both
+failure paths, the cross-type conversion that is a full creation in disguise, and the hash a
+dictionary of semantic strings pays on every lookup.
+
+This is a different answer from the quantities one, and worth stating plainly rather than leaving to
+be inferred from a chart: a quantity's wrapper is free, and a semantic string's is not. What it buys
+is that an invalid value cannot exist, checked once at the boundary instead of everywhere the value
+is used.
+
+### Paths
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/benchmarks/paths-performance-dark.svg">
+  <img alt="Allocated bytes per operation, and time relative to a fixed reference workload, for each Semantics.Paths release" src="docs/benchmarks/paths-performance.svg">
+</picture>
+
+Building each kind of path, then operating on one. The two file name panels sit next to each other
+deliberately: `FileNameWithoutExtension` caches into a field, `FileName` rebuilds and revalidates on
+every read, and both look like field access at a call site.
 
 ## Architecture
 
