@@ -907,7 +907,7 @@ the reflection only one side does."
 
 **Interfaces:**
 - Consumes: the package references added in Task 2 Step 1.
-- Produces: `internal static class PathSpecimens` with `internal static readonly string` members `AbsoluteFile`, `AbsoluteDirectory`, `RelativeFile`, and `internal const string FileNameOnly`. Task 6 uses all of them. Benchmark keys `PathCreationBenchmarks.AbsoluteFilePath`, `.RelativeFilePath`, `.FileNameType`, `.AbsoluteDirectoryPath`, and `PathOperationBenchmarks.FileName`, `.FileNameWithoutExtension`, `.DirectoryPath`, `.AsAbsolute`, `.AsRelative`, `.RemoveExtension`, which Task 7 draws.
+- Produces: `internal static class PathSpecimens` with `internal static readonly string` members `AbsoluteFile` and `AbsoluteDirectory`, plus `internal const string` members `RelativeFile` and `FileNameOnly`. Task 6 uses all of them. Benchmark keys `PathCreationBenchmarks.AbsoluteFilePath`, `.RelativeFilePath`, `.FileNameType`, `.AbsoluteDirectoryPath`, and `PathOperationBenchmarks.FileName`, `.FileNameWithoutExtension`, `.DirectoryPath`, `.AsAbsolute`, `.AsRelative`, `.RemoveExtension`, which Task 7 draws.
 
 - [ ] **Step 1: Write the specimens file**
 
@@ -960,7 +960,13 @@ internal static class PathSpecimens
 		Path.Combine(Root, "semantics", "src");
 
 	/// <summary>A relative file path. Forward slashes are accepted on both platforms.</summary>
-	internal static readonly string RelativeFile = "Semantics.Paths/FilePath.cs";
+	/// <remarks>
+	/// <c>const</c> rather than <c>static readonly</c>: it is a compile-time literal, and CA1802
+	/// reports the latter as an error under this repository's warnings-as-errors setting. The two
+	/// absolute specimens above genuinely must be <c>static readonly</c>, because they call
+	/// <see cref="Path.Combine"/> against a root chosen per platform.
+	/// </remarks>
+	internal const string RelativeFile = "Semantics.Paths/FilePath.cs";
 
 	/// <summary>A bare file name, with no separator in it.</summary>
 	internal const string FileNameOnly = "FilePath.cs";
