@@ -314,7 +314,7 @@ does not. Adding a storage type is one derived class.
 
 `Semantics.Benchmarks` measures three libraries. `.github/workflows/benchmark-history.yml` runs a
 fixed set once per release, appends to a history file per subject under `docs/benchmarks/`, and
-redraws the chart the README shows. Three things about it are not guessable from the code:
+redraws the chart the README shows. Four things about it are not guessable from the code:
 
 - **`BenchmarkAgainstVersion` must be set in the environment, never with `-p:`.** BenchmarkDotNet
   generates and builds a project of its own for each run, which a property passed on the command line
@@ -329,18 +329,17 @@ redraws the chart the README shows. Three things about it are not guessable from
 - **Nothing here touches an internal member.** The `InternalsVisibleTo` that would expose one names
   only the test assembly, and a benchmark built on internals could only ever measure the working copy,
   never a published package — which would make the release history impossible to backfill.
+- **All three subjects' benchmarks live in one project, so a compile error in any one file blocks
+  every subject's run regardless of `--filter`.** This is why the strings and paths histories start
+  at 4.0.0 with no 3.3.1 entry, while the quantities history reaches back to 3.3.1: against a
+  pre-4.0.0 package, `AbstractionCostBenchmarks.cs` (a quantities-only file) fails to build, because
+  it holds a `Length<T>` field with no initializer, valid only once `Length<T>` became a
+  `readonly record struct`. `docs/benchmarks/history.json` still carries a 3.3.1 entry predating that
+  file's current shape, which the current suite can no longer regenerate for any subject.
 
 `BaselineBenchmarks.ReferenceWork` measures a fixed workload that touches none of this library, so
 timings from different CI runners can be compared. **Its body must never change.** Editing it silently
 rescales every comparison drawn against history recorded before the edit.
-
-All three subjects' benchmarks live in one project, so a compile error in any one file blocks every
-subject's run regardless of `--filter`. This is why the strings and paths histories start at 4.0.0
-with no 3.3.1 entry, while the quantities history reaches back to 3.3.1: against a pre-4.0.0 package,
-`AbstractionCostBenchmarks.cs` (a quantities-only file) fails to build, because it holds a `Length<T>`
-field with no initializer, valid only once `Length<T>` became a `readonly record struct`. `docs/benchmarks/history.json`
-still carries a 3.3.1 entry predating that file's current shape, which the current suite can no longer
-regenerate for any subject.
 
 ### Operators and physics relationships
 

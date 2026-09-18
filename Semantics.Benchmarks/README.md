@@ -24,70 +24,6 @@ Operands are **parsed from text**, never converted from a `double`. A `decimal` 
 `PreciseNumber` seeded through a double would be measured carrying a double's worth of digits,
 which is the opposite of why those types are in the list.
 
-## Running
-
-From the repository root:
-
-```bash
-# Pick benchmarks from an interactive list
-dotnet run -c Release --project Semantics.Benchmarks
-
-# Run everything
-dotnet run -c Release --project Semantics.Benchmarks -- --filter '*'
-
-# One class across all four storage types, or one storage type across all classes
-dotnet run -c Release --project Semantics.Benchmarks -- --filter '*VectorBenchmarks*'
-dotnet run -c Release --project Semantics.Benchmarks -- --filter '*<Decimal>*'
-
-# What the quantity types cost over the bare storage type
-dotnet run -c Release --project Semantics.Benchmarks -- --filter '*AbstractionCostBenchmarks*'
-```
-
-The suite covers three libraries, and `--filter` is how one is picked:
-
-```bash
-dotnet run -c Release --project Semantics.Benchmarks -- --filter '*String*Benchmarks*'
-dotnet run -c Release --project Semantics.Benchmarks -- --filter '*Path*Benchmarks*'
-```
-
-## Measuring a published release
-
-Set `BenchmarkAgainstVersion` and the suite measures that package instead of the working copy:
-
-```bash
-BenchmarkAgainstVersion=5.2.0 dotnet run -c Release --project Semantics.Benchmarks -- --filter '*<Decimal>*'
-```
-
-Set it **in the environment, not with `-p:`**. BenchmarkDotNet generates and builds a project of
-its own for each run, and a property passed on the command line does not reach that project — it
-would build the benchmark assembly against the version you asked for and the harness against the
-one pinned centrally, which fails to compile if a type changed shape between them. MSBuild reads
-environment variables as properties in every project, so the environment form reaches both.
-`BenchmarkAgainstVersion` swaps all four shipped packages, `Quantities`, `Strings`,
-`Strings.Identifiers` and `Paths`, at the one version, which is correct because this repository
-ships one version across every package.
-
-This switch is how `docs/benchmarks/` is filled. No tag in this repository carries a benchmark
-project, so there is no older source to check out and run; and measuring packages is the better
-comparison anyway, because every version is timed by identical benchmark code rather than by
-whatever each tag happened to ship. A version whose API the current benchmarks cannot express is
-reported and skipped rather than failing the backfill — 4.0 made every quantity a record struct and
-5.0 removed four operators, so reaching back far enough eventually finds a version this suite
-cannot ask.
-
-That skip is also shared across subjects in a way worth naming, because it is the reason the strings
-and paths charts start at 4.0.0 with no 3.3.1 point. All three subjects live in one project, so a
-compile error in any one file blocks every subject's run regardless of `--filter`. Against packages
-older than 4.0.0, `AbstractionCostBenchmarks.cs` — a quantities-only file — fails to build, because
-it declares a `Length<T>` field with no initializer, which is only an error once `Length<T>` becomes
-a `readonly record struct`; before that migration it was a reference type and the field was valid.
-`docs/benchmarks/history.json` still carries a 3.3.1 entry from before that file existed in its
-current form, but the current suite cannot regenerate it for any subject.
-
-It is also why nothing here touches an internal member: the `InternalsVisibleTo` that would expose
-one names the test assembly, and a benchmark built on internals could only ever measure the
-working copy.
-
 ### What each class is for
 
 | Class | What it isolates |
@@ -153,6 +89,70 @@ load, a mutated field adds a store, and either would swamp the instruction being
 those rows are read as "below what the harness resolves" rather than as numbers, the `decimal` and
 `PreciseNumber` rows in the same table are the ones that mean something, and the release chart
 draws no operator panel at all.
+
+## Running
+
+From the repository root:
+
+```bash
+# Pick benchmarks from an interactive list
+dotnet run -c Release --project Semantics.Benchmarks
+
+# Run everything
+dotnet run -c Release --project Semantics.Benchmarks -- --filter '*'
+
+# One class across all four storage types, or one storage type across all classes
+dotnet run -c Release --project Semantics.Benchmarks -- --filter '*VectorBenchmarks*'
+dotnet run -c Release --project Semantics.Benchmarks -- --filter '*<Decimal>*'
+
+# What the quantity types cost over the bare storage type
+dotnet run -c Release --project Semantics.Benchmarks -- --filter '*AbstractionCostBenchmarks*'
+```
+
+The suite covers three libraries, and `--filter` is how one is picked:
+
+```bash
+dotnet run -c Release --project Semantics.Benchmarks -- --filter '*String*Benchmarks*'
+dotnet run -c Release --project Semantics.Benchmarks -- --filter '*Path*Benchmarks*'
+```
+
+## Measuring a published release
+
+Set `BenchmarkAgainstVersion` and the suite measures that package instead of the working copy:
+
+```bash
+BenchmarkAgainstVersion=5.2.0 dotnet run -c Release --project Semantics.Benchmarks -- --filter '*<Decimal>*'
+```
+
+Set it **in the environment, not with `-p:`**. BenchmarkDotNet generates and builds a project of
+its own for each run, and a property passed on the command line does not reach that project — it
+would build the benchmark assembly against the version you asked for and the harness against the
+one pinned centrally, which fails to compile if a type changed shape between them. MSBuild reads
+environment variables as properties in every project, so the environment form reaches both.
+`BenchmarkAgainstVersion` swaps all four shipped packages, `Quantities`, `Strings`,
+`Strings.Identifiers` and `Paths`, at the one version, which is correct because this repository
+ships one version across every package.
+
+This switch is how `docs/benchmarks/` is filled. No tag in this repository carries a benchmark
+project, so there is no older source to check out and run; and measuring packages is the better
+comparison anyway, because every version is timed by identical benchmark code rather than by
+whatever each tag happened to ship. A version whose API the current benchmarks cannot express is
+reported and skipped rather than failing the backfill — 4.0 made every quantity a record struct and
+5.0 removed four operators, so reaching back far enough eventually finds a version this suite
+cannot ask.
+
+That skip is also shared across subjects in a way worth naming, because it is the reason the strings
+and paths charts start at 4.0.0 with no 3.3.1 point. All three subjects live in one project, so a
+compile error in any one file blocks every subject's run regardless of `--filter`. Against packages
+older than 4.0.0, `AbstractionCostBenchmarks.cs` — a quantities-only file — fails to build, because
+it declares a `Length<T>` field with no initializer, which is only an error once `Length<T>` becomes
+a `readonly record struct`; before that migration it was a reference type and the field was valid.
+`docs/benchmarks/history.json` still carries a 3.3.1 entry from before that file existed in its
+current form, but the current suite cannot regenerate it for any subject.
+
+It is also why nothing here touches an internal member: the `InternalsVisibleTo` that would expose
+one names the test assembly, and a benchmark built on internals could only ever measure the
+working copy.
 
 ## Strings
 
