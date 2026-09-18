@@ -96,7 +96,12 @@ such), `WithSuffix` (likewise), and the implicit conversion back to `string`.
 `FileName` from well-formed input.
 
 `PathOperationBenchmarks` covers `FileName`, `FileNameWithoutExtension`, `DirectoryPath`,
-`AsAbsolute(baseDirectory)`, `AsRelative(baseDirectory)` and `WithoutExtension`.
+`RelativeFilePath.AsAbsolute(baseDirectory)`, `AbsoluteFilePath.AsRelative(baseDirectory)` and
+`RemoveExtension()`.
+
+Both conversions are measured in the direction that does work. `AbsoluteFilePath.AsAbsolute()`
+returns `this` and would measure nothing, so the absolute direction is taken from a
+`RelativeFilePath` and the relative direction from an `AbsoluteFilePath`.
 
 Two notes on that set. `FileNameWithoutExtension` caches into a field on `AbsoluteFilePath`, while
 `FileName` on `SemanticFilePath` builds a fresh `FileName`, validation included, on every read.
@@ -132,9 +137,9 @@ Paths:
 | 3 | `PathCreationBenchmarks.FileNameType` | Create (file name) |
 | 4 | `PathOperationBenchmarks.FileName` | FileName (uncached) |
 | 5 | `PathOperationBenchmarks.FileNameWithoutExtension` | FileName (cached) |
-| 6 | `PathOperationBenchmarks.AsAbsolute` | AsAbsolute |
-| 7 | `PathOperationBenchmarks.AsRelative` | AsRelative |
-| 8 | `PathOperationBenchmarks.WithoutExtension` | WithoutExtension |
+| 6 | `PathOperationBenchmarks.AsAbsolute` | AsAbsolute (from relative) |
+| 7 | `PathOperationBenchmarks.AsRelative` | AsRelative (from absolute) |
+| 8 | `PathOperationBenchmarks.RemoveExtension` | RemoveExtension |
 
 Both sets are subject to the measurability check under Verification. A benchmark that reports
 `ZeroMeasurement` is replaced by the next candidate from its class rather than left on the chart.
