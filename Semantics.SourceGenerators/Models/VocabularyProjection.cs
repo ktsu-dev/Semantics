@@ -46,11 +46,14 @@ internal static class VocabularyProjection
 
 	// The constraint is carried as the flag the vocabulary reads rather than as its value: what the
 	// vocabulary needs is whether a stricter floor is declared. The value itself stays here, where
-	// the Vector0Guards.EnsurePositive call is emitted from — and the flag is read off that value
-	// rather than off the presence of the object holding it, so a constraint of some other kind,
-	// when one is added, does not silently turn the strict floor on.
+	// the Vector0Guards.EnsurePositive call is emitted from — and which values mean "strict" is the
+	// vocabulary's rule rather than this reader's, so it is asked rather than restated: a copy of
+	// the rule per reader is how the two projections came to hold different ones in #218.
 	private static OverloadDeclaration Overload(OverloadDefinition overload) =>
-		new(overload.Name, overload.Description, overload.PhysicalConstraints?.MinExclusive == "0");
+		new(
+			overload.Name,
+			overload.Description,
+			OverloadDeclaration.IsStrictFloor(overload.PhysicalConstraints?.MinExclusive));
 
 	private static RelationshipDeclaration Relationship(RelationshipDefinition relationship) =>
 		new(relationship.Other, relationship.Result, [.. relationship.Forms]);

@@ -11,6 +11,10 @@ public sealed partial record Progression
 	/// <param name="key">The key to analyze against.</param>
 	/// <returns>One roman numeral per chord, in order.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="key"/> is null.</exception>
+	/// <exception cref="ArgumentException">
+	/// Thrown when a chord's root resolves to a scale degree beyond the seventh, which has no
+	/// roman numeral. See <see cref="Key.RomanNumeralOf(Chord)"/>.
+	/// </exception>
 	public IReadOnlyList<string> RomanNumerals(Key key)
 	{
 		Ensure.NotNull(key);

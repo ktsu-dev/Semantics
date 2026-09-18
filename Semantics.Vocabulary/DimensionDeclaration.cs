@@ -2,6 +2,7 @@
 
 namespace ktsu.Semantics.Vocabulary;
 
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -66,7 +67,33 @@ internal sealed record FormDeclaration(string Base, IReadOnlyList<OverloadDeclar
 /// A flag rather than the constraint itself, because the constraint's value is the only one either
 /// side declares and what the vocabulary needs from it is whether it is there.
 /// </remarks>
-internal sealed record OverloadDeclaration(string Name, string Description, bool IsStrictlyPositive);
+internal sealed record OverloadDeclaration(string Name, string Description, bool IsStrictlyPositive)
+{
+	/// <summary>
+	/// The one <c>physicalConstraints.minExclusive</c> value that opts an overload into the stricter
+	/// floor.
+	/// </summary>
+	internal const string StrictFloor = "0";
+
+	/// <summary>
+	/// Decides whether a declared <c>physicalConstraints.minExclusive</c> opts into the stricter
+	/// floor.
+	/// </summary>
+	/// <param name="minExclusive">
+	/// The value the overload declares, null when it declares no constraints at all, and empty when
+	/// it declares a constraints object without this field.
+	/// </param>
+	/// <returns>Whether the overload is strictly positive.</returns>
+	/// <remarks>
+	/// One implementation because there are two readers. The rule is that
+	/// <c>minExclusive: "0"</c> <em>specifically</em> opts in -- not that constraints are present --
+	/// so a constraint of some other kind, when one is added, does not silently turn the strict
+	/// floor on in one projection and leave it off in the other. Reading the presence of the object
+	/// instead is ktsu-dev/Semantics#218, and a copy of the rule per reader is how it got there.
+	/// </remarks>
+	internal static bool IsStrictFloor(string? minExclusive) =>
+		string.Equals(minExclusive, StrictFloor, StringComparison.Ordinal);
+}
 
 /// <summary>One declared relationship between dimensions.</summary>
 /// <param name="Other">The dimension on the other side of the operator.</param>

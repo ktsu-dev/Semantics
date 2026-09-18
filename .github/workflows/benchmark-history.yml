@@ -69,7 +69,7 @@ env:
   # nothing of its own, so its release changes land per storage type; a semantic string spends its
   # cost at creation, so its axis is how much validation the type declares.
   SUBJECTS: |
-    quantities|docs/benchmarks/history.json|docs/benchmarks/performance.svg|*ConstructionBenchmarks*FromNauticalMile *UnitConversionBenchmarks*InNauticalMile *OperatorBenchmarks*LengthTimesLength *VectorBenchmarks*.Length *ComparisonBenchmarks*CompareToInterface
+    quantities|docs/benchmarks/history.json|docs/benchmarks/performance.svg|*ConstructionBenchmarks*FromNauticalMile *UnitConversionBenchmarks*InNauticalMile *OperatorBenchmarks*LengthTimesLength *VectorBenchmarks*.Length *ComparisonBenchmarks*CompareToInterface *AbstractionCostBenchmarks*
     strings|docs/benchmarks/strings-history.json|docs/benchmarks/strings-performance.svg|*StringCreationBenchmarks* *StringOperationBenchmarks*
     paths|docs/benchmarks/paths-history.json|docs/benchmarks/paths-performance.svg|*PathCreationBenchmarks* *PathOperationBenchmarks*
 

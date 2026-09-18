@@ -71,9 +71,13 @@ public class AbstractionCostBenchmarks<T>
 	private T step;
 	private T other;
 
-	private Length<T> seedLength;
-	private Length<T> stepLength;
-	private Length<T> otherLength;
+	// Assigned in GlobalSetup before anything is measured. Initialised here because a quantity
+	// was a class before 4.0, where an unassigned field is a null reference the compiler rejects;
+	// from 4.0 it is a record struct and this is simply its default. The backfill measures those
+	// releases too, so the file has to compile against both shapes.
+	private Length<T> seedLength = default!;
+	private Length<T> stepLength = default!;
+	private Length<T> otherLength = default!;
 
 	/// <summary>
 	/// Prepares the operands, the bare ones and the wrapped ones holding the same values.

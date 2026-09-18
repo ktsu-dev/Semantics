@@ -2,6 +2,77 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "version": "3.3.1",
+      "commit": "fffa086",
+      "date": "2026-09-09",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "PathCreationBenchmarks.AbsoluteDirectoryPath": {
+          "": {
+            "meanNs": 4774.4695,
+            "allocatedBytes": 1680
+          }
+        },
+        "PathCreationBenchmarks.AbsoluteFilePath": {
+          "": {
+            "meanNs": 5089.1118,
+            "allocatedBytes": 1816
+          }
+        },
+        "PathCreationBenchmarks.FileNameType": {
+          "": {
+            "meanNs": 2494.0516,
+            "allocatedBytes": 896
+          }
+        },
+        "PathCreationBenchmarks.RelativeFilePath": {
+          "": {
+            "meanNs": 4559.9129,
+            "allocatedBytes": 1760
+          }
+        },
+        "PathOperationBenchmarks.AsAbsolute": {
+          "": {
+            "meanNs": 5098.5545,
+            "allocatedBytes": 1944
+          }
+        },
+        "PathOperationBenchmarks.AsRelative": {
+          "": {
+            "meanNs": 5552.833,
+            "allocatedBytes": 1760
+          }
+        },
+        "PathOperationBenchmarks.DirectoryPath": {
+          "": {
+            "meanNs": 4162.9669,
+            "allocatedBytes": 1432
+          }
+        },
+        "PathOperationBenchmarks.FileName": {
+          "": {
+            "meanNs": 2555.5514,
+            "allocatedBytes": 944
+          }
+        },
+        "PathOperationBenchmarks.FileNameWithoutExtension": {
+          "": {
+            "meanNs": 2.0953,
+            "allocatedBytes": 0
+          }
+        },
+        "PathOperationBenchmarks.RemoveExtension": {
+          "": {
+            "meanNs": 4679.0298,
+            "allocatedBytes": 1904
+          }
+        }
+      }
+    },
+    {
       "version": "4.0.0",
       "commit": "496d895",
       "date": "2026-09-10",

@@ -29,14 +29,24 @@ internal static partial class BenchmarkHistory
 	/// <summary>One drawable chart: its title, its grid width, and the panels it shows.</summary>
 	/// <param name="Title">The library the chart is about, used in the heading and the aria-label.</param>
 	/// <param name="Columns">Panels per row.</param>
-	/// <param name="Headline">The panels, in reading order.</param>
-	private sealed record Subject(string Title, int Columns, PanelSpec[] Headline);
+	/// <param name="Headline">The panels of the allocation and time sections, in reading order.</param>
+	/// <param name="Cost">
+	/// The paired benchmarks the cost section draws. Empty for a subject whose history carries no
+	/// bare-baseline pair, and that subject's chart then has two sections rather than three.
+	/// </param>
+	private sealed record Subject(string Title, int Columns, PanelSpec[] Headline, CostPair[] Cost);
 
 	/// <summary>One panel: which benchmark it draws, and what to call it.</summary>
 	/// <param name="Key">The benchmark key as <c>ingest</c> stores it.</param>
 	/// <param name="Parameters">The parameter case to draw, or null when the benchmark has none.</param>
 	/// <param name="Label">The panel heading.</param>
 	private sealed record PanelSpec(string Key, string? Parameters, string Label);
+
+	/// <summary>One cost panel: a measured benchmark over the bare baseline it is paired with.</summary>
+	/// <param name="Key">The benchmark measuring the wrapped type.</param>
+	/// <param name="Baseline">The benchmark measuring the same work on the bare type.</param>
+	/// <param name="Label">The panel heading.</param>
+	private sealed record CostPair(string Key, string Baseline, string Label);
 
 	/// <summary>The charts this script can draw, by the name <c>--subject</c> takes.</summary>
 	/// <remarks>
@@ -95,6 +105,16 @@ internal static partial class BenchmarkHistory
 			new PanelSpec("UnitConversionBenchmarks<PreciseNumber>.InNauticalMile", null, "Read back (precise)"),
 			new PanelSpec("VectorBenchmarks<Decimal>.Length", null, "Vector length (decimal)"),
 			new PanelSpec("ComparisonBenchmarks<Double>.CompareToInterface", null, "CompareTo (double)"),
+		],
+		[
+			// Both halves of each pair are stored like any other benchmark; the ratio is computed at
+			// render time rather than recorded, so an entry gathered before this section existed draws
+			// as soon as its run includes the pair, and no history has to be rewritten to change what
+			// the section shows.
+			new CostPair("AbstractionCostBenchmarks<Double>.QuantityAdd", "AbstractionCostBenchmarks<Double>.BareAdd", "Add (double)"),
+			new CostPair("AbstractionCostBenchmarks<Double>.QuantityMultiply", "AbstractionCostBenchmarks<Double>.BareMultiply", "Multiply (double)"),
+			new CostPair("AbstractionCostBenchmarks<Decimal>.QuantityMultiply", "AbstractionCostBenchmarks<Decimal>.BareMultiply", "Multiply (decimal)"),
+			new CostPair("AbstractionCostBenchmarks<PreciseNumber>.QuantityMultiply", "AbstractionCostBenchmarks<PreciseNumber>.BareMultiply", "Multiply (precise)"),
 		]),
 		["strings"] = new("Semantics.Strings", 4,
 		[
@@ -106,7 +126,8 @@ internal static partial class BenchmarkHistory
 			new("StringCreationBenchmarks.CreateThrows", null, "Create (throws)"),
 			new("StringOperationBenchmarks.AsConversion", null, "As<T> conversion"),
 			new("StringOperationBenchmarks.HashCode", null, "GetHashCode"),
-		]),
+		],
+			[]),
 		["paths"] = new("Semantics.Paths", 4,
 		[
 			new("PathCreationBenchmarks.AbsoluteFilePath", null, "Create (absolute file)"),
@@ -117,7 +138,8 @@ internal static partial class BenchmarkHistory
 			new("PathOperationBenchmarks.AsAbsolute", null, "AsAbsolute (from relative)"),
 			new("PathOperationBenchmarks.AsRelative", null, "AsRelative (from absolute)"),
 			new("PathOperationBenchmarks.RemoveExtension", null, "RemoveExtension"),
-		]),
+		],
+			[]),
 	};
 
 	/// <summary>
@@ -126,12 +148,25 @@ internal static partial class BenchmarkHistory
 	/// </summary>
 	private static readonly Dictionary<string, Theme> Themes = new(StringComparer.Ordinal)
 	{
-		["light"] = new("#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df", "#2a78d6", "#eb6834"),
-		["dark"] = new("#1a1a19", "#ffffff", "#c3c2b7", "#333330", "#3987e5", "#d95926"),
+		["light"] = new("#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df", "#2a78d6", "#eb6834", "#2e8b57"),
+		["dark"] = new("#1a1a19", "#ffffff", "#c3c2b7", "#333330", "#3987e5", "#d95926", "#3faa71"),
 	};
 
 	private sealed record Theme(
-		string Surface, string Ink, string Muted, string Grid, string Alloc, string Time);
+		string Surface, string Ink, string Muted, string Grid, string Alloc, string Time, string Cost);
+
+	/// <summary>Which of the three things a section draws.</summary>
+	private enum Measure
+	{
+		/// <summary>Bytes allocated per operation, as stored.</summary>
+		Allocation,
+
+		/// <summary>Time, divided by the reference workload from the same job.</summary>
+		Time,
+
+		/// <summary>Time, divided by the paired bare-double benchmark from the same entry.</summary>
+		Cost,
+	}
 
 	internal static int Run(string[] args)
 	{
@@ -486,16 +521,26 @@ internal static partial class BenchmarkHistory
 		string[] labels = [.. entries.Select(entry => entry!["version"]?.GetValue<string>() ?? "?")];
 		int width = Left + (subject.Columns * CellWidth) + 24;
 		int rows = (subject.Headline.Length + subject.Columns - 1) / subject.Columns;
-		int height = 72 + (((34 + (rows * CellHeight)) * 2) + 54);
+		int costRows = (subject.Cost.Length + subject.Columns - 1) / subject.Columns;
+
+		// A subject with no cost pairs draws two sections rather than three, and reserves no height
+		// for the third. Only the quantities suite measures a bare-storage-type baseline beside each
+		// operation; the strings and paths cost classes exist but are not run by the release workflow,
+		// so their histories carry no pair to divide.
+		Measure[] measures = subject.Cost.Length > 0
+			? [Measure.Allocation, Measure.Time, Measure.Cost]
+			: [Measure.Allocation, Measure.Time];
+		int height = 72 + ((34 + (rows * CellHeight)) * 2)
+			+ (costRows > 0 ? 34 + (costRows * CellHeight) : 0) + 54;
 
 		StringBuilder svg = new();
 		Preamble(svg, theme, width, height, entries, subject);
 
 		int y = 72;
-		foreach (bool isTime in (bool[])[false, true])
+		foreach (Measure measure in measures)
 		{
-			Section(svg, theme, entries, labels.Length, y, isTime, subject);
-			y += 34 + (rows * CellHeight);
+			Section(svg, theme, entries, labels.Length, y, measure, subject);
+			y += 34 + ((measure == Measure.Cost ? costRows : rows) * CellHeight);
 		}
 
 		Footer(svg, entries, labels, y - 4);
@@ -527,20 +572,53 @@ internal static partial class BenchmarkHistory
 	}
 
 	private static void Section(
-		StringBuilder svg, Theme theme, JsonArray entries, int points, int y, bool isTime, Subject subject)
+		StringBuilder svg, Theme theme, JsonArray entries, int points, int y, Measure measure, Subject subject)
 	{
-		string colour = isTime ? theme.Time : theme.Alloc;
-		string title = isTime
-			? "Time, as a multiple of a fixed reference workload"
-			: "Allocated bytes per operation";
-		string note = isTime
-			? "Divided by a reference loop measured in the same job, which cancels most of the difference between CI runners. Lower is faster."
-			: "Deterministic: the same code allocates the same bytes on any machine.";
+		string colour = measure switch
+		{
+			Measure.Time => theme.Time,
+			Measure.Cost => theme.Cost,
+			_ => theme.Alloc,
+		};
+		string title = measure switch
+		{
+			Measure.Time => "Time, as a multiple of a fixed reference workload",
+			Measure.Cost => "Cost of the quantity wrapper over the bare storage type",
+			_ => "Allocated bytes per operation",
+		};
+		string note = measure switch
+		{
+			Measure.Time => "Divided by a reference loop measured in the same job, which cancels most of the difference between CI runners. Lower is faster.",
+			Measure.Cost => "Divided by the identical loop on the bare storage type, measured beside it. A quantity holds one value and adds no work of its own, so this belongs at 1.",
+			_ => "Deterministic: the same code allocates the same bytes on any machine.",
+		};
 
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<rect x="{Left}" y="{y - 10}" width="9" height="9" rx="2" fill="{colour}" />""");
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left + 15}" y="{y - 2}" class="section">{Escape(title)}</text>""");
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left + 15}" y="{y + 12}" class="caption">{Escape(note)}</text>""");
 
+		if (measure == Measure.Cost)
+		{
+			for (int position = 0; position < subject.Cost.Length; position++)
+			{
+				(string key, string baseline, string label) = subject.Cost[position];
+				double?[] values = [.. entries.Select(entry => Cost(entry!, key, baseline))];
+				Panel(
+					svg,
+					Left + (position % subject.Columns * CellWidth),
+					y + 26 + (position / subject.Columns * CellHeight),
+					label,
+					points,
+					values,
+					true,
+					colour,
+					theme);
+			}
+
+			return;
+		}
+
+		bool isTime = measure == Measure.Time;
 		for (int position = 0; position < subject.Headline.Length; position++)
 		{
 			(string key, string? parameters, string label) = subject.Headline[position];
@@ -557,6 +635,25 @@ internal static partial class BenchmarkHistory
 				theme);
 		}
 	}
+
+	/// <summary>
+	/// One benchmark's mean divided by the mean of the bare-double benchmark beside it.
+	/// </summary>
+	/// <remarks>
+	/// Both were measured in the same job on the same machine, so unlike the time section this
+	/// needs no reference workload to be comparable across runs: the denominator is the reference.
+	/// </remarks>
+	private static double? Cost(JsonNode entry, string key, string baseline)
+	{
+		double? measured = Mean(entry, key);
+		double? divisor = Mean(entry, baseline);
+		return measured is not null && divisor is > 0 ? measured / divisor : null;
+	}
+
+	private static double? Mean(JsonNode entry, string key) =>
+		entry["benchmarks"]?[key] is JsonObject cases && cases.Count > 0
+			? cases.First().Value?["meanNs"]?.GetValue<double>()
+			: null;
 
 	private static double? Value(JsonNode entry, string key, string? parameters, bool isTime)
 	{

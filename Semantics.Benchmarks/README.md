@@ -56,9 +56,32 @@ Each pair runs identical arithmetic on `T` and on quantities over `T`, with the 
 | `decimal` | 1.04 | 0.90 | none either side |
 | `PreciseNumber` | 1.03 | 1.03 | 193 B either side, ratio 1.00 |
 
-The wrapper is free. Read the ratios below 1.00 as noise and code layout rather than as the quantity
-being faster than the number inside it — the spread across three short-run iterations covers that
-much, and there is no mechanism by which it could be.
+The wrapper is free. A ratio below 1.00 is **not** the quantity beating the number inside it —
+wrapping cannot remove work, and there is no mechanism by which it could. Where such a ratio is
+stable rather than scattered, and `decimal` multiply is stable at about 0.86 across every release
+measured, it is code layout: the two loops compile to slightly different orderings and the wrapped
+one happens to land better for that type's software multiply. Read the whole column as "no
+measurable wrapper cost" rather than as a direction.
+
+### It was not always free, and the chart says when
+
+`docs/benchmarks/` now carries this per release, and the answer before 4.0 is a different one
+entirely. In 3.3.1, when a quantity was a class rather than a `readonly record struct`:
+
+| storage | `Add` | `Multiply` |
+|---|---|---|
+| `double` | **27.84** | **56.37** |
+| `decimal` | — | 2.27 |
+| `PreciseNumber` | — | 1.33 |
+
+Every operation allocated an object, so a `Length<double>` add cost 28 times a bare `double` add.
+4.0 took that to 1.00 and six releases have held it there.
+
+The spread across that row is the reason this suite is parameterised by storage type at all: the
+same wrapper, in the same release, cost 56× over a `double` and 1.33× over a `PreciseNumber`. An
+allocation per operation is crushing when `T` is a machine instruction and invisible when `T` is
+already doing arbitrary-precision arithmetic. Measured at one storage type, the 4.0 change would
+have looked like anything between a rewrite and a rounding error.
 
 The `PreciseNumber` row is the one that says it most precisely, because it is the only storage type
 here that allocates at all: **the allocation ratio is exactly 1.00**. Every byte belongs to the
@@ -143,14 +166,14 @@ reported and skipped rather than failing the backfill — 4.0 made every quantit
 5.0 removed four operators, so reaching back far enough eventually finds a version this suite
 cannot ask.
 
-That skip is also shared across subjects in a way worth naming, because it is the reason the strings
-and paths charts start at 4.0.0 with no 3.3.1 point. All three subjects live in one project, so a
-compile error in any one file blocks every subject's run regardless of `--filter`. Against packages
-older than 4.0.0, `AbstractionCostBenchmarks.cs` — a quantities-only file — fails to build, because
-it declares a `Length<T>` field with no initializer, which is only an error once `Length<T>` becomes
-a `readonly record struct`; before that migration it was a reference type and the field was valid.
-`docs/benchmarks/history.json` still carries a 3.3.1 entry from before that file existed in its
-current form, but the current suite cannot regenerate it for any subject.
+A skip is also shared across subjects, which is worth naming because it is not obvious from a
+`--filter` that names one of them. All three subjects live in one project, so a compile error in any
+one file blocks every subject's run whatever the filter says. That is not hypothetical: against
+packages older than 4.0.0, `AbstractionCostBenchmarks.cs` — a quantities-only file — once failed to
+build, because it declared a `Length<T>` field with no initializer, which is an error only while
+`Length<T>` is a reference type. Every subject's backfill stopped at 4.0.0 as a result. The fields
+now carry `default!` and all three histories reach 3.3.1, but the coupling remains: a compile error
+introduced for one subject silently costs the other two their history.
 
 It is also why nothing here touches an internal member: the `InternalsVisibleTo` that would expose
 one names the test assembly, and a benchmark built on internals could only ever measure the

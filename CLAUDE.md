@@ -306,6 +306,18 @@ back by the matching power of two. A root that does not settle throws `Arithmeti
 than returning an estimate. The logarithmic scales and the hand-written audio types still compute
 through `double`.
 
+`StorageMath` is public API, not just the generator's helper (#239): an application doing its own
+vector math over quantities would otherwise reimplement the root, and worse. `Cbrt`, `RootN` and
+`Hypot` ship alongside `Sqrt` on the same seeding and the same Newton loop. `Sqrt` keeps its round
+trip through `double` for every primitive, integers included, because the generated code always
+inlined it; `Cbrt` and `RootN` take that route only for the binary floating point primitives and
+refine every integer type in integer arithmetic, so their floor is exact rather than whatever
+`Math.Pow` rounded to. `Hypot` computes a fractional type from the ratio of its legs, so a pair whose
+squares leave the type still has its hypotenuse, and squares an integer type directly, since the
+ratio of two integers is not a ratio. The seeding, the double round trip and the Newton loop itself
+stay private — `StorageMathTests.TheRootsArePublicAndTheirWorkingsAreNot` pins both halves of that,
+since this is a package with a compatibility baseline and the shape is frozen once it ships.
+
 `StorageConversionTests<T>` runs the same conversions, relationships and vector lengths over
 `double` and `decimal`, exactly where the answer terminates and to a relative tolerance where it
 does not. Adding a storage type is one derived class.
@@ -330,12 +342,13 @@ redraws the chart the README shows. Four things about it are not guessable from 
   only the test assembly, and a benchmark built on internals could only ever measure the working copy,
   never a published package — which would make the release history impossible to backfill.
 - **All three subjects' benchmarks live in one project, so a compile error in any one file blocks
-  every subject's run regardless of `--filter`.** This is why the strings and paths histories start
-  at 4.0.0 with no 3.3.1 entry, while the quantities history reaches back to 3.3.1: against a
-  pre-4.0.0 package, `AbstractionCostBenchmarks.cs` (a quantities-only file) fails to build, because
-  it holds a `Length<T>` field with no initializer, valid only once `Length<T>` became a
-  `readonly record struct`. `docs/benchmarks/history.json` still carries a 3.3.1 entry predating that
-  file's current shape, which the current suite can no longer regenerate for any subject.
+  every subject's run regardless of `--filter`.** `AbstractionCostBenchmarks.cs` demonstrated this:
+  it held a `Length<T>` field with no initializer, valid only once `Length<T>` became a
+  `readonly record struct`, so against a pre-4.0.0 package it failed to build and took every
+  subject's backfill down with it. The fields carry `default!` now and all three histories reach
+  3.3.1. Keep the pattern when adding a field to any benchmark class the backfill compiles: an
+  error introduced for one subject costs the other two their history, and the failure reads as a
+  build error in a file the person backfilling was not touching.
 
 `BaselineBenchmarks.ReferenceWork` measures a fixed workload that touches none of this library, so
 timings from different CI runners can be compared. **Its body must never change.** Editing it silently
