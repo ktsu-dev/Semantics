@@ -35,8 +35,19 @@ using ktsu.Semantics.Strings.Identifiers;
 /// it is worth saying here: the constant exists to be kept identical, not to be tuned.
 /// </para>
 /// <para>
-/// <b>The last two categories are fair pairs in the quantities sense</b> and are expected near
-/// 1.00, because a semantic string's equality and ordering are the underlying string's own.
+/// <b>The last two categories are fair pairs in the quantities sense</b>, but only because each
+/// baseline makes the same call the semantic side ends up making. That is worth stating for
+/// <c>Ordering</c> in particular: <c>SemanticString.CompareTo</c> forwards to
+/// <see cref="string.CompareTo(string)"/>, which is culture-sensitive, so a baseline written with
+/// <see cref="string.CompareOrdinal(string, string)"/> would have measured ordinal collation against
+/// culture collation and reported that difference as though it were the wrapper's cost.
+/// </para>
+/// <para>
+/// <b>An observation the pair surfaces, which this suite reports rather than fixes.</b> Equality on
+/// a semantic string is ordinal, because string equality always is, while ordering is
+/// culture-sensitive, because <see cref="string.CompareTo(string)"/> is. Two values can therefore
+/// compare equal by <c>==</c> and sort by a different rule than that suggests. Nothing here changes
+/// it; the benchmark only makes it visible.
 /// </para>
 /// <para>
 /// <b>Why these are loops.</b> A single call over an operand that does not change is
@@ -197,7 +208,7 @@ public class StringAbstractionCostBenchmarks
 
 		for (int i = 0; i < Operations; i++)
 		{
-			accumulator += string.CompareOrdinal(left.WeakString, right.WeakString);
+			accumulator += left.WeakString.CompareTo(right.WeakString);
 		}
 
 		return accumulator;
