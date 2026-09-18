@@ -116,13 +116,17 @@ jobs:
           work="${RUNNER_TEMP}/bench-$version"
           git worktree add --detach "$work" "$TAG"
 
+          # Every command in these loops inherits the here-string as stdin. A process that drains it
+          # would truncate the loop to one iteration and still exit zero, silently dropping subjects,
+          # so each invocation reads from /dev/null instead. BenchmarkDotNet does prompt when a
+          # filter selects nothing, which the backfill treats as an ordinary skip.
           while IFS='|' read -r subject history chart filter; do
             [ -n "$subject" ] || continue
             echo "::group::$subject $version"
             (cd "$work" && dotnet run -c Release --project Semantics.Benchmarks -- \
               --filter $filter \
               --job "$BENCHMARK_JOB" \
-              --artifacts "$GITHUB_WORKSPACE/$RUNS/$subject/$version")
+              --artifacts "$GITHUB_WORKSPACE/$RUNS/$subject/$version" </dev/null)
 
             dotnet run scripts/benchmark-history.cs -- ingest \
               --history "$history" \
@@ -131,7 +135,7 @@ jobs:
               --commit "$(git rev-parse --short "$TAG^{commit}")" \
               --date "$(git log -1 --format=%cs "$TAG")" \
               --run-id "${{ github.run_id }}" \
-              --baseline-ns "${{ steps.baseline.outputs.ns }}"
+              --baseline-ns "${{ steps.baseline.outputs.ns }}" </dev/null
             echo "::endgroup::"
           done <<< "$SUBJECTS"
 
@@ -162,7 +166,7 @@ jobs:
               if ! BenchmarkAgainstVersion="$version" dotnet run -c Release --project Semantics.Benchmarks -- \
                    --filter $filter \
                    --job "$BENCHMARK_JOB" \
-                   --artifacts "$GITHUB_WORKSPACE/$RUNS/$subject/$version"; then
+                   --artifacts "$GITHUB_WORKSPACE/$RUNS/$subject/$version" </dev/null; then
                 echo "::warning::$subject $version could not be benchmarked by the current suite; skipping"
                 echo "::endgroup::"
                 continue
@@ -186,7 +190,7 @@ jobs:
                    --commit "$commit" \
                    --date "$date" \
                    --run-id "${{ github.run_id }}" \
-                   --baseline-ns "$BASELINE_NS"; then
+                   --baseline-ns "$BASELINE_NS" </dev/null; then
                 echo "::warning::$subject $version produced no usable measurement; skipping"
               fi
               echo "::endgroup::"
@@ -204,7 +208,7 @@ jobs:
               continue
             fi
             dotnet run scripts/benchmark-history.cs -- render \
-              --subject "$subject" --history "$history" --out "$chart"
+              --subject "$subject" --history "$history" --out "$chart" </dev/null
           done <<< "$SUBJECTS"
 
       - name: Commit the history and the chart
