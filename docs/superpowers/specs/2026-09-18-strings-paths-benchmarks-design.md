@@ -162,7 +162,19 @@ the hand-written side marked `Baseline = true`:
 | Validate at a boundary | `Regex.IsMatch(s, pattern)` then throw on failure, the same pattern the attribute uses | `Uuid.Create(s)` |
 | Validate without throwing | the same match, returning a `bool` | `Uuid.TryCreate(s, out _)` |
 | Equality | `string.Equals(a, b, StringComparison.Ordinal)` | `Uuid` record equality |
-| Ordering | `string.CompareTo` | `Uuid.CompareTo` |
+| Ordering | `left.WeakString.CompareTo(right.WeakString)` | `Uuid.CompareTo` |
+
+**One correction the measurements forced.** The ordering baseline was first written as
+`string.CompareOrdinal`, which made that pair invalid: `SemanticString.CompareTo` forwards to
+`string.CompareTo(string)`, which is culture-sensitive, so the pair measured ordinal collation
+against culture collation and attributed the difference to the wrapper. A cost pair only isolates
+the wrapper when both sides make the same call, so the baseline is now the same `CompareTo` the
+semantic side reaches.
+
+That correction surfaced something worth recording about the library, which this work reports rather
+than changes: equality on a semantic string is ordinal, because string equality always is, while
+ordering is culture-sensitive. Two values can compare equal under `==` and sort by a different rule
+than that implies.
 
 Read that way, the ratio answers the question a user actually has. *I was going to validate this
 anyway, so what does routing it through the type cost me on top?* The answer separates into the

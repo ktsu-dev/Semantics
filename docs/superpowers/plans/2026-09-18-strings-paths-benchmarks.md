@@ -840,7 +840,7 @@ public class StringAbstractionCostBenchmarks
 
 		for (int i = 0; i < Operations; i++)
 		{
-			accumulator += string.CompareOrdinal(left.WeakString, right.WeakString);
+			accumulator += left.WeakString.CompareTo(right.WeakString);
 		}
 
 		return accumulator;
