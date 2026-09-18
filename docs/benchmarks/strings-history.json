@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "version": "5.3.4",
+      "commit": "8e401ee",
+      "date": "2026-09-16",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "StringCreationBenchmarks.CharsetRegex": {
+          "": {
+            "meanNs": 2712.9913,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.Checksum": {
+          "": {
+            "meanNs": 2578.7094,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.CreateThrows": {
+          "": {
+            "meanNs": 6807.6602,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.FormatRegex": {
+          "": {
+            "meanNs": 2920.1192,
+            "allocatedBytes": 928
+          }
+        },
+        "StringCreationBenchmarks.Mod97": {
+          "": {
+            "meanNs": 2912.5356,
+            "allocatedBytes": 896
+          }
+        },
+        "StringCreationBenchmarks.TryCreateRejects": {
+          "": {
+            "meanNs": 6811.9949,
+            "allocatedBytes": 1424
+          }
+        },
+        "StringCreationBenchmarks.Unvalidated": {
+          "": {
+            "meanNs": 1652.5791,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.AsConversion": {
+          "": {
+            "meanNs": 1655.4552,
+            "allocatedBytes": 504
+          }
+        },
+        "StringOperationBenchmarks.CompareTo": {
+          "": {
+            "meanNs": 0.5027,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.EqualityOperator": {
+          "": {
+            "meanNs": 1.0221,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.HashCode": {
+          "": {
+            "meanNs": 42.5549,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.ToStringImplicit": {
+          "": {
+            "meanNs": 1.0345,
+            "allocatedBytes": 0
+          }
+        },
+        "StringOperationBenchmarks.WithSuffix": {
+          "": {
+            "meanNs": 1753.4582,
+            "allocatedBytes": 616
+          }
+        }
+      }
+    }
+  ]
+}

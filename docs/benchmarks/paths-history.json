@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "version": "5.3.4",
+      "commit": "8e401ee",
+      "date": "2026-09-16",
+      "cpu": "Intel Core i9-14900",
+      "runtime": ".NET 10.0.12 (10.0.12, 10.0.1226.42308)",
+      "baselineNs": 747.4861,
+      "runId": "local-seed",
+      "benchmarks": {
+        "PathCreationBenchmarks.AbsoluteDirectoryPath": {
+          "": {
+            "meanNs": 4598.085,
+            "allocatedBytes": 1712
+          }
+        },
+        "PathCreationBenchmarks.AbsoluteFilePath": {
+          "": {
+            "meanNs": 4848.9339,
+            "allocatedBytes": 1816
+          }
+        },
+        "PathCreationBenchmarks.FileNameType": {
+          "": {
+            "meanNs": 2490.8984,
+            "allocatedBytes": 896
+          }
+        },
+        "PathCreationBenchmarks.RelativeFilePath": {
+          "": {
+            "meanNs": 4472.5624,
+            "allocatedBytes": 1728
+          }
+        },
+        "PathOperationBenchmarks.AsAbsolute": {
+          "": {
+            "meanNs": 5259.1688,
+            "allocatedBytes": 1944
+          }
+        },
+        "PathOperationBenchmarks.AsRelative": {
+          "": {
+            "meanNs": 5468.5588,
+            "allocatedBytes": 1760
+          }
+        },
+        "PathOperationBenchmarks.DirectoryPath": {
+          "": {
+            "meanNs": 4128.0039,
+            "allocatedBytes": 1432
+          }
+        },
+        "PathOperationBenchmarks.FileName": {
+          "": {
+            "meanNs": 2542.5893,
+            "allocatedBytes": 944
+          }
+        },
+        "PathOperationBenchmarks.FileNameWithoutExtension": {
+          "": {
+            "meanNs": 1.6714,
+            "allocatedBytes": 0
+          }
+        },
+        "PathOperationBenchmarks.RemoveExtension": {
+          "": {
+            "meanNs": 4674.3001,
+            "allocatedBytes": 1904
+          }
+        }
+      }
+    }
+  ]
+}

@@ -25,7 +25,18 @@ using ktsu.Semantics.Strings.Identifiers;
 /// actually holds. They also happen to span the interesting ground: <see cref="CharsetRegex"/> and
 /// <see cref="FormatRegex"/> are interpreted regular expressions looked up from the static cache
 /// on every call and carrying a one-second timeout, <see cref="Checksum"/> is a hand-written Luhn
-/// pass over the same sort of input, and <see cref="Mod97"/> is the heaviest shipped validator.
+/// pass over the same sort of input, and <see cref="Mod97"/> is a rearrangement, a
+/// character-to-digit expansion, and modular arithmetic.
+/// </para>
+/// <para>
+/// <b>What the ladder turned out to show.</b> The four validators land within about 340 ns of each
+/// other on a floor of roughly 1,650 ns, so the validator is a minor term and the reflection
+/// machinery is the bill: a Luhn pass, a character-set regular expression, a mod-97 pass and a
+/// format regular expression cost 0.93, 1.06, 1.26 and 1.27 microseconds on top of it. The last two
+/// are a tie within the noise, which is worth stating because the expectation going in was that the
+/// checksum work would dominate. An interpreted regular expression carrying a timeout and looked up
+/// from the static cache on every call is simply not cheap next to arithmetic over twenty-two
+/// characters.
 /// </para>
 /// <para>
 /// <b>Both failure paths are here, and they cost the same.</b> <see cref="TryCreateRejects"/> and
@@ -81,7 +92,7 @@ public class StringCreationBenchmarks
 	[Benchmark]
 	public CreditCardNumber Checksum() => CreditCardNumber.Create(card);
 
-	/// <summary>The heaviest shipped validator: rearrangement, expansion, modular arithmetic.</summary>
+	/// <summary>A rearrangement, a character-to-digit expansion, and modular arithmetic.</summary>
 	/// <returns>The created value.</returns>
 	[Benchmark]
 	public Iban Mod97() => Iban.Create(iban);
