@@ -507,7 +507,7 @@ a boundary that sees bad input is a number."
 
 **Interfaces:**
 - Consumes: `StringSpecimens.UuidText`, `StringSpecimens.PlainInput`, and the `PlainText` type from Task 2.
-- Produces: benchmark keys `StringOperationBenchmarks.EqualityOperator`, `.CompareTo`, `.HashCode`, `.AsConversion`, `.WithSuffix`, `.ToStringImplicit`. Task 7 draws `.AsConversion` and `.CompareTo`.
+- Produces: benchmark keys `StringOperationBenchmarks.EqualityOperator`, `.CompareTo`, `.HashCode`, `.AsConversion`, `.WithSuffix`, `.ToStringImplicit`. Task 7 draws `.AsConversion` and `.HashCode` (`.CompareTo` was measured at 0.5714 ns and hoisted, so it is not drawn).
 
 - [ ] **Step 1: Write the class**
 
@@ -1409,7 +1409,15 @@ be passed where a different kind belongs."
 
 - [ ] **Step 1: Add the two entries**
 
-Before writing these, check the notes recorded in Task 3 Step 2 and Task 5 Step 4. If `CompareTo` reported `ZeroMeasurement`, replace the strings position 8 panel with `new("StringOperationBenchmarks.HashCode", null, "GetHashCode")`. If `FileNameWithoutExtension` reported `ZeroMeasurement`, replace the paths position 5 panel with `new("PathCreationBenchmarks.AbsoluteDirectoryPath", null, "Create (absolute dir)")`.
+**The strings contingency has already fired and is baked into the list below.** Task 3 measured
+`StringOperationBenchmarks.CompareTo` at 0.5714 ns and BenchmarkDotNet reported `ZeroMeasurement` —
+the JIT hoists it, so a panel of it would chart the harness's resolution rather than the library.
+Position 8 is therefore `HashCode` (43.8881 ns, measured cleanly, no warning) rather than `CompareTo`.
+`ToStringImplicit` was also hoisted, and is not drawn either way.
+
+Still to check before writing the paths list: the note recorded in Task 5 Step 4. If
+`FileNameWithoutExtension` reported `ZeroMeasurement`, replace the paths position 5 panel with
+`new("PathCreationBenchmarks.AbsoluteDirectoryPath", null, "Create (absolute dir)")`.
 
 Add to the `Subjects` dictionary, after the `quantities` entry:
 
@@ -1423,7 +1431,7 @@ Add to the `Subjects` dictionary, after the `quantities` entry:
 			new("StringCreationBenchmarks.TryCreateRejects", null, "TryCreate (rejects)"),
 			new("StringCreationBenchmarks.CreateThrows", null, "Create (throws)"),
 			new("StringOperationBenchmarks.AsConversion", null, "As<T> conversion"),
-			new("StringOperationBenchmarks.CompareTo", null, "CompareTo"),
+			new("StringOperationBenchmarks.HashCode", null, "GetHashCode"),
 		]),
 		["paths"] = new("Semantics.Paths", 4,
 		[

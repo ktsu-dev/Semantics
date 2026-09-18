@@ -126,7 +126,7 @@ Strings:
 | 5 | `StringCreationBenchmarks.TryCreateRejects` | TryCreate (rejects) |
 | 6 | `StringCreationBenchmarks.CreateThrows` | Create (throws) |
 | 7 | `StringOperationBenchmarks.AsConversion` | As&lt;T&gt; conversion |
-| 8 | `StringOperationBenchmarks.CompareTo` | CompareTo |
+| 8 | `StringOperationBenchmarks.HashCode` | GetHashCode |
 
 Paths:
 
@@ -317,8 +317,10 @@ and will otherwise be rediscovered the hard way:
 2. **Every new benchmark is checked for being measurable.** The headline sets above are proposals, not
    commitments. Each new class runs at `--job short`, the warnings get read, and any benchmark coming
    back as `ZeroMeasurement` or `NA` is dropped or replaced before it reaches a chart. Anything cut is
-   reported with its reason rather than quietly substituted. `Equals` and `CompareTo` on the strings
-   operations chart are the plausible casualties, followed by the path property reads.
+   reported with its reason rather than quietly substituted. **Outcome on the strings side:**
+   `CompareTo` was hoisted (0.5714 ns, `ZeroMeasurement`) and is replaced on the chart by `HashCode`
+   (43.8881 ns, measured cleanly); `ToStringImplicit` was hoisted too and was never charted.
+   `EqualityOperator` survived at 1.1446 ns. The path property reads remain the outstanding risk.
 3. **Seeding proceeds one version first.** The full run is two new subjects across a ten-version list
    and will take hours. Version 5.3.4 is seeded alone and its numbers read against expectations
    stated in advance: the unvalidated floor below every validated rung, `Iban` slowest, allocation
