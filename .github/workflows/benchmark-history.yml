@@ -22,6 +22,9 @@ name: Benchmark History
 # is what lets a strings point and a quantities point from the same run be compared at all. It also
 # keeps the results to a single push.
 #
+# That applies from the first run of this workflow onward. The histories committed before it carry
+# baselines from two different machines, so the three charts' time rows are not yet on one scale.
+#
 # The cost is wall clock, and `subjects` on the dispatch is the answer to that: a long backfill is
 # split by subject across runs rather than by raising the timeout.
 
@@ -58,10 +61,13 @@ env:
   # One line per chart: name|history|chart|filter. An environment variable cannot hold an array,
   # and three steps need the same three triples, so this is the one place they are written.
   #
-  # Each filter is one operation per panel drawn. What varies between subjects is the axis: a
-  # quantity is a value type over T and does almost nothing of its own, so its release changes land
-  # per storage type; a semantic string spends its cost at creation, so its axis is how much
-  # validation the type declares.
+  # The quantities filter names one operation per panel. The strings and paths filters name whole
+  # classes instead, so they measure more than they draw: ingest stores every row and only render
+  # selects, which lets a panel be promoted later without re-running any history. Do not prune these
+  # to match the panel count.
+  # What varies between subjects is the axis: a quantity is a value type over T and does almost
+  # nothing of its own, so its release changes land per storage type; a semantic string spends its
+  # cost at creation, so its axis is how much validation the type declares.
   SUBJECTS: |
     quantities|docs/benchmarks/history.json|docs/benchmarks/performance.svg|*ConstructionBenchmarks*FromNauticalMile *UnitConversionBenchmarks*InNauticalMile *OperatorBenchmarks*LengthTimesLength *VectorBenchmarks*.Length *ComparisonBenchmarks*CompareToInterface
     strings|docs/benchmarks/strings-history.json|docs/benchmarks/strings-performance.svg|*StringCreationBenchmarks* *StringOperationBenchmarks*

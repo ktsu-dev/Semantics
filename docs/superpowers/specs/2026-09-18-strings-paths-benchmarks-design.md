@@ -179,7 +179,12 @@ than that implies.
 Read that way, the ratio answers the question a user actually has. *I was going to validate this
 anyway, so what does routing it through the type cost me on top?* The answer separates into the
 validation both sides pay and the per-call reflection only one side does. The last two rows are fair
-pairs in the quantities sense and are expected near 1.00.
+pairs in the quantities sense; measured, Equality came in at 2.53 and Ordering at 1.11, not the near
+1.00 either was expected to land at. Equality's 2.53 is genuine wrapper cost: the record's
+`EqualityContract` check and the null guards sit on top of the same ordinal string comparison the
+baseline makes. Ordering's 1.11 is the figure after the baseline was corrected to make the same
+culture-sensitive call, which is close enough to the floor that the remaining gap is call overhead
+rather than a second thing the wrapper is doing.
 
 `PathAbstractionCostBenchmarks` needs none of that care, because `System.IO.Path` is a real API doing
 the real work: `FileName` against `Path.GetFileName`, `AsAbsolute` against `Path.GetFullPath`,
@@ -310,7 +315,7 @@ The two ratio tables ship with real numbers from the seeding run. An empty table
 it will be filled in later is how a document starts rotting.
 
 **`CLAUDE.md`.** `Semantics.Benchmarks` joins the project-layout table, which omits it entirely today.
-A short "Benchmarks and the release charts" subsection records the three things that are non-obvious
+A short "Benchmarks and the release charts" subsection records the four things that are non-obvious
 and will otherwise be rediscovered the hard way:
 
 - `BenchmarkAgainstVersion` must be set in the environment rather than with `-p:`, because
@@ -338,6 +343,8 @@ and will otherwise be rediscovered the hard way:
    stated in advance: the unvalidated floor below every validated rung, `Iban` slowest, allocation
    non-zero everywhere because a semantic string is a reference type. The full backfill starts only
    once those hold. If they do not hold, that is a finding to raise, not something to chart.
+   **Outcome:** `Iban` was not slowest — the format regex came in 0.26% above mod-97, which is what
+   stopped the seeding gate. The other two expectations held.
 4. **Ordinary gates.** `dotnet build` warnings-clean, since ktsu.Sdk treats warnings as errors.
    `dotnet test` green. `Semantics.Benchmarks` carries `SonarQubeExclude` so the new benchmark classes
    are not analysed, but `scripts/benchmark-history.cs` is, so the local Sonar build documented in

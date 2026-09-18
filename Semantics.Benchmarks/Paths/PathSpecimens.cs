@@ -21,6 +21,8 @@ using System.IO;
 /// exactly a measurement taken on Linux. That is smaller than the difference between CI hosts that
 /// <c>BaselineBenchmarks</c> already exists to normalize, and it is why the history records a
 /// baseline reading alongside every entry.
+/// That normalization covers the time row only. Allocation is not divided by anything, so a
+/// platform change moves it directly, and the README says so beside the paths chart.
 /// </para>
 /// <para>
 /// Nothing here touches the filesystem, and none of these paths needs to exist. The benchmarks

@@ -1,10 +1,12 @@
 # Semantics Benchmarks
 
-A [BenchmarkDotNet](https://benchmarkdotnet.org) suite covering the quantity system: building a
-quantity from a unit, reading it back out in one, the generated physics operators, the
-componentwise vector operations, and comparison.
+A [BenchmarkDotNet](https://benchmarkdotnet.org) suite covering three libraries: `Semantics.Quantities`,
+`Semantics.Strings`, and `Semantics.Paths`.
 
 ## Quantities
+
+Building a quantity from a unit, reading it back out in one, the generated physics operators, the
+componentwise vector operations, and comparison.
 
 ### The axis that matters here is the storage type
 
@@ -173,6 +175,12 @@ expression cost 0.93, 1.06, 1.26 and 1.27 microseconds on top of that floor, so 
 minor term and the reflection machinery is the bill. The last two are a near-tie, worth naming
 because the mod-97 check was expected to dominate going in, and it does not.
 
+The chart draws three of the four validators. `Checksum` is measured and stored in the history but
+not drawn, for room rather than for principle: the grid is four columns, and the two failure paths
+earn their places more than a fourth validator would when all four land within 340 ns of each other.
+It can be promoted to a panel later without re-running anything, because `ingest` records every row
+and only `render` selects.
+
 ### What the type costs over the code a caller would otherwise write
 
 | pair | ratio | allocation, bare | allocation, semantic |
@@ -207,6 +215,10 @@ the type costs over `System.IO.Path` doing the same work.
 | `PathCreationBenchmarks` | Building each path type from a well-formed string. A path type is a semantic string whose validator asks the runtime a question about the shape of the value, so each row is the reflection floor plus one such question. |
 | `PathOperationBenchmarks` | What a path costs once it exists. `FileNameWithoutExtension` caches into a field and reads it back; `FileName` rebuilds and revalidates on every read. Both are properties and both look like field access at a call site. |
 | `PathAbstractionCostBenchmarks` | The same operation written twice, once against `System.IO.Path` and once through the type, paired so BenchmarkDotNet reports the ratio directly. See below. |
+
+`AbstractionCostBenchmarks` aside, two path benchmarks are stored and not drawn:
+`PathCreationBenchmarks.AbsoluteDirectoryPath` and `PathOperationBenchmarks.DirectoryPath`. Both are
+close cousins of panels already on the grid, so they add history without adding a column.
 
 ### What the type costs over `System.IO.Path`
 

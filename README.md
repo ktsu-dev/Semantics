@@ -170,7 +170,11 @@ Read the two halves of every chart differently. **Allocation is exact** — the 
 same bytes on any machine, so a step in the top row is always a real change. **Time is measured on
 shared CI runners**, where the host a job happens to land on varies more than most releases do, so
 each time is divided by a reference workload measured in the same job. That cancels most of the
-difference between machines; what is left is indicative rather than precise.
+difference between machines; what is left is indicative rather than precise. One caveat on the paths
+chart: its inputs are built per platform, because whether a path is absolute is a question the
+operating system answers differently, so its allocation row can step when the measuring host changes
+rather than when the library does. The other two charts take their inputs from compile-time constants
+and do not have that exposure.
 
 ### Quantities
 
@@ -196,8 +200,8 @@ The axis here is validation weight, because that is where a semantic string spen
 through `Activator.CreateInstance`, a `PropertyInfo.SetValue`, and a reflective walk of the type's
 validation attributes on every call, so the top row walks from that machinery alone up through a
 character set check, a format check, and a mod-97 check. The bottom row is what surrounds it: both
-failure paths, the cross-type conversion that is a full creation in disguise, and an ordering that is
-the underlying string's own.
+failure paths, the cross-type conversion that is a full creation in disguise, and the hash a
+dictionary of semantic strings pays on every lookup.
 
 This is a different answer from the quantities one, and worth stating plainly rather than leaving to
 be inferred from a chart: a quantity's wrapper is free, and a semantic string's is not. What it buys
