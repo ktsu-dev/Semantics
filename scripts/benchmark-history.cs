@@ -22,23 +22,35 @@ internal static partial class BenchmarkHistory
 {
 	private const int SchemaVersion = 1;
 	private const string BaselineKey = "BaselineBenchmarks.ReferenceWork";
-	private const int Columns = 4;
 	private const int CellWidth = 228;
 	private const int CellHeight = 132;
 	private const int Left = 56;
 
-	/// <summary>The benchmarks the README draws, in order.</summary>
+	/// <summary>One drawable chart: its title, its grid width, and the panels it shows.</summary>
+	/// <param name="Title">The library the chart is about, used in the heading and the aria-label.</param>
+	/// <param name="Columns">Panels per row.</param>
+	/// <param name="Headline">The panels, in reading order.</param>
+	private sealed record Subject(string Title, int Columns, PanelSpec[] Headline);
+
+	/// <summary>One panel: which benchmark it draws, and what to call it.</summary>
+	/// <param name="Key">The benchmark key as <c>ingest</c> stores it.</param>
+	/// <param name="Parameters">The parameter case to draw, or null when the benchmark has none.</param>
+	/// <param name="Label">The panel heading.</param>
+	private sealed record PanelSpec(string Key, string? Parameters, string Label);
+
+	/// <summary>The charts this script can draw, by the name <c>--subject</c> takes.</summary>
 	/// <remarks>
 	/// <para>
-	/// Everything measured is stored; this only decides what the picture shows, so it can change
+	/// Everything measured is stored; this only decides what each picture shows, so it can change
 	/// without re-running anything.
 	/// </para>
 	/// <para>
-	/// Drawn as a grid of one operation per storage type rather than of every operation at one
-	/// storage type. A quantity is a value type over <c>T</c> and does almost nothing of its own,
-	/// so what a release changes it changes per storage type — and the same line of user code costs
-	/// four different things depending on the <c>T</c> it was written against. The top row is one
-	/// construction across the four, so that row reads as the comparison it is.
+	/// <b>Quantities</b> is drawn as a grid of one operation per storage type rather than of every
+	/// operation at one storage type. A quantity is a value type over <c>T</c> and does almost
+	/// nothing of its own, so what a release changes it changes per storage type — and the same
+	/// line of user code costs four different things depending on the <c>T</c> it was written
+	/// against. The top row is one construction across the four, so that row reads as the
+	/// comparison it is.
 	/// </para>
 	/// <para>
 	/// None of the eight is a bare operator, although the suite measures those too. A relationship
@@ -51,17 +63,20 @@ internal static partial class BenchmarkHistory
 	/// enough above that floor to move when the library does.
 	/// </para>
 	/// </remarks>
-	private static readonly (string Key, string? Parameters, string Label)[] Headline =
-	[
-		("ConstructionBenchmarks<Double>.FromNauticalMile", null, "Construct (double)"),
-		("ConstructionBenchmarks<Single>.FromNauticalMile", null, "Construct (float)"),
-		("ConstructionBenchmarks<Decimal>.FromNauticalMile", null, "Construct (decimal)"),
-		("ConstructionBenchmarks<PreciseNumber>.FromNauticalMile", null, "Construct (precise)"),
-		("UnitConversionBenchmarks<Decimal>.InNauticalMile", null, "Read back (decimal)"),
-		("UnitConversionBenchmarks<PreciseNumber>.InNauticalMile", null, "Read back (precise)"),
-		("VectorBenchmarks<Decimal>.Length", null, "Vector length (decimal)"),
-		("ComparisonBenchmarks<Double>.CompareToInterface", null, "CompareTo (double)"),
-	];
+	private static readonly Dictionary<string, Subject> Subjects = new(StringComparer.Ordinal)
+	{
+		["quantities"] = new("Semantics.Quantities", 4,
+		[
+			new PanelSpec("ConstructionBenchmarks<Double>.FromNauticalMile", null, "Construct (double)"),
+			new PanelSpec("ConstructionBenchmarks<Single>.FromNauticalMile", null, "Construct (float)"),
+			new PanelSpec("ConstructionBenchmarks<Decimal>.FromNauticalMile", null, "Construct (decimal)"),
+			new PanelSpec("ConstructionBenchmarks<PreciseNumber>.FromNauticalMile", null, "Construct (precise)"),
+			new PanelSpec("UnitConversionBenchmarks<Decimal>.InNauticalMile", null, "Read back (decimal)"),
+			new PanelSpec("UnitConversionBenchmarks<PreciseNumber>.InNauticalMile", null, "Read back (precise)"),
+			new PanelSpec("VectorBenchmarks<Decimal>.Length", null, "Vector length (decimal)"),
+			new PanelSpec("ComparisonBenchmarks<Double>.CompareToInterface", null, "CompareTo (double)"),
+		]),
+	};
 
 	/// <summary>
 	/// Validated for colour-vision separation against both surfaces: every check passes, worst
@@ -391,6 +406,13 @@ internal static partial class BenchmarkHistory
 	private static int Render(Dictionary<string, string> options)
 	{
 		string historyPath = Required(options, "history");
+		string subjectName = Required(options, "subject");
+		if (!Subjects.TryGetValue(subjectName, out Subject? subject))
+		{
+			throw new InvalidOperationException(
+				$"Unknown subject '{subjectName}'. Known: {string.Join(", ", Subjects.Keys)}");
+		}
+
 		JsonArray entries = LoadHistory(historyPath)["entries"]!.AsArray();
 		if (entries.Count == 0)
 		{
@@ -409,7 +431,7 @@ internal static partial class BenchmarkHistory
 			string path = string.Equals(name, "light", StringComparison.Ordinal)
 				? output
 				: $"{stem}-dark{extension}";
-			File.WriteAllText(path, Draw(entries, Themes[name]));
+			File.WriteAllText(path, Draw(entries, Themes[name], subject));
 			written.Add(path);
 		}
 
@@ -417,20 +439,20 @@ internal static partial class BenchmarkHistory
 		return 0;
 	}
 
-	private static string Draw(JsonArray entries, Theme theme)
+	private static string Draw(JsonArray entries, Theme theme, Subject subject)
 	{
 		string[] labels = [.. entries.Select(entry => entry!["version"]?.GetValue<string>() ?? "?")];
-		int width = Left + (Columns * CellWidth) + 24;
-		int rows = (Headline.Length + Columns - 1) / Columns;
+		int width = Left + (subject.Columns * CellWidth) + 24;
+		int rows = (subject.Headline.Length + subject.Columns - 1) / subject.Columns;
 		int height = 72 + (((34 + (rows * CellHeight)) * 2) + 54);
 
 		StringBuilder svg = new();
-		Preamble(svg, theme, width, height, entries);
+		Preamble(svg, theme, width, height, entries, subject);
 
 		int y = 72;
 		foreach (bool isTime in (bool[])[false, true])
 		{
-			Section(svg, theme, entries, labels.Length, y, isTime);
+			Section(svg, theme, entries, labels.Length, y, isTime, subject);
 			y += 34 + (rows * CellHeight);
 		}
 
@@ -439,9 +461,10 @@ internal static partial class BenchmarkHistory
 		return svg.ToString();
 	}
 
-	private static void Preamble(StringBuilder svg, Theme theme, int width, int height, JsonArray entries)
+	private static void Preamble(
+		StringBuilder svg, Theme theme, int width, int height, JsonArray entries, Subject subject)
 	{
-		svg.AppendLine(CultureInfo.InvariantCulture, $"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="Semantics.Quantities allocation and relative time per release">""");
+		svg.AppendLine(CultureInfo.InvariantCulture, $"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{Escape(subject.Title)} allocation and relative time per release">""");
 		svg.AppendLine("<style>");
 		svg.AppendLine(CultureInfo.InvariantCulture, $"  text {{ font-family: ui-sans-serif, -apple-system, 'Segoe UI', Roboto, sans-serif; fill: {theme.Ink}; }}");
 		svg.AppendLine("  .title { font-size: 15px; font-weight: 600; }");
@@ -453,7 +476,7 @@ internal static partial class BenchmarkHistory
 		svg.AppendLine(CultureInfo.InvariantCulture, $"  .axis {{ stroke: {theme.Grid}; stroke-width: 1; }}");
 		svg.AppendLine("</style>");
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<rect width="{width}" height="{height}" fill="{theme.Surface}" />""");
-		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left}" y="28" class="title">Semantics.Quantities performance by release</text>""");
+		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left}" y="28" class="title">{Escape(subject.Title)} performance by release</text>""");
 
 		JsonNode latest = entries[^1]!;
 		string date = latest["date"]?.GetValue<string>() ?? "";
@@ -461,7 +484,8 @@ internal static partial class BenchmarkHistory
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left}" y="45" class="caption">{entries.Count} releases · newest {Escape(latest["version"]?.GetValue<string>() ?? "?")}{suffix}</text>""");
 	}
 
-	private static void Section(StringBuilder svg, Theme theme, JsonArray entries, int points, int y, bool isTime)
+	private static void Section(
+		StringBuilder svg, Theme theme, JsonArray entries, int points, int y, bool isTime, Subject subject)
 	{
 		string colour = isTime ? theme.Time : theme.Alloc;
 		string title = isTime
@@ -475,14 +499,14 @@ internal static partial class BenchmarkHistory
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left + 15}" y="{y - 2}" class="section">{Escape(title)}</text>""");
 		svg.AppendLine(CultureInfo.InvariantCulture, $"""<text x="{Left + 15}" y="{y + 12}" class="caption">{Escape(note)}</text>""");
 
-		for (int position = 0; position < Headline.Length; position++)
+		for (int position = 0; position < subject.Headline.Length; position++)
 		{
-			(string key, string? parameters, string label) = Headline[position];
+			(string key, string? parameters, string label) = subject.Headline[position];
 			double?[] values = [.. entries.Select(entry => Value(entry!, key, parameters, isTime))];
 			Panel(
 				svg,
-				Left + (position % Columns * CellWidth),
-				y + 26 + (position / Columns * CellHeight),
+				Left + (position % subject.Columns * CellWidth),
+				y + 26 + (position / subject.Columns * CellHeight),
 				label + (parameters is null ? "" : $" ({parameters} digits)"),
 				points,
 				values,
