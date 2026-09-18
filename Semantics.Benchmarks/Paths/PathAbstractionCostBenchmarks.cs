@@ -29,6 +29,27 @@ using ktsu.Semantics.Paths;
 /// unchanging operand is loop-invariant, the JIT hoists it, and a ratio between two hoisted
 /// methods means nothing.
 /// </para>
+/// <para>
+/// <b>Read <see cref="SemanticCreate"/>'s ratio differently from the other three.</b> It is the
+/// largest by a wide margin, and that is a fact about its baseline rather than about creation. The
+/// semantic side costs about the same in all four categories, because all four are dominated by the
+/// same reflection and validation; what differs is what each is measured against.
+/// <see cref="BareFileName"/>, <see cref="BareAsAbsolute"/> and <see cref="BareAsRelative"/> each do
+/// real string work, while <see cref="BareCreate"/> is a single boolean check costing a few
+/// nanoseconds. Dividing a roughly constant numerator by a much smaller denominator is most of the
+/// difference between 1,810 and the double- and triple-digit ratios above it.
+/// </para>
+/// <para>
+/// <b>And <see cref="BareCreate"/> is deliberately narrower than the validator it stands in for.</b>
+/// <c>IsAbsolutePathAttribute</c> asks
+/// <c>Path.IsPathFullyQualified(value + Path.DirectorySeparatorChar)</c>, concatenating and
+/// allocating first; the baseline here asks the question without the separator. That is not an
+/// oversight, and it is worth roughly a fourteenfold difference in the ratio on its own, so it is
+/// worth saying why: a baseline in this class is <i>the code a caller would otherwise write</i>, and
+/// a caller checking whether a path is absolute writes the plain check. Appending a separator is the
+/// library's own way of handling edge cases, so it belongs on the library's side of the comparison,
+/// which is exactly what the ratio is meant to report.
+/// </para>
 /// </remarks>
 [MemoryDiagnoser]
 [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
@@ -154,7 +175,10 @@ public class PathAbstractionCostBenchmarks
 		return accumulator;
 	}
 
-	/// <summary>Checking a path is rooted by hand, which is what creation validates.</summary>
+	/// <summary>
+	/// Checking a path is rooted by hand, which is what creation validates — modulo the separator the
+	/// validator appends before asking.
+	/// </summary>
 	/// <returns>The count of rooted paths, which is every iteration.</returns>
 	[BenchmarkCategory("Create")]
 	[Benchmark(Baseline = true, OperationsPerInvoke = Operations)]
