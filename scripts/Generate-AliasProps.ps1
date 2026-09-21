@@ -4,11 +4,20 @@
 	ktsu.Semantics.Quantities.<StorageType> satellite packages.
 
 .DESCRIPTION
-	Each satellite package ships a buildTransitive/<PackageId>.props that NuGet
-	auto-imports into consumers. The props inject MSBuild <Using> items, which the
-	SDK turns into `global using Mass = ktsu.Semantics.Quantities.Mass<double>;`
-	(and so on for every quantity type), so a project that references the package
-	can write `Mass` instead of `Mass<double>`.
+	Each satellite package ships a build/<PackageId>.props that NuGet auto-imports
+	into the project that references the package. The props inject MSBuild <Using>
+	items, which the SDK turns into
+	`global using Mass = ktsu.Semantics.Quantities.Mass<double>;` (and so on for
+	every quantity type), so a project that references the package can write `Mass`
+	instead of `Mass<double>`.
+
+	build/ rather than buildTransitive/ on purpose. The alias names are project-wide
+	global usings keyed on the bare type name, so two storage types reaching one
+	project define every alias twice and the compile fails with one CS1537 per
+	quantity. buildTransitive/ flows the binding to every project downstream of the
+	referencing one, so a project that references no alias package at all - and
+	therefore cannot satisfy the "one alias package per project" rule - would collect
+	two. build/ binds exactly where the reference is, which is what the rule says.
 
 	The catalog of quantity types is the set of committed source-generator outputs
 	(every quantity is emitted as a `<Type>.g.cs`), so this script stays in sync
@@ -58,8 +67,8 @@ foreach ($entry in $storageTypes.GetEnumerator()) {
 	$keyword = $entry.Value
 	$packageId = "ktsu.Semantics.Quantities.$suffix"
 	$projectDir = Join-Path $repoRoot "Semantics.Quantities.$suffix"
-	$buildTransitive = Join-Path $projectDir 'buildTransitive'
-	New-Item -ItemType Directory -Path $buildTransitive -Force | Out-Null
+	$buildFolder = Join-Path $projectDir 'build'
+	New-Item -ItemType Directory -Path $buildFolder -Force | Out-Null
 
 	$sb = [System.Text.StringBuilder]::new()
 	[void]$sb.AppendLine('<Project>')
@@ -72,7 +81,7 @@ foreach ($entry in $storageTypes.GetEnumerator()) {
 	[void]$sb.AppendLine("`t</ItemGroup>")
 	[void]$sb.AppendLine('</Project>')
 
-	$propsPath = Join-Path $buildTransitive "$packageId.props"
+	$propsPath = Join-Path $buildFolder "$packageId.props"
 	# CRLF to match the repo's line-ending convention.
 	$content = ($sb.ToString() -replace "`r?`n", "`r`n")
 	[System.IO.File]::WriteAllText($propsPath, $content, [System.Text.UTF8Encoding]::new($false))

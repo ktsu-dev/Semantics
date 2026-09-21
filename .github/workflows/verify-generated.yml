@@ -2,7 +2,7 @@ name: Verify Generated Files
 
 # Two kinds of generated artifacts are committed to this repo:
 #   1. Source-generator output under Semantics.Quantities/Generated/ (EmitCompilerGeneratedFiles=true).
-#   2. The storage-type alias props under Semantics.Quantities.<T>/buildTransitive/, produced by
+#   2. The storage-type alias props under Semantics.Quantities.<T>/build/, produced by
 #      scripts/Generate-AliasProps.ps1 from the quantity catalogue.
 # This job rebuilds and regenerates both, then fails if anything drifts from its source — so a
 # committed generated file or alias-props file can never go stale.

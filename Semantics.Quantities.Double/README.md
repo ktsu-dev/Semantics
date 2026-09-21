@@ -16,7 +16,7 @@
 
 Every quantity in `ktsu.Semantics.Quantities` is generic over its numeric storage type, so you normally write `Mass<double>`, `Speed<double>`, and so on. If a project uses one storage type throughout, that generic argument is noise.
 
-This package is props-only. It ships no assembly, just a `buildTransitive` props file that injects one C# global-using alias per quantity, binding each open generic type to `double`. Reference it and you can write `Mass`, `Speed`, `Force3D` with no generic argument, and every quantity resolves to its `double` form. The aliases are real `Mass<double>` (and so on), so they interoperate with the entire API with no conversion.
+This package is props-only. It ships no assembly, just a `build` props file that injects one C# global-using alias per quantity, binding each open generic type to `double`. Reference it and you can write `Mass`, `Speed`, `Force3D` with no generic argument, and every quantity resolves to its `double` form. The aliases are real `Mass<double>` (and so on), so they interoperate with the entire API with no conversion.
 
 Installing this package also pulls in the matching version of `ktsu.Semantics.Quantities` as a dependency, so it is the only reference you need.
 
@@ -69,6 +69,15 @@ The aliases are project-wide global usings keyed on the bare type name (`Mass`, 
 - [`ktsu.Semantics.Quantities.Precise`](../Semantics.Quantities.Precise/README.md)
 
 A project that genuinely needs mixed storage types should skip the alias packages and reference `ktsu.Semantics.Quantities` directly, writing the closed generic (`Mass<double>`) explicitly.
+
+The binding applies to the project that declares the `PackageReference`, and to no other. The props
+ship in the package's `build/` folder rather than `buildTransitive/`, so they are not inherited by
+projects that reference *this* project. An application assembled from several projects, each wrapping
+a different storage type, therefore compiles: each project that wants aliases references its own alias
+package, and no project collects a binding it never asked for. Earlier versions shipped the props in
+`buildTransitive/`, where the binding did flow downstream and two of them in one dependency graph
+produced a wall of `CS1537` against a generated file the author never wrote; `PrivateAssets="all"` on
+the alias reference was the workaround for that, and is no longer needed.
 
 The alias lists are generated from the quantity catalogue by `scripts/Generate-AliasProps.ps1` and validated in CI, so they stay in lockstep with the quantities the core package emits.
 

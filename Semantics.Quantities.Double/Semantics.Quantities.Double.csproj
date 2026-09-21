@@ -5,20 +5,20 @@
   <PropertyGroup>
     <!-- Matches Semantics.Quantities (which requires INumber<T>, so net8.0+). -->
     <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
-    <!-- Props-only package: no compiled assembly, just the buildTransitive aliases. -->
+    <!-- Props-only package: no compiled assembly, just the build/ aliases. -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <!-- No assembly means no symbols and no source to ship. ktsu.Sdk defaults IncludeSource=true,
          which emits an empty .snupkg that nuget.org rejects with HTTP 400 ("does not contain any
          symbol (.pdb) files"), aborting publish. Suppress symbol/source package generation. -->
     <IncludeSymbols>false</IncludeSymbols>
     <IncludeSource>false</IncludeSource>
-    <Description>Storage-type aliases for ktsu.Semantics.Quantities. Reference this package to write `Mass` instead of `Mass&lt;double&gt;` (and every other quantity) bound to double, project-wide. Use one storage-type alias package per project.</Description>
+    <Description>Storage-type aliases for ktsu.Semantics.Quantities. Reference this package to write `Mass` instead of `Mass&lt;double&gt;` (and every other quantity) bound to double, project-wide. Use one storage-type alias package per project. The aliases bind only in the project that references this package, not in projects downstream of it, so each project that wants them references the package itself.</Description>
     <!-- NU5128: a dependencies-only package legitimately has no lib/ assemblies. -->
     <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="buildTransitive\ktsu.Semantics.Quantities.Double.props" Pack="true" PackagePath="buildTransitive\" />
+    <None Include="build\ktsu.Semantics.Quantities.Double.props" Pack="true" PackagePath="build\" />
   </ItemGroup>
 
   <ItemGroup>
