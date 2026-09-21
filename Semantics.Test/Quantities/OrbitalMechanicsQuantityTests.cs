@@ -87,7 +87,7 @@ public sealed class OrbitalMechanicsQuantityTests
 
 		SpecificOrbitalEnergy<double> epsilon = SpecificOrbitalEnergy<double>.FromJoulePerKilogram(expected);
 
-		Assert.IsTrue(epsilon.Value < 0.0, "A bound orbit has negative specific orbital energy.");
+		Assert.IsLessThan(0.0, epsilon.Value, "A bound orbit has negative specific orbital energy.");
 		Assert.AreEqual(expected, epsilon.Value, 1e-3);
 	}
 
