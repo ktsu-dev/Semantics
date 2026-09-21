@@ -114,4 +114,10 @@ public readonly partial record struct Displacement3D<T> : IVector3<Displacement3
 		return new() { X = (Y * other.Z) - (Z * other.Y), Y = (Z * other.X) - (X * other.Z), Z = (X * other.Y) - (Y * other.X) };
 	}
 
+	/// <summary>Typed cross product: Displacement3D x Velocity3D = SpecificAngularMomentum3D.</summary>
+	public SpecificAngularMomentum3D<T> Cross(Velocity3D<T> other)
+	{
+		return new() { X = (Y * other.Z) - (Z * other.Y), Y = (Z * other.X) - (X * other.Z), Z = (X * other.Y) - (Y * other.X) };
+	}
+
 };

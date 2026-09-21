@@ -89,6 +89,7 @@
 		<Using Include="ktsu.Semantics.Quantities.GaugePressure&lt;double&gt;" Alias="GaugePressure" />
 		<Using Include="ktsu.Semantics.Quantities.GravitationalAcceleration&lt;double&gt;" Alias="GravitationalAcceleration" />
 		<Using Include="ktsu.Semantics.Quantities.GravitationalField3D&lt;double&gt;" Alias="GravitationalField3D" />
+		<Using Include="ktsu.Semantics.Quantities.GravitationalParameter&lt;double&gt;" Alias="GravitationalParameter" />
 		<Using Include="ktsu.Semantics.Quantities.GroundSpeed&lt;double&gt;" Alias="GroundSpeed" />
 		<Using Include="ktsu.Semantics.Quantities.GroupVelocity&lt;double&gt;" Alias="GroupVelocity" />
 		<Using Include="ktsu.Semantics.Quantities.HalfLife&lt;double&gt;" Alias="HalfLife" />
@@ -180,10 +181,17 @@
 		<Using Include="ktsu.Semantics.Quantities.SoundPressureLevel&lt;double&gt;" Alias="SoundPressureLevel" />
 		<Using Include="ktsu.Semantics.Quantities.SoundSpeed&lt;double&gt;" Alias="SoundSpeed" />
 		<Using Include="ktsu.Semantics.Quantities.SoundTransmissionClass&lt;double&gt;" Alias="SoundTransmissionClass" />
+		<Using Include="ktsu.Semantics.Quantities.SpecificAngularMomentum3D&lt;double&gt;" Alias="SpecificAngularMomentum3D" />
+		<Using Include="ktsu.Semantics.Quantities.SpecificAngularMomentumMagnitude&lt;double&gt;" Alias="SpecificAngularMomentumMagnitude" />
+		<Using Include="ktsu.Semantics.Quantities.SpecificEnergy&lt;double&gt;" Alias="SpecificEnergy" />
+		<Using Include="ktsu.Semantics.Quantities.SpecificEnergyMagnitude&lt;double&gt;" Alias="SpecificEnergyMagnitude" />
 		<Using Include="ktsu.Semantics.Quantities.SpecificEntropy&lt;double&gt;" Alias="SpecificEntropy" />
 		<Using Include="ktsu.Semantics.Quantities.SpecificGravity&lt;double&gt;" Alias="SpecificGravity" />
 		<Using Include="ktsu.Semantics.Quantities.SpecificHeat&lt;double&gt;" Alias="SpecificHeat" />
+		<Using Include="ktsu.Semantics.Quantities.SpecificKineticEnergy&lt;double&gt;" Alias="SpecificKineticEnergy" />
+		<Using Include="ktsu.Semantics.Quantities.SpecificOrbitalEnergy&lt;double&gt;" Alias="SpecificOrbitalEnergy" />
 		<Using Include="ktsu.Semantics.Quantities.Speed&lt;double&gt;" Alias="Speed" />
+		<Using Include="ktsu.Semantics.Quantities.StandardGravitationalParameter&lt;double&gt;" Alias="StandardGravitationalParameter" />
 		<Using Include="ktsu.Semantics.Quantities.Stress&lt;double&gt;" Alias="Stress" />
 		<Using Include="ktsu.Semantics.Quantities.SurfaceArea&lt;double&gt;" Alias="SurfaceArea" />
 		<Using Include="ktsu.Semantics.Quantities.SurfaceTension&lt;double&gt;" Alias="SurfaceTension" />

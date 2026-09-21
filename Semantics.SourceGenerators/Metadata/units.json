@@ -434,6 +434,25 @@
           "system": "SIDerived"
         },
         {
+          "name": "CubicMeterPerSecondSquared",
+          "symbol": "m³/s²",
+          "description": "Cubic meter per second squared - SI derived unit of standard gravitational parameter.",
+          "system": "SIDerived"
+        },
+        {
+          "name": "CubicKilometerPerSecondSquared",
+          "symbol": "km³/s²",
+          "description": "Cubic kilometer per second squared - 1e9 m³/s², the unit published values of mu are quoted in.",
+          "system": "SIDerived",
+          "conversionFactor": "CubicKilometerPerSecondSquaredToCubicMeterPerSecondSquared"
+        },
+        {
+          "name": "JoulePerKilogram",
+          "symbol": "J/kg",
+          "description": "Joule per kilogram - SI derived unit of specific energy.",
+          "system": "SIDerived"
+        },
+        {
           "name": "Bar",
           "symbol": "bar",
           "description": "Bar - Metric unit of pressure.",

@@ -84,7 +84,8 @@
       "derivatives": [],
       "dotProducts": [],
       "crossProducts": [
-        { "other": "Force", "result": "Torque", "forms": [3] }
+        { "other": "Force", "result": "Torque", "forms": [3] },
+        { "other": "Velocity", "result": "SpecificAngularMomentum", "forms": [3] }
       ]
     },
     {
@@ -1367,6 +1368,65 @@
       "availableUnits": ["Acum"],
       "quantities": {
         "vector0": { "base": "Sharpness" }
+      },
+      "integrals": [],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "GravitationalParameter",
+      "symbol": "L³ T⁻²",
+      "dimensionalFormula": { "length": 3, "time": -2 },
+      "availableUnits": ["CubicMeterPerSecondSquared", "CubicKilometerPerSecondSquared"],
+      "quantities": {
+        "vector0": {
+          "base": "GravitationalParameter",
+          "overloads": [
+            { "name": "StandardGravitationalParameter", "description": "Gravitational constant times a body's mass, mu = GM." }
+          ]
+        }
+      },
+      "integrals": [],
+      "derivatives": [
+        { "other": "Area", "result": "Acceleration" },
+        { "other": "Length", "result": "SpecificEnergy" }
+      ],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "SpecificEnergy",
+      "symbol": "L² T⁻²",
+      "dimensionalFormula": { "length": 2, "time": -2 },
+      "availableUnits": ["JoulePerKilogram"],
+      "quantities": {
+        "vector0": {
+          "base": "SpecificEnergyMagnitude",
+          "overloads": [
+            { "name": "SpecificKineticEnergy", "description": "Kinetic energy per unit mass, which is never negative." }
+          ]
+        },
+        "vector1": {
+          "base": "SpecificEnergy",
+          "overloads": [
+            { "name": "SpecificOrbitalEnergy", "description": "Orbital energy per unit reduced mass, negative for every bound orbit." }
+          ]
+        }
+      },
+      "integrals": [],
+      "derivatives": [],
+      "dotProducts": [],
+      "crossProducts": []
+    },
+    {
+      "name": "SpecificAngularMomentum",
+      "symbol": "L² T⁻¹",
+      "dimensionalFormula": { "length": 2, "time": -1 },
+      "availableUnits": ["SquareMeterPerSecond"],
+      "quantities": {
+        "vector0": { "base": "SpecificAngularMomentumMagnitude" },
+        "vector3": { "base": "SpecificAngularMomentum3D" }
       },
       "integrals": [],
       "derivatives": [],

@@ -257,5 +257,11 @@ public readonly partial record struct Length<T> : IVector0<Length<T>, T>, IPhysi
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static ForceMagnitude<T> operator *(Length<T> left, SurfaceTension<T> right) => ForceMagnitude<T>.Create(left.Quantity * right.Quantity);
+
+	/// <summary>
+	/// Multiplies Length by SpecificEnergyMagnitude to produce GravitationalParameter.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(Length<T> left, SpecificEnergyMagnitude<T> right) => GravitationalParameter<T>.Create(left.Quantity * right.Quantity);
 }
 

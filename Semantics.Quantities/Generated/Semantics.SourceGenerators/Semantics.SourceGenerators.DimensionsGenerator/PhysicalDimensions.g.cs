@@ -110,6 +110,9 @@ public static class PhysicalDimensions
 	/// <summary>Physical dimension: Frequency</summary>
 	public static readonly DimensionInfo Frequency = new("Frequency", "T⁻¹", new Dictionary<string, int> { ["time"] = -1 }, new List<string> { "Frequency", "SamplingRate", "ClockSpeed", "Bandwidth", "Pitch" });
 
+	/// <summary>Physical dimension: GravitationalParameter</summary>
+	public static readonly DimensionInfo GravitationalParameter = new("GravitationalParameter", "L³ T⁻²", new Dictionary<string, int> { ["length"] = 3, ["time"] = -2 }, new List<string> { "GravitationalParameter", "StandardGravitationalParameter" });
+
 	/// <summary>Physical dimension: HeatTransferCoefficient</summary>
 	public static readonly DimensionInfo HeatTransferCoefficient = new("HeatTransferCoefficient", "M T⁻³ Θ⁻¹", new Dictionary<string, int> { ["mass"] = 1, ["time"] = -3, ["temperature"] = -1 }, new List<string> { "HeatTransferCoefficient" });
 
@@ -200,6 +203,12 @@ public static class PhysicalDimensions
 	/// <summary>Physical dimension: Snap</summary>
 	public static readonly DimensionInfo Snap = new("Snap", "L T⁻⁴", new Dictionary<string, int> { ["length"] = 1, ["time"] = -4 }, new List<string> { "SnapMagnitude", "Snap1D", "Snap2D", "Snap3D", "Snap4D" });
 
+	/// <summary>Physical dimension: SpecificAngularMomentum</summary>
+	public static readonly DimensionInfo SpecificAngularMomentum = new("SpecificAngularMomentum", "L² T⁻¹", new Dictionary<string, int> { ["length"] = 2, ["time"] = -1 }, new List<string> { "SpecificAngularMomentumMagnitude", "SpecificAngularMomentum3D" });
+
+	/// <summary>Physical dimension: SpecificEnergy</summary>
+	public static readonly DimensionInfo SpecificEnergy = new("SpecificEnergy", "L² T⁻²", new Dictionary<string, int> { ["length"] = 2, ["time"] = -2 }, new List<string> { "SpecificEnergyMagnitude", "SpecificKineticEnergy", "SpecificEnergy", "SpecificOrbitalEnergy" });
+
 	/// <summary>Physical dimension: SpecificHeat</summary>
 	public static readonly DimensionInfo SpecificHeat = new("SpecificHeat", "L² T⁻² Θ⁻¹", new Dictionary<string, int> { ["length"] = 2, ["time"] = -2, ["temperature"] = -1 }, new List<string> { "SpecificHeat", "SpecificEntropy" });
 
@@ -234,7 +243,7 @@ public static class PhysicalDimensions
 	public static readonly DimensionInfo VolumetricFlowRate = new("VolumetricFlowRate", "L³ T⁻¹", new Dictionary<string, int> { ["length"] = 3, ["time"] = -1 }, new List<string> { "VolumetricFlowRate" });
 
 	/// <summary>Gets a frozen collection of all standard physical dimensions.</summary>
-	public static IReadOnlySet<DimensionInfo> All = new HashSet<DimensionInfo>([ AbsorbedDose, Acceleration, AcousticImpedance, AmountOfSubstance, AngularAcceleration, AngularDisplacement, AngularJerk, AngularMomentum, AngularVelocity, Area, CatalyticActivity, Concentration, Density, Dimensionless, DynamicViscosity, ElectricCapacitance, ElectricCharge, ElectricConductance, ElectricConductivity, ElectricCurrent, ElectricField, ElectricFlux, ElectricPotential, ElectricPowerDensity, ElectricResistance, Energy, Entropy, EquivalentDose, Exposure, Force, Frequency, HeatTransferCoefficient, Illuminance, Inductance, Irradiance, Jerk, KinematicViscosity, Length, Loudness, Luminance, LuminousFlux, LuminousIntensity, MagneticFlux, MagneticFluxDensity, Mass, MassFlowRate, MolarEnergy, MolarMass, MomentOfInertia, Momentum, NuclearCrossSection, OpticalPower, Permittivity, Power, Pressure, RadioactiveActivity, RateConstant, ReactionRate, Sensitivity, Sharpness, Snap, SpecificHeat, SurfaceTension, Temperature, ThermalConductivity, ThermalExpansion, ThermalResistance, Time, Torque, Velocity, Volume, VolumetricFlowRate ]);
+	public static IReadOnlySet<DimensionInfo> All = new HashSet<DimensionInfo>([ AbsorbedDose, Acceleration, AcousticImpedance, AmountOfSubstance, AngularAcceleration, AngularDisplacement, AngularJerk, AngularMomentum, AngularVelocity, Area, CatalyticActivity, Concentration, Density, Dimensionless, DynamicViscosity, ElectricCapacitance, ElectricCharge, ElectricConductance, ElectricConductivity, ElectricCurrent, ElectricField, ElectricFlux, ElectricPotential, ElectricPowerDensity, ElectricResistance, Energy, Entropy, EquivalentDose, Exposure, Force, Frequency, GravitationalParameter, HeatTransferCoefficient, Illuminance, Inductance, Irradiance, Jerk, KinematicViscosity, Length, Loudness, Luminance, LuminousFlux, LuminousIntensity, MagneticFlux, MagneticFluxDensity, Mass, MassFlowRate, MolarEnergy, MolarMass, MomentOfInertia, Momentum, NuclearCrossSection, OpticalPower, Permittivity, Power, Pressure, RadioactiveActivity, RateConstant, ReactionRate, Sensitivity, Sharpness, Snap, SpecificAngularMomentum, SpecificEnergy, SpecificHeat, SurfaceTension, Temperature, ThermalConductivity, ThermalExpansion, ThermalResistance, Time, Torque, Velocity, Volume, VolumetricFlowRate ]);
 }
 
 /// <summary>
@@ -486,6 +495,14 @@ public interface IFrequencyUnit : IUnit
 }
 
 /// <summary>
+/// Marker interface implemented by every unit of the <c>GravitationalParameter</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface IGravitationalParameterUnit : IUnit
+{
+}
+
+/// <summary>
 /// Marker interface implemented by every unit of the <c>HeatTransferCoefficient</c> dimension.
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
@@ -722,6 +739,22 @@ public interface ISharpnessUnit : IUnit
 /// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
 /// </summary>
 public interface ISnapUnit : IUnit
+{
+}
+
+/// <summary>
+/// Marker interface implemented by every unit of the <c>SpecificAngularMomentum</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface ISpecificAngularMomentumUnit : IUnit
+{
+}
+
+/// <summary>
+/// Marker interface implemented by every unit of the <c>SpecificEnergy</c> dimension.
+/// Generated quantities use this to make <c>In(...)</c> dimensionally type-safe at compile time.
+/// </summary>
+public interface ISpecificEnergyUnit : IUnit
 {
 }
 
