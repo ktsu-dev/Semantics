@@ -16,6 +16,14 @@ using System.Numerics;
 /// Decibels express ratios on a logarithmic scale. Amplitude/field quantities use dB = 20·log10(ratio); power quantities use dB = 10·log10(ratio). A level of 0 dB is unity.
 /// Logarithmic scales don't obey linear arithmetic, so this type is generated as a
 /// standalone companion (from logarithmic.json) rather than a physical dimension.
+/// <para>
+/// <b>Precision:</b> the conversions to and from the linear counterparts compute in
+/// <see langword="double"/> whatever <typeparamref name="T"/> is, so a value carried in a
+/// storage type wider than <see langword="double"/> — <see langword="decimal"/>, or
+/// <c>PreciseNumber</c> — is accurate to about fifteen significant digits once it has been
+/// through one. Arithmetic, comparison and the raw factory keep every digit
+/// <typeparamref name="T"/> holds; only the logarithm and its inverse do not.
+/// </para>
 /// </remarks>
 /// <typeparam name="T">The floating-point storage type.</typeparam>
 /// <param name="Value">The scale value.</param>
@@ -34,6 +42,13 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// </summary>
 	/// <param name="linear">The linear <see cref="Gain{T}"/>.</param>
 	/// <returns>A new <see cref="Decibels{T}"/>. A linear value of zero maps to negative infinity.</returns>
+	/// <remarks>
+	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
+	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
+	/// result is converted back. A storage type wider than <see langword="double"/> —
+	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
+	/// significant digits across this conversion, rather than the precision it is capable of.
+	/// </remarks>
 	public static Decibels<T> FromGain(Gain<T> linear)
 	{
 		double linearValue = double.CreateChecked(linear.Value);
@@ -44,6 +59,13 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// Converts this level to a linear amplitude gain using gain = 10^(dB/20).
 	/// </summary>
 	/// <returns>The linear <see cref="Gain{T}"/>.</returns>
+	/// <remarks>
+	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
+	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
+	/// result is converted back. A storage type wider than <see langword="double"/> —
+	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
+	/// significant digits across this conversion, rather than the precision it is capable of.
+	/// </remarks>
 	public Gain<T> ToAmplitude()
 	{
 		double scaleValue = double.CreateChecked(Value);
@@ -55,6 +77,13 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// </summary>
 	/// <param name="linear">The linear <see cref="Ratio{T}"/>.</param>
 	/// <returns>A new <see cref="Decibels{T}"/>. A linear value of zero maps to negative infinity.</returns>
+	/// <remarks>
+	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
+	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
+	/// result is converted back. A storage type wider than <see langword="double"/> —
+	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
+	/// significant digits across this conversion, rather than the precision it is capable of.
+	/// </remarks>
 	public static Decibels<T> FromPowerRatio(Ratio<T> linear)
 	{
 		double linearValue = double.CreateChecked(linear.Value);
@@ -65,6 +94,13 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// Converts this level to a linear power ratio using ratio = 10^(dB/10).
 	/// </summary>
 	/// <returns>The linear <see cref="Ratio{T}"/>.</returns>
+	/// <remarks>
+	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
+	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
+	/// result is converted back. A storage type wider than <see langword="double"/> —
+	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
+	/// significant digits across this conversion, rather than the precision it is capable of.
+	/// </remarks>
 	public Ratio<T> ToPower()
 	{
 		double scaleValue = double.CreateChecked(Value);

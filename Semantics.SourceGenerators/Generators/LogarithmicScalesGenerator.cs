@@ -79,6 +79,14 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 
 		cb.WriteLine("/// Logarithmic scales don't obey linear arithmetic, so this type is generated as a");
 		cb.WriteLine("/// standalone companion (from logarithmic.json) rather than a physical dimension.");
+		cb.WriteLine("/// <para>");
+		cb.WriteLine("/// <b>Precision:</b> the conversions to and from the linear counterparts compute in");
+		cb.WriteLine("/// <see langword=\"double\"/> whatever <typeparamref name=\"T\"/> is, so a value carried in a");
+		cb.WriteLine("/// storage type wider than <see langword=\"double\"/> — <see langword=\"decimal\"/>, or");
+		cb.WriteLine("/// <c>PreciseNumber</c> — is accurate to about fifteen significant digits once it has been");
+		cb.WriteLine("/// through one. Arithmetic, comparison and the raw factory keep every digit");
+		cb.WriteLine("/// <typeparamref name=\"T\"/> holds; only the logarithm and its inverse do not.");
+		cb.WriteLine("/// </para>");
 		cb.WriteLine("/// </remarks>");
 		cb.WriteLine("/// <typeparam name=\"T\">The floating-point storage type.</typeparam>");
 		cb.WriteLine("/// <param name=\"Value\">The scale value.</param>");
@@ -122,6 +130,29 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 		cb.NewLine();
 	}
 
+	/// <summary>
+	/// Emits the remarks stating that a conversion computes in <see langword="double"/> regardless
+	/// of the storage type.
+	/// </summary>
+	/// <param name="cb">The code blocker to write to.</param>
+	/// <remarks>
+	/// On the conversion rather than only on the type, because the call site is where a caller
+	/// spends the precision, and the method's own tooltip is what they see there. The storage type
+	/// is otherwise exact — unit factors, metric magnitudes and vector lengths all compute in
+	/// <c>T</c>'s own arithmetic — so a scale quietly dropping to fifteen digits is a surprise
+	/// worth stating rather than leaving to be discovered in a result.
+	/// </remarks>
+	private static void WriteDoublePrecisionRemarks(CodeBlocker cb)
+	{
+		cb.WriteLine("/// <remarks>");
+		cb.WriteLine("/// Computes in <see langword=\"double\"/> whatever <typeparamref name=\"T\"/> is: the value is");
+		cb.WriteLine("/// converted to <see langword=\"double\"/>, the logarithm or power is taken there, and the");
+		cb.WriteLine("/// result is converted back. A storage type wider than <see langword=\"double\"/> —");
+		cb.WriteLine("/// <see langword=\"decimal\"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen");
+		cb.WriteLine("/// significant digits across this conversion, rather than the precision it is capable of.");
+		cb.WriteLine("/// </remarks>");
+	}
+
 	private static void WriteConversion(CodeBlocker cb, LogarithmicScaleDefinition scale, LogarithmicConversionDefinition conversion, string fullType)
 	{
 		string linear = conversion.Linear;
@@ -145,6 +176,7 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine($"/// <param name=\"linear\">The linear <see cref=\"{linear}{{T}}\"/>.</param>");
 		cb.WriteLine($"/// <returns>A new <see cref=\"{scale.Name}{{T}}\"/>. A linear value of zero maps to negative infinity.</returns>");
+		WriteDoublePrecisionRemarks(cb);
 		cb.WriteLine($"public static {fullType} {fromName}({linear}<T> linear)");
 		using (new Scope(cb))
 		{
@@ -168,6 +200,7 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 		cb.WriteLine($"/// {conversion.ToSummary ?? $"Converts this value to the linear {linear}."}");
 		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine($"/// <returns>The linear <see cref=\"{linear}{{T}}\"/>.</returns>");
+		WriteDoublePrecisionRemarks(cb);
 		cb.WriteLine($"public {linear}<T> {toName}()");
 		using (new Scope(cb))
 		{
