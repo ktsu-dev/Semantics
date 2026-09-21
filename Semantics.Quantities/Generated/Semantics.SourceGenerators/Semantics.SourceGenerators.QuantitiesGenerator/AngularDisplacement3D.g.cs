@@ -40,8 +40,12 @@ public readonly partial record struct AngularDisplacement3D<T> : IVector3<Angula
 	/// <summary>Gets the unit vector for the Z-axis.</summary>
 	public static AngularDisplacement3D<T> UnitZ => new() { X = T.Zero, Y = T.Zero, Z = T.One };
 
-	/// <summary>Gets the magnitude as a <see cref="Angle{T}"/>.</summary>
-	public Angle<T> Magnitude() => Angle<T>.Create(Length());
+	/// <summary>Gets the magnitude of this vector as a <see cref="global::ktsu.Semantics.Quantities.Angle{T}"/>.</summary>
+	public global::ktsu.Semantics.Quantities.Angle<T> Magnitude() => global::ktsu.Semantics.Quantities.Angle<T>.Create(Length());
+
+	/// <summary>Gets the distance to another vector as a <see cref="global::ktsu.Semantics.Quantities.Angle{T}"/>.</summary>
+	/// <param name="other">The vector to measure the distance to.</param>
+	public global::ktsu.Semantics.Quantities.Angle<T> DistanceTo(AngularDisplacement3D<T> other) => global::ktsu.Semantics.Quantities.Angle<T>.Create(Distance(other));
 
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()

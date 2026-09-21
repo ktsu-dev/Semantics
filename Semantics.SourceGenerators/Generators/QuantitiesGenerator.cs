@@ -1141,10 +1141,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			WriteVectorComponentProperties(cb, components);
 			WriteVectorStaticProperties(cb, fullType, components);
 
-			// Typed Magnitude() method returning V0 base
-			cb.WriteLine($"/// <summary>Gets the magnitude as a <see cref=\"{v0TypeName}{{T}}\"/>.</summary>");
-			cb.WriteLine($"public {v0TypeName}<T> Magnitude() => {v0TypeName}<T>.Create(Length());");
-			cb.NewLine();
+			WriteVectorMagnitudeMembers(cb, fullType, v0TypeName);
 
 			WriteVectorMethods(cb, fullType, components, dims);
 			WriteVectorOperators(cb, fullType, components);
@@ -1385,6 +1382,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		{
 			WriteVectorComponentProperties(cb, components);
 			WriteVectorStaticProperties(cb, fullType, components);
+			WriteVectorMagnitudeMembers(cb, fullType, type.MagnitudeType);
 			WriteVectorMethods(cb, fullType, components, dims);
 			WriteVectorOperators(cb, fullType, components);
 
@@ -1599,6 +1597,51 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			cb.WriteLine($"public static {fullType} Unit{comp} => new() {{ {unitInit} }};");
 			cb.NewLine();
 		}
+	}
+
+	/// <summary>
+	/// Writes the two members that answer with the dimension's magnitude form rather than with a
+	/// bare <c>T</c>: <c>Magnitude()</c> and <c>DistanceTo()</c>. Issue #238.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// The return type is written fully qualified, and that is not decoration. Every vector form
+	/// already has a <c>Length()</c> method, so inside <c>Displacement3D</c> — whose magnitude form
+	/// is called <c>Length</c> — an unqualified <c>Length&lt;T&gt;</c> return type puts a method
+	/// group and a generic type under one identifier. It parses, because the type argument list
+	/// disambiguates it, which is exactly the problem: it compiles and then misleads whoever reads
+	/// the generated source.
+	/// </para>
+	/// <para>
+	/// Both use <c>Create</c> rather than a <c>From{Unit}</c> factory, so they bypass
+	/// <see cref="Vector0Guards"/>. That is correct rather than an oversight — a length and a
+	/// distance are non-negative by construction, having come out of a square root — and it keeps
+	/// the guard off a call that belongs in a hot loop.
+	/// </para>
+	/// <para>
+	/// There is deliberately no <c>MagnitudeSquared()</c>. The square of a dimension usually has no
+	/// declared name, and where it has one it is not unique, so there is nothing to return.
+	/// <c>LengthSquared()</c> keeps answering with <c>T</c>, which is the honest answer.
+	/// </para>
+	/// </remarks>
+	/// <param name="cb">The code blocker to write to.</param>
+	/// <param name="fullType">The vector type being written, including its type argument.</param>
+	/// <param name="v0TypeName">
+	/// The name of the dimension's magnitude form — the <c>vector0</c> base, never one of its
+	/// overloads, since the base is what every overload widens from.
+	/// </param>
+	private static void WriteVectorMagnitudeMembers(CodeBlocker cb, string fullType, string v0TypeName)
+	{
+		string v0 = $"global::ktsu.Semantics.Quantities.{v0TypeName}";
+
+		cb.WriteLine($"/// <summary>Gets the magnitude of this vector as a <see cref=\"{v0}{{T}}\"/>.</summary>");
+		cb.WriteLine($"public {v0}<T> Magnitude() => {v0}<T>.Create(Length());");
+		cb.NewLine();
+
+		cb.WriteLine($"/// <summary>Gets the distance to another vector as a <see cref=\"{v0}{{T}}\"/>.</summary>");
+		cb.WriteLine("/// <param name=\"other\">The vector to measure the distance to.</param>");
+		cb.WriteLine($"public {v0}<T> DistanceTo({fullType} other) => {v0}<T>.Create(Distance(other));");
+		cb.NewLine();
 	}
 
 	private static void WriteVectorMethods(CodeBlocker cb, string fullType, string[] components, int dims)

@@ -34,8 +34,12 @@ public readonly partial record struct Momentum2D<T> : IVector2<Momentum2D<T>, T>
 	/// <summary>Gets the unit vector for the Y-axis.</summary>
 	public static Momentum2D<T> UnitY => new() { X = T.Zero, Y = T.One };
 
-	/// <summary>Gets the magnitude as a <see cref="MomentumMagnitude{T}"/>.</summary>
-	public MomentumMagnitude<T> Magnitude() => MomentumMagnitude<T>.Create(Length());
+	/// <summary>Gets the magnitude of this vector as a <see cref="global::ktsu.Semantics.Quantities.MomentumMagnitude{T}"/>.</summary>
+	public global::ktsu.Semantics.Quantities.MomentumMagnitude<T> Magnitude() => global::ktsu.Semantics.Quantities.MomentumMagnitude<T>.Create(Length());
+
+	/// <summary>Gets the distance to another vector as a <see cref="global::ktsu.Semantics.Quantities.MomentumMagnitude{T}"/>.</summary>
+	/// <param name="other">The vector to measure the distance to.</param>
+	public global::ktsu.Semantics.Quantities.MomentumMagnitude<T> DistanceTo(Momentum2D<T> other) => global::ktsu.Semantics.Quantities.MomentumMagnitude<T>.Create(Distance(other));
 
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()

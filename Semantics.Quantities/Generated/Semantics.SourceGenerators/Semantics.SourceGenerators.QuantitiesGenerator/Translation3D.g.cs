@@ -40,6 +40,13 @@ public readonly partial record struct Translation3D<T> : IVector3<Translation3D<
 	/// <summary>Gets the unit vector for the Z-axis.</summary>
 	public static Translation3D<T> UnitZ => new() { X = T.Zero, Y = T.Zero, Z = T.One };
 
+	/// <summary>Gets the magnitude of this vector as a <see cref="global::ktsu.Semantics.Quantities.Length{T}"/>.</summary>
+	public global::ktsu.Semantics.Quantities.Length<T> Magnitude() => global::ktsu.Semantics.Quantities.Length<T>.Create(Length());
+
+	/// <summary>Gets the distance to another vector as a <see cref="global::ktsu.Semantics.Quantities.Length{T}"/>.</summary>
+	/// <param name="other">The vector to measure the distance to.</param>
+	public global::ktsu.Semantics.Quantities.Length<T> DistanceTo(Translation3D<T> other) => global::ktsu.Semantics.Quantities.Length<T>.Create(Distance(other));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

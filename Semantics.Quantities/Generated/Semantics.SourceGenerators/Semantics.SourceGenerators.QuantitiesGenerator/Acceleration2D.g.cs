@@ -34,8 +34,12 @@ public readonly partial record struct Acceleration2D<T> : IVector2<Acceleration2
 	/// <summary>Gets the unit vector for the Y-axis.</summary>
 	public static Acceleration2D<T> UnitY => new() { X = T.Zero, Y = T.One };
 
-	/// <summary>Gets the magnitude as a <see cref="AccelerationMagnitude{T}"/>.</summary>
-	public AccelerationMagnitude<T> Magnitude() => AccelerationMagnitude<T>.Create(Length());
+	/// <summary>Gets the magnitude of this vector as a <see cref="global::ktsu.Semantics.Quantities.AccelerationMagnitude{T}"/>.</summary>
+	public global::ktsu.Semantics.Quantities.AccelerationMagnitude<T> Magnitude() => global::ktsu.Semantics.Quantities.AccelerationMagnitude<T>.Create(Length());
+
+	/// <summary>Gets the distance to another vector as a <see cref="global::ktsu.Semantics.Quantities.AccelerationMagnitude{T}"/>.</summary>
+	/// <param name="other">The vector to measure the distance to.</param>
+	public global::ktsu.Semantics.Quantities.AccelerationMagnitude<T> DistanceTo(Acceleration2D<T> other) => global::ktsu.Semantics.Quantities.AccelerationMagnitude<T>.Create(Distance(other));
 
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()

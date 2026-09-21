@@ -66,7 +66,24 @@ Every quantity is a vector. Dimensionality of the *direction space* is part of t
 | `IVector3<TSelf, T>` | 3D directional | Per-component | `Velocity3D`, `Force3D`, `Position3D` |
 | `IVector4<TSelf, T>` | 4D directional | Per-component | (reserved for relativistic / spacetime) |
 
-`IVectorN.Magnitude()` (for N >= 1) returns the corresponding `IVector0`.
+`IVectorN.Magnitude()` (for N >= 1) returns the corresponding `IVector0`, and `DistanceTo(other)`
+answers with the same type. Both are emitted onto every vector form, overloads included, and both
+return the `vector0` **base** rather than one of its overloads — `Velocity3D.Magnitude()` is a
+`Speed`, `Position3D.Magnitude()` is a `Length` and not a `Distance` — because the base is what
+every overload widens from. A caller who wants the overload narrows explicitly.
+
+The return type is written fully qualified in the generated source, which looks like noise and is
+not: every vector form has a `Length()` method, so inside `Displacement3D`, whose magnitude form is
+*called* `Length`, an unqualified `Length<T>` return type puts a method group and a generic type
+under one identifier. It parses, because the type argument list disambiguates it — which is the
+problem, since it compiles and then misleads the next reader.
+
+`Length()` and `LengthSquared()` keep answering with a bare `T`, and the squared one has no typed
+counterpart on purpose: the square of a dimension usually has no declared name, and where it has one
+it is not unique, so there would be nothing to return. `Magnitude()` and `DistanceTo()` build with
+`Create` rather than a `From{Unit}` factory, bypassing `Vector0Guards` — correct, because a value
+that came out of a square root is non-negative by construction, and it keeps the guard off a call
+that belongs in a hot loop.
 
 All generated types are generic over a numeric storage type: `where T : struct, INumber<T>`.
 

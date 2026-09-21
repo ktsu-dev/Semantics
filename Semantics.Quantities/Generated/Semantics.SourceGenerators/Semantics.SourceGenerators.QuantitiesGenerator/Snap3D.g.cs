@@ -40,8 +40,12 @@ public readonly partial record struct Snap3D<T> : IVector3<Snap3D<T>, T>
 	/// <summary>Gets the unit vector for the Z-axis.</summary>
 	public static Snap3D<T> UnitZ => new() { X = T.Zero, Y = T.Zero, Z = T.One };
 
-	/// <summary>Gets the magnitude as a <see cref="SnapMagnitude{T}"/>.</summary>
-	public SnapMagnitude<T> Magnitude() => SnapMagnitude<T>.Create(Length());
+	/// <summary>Gets the magnitude of this vector as a <see cref="global::ktsu.Semantics.Quantities.SnapMagnitude{T}"/>.</summary>
+	public global::ktsu.Semantics.Quantities.SnapMagnitude<T> Magnitude() => global::ktsu.Semantics.Quantities.SnapMagnitude<T>.Create(Length());
+
+	/// <summary>Gets the distance to another vector as a <see cref="global::ktsu.Semantics.Quantities.SnapMagnitude{T}"/>.</summary>
+	/// <param name="other">The vector to measure the distance to.</param>
+	public global::ktsu.Semantics.Quantities.SnapMagnitude<T> DistanceTo(Snap3D<T> other) => global::ktsu.Semantics.Quantities.SnapMagnitude<T>.Create(Distance(other));
 
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
