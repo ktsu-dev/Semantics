@@ -106,15 +106,22 @@ one driving it. Two layers, and both earn their place:
   rather than generated, because none of it is derived from the metadata. It is what gives a
   product nobody declared a type at all.
 - **Nominal.** One class per dimension, per vector form and per named overload — `Length`,
-  `Displacement3D`, `Weight`. This is what the exponents cannot do: **72 dimensions share 63
+  `Displacement3D`, `Weight`. This is what the exponents cannot do: **75 dimensions share 64
   exponent vectors**, so `Area` and `NuclearCrossSection`, `Torque` and `Energy`, `AbsorbedDose`
-  and `EquivalentDose` are each one vector between two names. 212 classes in all — 148 magnitudes,
-  27 signed scalars, and 37 vectors of two to four components.
+  and `EquivalentDose` are each one vector between two names. 220 classes in all — 153 magnitudes,
+  29 signed scalars, and 38 vectors of two to four components.
+
+  The clearest illustration of the point is the newest: `SpecificEnergy` is `L² T⁻²`, which is
+  what `AbsorbedDose` and `EquivalentDose` already are — specific orbital energy and absorbed
+  radiation dose are both joules per kilogram, and nothing in the exponents separates the energy
+  of an orbit from a radiation dose. `SpecificAngularMomentum` lands on `L² T⁻¹` beside
+  `KinematicViscosity` the same way. Only `GravitationalParameter` brought a vector of its own,
+  `L³ T⁻²`, which is the 64th.
 
 **Eight axes, not the seven in `dimensionalFormula` before.** `angle` is carried by
 `AngularDisplacement`, `AngularVelocity`, `AngularAcceleration` and `AngularJerk`, and that is the
 whole of it. Without it an angle is the same type as a ratio and an angular speed the same type as
-a frequency; with it, 61 distinct exponent vectors become 63. It is read by the C++ projection and
+a frequency; with it, 62 distinct exponent vectors become 64. It is read by the C++ projection and
 carried through `DimensionInfo` on the .NET side, where `ktsu.Schema` reads it off a unit to fill
 the eight exponents in its C++ reflection table.
 
@@ -125,8 +132,9 @@ has to pick one. Picking the first declared picked by file position, and `Dimens
 first entry in `dimensions.json`, so every angular unit reported no exponents at all: the same
 answer a unitless count gives, which is the conflation the axis was added to prevent. A claim that
 says something now beats one that says nothing. Where several say something the first still wins,
-which decides the only other unit claimed twice: `SquareMeter` is `Area` and `NuclearCrossSection`,
-one of the 72-over-63 collisions, so the two answers differ in name and not in exponents.
+which decides the other two units claimed twice: `SquareMeter` is `Area` and `NuclearCrossSection`,
+and `SquareMeterPerSecond` is `KinematicViscosity` and `SpecificAngularMomentum`. Both are
+75-over-64 collisions, so in each the two answers differ in name and not in exponents.
 
 **A relationship is checked before it is emitted.** The operator is written as
 `Result{ lhs.value() * rhs.value() }`, so the exponents have to agree with the declared result or it
@@ -179,6 +187,15 @@ which is what puts the operands in that order. It was declared on `Force` and em
 negation. No exponent can catch that: a cross product and its negation have identical dimensions, so
 the only thing standing between the two is which dimension declares the relationship. A test pins
 the sign: a force of +10 ŷ at a lever arm of +0.5 x̂ gives +5 about z, and the other order gives −5.
+
+Specific angular momentum is the second relationship under that rule, and it is declared the same
+way for the same reason: **h = r × v**, so `cross(Displacement3D, Velocity3D)` is declared on
+`Length`. SEM008 passes either declaration — the exponents of h and −h are identical — and
+`OrbitalMechanicsQuantityTests` pins it the way the torque test does. Declaring it on `Velocity`
+instead does not produce a wrong answer quietly; it produces no `Displacement3D.Cross(Velocity3D)`
+at all, because only the declared direction is emitted, so the test stops compiling rather than
+silently inverting. That is worth knowing: for a cross product the declaration site is checked by
+the call site, and it is the *sign* of an existing call that nothing but a test can check.
 
 **How the generated code is written is measured, not chosen.** See the header of
 `CppQuantityGenerator` — the same vocabulary written two ways measured 0.9896 and 1.4004 against

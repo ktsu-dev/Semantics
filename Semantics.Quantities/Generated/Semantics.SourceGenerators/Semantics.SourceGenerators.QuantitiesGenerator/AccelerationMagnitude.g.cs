@@ -147,5 +147,11 @@ public readonly partial record struct AccelerationMagnitude<T> : IVector0<Accele
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Duration<T> operator /(AccelerationMagnitude<T> left, JerkMagnitude<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+
+	/// <summary>
+	/// Multiplies AccelerationMagnitude by Area to produce GravitationalParameter.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(AccelerationMagnitude<T> left, Area<T> right) => GravitationalParameter<T>.Create(left.Quantity * right.Quantity);
 }
 

@@ -483,6 +483,17 @@
       ]
     },
     {
+      "category": "GravitationalParameter",
+      "description": "Gravitational parameter unit conversion factors",
+      "factors": [
+        {
+          "name": "CubicKilometerPerSecondSquaredToCubicMeterPerSecondSquared",
+          "description": "Cubic kilometer per second squared to cubic meter per second squared: 1e9 m³/s² per km³/s² (exact by definition)",
+          "value": "1e9"
+        }
+      ]
+    },
+    {
       "category": "Force",
       "description": "Force unit conversion factors",
       "factors": [

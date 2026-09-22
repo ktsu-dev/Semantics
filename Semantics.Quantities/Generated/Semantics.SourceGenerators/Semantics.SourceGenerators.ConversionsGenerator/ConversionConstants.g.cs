@@ -239,6 +239,9 @@ internal static class ConversionConstants
 	/// <summary>Standard gravity to meters per second squared: 9.80665 m/s² per g (exact by definition)</summary>
 	internal const double StandardGravityToMeterPerSecondSquared = 9.80665d;
 
+	/// <summary>Cubic kilometer per second squared to cubic meter per second squared: 1e9 m³/s² per km³/s² (exact by definition)</summary>
+	internal const double CubicKilometerPerSecondSquaredToCubicMeterPerSecondSquared = 1e9d;
+
 	/// <summary>Dyne to newton conversion: 1e-5 N/dyn (exact by definition)</summary>
 	internal const double DyneToNewtons = 1e-5d;
 
@@ -736,6 +739,12 @@ internal static class ConversionConstants
 
 		/// <summary>StandardGravityToMeterPerSecondSquared parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
 		private static readonly T? ParsedStandardGravityToMeterPerSecondSquared = StorageLiteral.Parse<T>("9.80665");
+
+		/// <summary>Cubic kilometer per second squared to cubic meter per second squared: 1e9 m³/s² per km³/s² (exact by definition)</summary>
+		internal static T CubicKilometerPerSecondSquaredToCubicMeterPerSecondSquared => ParsedCubicKilometerPerSecondSquaredToCubicMeterPerSecondSquared ?? T.CreateChecked(ConversionConstants.CubicKilometerPerSecondSquaredToCubicMeterPerSecondSquared);
+
+		/// <summary>CubicKilometerPerSecondSquaredToCubicMeterPerSecondSquared parsed into <typeparamref name="T"/>, or <see langword="null"/> when the <see langword="double"/> is converted at each read.</summary>
+		private static readonly T? ParsedCubicKilometerPerSecondSquaredToCubicMeterPerSecondSquared = StorageLiteral.Parse<T>("1e9");
 
 		/// <summary>Dyne to newton conversion: 1e-5 N/dyn (exact by definition)</summary>
 		internal static T DyneToNewtons => ParsedDyneToNewtons ?? T.CreateChecked(ConversionConstants.DyneToNewtons);

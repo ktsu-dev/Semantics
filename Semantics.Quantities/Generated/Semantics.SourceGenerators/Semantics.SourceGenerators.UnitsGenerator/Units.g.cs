@@ -2053,6 +2053,105 @@ public sealed record MeterPerSecondSquared : IUnit, IAccelerationUnit
 }
 
 /// <summary>
+/// Cubic meter per second squared - SI derived unit of standard gravitational parameter.
+/// </summary>
+public sealed record CubicMeterPerSecondSquared : IUnit, IGravitationalParameterUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "CubicMeterPerSecondSquared";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "m³/s²";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.GravitationalParameter;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public CubicMeterPerSecondSquared() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
+}
+
+/// <summary>
+/// Cubic kilometer per second squared - 1e9 m³/s², the unit published values of mu are quoted in.
+/// </summary>
+public sealed record CubicKilometerPerSecondSquared : IUnit, IGravitationalParameterUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "CubicKilometerPerSecondSquared";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "km³/s²";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.GravitationalParameter;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => CubicKilometerPerSecondSquaredToCubicMeterPerSecondSquared;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public CubicKilometerPerSecondSquared() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => ConversionConstants.Values<T>.CubicKilometerPerSecondSquaredToCubicMeterPerSecondSquared;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
+}
+
+/// <summary>
+/// Joule per kilogram - SI derived unit of specific energy.
+/// </summary>
+public sealed record JoulePerKilogram : IUnit, ISpecificEnergyUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "JoulePerKilogram";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "J/kg";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.SpecificEnergy;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => 1d;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public JoulePerKilogram() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => T.One;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
+}
+
+/// <summary>
 /// Bar - Metric unit of pressure.
 /// </summary>
 public sealed record Bar : IUnit, IPressureUnit
@@ -5520,7 +5619,7 @@ public sealed record Micromolar : IUnit, IConcentrationUnit
 /// <summary>
 /// Square meter per second - SI derived unit of kinematic viscosity.
 /// </summary>
-public sealed record SquareMeterPerSecond : IUnit, IKinematicViscosityUnit
+public sealed record SquareMeterPerSecond : IUnit, IKinematicViscosityUnit, ISpecificAngularMomentumUnit
 {
 	/// <summary>Gets the full name of the unit.</summary>
 	public string Name => "SquareMeterPerSecond";
@@ -6318,11 +6417,17 @@ public static class Units
 	/// <summary>Singleton <c>CubicInch</c> instance.</summary>
 	public static readonly CubicInch CubicInch = new CubicInch();
 
+	/// <summary>Singleton <c>CubicKilometerPerSecondSquared</c> instance.</summary>
+	public static readonly CubicKilometerPerSecondSquared CubicKilometerPerSecondSquared = new CubicKilometerPerSecondSquared();
+
 	/// <summary>Singleton <c>CubicMeter</c> instance.</summary>
 	public static readonly CubicMeter CubicMeter = new CubicMeter();
 
 	/// <summary>Singleton <c>CubicMeterPerSecond</c> instance.</summary>
 	public static readonly CubicMeterPerSecond CubicMeterPerSecond = new CubicMeterPerSecond();
+
+	/// <summary>Singleton <c>CubicMeterPerSecondSquared</c> instance.</summary>
+	public static readonly CubicMeterPerSecondSquared CubicMeterPerSecondSquared = new CubicMeterPerSecondSquared();
 
 	/// <summary>Singleton <c>Curie</c> instance.</summary>
 	public static readonly Curie Curie = new Curie();
@@ -6428,6 +6533,9 @@ public static class Units
 
 	/// <summary>Singleton <c>JoulePerKelvin</c> instance.</summary>
 	public static readonly JoulePerKelvin JoulePerKelvin = new JoulePerKelvin();
+
+	/// <summary>Singleton <c>JoulePerKilogram</c> instance.</summary>
+	public static readonly JoulePerKilogram JoulePerKilogram = new JoulePerKilogram();
 
 	/// <summary>Singleton <c>JoulePerKilogramKelvin</c> instance.</summary>
 	public static readonly JoulePerKilogramKelvin JoulePerKilogramKelvin = new JoulePerKilogramKelvin();

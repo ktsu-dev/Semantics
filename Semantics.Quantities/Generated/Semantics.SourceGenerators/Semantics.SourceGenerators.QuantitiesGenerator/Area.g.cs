@@ -219,5 +219,11 @@ public readonly partial record struct Area<T> : IVector0<Area<T>, T>, IPhysicalQ
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static LuminousIntensity<T> operator *(Area<T> left, Luminance<T> right) => LuminousIntensity<T>.Create(left.Quantity * right.Quantity);
+
+	/// <summary>
+	/// Multiplies Area by AccelerationMagnitude to produce GravitationalParameter.
+	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(Area<T> left, AccelerationMagnitude<T> right) => GravitationalParameter<T>.Create(left.Quantity * right.Quantity);
 }
 
