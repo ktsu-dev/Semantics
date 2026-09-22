@@ -47,6 +47,19 @@ public readonly partial record struct Snap3D<T> : IVector3<Snap3D<T>, T>
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.SnapMagnitude<T> DistanceTo(Snap3D<T> other) => global::ktsu.Semantics.Quantities.SnapMagnitude<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="Snap3D{T}"/> from components in MeterPerSecondQuartic.</summary>
+	/// <param name="x">The X component, in MeterPerSecondQuartic.</param>
+	/// <param name="y">The Y component, in MeterPerSecondQuartic.</param>
+	/// <param name="z">The Z component, in MeterPerSecondQuartic.</param>
+	/// <returns>A new <see cref="Snap3D{T}"/> storing the SI-base equivalent.</returns>
+	public static Snap3D<T> FromMeterPerSecondQuartic(T x, T y, T z) => new() { X = x, Y = y, Z = z };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="Snap3D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y, T Z) In(global::ktsu.Semantics.Quantities.ISnapUnit unit) => (unit.FromBase(X), unit.FromBase(Y), unit.FromBase(Z));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

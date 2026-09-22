@@ -164,8 +164,10 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		else
 		{
 			// V2/3/4 overloads are rare — the strategy document shows them mainly for V3
-			// (Position3D, Translation3D) — and carry no units or relationships of their own.
-			EmitVectorOverloadType(context, type);
+			// (Position3D, Translation3D) — and carry no relationships of their own. They do get
+			// the per-unit surface (#237): Position3D is exactly the type whose callers were
+			// hand-writing the ×1000, and it reaches its units through the dimension it refines.
+			EmitVectorOverloadType(context, type, dim, emission);
 		}
 	}
 
@@ -595,7 +597,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			bool isBase = unitName == baseUnit;
 			string conversionExpr = isBase
 				? Emit.ValueParameter
-				: BuildToBaseExpression(unitName, unitMap);
+				: BuildToBaseExpression(unitName, unitMap, Emit.ValueParameter);
 
 			string body = applyV0Guard
 				? $"=> Create(Vector0Guards.{guardMethod}({conversionExpr}, nameof(value)));"
@@ -631,10 +633,10 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	}
 
 	/// <summary>
-	/// Builds the C# expression converting <c>value</c> in <paramref name="unitName"/> to the SI
-	/// base unit. Honours magnitude (<c>Kilo</c>, <c>Centi</c>, …), conversionFactor (lookup in
-	/// <see cref="ConversionConstants"/>), their product when a unit declares both, and offset
-	/// (additive, after scaling).
+	/// Builds the C# expression converting <paramref name="operand"/> in <paramref name="unitName"/>
+	/// to the SI base unit. Honours magnitude (<c>Kilo</c>, <c>Centi</c>, …), conversionFactor
+	/// (lookup in <see cref="ConversionConstants"/>), their product when a unit declares both, and
+	/// offset (additive, after scaling).
 	/// </summary>
 	/// <remarks>
 	/// Each factor is read from the <c>Values&lt;T&gt;</c> holder that <see cref="MagnitudesGenerator"/>
@@ -642,7 +644,17 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// type once. It used to be <c>T.CreateChecked</c> of the <see langword="double"/> constant, which
 	/// capped every storage type at the precision of <see langword="double"/>.
 	/// </remarks>
-	private static string BuildToBaseExpression(string unitName, IReadOnlyDictionary<string, UnitDefinition> unitMap)
+	/// <param name="unitName">The unit the operand is expressed in.</param>
+	/// <param name="unitMap">Every unit declared in <c>units.json</c>, keyed by name.</param>
+	/// <param name="operand">
+	/// The expression being converted. The scalar factories pass their <c>value</c> parameter; the
+	/// vector factories (#237) pass one component parameter at a time, which is the only reason
+	/// this is a parameter rather than the constant it used to be.
+	/// </param>
+	private static string BuildToBaseExpression(
+		string unitName,
+		IReadOnlyDictionary<string, UnitDefinition> unitMap,
+		string operand)
 	{
 		// If we don't have unit metadata, fall back to identity. The dimensions.json author is
 		// responsible for keeping availableUnits in sync with units.json; if a unit is missing,
@@ -650,10 +662,10 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		// (A future SEM00x diagnostic could surface this gap.)
 		if (!unitMap.TryGetValue(unitName, out UnitDefinition? unit) || unit == null)
 		{
-			return Emit.ValueParameter;
+			return operand;
 		}
 
-		string scaled = Emit.ValueParameter;
+		string scaled = operand;
 		bool hasMagnitude = !string.IsNullOrEmpty(unit.Magnitude) && unit.Magnitude != "1";
 		bool hasFactor = !string.IsNullOrEmpty(unit.ConversionFactor) && unit.ConversionFactor != "1";
 
@@ -661,25 +673,36 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		// IUnit.ToBaseFactorAs<T>() reports (UnitsGenerator.BuildStorageFactorExpression).
 		if (hasMagnitude && hasFactor)
 		{
-			scaled = $"(value * (MetricMagnitudes.Values<T>.{unit.Magnitude} * Units.ConversionConstants.Values<T>.{unit.ConversionFactor}))";
+			scaled = $"({operand} * (MetricMagnitudes.Values<T>.{unit.Magnitude} * Units.ConversionConstants.Values<T>.{unit.ConversionFactor}))";
 		}
 		else if (hasMagnitude)
 		{
-			scaled = $"(value * MetricMagnitudes.Values<T>.{unit.Magnitude})";
+			scaled = $"({operand} * MetricMagnitudes.Values<T>.{unit.Magnitude})";
 		}
 		else if (hasFactor)
 		{
-			scaled = $"(value * Units.ConversionConstants.Values<T>.{unit.ConversionFactor})";
+			scaled = $"({operand} * Units.ConversionConstants.Values<T>.{unit.ConversionFactor})";
 		}
 
-		bool hasOffset = !string.IsNullOrEmpty(unit.Offset) && unit.Offset != "0";
-		if (hasOffset)
+		if (HasOffset(unit))
 		{
 			scaled = $"({scaled} + Units.ConversionConstants.Values<T>.{unit.Offset})";
 		}
 
 		return scaled;
 	}
+
+	/// <summary>
+	/// Whether <paramref name="unit"/> converts to the SI base with a non-zero additive offset —
+	/// the temperature scales, and nothing else today.
+	/// </summary>
+	/// <remarks>
+	/// Scalar factories apply the offset; the vector factories refuse to be generated at all when
+	/// one is in reach (#237, decision 2), so both paths need the same question answered the same
+	/// way rather than each spelling out the null-and-<c>"0"</c> check.
+	/// </remarks>
+	private static bool HasOffset(UnitDefinition? unit) =>
+		unit != null && !string.IsNullOrEmpty(unit.Offset) && unit.Offset != "0";
 
 	/// <summary>
 	/// Adds the per-quantity surface required by <see cref="ktsu.Semantics.Quantities.IPhysicalQuantity{T}"/>
@@ -1142,6 +1165,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			WriteVectorStaticProperties(cb, fullType, components);
 
 			WriteVectorMagnitudeMembers(cb, fullType, v0TypeName);
+			WriteVectorUnitMembers(cb, context, typeName, fullType, components, dim, emission.Units);
 
 			WriteVectorMethods(cb, fullType, components, dims);
 			WriteVectorOperators(cb, fullType, components);
@@ -1347,7 +1371,11 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		context.AddSource(sourceFile.FileName, cb.ToString());
 	}
 
-	private static void EmitVectorOverloadType(SourceProductionContext context, QuantityType type)
+	private static void EmitVectorOverloadType(
+		SourceProductionContext context,
+		QuantityType type,
+		PhysicalDimension dim,
+		Emission emission)
 	{
 		int dims = type.Form;
 		string[] components = Components(dims);
@@ -1383,6 +1411,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			WriteVectorComponentProperties(cb, components);
 			WriteVectorStaticProperties(cb, fullType, components);
 			WriteVectorMagnitudeMembers(cb, fullType, type.MagnitudeType);
+			WriteVectorUnitMembers(cb, context, typeName, fullType, components, dim, emission.Units);
 			WriteVectorMethods(cb, fullType, components, dims);
 			WriteVectorOperators(cb, fullType, components);
 
@@ -1641,6 +1670,108 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		cb.WriteLine($"/// <summary>Gets the distance to another vector as a <see cref=\"{v0}{{T}}\"/>.</summary>");
 		cb.WriteLine("/// <param name=\"other\">The vector to measure the distance to.</param>");
 		cb.WriteLine($"public {v0}<T> DistanceTo({fullType} other) => {v0}<T>.Create(Distance(other));");
+		cb.NewLine();
+	}
+
+	/// <summary>
+	/// Writes the per-unit surface a vector form was missing: one <c>From{Unit}</c> factory per
+	/// entry in the dimension's <c>availableUnits</c>, and the <c>In(unit)</c> reader that answers
+	/// in the caller's unit again. Issue #237.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// The factories take one <typeparamref name="T"/> per component and convert each with the
+	/// same <c>Values&lt;T&gt;</c> holder the scalar factories read, so a <c>decimal</c> or
+	/// <c>PreciseNumber</c> vector converts at its own precision rather than through
+	/// <see langword="double"/>. Naming follows the same mechanical rule: the unit's singular
+	/// lemma from <c>units.json</c>, verbatim.
+	/// </para>
+	/// <para>
+	/// Deliberately no <c>Vector0Guards</c>. Vector components are signed by construction — a
+	/// <c>Position3D</c> with a negative X is ordinary — so the non-negativity rule that belongs
+	/// to the V0 form must not leak in here (#237, decision 1).
+	/// </para>
+	/// <para>
+	/// The reader returns a tuple of components rather than the vector type. It cannot return the
+	/// vector type: the result is no longer in base units, and a <c>Position3D</c> that is not in
+	/// base units would be a lie in the type system. The tuple's elements carry the component
+	/// names, so <c>var (x, y, z) = p.In(Units.Kilometer)</c> reads at the call site.
+	/// </para>
+	/// </remarks>
+	/// <param name="cb">The code blocker to write to.</param>
+	/// <param name="context">Where <c>SEM010</c> goes if the dimension is one this cannot serve.</param>
+	/// <param name="typeName">The vector type being written, for the diagnostic message.</param>
+	/// <param name="fullType">The vector type including its type argument.</param>
+	/// <param name="components">The component names, e.g. <c>X</c>, <c>Y</c>, <c>Z</c>.</param>
+	/// <param name="dim">The dimension the vector form belongs to.</param>
+	/// <param name="unitMap">Every unit declared in <c>units.json</c>, keyed by name.</param>
+	private static void WriteVectorUnitMembers(
+		CodeBlocker cb,
+		SourceProductionContext context,
+		string typeName,
+		string fullType,
+		string[] components,
+		PhysicalDimension dim,
+		IReadOnlyDictionary<string, UnitDefinition> unitMap)
+	{
+		List<string> availableUnits = dim.AvailableUnits;
+		if (availableUnits == null || availableUnits.Count == 0)
+		{
+			return;
+		}
+
+		// An offset conversion applied componentwise is meaningless — adding 273.15 to each
+		// component of a displacement is not a unit change, it is nonsense — and the In(unit)
+		// reader takes I{dim}Unit, so it would accept the offset unit at runtime even if only
+		// the factories were skipped. So the whole per-unit surface is refused for the dimension
+		// rather than emitting something quietly wrong for part of it (#237, decision 2).
+		//
+		// No dimension declaring a vector form has an offset unit today: this is the guard that
+		// keeps that true rather than a bug being worked around.
+		List<string> offsetUnits = [.. availableUnits.Where(u => unitMap.TryGetValue(u, out UnitDefinition? d) && HasOffset(d))];
+		if (offsetUnits.Count > 0)
+		{
+			context.ReportAt(
+				SemanticsDiagnostics.OffsetUnitOnVectorForm,
+				location: null,
+				typeName,
+				dim.Name,
+				string.Join(", ", offsetUnits));
+			return;
+		}
+
+		string baseUnit = availableUnits[0];
+		string[] parameters = [.. components.Select(c => c.ToLowerInvariant())];
+		string parameterList = string.Join(", ", parameters.Select(p => $"T {p}"));
+
+		foreach (string unitName in availableUnits)
+		{
+			bool isBase = unitName == baseUnit;
+			string initializers = string.Join(
+				", ",
+				components.Zip(parameters, (component, parameter) => (component, parameter))
+					.Select(pair => $"{pair.component} = {(isBase ? pair.parameter : BuildToBaseExpression(unitName, unitMap, pair.parameter))}"));
+
+			cb.WriteLine($"/// <summary>Creates a <see cref=\"{typeName}{{T}}\"/> from components in {unitName}.</summary>");
+			foreach (string parameter in parameters)
+			{
+				cb.WriteLine($"/// <param name=\"{parameter}\">The {parameter.ToUpperInvariant()} component, in {unitName}.</param>");
+			}
+
+			cb.WriteLine($"/// <returns>A new <see cref=\"{typeName}{{T}}\"/> storing the SI-base equivalent.</returns>");
+			cb.WriteLine($"public static {fullType} From{unitName}({parameterList}) => new() {{ {initializers} }};");
+			cb.NewLine();
+		}
+
+		string unitInterface = $"global::ktsu.Semantics.Quantities.I{dim.Name}Unit";
+		string tupleType = string.Join(", ", components.Select(c => $"T {c}"));
+		string tupleValue = string.Join(", ", components.Select(c => $"unit.FromBase({c})"));
+
+		cb.WriteLine("/// <summary>Converts this vector's SI-base components to <paramref name=\"unit\"/>.</summary>");
+		cb.WriteLine($"/// <remarks>Returns bare components rather than a <see cref=\"{typeName}{{T}}\"/>, because a vector that is not in base units cannot be one.</remarks>");
+		cb.WriteLine("/// <param name=\"unit\">The dimensionally-compatible target unit.</param>");
+		cb.WriteLine("/// <returns>The components expressed in <paramref name=\"unit\"/>.</returns>");
+		cb.WriteLine($"public ({tupleType}) In({unitInterface} unit) => ({tupleValue});");
 		cb.NewLine();
 	}
 

@@ -47,6 +47,33 @@ public readonly partial record struct Current3D<T> : IVector3<Current3D<T>, T>
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.CurrentMagnitude<T> DistanceTo(Current3D<T> other) => global::ktsu.Semantics.Quantities.CurrentMagnitude<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="Current3D{T}"/> from components in Ampere.</summary>
+	/// <param name="x">The X component, in Ampere.</param>
+	/// <param name="y">The Y component, in Ampere.</param>
+	/// <param name="z">The Z component, in Ampere.</param>
+	/// <returns>A new <see cref="Current3D{T}"/> storing the SI-base equivalent.</returns>
+	public static Current3D<T> FromAmpere(T x, T y, T z) => new() { X = x, Y = y, Z = z };
+
+	/// <summary>Creates a <see cref="Current3D{T}"/> from components in Milliampere.</summary>
+	/// <param name="x">The X component, in Milliampere.</param>
+	/// <param name="y">The Y component, in Milliampere.</param>
+	/// <param name="z">The Z component, in Milliampere.</param>
+	/// <returns>A new <see cref="Current3D{T}"/> storing the SI-base equivalent.</returns>
+	public static Current3D<T> FromMilliampere(T x, T y, T z) => new() { X = (x * MetricMagnitudes.Values<T>.Milli), Y = (y * MetricMagnitudes.Values<T>.Milli), Z = (z * MetricMagnitudes.Values<T>.Milli) };
+
+	/// <summary>Creates a <see cref="Current3D{T}"/> from components in Kiloampere.</summary>
+	/// <param name="x">The X component, in Kiloampere.</param>
+	/// <param name="y">The Y component, in Kiloampere.</param>
+	/// <param name="z">The Z component, in Kiloampere.</param>
+	/// <returns>A new <see cref="Current3D{T}"/> storing the SI-base equivalent.</returns>
+	public static Current3D<T> FromKiloampere(T x, T y, T z) => new() { X = (x * MetricMagnitudes.Values<T>.Kilo), Y = (y * MetricMagnitudes.Values<T>.Kilo), Z = (z * MetricMagnitudes.Values<T>.Kilo) };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="Current3D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y, T Z) In(global::ktsu.Semantics.Quantities.IElectricCurrentUnit unit) => (unit.FromBase(X), unit.FromBase(Y), unit.FromBase(Z));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

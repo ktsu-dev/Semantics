@@ -122,4 +122,26 @@ public static class SemanticsDiagnostics
 		9,
 		"conversions.json factor value is malformed",
 		"Conversion factor '{0}' has value '{1}', which is not a decimal literal such as \"0.3048\" or a fraction of two such as \"5/9\" with a non-zero denominator, that a double can hold without overflowing or rounding to zero. No constant is generated for it. Fix conversions.json.");
+
+	/// <summary>
+	/// SEM010: a dimension declaring a vector form has an offset unit in its
+	/// <c>availableUnits</c>, so that vector form gets no per-unit surface.
+	/// </summary>
+	/// <remarks>
+	/// An additive offset is meaningless applied componentwise — adding 273.15 to each component
+	/// of a displacement is not a unit change — so the <c>From{Unit}</c> factories and the
+	/// <c>In(unit)</c> reader are not emitted for that vector type, rather than being emitted
+	/// quietly wrong (#237, decision 2). The scalar forms keep their factories: the offset is
+	/// correct for a V0 or V1, and only the componentwise reading of it is not.
+	/// <para>
+	/// Defensive rather than observed. No dimension declaring a vector form has an offset unit
+	/// today, and this is what keeps that true instead of letting the combination appear silently.
+	/// A warning rather than an error, because the vector type itself still generates and every
+	/// other member on it is unaffected.
+	/// </para>
+	/// </remarks>
+	public static DiagnosticDescriptor OffsetUnitOnVectorForm { get; } = Catalog.Warning(
+		10,
+		"Vector form cannot express a unit with an additive offset",
+		"Vector type '{0}' belongs to dimension '{1}', whose availableUnits include offset unit(s) {2}. An offset conversion is meaningless applied componentwise, so no From{{Unit}} factories and no In(unit) reader are generated for '{0}'. Give the offset unit its own dimension, or drop the vector form.");
 }

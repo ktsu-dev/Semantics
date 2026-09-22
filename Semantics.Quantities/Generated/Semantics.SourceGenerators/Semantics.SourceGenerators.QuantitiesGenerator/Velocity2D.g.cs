@@ -41,6 +41,42 @@ public readonly partial record struct Velocity2D<T> : IVector2<Velocity2D<T>, T>
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.Speed<T> DistanceTo(Velocity2D<T> other) => global::ktsu.Semantics.Quantities.Speed<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="Velocity2D{T}"/> from components in MeterPerSecond.</summary>
+	/// <param name="x">The X component, in MeterPerSecond.</param>
+	/// <param name="y">The Y component, in MeterPerSecond.</param>
+	/// <returns>A new <see cref="Velocity2D{T}"/> storing the SI-base equivalent.</returns>
+	public static Velocity2D<T> FromMeterPerSecond(T x, T y) => new() { X = x, Y = y };
+
+	/// <summary>Creates a <see cref="Velocity2D{T}"/> from components in KilometerPerHour.</summary>
+	/// <param name="x">The X component, in KilometerPerHour.</param>
+	/// <param name="y">The Y component, in KilometerPerHour.</param>
+	/// <returns>A new <see cref="Velocity2D{T}"/> storing the SI-base equivalent.</returns>
+	public static Velocity2D<T> FromKilometerPerHour(T x, T y) => new() { X = (x * Units.ConversionConstants.Values<T>.KilometerPerHourToMeterPerSecond), Y = (y * Units.ConversionConstants.Values<T>.KilometerPerHourToMeterPerSecond) };
+
+	/// <summary>Creates a <see cref="Velocity2D{T}"/> from components in MilePerHour.</summary>
+	/// <param name="x">The X component, in MilePerHour.</param>
+	/// <param name="y">The Y component, in MilePerHour.</param>
+	/// <returns>A new <see cref="Velocity2D{T}"/> storing the SI-base equivalent.</returns>
+	public static Velocity2D<T> FromMilePerHour(T x, T y) => new() { X = (x * Units.ConversionConstants.Values<T>.MilePerHourToMeterPerSecond), Y = (y * Units.ConversionConstants.Values<T>.MilePerHourToMeterPerSecond) };
+
+	/// <summary>Creates a <see cref="Velocity2D{T}"/> from components in FootPerSecond.</summary>
+	/// <param name="x">The X component, in FootPerSecond.</param>
+	/// <param name="y">The Y component, in FootPerSecond.</param>
+	/// <returns>A new <see cref="Velocity2D{T}"/> storing the SI-base equivalent.</returns>
+	public static Velocity2D<T> FromFootPerSecond(T x, T y) => new() { X = (x * Units.ConversionConstants.Values<T>.FootPerSecondToMeterPerSecond), Y = (y * Units.ConversionConstants.Values<T>.FootPerSecondToMeterPerSecond) };
+
+	/// <summary>Creates a <see cref="Velocity2D{T}"/> from components in Knot.</summary>
+	/// <param name="x">The X component, in Knot.</param>
+	/// <param name="y">The Y component, in Knot.</param>
+	/// <returns>A new <see cref="Velocity2D{T}"/> storing the SI-base equivalent.</returns>
+	public static Velocity2D<T> FromKnot(T x, T y) => new() { X = (x * Units.ConversionConstants.Values<T>.KnotToMeterPerSecond), Y = (y * Units.ConversionConstants.Values<T>.KnotToMeterPerSecond) };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="Velocity2D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y) In(global::ktsu.Semantics.Quantities.IVelocityUnit unit) => (unit.FromBase(X), unit.FromBase(Y));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

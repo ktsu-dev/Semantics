@@ -53,6 +53,44 @@ public readonly partial record struct Force4D<T> : IVector4<Force4D<T>, T>
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.ForceMagnitude<T> DistanceTo(Force4D<T> other) => global::ktsu.Semantics.Quantities.ForceMagnitude<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="Force4D{T}"/> from components in Newton.</summary>
+	/// <param name="x">The X component, in Newton.</param>
+	/// <param name="y">The Y component, in Newton.</param>
+	/// <param name="z">The Z component, in Newton.</param>
+	/// <param name="w">The W component, in Newton.</param>
+	/// <returns>A new <see cref="Force4D{T}"/> storing the SI-base equivalent.</returns>
+	public static Force4D<T> FromNewton(T x, T y, T z, T w) => new() { X = x, Y = y, Z = z, W = w };
+
+	/// <summary>Creates a <see cref="Force4D{T}"/> from components in Kilonewton.</summary>
+	/// <param name="x">The X component, in Kilonewton.</param>
+	/// <param name="y">The Y component, in Kilonewton.</param>
+	/// <param name="z">The Z component, in Kilonewton.</param>
+	/// <param name="w">The W component, in Kilonewton.</param>
+	/// <returns>A new <see cref="Force4D{T}"/> storing the SI-base equivalent.</returns>
+	public static Force4D<T> FromKilonewton(T x, T y, T z, T w) => new() { X = (x * MetricMagnitudes.Values<T>.Kilo), Y = (y * MetricMagnitudes.Values<T>.Kilo), Z = (z * MetricMagnitudes.Values<T>.Kilo), W = (w * MetricMagnitudes.Values<T>.Kilo) };
+
+	/// <summary>Creates a <see cref="Force4D{T}"/> from components in Dyne.</summary>
+	/// <param name="x">The X component, in Dyne.</param>
+	/// <param name="y">The Y component, in Dyne.</param>
+	/// <param name="z">The Z component, in Dyne.</param>
+	/// <param name="w">The W component, in Dyne.</param>
+	/// <returns>A new <see cref="Force4D{T}"/> storing the SI-base equivalent.</returns>
+	public static Force4D<T> FromDyne(T x, T y, T z, T w) => new() { X = (x * Units.ConversionConstants.Values<T>.DyneToNewtons), Y = (y * Units.ConversionConstants.Values<T>.DyneToNewtons), Z = (z * Units.ConversionConstants.Values<T>.DyneToNewtons), W = (w * Units.ConversionConstants.Values<T>.DyneToNewtons) };
+
+	/// <summary>Creates a <see cref="Force4D{T}"/> from components in PoundForce.</summary>
+	/// <param name="x">The X component, in PoundForce.</param>
+	/// <param name="y">The Y component, in PoundForce.</param>
+	/// <param name="z">The Z component, in PoundForce.</param>
+	/// <param name="w">The W component, in PoundForce.</param>
+	/// <returns>A new <see cref="Force4D{T}"/> storing the SI-base equivalent.</returns>
+	public static Force4D<T> FromPoundForce(T x, T y, T z, T w) => new() { X = (x * Units.ConversionConstants.Values<T>.PoundForceToNewtons), Y = (y * Units.ConversionConstants.Values<T>.PoundForceToNewtons), Z = (z * Units.ConversionConstants.Values<T>.PoundForceToNewtons), W = (w * Units.ConversionConstants.Values<T>.PoundForceToNewtons) };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="Force4D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y, T Z, T W) In(global::ktsu.Semantics.Quantities.IForceUnit unit) => (unit.FromBase(X), unit.FromBase(Y), unit.FromBase(Z), unit.FromBase(W));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

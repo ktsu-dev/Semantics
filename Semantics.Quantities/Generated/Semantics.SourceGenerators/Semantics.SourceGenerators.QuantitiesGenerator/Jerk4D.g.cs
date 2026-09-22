@@ -53,6 +53,20 @@ public readonly partial record struct Jerk4D<T> : IVector4<Jerk4D<T>, T>
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.JerkMagnitude<T> DistanceTo(Jerk4D<T> other) => global::ktsu.Semantics.Quantities.JerkMagnitude<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="Jerk4D{T}"/> from components in MeterPerSecondCubed.</summary>
+	/// <param name="x">The X component, in MeterPerSecondCubed.</param>
+	/// <param name="y">The Y component, in MeterPerSecondCubed.</param>
+	/// <param name="z">The Z component, in MeterPerSecondCubed.</param>
+	/// <param name="w">The W component, in MeterPerSecondCubed.</param>
+	/// <returns>A new <see cref="Jerk4D{T}"/> storing the SI-base equivalent.</returns>
+	public static Jerk4D<T> FromMeterPerSecondCubed(T x, T y, T z, T w) => new() { X = x, Y = y, Z = z, W = w };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="Jerk4D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y, T Z, T W) In(global::ktsu.Semantics.Quantities.IJerkUnit unit) => (unit.FromBase(X), unit.FromBase(Y), unit.FromBase(Z), unit.FromBase(W));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

@@ -235,6 +235,7 @@ them. See the type's own documentation for what each one guarantees.
   | SEM007 | A metadata file that could not be parsed. |
   | SEM008 | A relationship whose declared result does not follow from the dimensions of its operands, or whose signed value cannot land in a magnitude result. No operator is generated for it. |
   | SEM009 | A `conversions.json` factor whose `value` is neither a decimal literal nor a fraction of two with a non-zero denominator, or that a `double` cannot hold. An error, and no constant is generated for it. |
+  | SEM010 | A dimension declaring both a vector form and an offset unit. Its vector types get no `From{Unit}` factories and no `In(unit)` reader, because an additive offset applied componentwise is not a unit change. The scalar forms keep theirs, where the offset is correct. |
 
   Adding one means adding it to `SemanticsDiagnostics` and to `AnalyzerReleases.Unshipped.md`; `AnalyzerReleaseTrackingTests` fails if the second step is forgotten. `GeneratorDiagnosticTests` proves each one still fires on the input it is meant to catch.
 - `availableUnits` order matters: the first entry is treated as the SI base unit by `UnitsGenerator`.

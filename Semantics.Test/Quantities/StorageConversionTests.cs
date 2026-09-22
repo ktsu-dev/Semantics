@@ -2,6 +2,7 @@
 
 namespace ktsu.Semantics.Test.Quantities;
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -168,6 +169,72 @@ public abstract class StorageConversionTests<T>(string tolerance, bool decimalEx
 		Displacement2D<T> diagonal = new() { X = T.One, Y = T.One };
 
 		AssertValue("1.41421356237309504880168872420969807856967187537694807317667973799", diagonal.Length(), terminates: false);
+	}
+
+	/// <summary>
+	/// A vector factory converts every component, so the ×1000 a kilometre-native caller used to
+	/// write by hand now lives in the type. Issue #237.
+	/// </summary>
+	[TestMethod]
+	public void AVectorFactoryConvertsEveryComponent()
+	{
+		Position3D<T> orbit = Position3D<T>.FromKilometer(Of("6778"), Of("-1.5"), T.Zero);
+
+		AssertValue("6778000", orbit.X, terminates: true);
+		AssertValue("-1500", orbit.Y, terminates: true);
+		AssertValue("0", orbit.Z, terminates: true);
+	}
+
+	/// <summary>
+	/// The vector factories read the same <c>Values&lt;T&gt;</c> holder as the scalar ones, so a
+	/// non-terminating factor lands at the storage type's own precision rather than arriving
+	/// through <see cref="double"/>. The knot is the sharpest case the catalogue has.
+	/// </summary>
+	[TestMethod]
+	public void AVectorFactoryAgreesWithTheScalarFactoryForTheSameUnit()
+	{
+		Velocity3D<T> velocity = Velocity3D<T>.FromKnot(T.One, T.One, T.One);
+		Speed<T> speed = Speed<T>.FromKnot(T.One);
+
+		AssertValue("0.51444444444444444444444444444444444444", velocity.X, terminates: false);
+		Assert.AreEqual(speed.Value, velocity.X);
+		Assert.AreEqual(speed.Value, velocity.Y);
+		Assert.AreEqual(speed.Value, velocity.Z);
+	}
+
+	/// <summary>
+	/// The reader answers in the caller's unit again, as bare components rather than the vector
+	/// type — which it could not be, the result no longer being in base units.
+	/// </summary>
+	[TestMethod]
+	public void TheVectorReaderRoundTripsThroughItsUnit()
+	{
+		(T x, T y, T z) = Position3D<T>.FromKilometer(Of("36"), Of("-4"), T.Zero).In(Units.Kilometer);
+
+		AssertValue("36", x, terminates: true);
+		AssertValue("-4", y, terminates: true);
+		AssertValue("0", z, terminates: true);
+	}
+
+	/// <summary>
+	/// Vector components are signed by construction, so the factories carry no
+	/// <c>Vector0Guards</c>: a position with a negative X is ordinary, and the V0 non-negativity
+	/// rule must not leak into the vector forms (#237, decision 1).
+	/// </summary>
+	/// <remarks>
+	/// The paired scalar call is what makes this an assertion rather than a coincidence. The same
+	/// unit and the same negative magnitude does throw on the V0, so a guard added to the vector
+	/// factories would be caught here rather than quietly narrowing what they accept.
+	/// </remarks>
+	[TestMethod]
+	public void AVectorFactoryAcceptsNegativeComponentsWhereTheMagnitudeFormRefusesThem()
+	{
+		Position3D<T> behind = Position3D<T>.FromKilometer(Of("-1"), Of("-2"), Of("-3"));
+
+		AssertValue("-1000", behind.X, terminates: true);
+		AssertValue("-3000", behind.Z, terminates: true);
+
+		Assert.ThrowsExactly<ArgumentException>(() => Length<T>.FromKilometer(Of("-1")));
 	}
 
 	/// <summary>

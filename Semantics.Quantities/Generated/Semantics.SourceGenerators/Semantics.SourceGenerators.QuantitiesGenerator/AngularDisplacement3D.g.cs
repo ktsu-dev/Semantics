@@ -47,6 +47,47 @@ public readonly partial record struct AngularDisplacement3D<T> : IVector3<Angula
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.Angle<T> DistanceTo(AngularDisplacement3D<T> other) => global::ktsu.Semantics.Quantities.Angle<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="AngularDisplacement3D{T}"/> from components in Radian.</summary>
+	/// <param name="x">The X component, in Radian.</param>
+	/// <param name="y">The Y component, in Radian.</param>
+	/// <param name="z">The Z component, in Radian.</param>
+	/// <returns>A new <see cref="AngularDisplacement3D{T}"/> storing the SI-base equivalent.</returns>
+	public static AngularDisplacement3D<T> FromRadian(T x, T y, T z) => new() { X = x, Y = y, Z = z };
+
+	/// <summary>Creates a <see cref="AngularDisplacement3D{T}"/> from components in Degree.</summary>
+	/// <param name="x">The X component, in Degree.</param>
+	/// <param name="y">The Y component, in Degree.</param>
+	/// <param name="z">The Z component, in Degree.</param>
+	/// <returns>A new <see cref="AngularDisplacement3D{T}"/> storing the SI-base equivalent.</returns>
+	public static AngularDisplacement3D<T> FromDegree(T x, T y, T z) => new() { X = (x * Units.ConversionConstants.Values<T>.DegreeToRadians), Y = (y * Units.ConversionConstants.Values<T>.DegreeToRadians), Z = (z * Units.ConversionConstants.Values<T>.DegreeToRadians) };
+
+	/// <summary>Creates a <see cref="AngularDisplacement3D{T}"/> from components in Gradian.</summary>
+	/// <param name="x">The X component, in Gradian.</param>
+	/// <param name="y">The Y component, in Gradian.</param>
+	/// <param name="z">The Z component, in Gradian.</param>
+	/// <returns>A new <see cref="AngularDisplacement3D{T}"/> storing the SI-base equivalent.</returns>
+	public static AngularDisplacement3D<T> FromGradian(T x, T y, T z) => new() { X = (x * Units.ConversionConstants.Values<T>.GradianToRadians), Y = (y * Units.ConversionConstants.Values<T>.GradianToRadians), Z = (z * Units.ConversionConstants.Values<T>.GradianToRadians) };
+
+	/// <summary>Creates a <see cref="AngularDisplacement3D{T}"/> from components in Revolution.</summary>
+	/// <param name="x">The X component, in Revolution.</param>
+	/// <param name="y">The Y component, in Revolution.</param>
+	/// <param name="z">The Z component, in Revolution.</param>
+	/// <returns>A new <see cref="AngularDisplacement3D{T}"/> storing the SI-base equivalent.</returns>
+	public static AngularDisplacement3D<T> FromRevolution(T x, T y, T z) => new() { X = (x * Units.ConversionConstants.Values<T>.RevolutionToRadians), Y = (y * Units.ConversionConstants.Values<T>.RevolutionToRadians), Z = (z * Units.ConversionConstants.Values<T>.RevolutionToRadians) };
+
+	/// <summary>Creates a <see cref="AngularDisplacement3D{T}"/> from components in Milliradian.</summary>
+	/// <param name="x">The X component, in Milliradian.</param>
+	/// <param name="y">The Y component, in Milliradian.</param>
+	/// <param name="z">The Z component, in Milliradian.</param>
+	/// <returns>A new <see cref="AngularDisplacement3D{T}"/> storing the SI-base equivalent.</returns>
+	public static AngularDisplacement3D<T> FromMilliradian(T x, T y, T z) => new() { X = (x * MetricMagnitudes.Values<T>.Milli), Y = (y * MetricMagnitudes.Values<T>.Milli), Z = (z * MetricMagnitudes.Values<T>.Milli) };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="AngularDisplacement3D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y, T Z) In(global::ktsu.Semantics.Quantities.IAngularDisplacementUnit unit) => (unit.FromBase(X), unit.FromBase(Y), unit.FromBase(Z));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

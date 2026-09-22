@@ -85,6 +85,21 @@ it is not unique, so there would be nothing to return. `Magnitude()` and `Distan
 that came out of a square root is non-negative by construction, and it keeps the guard off a call
 that belongs in a hot loop.
 
+Every vector form also gets the per-unit surface the scalars have: one `From{Unit}(T x, T y, T z)`
+factory per entry in the dimension's `availableUnits`, named by the unit's singular lemma exactly as
+the scalar factories are, and an `In(unit)` reader. A vector form reaches its units through the
+dimension, so an overload gets them too — `Position3D<T>.FromKilometer(6778, 0, 0)` is the call that
+used to be a hand-written ×1000 at every construction site. The factories convert each component
+through the same `Values<T>` holder the scalar ones read, so a `decimal` or `PreciseNumber` vector
+converts at its own precision rather than through `double`.
+
+Two things the vector surface does differently, both deliberate. It carries **no `Vector0Guards`**:
+components are signed by construction, a position with a negative X is ordinary, and the V0
+non-negativity rule must not leak into the vectors. And `In(unit)` returns a **tuple of components**,
+`(T X, T Y, T Z)`, not the vector type — it cannot return the vector type, because the result is no
+longer in base units and a `Position3D` that is not in base units would be a lie in the type system.
+A dimension with an offset unit gets no vector unit surface at all; see SEM010.
+
 All generated types are generic over a numeric storage type: `where T : struct, INumber<T>`.
 
 ### Resolved design decisions
@@ -483,6 +498,7 @@ var converted = sourceString.As<SourceType, TargetType>();
   - **SEM007** — a metadata file could not be parsed. Replaces the base generator's `CONV001` in category `SourceGenerator`, and covers the path that used to swallow the exception, where a malformed `units.json` silently produced factories with no scale factor.
   - **SEM008** — a relationship's declared result does not follow from the dimensions of its operands, or its value is signed and the declared result is a magnitude. The check comes from `Semantics.Vocabulary`, shared with the C++ projection; before that this side checked the names (SEM001) and the forms (SEM003) and then emitted the operator, so `Sensitivity * Pressure -> ElectricPotential` shipped as a working C# operator computing the wrong physics — which is what found that bug, and it is now fixed. **No operator is generated** for a refused relationship, in any of the directions C# spells a product in — that followed from making the vocabulary drive emission rather than only check it, and the removal is documented in `docs/migration-guide-5.0.md`. Suppressed in `Semantics.Quantities.csproj` because ktsu.Sdk builds warnings as errors and the four below are outstanding; `UnkeepableRelationshipTests` pins the set, and asserts that none of them is in the compiled surface, so a fifth fails there rather than disappearing into the suppression.
   - **SEM009**: a factor's `value` in `conversions.json` is neither a decimal literal nor a fraction of two with a non-zero denominator, or a `double` cannot hold it (a literal, operand, or quotient beyond its range, or a non-zero value that rounds to zero). An error, and no constant is generated for it, because every unit using the factor would otherwise fail to compile far from the metadata line that caused it, or convert with a wrong factor.
+  - **SEM010**: a dimension declares both a vector form and a unit converting with an additive offset. Adding 273.15 to each component of a displacement is not a unit change, so the whole per-unit surface — every `From{Unit}` factory and the `In(unit)` reader — is withheld from that dimension's vector types rather than emitted quietly wrong. Withheld as a whole rather than per-unit, because `In` takes the dimension's `I{Dimension}Unit` and would accept the offset unit at runtime even if only its factory were skipped. The scalar forms are unaffected: the offset is correct for a V0 or V1. Defensive — no dimension declaring a vector form has an offset unit today, and `TheRealMetadataReportsNothingUnexpected` is what keeps that true.
   - Descriptors are allocated from `SemanticsDiagnostics`, which is the one place to add a new one. `AnalyzerReleaseTrackingTests` fails if the identifier is missing from `AnalyzerReleases.Unshipped.md`, so RS2008 no longer surfaces only after a push.
 - See `docs/physics-generator.md` for the full schema and an end-to-end "add a dimension" walk-through.
 

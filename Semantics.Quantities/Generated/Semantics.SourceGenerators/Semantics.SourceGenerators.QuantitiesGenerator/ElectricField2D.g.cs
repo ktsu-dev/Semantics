@@ -41,6 +41,18 @@ public readonly partial record struct ElectricField2D<T> : IVector2<ElectricFiel
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.ElectricFieldMagnitude<T> DistanceTo(ElectricField2D<T> other) => global::ktsu.Semantics.Quantities.ElectricFieldMagnitude<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="ElectricField2D{T}"/> from components in VoltPerMeter.</summary>
+	/// <param name="x">The X component, in VoltPerMeter.</param>
+	/// <param name="y">The Y component, in VoltPerMeter.</param>
+	/// <returns>A new <see cref="ElectricField2D{T}"/> storing the SI-base equivalent.</returns>
+	public static ElectricField2D<T> FromVoltPerMeter(T x, T y) => new() { X = x, Y = y };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="ElectricField2D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y) In(global::ktsu.Semantics.Quantities.IElectricFieldUnit unit) => (unit.FromBase(X), unit.FromBase(Y));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{
