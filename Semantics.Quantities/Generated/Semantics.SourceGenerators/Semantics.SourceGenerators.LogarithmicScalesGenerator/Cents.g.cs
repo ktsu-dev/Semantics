@@ -16,6 +16,14 @@ using System.Numerics;
 /// An octave is 1200 cents: cents = 1200·log2(frequencyRatio).
 /// Logarithmic scales don't obey linear arithmetic, so this type is generated as a
 /// standalone companion (from logarithmic.json) rather than a physical dimension.
+/// <para>
+/// <b>Precision:</b> the conversions to and from the linear counterparts compute in
+/// <see langword="double"/> whatever <typeparamref name="T"/> is, so a value carried in a
+/// storage type wider than <see langword="double"/> — <see langword="decimal"/>, or
+/// <c>PreciseNumber</c> — is accurate to about fifteen significant digits once it has been
+/// through one. Arithmetic, comparison and the raw factory keep every digit
+/// <typeparamref name="T"/> holds; only the logarithm and its inverse do not.
+/// </para>
 /// </remarks>
 /// <typeparam name="T">The floating-point storage type.</typeparam>
 /// <param name="Value">The scale value.</param>
@@ -34,6 +42,13 @@ public readonly partial record struct Cents<T>(T Value) : IComparable<Cents<T>>
 	/// </summary>
 	/// <param name="linear">The linear <see cref="Ratio{T}"/>.</param>
 	/// <returns>A new <see cref="Cents{T}"/>. A linear value of zero maps to negative infinity.</returns>
+	/// <remarks>
+	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
+	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
+	/// result is converted back. A storage type wider than <see langword="double"/> —
+	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
+	/// significant digits across this conversion, rather than the precision it is capable of.
+	/// </remarks>
 	public static Cents<T> FromFrequencyRatio(Ratio<T> linear)
 	{
 		double linearValue = double.CreateChecked(linear.Value);
@@ -44,6 +59,13 @@ public readonly partial record struct Cents<T>(T Value) : IComparable<Cents<T>>
 	/// Converts this interval to a frequency ratio using ratio = 2^(cents/1200).
 	/// </summary>
 	/// <returns>The linear <see cref="Ratio{T}"/>.</returns>
+	/// <remarks>
+	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
+	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
+	/// result is converted back. A storage type wider than <see langword="double"/> —
+	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
+	/// significant digits across this conversion, rather than the precision it is capable of.
+	/// </remarks>
 	public Ratio<T> ToFrequencyRatio()
 	{
 		double scaleValue = double.CreateChecked(Value);

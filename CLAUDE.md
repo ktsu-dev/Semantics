@@ -321,7 +321,13 @@ arithmetic, so a `decimal` length has 28 significant digits. A value a `double` 
 `BigInteger` of 2^2048, is scaled by powers of four into [1, 4) for the seed, and the root is scaled
 back by the matching power of two. A root that does not settle throws `ArithmeticException` rather
 than returning an estimate. The logarithmic scales and the hand-written audio types still compute
-through `double`.
+through `double`, and as of #235 every generated conversion says so in its own XML `<remarks>`
+rather than only here — the method tooltip is where a `decimal` or `PreciseNumber` consumer spends
+the precision, so that is where the cost is stated. `SourceGeneratorTests` counts the remarks
+against the conversions that actually drop to `double`, so a conversion added later cannot ship
+undocumented. If the scales ever compute in `T`'s own arithmetic (option 3 on #235, which wants
+`Exp`/`Log` on `PreciseNumber` first — ktsu-dev/PreciseNumber#81), the remarks become false and
+should be removed with the `double` path rather than left to rot.
 
 `StorageMath` is public API, not just the generator's helper (#239): an application doing its own
 vector math over quantities would otherwise reimplement the root, and worse. `Cbrt`, `RootN` and

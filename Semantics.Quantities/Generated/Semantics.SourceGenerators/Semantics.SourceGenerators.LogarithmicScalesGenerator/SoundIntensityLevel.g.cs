@@ -16,6 +16,14 @@ using System.Numerics;
 /// SIL is a logarithmic power quantity: SIL = 10·log10(I / I₀) with I₀ = 10⁻¹² W/m².
 /// Logarithmic scales don't obey linear arithmetic, so this type is generated as a
 /// standalone companion (from logarithmic.json) rather than a physical dimension.
+/// <para>
+/// <b>Precision:</b> the conversions to and from the linear counterparts compute in
+/// <see langword="double"/> whatever <typeparamref name="T"/> is, so a value carried in a
+/// storage type wider than <see langword="double"/> — <see langword="decimal"/>, or
+/// <c>PreciseNumber</c> — is accurate to about fifteen significant digits once it has been
+/// through one. Arithmetic, comparison and the raw factory keep every digit
+/// <typeparamref name="T"/> holds; only the logarithm and its inverse do not.
+/// </para>
 /// </remarks>
 /// <typeparam name="T">The floating-point storage type.</typeparam>
 /// <param name="Value">The scale value.</param>
@@ -34,6 +42,13 @@ public readonly partial record struct SoundIntensityLevel<T>(T Value) : ICompara
 	/// </summary>
 	/// <param name="linear">The linear <see cref="SoundIntensity{T}"/>.</param>
 	/// <returns>A new <see cref="SoundIntensityLevel{T}"/>. A linear value of zero maps to negative infinity.</returns>
+	/// <remarks>
+	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
+	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
+	/// result is converted back. A storage type wider than <see langword="double"/> —
+	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
+	/// significant digits across this conversion, rather than the precision it is capable of.
+	/// </remarks>
 	public static SoundIntensityLevel<T> FromSoundIntensity(SoundIntensity<T> linear)
 	{
 		double linearValue = double.CreateChecked(linear.Value);
@@ -45,6 +60,13 @@ public readonly partial record struct SoundIntensityLevel<T>(T Value) : ICompara
 	/// Converts this level to the equivalent linear sound intensity using I = I₀·10^(SIL/10).
 	/// </summary>
 	/// <returns>The linear <see cref="SoundIntensity{T}"/>.</returns>
+	/// <remarks>
+	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
+	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
+	/// result is converted back. A storage type wider than <see langword="double"/> —
+	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
+	/// significant digits across this conversion, rather than the precision it is capable of.
+	/// </remarks>
 	public SoundIntensity<T> ToSoundIntensity()
 	{
 		double scaleValue = double.CreateChecked(Value);
