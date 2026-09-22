@@ -2,8 +2,12 @@
 
 Changes since v5.4.0:
 
+- Regenerate SpecificAngularMomentum3D after merging main [patch] ([@Claude](https://github.com/Claude))
+- Merge remote-tracking branch 'origin/main' into claude/semantics-240-orbital-dimensions ([@Claude](https://github.com/Claude))
 - State the double-precision cost of a logarithmic conversion in its own docs [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
+- Use Assert.IsLessThan for the negative-energy assertion [patch] ([@Claude](https://github.com/Claude))
 - Answer vector magnitude and distance with the dimension, not a bare T [minor] ([@Claude](https://github.com/Claude))
+- Add GravitationalParameter, SpecificEnergy and SpecificAngularMomentum [minor] ([@Claude](https://github.com/Claude))
 - Ship the storage-type alias props in build/, not buildTransitive/ [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
 - Merge main into the strings and paths benchmark work ([@matt-edmondson](https://github.com/matt-edmondson))
 - Fix whole-branch review findings in benchmark docs [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
