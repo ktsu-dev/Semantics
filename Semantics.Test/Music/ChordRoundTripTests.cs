@@ -29,6 +29,24 @@ public class ChordRoundTripTests
 	}
 
 	[TestMethod]
+	public void DiminishedMajorSeventhRoundTrips()
+	{
+		// The corpus above cannot cover this one. It starts from a symbol, and "Cdimmaj7" parsed
+		// wrongly as a diminished seventh still formats and re-parses consistently as "Cdim7" —
+		// a stable round trip of the wrong chord. The chord object is the only honest starting
+		// point, since it is what the formatter is being asked to be the inverse of.
+		Chord chord = new() { Quality = ChordQuality.Diminished, Seventh = SeventhType.Major };
+
+		Assert.AreEqual("Cdimmaj7", chord.ToString());
+
+		Chord reparsed = Chord.Parse(chord.ToString());
+
+		Assert.AreEqual(SeventhType.Major, reparsed.Seventh);
+		Assert.AreEqual(ChordQuality.Diminished, reparsed.Quality);
+		Assert.AreEqual(chord, reparsed);
+	}
+
+	[TestMethod]
 	public void TryParseReturnsFalseOnEmpty()
 	{
 		Assert.IsFalse(Chord.TryParse("", out Chord? result));

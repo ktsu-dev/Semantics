@@ -312,14 +312,19 @@ public sealed record Chord
 		bool hasSeven = body.Contains('7');
 		bool hasMaj7 = body.Contains("maj", StringComparison.Ordinal) || body.Contains("M7", StringComparison.Ordinal) || body.Contains('Δ');
 
-		if (quality == ChordQuality.Diminished && body.Contains("dim", StringComparison.Ordinal) && hasSeven)
-		{
-			return SeventhType.Diminished;
-		}
-
+		// The major seventh is tested first because one body can carry both spellings: "dimmaj7"
+		// is the diminished-major seventh, a chord distinct from "dim7", and it is what the
+		// formatter emits for Diminished + Major. Testing the diminished branch first swallowed
+		// it, since "dimmaj7" contains "dim" and a '7' exactly as "dim7" does. "dim7" itself is
+		// unaffected: it carries no "maj".
 		if (hasMaj7)
 		{
 			return SeventhType.Major;
+		}
+
+		if (quality == ChordQuality.Diminished && body.Contains("dim", StringComparison.Ordinal) && hasSeven)
+		{
+			return SeventhType.Diminished;
 		}
 
 		return hasSeven ? SeventhType.Dominant : SeventhType.None;
