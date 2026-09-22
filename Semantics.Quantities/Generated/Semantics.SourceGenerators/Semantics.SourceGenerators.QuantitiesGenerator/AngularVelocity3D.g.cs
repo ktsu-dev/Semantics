@@ -47,6 +47,26 @@ public readonly partial record struct AngularVelocity3D<T> : IVector3<AngularVel
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.AngularSpeed<T> DistanceTo(AngularVelocity3D<T> other) => global::ktsu.Semantics.Quantities.AngularSpeed<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="AngularVelocity3D{T}"/> from components in RadianPerSecond.</summary>
+	/// <param name="x">The X component, in RadianPerSecond.</param>
+	/// <param name="y">The Y component, in RadianPerSecond.</param>
+	/// <param name="z">The Z component, in RadianPerSecond.</param>
+	/// <returns>A new <see cref="AngularVelocity3D{T}"/> storing the SI-base equivalent.</returns>
+	public static AngularVelocity3D<T> FromRadianPerSecond(T x, T y, T z) => new() { X = x, Y = y, Z = z };
+
+	/// <summary>Creates a <see cref="AngularVelocity3D{T}"/> from components in RevolutionPerMinute.</summary>
+	/// <param name="x">The X component, in RevolutionPerMinute.</param>
+	/// <param name="y">The Y component, in RevolutionPerMinute.</param>
+	/// <param name="z">The Z component, in RevolutionPerMinute.</param>
+	/// <returns>A new <see cref="AngularVelocity3D{T}"/> storing the SI-base equivalent.</returns>
+	public static AngularVelocity3D<T> FromRevolutionPerMinute(T x, T y, T z) => new() { X = (x * Units.ConversionConstants.Values<T>.RevolutionPerMinuteToRadianPerSecond), Y = (y * Units.ConversionConstants.Values<T>.RevolutionPerMinuteToRadianPerSecond), Z = (z * Units.ConversionConstants.Values<T>.RevolutionPerMinuteToRadianPerSecond) };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="AngularVelocity3D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y, T Z) In(global::ktsu.Semantics.Quantities.IAngularVelocityUnit unit) => (unit.FromBase(X), unit.FromBase(Y), unit.FromBase(Z));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

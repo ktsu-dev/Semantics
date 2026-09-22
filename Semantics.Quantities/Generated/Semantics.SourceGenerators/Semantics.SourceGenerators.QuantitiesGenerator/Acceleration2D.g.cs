@@ -41,6 +41,24 @@ public readonly partial record struct Acceleration2D<T> : IVector2<Acceleration2
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.AccelerationMagnitude<T> DistanceTo(Acceleration2D<T> other) => global::ktsu.Semantics.Quantities.AccelerationMagnitude<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="Acceleration2D{T}"/> from components in MeterPerSecondSquared.</summary>
+	/// <param name="x">The X component, in MeterPerSecondSquared.</param>
+	/// <param name="y">The Y component, in MeterPerSecondSquared.</param>
+	/// <returns>A new <see cref="Acceleration2D{T}"/> storing the SI-base equivalent.</returns>
+	public static Acceleration2D<T> FromMeterPerSecondSquared(T x, T y) => new() { X = x, Y = y };
+
+	/// <summary>Creates a <see cref="Acceleration2D{T}"/> from components in StandardGravity.</summary>
+	/// <param name="x">The X component, in StandardGravity.</param>
+	/// <param name="y">The Y component, in StandardGravity.</param>
+	/// <returns>A new <see cref="Acceleration2D{T}"/> storing the SI-base equivalent.</returns>
+	public static Acceleration2D<T> FromStandardGravity(T x, T y) => new() { X = (x * Units.ConversionConstants.Values<T>.StandardGravityToMeterPerSecondSquared), Y = (y * Units.ConversionConstants.Values<T>.StandardGravityToMeterPerSecondSquared) };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="Acceleration2D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y) In(global::ktsu.Semantics.Quantities.IAccelerationUnit unit) => (unit.FromBase(X), unit.FromBase(Y));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

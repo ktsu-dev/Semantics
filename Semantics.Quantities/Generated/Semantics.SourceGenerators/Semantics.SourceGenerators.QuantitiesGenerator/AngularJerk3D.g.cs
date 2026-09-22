@@ -47,6 +47,19 @@ public readonly partial record struct AngularJerk3D<T> : IVector3<AngularJerk3D<
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.AngularJerkMagnitude<T> DistanceTo(AngularJerk3D<T> other) => global::ktsu.Semantics.Quantities.AngularJerkMagnitude<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="AngularJerk3D{T}"/> from components in RadianPerSecondCubed.</summary>
+	/// <param name="x">The X component, in RadianPerSecondCubed.</param>
+	/// <param name="y">The Y component, in RadianPerSecondCubed.</param>
+	/// <param name="z">The Z component, in RadianPerSecondCubed.</param>
+	/// <returns>A new <see cref="AngularJerk3D{T}"/> storing the SI-base equivalent.</returns>
+	public static AngularJerk3D<T> FromRadianPerSecondCubed(T x, T y, T z) => new() { X = x, Y = y, Z = z };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="AngularJerk3D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y, T Z) In(global::ktsu.Semantics.Quantities.IAngularJerkUnit unit) => (unit.FromBase(X), unit.FromBase(Y), unit.FromBase(Z));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

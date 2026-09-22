@@ -594,6 +594,122 @@ public class GeneratorDiagnosticTests
 	}
 
 	/// <summary>
+	/// A units document whose second unit converts with an additive offset, so a dimension can be
+	/// given the combination — a vector form and an offset unit — that no real dimension has.
+	/// </summary>
+	/// <remarks>
+	/// <c>DimensionsDocument</c> declares <c>vector3: Displacement3D</c>, so naming <c>Stepped</c>
+	/// in its <c>availableUnits</c> is the whole of the setup.
+	/// </remarks>
+	private const string OffsetUnitsDocument =
+		"""
+		{
+		  "unitCategories": [
+		    {
+		      "name": "Test",
+		      "description": "A category.",
+		      "units": [
+		        { "name": "Meter", "symbol": "m", "description": "Meter.", "system": "SIBase" },
+		        { "name": "Stepped", "symbol": "st", "description": "A scale with a zero somewhere else.", "system": "Other", "offset": "CelsiusToKelvinOffset" }
+		      ]
+		    }
+		  ]
+		}
+		""";
+
+	/// <summary>
+	/// Runs the quantities generator over a dimension declaring a vector form, with the units it
+	/// should be able to reach.
+	/// </summary>
+	/// <param name="availableUnits">The units the dimension declares, as JSON list items.</param>
+	/// <param name="unitsDocument">The units.json to resolve them against.</param>
+	/// <returns>What the generator reported, and everything it wrote.</returns>
+	private static (IReadOnlyList<Diagnostic> Diagnostics, string Source) RunOverVectorDimension(
+		string availableUnits,
+		string unitsDocument)
+	{
+		Dictionary<string, string> metadata = new()
+		{
+			["dimensions.json"] = DimensionsDocument(availableUnits: availableUnits),
+			["units.json"] = unitsDocument,
+		};
+
+		GeneratorRunResult result = Harness.Run(new QuantitiesGenerator(), metadata);
+
+		return (
+			[.. result.Diagnostics],
+			string.Join("\n", result.GeneratedSources.Select(static source => source.SourceText.ToString())));
+	}
+
+	/// <summary>
+	/// A dimension that declares a vector form and an offset unit gets SEM010, and its vector type
+	/// gets no per-unit surface at all rather than a componentwise offset that means nothing (#237).
+	/// </summary>
+	[TestMethod]
+	public void Sem010_IsReportedForAVectorFormWhoseDimensionDeclaresAnOffsetUnit()
+	{
+		(IReadOnlyList<Diagnostic> diagnostics, string source) =
+			RunOverVectorDimension("\"Meter\", \"Stepped\"", OffsetUnitsDocument);
+
+		AssertReports(diagnostics, "SEM010");
+
+		// The refusal is the whole surface, not just the offending unit: In(unit) takes the
+		// dimension's unit interface, so it would accept Stepped at runtime even if only the
+		// FromStepped factory were skipped.
+		Assert.DoesNotContain("public static Displacement3D<T> FromMeter(", source);
+		Assert.DoesNotContain("public static Displacement3D<T> FromStepped(", source);
+		Assert.DoesNotContain("public (T X, T Y, T Z) In(", source);
+	}
+
+	/// <summary>
+	/// The scalar forms of that same dimension keep their factories. The offset is correct for a
+	/// V0 — only reading it componentwise is not — so SEM010 must not cost them anything.
+	/// </summary>
+	[TestMethod]
+	public void Sem010_DoesNotTakeTheScalarFactoriesWithIt()
+	{
+		(_, string source) = RunOverVectorDimension("\"Meter\", \"Stepped\"", OffsetUnitsDocument);
+
+		Assert.Contains("public static Length<T> FromStepped(T value)", source);
+	}
+
+	/// <summary>
+	/// Without the offset unit the same dimension gets the full vector surface and no diagnostic,
+	/// so SEM010 is pinned to the offset rather than to declaring a vector form at all.
+	/// </summary>
+	[TestMethod]
+	public void AVectorFormWithoutAnOffsetUnitGetsItsFactoriesAndReader()
+	{
+		(IReadOnlyList<Diagnostic> diagnostics, string source) =
+			RunOverVectorDimension("\"Meter\", \"Kilofoot\"", OffsetFreeUnitsDocument);
+
+		Assert.IsEmpty(
+			diagnostics.Where(static diagnostic => diagnostic.Id == "SEM010"),
+			"SEM010 fired for a dimension with no offset unit.");
+
+		Assert.Contains("public static Displacement3D<T> FromMeter(T x, T y, T z) => new() { X = x, Y = y, Z = z };", source);
+		Assert.Contains("public static Displacement3D<T> FromKilofoot(T x, T y, T z)", source);
+		Assert.Contains("public (T X, T Y, T Z) In(global::ktsu.Semantics.Quantities.ILengthUnit unit)", source);
+	}
+
+	/// <summary>The same two units as <see cref="OffsetUnitsDocument"/>, neither carrying an offset.</summary>
+	private const string OffsetFreeUnitsDocument =
+		"""
+		{
+		  "unitCategories": [
+		    {
+		      "name": "Test",
+		      "description": "A category.",
+		      "units": [
+		        { "name": "Meter", "symbol": "m", "description": "Meter.", "system": "SIBase" },
+		        { "name": "Kilofoot", "symbol": "kft", "description": "A thousand feet.", "system": "Imperial", "magnitude": "Kilo", "conversionFactor": "FeetToMeters" }
+		      ]
+		    }
+		  ]
+		}
+		""";
+
+	/// <summary>
 	/// The real metadata reports nothing except the relationships it is already known to get wrong.
 	/// </summary>
 	/// <remarks>

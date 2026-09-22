@@ -41,6 +41,18 @@ public readonly partial record struct Snap2D<T> : IVector2<Snap2D<T>, T>
 	/// <param name="other">The vector to measure the distance to.</param>
 	public global::ktsu.Semantics.Quantities.SnapMagnitude<T> DistanceTo(Snap2D<T> other) => global::ktsu.Semantics.Quantities.SnapMagnitude<T>.Create(Distance(other));
 
+	/// <summary>Creates a <see cref="Snap2D{T}"/> from components in MeterPerSecondQuartic.</summary>
+	/// <param name="x">The X component, in MeterPerSecondQuartic.</param>
+	/// <param name="y">The Y component, in MeterPerSecondQuartic.</param>
+	/// <returns>A new <see cref="Snap2D{T}"/> storing the SI-base equivalent.</returns>
+	public static Snap2D<T> FromMeterPerSecondQuartic(T x, T y) => new() { X = x, Y = y };
+
+	/// <summary>Converts this vector's SI-base components to <paramref name="unit"/>.</summary>
+	/// <remarks>Returns bare components rather than a <see cref="Snap2D{T}"/>, because a vector that is not in base units cannot be one.</remarks>
+	/// <param name="unit">The dimensionally-compatible target unit.</param>
+	/// <returns>The components expressed in <paramref name="unit"/>.</returns>
+	public (T X, T Y) In(global::ktsu.Semantics.Quantities.ISnapUnit unit) => (unit.FromBase(X), unit.FromBase(Y));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{
