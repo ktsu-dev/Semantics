@@ -46,8 +46,12 @@ public readonly partial record struct Snap4D<T> : IVector4<Snap4D<T>, T>
 	/// <summary>Gets the unit vector for the W-axis.</summary>
 	public static Snap4D<T> UnitW => new() { X = T.Zero, Y = T.Zero, Z = T.Zero, W = T.One };
 
-	/// <summary>Gets the magnitude as a <see cref="SnapMagnitude{T}"/>.</summary>
-	public SnapMagnitude<T> Magnitude() => SnapMagnitude<T>.Create(Length());
+	/// <summary>Gets the magnitude of this vector as a <see cref="global::ktsu.Semantics.Quantities.SnapMagnitude{T}"/>.</summary>
+	public global::ktsu.Semantics.Quantities.SnapMagnitude<T> Magnitude() => global::ktsu.Semantics.Quantities.SnapMagnitude<T>.Create(Length());
+
+	/// <summary>Gets the distance to another vector as a <see cref="global::ktsu.Semantics.Quantities.SnapMagnitude{T}"/>.</summary>
+	/// <param name="other">The vector to measure the distance to.</param>
+	public global::ktsu.Semantics.Quantities.SnapMagnitude<T> DistanceTo(Snap4D<T> other) => global::ktsu.Semantics.Quantities.SnapMagnitude<T>.Create(Distance(other));
 
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()

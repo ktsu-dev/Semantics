@@ -40,8 +40,12 @@ public readonly partial record struct Jerk3D<T> : IVector3<Jerk3D<T>, T>
 	/// <summary>Gets the unit vector for the Z-axis.</summary>
 	public static Jerk3D<T> UnitZ => new() { X = T.Zero, Y = T.Zero, Z = T.One };
 
-	/// <summary>Gets the magnitude as a <see cref="JerkMagnitude{T}"/>.</summary>
-	public JerkMagnitude<T> Magnitude() => JerkMagnitude<T>.Create(Length());
+	/// <summary>Gets the magnitude of this vector as a <see cref="global::ktsu.Semantics.Quantities.JerkMagnitude{T}"/>.</summary>
+	public global::ktsu.Semantics.Quantities.JerkMagnitude<T> Magnitude() => global::ktsu.Semantics.Quantities.JerkMagnitude<T>.Create(Length());
+
+	/// <summary>Gets the distance to another vector as a <see cref="global::ktsu.Semantics.Quantities.JerkMagnitude{T}"/>.</summary>
+	/// <param name="other">The vector to measure the distance to.</param>
+	public global::ktsu.Semantics.Quantities.JerkMagnitude<T> DistanceTo(Jerk3D<T> other) => global::ktsu.Semantics.Quantities.JerkMagnitude<T>.Create(Distance(other));
 
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
