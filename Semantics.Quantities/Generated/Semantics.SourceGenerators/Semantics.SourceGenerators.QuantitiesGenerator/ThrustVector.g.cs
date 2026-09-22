@@ -40,6 +40,13 @@ public readonly partial record struct ThrustVector<T> : IVector3<ThrustVector<T>
 	/// <summary>Gets the unit vector for the Z-axis.</summary>
 	public static ThrustVector<T> UnitZ => new() { X = T.Zero, Y = T.Zero, Z = T.One };
 
+	/// <summary>Gets the magnitude of this vector as a <see cref="global::ktsu.Semantics.Quantities.ForceMagnitude{T}"/>.</summary>
+	public global::ktsu.Semantics.Quantities.ForceMagnitude<T> Magnitude() => global::ktsu.Semantics.Quantities.ForceMagnitude<T>.Create(Length());
+
+	/// <summary>Gets the distance to another vector as a <see cref="global::ktsu.Semantics.Quantities.ForceMagnitude{T}"/>.</summary>
+	/// <param name="other">The vector to measure the distance to.</param>
+	public global::ktsu.Semantics.Quantities.ForceMagnitude<T> DistanceTo(ThrustVector<T> other) => global::ktsu.Semantics.Quantities.ForceMagnitude<T>.Create(Distance(other));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

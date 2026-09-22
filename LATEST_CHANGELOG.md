@@ -1,6 +1,4 @@
-## v5.4.3 (patch)
+## v5.4.3
 
-Changes since v5.4.2:
-
-- Ship the storage-type alias props in build/, not buildTransitive/ [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
+No significant changes detected since v5.4.3.
 

@@ -40,6 +40,13 @@ public readonly partial record struct GravitationalField3D<T> : IVector3<Gravita
 	/// <summary>Gets the unit vector for the Z-axis.</summary>
 	public static GravitationalField3D<T> UnitZ => new() { X = T.Zero, Y = T.Zero, Z = T.One };
 
+	/// <summary>Gets the magnitude of this vector as a <see cref="global::ktsu.Semantics.Quantities.AccelerationMagnitude{T}"/>.</summary>
+	public global::ktsu.Semantics.Quantities.AccelerationMagnitude<T> Magnitude() => global::ktsu.Semantics.Quantities.AccelerationMagnitude<T>.Create(Length());
+
+	/// <summary>Gets the distance to another vector as a <see cref="global::ktsu.Semantics.Quantities.AccelerationMagnitude{T}"/>.</summary>
+	/// <param name="other">The vector to measure the distance to.</param>
+	public global::ktsu.Semantics.Quantities.AccelerationMagnitude<T> DistanceTo(GravitationalField3D<T> other) => global::ktsu.Semantics.Quantities.AccelerationMagnitude<T>.Create(Distance(other));
+
 	/// <summary>Calculates the length of the vector.</summary>
 	public T Length()
 	{

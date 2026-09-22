@@ -1,3 +1,7 @@
+## v5.4.3
+
+No significant changes detected since v5.4.3.
+
 ## v5.4.3 (patch)
 
 Changes since v5.4.2:
