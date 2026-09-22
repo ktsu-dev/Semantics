@@ -1,6 +1,38 @@
-## v5.4.3
+## v5.5.0 (minor)
 
-No significant changes detected since v5.4.3.
+Changes since v5.4.0:
+
+- State the double-precision cost of a logarithmic conversion in its own docs [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
+- Answer vector magnitude and distance with the dimension, not a bare T [minor] ([@Claude](https://github.com/Claude))
+- Ship the storage-type alias props in build/, not buildTransitive/ [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
+- Merge main into the strings and paths benchmark work ([@matt-edmondson](https://github.com/matt-edmondson))
+- Fix whole-branch review findings in benchmark docs [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
+- Fix review findings: bullet count and heading nesting ([@matt-edmondson](https://github.com/matt-edmondson))
+- Document the strings and paths benchmarks [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
+- Backfill the strings and paths histories ([@matt-edmondson](https://github.com/matt-edmondson))
+- Seed the strings and paths histories at 5.3.4 ([@matt-edmondson](https://github.com/matt-edmondson))
+- Record what the validation ladder actually measured ([@matt-edmondson](https://github.com/matt-edmondson))
+- Redirect stdin from /dev/null in the subject loops ([@matt-edmondson](https://github.com/matt-edmondson))
+- Measure three subjects per run ([@matt-edmondson](https://github.com/matt-edmondson))
+- Fix strings XML doc to describe HashCode, not CompareTo ([@matt-edmondson](https://github.com/matt-edmondson))
+- Describe the panel the strings chart actually draws ([@matt-edmondson](https://github.com/matt-edmondson))
+- Explain the Create ratio's outlier size in the source, not just the report ([@matt-edmondson](https://github.com/matt-edmondson))
+- Draw the strings and paths charts ([@matt-edmondson](https://github.com/matt-edmondson))
+- Pair the path types against System.IO.Path ([@matt-edmondson](https://github.com/matt-edmondson))
+- Declare the relative path specimen as a const ([@matt-edmondson](https://github.com/matt-edmondson))
+- Make RelativeFile a const, not a suppressed readonly field ([@matt-edmondson](https://github.com/matt-edmondson))
+- Measure the path types, building and operating ([@matt-edmondson](https://github.com/matt-edmondson))
+- Fix Ordering baseline to match the culture-sensitive comparison it pairs against ([@matt-edmondson](https://github.com/matt-edmondson))
+- Compare like with like in the string ordering pair ([@matt-edmondson](https://github.com/matt-edmondson))
+- Pair the string types against hand-written validation ([@matt-edmondson](https://github.com/matt-edmondson))
+- Chart GetHashCode rather than CompareTo for strings ([@matt-edmondson](https://github.com/matt-edmondson))
+- Measure a semantic string after it exists ([@matt-edmondson](https://github.com/matt-edmondson))
+- Correct the expected cost of the two string failure paths ([@matt-edmondson](https://github.com/matt-edmondson))
+- Measure creating a semantic string across the validation ladder ([@matt-edmondson](https://github.com/matt-edmondson))
+- Make the release chart renderer subject-aware ([@matt-edmondson](https://github.com/matt-edmondson))
+- Plan the strings and paths benchmark work ([@matt-edmondson](https://github.com/matt-edmondson))
+- Design the benchmark history and charts for strings and paths ([@matt-edmondson](https://github.com/matt-edmondson))
+- State the strict-floor rule once, and pin it [patch] ([@Claude](https://github.com/Claude))
 
 ## v5.4.3 (patch)
 
