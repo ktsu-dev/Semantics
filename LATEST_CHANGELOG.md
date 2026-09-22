@@ -1,6 +1,4 @@
-## v5.5.1 (patch)
+## v5.5.1
 
-Changes since v5.5.0:
-
-- Keep a path's equality and hash code stable when a derived property is read [patch] ([@Claude](https://github.com/Claude))
+No significant changes detected since v5.5.1.
 
