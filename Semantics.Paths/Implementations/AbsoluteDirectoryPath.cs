@@ -10,7 +10,23 @@ using System.Diagnostics.CodeAnalysis;
 [IsAbsolutePath]
 public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirectoryPath>, IAbsoluteDirectoryPath
 {
-	// Cache for expensive parent directory computation
+	/// <summary>
+	/// Determines whether this path and <paramref name="other"/> are the same path.
+	/// </summary>
+	/// <param name="other">The path to compare with, or <see langword="null"/>.</param>
+	/// <returns><see langword="true"/> if both are absolute directory paths with the same text; otherwise, <see langword="false"/>.</returns>
+	/// <remarks>
+	/// Declared explicitly, rather than left to the record's generated equality, because that would compare the
+	/// private memoization fields below as well — so reading a derived property would change both equality and the
+	/// hash code while leaving the text untouched, moving the instance out of its own hash bucket. A path's identity
+	/// is its text. See <see href="https://github.com/ktsu-dev/Semantics/issues/265"/>.
+	/// </remarks>
+	public bool Equals(AbsoluteDirectoryPath? other) => base.Equals(other);
+
+	/// <inheritdoc cref="Equals(AbsoluteDirectoryPath)"/>
+	public override int GetHashCode() => base.GetHashCode();
+
+	// Cache for expensive parent directory computation. Excluded from equality by the members above.
 	private AbsoluteDirectoryPath? _cachedParent;
 
 	/// <summary>

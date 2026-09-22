@@ -8,7 +8,23 @@ namespace ktsu.Semantics.Paths;
 [IsRelativePath]
 public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRelativeFilePath
 {
-	// Cache for expensive directory path computation
+	/// <summary>
+	/// Determines whether this path and <paramref name="other"/> are the same path.
+	/// </summary>
+	/// <param name="other">The path to compare with, or <see langword="null"/>.</param>
+	/// <returns><see langword="true"/> if both are relative file paths with the same text; otherwise, <see langword="false"/>.</returns>
+	/// <remarks>
+	/// Declared explicitly, rather than left to the record's generated equality, because that would compare the
+	/// private memoization fields below as well — so reading a derived property would change both equality and the
+	/// hash code while leaving the text untouched, moving the instance out of its own hash bucket. A path's identity
+	/// is its text. See <see href="https://github.com/ktsu-dev/Semantics/issues/265"/>.
+	/// </remarks>
+	public bool Equals(RelativeFilePath? other) => base.Equals(other);
+
+	/// <inheritdoc cref="Equals(RelativeFilePath)"/>
+	public override int GetHashCode() => base.GetHashCode();
+
+	// Cache for expensive directory path computation. Excluded from equality by the members above.
 	private RelativeDirectoryPath? _cachedDirectoryPath;
 
 	/// <summary>
