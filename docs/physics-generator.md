@@ -12,7 +12,7 @@ For the *why* (the unified vector model), see `docs/strategy-unified-vector-quan
 | `UnitsGenerator` | `Units.g.cs` | All declared units with their conversion factors, as `double` properties and as `IUnit.ToBaseFactorAs<T>()`/`ToBaseOffsetAs<T>()` explicit implementations that read the per-type values. |
 | `ConversionsGenerator` | `ConversionConstants.g.cs` | Conversion ratios (`FeetToMeters`, etc.) from `conversions.json`, as `double` constants plus a `Values<T>` holder that parses each one into the storage type. See [Conversion factor values](#conversion-factor-values). |
 | `MagnitudesGenerator` | `MetricMagnitudes.g.cs` | SI prefixes and their numeric magnitudes, as public `double` constants plus an internal `Values<T>` holder parsed per storage type. |
-| `PrecisionGenerator` | `StorageTypes.g.cs` | The storage types the alias packages cover (`decimal`, `double`, `float`), as a public `StorageTypes` class. Nothing in the library reads it. |
+| `PrecisionGenerator` | `StorageTypes.g.cs` | The entries of `precision.json` (`decimal`, `double`, `float`), as a public `StorageTypes` class. Nothing in the library reads it, and it is **not** the list of supported storage types — that is the set of alias packages, which includes `Precise`. Do not add a package-provided type here; see [Storage types and `precision.json`](#storage-types-and-precisionjson). |
 | `PhysicalConstantsGenerator` | `PhysicalConstants.g.cs` | `PhysicalConstants.<Domain>.X<T>()`, `PhysicalConstants.Generic.X<T>()`, and `PhysicalConstants.Conversion.X<T>()` accessors; each literal is parsed straight into `T` and cached per closed generic type. |
 | `QuantitiesGenerator` | one `*.g.cs` file per emitted type | Vector0/V1/V2/V3/V4 bases, semantic overloads, factories, operators, magnitude extraction, dot/cross products. |
 | `LogarithmicScalesGenerator` | one `*.g.cs` file per logarithmic scale | Decibel levels, pitch intervals, and pH from `logarithmic.json`: standalone `readonly partial record struct`s with linear-quantity conversions, log-space arithmetic, and comparisons. |
@@ -218,6 +218,38 @@ than returning an estimate.
 `StorageMath` is public, alongside `Cbrt`, `RootN` and `Hypot` on the same seeding and the same loop,
 so an application computing a norm the generator does not emit reaches them rather than reimplementing
 them. See the type's own documentation for what each one guarantees.
+
+## Storage types and `precision.json`
+
+Four storage types ship, one per alias package: `Semantics.Quantities.Double`, `.Float`, `.Decimal`
+and `.Precise`. `precision.json` lists three of them. That is deliberate, not an oversight, and the
+missing entry is `PreciseNumber`.
+
+`PrecisionGenerator` emits `StorageTypes` into the **core** `ktsu.Semantics.Quantities` namespace,
+one field per entry:
+
+```csharp
+Name = storageType.ToUpperInvariant(),
+DefaultValue = $"typeof({storageType})",
+```
+
+Two things follow, and both bite only on a type that is not a C# keyword:
+
+- `typeof(PreciseNumber)` in the core assembly would make `Semantics.Quantities` reference
+  `ktsu.PreciseNumber`. The alias packages exist precisely so that dependency stays opt-in, so the
+  entry would undo the separation it is meant to describe.
+- The field name is derived from the entry, so a qualified name is not an identifier:
+  `ktsu.PreciseNumber.PreciseNumber` yields `KTSU.PRECISENUMBER.PRECISENUMBER`, which does not
+  compile.
+
+So **adding a storage type does not mean adding an entry here.** It means a new alias package, its
+generated `build/*.props`, and one derived `StorageConversionTests<T>` class.
+
+Nothing in the repository reads `StorageTypes` — outside `Generated/`, the only mentions are
+`PrecisionGenerator` and `PrecisionMetadata` themselves — so the omission costs nothing at runtime.
+It is still public surface that enumerates three of four shipped storage types, and whether it should
+exist at all is the open question in
+[#236](https://github.com/ktsu-dev/Semantics/issues/236).
 
 ## Validation, diagnostics, and gotchas
 
