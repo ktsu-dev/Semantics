@@ -43,6 +43,33 @@ public class ChordTests
 	}
 
 	[TestMethod]
+	public void Parse_DiminishedMajorSeventh_IsDiminishedTriadWithMajorSeventh()
+	{
+		Chord c = Chord.Parse("Cdimmaj7");
+		Assert.AreEqual(ChordQuality.Diminished, c.Quality);
+		Assert.AreEqual(SeventhType.Major, c.Seventh);
+	}
+
+	[TestMethod]
+	public void Parse_DiminishedSeventh_StillHasTheDiminishedSeventh()
+	{
+		// The guard on the reordered checks: "dim7" carries no "maj", so it must not be swept
+		// into the major-seventh branch that now runs first.
+		Chord c = Chord.Parse("Cdim7");
+		Assert.AreEqual(ChordQuality.Diminished, c.Quality);
+		Assert.AreEqual(SeventhType.Diminished, c.Seventh);
+	}
+
+	[TestMethod]
+	public void ChordTones_DiminishedMajorSeventh_HasTheMajorSeventhNotTheDoubleFlatSeventh()
+	{
+		// The audible half of the bug: a misparse puts the bb7 (9) where the major 7th (11)
+		// belongs, so Voice() and playback are a semitone out on that tone.
+		int[] actual = [.. Chord.Parse("Cdimmaj7").ChordTones()];
+		Assert.AreSequenceEqual([0, 3, 6, 11], actual, "Cdimmaj7 should be a diminished triad with a major seventh.");
+	}
+
+	[TestMethod]
 	public void Parse_HalfDiminished_IsDiminishedTriadWithDominantSeventh()
 	{
 		Chord c = Chord.Parse("Cm7b5");
