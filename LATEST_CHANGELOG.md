@@ -1,6 +1,4 @@
-## v5.7.0 (minor)
+## v5.7.0
 
-Changes since v5.6.0:
-
-- Add KilometerPerSecond, the unit orbital state vectors are quoted in ([@Claude](https://github.com/Claude))
+No significant changes detected since v5.7.0.
 
