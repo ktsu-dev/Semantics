@@ -103,6 +103,14 @@ public readonly partial record struct GroupVelocity<T> : IVector0<GroupVelocity<
 	public static GroupVelocity<T> FromMeterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 
 	/// <summary>
+	/// Creates a new GroupVelocity from a value in KilometerPerSecond.
+	/// </summary>
+	/// <param name="value">The value in KilometerPerSecond.</param>
+	/// <returns>A new GroupVelocity instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static GroupVelocity<T> FromKilometerPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
+
+	/// <summary>
 	/// Creates a new GroupVelocity from a value in KilometerPerHour.
 	/// </summary>
 	/// <param name="value">The value in KilometerPerHour.</param>

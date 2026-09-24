@@ -54,6 +54,13 @@ public readonly partial record struct Velocity3D<T> : IVector3<Velocity3D<T>, T>
 	/// <returns>A new <see cref="Velocity3D{T}"/> storing the SI-base equivalent.</returns>
 	public static Velocity3D<T> FromMeterPerSecond(T x, T y, T z) => new() { X = x, Y = y, Z = z };
 
+	/// <summary>Creates a <see cref="Velocity3D{T}"/> from components in KilometerPerSecond.</summary>
+	/// <param name="x">The X component, in KilometerPerSecond.</param>
+	/// <param name="y">The Y component, in KilometerPerSecond.</param>
+	/// <param name="z">The Z component, in KilometerPerSecond.</param>
+	/// <returns>A new <see cref="Velocity3D{T}"/> storing the SI-base equivalent.</returns>
+	public static Velocity3D<T> FromKilometerPerSecond(T x, T y, T z) => new() { X = (x * MetricMagnitudes.Values<T>.Kilo), Y = (y * MetricMagnitudes.Values<T>.Kilo), Z = (z * MetricMagnitudes.Values<T>.Kilo) };
+
 	/// <summary>Creates a <see cref="Velocity3D{T}"/> from components in KilometerPerHour.</summary>
 	/// <param name="x">The X component, in KilometerPerHour.</param>
 	/// <param name="y">The Y component, in KilometerPerHour.</param>

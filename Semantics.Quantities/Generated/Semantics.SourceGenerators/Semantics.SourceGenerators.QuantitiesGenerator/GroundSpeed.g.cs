@@ -103,6 +103,14 @@ public readonly partial record struct GroundSpeed<T> : IVector0<GroundSpeed<T>, 
 	public static GroundSpeed<T> FromMeterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 
 	/// <summary>
+	/// Creates a new GroundSpeed from a value in KilometerPerSecond.
+	/// </summary>
+	/// <param name="value">The value in KilometerPerSecond.</param>
+	/// <returns>A new GroundSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static GroundSpeed<T> FromKilometerPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
+
+	/// <summary>
 	/// Creates a new GroundSpeed from a value in KilometerPerHour.
 	/// </summary>
 	/// <param name="value">The value in KilometerPerHour.</param>

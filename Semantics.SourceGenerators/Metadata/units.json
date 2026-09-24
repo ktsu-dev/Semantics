@@ -481,6 +481,13 @@
           "conversionFactor": "KilometerPerHourToMeterPerSecond"
         },
         {
+          "name": "KilometerPerSecond",
+          "symbol": "km/s",
+          "description": "Kilometers per second - 1000 meters per second; the unit orbital state vectors are quoted in.",
+          "system": "SIDerived",
+          "magnitude": "Kilo"
+        },
+        {
           "name": "MilePerHour",
           "symbol": "mph",
           "description": "Miles per hour - Imperial unit of velocity.",
