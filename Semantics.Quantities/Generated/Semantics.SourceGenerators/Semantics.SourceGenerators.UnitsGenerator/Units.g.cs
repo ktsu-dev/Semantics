@@ -2284,6 +2284,39 @@ public sealed record KilometerPerHour : IUnit, IVelocityUnit
 }
 
 /// <summary>
+/// Kilometers per second - 1000 meters per second; the unit orbital state vectors are quoted in.
+/// </summary>
+public sealed record KilometerPerSecond : IUnit, IVelocityUnit
+{
+	/// <summary>Gets the full name of the unit.</summary>
+	public string Name => "KilometerPerSecond";
+
+	/// <summary>Gets the symbol/abbreviation of the unit.</summary>
+	public string Symbol => "km/s";
+
+	/// <summary>Gets the unit system this unit belongs to.</summary>
+	public UnitSystem System => UnitSystem.SIDerived;
+
+	/// <summary>Gets the physical dimension this unit measures.</summary>
+	public DimensionInfo Dimension => PhysicalDimensions.Velocity;
+
+	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
+	public double ToBaseFactor => MetricMagnitudes.Kilo;
+
+	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
+	public double ToBaseOffset => 0d;
+
+	/// <summary>Initializes a new instance of the unit.</summary>
+	public KilometerPerSecond() { }
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Kilo;
+
+	/// <inheritdoc/>
+	T IUnit.ToBaseOffsetAs<T>() => T.Zero;
+}
+
+/// <summary>
 /// Miles per hour - Imperial unit of velocity.
 /// </summary>
 public sealed record MilePerHour : IUnit, IVelocityUnit
@@ -6593,6 +6626,9 @@ public static class Units
 
 	/// <summary>Singleton <c>KilometerPerHour</c> instance.</summary>
 	public static readonly KilometerPerHour KilometerPerHour = new KilometerPerHour();
+
+	/// <summary>Singleton <c>KilometerPerSecond</c> instance.</summary>
+	public static readonly KilometerPerSecond KilometerPerSecond = new KilometerPerSecond();
 
 	/// <summary>Singleton <c>Kilomole</c> instance.</summary>
 	public static readonly Kilomole Kilomole = new Kilomole();

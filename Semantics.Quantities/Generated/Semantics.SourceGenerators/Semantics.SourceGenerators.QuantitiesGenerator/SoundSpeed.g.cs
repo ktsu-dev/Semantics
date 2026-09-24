@@ -103,6 +103,14 @@ public readonly partial record struct SoundSpeed<T> : IVector0<SoundSpeed<T>, T>
 	public static SoundSpeed<T> FromMeterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 
 	/// <summary>
+	/// Creates a new SoundSpeed from a value in KilometerPerSecond.
+	/// </summary>
+	/// <param name="value">The value in KilometerPerSecond.</param>
+	/// <returns>A new SoundSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static SoundSpeed<T> FromKilometerPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
+
+	/// <summary>
 	/// Creates a new SoundSpeed from a value in KilometerPerHour.
 	/// </summary>
 	/// <param name="value">The value in KilometerPerHour.</param>

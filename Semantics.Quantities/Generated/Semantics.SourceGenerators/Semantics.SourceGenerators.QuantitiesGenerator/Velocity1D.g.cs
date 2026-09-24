@@ -105,6 +105,13 @@ public readonly partial record struct Velocity1D<T> : IVector1<Velocity1D<T>, T>
 	public static Velocity1D<T> FromMeterPerSecond(T value) => Create(value);
 
 	/// <summary>
+	/// Creates a new <see cref="Velocity1D{T}"/> from a value in KilometerPerSecond.
+	/// </summary>
+	/// <param name="value">The value in KilometerPerSecond.</param>
+	/// <returns>A new <see cref="Velocity1D{T}"/> instance.</returns>
+	public static Velocity1D<T> FromKilometerPerSecond(T value) => Create((value * MetricMagnitudes.Values<T>.Kilo));
+
+	/// <summary>
 	/// Creates a new <see cref="Velocity1D{T}"/> from a value in KilometerPerHour.
 	/// </summary>
 	/// <param name="value">The value in KilometerPerHour.</param>

@@ -47,6 +47,12 @@ public readonly partial record struct Velocity2D<T> : IVector2<Velocity2D<T>, T>
 	/// <returns>A new <see cref="Velocity2D{T}"/> storing the SI-base equivalent.</returns>
 	public static Velocity2D<T> FromMeterPerSecond(T x, T y) => new() { X = x, Y = y };
 
+	/// <summary>Creates a <see cref="Velocity2D{T}"/> from components in KilometerPerSecond.</summary>
+	/// <param name="x">The X component, in KilometerPerSecond.</param>
+	/// <param name="y">The Y component, in KilometerPerSecond.</param>
+	/// <returns>A new <see cref="Velocity2D{T}"/> storing the SI-base equivalent.</returns>
+	public static Velocity2D<T> FromKilometerPerSecond(T x, T y) => new() { X = (x * MetricMagnitudes.Values<T>.Kilo), Y = (y * MetricMagnitudes.Values<T>.Kilo) };
+
 	/// <summary>Creates a <see cref="Velocity2D{T}"/> from components in KilometerPerHour.</summary>
 	/// <param name="x">The X component, in KilometerPerHour.</param>
 	/// <param name="y">The Y component, in KilometerPerHour.</param>

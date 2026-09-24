@@ -103,6 +103,14 @@ public readonly partial record struct FlowSpeed<T> : IVector0<FlowSpeed<T>, T>, 
 	public static FlowSpeed<T> FromMeterPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative(value, nameof(value)));
 
 	/// <summary>
+	/// Creates a new FlowSpeed from a value in KilometerPerSecond.
+	/// </summary>
+	/// <param name="value">The value in KilometerPerSecond.</param>
+	/// <returns>A new FlowSpeed instance.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
+	public static FlowSpeed<T> FromKilometerPerSecond(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Kilo), nameof(value)));
+
+	/// <summary>
 	/// Creates a new FlowSpeed from a value in KilometerPerHour.
 	/// </summary>
 	/// <param name="value">The value in KilometerPerHour.</param>

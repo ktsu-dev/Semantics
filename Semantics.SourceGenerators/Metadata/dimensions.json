@@ -259,7 +259,7 @@
       "symbol": "L T⁻¹",
       "dimensionalFormula": { "length": 1, "time": -1 },
       "availableUnits": [
-        "MeterPerSecond", "KilometerPerHour", "MilePerHour", "FootPerSecond", "Knot"
+        "MeterPerSecond", "KilometerPerSecond", "KilometerPerHour", "MilePerHour", "FootPerSecond", "Knot"
       ],
       "quantities": {
         "vector0": {

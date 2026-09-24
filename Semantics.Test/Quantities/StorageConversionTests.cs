@@ -82,6 +82,42 @@ public abstract class StorageConversionTests<T>(string tolerance, bool decimalEx
 	}
 
 	[TestMethod]
+	public void AKilometerPerSecondIsExactlyAThousandMetersPerSecond()
+	{
+		Speed<T> speed = Speed<T>.FromKilometerPerSecond(Of("7.66"));
+
+		AssertValue("7660", speed.Value, terminates: true);
+		AssertValue("7.66", speed.In(Units.KilometerPerSecond), terminates: true);
+
+		// Against a neighbour defined by a different mechanism: kilometers per hour carries the
+		// repeating factor 5/18, so agreeing with it at 3600 to 1 ties the new unit to something
+		// other than its own definition. Non-terminating because that factor is.
+		AssertValue("3600", Speed<T>.FromKilometerPerSecond(T.One).In(Units.KilometerPerHour), terminates: false);
+	}
+
+	/// <summary>
+	/// The whole of what <c>KilometerPerSecond</c> is for: an orbital state is published in
+	/// kilometers and kilometers per second together, and until this unit existed the second half
+	/// had to be multiplied by a thousand at the call site — in a library whose point is that units
+	/// are not spelled by hand.
+	/// </summary>
+	[TestMethod]
+	public void AStateVectorIsBuiltFromItsPublishedUnitsWithNoArithmeticAtTheCallSite()
+	{
+		Position3D<T> position = Position3D<T>.FromKilometer(Of("6778"), Of("-1.5"), T.Zero);
+		Velocity3D<T> velocity = Velocity3D<T>.FromKilometerPerSecond(Of("0.5"), Of("7.5"), Of("-1.25"));
+
+		AssertValue("6778000", position.X, terminates: true);
+		AssertValue("500", velocity.X, terminates: true);
+		AssertValue("7500", velocity.Y, terminates: true);
+		AssertValue("-1250", velocity.Z, terminates: true);
+
+		// Componentwise, and signed, exactly as the position factory beside it is — the vector
+		// forms carry no Vector0 guard, so a retrograde component is ordinary.
+		Assert.AreEqual(Speed<T>.FromKilometerPerSecond(Of("7.5")).Value, velocity.Y);
+	}
+
+	[TestMethod]
 	public void AKnotIsTheRepeatingFractionOfAMeterPerSecond()
 	{
 		Speed<T> knot = Speed<T>.FromKnot(T.One);
