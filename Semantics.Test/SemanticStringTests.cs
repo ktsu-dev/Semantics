@@ -1310,9 +1310,15 @@ public class SemanticStringAdditionalTests
 			MySemanticString left = SemanticString<MySemanticString>.Create<MySemanticString>(first);
 			MySemanticString right = SemanticString<MySemanticString>.Create<MySemanticString>(second);
 
+			// A second instance rather than `left` itself: comparing an instance with its own
+			// reference holds for any implementation, so it would not pin the other half of the
+			// contract — that two Equals-equal values also compare 0.
+			MySemanticString sameValueAsLeft = SemanticString<MySemanticString>.Create<MySemanticString>(first);
+
 			Assert.IsFalse(left.Equals(right), $"'{first}' and '{second}' are distinct values");
 			Assert.AreNotEqual(0, left.CompareTo(right), $"CompareTo must not report '{first}' and '{second}' as equal when Equals does not");
-			Assert.AreEqual(0, left.CompareTo(left), "CompareTo must report a value equal to itself");
+			Assert.IsTrue(left.Equals(sameValueAsLeft), $"Two instances of '{first}' are equal values");
+			Assert.AreEqual(0, left.CompareTo(sameValueAsLeft), $"CompareTo must report two instances of '{first}' as equal when Equals does");
 
 			SortedSet<MySemanticString> set = [left, right];
 			Assert.HasCount(2, set, $"'{first}' and '{second}' are distinct values and must both be retained");
