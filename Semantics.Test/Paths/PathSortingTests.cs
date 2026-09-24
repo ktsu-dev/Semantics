@@ -108,4 +108,18 @@ public class PathSortingTests
 
 		Assert.IsTrue(comparerName.StartsWith("GenericComparer", StringComparison.Ordinal), $"Actual comparer: {comparerName}");
 	}
+
+	[TestMethod]
+	public void DefaultComparer_ForPathInterface_OrdersOrdinally()
+	{
+		// IComparable<IPath>.CompareTo must order the same way as the inherited CompareTo(object),
+		// which is ordinal. A linguistic comparison sorts by letter before case, so it would put
+		// "apple" first and make the order depend on the running culture.
+		AbsoluteDirectoryPath upper = MakeDirectory("Zebra");
+		AbsoluteDirectoryPath lower = MakeDirectory("apple");
+
+		int expected = Math.Sign(string.CompareOrdinal(upper.WeakString, lower.WeakString));
+
+		Assert.AreEqual(expected, Math.Sign(Comparer<IPath>.Default.Compare(upper, lower)), "Sorting through IComparable<IPath> must follow ordinal order");
+	}
 }

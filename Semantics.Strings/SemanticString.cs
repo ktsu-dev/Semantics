@@ -92,15 +92,25 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	public char this[int index] => WeakString[index: index];
 
 	/// <inheritdoc/>
+	/// <remarks>
+	/// Ordering is ordinal, matching the ordinal <see cref="object.Equals(object)"/> and
+	/// <see cref="object.GetHashCode"/> the record generates from <see cref="WeakString"/>. A
+	/// culture-sensitive comparison would give punctuation minimal collation weight, so values such as
+	/// <c>"Co-op"</c> and <c>"Coop"</c> would compare equal while remaining unequal and differently
+	/// hashed — which breaks the <see cref="IComparable"/>/<see cref="IEquatable{T}"/> consistency
+	/// contract and lets a <see cref="System.Collections.Generic.SortedSet{T}"/> discard a distinct
+	/// value as a duplicate. It would also make the sort order depend on the running culture.
+	/// </remarks>
 	public int CompareTo(object? value) => value switch
 	{
 		null => 1,
-		ISemanticString semanticString => WeakString.CompareTo(strB: semanticString.WeakString),
-		string stringValue => WeakString.CompareTo(strB: stringValue),
+		ISemanticString semanticString => string.CompareOrdinal(WeakString, semanticString.WeakString),
+		string stringValue => string.CompareOrdinal(WeakString, stringValue),
 		_ => throw new ArgumentException($"Object must be of type {nameof(String)} or {nameof(ISemanticString)}.", nameof(value)),
 	};
 	/// <inheritdoc/>
-	public int CompareTo(ISemanticString? other) => WeakString.CompareTo(strB: other?.WeakString);
+	/// <remarks>Ordering is ordinal; see <see cref="CompareTo(object)"/> for why.</remarks>
+	public int CompareTo(ISemanticString? other) => string.CompareOrdinal(WeakString, other?.WeakString);
 
 	/// <inheritdoc/>
 	public bool Contains(string value) => WeakString.Contains(value: value);
