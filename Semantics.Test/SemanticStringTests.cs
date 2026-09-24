@@ -1247,6 +1247,84 @@ public class SemanticStringAdditionalTests
 		Assert.AreSequenceEqual(expected, sorted);
 	}
 
+	/// <summary>
+	/// Pairs a linguistic comparison orders differently from an ordinal one. The first three flip
+	/// sign, because collation sorts by letter before case while ordinal sorts by code unit, so every
+	/// uppercase letter precedes every lowercase one. The last two are the punctuation cases: Windows
+	/// NLS gives a hyphen minimal collation weight and reports them equal, which also contradicts the
+	/// ordinal <c>Equals</c>. ICU does not, which is why they are grouped separately below.
+	/// </summary>
+	private static readonly (string First, string Second)[] CaseOrderingPairs =
+	[
+		("Zebra", "apple"),
+		("apple", "Banana"),
+		("MySemanticString", "mysemanticstring"),
+	];
+
+	private static readonly (string First, string Second)[] PunctuationPairs =
+	[
+		("Co-op", "Coop"),
+		("e-mail", "email"),
+	];
+
+	[TestMethod]
+	public void CompareTo_OrdersOrdinally()
+	{
+		foreach ((string first, string second) in CaseOrderingPairs.Concat(PunctuationPairs))
+		{
+			MySemanticString left = SemanticString<MySemanticString>.Create<MySemanticString>(first);
+			MySemanticString right = SemanticString<MySemanticString>.Create<MySemanticString>(second);
+			int expected = Math.Sign(string.CompareOrdinal(first, second));
+
+			Assert.AreEqual(expected, Math.Sign(left.CompareTo(right)), $"CompareTo(ISemanticString) must order '{first}' and '{second}' ordinally");
+
+			// A string is not an ISemanticString, so this binds to the non-generic CompareTo(object).
+			Assert.AreEqual(expected, Math.Sign(left.CompareTo(second)), $"CompareTo(object) must order '{first}' and '{second}' ordinally");
+			Assert.AreEqual(expected, Math.Sign(left.CompareTo((object)right)), $"CompareTo(object) must order '{first}' and '{second}' ordinally for a semantic string too");
+		}
+	}
+
+	[TestMethod]
+	public void ComparisonOperators_OrderOrdinally()
+	{
+		foreach ((string first, string second) in CaseOrderingPairs.Concat(PunctuationPairs))
+		{
+			MySemanticString left = SemanticString<MySemanticString>.Create<MySemanticString>(first);
+			MySemanticString right = SemanticString<MySemanticString>.Create<MySemanticString>(second);
+			bool ordinallyLess = string.CompareOrdinal(first, second) < 0;
+
+			Assert.AreEqual(ordinallyLess, left < right, $"'{first}' < '{second}' must follow ordinal order");
+			Assert.AreEqual(ordinallyLess, left <= right, $"'{first}' <= '{second}' must follow ordinal order");
+			Assert.AreEqual(!ordinallyLess, left > right, $"'{first}' > '{second}' must follow ordinal order");
+			Assert.AreEqual(!ordinallyLess, left >= right, $"'{first}' >= '{second}' must follow ordinal order");
+		}
+	}
+
+	[TestMethod]
+	public void CompareTo_IsZeroExactlyWhenEqual()
+	{
+		// The IComparable/IEquatable consistency contract, which is what a SortedSet relies on: it
+		// treats any two values comparing 0 as duplicates and silently discards the second.
+		foreach ((string first, string second) in CaseOrderingPairs.Concat(PunctuationPairs))
+		{
+			MySemanticString left = SemanticString<MySemanticString>.Create<MySemanticString>(first);
+			MySemanticString right = SemanticString<MySemanticString>.Create<MySemanticString>(second);
+
+			// A second instance rather than `left` itself: comparing an instance with its own
+			// reference holds for any implementation, so it would not pin the other half of the
+			// contract — that two Equals-equal values also compare 0.
+			MySemanticString sameValueAsLeft = SemanticString<MySemanticString>.Create<MySemanticString>(first);
+
+			Assert.IsFalse(left.Equals(right), $"'{first}' and '{second}' are distinct values");
+			Assert.AreNotEqual(0, left.CompareTo(right), $"CompareTo must not report '{first}' and '{second}' as equal when Equals does not");
+			Assert.IsTrue(left.Equals(sameValueAsLeft), $"Two instances of '{first}' are equal values");
+			Assert.AreEqual(0, left.CompareTo(sameValueAsLeft), $"CompareTo must report two instances of '{first}' as equal when Equals does");
+
+			SortedSet<MySemanticString> set = [left, right];
+			Assert.HasCount(2, set, $"'{first}' and '{second}' are distinct values and must both be retained");
+		}
+	}
+
 	[TestMethod]
 	public void DebuggerDisplay_ReturnsCorrectFormat()
 	{

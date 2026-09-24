@@ -82,8 +82,13 @@ public abstract record SemanticPath<TDerived> : SemanticString<TDerived>, ICompa
 	/// <see cref="Comparer{T}.Default"/> sort an <see cref="IPath"/> collection through the generic
 	/// comparison path instead of boxing into the non-generic
 	/// <see cref="IComparable.CompareTo(object)"/>.
+	/// <para>
+	/// Ordering is ordinal, so that sorting a path collection through this generic path agrees with
+	/// the inherited <see cref="SemanticString{TDerived}.CompareTo(object)"/> rather than varying with
+	/// the running culture.
+	/// </para>
 	/// </remarks>
-	int IComparable<IPath>.CompareTo(IPath? other) => WeakString.CompareTo(strB: other?.WeakString);
+	int IComparable<IPath>.CompareTo(IPath? other) => string.CompareOrdinal(WeakString, other?.WeakString);
 
 	/// <summary>
 	/// Normalizes the path by standardizing directory separators and removing trailing separators.
