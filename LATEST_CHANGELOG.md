@@ -1,7 +1,4 @@
-## v5.8.0 (minor)
+## v5.8.0
 
-Changes since v5.7.0:
-
-- Assert reflexivity against a second instance, not the same reference ([@Claude](https://github.com/Claude))
-- Compare semantic strings ordinally, matching their ordinal Equals ([@Claude](https://github.com/Claude))
+No significant changes detected since v5.8.0.
 
