@@ -15,6 +15,7 @@ public class ChordRoundTripTests
 		"C7b9", "C7#9", "C7#11", "C7b13", "Cadd9",
 		"C/G", "Dm7/G", "F#m7b5", "Bbmaj7",
 		"C6/9", "Cm6/9", "C6/9/G",
+		"C69", "Cm69", "Cadd11", "Cadd13", "Cmadd11",
 	];
 
 	[TestMethod]
