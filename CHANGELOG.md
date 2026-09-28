@@ -1,6 +1,8 @@
-## v5.8.0
+## v5.8.1 (patch)
 
-No significant changes detected since v5.8.0.
+Changes since v5.8.0:
+
+- Let AdjustForContrast darken on mid-tone backgrounds [patch] ([@Claude](https://github.com/Claude))
 
 ## v5.8.0 (minor)
 
