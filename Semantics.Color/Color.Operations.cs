@@ -60,34 +60,46 @@ public readonly partial record struct Color
 
 		Oklab lab = ToOklab();
 		double alpha = A;
-		bool goLighter = background.RelativeLuminance < 0.5;
-		double lo = goLighter ? lab.L : 0.0;
-		double hi = goLighter ? 1.0 : lab.L;
 
-		// Contrast increases monotonically as L moves toward the chosen extreme; binary-search the
-		// smallest movement that meets the requirement.
-		for (int i = 0; i < 30; i++)
+		// Try first the direction whose extreme (white or black) gives the higher contrast against
+		// this background. The two are equal near luminance 0.179, not 0.5, so on a mid-tone
+		// background darkening is usually the only way to reach the target. If the preferred
+		// direction still falls short, fall back to the other one before giving up.
+		double bgLum = background.RelativeLuminance;
+		bool preferLighter = (1.05 / (bgLum + 0.05)) >= ((bgLum + 0.05) / 0.05);
+
+		return Search(preferLighter) ?? Search(!preferLighter) ?? this;
+
+		Color? Search(bool goLighter)
 		{
-			double mid = (lo + hi) / 2.0;
-			Color candidate = Candidate(lab, mid);
-			bool meets = candidate.ContrastRatio(background) >= required;
+			double lo = goLighter ? lab.L : 0.0;
+			double hi = goLighter ? 1.0 : lab.L;
 
-			// The interval always shrinks toward the end that satisfies the requirement. When
-			// lightening that is the upper bound if the midpoint already meets it; when darkening
-			// the roles swap. Both cases reduce to whether the midpoint landed on the goLighter
-			// side, so the four-way branch collapses to one comparison.
-			if (meets == goLighter)
+			// Contrast increases monotonically as L moves toward the chosen extreme; binary-search
+			// the smallest movement that meets the requirement.
+			for (int i = 0; i < 30; i++)
 			{
-				hi = mid;
+				double mid = (lo + hi) / 2.0;
+				Color candidate = Candidate(lab, mid);
+				bool meets = candidate.ContrastRatio(background) >= required;
+
+				// The interval always shrinks toward the end that satisfies the requirement. When
+				// lightening that is the upper bound if the midpoint already meets it; when darkening
+				// the roles swap. Both cases reduce to whether the midpoint landed on the goLighter
+				// side, so the four-way branch collapses to one comparison.
+				if (meets == goLighter)
+				{
+					hi = mid;
+				}
+				else
+				{
+					lo = mid;
+				}
 			}
-			else
-			{
-				lo = mid;
-			}
+
+			Color result = Candidate(lab, goLighter ? hi : lo);
+			return result.ContrastRatio(background) >= required ? result : null;
 		}
-
-		Color result = Candidate(lab, goLighter ? hi : lo);
-		return result.ContrastRatio(background) >= required ? result : this;
 
 		Color Candidate(Oklab source, double lightness) =>
 			FromOklab(new Oklab(lightness, source.A, source.B), alpha).Clamp();
