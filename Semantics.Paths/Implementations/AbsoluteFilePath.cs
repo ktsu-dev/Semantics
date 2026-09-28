@@ -80,62 +80,20 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	}
 
 	/// <summary>
-	/// Determines whether this path is a child of the specified parent path using efficient span comparison.
+	/// Determines whether this file is inside the specified parent directory.
 	/// </summary>
 	/// <param name="parentPath">The potential parent path to check against.</param>
 	/// <returns><see langword="true"/> if this path is a child of the parent path; otherwise, <see langword="false"/>.</returns>
 	/// <remarks>
-	/// This method uses span-based comparison for better performance than string concatenation.
-	/// It normalizes both paths before comparison to handle different separator styles.
+	/// Both paths are normalized before comparison to handle different separator styles. Case is
+	/// ignored on Windows and significant on every other platform. Every file below a filesystem
+	/// root is a child of that root.
 	/// </remarks>
 	public bool IsChildOf(AbsoluteDirectoryPath parentPath)
 	{
 		Ensure.NotNull(parentPath);
 
-		// Get normalized paths using span semantics for comparison
-#if NETSTANDARD2_0
-		string thisPathSpan = Path.GetFullPath(WeakString);
-		string parentPathSpan = Path.GetFullPath(parentPath.WeakString);
-
-		// A path cannot be a child of itself
-		if (string.Equals(thisPathSpan, parentPathSpan, StringComparison.OrdinalIgnoreCase))
-		{
-			return false;
-		}
-
-		// Check if this path starts with the parent path followed by a separator
-		if (!thisPathSpan.StartsWith(parentPathSpan, StringComparison.OrdinalIgnoreCase))
-		{
-			return false;
-		}
-
-		// Ensure there's a separator after the parent path (not just a prefix match)
-		int nextIndex = parentPathSpan.Length;
-		return nextIndex < thisPathSpan.Length &&
-			   (thisPathSpan[nextIndex] == Path.DirectorySeparatorChar ||
-				thisPathSpan[nextIndex] == Path.AltDirectorySeparatorChar);
-#else
-		ReadOnlySpan<char> thisPathSpan = Path.GetFullPath(WeakString).AsSpan();
-		ReadOnlySpan<char> parentPathSpan = Path.GetFullPath(parentPath.WeakString).AsSpan();
-
-		// A path cannot be a child of itself
-		if (thisPathSpan.SequenceEqual(parentPathSpan))
-		{
-			return false;
-		}
-
-		// Check if this path starts with the parent path followed by a separator
-		if (!thisPathSpan.StartsWith(parentPathSpan, StringComparison.OrdinalIgnoreCase))
-		{
-			return false;
-		}
-
-		// Ensure there's a separator after the parent path (not just a prefix match)
-		int nextIndex = parentPathSpan.Length;
-		return nextIndex < thisPathSpan.Length &&
-			   (thisPathSpan[nextIndex] == Path.DirectorySeparatorChar ||
-				thisPathSpan[nextIndex] == Path.AltDirectorySeparatorChar);
-#endif
+		return PathContainment.IsStrictlyInside(Path.GetFullPath(WeakString), Path.GetFullPath(parentPath.WeakString));
 	}
 
 	/// <summary>
