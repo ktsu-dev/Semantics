@@ -63,7 +63,7 @@ public sealed record Chord
 			return false;
 		}
 
-		string body = new([.. head[index..].Where(c => c is not ('(' or ')'))]);
+		string body = RewriteSixNine(new([.. head[index..].Where(c => c is not ('(' or ')'))]));
 		ChordModifiers modifiers = ConsumeModifiers(ref body);
 		ChordQuality quality = DetermineQuality(body, modifiers.FifthAlteration);
 		SeventhType seventh = DetermineSeventh(body, quality);
@@ -76,6 +76,14 @@ public sealed record Chord
 
 		ChordTensions tensions = modifiers.Tensions;
 		ApplyExtensions(ref body, modifiers.HasAdd9, ref seventh, ref tensions);
+
+		// Every modifier and extension has been consumed; what is left may only be the quality and
+		// seventh vocabulary read above. Anything else ("add" with an unsupported number, a stray
+		// digit) would otherwise be dropped silently and the parse would return a different chord.
+		if (!IsQualityVocabulary(body))
+		{
+			return false;
+		}
 
 		result = new Chord
 		{
@@ -146,6 +154,44 @@ public sealed record Chord
 		return true;
 	}
 
+	/// <summary>
+	/// Rewrites the unslashed "six-nine" spelling in a chord body — a "6" directly followed by a bare
+	/// "9", as in "C69" — into "6add9", the same reading <see cref="TryRewriteSixNine"/> gives "C6/9".
+	/// Without it the "9" is taken as a ninth extension and implies a dominant seventh.
+	/// </summary>
+	/// <param name="body">The chord body, after the root.</param>
+	/// <returns>The body with the idiom rewritten, or the body unchanged.</returns>
+	private static string RewriteSixNine(string body)
+	{
+		int at = body.IndexOf("69", StringComparison.Ordinal);
+
+		// A following digit would make it some other extension ("691"), not the bare ninth.
+		bool bareNine = at >= 0 && (at + 2 >= body.Length || body[at + 2] is < '0' or > '9');
+		return bareNine ? body[..(at + 1)] + "add9" + body[(at + 2)..] : body;
+	}
+
+	/// <summary>The words a chord body may still hold once every modifier and extension is consumed.</summary>
+	private static readonly string[] QualityWords = ["maj", "Maj", "min", "dim", "aug", "sus2", "sus4", "sus"];
+
+	/// <summary>
+	/// Returns whether a fully consumed chord body holds only the quality and seventh vocabulary
+	/// that <see cref="DetermineQuality"/>, <see cref="DetermineSeventh"/> and the sixth check read.
+	/// </summary>
+	/// <param name="body">The chord body left after the modifiers and extensions are taken.</param>
+	/// <returns><see langword="true"/> when nothing unrecognised remains.</returns>
+	private static bool IsQualityVocabulary(string body)
+	{
+		foreach (string word in QualityWords)
+		{
+			while (Take(ref body, word))
+			{
+				// Intentionally empty: Take removes one occurrence of the word from body each pass.
+			}
+		}
+
+		return body.All(c => c is 'm' or 'M' or '-' or '°' or '+' or 'Δ' or '5' or '6' or '7');
+	}
+
 	private static bool TryParseRoot(string symbol, ref int index, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out PitchClass? root)
 	{
 		root = null;
@@ -171,7 +217,7 @@ public sealed record Chord
 	/// <summary>
 	/// Consumes the modifier tokens from a chord body, in the order they must be taken: the
 	/// omissions, the flat sixth (before any bare "6"), the altered tensions (multi-character
-	/// tokens before bare numbers), the fifth alteration, and finally "add9".
+	/// tokens before bare numbers), the fifth alteration, and finally the added tones.
 	/// </summary>
 	private static ChordModifiers ConsumeModifiers(ref string body)
 	{
@@ -183,11 +229,22 @@ public sealed record Chord
 		ChordTensions tensions = ConsumeTensions(ref body);
 		int fifthAlteration = ConsumeFifthAlteration(ref body);
 
-		// "add9" must be consumed before the bare "9" logic so it does not imply a seventh.
+		// The added tones must be consumed before the bare "9"/"11"/"13" logic so they do not
+		// imply a seventh.
 		bool hasAdd9 = Take(ref body, "add9");
 		if (hasAdd9)
 		{
 			tensions |= ChordTensions.Nine;
+		}
+
+		if (Take(ref body, "add11"))
+		{
+			tensions |= ChordTensions.Eleven;
+		}
+
+		if (Take(ref body, "add13"))
+		{
+			tensions |= ChordTensions.Thirteen;
 		}
 
 		return new ChordModifiers(omissions, sixth, tensions, fifthAlteration, hasAdd9);
@@ -541,10 +598,17 @@ public sealed record Chord
 
 	private void AppendTensions(System.Text.StringBuilder sb)
 	{
-		// Natural extension stack: 13 implies 9+11+13, 11 implies 9+11. A bare 9 with no
-		// seventh must be written "add9" so it does not imply a dominant seventh on reparse.
+		// Natural extension stack: 13 implies 9+11+13, 11 implies 9+11. With no seventh each natural
+		// tension is an added tone and must be written "addN" so it does not imply a dominant
+		// seventh on reparse.
 		bool hasSeventh = Seventh != SeventhType.None;
-		if (Tensions.HasFlag(ChordTensions.Thirteen))
+		if (!hasSeventh)
+		{
+			AppendAddedTone(sb, ChordTensions.Nine, "add9");
+			AppendAddedTone(sb, ChordTensions.Eleven, "add11");
+			AppendAddedTone(sb, ChordTensions.Thirteen, "add13");
+		}
+		else if (Tensions.HasFlag(ChordTensions.Thirteen))
 		{
 			_ = sb.Append("13");
 		}
@@ -554,7 +618,7 @@ public sealed record Chord
 		}
 		else if (Tensions.HasFlag(ChordTensions.Nine))
 		{
-			_ = sb.Append(hasSeventh ? "9" : "add9");
+			_ = sb.Append('9');
 		}
 
 		if (Tensions.HasFlag(ChordTensions.FlatNine))
@@ -575,6 +639,14 @@ public sealed record Chord
 		if (Tensions.HasFlag(ChordTensions.FlatThirteen))
 		{
 			_ = sb.Append("b13");
+		}
+	}
+
+	private void AppendAddedTone(System.Text.StringBuilder sb, ChordTensions flag, string token)
+	{
+		if (Tensions.HasFlag(flag))
+		{
+			_ = sb.Append(token);
 		}
 	}
 

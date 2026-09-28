@@ -224,6 +224,10 @@ public class ChordTests
 			("C7#9", [0, 4, 7, 10, 15]),
 			("C7#5", [0, 4, 8, 10]),
 			("Cmmaj7", [0, 3, 7, 11]),
+			("C69", [0, 4, 7, 9, 14]),
+			("Cm69", [0, 3, 7, 9, 14]),
+			("Cadd11", [0, 4, 7, 17]),
+			("Cadd13", [0, 4, 7, 21]),
 		];
 
 		foreach ((string symbol, int[] expected) in cases)
@@ -231,5 +235,37 @@ public class ChordTests
 			int[] actual = [.. Chord.Parse(symbol).ChordTones()];
 			Assert.AreSequenceEqual(expected, actual, $"ChordTones mismatch for '{symbol}'.");
 		}
+	}
+
+	[TestMethod]
+	public void Parse_UnslashedSixNine_IsTheSameChordAsTheSlashedSpelling()
+	{
+		Assert.AreEqual(Chord.Parse("C6/9"), Chord.Parse("C69"));
+		Assert.AreEqual(Chord.Parse("Cm6/9"), Chord.Parse("Cm69"));
+		Assert.AreEqual(SeventhType.None, Chord.Parse("C69").Seventh);
+	}
+
+	[TestMethod]
+	public void Parse_AddedEleventhAndThirteenth_DoNotImplyASeventh()
+	{
+		Chord add11 = Chord.Parse("Cadd11");
+		Assert.AreEqual(SeventhType.None, add11.Seventh);
+		Assert.AreEqual(ChordTensions.Eleven, add11.Tensions);
+
+		Chord add13 = Chord.Parse("Cadd13");
+		Assert.AreEqual(SeventhType.None, add13.Seventh);
+		Assert.AreEqual(ChordTensions.Thirteen, add13.Tensions);
+	}
+
+	[TestMethod]
+	public void Parse_UnrecognisedTextLeftInTheBody_Fails()
+	{
+		Assert.IsFalse(Chord.TryParse("Cadd", out Chord? bareAdd));
+		Assert.IsNull(bareAdd);
+		Assert.IsFalse(Chord.TryParse("Cadd4", out Chord? unsupportedAdd));
+		Assert.IsNull(unsupportedAdd);
+		Assert.IsFalse(Chord.TryParse("Cxyz", out Chord? junk));
+		Assert.IsNull(junk);
+		_ = Assert.ThrowsExactly<FormatException>(() => Chord.Parse("C7add"));
 	}
 }
