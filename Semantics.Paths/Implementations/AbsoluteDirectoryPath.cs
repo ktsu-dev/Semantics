@@ -193,49 +193,29 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	}
 
 	/// <summary>
-	/// Determines whether this directory is a child of the specified parent path using efficient span comparison.
+	/// Determines whether this directory is inside the specified parent directory.
 	/// </summary>
 	/// <param name="parentPath">The potential parent path to check against.</param>
 	/// <returns><see langword="true"/> if this path is a child of the parent path; otherwise, <see langword="false"/>.</returns>
 	/// <remarks>
-	/// This method uses span-based comparison for better performance than string concatenation.
-	/// It normalizes both paths before comparison to handle different separator styles.
+	/// Both paths are normalized before comparison to handle different separator styles. Case is
+	/// ignored on Windows and significant on every other platform. Every path below a filesystem
+	/// root is a child of that root.
 	/// </remarks>
 	public bool IsChildOf(AbsoluteDirectoryPath parentPath)
 	{
 		Ensure.NotNull(parentPath);
 
-		// Get normalized paths using span semantics for comparison
-		ReadOnlySpan<char> thisPathSpan = Path.GetFullPath(WeakString).AsSpan();
-		ReadOnlySpan<char> parentPathSpan = Path.GetFullPath(parentPath.WeakString).AsSpan();
-
-		// A path cannot be a child of itself
-		if (thisPathSpan.SequenceEqual(parentPathSpan))
-		{
-			return false;
-		}
-
-		// Check if this path starts with the parent path followed by a separator
-		if (!thisPathSpan.StartsWith(parentPathSpan, StringComparison.OrdinalIgnoreCase))
-		{
-			return false;
-		}
-
-		// Ensure there's a separator after the parent path (not just a prefix match)
-		int nextIndex = parentPathSpan.Length;
-		return nextIndex < thisPathSpan.Length &&
-			   (thisPathSpan[nextIndex] == Path.DirectorySeparatorChar ||
-				thisPathSpan[nextIndex] == Path.AltDirectorySeparatorChar);
+		return PathContainment.IsStrictlyInside(Path.GetFullPath(WeakString), Path.GetFullPath(parentPath.WeakString));
 	}
 
 	/// <summary>
-	/// Determines whether this directory is a parent of the specified child path using efficient span comparison.
+	/// Determines whether the specified child directory is inside this directory.
 	/// </summary>
 	/// <param name="childPath">The potential child path to check against.</param>
 	/// <returns><see langword="true"/> if this path is a parent of the child path; otherwise, <see langword="false"/>.</returns>
 	/// <remarks>
-	/// This method uses span-based comparison for better performance than string concatenation.
-	/// It normalizes both paths before comparison to handle different separator styles.
+	/// The same check as <see cref="IsChildOf"/>, with the arguments swapped.
 	/// </remarks>
 	public bool IsParentOf(AbsoluteDirectoryPath childPath)
 	{
