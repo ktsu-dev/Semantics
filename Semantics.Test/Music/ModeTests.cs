@@ -28,6 +28,25 @@ public class ModeTests
 	}
 
 	[TestMethod]
+	[DataRow("ionian")]
+	[DataRow("Ionian")]
+	[DataRow("IONIAN")]
+	public void Parse_IonianAlias_EqualsMajor(string name)
+	{
+		Mode parsed = Mode.Parse(name);
+		Assert.AreEqual(Mode.Ionian, parsed);
+		Assert.AreEqual(Mode.Major, parsed);
+		Assert.AreEqual("major", parsed.ToString());
+	}
+
+	[TestMethod]
+	public void TryParse_IonianAlias_EqualsMajor()
+	{
+		Assert.IsTrue(Mode.TryParse("ionian", out Mode? result));
+		Assert.AreEqual(Mode.Major, result);
+	}
+
+	[TestMethod]
 	public void Parse_RejectsUnknown()
 	{
 		_ = Assert.ThrowsExactly<FormatException>(() => Mode.Parse("bebop"));

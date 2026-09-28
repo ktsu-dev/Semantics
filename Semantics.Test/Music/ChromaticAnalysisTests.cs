@@ -49,6 +49,21 @@ public class ChromaticAnalysisTests
 	}
 
 	[TestMethod]
+	public void ChromaticChords_ParsedIonianKey_IsAnalyzedAsMajor()
+	{
+		Key ionian = Key.Parse("C ionian");
+
+		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> secondary =
+			Progression.Parse("4/4  C | D7 | G7 | C").ChromaticChords(ionian);
+		Assert.AreEqual("V/V", secondary[0].Detail);
+
+		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> borrowed =
+			Progression.Parse("4/4  C | Fm | C").ChromaticChords(ionian);
+		Assert.AreEqual(ChromaticKind.BorrowedChord, borrowed[0].Kind);
+		Assert.AreEqual("from parallel minor", borrowed[0].Detail);
+	}
+
+	[TestMethod]
 	public void ChromaticAnalysis_Create_RejectsNegativeIndex() =>
 		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ChromaticAnalysis.Create(-1, ChromaticKind.Chromatic, null));
 }
