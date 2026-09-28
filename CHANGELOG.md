@@ -1,3 +1,7 @@
+## v5.8.3
+
+No significant changes detected since v5.8.3.
+
 ## v5.8.3 (patch)
 
 Changes since v5.8.2:
@@ -442,11 +446,13 @@ Changes since v2.0.0:
 - [patch] MSTEST0068: CollectionAssert.AreEqual -> Assert.AreSequenceEqual ([@matt-edmondson](https://github.com/matt-edmondson))
 - [patch] Migrate file headers to the one-line ktsu-dev form ([@matt-edmondson](https://github.com/matt-edmondson))
 - [patch] Fix SonarCloud BLOCKER issues in test suite ([@matt-edmondson](https://github.com/matt-edmondson))
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 - Sync .serena\.gitignore ([@KtsuTools](https://github.com/KtsuTools))
 - Sync .runsettings ([@KtsuTools](https://github.com/KtsuTools))
 - Sync .editorconfig ([@KtsuTools](https://github.com/KtsuTools))
 - Sync .gitattributes ([@KtsuTools](https://github.com/KtsuTools))
 - Sync global.json ([@KtsuTools](https://github.com/KtsuTools))
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 - [minor] Return the root itself from AbsoluteDirectoryPath.Parent ([@matt-edmondson](https://github.com/matt-edmondson))
 - [patch] Fix directory detection in SemanticRelativePath.Make ([@matt-edmondson](https://github.com/matt-edmondson))
 - Make the new path tests platform-agnostic ([@matt-edmondson](https://github.com/matt-edmondson))
@@ -618,11 +624,13 @@ Changes since v2.9.3:
 - [patch] MSTEST0068: CollectionAssert.AreEqual -> Assert.AreSequenceEqual ([@matt-edmondson](https://github.com/matt-edmondson))
 - [patch] Migrate file headers to the one-line ktsu-dev form ([@matt-edmondson](https://github.com/matt-edmondson))
 - [patch] Fix SonarCloud BLOCKER issues in test suite ([@matt-edmondson](https://github.com/matt-edmondson))
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 - Sync .serena\.gitignore ([@KtsuTools](https://github.com/KtsuTools))
 - Sync .runsettings ([@KtsuTools](https://github.com/KtsuTools))
 - Sync .editorconfig ([@KtsuTools](https://github.com/KtsuTools))
 - Sync .gitattributes ([@KtsuTools](https://github.com/KtsuTools))
 - Sync global.json ([@KtsuTools](https://github.com/KtsuTools))
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 
 ## v2.9.3 (patch)
 
@@ -988,10 +996,12 @@ Changes since v1.0.0:
 - Merge main into vectors (structural reconciliation) ([@Claude](https://github.com/Claude))
 - docs: align docs with unified vector model and current API ([@Claude](https://github.com/Claude))
 - feat: Add new skill for creating physics quantity types with metadata-driven process ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance GitHub Actions workflow with version bump input options and improve KtsuBuild cloning logic ([@matt-edmondson](https://github.com/matt-edmondson))
 - Enhance project configuration: enable compiler-generated files and set output path; remove specific generated files from compilation ([@matt-edmondson](https://github.com/matt-edmondson))
 - feat: Add new unit categories and conversion factors for fluid mechanics and chemistry ([@matt-edmondson](https://github.com/matt-edmondson))
 - feat: Enhance dimensions and units metadata with additional overloads and derived units ([@matt-edmondson](https://github.com/matt-edmondson))
 - feat: Update CodeBlocker package version and refactor scope usage in generators and templates ([@matt-edmondson](https://github.com/matt-edmondson))
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 - Refactor dimensions metadata structure and enhance vector form definitions ([@matt-edmondson](https://github.com/matt-edmondson))
 - feat: Update dimensions.json schema to unify vector representation and enhance dimensional relationships ([@matt-edmondson](https://github.com/matt-edmondson))
 - feat: Enhance cross-dimensional operations and relationships in unified vector representation ([@matt-edmondson](https://github.com/matt-edmondson))
@@ -1008,6 +1018,7 @@ Changes since v1.0.0:
 - Add ktsu.RoundTripStringJsonConverter package reference and update SemanticString to use its JsonConverter ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor validation strategy null checks to use Ensure.NotNull for consistency ([@matt-edmondson](https://github.com/matt-edmondson))
 - Enhance test assertions with descriptive messages for clarity ([@matt-edmondson](https://github.com/matt-edmondson))
+- Remove .github\workflows\project.yml ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update suppression targets in CompatibilitySuppressions.xml for attribute consistency ([@matt-edmondson](https://github.com/matt-edmondson))
 - Remove unnecessary blank line in PerformanceRegressionTests class ([@matt-edmondson](https://github.com/matt-edmondson))
 - Remove performance variance checks from quantity creation test for consistency ([@matt-edmondson](https://github.com/matt-edmondson))
@@ -1028,6 +1039,7 @@ Changes since v1.0.0:
 - Add unit tests for AcousticImpedance, ReflectionCoefficient, and SoundSpeed classes ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add unit tests for AcousticDirectionalityIndex functionality ([@matt-edmondson](https://github.com/matt-edmondson))
 - Remove obsolete cursor ignore files to streamline project structure ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance GitHub Actions workflow and testing configuration ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor Exposure calculations to use CoulombPerKilogram unit ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add unit tests for various SemanticString validators ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add unit tests for casing and line count validators in SemanticString ([@matt-edmondson](https://github.com/matt-edmondson))
@@ -1130,9 +1142,11 @@ Changes since v1.0.0:
 -  Add new semantic path types and validation strategies ([@matt-edmondson](https://github.com/matt-edmondson))
 - Implement semantic path operators and enhance path interfaces ([@matt-edmondson](https://github.com/matt-edmondson))
 - Enhance semantic path documentation and interface functionality ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor GitHub Actions workflow to reposition .NET SDK setup step for improved clarity and maintainability. The setup step is now placed after the JDK setup, ensuring a more logical flow in the CI process. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Enhance documentation for path interface hierarchy and examples ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add comprehensive interface tests for semantic path types ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add interfaces for path type hierarchy to enable polymorphism ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance GitHub Actions workflow by adding .NET SDK setup step with caching for improved build performance. ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v1.1.2 (patch)
 
@@ -1159,9 +1173,11 @@ Changes since v1.0.0:
 
 - Fix IDE0370 build errors from .NET 10 SDK analyzer ([@Claude](https://github.com/Claude))
 - Add audio-engineering quantities and normalized parameter tapers ([@Claude](https://github.com/Claude))
+- Enhance GitHub Actions workflow with version bump input options and improve KtsuBuild cloning logic ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add ktsu.RoundTripStringJsonConverter package reference and update SemanticString to use its JsonConverter ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor validation strategy null checks to use Ensure.NotNull for consistency ([@matt-edmondson](https://github.com/matt-edmondson))
 - Enhance test assertions with descriptive messages for clarity ([@matt-edmondson](https://github.com/matt-edmondson))
+- Remove .github\workflows\project.yml ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update suppression targets in CompatibilitySuppressions.xml for attribute consistency ([@matt-edmondson](https://github.com/matt-edmondson))
 - Remove unnecessary blank line in PerformanceRegressionTests class ([@matt-edmondson](https://github.com/matt-edmondson))
 - Remove performance variance checks from quantity creation test for consistency ([@matt-edmondson](https://github.com/matt-edmondson))
@@ -1182,6 +1198,7 @@ Changes since v1.0.0:
 - Add unit tests for AcousticImpedance, ReflectionCoefficient, and SoundSpeed classes ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add unit tests for AcousticDirectionalityIndex functionality ([@matt-edmondson](https://github.com/matt-edmondson))
 - Remove obsolete cursor ignore files to streamline project structure ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance GitHub Actions workflow and testing configuration ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor Exposure calculations to use CoulombPerKilogram unit ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add unit tests for various SemanticString validators ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add unit tests for casing and line count validators in SemanticString ([@matt-edmondson](https://github.com/matt-edmondson))
@@ -1274,9 +1291,11 @@ Changes since v1.0.0:
 -  Add new semantic path types and validation strategies ([@matt-edmondson](https://github.com/matt-edmondson))
 - Implement semantic path operators and enhance path interfaces ([@matt-edmondson](https://github.com/matt-edmondson))
 - Enhance semantic path documentation and interface functionality ([@matt-edmondson](https://github.com/matt-edmondson))
+- Refactor GitHub Actions workflow to reposition .NET SDK setup step for improved clarity and maintainability. The setup step is now placed after the JDK setup, ensuring a more logical flow in the CI process. ([@matt-edmondson](https://github.com/matt-edmondson))
 - Enhance documentation for path interface hierarchy and examples ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add comprehensive interface tests for semantic path types ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add interfaces for path type hierarchy to enable polymorphism ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance GitHub Actions workflow by adding .NET SDK setup step with caching for improved build performance. ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v1.0.34 (patch)
 
@@ -1301,13 +1320,12 @@ Changes since v1.0.31:
 Changes since v1.0.30:
 
 - Enhance GitHub Actions workflow with version bump input options and improve KtsuBuild cloning logic ([@matt-edmondson](https://github.com/matt-edmondson))
-- Bump Polyfill from 9.8.1 to 9.9.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump the ktsu group with 1 update ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump the ktsu group with 1 update ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
 ## v1.0.31-pre.1 (prerelease)
 
-No significant changes detected since v1.0.31.
+Changes since v1.0.30:
+
+- Bump the ktsu group with 1 update ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
 ## v1.0.30 (patch)
 
@@ -1383,7 +1401,9 @@ Changes since v1.0.30-pre.1:
 
 ## v1.0.30-pre.1 (prerelease)
 
-No significant changes detected since v1.0.30.
+Changes since v1.0.29:
+
+- Bump the ktsu group with 3 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
 ## v1.0.29 (patch)
 
@@ -1391,6 +1411,7 @@ Changes since v1.0.28:
 
 - Refactor validation strategy null checks to use Ensure.NotNull for consistency ([@matt-edmondson](https://github.com/matt-edmondson))
 - Enhance test assertions with descriptive messages for clarity ([@matt-edmondson](https://github.com/matt-edmondson))
+- Remove .github\workflows\project.yml ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v1.0.29-pre.6 (prerelease)
 
@@ -1431,7 +1452,9 @@ Changes since v1.0.29-pre.1:
 
 ## v1.0.29-pre.1 (prerelease)
 
-No significant changes detected since v1.0.29.
+Changes since v1.0.28:
+
+- Bump Polyfill from 9.7.3 to 9.7.4 ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
 ## v1.0.28 (patch)
 
@@ -1492,6 +1515,7 @@ Changes since v1.0.20:
 - Add unit tests for AcousticImpedance, ReflectionCoefficient, and SoundSpeed classes ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add unit tests for AcousticDirectionalityIndex functionality ([@matt-edmondson](https://github.com/matt-edmondson))
 - Remove obsolete cursor ignore files to streamline project structure ([@matt-edmondson](https://github.com/matt-edmondson))
+- Enhance GitHub Actions workflow and testing configuration ([@matt-edmondson](https://github.com/matt-edmondson))
 - Refactor Exposure calculations to use CoulombPerKilogram unit ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add unit tests for various SemanticString validators ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add unit tests for casing and line count validators in SemanticString ([@matt-edmondson](https://github.com/matt-edmondson))
@@ -1527,7 +1551,9 @@ Changes since v1.0.19:
 
 ## v1.0.20-pre.1 (prerelease)
 
-No significant changes detected since v1.0.20.
+Changes since v1.0.19:
+
+- Update package versions and enhance build scripts ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v1.0.19 (patch)
 
@@ -1552,7 +1578,9 @@ Changes since v1.0.16:
 
 ## v1.0.17-pre.1 (prerelease)
 
-No significant changes detected since v1.0.17.
+Changes since v1.0.16:
+
+- Update copyright notice, package versions, and enhance winget manifest generation script ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v1.0.16 (patch)
 
