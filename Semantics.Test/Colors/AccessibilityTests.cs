@@ -40,4 +40,41 @@ public class AccessibilityTests
 			adjusted.AccessibilityLevelAgainst(background) >= AccessibilityLevel.AA,
 			$"contrast was {adjusted.ContrastRatio(background)}");
 	}
+
+	[TestMethod]
+	public void AdjustForContrast_DarkensOnMidToneBackground()
+	{
+		// Luminance ~0.296: lightening cannot reach AA here, darkening can.
+		Color background = Color.FromSrgb(0.58, 0.58, 0.58);
+		Color faint = Color.FromSrgb(0.55, 0.55, 0.55);
+		Color adjusted = faint.AdjustForContrast(background, AccessibilityLevel.AA);
+		Assert.IsTrue(
+			adjusted.AccessibilityLevelAgainst(background) >= AccessibilityLevel.AA,
+			$"contrast was {adjusted.ContrastRatio(background)}");
+		Assert.IsTrue(adjusted.RelativeLuminance < background.RelativeLuminance);
+	}
+
+	[TestMethod]
+	public void AdjustForContrast_ReachesLargeTextAAOnUpperMidToneBackground()
+	{
+		// Luminance ~0.45: white tops out below 3:1, black clears it comfortably.
+		Color background = Color.FromSrgb(0.7, 0.7, 0.7);
+		Color faint = Color.FromSrgb(0.75, 0.75, 0.75);
+		Color adjusted = faint.AdjustForContrast(background, AccessibilityLevel.AA, largeText: true);
+		Assert.IsTrue(
+			adjusted.AccessibilityLevelAgainst(background, largeText: true) >= AccessibilityLevel.AA,
+			$"contrast was {adjusted.ContrastRatio(background)}");
+	}
+
+	[TestMethod]
+	public void AdjustForContrast_LightensOnDarkBackground()
+	{
+		Color background = Color.FromSrgb(0.1, 0.1, 0.1);
+		Color faint = Color.FromSrgb(0.2, 0.2, 0.2);
+		Color adjusted = faint.AdjustForContrast(background, AccessibilityLevel.AA);
+		Assert.IsTrue(
+			adjusted.AccessibilityLevelAgainst(background) >= AccessibilityLevel.AA,
+			$"contrast was {adjusted.ContrastRatio(background)}");
+		Assert.IsTrue(adjusted.RelativeLuminance > background.RelativeLuminance);
+	}
 }
