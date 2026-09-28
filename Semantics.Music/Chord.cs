@@ -183,7 +183,9 @@ public sealed record Chord
 	{
 		foreach (string word in QualityWords)
 		{
-			body = body.Replace(word, string.Empty, StringComparison.Ordinal);
+			while (Take(ref body, word))
+			{
+			}
 		}
 
 		return body.All(c => c is 'm' or 'M' or '-' or '°' or '+' or 'Δ' or '5' or '6' or '7');
