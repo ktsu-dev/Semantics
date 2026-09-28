@@ -14,7 +14,6 @@ public sealed record Mode
 	{
 		// Diatonic modes.
 		["major"] = [0, 2, 4, 5, 7, 9, 11],
-		["ionian"] = [0, 2, 4, 5, 7, 9, 11],
 		["dorian"] = [0, 2, 3, 5, 7, 9, 10],
 		["phrygian"] = [0, 1, 3, 5, 7, 8, 10],
 		["lydian"] = [0, 2, 4, 6, 7, 9, 11],
@@ -53,6 +52,13 @@ public sealed record Mode
 		["minor_pentatonic"] = [0, 3, 5, 7, 10],
 		["blues_minor"] = [0, 3, 5, 6, 7, 10],
 		["blues_major"] = [0, 2, 3, 4, 7, 9],
+	};
+
+	// Alternative spellings that name the same mode as a shape above. Parsing maps them to the
+	// canonical name, so a parsed alias equals the static instance it aliases.
+	private static readonly Dictionary<string, string> Aliases = new(StringComparer.OrdinalIgnoreCase)
+	{
+		["ionian"] = "major",
 	};
 
 	/// <summary>Gets the canonical lower-case name of the mode.</summary>
@@ -168,11 +174,17 @@ public sealed record Mode
 	}
 
 	/// <summary>Tries to parse a mode by name, case-insensitively.</summary>
+	/// <remarks>An alias such as "ionian" parses to its canonical mode (<see cref="Major"/>).</remarks>
 	/// <param name="name">The mode name.</param>
 	/// <param name="result">The matching mode, or null on failure.</param>
 	/// <returns><see langword="true"/> when the name is a known mode.</returns>
 	public static bool TryParse(string? name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Mode? result)
 	{
+		if (name is not null && Aliases.TryGetValue(name, out string? canonical))
+		{
+			name = canonical;
+		}
+
 		if (name is not null && Shapes.ContainsKey(name))
 		{
 			result = new() { Name = name.ToLowerInvariant() };

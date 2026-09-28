@@ -97,6 +97,13 @@ public class KeyTests
 	}
 
 	[TestMethod]
+	public void Parse_IonianSpelling_IsTheSameKeyAsMajor()
+	{
+		Assert.AreEqual(Key.Parse("C major"), Key.Parse("C ionian"));
+		Assert.AreEqual(CMajor, Key.Parse("C ionian"));
+	}
+
+	[TestMethod]
 	public void TryParseFailsOnUnknownMode()
 	{
 		Assert.IsFalse(Key.TryParse("C bogus", out Key? result));
