@@ -185,6 +185,7 @@ public sealed record Chord
 		{
 			while (Take(ref body, word))
 			{
+				// Intentionally empty: Take removes one occurrence of the word from body each pass.
 			}
 		}
 
