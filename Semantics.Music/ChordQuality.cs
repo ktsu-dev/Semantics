@@ -25,4 +25,7 @@ public enum ChordQuality
 
 	/// <summary>Power chord (root and perfect fifth only, no third).</summary>
 	Power,
+
+	/// <summary>Major triad with a lowered fifth (major third, diminished fifth), as in "C7b5" or "Cmaj7b5".</summary>
+	MajorFlatFive,
 }

@@ -109,4 +109,13 @@ public class KeyTests
 		Assert.IsFalse(Key.TryParse("C bogus", out Key? result));
 		Assert.IsNull(result);
 	}
+
+	[TestMethod]
+	public void RomanNumeral_DominantSeventhFlatFiveRoundTrips()
+	{
+		Chord chord = Chord.Parse("G7b5");
+		string numeral = CMajor.RomanNumeralOf(chord);
+		Assert.AreEqual("V7b5", numeral);
+		Assert.AreEqual(chord, CMajor.ChordFromRomanNumeral(numeral));
+	}
 }

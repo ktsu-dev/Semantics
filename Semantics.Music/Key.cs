@@ -249,6 +249,8 @@ public sealed record Key
 			_ => "",
 		};
 
-		return quality + seventh;
+		string fifth = chord.Quality == ChordQuality.MajorFlatFive ? "b5" : "";
+
+		return quality + seventh + fifth;
 	}
 }
