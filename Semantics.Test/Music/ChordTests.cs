@@ -282,4 +282,49 @@ public class ChordTests
 		Assert.IsNull(junk);
 		_ = Assert.ThrowsExactly<FormatException>(() => Chord.Parse("C7add"));
 	}
+
+	[TestMethod]
+	public void Parse_FlatFifth_KeepsTheThirdTheSymbolSpells()
+	{
+		// A b5 lowers only the fifth. It is diminished only when the body also spells a minor third.
+		(string Symbol, int[] Tones)[] cases =
+		[
+			("C7b5", [0, 4, 6, 10]),
+			("Cmaj7b5", [0, 4, 6, 11]),
+			("C9b5", [0, 4, 6, 10, 14]),
+			("C(b5)", [0, 4, 6]),
+			("C7♭5", [0, 4, 6, 10]),
+			("Cm7b5", [0, 3, 6, 10]),
+			("C-7b5", [0, 3, 6, 10]),
+			("Cmmaj7b5", [0, 3, 6, 11]),
+		];
+
+		foreach ((string symbol, int[] expected) in cases)
+		{
+			int[] actual = [.. Chord.Parse(symbol).ChordTones()];
+			Assert.AreSequenceEqual(expected, actual, $"ChordTones mismatch for '{symbol}'.");
+		}
+
+		Assert.AreEqual(ChordQuality.MajorFlatFive, Chord.Parse("C7b5").Quality);
+		Assert.AreEqual("C7b5", Chord.Parse("C7b5").ToString());
+		Assert.AreEqual("Cmaj7b5", Chord.Parse("Cmaj7b5").ToString());
+		Assert.AreEqual("C(b5)", Chord.Parse("C(b5)").ToString());
+	}
+
+	[TestMethod]
+	public void Parse_BareMaj_IsNotAMajorSeventh()
+	{
+		Assert.AreEqual(Chord.Parse("C"), Chord.Parse("Cmaj"));
+		Assert.AreEqual(Chord.Parse("C6"), Chord.Parse("Cmaj6"));
+		Assert.AreEqual(SeventhType.Major, Chord.Parse("Cmaj9").Seventh);
+		Assert.AreEqual(SeventhType.Major, Chord.Parse("CMaj7").Seventh);
+	}
+
+	[TestMethod]
+	public void Parse_HalfDiminishedSign_IsTheHalfDiminishedSeventh()
+	{
+		Assert.AreEqual(Chord.Parse("Cm7b5"), Chord.Parse("Cø7"));
+		Assert.AreEqual(Chord.Parse("Cm7b5"), Chord.Parse("Cø"));
+		Assert.AreSequenceEqual([0, 3, 6, 10], [.. Chord.Parse("Cø7").ChordTones()]);
+	}
 }

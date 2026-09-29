@@ -63,7 +63,7 @@ public sealed record Chord
 			return false;
 		}
 
-		string body = RewriteSixNine(new([.. head[index..].Where(c => c is not ('(' or ')'))]));
+		string body = RewriteHalfDiminished(RewriteSixNine(new([.. head[index..].Where(c => c is not ('(' or ')'))])));
 		ChordModifiers modifiers = ConsumeModifiers(ref body);
 		ChordQuality quality = DetermineQuality(body, modifiers.FifthAlteration);
 		SeventhType seventh = DetermineSeventh(body, quality);
@@ -168,6 +168,24 @@ public sealed record Chord
 		// A following digit would make it some other extension ("691"), not the bare ninth.
 		bool bareNine = at >= 0 && (at + 2 >= body.Length || body[at + 2] is < '0' or > '9');
 		return bareNine ? body[..(at + 1)] + "add9" + body[(at + 2)..] : body;
+	}
+
+	/// <summary>
+	/// Rewrites the half-diminished sign into the "m7b5" spelling the modifier reader understands.
+	/// "ø" always denotes the half-diminished seventh, so "Cø" and "Cø7" both read as "Cm7b5".
+	/// </summary>
+	/// <param name="body">The chord body, after the root.</param>
+	/// <returns>The body with the sign rewritten, or the body unchanged.</returns>
+	private static string RewriteHalfDiminished(string body)
+	{
+		int at = body.IndexOf('ø');
+		if (at < 0)
+		{
+			return body;
+		}
+
+		int end = at + 1 < body.Length && body[at + 1] == '7' ? at + 2 : at + 1;
+		return body[..at] + "m7b5" + body[end..];
 	}
 
 	/// <summary>The words a chord body may still hold once every modifier and extension is consumed.</summary>
@@ -346,8 +364,9 @@ public sealed record Chord
 
 		if (fifthAlteration < 0)
 		{
-			// A lowered fifth with a (typically minor) third: a diminished/half-diminished colour.
-			return ChordQuality.Diminished;
+			// A lowered fifth is diminished only when the body also spells a minor third ("Cm7b5");
+			// otherwise the third stays major and only the fifth is lowered ("C7b5", "Cmaj7b5").
+			return IsMinor(body) ? ChordQuality.Diminished : ChordQuality.MajorFlatFive;
 		}
 
 		if (fifthAlteration > 0)
@@ -367,8 +386,8 @@ public sealed record Chord
 	private static SeventhType DetermineSeventh(string body, ChordQuality quality)
 	{
 		bool hasSeven = body.Contains('7');
-		bool hasMaj7 = body.Contains("maj", StringComparison.Ordinal)
-			|| body.Contains("Maj", StringComparison.Ordinal)
+		bool hasMaj7 = IsMajorSeventhWord(body, "maj")
+			|| IsMajorSeventhWord(body, "Maj")
 			|| body.Contains("M7", StringComparison.Ordinal)
 			|| body.Contains('Δ');
 
@@ -390,6 +409,21 @@ public sealed record Chord
 		}
 
 		return hasSeven ? SeventhType.Dominant : SeventhType.None;
+	}
+
+	/// <summary>
+	/// Returns whether "maj" in a chord body names a major seventh. It does only when an extension
+	/// number follows it ("maj7", "maj9", "maj13"): a bare "maj" is a plain major triad, and
+	/// "maj6" a major sixth chord, neither of which carries a seventh.
+	/// </summary>
+	/// <param name="body">The chord body, before the extensions are taken.</param>
+	/// <param name="word">The spelling of "maj" to look for.</param>
+	/// <returns><see langword="true"/> when the word is followed by an extension other than 6.</returns>
+	private static bool IsMajorSeventhWord(string body, string word)
+	{
+		int at = body.IndexOf(word, StringComparison.Ordinal);
+		int next = at + word.Length;
+		return at >= 0 && next < body.Length && body[next] is >= '0' and <= '9' and not '6';
 	}
 
 	private static void ApplyExtensions(ref string body, bool hasAdd9, ref SeventhType seventh, ref ChordTensions tensions)
@@ -444,7 +478,7 @@ public sealed record Chord
 		{
 			_ = offsets.Add(Quality switch
 			{
-				ChordQuality.Diminished => 6,
+				ChordQuality.Diminished or ChordQuality.MajorFlatFive => 6,
 				ChordQuality.Augmented => 8,
 				_ => 7,
 			});
@@ -537,6 +571,13 @@ public sealed record Chord
 		AppendQualityAndSeventh(sb);
 		AppendSixth(sb);
 		AppendTensions(sb);
+		if (Quality == ChordQuality.MajorFlatFive)
+		{
+			// Straight after the root, "b5" would be read back as a flat on the root ("Cb5" is a
+			// C-flat power chord), so the bare triad parenthesises it.
+			_ = sb.Append(sb.Length == Root.Name.Length ? "(b5)" : "b5");
+		}
+
 		AppendOmissions(sb);
 		if (Bass is not null)
 		{
