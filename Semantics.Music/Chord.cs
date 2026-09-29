@@ -367,7 +367,10 @@ public sealed record Chord
 	private static SeventhType DetermineSeventh(string body, ChordQuality quality)
 	{
 		bool hasSeven = body.Contains('7');
-		bool hasMaj7 = body.Contains("maj", StringComparison.Ordinal) || body.Contains("M7", StringComparison.Ordinal) || body.Contains('Δ');
+		bool hasMaj7 = body.Contains("maj", StringComparison.Ordinal)
+			|| body.Contains("Maj", StringComparison.Ordinal)
+			|| body.Contains("M7", StringComparison.Ordinal)
+			|| body.Contains('Δ');
 
 		// The major seventh is tested first because one body can carry both spellings: "dimmaj7"
 		// is the diminished-major seventh, a chord distinct from "dim7", and it is what the
@@ -379,7 +382,9 @@ public sealed record Chord
 			return SeventhType.Major;
 		}
 
-		if (quality == ChordQuality.Diminished && body.Contains("dim", StringComparison.Ordinal) && hasSeven)
+		// '°' is accepted here as it is for the triad, so "C°7" is the diminished seventh rather than
+		// falling through to a dominant seventh on a diminished triad, which is the half-diminished chord.
+		if (quality == ChordQuality.Diminished && (body.Contains("dim", StringComparison.Ordinal) || body.Contains('°')) && hasSeven)
 		{
 			return SeventhType.Diminished;
 		}
