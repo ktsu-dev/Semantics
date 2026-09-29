@@ -1,6 +1,6 @@
-## v5.8.4 (patch)
+## v5.8.5 (patch)
 
-Changes since v5.8.3:
+Changes since v5.8.4:
 
-- Move CI onto the shared ci-shared.yml pipeline ([@Claude](https://github.com/Claude))
+- Parse CMaj7, CmMaj7 and C°7 as the sevenths they name [patch] ([@Claude](https://github.com/Claude))
 
