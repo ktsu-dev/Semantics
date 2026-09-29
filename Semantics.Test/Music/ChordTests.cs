@@ -70,6 +70,20 @@ public class ChordTests
 	}
 
 	[TestMethod]
+	[DataRow("CmMaj7", ChordQuality.Minor, SeventhType.Major, new[] { 0, 3, 7, 11 })]
+	[DataRow("CMaj7", ChordQuality.Major, SeventhType.Major, new[] { 0, 4, 7, 11 })]
+	[DataRow("C°7", ChordQuality.Diminished, SeventhType.Diminished, new[] { 0, 3, 6, 9 })]
+	public void Parse_AlternativeSeventhSpellings_GiveTheSeventhTheyName(string symbol, ChordQuality quality, SeventhType seventh, int[] tones)
+	{
+		// A round-trip alone cannot catch these: the misparsed chord formats and re-parses
+		// consistently, so the seventh type and the pitches have to be asserted directly.
+		Chord c = Chord.Parse(symbol);
+		Assert.AreEqual(quality, c.Quality, symbol);
+		Assert.AreEqual(seventh, c.Seventh, symbol);
+		Assert.AreSequenceEqual(tones, [.. c.ChordTones()], symbol);
+	}
+
+	[TestMethod]
 	public void Parse_HalfDiminished_IsDiminishedTriadWithDominantSeventh()
 	{
 		Chord c = Chord.Parse("Cm7b5");
