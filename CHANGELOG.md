@@ -1,6 +1,8 @@
-## v5.8.3
+## v5.8.4 (patch)
 
-No significant changes detected since v5.8.3.
+Changes since v5.8.3:
+
+- Move CI onto the shared ci-shared.yml pipeline ([@Claude](https://github.com/Claude))
 
 ## v5.8.3 (patch)
 
