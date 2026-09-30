@@ -54,21 +54,17 @@ public readonly partial record struct Capacity<T> : IVector0<Capacity<T>, T>, IP
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Capacity<T> operator +(Capacity<T> left, Capacity<T> right) => Create(left.Quantity + right.Quantity);
 
-	/// <summary>Negates a <see cref="Capacity{T}"/>.</summary>
+	/// <summary>Scales a <see cref="Capacity{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Capacity<T> operator -(Capacity<T> value) => Create(-value.Quantity);
+	public static Capacity<T> operator *(Capacity<T> left, T right) => Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)));
 
-	/// <summary>Scales a <see cref="Capacity{T}"/> by a bare number.</summary>
+	/// <summary>Scales a <see cref="Capacity{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Capacity<T> operator *(Capacity<T> left, T right) => Create(left.Quantity * right);
+	public static Capacity<T> operator *(T left, Capacity<T> right) => Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)));
 
-	/// <summary>Scales a <see cref="Capacity{T}"/> by a bare number.</summary>
+	/// <summary>Divides a <see cref="Capacity{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Capacity<T> operator *(T left, Capacity<T> right) => Create(left * right.Quantity);
-
-	/// <summary>Divides a <see cref="Capacity{T}"/> by a bare number.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Capacity<T> operator /(Capacity<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+	public static Capacity<T> operator /(Capacity<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)));
 
 	/// <summary>Divides one <see cref="Capacity{T}"/> by another, giving the bare ratio.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]

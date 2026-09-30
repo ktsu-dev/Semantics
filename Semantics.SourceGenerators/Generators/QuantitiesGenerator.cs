@@ -847,23 +847,35 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				$"Subtracts one {docRef} from another.");
 		}
 
-		cls.Members.Add(new MethodTemplate()
+		// A magnitude has no negation, and scaling one by a negative number throws, for the same
+		// reason binary '-' is withheld above: a V0 never holds a negative value (#285). The
+		// factories guard construction (#50); these are the operators that could otherwise get
+		// past them.
+		if (!isV0)
 		{
-			Comments = {$"/// <summary>Negates a {docRef}.</summary>"},
-			Attributes = {Emit.PhysicsOperatorSuppression},
-			Keywords = {Emit.Public, Emit.Static, fullType},
-			Name = "operator -",
-			Parameters = {new ParameterTemplate { Type = fullType, Name = Emit.ValueParameter }},
-			BodyFactory = (body) => body.Write("=> Create(-value.Quantity);"),
-		});
+			cls.Members.Add(new MethodTemplate()
+			{
+				Comments = {$"/// <summary>Negates a {docRef}.</summary>"},
+				Attributes = {Emit.PhysicsOperatorSuppression},
+				Keywords = {Emit.Public, Emit.Static, fullType},
+				Name = "operator -",
+				Parameters = {new ParameterTemplate { Type = fullType, Name = Emit.ValueParameter }},
+				BodyFactory = (body) => body.Write("=> Create(-value.Quantity);"),
+			});
+		}
 
-		AddBinaryOperator(cls, fullType, "*", fullType, "T", "=> Create(left.Quantity * right);",
-			$"Scales a {docRef} by a bare number.");
-		AddBinaryOperator(cls, fullType, "*", "T", fullType, "=> Create(left * right.Quantity);",
-			$"Scales a {docRef} by a bare number.");
+		string scaledLeft = isV0 ? "Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)))" : "Create(left.Quantity * right)";
+		string scaledRight = isV0 ? "Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)))" : "Create(left * right.Quantity)";
+		string divided = isV0 ? "Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)))" : "Create(left.Quantity / right)";
+		string scaleRemark = isV0 ? " Throws <see cref=\"System.ArgumentException\"/> when the number is negative." : string.Empty;
+
+		AddBinaryOperator(cls, fullType, "*", fullType, "T", $"=> {scaledLeft};",
+			$"Scales a {docRef} by a bare number.{scaleRemark}");
+		AddBinaryOperator(cls, fullType, "*", "T", fullType, $"=> {scaledRight};",
+			$"Scales a {docRef} by a bare number.{scaleRemark}");
 		AddBinaryOperator(cls, fullType, "/", fullType, "T",
-			"=> T.IsZero(right) ? throw new System.DivideByZeroException(\"Cannot divide by zero.\") : Create(left.Quantity / right);",
-			$"Divides a {docRef} by a bare number.");
+			$"=> T.IsZero(right) ? throw new System.DivideByZeroException(\"Cannot divide by zero.\") : {divided};",
+			$"Divides a {docRef} by a bare number.{scaleRemark}");
 		AddBinaryOperator(cls, "T", "/", fullType, fullType,
 			"=> T.IsZero(right.Quantity) ? throw new System.DivideByZeroException(\"Cannot divide by zero.\") : left.Quantity / right.Quantity;",
 			$"Divides one {docRef} by another, giving the bare ratio.");

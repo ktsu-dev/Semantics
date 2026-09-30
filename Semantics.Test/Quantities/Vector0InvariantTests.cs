@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// <list type="bullet">
 /// <item><description>Issue #50: factories reject negative inputs with <see cref="ArgumentException"/>.</description></item>
 /// <item><description>Issue #52: V0 - V0 returns the same V0 of <c>T.Abs(a - b)</c>.</description></item>
+/// <item><description>Issue #285: a V0 has no unary negation, and scaling it by a negative number throws.</description></item>
 /// </list>
 /// </summary>
 [TestClass]
@@ -281,4 +282,54 @@ public sealed class Vector0InvariantTests
 			() => Vector0Guards.EnsurePositive(-1.0, "myParam"));
 		Assert.AreEqual("myParam", ex.ParamName);
 	}
+
+	// =========================================================== #285: Operators cannot make a V0 negative
+
+	[TestMethod]
+	public void Vector0_Has_No_Unary_Negation()
+	{
+		Assert.IsNull(typeof(Temperature<double>).GetMethod("op_UnaryNegation"));
+		Assert.IsNull(typeof(Speed<double>).GetMethod("op_UnaryNegation"));
+		Assert.IsNull(typeof(Distance<double>).GetMethod("op_UnaryNegation"));
+	}
+
+	[TestMethod]
+	public void Vector1_Keeps_Unary_Negation()
+	{
+		Velocity1D<double> v = -Velocity1D<double>.FromMeterPerSecond(3.0);
+		Assert.AreEqual(-3.0, v.Value, Tolerance);
+	}
+
+	[TestMethod]
+	public void Vector0_Times_Negative_Scalar_Throws()
+	{
+		Speed<double> speed = Speed<double>.FromMeterPerSecond(2.0);
+		_ = Assert.ThrowsExactly<ArgumentException>(() => speed * -3.0);
+		_ = Assert.ThrowsExactly<ArgumentException>(() => -3.0 * speed);
+	}
+
+	[TestMethod]
+	public void Vector0_Divided_By_Negative_Scalar_Throws()
+	{
+		Temperature<double> temperature = Temperature<double>.FromKelvin(300.0);
+		_ = Assert.ThrowsExactly<ArgumentException>(() => temperature / -2.0);
+	}
+
+	[TestMethod]
+	public void Vector0_Overload_Times_Negative_Scalar_Throws()
+		=> _ = Assert.ThrowsExactly<ArgumentException>(() => Distance<double>.FromMeter(1.0) * -1.0);
+
+	[TestMethod]
+	public void Vector0_Scaled_By_NonNegative_Scalar_Is_Allowed()
+	{
+		Speed<double> speed = Speed<double>.FromMeterPerSecond(2.0);
+		Assert.AreEqual(6.0, (speed * 3.0).Value, Tolerance);
+		Assert.AreEqual(6.0, (3.0 * speed).Value, Tolerance);
+		Assert.AreEqual(1.0, (speed / 2.0).Value, Tolerance);
+		Assert.AreEqual(0.0, (speed * 0.0).Value, Tolerance);
+	}
+
+	[TestMethod]
+	public void Vector1_Scaled_By_Negative_Scalar_Is_Signed()
+		=> Assert.AreEqual(-6.0, (Velocity1D<double>.FromMeterPerSecond(2.0) * -3.0).Value, Tolerance);
 }
