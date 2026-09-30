@@ -574,8 +574,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// <c>physicalConstraints.minExclusive: "0"</c> per #51) the guard is upgraded to
 	/// <c>Vector0Guards.EnsurePositive</c>, which rejects zero as well as negative values.
 	/// <paramref name="strictPositive"/> is ignored when <paramref name="applyV0Guard"/> is false.
-	/// When <paramref name="isDifference"/> is true (a V1 form, which holds a signed difference
-	/// rather than a position on the scale) the unit's offset is left out, so
+	/// When <paramref name="applyV0Guard"/> is false the form is a V1, which holds a signed
+	/// difference rather than a position on the scale, so the unit's offset is left out:
 	/// <c>TemperatureDelta.FromCelsius(10)</c> is 10 K rather than 283.15 K (#283).
 	/// </summary>
 	private static void AddUnitFactories(
@@ -585,8 +585,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		string fullType,
 		string crefForComment,
 		bool applyV0Guard,
-		bool strictPositive = false,
-		bool isDifference = false)
+		bool strictPositive = false)
 	{
 		if (availableUnits == null || availableUnits.Count == 0)
 		{
@@ -601,7 +600,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			bool isBase = unitName == baseUnit;
 			string conversionExpr = isBase
 				? Emit.ValueParameter
-				: BuildToBaseExpression(unitName, unitMap, Emit.ValueParameter, applyOffset: !isDifference);
+				: BuildToBaseExpression(unitName, unitMap, Emit.ValueParameter, applyOffset: applyV0Guard);
 
 			string body = applyV0Guard
 				? $"=> Create(Vector0Guards.{guardMethod}({conversionExpr}, nameof(value)));"
@@ -1121,8 +1120,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			emission.Units,
 			fullType,
 			"<see cref=\"" + typeName + "{T}\"/>",
-			applyV0Guard: false,
-			isDifference: true);
+			applyV0Guard: false);
 
 		// Dimension override + typed In() (#59).
 		AddDimensionAndInMembers(cls, dim, emission.Units, isDifference: true);
@@ -1294,8 +1292,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			fullType,
 			typeName,
 			applyV0Guard: vectorForm == 0,
-			strictPositive: strictPositive,
-			isDifference: vectorForm != 0);
+			strictPositive: strictPositive);
 
 		// Dimension override + typed In() (#59).
 		AddDimensionAndInMembers(cls, dim, emission.Units, isDifference: vectorForm != 0);
