@@ -53,21 +53,17 @@ public readonly partial record struct VoltageMagnitude<T> : IVector0<VoltageMagn
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static VoltageMagnitude<T> operator +(VoltageMagnitude<T> left, VoltageMagnitude<T> right) => Create(left.Quantity + right.Quantity);
 
-	/// <summary>Negates a <see cref="VoltageMagnitude{T}"/>.</summary>
+	/// <summary>Scales a <see cref="VoltageMagnitude{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator -(VoltageMagnitude<T> value) => Create(-value.Quantity);
+	public static VoltageMagnitude<T> operator *(VoltageMagnitude<T> left, T right) => Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)));
 
-	/// <summary>Scales a <see cref="VoltageMagnitude{T}"/> by a bare number.</summary>
+	/// <summary>Scales a <see cref="VoltageMagnitude{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator *(VoltageMagnitude<T> left, T right) => Create(left.Quantity * right);
+	public static VoltageMagnitude<T> operator *(T left, VoltageMagnitude<T> right) => Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)));
 
-	/// <summary>Scales a <see cref="VoltageMagnitude{T}"/> by a bare number.</summary>
+	/// <summary>Divides a <see cref="VoltageMagnitude{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator *(T left, VoltageMagnitude<T> right) => Create(left * right.Quantity);
-
-	/// <summary>Divides a <see cref="VoltageMagnitude{T}"/> by a bare number.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator /(VoltageMagnitude<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+	public static VoltageMagnitude<T> operator /(VoltageMagnitude<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)));
 
 	/// <summary>Divides one <see cref="VoltageMagnitude{T}"/> by another, giving the bare ratio.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]

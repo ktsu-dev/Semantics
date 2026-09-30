@@ -54,21 +54,17 @@ public readonly partial record struct Gain<T> : IVector0<Gain<T>, T>, IPhysicalQ
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Gain<T> operator +(Gain<T> left, Gain<T> right) => Create(left.Quantity + right.Quantity);
 
-	/// <summary>Negates a <see cref="Gain{T}"/>.</summary>
+	/// <summary>Scales a <see cref="Gain{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Gain<T> operator -(Gain<T> value) => Create(-value.Quantity);
+	public static Gain<T> operator *(Gain<T> left, T right) => Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)));
 
-	/// <summary>Scales a <see cref="Gain{T}"/> by a bare number.</summary>
+	/// <summary>Scales a <see cref="Gain{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Gain<T> operator *(Gain<T> left, T right) => Create(left.Quantity * right);
+	public static Gain<T> operator *(T left, Gain<T> right) => Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)));
 
-	/// <summary>Scales a <see cref="Gain{T}"/> by a bare number.</summary>
+	/// <summary>Divides a <see cref="Gain{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Gain<T> operator *(T left, Gain<T> right) => Create(left * right.Quantity);
-
-	/// <summary>Divides a <see cref="Gain{T}"/> by a bare number.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Gain<T> operator /(Gain<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+	public static Gain<T> operator /(Gain<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)));
 
 	/// <summary>Divides one <see cref="Gain{T}"/> by another, giving the bare ratio.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]

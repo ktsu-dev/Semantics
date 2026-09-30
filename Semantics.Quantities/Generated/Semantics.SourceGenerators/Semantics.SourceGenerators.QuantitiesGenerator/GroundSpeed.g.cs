@@ -54,21 +54,17 @@ public readonly partial record struct GroundSpeed<T> : IVector0<GroundSpeed<T>, 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static GroundSpeed<T> operator +(GroundSpeed<T> left, GroundSpeed<T> right) => Create(left.Quantity + right.Quantity);
 
-	/// <summary>Negates a <see cref="GroundSpeed{T}"/>.</summary>
+	/// <summary>Scales a <see cref="GroundSpeed{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static GroundSpeed<T> operator -(GroundSpeed<T> value) => Create(-value.Quantity);
+	public static GroundSpeed<T> operator *(GroundSpeed<T> left, T right) => Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)));
 
-	/// <summary>Scales a <see cref="GroundSpeed{T}"/> by a bare number.</summary>
+	/// <summary>Scales a <see cref="GroundSpeed{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static GroundSpeed<T> operator *(GroundSpeed<T> left, T right) => Create(left.Quantity * right);
+	public static GroundSpeed<T> operator *(T left, GroundSpeed<T> right) => Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)));
 
-	/// <summary>Scales a <see cref="GroundSpeed{T}"/> by a bare number.</summary>
+	/// <summary>Divides a <see cref="GroundSpeed{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static GroundSpeed<T> operator *(T left, GroundSpeed<T> right) => Create(left * right.Quantity);
-
-	/// <summary>Divides a <see cref="GroundSpeed{T}"/> by a bare number.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static GroundSpeed<T> operator /(GroundSpeed<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+	public static GroundSpeed<T> operator /(GroundSpeed<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)));
 
 	/// <summary>Divides one <see cref="GroundSpeed{T}"/> by another, giving the bare ratio.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]

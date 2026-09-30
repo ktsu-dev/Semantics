@@ -54,21 +54,17 @@ public readonly partial record struct ThermalDiffusivity<T> : IVector0<ThermalDi
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static ThermalDiffusivity<T> operator +(ThermalDiffusivity<T> left, ThermalDiffusivity<T> right) => Create(left.Quantity + right.Quantity);
 
-	/// <summary>Negates a <see cref="ThermalDiffusivity{T}"/>.</summary>
+	/// <summary>Scales a <see cref="ThermalDiffusivity{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ThermalDiffusivity<T> operator -(ThermalDiffusivity<T> value) => Create(-value.Quantity);
+	public static ThermalDiffusivity<T> operator *(ThermalDiffusivity<T> left, T right) => Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)));
 
-	/// <summary>Scales a <see cref="ThermalDiffusivity{T}"/> by a bare number.</summary>
+	/// <summary>Scales a <see cref="ThermalDiffusivity{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ThermalDiffusivity<T> operator *(ThermalDiffusivity<T> left, T right) => Create(left.Quantity * right);
+	public static ThermalDiffusivity<T> operator *(T left, ThermalDiffusivity<T> right) => Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)));
 
-	/// <summary>Scales a <see cref="ThermalDiffusivity{T}"/> by a bare number.</summary>
+	/// <summary>Divides a <see cref="ThermalDiffusivity{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ThermalDiffusivity<T> operator *(T left, ThermalDiffusivity<T> right) => Create(left * right.Quantity);
-
-	/// <summary>Divides a <see cref="ThermalDiffusivity{T}"/> by a bare number.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ThermalDiffusivity<T> operator /(ThermalDiffusivity<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+	public static ThermalDiffusivity<T> operator /(ThermalDiffusivity<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)));
 
 	/// <summary>Divides one <see cref="ThermalDiffusivity{T}"/> by another, giving the bare ratio.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]

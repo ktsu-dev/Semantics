@@ -134,7 +134,7 @@ Every quantity is a vector. Direction-space dimensionality is part of the type:
 
 The model and its rationale live in `strategy-unified-vector-quantities.md`. Rules of thumb:
 
-- A `Vector0` is *always* non-negative. `Speed.Create(-1)` throws.
+- A `Vector0` is *always* non-negative. `Speed.FromMeterPerSecond(-1)` throws, as does scaling a `Vector0` by a negative number, and a `Vector0` has no unary `-`. `Create` is the unguarded primitive the generated code builds on, and does not check.
 - `V0 - V0` returns the same `V0` of `T.Abs(a - b)` (signed subtraction must use V1 explicitly).
 - A semantic overload (e.g. `Weight` over `ForceMagnitude`) implicitly widens to its base; narrowing is explicit.
 - All values are stored in SI base units.

@@ -54,21 +54,17 @@ public readonly partial record struct Friction<T> : IVector0<Friction<T>, T>, IP
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Friction<T> operator +(Friction<T> left, Friction<T> right) => Create(left.Quantity + right.Quantity);
 
-	/// <summary>Negates a <see cref="Friction{T}"/>.</summary>
+	/// <summary>Scales a <see cref="Friction{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Friction<T> operator -(Friction<T> value) => Create(-value.Quantity);
+	public static Friction<T> operator *(Friction<T> left, T right) => Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)));
 
-	/// <summary>Scales a <see cref="Friction{T}"/> by a bare number.</summary>
+	/// <summary>Scales a <see cref="Friction{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Friction<T> operator *(Friction<T> left, T right) => Create(left.Quantity * right);
+	public static Friction<T> operator *(T left, Friction<T> right) => Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)));
 
-	/// <summary>Scales a <see cref="Friction{T}"/> by a bare number.</summary>
+	/// <summary>Divides a <see cref="Friction{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Friction<T> operator *(T left, Friction<T> right) => Create(left * right.Quantity);
-
-	/// <summary>Divides a <see cref="Friction{T}"/> by a bare number.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Friction<T> operator /(Friction<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+	public static Friction<T> operator /(Friction<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)));
 
 	/// <summary>Divides one <see cref="Friction{T}"/> by another, giving the bare ratio.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]

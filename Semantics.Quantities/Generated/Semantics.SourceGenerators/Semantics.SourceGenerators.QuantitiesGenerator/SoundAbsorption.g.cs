@@ -54,21 +54,17 @@ public readonly partial record struct SoundAbsorption<T> : IVector0<SoundAbsorpt
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SoundAbsorption<T> operator +(SoundAbsorption<T> left, SoundAbsorption<T> right) => Create(left.Quantity + right.Quantity);
 
-	/// <summary>Negates a <see cref="SoundAbsorption{T}"/>.</summary>
+	/// <summary>Scales a <see cref="SoundAbsorption{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SoundAbsorption<T> operator -(SoundAbsorption<T> value) => Create(-value.Quantity);
+	public static SoundAbsorption<T> operator *(SoundAbsorption<T> left, T right) => Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)));
 
-	/// <summary>Scales a <see cref="SoundAbsorption{T}"/> by a bare number.</summary>
+	/// <summary>Scales a <see cref="SoundAbsorption{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SoundAbsorption<T> operator *(SoundAbsorption<T> left, T right) => Create(left.Quantity * right);
+	public static SoundAbsorption<T> operator *(T left, SoundAbsorption<T> right) => Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)));
 
-	/// <summary>Scales a <see cref="SoundAbsorption{T}"/> by a bare number.</summary>
+	/// <summary>Divides a <see cref="SoundAbsorption{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SoundAbsorption<T> operator *(T left, SoundAbsorption<T> right) => Create(left * right.Quantity);
-
-	/// <summary>Divides a <see cref="SoundAbsorption{T}"/> by a bare number.</summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SoundAbsorption<T> operator /(SoundAbsorption<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(left.Quantity / right);
+	public static SoundAbsorption<T> operator /(SoundAbsorption<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)));
 
 	/// <summary>Divides one <see cref="SoundAbsorption{T}"/> by another, giving the bare ratio.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
