@@ -109,14 +109,14 @@ public readonly partial record struct TemperatureDelta<T> : IVector1<Temperature
 	/// </summary>
 	/// <param name="value">The value in Celsius.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
-	public static TemperatureDelta<T> FromCelsius(T value) => Create((value + Units.ConversionConstants.Values<T>.CelsiusToKelvinOffset));
+	public static TemperatureDelta<T> FromCelsius(T value) => Create(value);
 
 	/// <summary>
 	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Fahrenheit.
 	/// </summary>
 	/// <param name="value">The value in Fahrenheit.</param>
 	/// <returns>A new <see cref="TemperatureDelta{T}"/> instance.</returns>
-	public static TemperatureDelta<T> FromFahrenheit(T value) => Create(((value * Units.ConversionConstants.Values<T>.FahrenheitScale) + Units.ConversionConstants.Values<T>.FahrenheitToKelvinOffset));
+	public static TemperatureDelta<T> FromFahrenheit(T value) => Create((value * Units.ConversionConstants.Values<T>.FahrenheitScale));
 
 	/// <summary>
 	/// Creates a new <see cref="TemperatureDelta{T}"/> from a value in Rankine.
@@ -131,7 +131,7 @@ public readonly partial record struct TemperatureDelta<T> : IVector1<Temperature
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
-	public T In(global::ktsu.Semantics.Quantities.ITemperatureUnit unit) => unit.FromBase(Value);
+	public T In(global::ktsu.Semantics.Quantities.ITemperatureUnit unit) => Value / unit.ToBaseFactorAs<T>();
 
 	/// <summary>
 	/// Gets the magnitude of this quantity as a <see cref="Temperature{T}"/>.

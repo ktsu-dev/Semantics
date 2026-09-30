@@ -574,6 +574,9 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// <c>physicalConstraints.minExclusive: "0"</c> per #51) the guard is upgraded to
 	/// <c>Vector0Guards.EnsurePositive</c>, which rejects zero as well as negative values.
 	/// <paramref name="strictPositive"/> is ignored when <paramref name="applyV0Guard"/> is false.
+	/// When <paramref name="isDifference"/> is true (a V1 form, which holds a signed difference
+	/// rather than a position on the scale) the unit's offset is left out, so
+	/// <c>TemperatureDelta.FromCelsius(10)</c> is 10 K rather than 283.15 K (#283).
 	/// </summary>
 	private static void AddUnitFactories(
 		ClassTemplate cls,
@@ -582,7 +585,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		string fullType,
 		string crefForComment,
 		bool applyV0Guard,
-		bool strictPositive = false)
+		bool strictPositive = false,
+		bool isDifference = false)
 	{
 		if (availableUnits == null || availableUnits.Count == 0)
 		{
@@ -597,7 +601,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			bool isBase = unitName == baseUnit;
 			string conversionExpr = isBase
 				? Emit.ValueParameter
-				: BuildToBaseExpression(unitName, unitMap, Emit.ValueParameter);
+				: BuildToBaseExpression(unitName, unitMap, Emit.ValueParameter, applyOffset: !isDifference);
 
 			string body = applyV0Guard
 				? $"=> Create(Vector0Guards.{guardMethod}({conversionExpr}, nameof(value)));"
@@ -651,10 +655,15 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// vector factories (#237) pass one component parameter at a time, which is the only reason
 	/// this is a parameter rather than the constant it used to be.
 	/// </param>
+	/// <param name="applyOffset">
+	/// Whether to add the unit's offset. False for a form that holds a difference (#283): 10 °C
+	/// warmer is 10 K warmer, not 283.15 K.
+	/// </param>
 	private static string BuildToBaseExpression(
 		string unitName,
 		IReadOnlyDictionary<string, UnitDefinition> unitMap,
-		string operand)
+		string operand,
+		bool applyOffset = true)
 	{
 		// If we don't have unit metadata, fall back to identity. The dimensions.json author is
 		// responsible for keeping availableUnits in sync with units.json; if a unit is missing,
@@ -684,7 +693,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			scaled = $"({operand} * Units.ConversionConstants.Values<T>.{unit.ConversionFactor})";
 		}
 
-		if (HasOffset(unit))
+		if (applyOffset && HasOffset(unit))
 		{
 			scaled = $"({scaled} + Units.ConversionConstants.Values<T>.{unit.Offset})";
 		}
@@ -711,8 +720,24 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// caller's unit. Emitted for V0 and V1 (scalar-storage) types only; vector V2+ types
 	/// have per-component conversion needs and are deferred.
 	/// </summary>
-	private static void AddDimensionAndInMembers(ClassTemplate cls, PhysicalDimension dim)
+	/// <remarks>
+	/// A difference form (<paramref name="isDifference"/>) of a dimension with an offset unit reads
+	/// with the factor alone, the counterpart of its factories leaving the offset out (#283).
+	/// <c>unit.FromBase</c> would subtract the offset, reading a 10 K rise as −263.15 °C. Every other
+	/// form keeps <c>FromBase</c>, which for a unit without an offset is the same division.
+	/// </remarks>
+	private static void AddDimensionAndInMembers(
+		ClassTemplate cls,
+		PhysicalDimension dim,
+		IReadOnlyDictionary<string, UnitDefinition> unitMap,
+		bool isDifference)
 	{
+		bool factorOnly = isDifference
+			&& dim.AvailableUnits.Any(u => unitMap.TryGetValue(u, out UnitDefinition? d) && HasOffset(d));
+		string inBody = factorOnly
+			? "=> Value / unit.ToBaseFactorAs<T>();"
+			: "=> unit.FromBase(Value);";
+
 		cls.Members.Add(new FieldTemplate()
 		{
 			Comments = {$"/// <summary>Gets the physical dimension this quantity belongs to.</summary>"},
@@ -737,7 +762,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			{
 				new ParameterTemplate { Type = $"global::ktsu.Semantics.Quantities.I{dim.Name}Unit", Name = "unit" },
 			},
-			BodyFactory = (body) => body.Write("=> unit.FromBase(Value);"),
+			BodyFactory = (body) => body.Write(inBody),
 		});
 	}
 
@@ -1005,7 +1030,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			applyV0Guard: true);
 
 		// Dimension override + typed In() (#59).
-		AddDimensionAndInMembers(cls, dim);
+		AddDimensionAndInMembers(cls, dim, emission.Units, isDifference: false);
 
 		// V0 - V0 returns the same V0 of T.Abs(left - right) (locked decision in #52).
 		// We emit this on every V0 base type so the derived operator wins overload resolution
@@ -1089,17 +1114,18 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		});
 
 		// Factory methods for every available unit.
-		// V1 quantities are signed; no V0 non-negativity guard.
+		// V1 quantities are signed differences: no V0 non-negativity guard, and no unit offset (#283).
 		AddUnitFactories(
 			cls,
 			dim.AvailableUnits,
 			emission.Units,
 			fullType,
 			"<see cref=\"" + typeName + "{T}\"/>",
-			applyV0Guard: false);
+			applyV0Guard: false,
+			isDifference: true);
 
 		// Dimension override + typed In() (#59).
-		AddDimensionAndInMembers(cls, dim);
+		AddDimensionAndInMembers(cls, dim, emission.Units, isDifference: true);
 
 		// Magnitude method returning V0 base
 		cls.Members.Add(new MethodTemplate()
@@ -1259,7 +1285,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		// type (#50). V0 overloads that declare physicalConstraints.minExclusive in
 		// dimensions.json (#51, e.g. Wavelength, Period, HalfLife) get the stricter
 		// EnsurePositive guard so a zero input is rejected too. V1 overloads accept
-		// any sign.
+		// any sign, and like their V1 base hold a difference, so they leave out the unit offset (#283).
 		bool strictPositive = type.Magnitude == Magnitude.Positive;
 		AddUnitFactories(
 			cls,
@@ -1268,10 +1294,11 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			fullType,
 			typeName,
 			applyV0Guard: vectorForm == 0,
-			strictPositive: strictPositive);
+			strictPositive: strictPositive,
+			isDifference: vectorForm != 0);
 
 		// Dimension override + typed In() (#59).
-		AddDimensionAndInMembers(cls, dim);
+		AddDimensionAndInMembers(cls, dim, emission.Units, isDifference: vectorForm != 0);
 
 		// Implicit widening to base type
 		cls.Members.Add(new MethodTemplate()

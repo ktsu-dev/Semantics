@@ -110,14 +110,14 @@ public readonly partial record struct TemperatureRise<T> : IVector1<TemperatureR
 	/// </summary>
 	/// <param name="value">The value in Celsius.</param>
 	/// <returns>A new TemperatureRise instance.</returns>
-	public static TemperatureRise<T> FromCelsius(T value) => Create((value + Units.ConversionConstants.Values<T>.CelsiusToKelvinOffset));
+	public static TemperatureRise<T> FromCelsius(T value) => Create(value);
 
 	/// <summary>
 	/// Creates a new TemperatureRise from a value in Fahrenheit.
 	/// </summary>
 	/// <param name="value">The value in Fahrenheit.</param>
 	/// <returns>A new TemperatureRise instance.</returns>
-	public static TemperatureRise<T> FromFahrenheit(T value) => Create(((value * Units.ConversionConstants.Values<T>.FahrenheitScale) + Units.ConversionConstants.Values<T>.FahrenheitToKelvinOffset));
+	public static TemperatureRise<T> FromFahrenheit(T value) => Create((value * Units.ConversionConstants.Values<T>.FahrenheitScale));
 
 	/// <summary>
 	/// Creates a new TemperatureRise from a value in Rankine.
@@ -132,7 +132,7 @@ public readonly partial record struct TemperatureRise<T> : IVector1<TemperatureR
 	/// </summary>
 	/// <param name="unit">The dimensionally-compatible target unit.</param>
 	/// <returns>The value expressed in <paramref name="unit"/>.</returns>
-	public T In(global::ktsu.Semantics.Quantities.ITemperatureUnit unit) => unit.FromBase(Value);
+	public T In(global::ktsu.Semantics.Quantities.ITemperatureUnit unit) => Value / unit.ToBaseFactorAs<T>();
 
 	/// <summary>Implicit conversion to TemperatureDelta.</summary>
 	public static implicit operator TemperatureDelta<T>(TemperatureRise<T> value) => TemperatureDelta<T>.Create(value.Value);
