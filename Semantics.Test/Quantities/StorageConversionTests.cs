@@ -136,6 +136,27 @@ public abstract class StorageConversionTests<T>(string tolerance, bool decimalEx
 		AssertValue("212", boiling.In(Units.Fahrenheit), terminates: false);
 	}
 
+	/// <summary>
+	/// A temperature difference converts with the factor alone (#283): 10 °C warmer is 10 K warmer,
+	/// not 283.15 K, and a 10 K rise reads as 10 °C rather than −263.15 °C.
+	/// </summary>
+	[TestMethod]
+	public void TemperatureDifferencesLeaveOutTheScaleOffset()
+	{
+		AssertValue("10", TemperatureDelta<T>.FromCelsius(Of("10")).Value, terminates: true);
+		AssertValue("10", TemperatureDelta<T>.FromFahrenheit(Of("18")).Value, terminates: false);
+		AssertValue("10", TemperatureDelta<T>.FromKelvin(Of("10")).In(Units.Celsius), terminates: true);
+		AssertValue("18", TemperatureDelta<T>.FromKelvin(Of("10")).In(Units.Fahrenheit), terminates: false);
+
+		AssertValue("10", TemperatureRise<T>.FromCelsius(Of("10")).Value, terminates: true);
+		AssertValue("10", TemperatureRise<T>.FromFahrenheit(Of("18")).Value, terminates: false);
+		AssertValue("10", TemperatureRise<T>.FromKelvin(Of("10")).In(Units.Celsius), terminates: true);
+
+		AssertValue("10", TemperatureDrop<T>.FromCelsius(Of("10")).Value, terminates: true);
+		AssertValue("10", TemperatureDrop<T>.FromFahrenheit(Of("18")).Value, terminates: false);
+		AssertValue("10", TemperatureDrop<T>.FromKelvin(Of("10")).In(Units.Celsius), terminates: true);
+	}
+
 	[TestMethod]
 	public void AnglesUsePiToThePrecisionOfTheStorageType()
 	{
