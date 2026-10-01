@@ -29,6 +29,6 @@ public enum ChordQuality
 	/// <summary>Major triad with a lowered fifth (major third, diminished fifth), as in "C7b5" or "Cmaj7b5".</summary>
 	MajorFlatFive,
 
-	/// <summary>Minor triad with a raised fifth (minor third, augmented fifth).</summary>
+	/// <summary>Minor triad with a raised fifth (minor third, augmented fifth), as in "Cm#5".</summary>
 	MinorSharpFive,
 }

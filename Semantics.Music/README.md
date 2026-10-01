@@ -81,6 +81,36 @@ Note a4 = Note.Create(Pitch.Parse("A4"), Duration.Quarter, Velocity.Forte);
 double noteSeconds = a4.Seconds(tempo);                  // 0.5 s
 ```
 
+Chord symbols use one grammar for parsing and canonical formatting:
+
+```text
+symbol      = root body [ "/" bass ] EOF
+root, bass  = letter { accidental }
+accidental  = "#" | "b" | "♯" | "♭"
+body        = [ quality ] [ extension ] [ suspension ] { modifier }
+quality     = minor [ "aug" | "+" ] | "dim" | "°" | "ø" | "aug" | "+"
+            | majorWord
+minor       = "m" | "min" | "-"
+majorWord   = "maj" | "Maj" | "M" | "Δ"
+extension   = [ majorWord ] number | number "M" | "Δ"
+            | "6" [ "/9" | "9" ] | "b6" | "♭6" | "5"
+number      = "7" | "9" | "11" | "13"
+suspension  = "sus2" | "sus4" | "sus"
+modifier    = alteration | add | omit | "b6" | "♭6"
+            | "(" modifier { [ "," ] modifier } ")"
+alteration  = ("b" | "♭" | "-") ( "5" | "9" | "13" )
+            | ("#" | "♯" | "+") ( "5" | "9" | "11" )
+add         = "add" ( "9" | "11" | "13" | "6" | "b6" )
+omit        = "no3" | "no5"
+```
+
+The grammar consumes the complete symbol and does not permit whitespace. A numbered extension
+implies a seventh and its natural lower stack tones unless an alteration replaces that degree;
+`addN` adds only that tone. `M`/`maj` before an extension marks a major seventh, while `7M` is
+accepted as the same spelling. A small compatibility reader also accepts previously printed forms
+such as `C79`, `Cmaj79`, `Csus47`, and `C6add9`. `ToString()` emits the canonical form, for example
+`C13b9`, `C7sus4`, `C6/9`, and `C(#11)`.
+
 ### Roman numerals, both directions
 
 ```csharp

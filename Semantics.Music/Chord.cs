@@ -33,11 +33,15 @@ public sealed record Chord
 	/// <summary>Gets the slash-chord bass, if any (otherwise the root sounds in the bass).</summary>
 	public PitchClass? Bass { get; init; }
 
-	/// <summary>Parses a chord symbol using the chord-symbol grammar documented in the music guide.</summary>
+	/// <summary>Parses a no-whitespace chord symbol using the grammar documented in the music guide.</summary>
 	/// <param name="symbol">The chord symbol.</param>
 	/// <returns>The parsed chord.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="symbol"/> is null.</exception>
 	/// <exception cref="FormatException">Thrown when the symbol cannot be parsed.</exception>
+	/// <remarks>
+	/// The symbol consists of a root, an optional quality/extension/suspension and modifiers, then an
+	/// optional slash bass. Canonical symbols satisfy <c>Parse(symbol).ToString() == symbol</c>.
+	/// </remarks>
 	public static Chord Parse(string symbol)
 	{
 		Ensure.NotNull(symbol);
@@ -46,10 +50,11 @@ public sealed record Chord
 			: throw new FormatException($"Invalid chord symbol '{symbol}'.");
 	}
 
-	/// <summary>Tries to parse a chord symbol.</summary>
+	/// <summary>Tries to parse a no-whitespace chord symbol using the chord-symbol grammar.</summary>
 	/// <param name="symbol">The text to parse.</param>
 	/// <param name="result">The parsed chord, or null on failure.</param>
 	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	/// <remarks>Every input character must belong to the root, body, optional bass or end-of-input production.</remarks>
 	public static bool TryParse(string? symbol, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Chord? result)
 	{
 		result = null;
@@ -161,8 +166,9 @@ public sealed record Chord
 		return pitches;
 	}
 
-	/// <summary>Returns the canonical symbol, inverse to <see cref="Parse"/> for expressible chords.</summary>
+	/// <summary>Returns the canonical symbol in the grammar used by <see cref="Parse"/>.</summary>
 	/// <returns>The canonical chord symbol.</returns>
+	/// <remarks><c>Parse(ToString()) == this</c> for every expressible chord.</remarks>
 	public override string ToString() => ChordSymbolWriter.Format(this);
 
 	private void AddTension(SortedSet<int> offsets, ChordTensions flag, int semitones)

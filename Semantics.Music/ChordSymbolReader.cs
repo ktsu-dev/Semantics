@@ -116,6 +116,18 @@ internal sealed class ChordSymbolReader(string text)
 
 	private bool TryReadExtension(ChordBuilder builder)
 	{
+		if (StartsWith("(b6)") || StartsWith("(♭6)"))
+		{
+			index++;
+			if (!TryTakeEither("b6", "♭6") || !TryTake(")"))
+			{
+				return false;
+			}
+
+			builder.Sixth = SixthType.Flat;
+			return true;
+		}
+
 		if (TryTakeEither("b6", "♭6"))
 		{
 			builder.Sixth = SixthType.Flat;
@@ -151,12 +163,13 @@ internal sealed class ChordSymbolReader(string text)
 		}
 
 		builder.ExtendedNumber = number;
-		if (number == 7 && TryTake("M"))
+		bool majorAfterNumber = number == 7 && TryTake("M");
+		if (majorAfterNumber)
 		{
 			builder.MajorMarker = true;
 		}
 
-		if (number == 7 && TryReadLegacyNumber(out int legacyNumber))
+		if (number == 7 && !majorAfterNumber && TryReadLegacyNumber(out int legacyNumber))
 		{
 			builder.ExtendedNumber = legacyNumber;
 		}
@@ -188,10 +201,18 @@ internal sealed class ChordSymbolReader(string text)
 			if (TryTake("("))
 			{
 				bool any = false;
-				while (TryReadModifier(builder))
+				while (!Peek(')'))
 				{
+					if (!TryReadModifier(builder))
+					{
+						return false;
+					}
+
 					any = true;
-					_ = TryTake(",");
+					if (TryTake(",") && Peek(')'))
+					{
+						return false;
+					}
 				}
 
 				if (!any || !TryTake(")"))
@@ -211,10 +232,36 @@ internal sealed class ChordSymbolReader(string text)
 		return true;
 	}
 
-	private bool TryReadModifier(ChordBuilder builder) =>
-		TryReadAlteration(builder)
-		|| TryReadAdd(builder)
-		|| TryReadOmit(builder);
+	private bool TryReadModifier(ChordBuilder builder)
+	{
+		int start = index;
+		if (builder.ExtendedNumber > 0 && Peek('+') && !IsDigit(PeekNext()))
+		{
+			if (builder.Augmented)
+			{
+				return false;
+			}
+
+			index++;
+			builder.Augmented = true;
+			return true;
+		}
+
+		if (TryTakeEither("b6", "♭6"))
+		{
+			return builder.SetSixth(SixthType.Flat);
+		}
+
+		bool parsed = TryReadAlteration(builder)
+			|| TryReadAdd(builder)
+			|| TryReadOmit(builder);
+		if (!parsed)
+		{
+			index = start;
+		}
+
+		return parsed;
+	}
 
 	private bool TryReadAlteration(ChordBuilder builder)
 	{
@@ -487,6 +534,11 @@ internal sealed class ChordSymbolReader(string text)
 		private bool HasValidShape()
 		{
 			if (Sus is not null && (Minor || Diminished || Augmented || MajorMarker || Power || FifthAlteration != 0))
+			{
+				return false;
+			}
+
+			if (MajorMarker && !DeltaMarker && ExtendedNumber == 0 && (Minor || Diminished || Augmented))
 			{
 				return false;
 			}

@@ -106,6 +106,12 @@ internal static class ChordSymbolWriter
 			return false;
 		}
 
+		if (chord.Quality is ChordQuality.Sus2 or ChordQuality.Sus4
+			&& chord.Seventh == SeventhType.Major)
+		{
+			return false;
+		}
+
 		if (chord.Quality == ChordQuality.Power
 			&& (chord.Seventh != SeventhType.None
 				|| chord.Sixth != SixthType.None
@@ -115,7 +121,8 @@ internal static class ChordSymbolWriter
 			return false;
 		}
 
-		if ((chord.Tensions.HasFlag(ChordTensions.Nine)
+		if ((chord.Tensions.HasFlag(ChordTensions.FlatNine) && chord.Tensions.HasFlag(ChordTensions.SharpNine))
+			|| (chord.Tensions.HasFlag(ChordTensions.Nine)
 				&& (chord.Tensions.HasFlag(ChordTensions.FlatNine) || chord.Tensions.HasFlag(ChordTensions.SharpNine)))
 			|| (chord.Tensions.HasFlag(ChordTensions.Eleven) && chord.Tensions.HasFlag(ChordTensions.SharpEleven))
 			|| (chord.Tensions.HasFlag(ChordTensions.Thirteen) && chord.Tensions.HasFlag(ChordTensions.FlatThirteen)))
@@ -174,17 +181,16 @@ internal static class ChordSymbolWriter
 		}
 
 		int extension = GetExtension(chord.Tensions);
-		if (chord.Quality == ChordQuality.Diminished && chord.Seventh == SeventhType.Major)
+		if (extension == 0)
 		{
-			_ = symbol.Append('7');
-		}
-		else if (extension == 0)
-		{
-			_ = symbol.Append(chord.Seventh == SeventhType.Major ? "maj7" : "7");
+			_ = symbol.Append(
+				chord.Seventh == SeventhType.Major && chord.Quality != ChordQuality.Diminished
+					? "maj7"
+					: "7");
 		}
 		else
 		{
-			if (chord.Seventh == SeventhType.Major)
+			if (chord.Seventh == SeventhType.Major && chord.Quality != ChordQuality.Diminished)
 			{
 				_ = symbol.Append("maj");
 			}

@@ -9,19 +9,46 @@ public class ChordGrammarTests
 {
 	[TestMethod]
 	[DataRow("C7add13", "C7add13", new[] { 0, 4, 7, 10, 21 })]
+	[DataRow("C7add11", "C7add11", new[] { 0, 4, 7, 10, 17 })]
 	[DataRow("C9add13", "C9add13", new[] { 0, 4, 7, 10, 14, 21 })]
+	[DataRow("Cmaj7add13", "Cmaj7add13", new[] { 0, 4, 7, 11, 21 })]
+	[DataRow("CM7", "Cmaj7", new[] { 0, 4, 7, 11 })]
+	[DataRow("C7M", "Cmaj7", new[] { 0, 4, 7, 11 })]
+	[DataRow("CM", "C", new[] { 0, 4, 7 })]
 	[DataRow("CM9", "Cmaj9", new[] { 0, 4, 7, 11, 14 })]
 	[DataRow("CM11", "Cmaj11", new[] { 0, 4, 7, 11, 14, 17 })]
 	[DataRow("CM13", "Cmaj13", new[] { 0, 4, 7, 11, 14, 17, 21 })]
 	[DataRow("CmM9", "Cmmaj9", new[] { 0, 3, 7, 11, 14 })]
+	[DataRow("CΔ9", "Cmaj9", new[] { 0, 4, 7, 11, 14 })]
+	[DataRow("C(b9)", "C(b9)", new[] { 0, 4, 7, 13 })]
+	[DataRow("C(#9)", "C(#9)", new[] { 0, 4, 7, 15 })]
+	[DataRow("C(b13)", "C(b13)", new[] { 0, 4, 7, 20 })]
+	[DataRow("C(b6)", "C(b6)", new[] { 0, 4, 7, 8 })]
+	[DataRow("B(b9)", "B(b9)", new[] { 0, 4, 7, 13 })]
 	[DataRow("C(#11)", "C(#11)", new[] { 0, 4, 7, 18 })]
 	[DataRow("C13b9", "C13b9", new[] { 0, 4, 7, 10, 13, 17, 21 })]
+	[DataRow("C13#9", "C13#9", new[] { 0, 4, 7, 10, 15, 17, 21 })]
 	[DataRow("C13#11", "C13#11", new[] { 0, 4, 7, 10, 14, 18, 21 })]
+	[DataRow("C11b9", "C11b9", new[] { 0, 4, 7, 10, 13, 17 })]
+	[DataRow("C13b9#11", "C13b9#11", new[] { 0, 4, 7, 10, 13, 18, 21 })]
 	[DataRow("Cm7#5", "Cm7#5", new[] { 0, 3, 8, 10 })]
+	[DataRow("Cm#5", "Cm#5", new[] { 0, 3, 8 })]
 	[DataRow("Cm+", "Cm#5", new[] { 0, 3, 8 })]
+	[DataRow("Cmaug7", "Cm7#5", new[] { 0, 3, 8, 10 })]
+	[DataRow("C7#5", "Caug7", new[] { 0, 4, 8, 10 })]
+	[DataRow("Caug", "Caug", new[] { 0, 4, 8 })]
+	[DataRow("C+", "Caug", new[] { 0, 4, 8 })]
 	[DataRow("C7-9", "C7b9", new[] { 0, 4, 7, 10, 13 })]
 	[DataRow("C7+9", "C7#9", new[] { 0, 4, 7, 10, 15 })]
 	[DataRow("C7-5", "C7b5", new[] { 0, 4, 6, 10 })]
+	[DataRow("Cmaj7-5", "Cmaj7b5", new[] { 0, 4, 6, 11 })]
+	[DataRow("C7-13", "C7b13", new[] { 0, 4, 7, 10, 20 })]
+	[DataRow("C-", "Cm", new[] { 0, 3, 7 })]
+	[DataRow("C-7", "Cm7", new[] { 0, 3, 7, 10 })]
+	[DataRow("C-9", "Cm9", new[] { 0, 3, 7, 10, 14 })]
+	[DataRow("C-7b5", "Cm7b5", new[] { 0, 3, 6, 10 })]
+	[DataRow("C7+", "Caug7", new[] { 0, 4, 8, 10 })]
+	[DataRow("C7+5", "Caug7", new[] { 0, 4, 8, 10 })]
 	[DataRow("Cadd9(#11)", "C(#11)add9", new[] { 0, 4, 7, 14, 18 })]
 	public void Parse_GrammarSpellings_KeepTheirMeaning(string symbol, string canonical, int[] tones)
 	{
@@ -46,6 +73,14 @@ public class ChordGrammarTests
 	[DataRow("Cmsus4")]
 	[DataRow("C7b9b9")]
 	[DataRow("C7b5#5")]
+	[DataRow("C7add9add9")]
+	[DataRow("C7no3no3")]
+	[DataRow("C7sus4sus2")]
+	[DataRow("C7b9#9")]
+	[DataRow("C7M9")]
+	[DataRow("CmM")]
+	[DataRow("C7(b9b9)")]
+	[DataRow("C7(b9,)")]
 	public void Parse_RejectsInvalidGrammar(string symbol)
 	{
 		Assert.IsFalse(Chord.TryParse(symbol, out Chord? chord), symbol);
@@ -68,6 +103,17 @@ public class ChordGrammarTests
 		foreach ((string input, string canonical) in cases)
 		{
 			Assert.AreEqual(canonical, Chord.Parse(input).ToString(), input);
+		}
+	}
+
+	[TestMethod]
+	public void Parse_SlashBassAndSixNineAreConsumedInTheirOwnProductions()
+	{
+		string[] symbols = ["C/G", "Dm7/G", "C6/9", "Cm6/9", "C6/9/G", "Db/Cb"];
+		foreach (string symbol in symbols)
+		{
+			Chord chord = Chord.Parse(symbol);
+			Assert.AreEqual(chord, Chord.Parse(chord.ToString()), symbol);
 		}
 	}
 
