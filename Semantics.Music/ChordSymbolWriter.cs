@@ -21,28 +21,45 @@ internal static class ChordSymbolWriter
 		ChordTensions impliedTensions = AppendExtension(symbol, chord);
 		bool hasSeventh = chord.Seventh != SeventhType.None;
 		ChordTensions remaining = chord.Tensions & ~impliedTensions;
-		if (!hasSeventh && chord.Sixth == SixthType.Natural)
+		AppendSixthBeforeSuspension(symbol, chord, ref remaining);
+		AppendSuspension(symbol, chord);
+		AppendAlterations(symbol, chord);
+		AppendAddedSixth(symbol, chord, hasSeventh);
+		AppendAddedTensions(symbol, remaining);
+		AppendOmissionsAndBass(symbol, chord);
+		return symbol.ToString();
+	}
+
+	internal static bool IsExpressible(Chord chord)
+	{
+		Ensure.NotNull(chord);
+		return HasSupportedValues(chord) && HasSupportedStructure(chord) && !HasConflictingTensions(chord);
+	}
+
+	private static void AppendSixthBeforeSuspension(StringBuilder symbol, Chord chord, ref ChordTensions remaining)
+	{
+		if (chord.Seventh != SeventhType.None)
 		{
-			_ = symbol.Append(remaining.HasFlag(ChordTensions.Nine) ? "6/9" : "6");
-			if (remaining.HasFlag(ChordTensions.Nine))
+			return;
+		}
+
+		if (chord.Sixth == SixthType.Natural)
+		{
+			bool hasAddedNinth = remaining.HasFlag(ChordTensions.Nine);
+			_ = symbol.Append(hasAddedNinth ? "6/9" : "6");
+			if (hasAddedNinth)
 			{
 				remaining &= ~ChordTensions.Nine;
 			}
 		}
-		else if (!hasSeventh && chord.Sixth == SixthType.Flat)
+		else if (chord.Sixth == SixthType.Flat)
 		{
-			if (symbol.Length == chord.Root.Name.Length)
-			{
-				_ = symbol.Append("(b6)");
-			}
-			else
-			{
-				_ = symbol.Append("b6");
-			}
+			_ = symbol.Append(symbol.Length == chord.Root.Name.Length ? "(b6)" : "b6");
 		}
+	}
 
-		AppendSuspension(symbol, chord);
-
+	private static void AppendAlterations(StringBuilder symbol, Chord chord)
+	{
 		StringBuilder alterations = new();
 		AppendFlag(alterations, chord.Quality == ChordQuality.MajorFlatFive || (chord.Quality == ChordQuality.Diminished && chord.Seventh == SeventhType.Dominant), "b5");
 		AppendFlag(alterations, chord.Quality == ChordQuality.MinorSharpFive, "#5");
@@ -50,88 +67,81 @@ internal static class ChordSymbolWriter
 		AppendFlag(alterations, chord.Tensions.HasFlag(ChordTensions.SharpNine), "#9");
 		AppendFlag(alterations, chord.Tensions.HasFlag(ChordTensions.SharpEleven), "#11");
 		AppendFlag(alterations, chord.Tensions.HasFlag(ChordTensions.FlatThirteen), "b13");
-
-		if (alterations.Length > 0)
+		if (alterations.Length == 0)
 		{
-			bool startsWithAccidental = symbol.Length == chord.Root.Name.Length;
-			if (startsWithAccidental)
-			{
-				_ = symbol.Append('(').Append(alterations).Append(')');
-			}
-			else
-			{
-				_ = symbol.Append(alterations);
-			}
+			return;
 		}
 
-		if (chord.Sixth == SixthType.Natural)
+		if (symbol.Length == chord.Root.Name.Length)
 		{
-			if (hasSeventh)
-			{
-				_ = symbol.Append("add6");
-			}
+			_ = symbol.Append('(').Append(alterations).Append(')');
 		}
-		else if (chord.Sixth == SixthType.Flat && hasSeventh)
+		else
 		{
-			_ = symbol.Append("addb6");
+			_ = symbol.Append(alterations);
+		}
+	}
+
+	private static void AppendAddedSixth(StringBuilder symbol, Chord chord, bool hasSeventh)
+	{
+		if (!hasSeventh)
+		{
+			return;
 		}
 
-		AppendFlag(symbol, remaining.HasFlag(ChordTensions.Nine), "add9");
-		AppendFlag(symbol, remaining.HasFlag(ChordTensions.Eleven), "add11");
-		AppendFlag(symbol, remaining.HasFlag(ChordTensions.Thirteen), "add13");
+		AppendFlag(symbol, chord.Sixth == SixthType.Natural, "add6");
+		AppendFlag(symbol, chord.Sixth == SixthType.Flat, "addb6");
+	}
+
+	private static void AppendAddedTensions(StringBuilder symbol, ChordTensions tensions)
+	{
+		AppendFlag(symbol, tensions.HasFlag(ChordTensions.Nine), "add9");
+		AppendFlag(symbol, tensions.HasFlag(ChordTensions.Eleven), "add11");
+		AppendFlag(symbol, tensions.HasFlag(ChordTensions.Thirteen), "add13");
+	}
+
+	private static void AppendOmissionsAndBass(StringBuilder symbol, Chord chord)
+	{
 		AppendFlag(symbol, chord.Omissions.HasFlag(ChordOmissions.Third), "no3");
 		AppendFlag(symbol, chord.Omissions.HasFlag(ChordOmissions.Fifth), "no5");
 		if (chord.Bass is not null)
 		{
 			_ = symbol.Append('/').Append(chord.Bass.Name);
 		}
-
-		return symbol.ToString();
 	}
 
-	internal static bool IsExpressible(Chord chord)
-	{
-		Ensure.NotNull(chord);
-		if (!Enum.IsDefined(chord.Quality)
-			|| !Enum.IsDefined(chord.Seventh)
-			|| !Enum.IsDefined(chord.Sixth)
-			|| (chord.Tensions & ~AllTensions) != 0
-			|| (chord.Omissions & ~AllOmissions) != 0)
-		{
-			return false;
-		}
+	private static bool HasSupportedValues(Chord chord) =>
+		Enum.IsDefined(chord.Quality)
+		&& Enum.IsDefined(chord.Seventh)
+		&& Enum.IsDefined(chord.Sixth)
+		&& (chord.Tensions & ~AllTensions) == 0
+		&& (chord.Omissions & ~AllOmissions) == 0;
 
+	private static bool HasSupportedStructure(Chord chord)
+	{
 		if (chord.Seventh == SeventhType.Diminished && chord.Quality != ChordQuality.Diminished)
 		{
 			return false;
 		}
 
-		if (chord.Quality is ChordQuality.Sus2 or ChordQuality.Sus4
-			&& chord.Seventh == SeventhType.Major)
+		if ((chord.Quality is ChordQuality.Sus2 or ChordQuality.Sus4) && chord.Seventh == SeventhType.Major)
 		{
 			return false;
 		}
 
-		if (chord.Quality == ChordQuality.Power
-			&& (chord.Seventh != SeventhType.None
-				|| chord.Sixth != SixthType.None
-				|| chord.Tensions != ChordTensions.None
-				|| chord.Omissions != ChordOmissions.None))
-		{
-			return false;
-		}
-
-		if ((chord.Tensions.HasFlag(ChordTensions.FlatNine) && chord.Tensions.HasFlag(ChordTensions.SharpNine))
-			|| (chord.Tensions.HasFlag(ChordTensions.Nine)
-				&& (chord.Tensions.HasFlag(ChordTensions.FlatNine) || chord.Tensions.HasFlag(ChordTensions.SharpNine)))
-			|| (chord.Tensions.HasFlag(ChordTensions.Eleven) && chord.Tensions.HasFlag(ChordTensions.SharpEleven))
-			|| (chord.Tensions.HasFlag(ChordTensions.Thirteen) && chord.Tensions.HasFlag(ChordTensions.FlatThirteen)))
-		{
-			return false;
-		}
-
-		return true;
+		return chord.Quality != ChordQuality.Power
+			|| (chord.Seventh == SeventhType.None
+				&& chord.Sixth == SixthType.None
+				&& chord.Tensions == ChordTensions.None
+				&& chord.Omissions == ChordOmissions.None);
 	}
+
+	private static bool HasConflictingTensions(Chord chord) =>
+		(chord.Tensions.HasFlag(ChordTensions.FlatNine) && chord.Tensions.HasFlag(ChordTensions.SharpNine))
+		|| (chord.Tensions.HasFlag(ChordTensions.Nine)
+			&& (chord.Tensions.HasFlag(ChordTensions.FlatNine) || chord.Tensions.HasFlag(ChordTensions.SharpNine)))
+		|| (chord.Tensions.HasFlag(ChordTensions.Eleven) && chord.Tensions.HasFlag(ChordTensions.SharpEleven))
+		|| (chord.Tensions.HasFlag(ChordTensions.Thirteen) && chord.Tensions.HasFlag(ChordTensions.FlatThirteen));
 
 	private static void AppendQuality(StringBuilder symbol, Chord chord)
 	{

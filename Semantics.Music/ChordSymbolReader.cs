@@ -18,12 +18,9 @@ internal sealed class ChordSymbolReader(string text)
 		}
 
 		PitchClass? bass = null;
-		if (reader.TryTake("/"))
+		if (reader.TryTake("/") && (!reader.TryReadRoot(out bass) || reader.index != text.Length))
 		{
-			if (!reader.TryReadRoot(out bass) || reader.index != text.Length)
-			{
-				return false;
-			}
+			return false;
 		}
 
 		if (reader.index != text.Length || !builder.TryBuild(root!, bass, out chord))
@@ -73,48 +70,76 @@ internal sealed class ChordSymbolReader(string text)
 
 	private bool TryReadQuality(ChordBuilder builder)
 	{
+		ReadMinorQuality(builder);
+		if (!ReadDiminishedQuality(builder))
+		{
+			return false;
+		}
+
+		ReadAugmentedQuality(builder);
+		ReadMajorMarker(builder);
+		return HasValidQualityCombination(builder);
+	}
+
+	private void ReadMinorQuality(ChordBuilder builder)
+	{
 		if (TryTake("min") || (Peek('m') && !StartsWith("maj") && !StartsWith("Maj") && TryTake("m")) || TryTake("-"))
 		{
 			builder.Minor = true;
 		}
+	}
 
+	private bool ReadDiminishedQuality(ChordBuilder builder)
+	{
 		if (TryTake("dim") || TryTake("°"))
 		{
-			if (builder.Minor)
-			{
-				return false;
-			}
-
 			builder.Diminished = true;
+			return !builder.Minor;
 		}
-		else if (TryTake("ø"))
+
+		if (!TryTake("ø"))
 		{
-			if (builder.Minor)
-			{
-				return false;
-			}
-
-			builder.Diminished = true;
-			builder.HalfDiminished = true;
+			return true;
 		}
 
+		builder.Diminished = true;
+		builder.HalfDiminished = true;
+		return !builder.Minor;
+	}
+
+	private void ReadAugmentedQuality(ChordBuilder builder)
+	{
 		if (TryTake("aug") || (Peek('+') && !IsDigit(PeekNext()) && TryTake("+")))
 		{
 			builder.Augmented = true;
 		}
+	}
 
+	private void ReadMajorMarker(ChordBuilder builder)
+	{
 		if (TryTakeMajorWord())
 		{
 			builder.MajorMarker = true;
 			builder.DeltaMarker = text[index - 1] == 'Δ';
 		}
-
-		return !((builder.Diminished && builder.Augmented)
-			|| (builder.Minor && builder.Diminished)
-			|| (builder.MajorMarker && (builder.Diminished || builder.Augmented) && builder.Minor));
 	}
 
+	private static bool HasValidQualityCombination(ChordBuilder builder) =>
+		!(builder.Diminished && builder.Augmented)
+		&& !(builder.Minor && builder.Diminished)
+		&& !(builder.MajorMarker && (builder.Diminished || builder.Augmented) && builder.Minor);
+
 	private bool TryReadExtension(ChordBuilder builder)
+	{
+		if (TryReadSixthExtension(builder) || TryReadPowerExtension(builder))
+		{
+			return true;
+		}
+
+		return TryReadNumberExtension(builder);
+	}
+
+	private bool TryReadSixthExtension(ChordBuilder builder)
 	{
 		if (StartsWith("(b6)") || StartsWith("(♭6)"))
 		{
@@ -134,36 +159,46 @@ internal sealed class ChordSymbolReader(string text)
 			return true;
 		}
 
-		if (TryTake("6"))
+		if (!TryTake("6"))
 		{
-			builder.Sixth = SixthType.Natural;
-			if (TryTake("/9") || TryTake("9"))
-			{
-				if (index < text.Length && IsDigit(text[index]))
-				{
-					return false;
-				}
+			return false;
+		}
 
-				builder.ExtendedNumber = 6;
-				builder.AddedTensions |= ChordTensions.Nine;
+		builder.Sixth = SixthType.Natural;
+		if (TryTake("/9") || TryTake("9"))
+		{
+			if (index < text.Length && IsDigit(text[index]))
+			{
+				return false;
 			}
 
-			return true;
+			builder.ExtendedNumber = 6;
+			builder.AddedTensions |= ChordTensions.Nine;
 		}
 
-		if (TryTake("5"))
+		return true;
+	}
+
+	private bool TryReadPowerExtension(ChordBuilder builder)
+	{
+		if (!TryTake("5"))
 		{
-			builder.Power = true;
-			return true;
+			return false;
 		}
 
+		builder.Power = true;
+		return true;
+	}
+
+	private bool TryReadNumberExtension(ChordBuilder builder)
+	{
 		if (!TryReadNumber(out int number))
 		{
 			return true;
 		}
 
 		builder.ExtendedNumber = number;
-		bool majorAfterNumber = number == 7 && TryTake("M");
+		bool majorAfterNumber = TryTake("M");
 		if (majorAfterNumber)
 		{
 			builder.MajorMarker = true;
@@ -198,28 +233,8 @@ internal sealed class ChordSymbolReader(string text)
 	{
 		while (index < text.Length && text[index] != '/')
 		{
-			if (TryTake("("))
+			if (TryReadModifierGroup(builder))
 			{
-				bool any = false;
-				while (!Peek(')'))
-				{
-					if (!TryReadModifier(builder))
-					{
-						return false;
-					}
-
-					any = true;
-					if (TryTake(",") && Peek(')'))
-					{
-						return false;
-					}
-				}
-
-				if (!any || !TryTake(")"))
-				{
-					return false;
-				}
-
 				continue;
 			}
 
@@ -232,12 +247,51 @@ internal sealed class ChordSymbolReader(string text)
 		return true;
 	}
 
+	private bool TryReadModifierGroup(ChordBuilder builder)
+	{
+		int start = index;
+		if (!TryTake("("))
+		{
+			return false;
+		}
+
+		bool any = false;
+		while (!Peek(')'))
+		{
+			if (!TryReadModifier(builder))
+			{
+				index = start;
+				return false;
+			}
+
+			any = true;
+			if (TryTake(",") && Peek(')'))
+			{
+				index = start;
+				return false;
+			}
+		}
+
+		if (!any)
+		{
+			index = start;
+			return false;
+		}
+
+		return TryTake(")");
+	}
+
 	private bool TryReadModifier(ChordBuilder builder)
 	{
 		int start = index;
+		if (TryReadModifierGroup(builder))
+		{
+			return true;
+		}
+
 		if (builder.ExtendedNumber > 0 && Peek('+') && !IsDigit(PeekNext()))
 		{
-			if (builder.Augmented)
+			if (builder.Minor || builder.Diminished || builder.Augmented || builder.MajorMarker)
 			{
 				return false;
 			}
@@ -249,7 +303,13 @@ internal sealed class ChordSymbolReader(string text)
 
 		if (TryTakeEither("b6", "♭6"))
 		{
-			return builder.SetSixth(SixthType.Flat);
+			if (builder.SetSixth(SixthType.Flat))
+			{
+				return true;
+			}
+
+			index = start;
+			return false;
 		}
 
 		bool parsed = TryReadAlteration(builder)
@@ -281,7 +341,7 @@ internal sealed class ChordSymbolReader(string text)
 
 			if (TryTake("9"))
 			{
-				return builder.SetTension(ChordTensions.SharpNine, ChordTensions.FlatNine);
+				return builder.SetTension(ChordTensions.SharpNine, ChordTensions.FlatNine | ChordTensions.Nine);
 			}
 
 			if (TryTake("11"))
@@ -299,7 +359,7 @@ internal sealed class ChordSymbolReader(string text)
 
 		if (TryTake("9"))
 		{
-			return builder.SetTension(ChordTensions.FlatNine, ChordTensions.SharpNine);
+			return builder.SetTension(ChordTensions.FlatNine, ChordTensions.SharpNine | ChordTensions.Nine);
 		}
 
 		if (TryTake("13"))
@@ -531,25 +591,25 @@ internal sealed class ChordSymbolReader(string text)
 			return true;
 		}
 
-		private bool HasValidShape()
-		{
-			if (Sus is not null && (Minor || Diminished || Augmented || MajorMarker || Power || FifthAlteration != 0))
-			{
-				return false;
-			}
+		private bool HasValidShape() =>
+			!HasInvalidSuspension()
+			&& !HasInvalidMajorMarker()
+			&& !HasInvalidPower()
+			&& !(Diminished && FifthAlteration != 0)
+			&& !(FifthAlteration < 0 && Augmented);
 
-			if (MajorMarker && !DeltaMarker && ExtendedNumber == 0 && (Minor || Diminished || Augmented))
-			{
-				return false;
-			}
+		private bool HasInvalidSuspension() =>
+			Sus is not null && (Minor || Diminished || Augmented || MajorMarker || Power || FifthAlteration != 0);
 
-			if (Power && (ExtendedNumber != 0 || Sixth != SixthType.None || AddedTensions != ChordTensions.None || Omissions != ChordOmissions.None || FifthAlteration != 0))
-			{
-				return false;
-			}
+		private bool HasInvalidMajorMarker() =>
+			(MajorMarker && !DeltaMarker && ExtendedNumber == 0 && (Minor || Diminished || Augmented))
+			|| (DeltaMarker && ExtendedNumber == 6)
+			|| (MajorMarker && ExtendedNumber == 6 && (Minor || Diminished || Augmented));
 
-			return !(Diminished && FifthAlteration != 0) && !(FifthAlteration < 0 && Augmented);
-		}
+		private bool HasInvalidPower() =>
+			Power && (Minor || Diminished || Augmented || MajorMarker || ExtendedNumber != 0
+				|| Sixth != SixthType.None || AddedTensions != ChordTensions.None
+				|| Omissions != ChordOmissions.None || FifthAlteration != 0);
 
 		private bool HasRepeatedExtensionTension() =>
 			(ExtendedNumber >= 9 && AddedTensions.HasFlag(ChordTensions.Nine))
@@ -590,7 +650,12 @@ internal sealed class ChordSymbolReader(string text)
 		{
 			if (ExtendedNumber is 0 or 6)
 			{
-				return HalfDiminished ? SeventhType.Dominant : DeltaMarker ? SeventhType.Major : SeventhType.None;
+				if (HalfDiminished)
+				{
+					return SeventhType.Dominant;
+				}
+
+				return DeltaMarker ? SeventhType.Major : SeventhType.None;
 			}
 
 			if (MajorMarker)

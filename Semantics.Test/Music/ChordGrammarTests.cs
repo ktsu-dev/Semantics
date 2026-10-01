@@ -14,6 +14,7 @@ public class ChordGrammarTests
 	[DataRow("Cmaj7add13", "Cmaj7add13", new[] { 0, 4, 7, 11, 21 })]
 	[DataRow("CM7", "Cmaj7", new[] { 0, 4, 7, 11 })]
 	[DataRow("C7M", "Cmaj7", new[] { 0, 4, 7, 11 })]
+	[DataRow("C9M", "Cmaj9", new[] { 0, 4, 7, 11, 14 })]
 	[DataRow("CM", "C", new[] { 0, 4, 7 })]
 	[DataRow("CM9", "Cmaj9", new[] { 0, 4, 7, 11, 14 })]
 	[DataRow("CM11", "Cmaj11", new[] { 0, 4, 7, 11, 14, 17 })]
@@ -81,6 +82,11 @@ public class ChordGrammarTests
 	[DataRow("CmM")]
 	[DataRow("C7(b9b9)")]
 	[DataRow("C7(b9,)")]
+	[DataRow("C7add9#9")]
+	[DataRow("C6/9b9")]
+	[DataRow("Cmaj5")]
+	[DataRow("C7M+")]
+	[DataRow("Cm7+")]
 	public void Parse_RejectsInvalidGrammar(string symbol)
 	{
 		Assert.IsFalse(Chord.TryParse(symbol, out Chord? chord), symbol);
@@ -94,6 +100,8 @@ public class ChordGrammarTests
 		[
 			("C79", "C9"),
 			("Cmaj79", "Cmaj9"),
+			("Cmaj713", "Cmaj13"),
+			("C711", "C11"),
 			("C713", "C13"),
 			("Csus47", "C7sus4"),
 			("C6add9", "C6/9"),

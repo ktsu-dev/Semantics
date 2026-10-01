@@ -106,10 +106,11 @@ omit        = "no3" | "no5"
 
 The grammar consumes the complete symbol and does not permit whitespace. A numbered extension
 implies a seventh and its natural lower stack tones unless an alteration replaces that degree;
-`addN` adds only that tone. `M`/`maj` before an extension marks a major seventh, while `7M` is
-accepted as the same spelling. A small compatibility reader also accepts previously printed forms
-such as `C79`, `Cmaj79`, `Csus47`, and `C6add9`. `ToString()` emits the canonical form, for example
-`C13b9`, `C7sus4`, `C6/9`, and `C(#11)`.
+`addN` adds only that tone. `M`/`maj` before an extension or an `M` suffix on its number marks a
+major seventh. A small compatibility reader also accepts previously printed forms
+such as `C79`, `Cmaj79`, `Csus47`, and `C6add9`; a bare `+` after a numbered chord remains an
+augmentation mark. `ToString()` emits the canonical form, for example `C13b9`, `C7sus4`, `C6/9`,
+and `C(#11)`.
 
 ### Roman numerals, both directions
 
