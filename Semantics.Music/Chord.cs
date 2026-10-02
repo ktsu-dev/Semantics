@@ -33,11 +33,15 @@ public sealed record Chord
 	/// <summary>Gets the slash-chord bass, if any (otherwise the root sounds in the bass).</summary>
 	public PitchClass? Bass { get; init; }
 
-	/// <summary>Parses a chord symbol.</summary>
+	/// <summary>Parses a no-whitespace chord symbol using the grammar documented in the music guide.</summary>
 	/// <param name="symbol">The chord symbol.</param>
 	/// <returns>The parsed chord.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="symbol"/> is null.</exception>
 	/// <exception cref="FormatException">Thrown when the symbol cannot be parsed.</exception>
+	/// <remarks>
+	/// The symbol consists of a root, an optional quality/extension/suspension and modifiers, then an
+	/// optional slash bass. Canonical symbols satisfy <c>Parse(symbol).ToString() == symbol</c>.
+	/// </remarks>
 	public static Chord Parse(string symbol)
 	{
 		Ensure.NotNull(symbol);
@@ -46,415 +50,15 @@ public sealed record Chord
 			: throw new FormatException($"Invalid chord symbol '{symbol}'.");
 	}
 
-	/// <summary>Tries to parse a chord symbol.</summary>
+	/// <summary>Tries to parse a no-whitespace chord symbol using the chord-symbol grammar.</summary>
 	/// <param name="symbol">The text to parse.</param>
 	/// <param name="result">The parsed chord, or null on failure.</param>
 	/// <returns><see langword="true"/> when parsing succeeds.</returns>
+	/// <remarks>Every input character must belong to the root, body, optional bass or end-of-input production.</remarks>
 	public static bool TryParse(string? symbol, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Chord? result)
 	{
 		result = null;
-		if (symbol is null || symbol.Length == 0)
-		{
-			return false;
-		}
-
-		if (!TryReadRoot(symbol, out PitchClass? bass, out string head, out int index, out PitchClass? root))
-		{
-			return false;
-		}
-
-		string body = RewriteHalfDiminished(RewriteSixNine(new([.. head[index..].Where(c => c is not ('(' or ')'))])));
-		ChordModifiers modifiers = ConsumeModifiers(ref body);
-		ChordQuality quality = DetermineQuality(body, modifiers.FifthAlteration);
-		SeventhType seventh = DetermineSeventh(body, quality);
-
-		SixthType sixth = modifiers.Sixth;
-		if (sixth == SixthType.None && body.Contains('6'))
-		{
-			sixth = SixthType.Natural;
-		}
-
-		ChordTensions tensions = modifiers.Tensions;
-		ApplyExtensions(ref body, modifiers.HasAdd9, ref seventh, ref tensions);
-
-		// Every modifier and extension has been consumed; what is left may only be the quality and
-		// seventh vocabulary read above. Anything else ("add" with an unsupported number, a stray
-		// digit) would otherwise be dropped silently and the parse would return a different chord.
-		if (!IsQualityVocabulary(body))
-		{
-			return false;
-		}
-
-		result = new Chord
-		{
-			Root = root,
-			Quality = quality,
-			Seventh = seventh,
-			Sixth = sixth,
-			Tensions = tensions,
-			Omissions = modifiers.Omissions,
-			Bass = bass,
-		};
-		return true;
-	}
-
-	private static bool TryReadRoot(string symbol, out PitchClass? bass, out string head, out int index, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out PitchClass? root)
-	{
-		bass = null;
-		head = symbol;
-		index = 0;
-		root = null;
-
-		int slash = symbol.IndexOf('/');
-		if (slash >= 0)
-		{
-			int bassIndex = 0;
-			if (TryParseRoot(symbol[(slash + 1)..], ref bassIndex, out PitchClass? parsedBass))
-			{
-				bass = parsedBass;
-				head = symbol[..slash];
-			}
-			else
-			{
-				// Not a bass note. The other thing a slash spells is the "six-nine" idiom, where
-				// the "/9" stacks an added ninth on a sixth chord instead of overriding the bass.
-				// Rewrite it and read the result, which may still carry a real slash bass.
-				return TryRewriteSixNine(symbol, slash, out string? rewritten)
-					&& TryReadRoot(rewritten, out bass, out head, out index, out root);
-			}
-		}
-
-		return TryParseRoot(head, ref index, out root);
-	}
-
-	/// <summary>
-	/// Rewrites the "six-nine" idiom — a bare "9" directly after a "6", as in "C6/9" — into the
-	/// equivalent "add9" spelling ("C6add9") that the modifier reader already understands. The
-	/// ninth is an addition there, so it must not imply a seventh the way a bare "9" would.
-	/// </summary>
-	/// <param name="symbol">The chord symbol being read.</param>
-	/// <param name="slash">The index of the slash under consideration.</param>
-	/// <param name="rewritten">The rewritten symbol, or null when the symbol is not the idiom.</param>
-	/// <returns><see langword="true"/> when the symbol was rewritten.</returns>
-	private static bool TryRewriteSixNine(string symbol, int slash, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out string? rewritten)
-	{
-		rewritten = null;
-
-		bool sixBeforeSlash = slash > 0 && symbol[slash - 1] == '6';
-		bool nineAfterSlash = slash + 1 < symbol.Length && symbol[slash + 1] == '9';
-
-		// A following digit would make it some other extension ("/91"), not the bare ninth.
-		bool bareNine = nineAfterSlash && (slash + 2 >= symbol.Length || symbol[slash + 2] is < '0' or > '9');
-		if (!sixBeforeSlash || !bareNine)
-		{
-			return false;
-		}
-
-		rewritten = symbol[..slash] + "add9" + symbol[(slash + 2)..];
-		return true;
-	}
-
-	/// <summary>
-	/// Rewrites the unslashed "six-nine" spelling in a chord body — a "6" directly followed by a bare
-	/// "9", as in "C69" — into "6add9", the same reading <see cref="TryRewriteSixNine"/> gives "C6/9".
-	/// Without it the "9" is taken as a ninth extension and implies a dominant seventh.
-	/// </summary>
-	/// <param name="body">The chord body, after the root.</param>
-	/// <returns>The body with the idiom rewritten, or the body unchanged.</returns>
-	private static string RewriteSixNine(string body)
-	{
-		int at = body.IndexOf("69", StringComparison.Ordinal);
-
-		// A following digit would make it some other extension ("691"), not the bare ninth.
-		bool bareNine = at >= 0 && (at + 2 >= body.Length || body[at + 2] is < '0' or > '9');
-		return bareNine ? body[..(at + 1)] + "add9" + body[(at + 2)..] : body;
-	}
-
-	/// <summary>
-	/// Rewrites the half-diminished sign into the "m7b5" spelling the modifier reader understands.
-	/// "ø" always denotes the half-diminished seventh, so "Cø" and "Cø7" both read as "Cm7b5".
-	/// </summary>
-	/// <param name="body">The chord body, after the root.</param>
-	/// <returns>The body with the sign rewritten, or the body unchanged.</returns>
-	private static string RewriteHalfDiminished(string body)
-	{
-		int at = body.IndexOf('ø');
-		if (at < 0)
-		{
-			return body;
-		}
-
-		int end = at + 1 < body.Length && body[at + 1] == '7' ? at + 2 : at + 1;
-		return body[..at] + "m7b5" + body[end..];
-	}
-
-	/// <summary>The words a chord body may still hold once every modifier and extension is consumed.</summary>
-	private static readonly string[] QualityWords = ["maj", "Maj", "min", "dim", "aug", "sus2", "sus4", "sus"];
-
-	/// <summary>
-	/// Returns whether a fully consumed chord body holds only the quality and seventh vocabulary
-	/// that <see cref="DetermineQuality"/>, <see cref="DetermineSeventh"/> and the sixth check read.
-	/// </summary>
-	/// <param name="body">The chord body left after the modifiers and extensions are taken.</param>
-	/// <returns><see langword="true"/> when nothing unrecognised remains.</returns>
-	private static bool IsQualityVocabulary(string body)
-	{
-		foreach (string word in QualityWords)
-		{
-			while (Take(ref body, word))
-			{
-				// Intentionally empty: Take removes one occurrence of the word from body each pass.
-			}
-		}
-
-		return body.All(c => c is 'm' or 'M' or '-' or '°' or '+' or 'Δ' or '5' or '6' or '7');
-	}
-
-	private static bool TryParseRoot(string symbol, ref int index, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out PitchClass? root)
-	{
-		root = null;
-		if (index >= symbol.Length || !Notation.TryReadNoteLetter(symbol[index], out NoteLetter letter))
-		{
-			return false;
-		}
-
-		index++;
-		int accidental = Notation.ReadAccidentalOffset(symbol, ref index);
-		root = PitchClass.Create((int)letter + accidental);
-		return true;
-	}
-
-	/// <summary>The fifth alteration and the upper-structure modifiers consumed from a chord body.</summary>
-	private readonly record struct ChordModifiers(
-		ChordOmissions Omissions,
-		SixthType Sixth,
-		ChordTensions Tensions,
-		int FifthAlteration,
-		bool HasAdd9);
-
-	/// <summary>
-	/// Consumes the modifier tokens from a chord body, in the order they must be taken: the
-	/// omissions, the flat sixth (before any bare "6"), the altered tensions (multi-character
-	/// tokens before bare numbers), the fifth alteration, and finally the added tones.
-	/// </summary>
-	private static ChordModifiers ConsumeModifiers(ref string body)
-	{
-		ChordOmissions omissions = ConsumeOmissions(ref body);
-
-		// Flat sixth before the bare "6".
-		SixthType sixth = TakeEither(ref body, "b6", "♭6") ? SixthType.Flat : SixthType.None;
-
-		ChordTensions tensions = ConsumeTensions(ref body);
-		int fifthAlteration = ConsumeFifthAlteration(ref body);
-
-		// The added tones must be consumed before the bare "9"/"11"/"13" logic so they do not
-		// imply a seventh.
-		bool hasAdd9 = Take(ref body, "add9");
-		if (hasAdd9)
-		{
-			tensions |= ChordTensions.Nine;
-		}
-
-		if (Take(ref body, "add11"))
-		{
-			tensions |= ChordTensions.Eleven;
-		}
-
-		if (Take(ref body, "add13"))
-		{
-			tensions |= ChordTensions.Thirteen;
-		}
-
-		return new ChordModifiers(omissions, sixth, tensions, fifthAlteration, hasAdd9);
-	}
-
-	private static ChordOmissions ConsumeOmissions(ref string body)
-	{
-		ChordOmissions omissions = ChordOmissions.None;
-		if (Take(ref body, "no5"))
-		{
-			omissions |= ChordOmissions.Fifth;
-		}
-
-		if (Take(ref body, "no3"))
-		{
-			omissions |= ChordOmissions.Third;
-		}
-
-		return omissions;
-	}
-
-	/// <summary>Consumes the altered tensions, taking multi-character tokens before bare numbers.</summary>
-	private static ChordTensions ConsumeTensions(ref string body)
-	{
-		ChordTensions tensions = ChordTensions.None;
-		if (TakeEither(ref body, "#11", "♯11"))
-		{
-			tensions |= ChordTensions.SharpEleven;
-		}
-
-		if (TakeEither(ref body, "b13", "♭13"))
-		{
-			tensions |= ChordTensions.FlatThirteen;
-		}
-
-		if (TakeEither(ref body, "b9", "♭9"))
-		{
-			tensions |= ChordTensions.FlatNine;
-		}
-
-		if (TakeEither(ref body, "#9", "♯9"))
-		{
-			tensions |= ChordTensions.SharpNine;
-		}
-
-		return tensions;
-	}
-
-	/// <summary>Consumes the fifth alteration, returning +1 for a sharp fifth, -1 for a flat fifth, 0 for neither.</summary>
-	private static int ConsumeFifthAlteration(ref string body)
-	{
-		int fifthAlteration = 0;
-		if (TakeEither(ref body, "#5", "♯5"))
-		{
-			fifthAlteration = 1;
-		}
-
-		if (TakeEither(ref body, "b5", "♭5"))
-		{
-			fifthAlteration = -1;
-		}
-
-		return fifthAlteration;
-	}
-
-	/// <summary>
-	/// Takes the ASCII spelling of a token, falling back to its Unicode spelling. Only one is
-	/// ever consumed — the fallback is not attempted once the ASCII form matches.
-	/// </summary>
-	private static bool TakeEither(ref string body, string asciiToken, string unicodeToken) =>
-		Take(ref body, asciiToken) || Take(ref body, unicodeToken);
-
-	private static ChordQuality DetermineQuality(string body, int fifthAlteration)
-	{
-		if (body.Contains("sus2", StringComparison.Ordinal))
-		{
-			return ChordQuality.Sus2;
-		}
-
-		if (body.Contains("sus", StringComparison.Ordinal))
-		{
-			return ChordQuality.Sus4;
-		}
-
-		if (body == "5")
-		{
-			return ChordQuality.Power;
-		}
-
-		if (body.Contains("dim", StringComparison.Ordinal) || body.Contains('°'))
-		{
-			return ChordQuality.Diminished;
-		}
-
-		if (body.Contains("aug", StringComparison.Ordinal) || body.Contains('+'))
-		{
-			return ChordQuality.Augmented;
-		}
-
-		if (fifthAlteration < 0)
-		{
-			// A lowered fifth is diminished only when the body also spells a minor third ("Cm7b5");
-			// otherwise the third stays major and only the fifth is lowered ("C7b5", "Cmaj7b5").
-			return IsMinor(body) ? ChordQuality.Diminished : ChordQuality.MajorFlatFive;
-		}
-
-		if (fifthAlteration > 0)
-		{
-			// A raised fifth with a (typically major) third: an augmented colour.
-			return ChordQuality.Augmented;
-		}
-
-		return IsMinor(body) ? ChordQuality.Minor : ChordQuality.Major;
-	}
-
-	private static bool IsMinor(string body) =>
-		body.Contains("min", StringComparison.Ordinal)
-		|| body.Contains('-')
-		|| (body.StartsWith('m') && !body.StartsWith("maj", StringComparison.Ordinal));
-
-	private static SeventhType DetermineSeventh(string body, ChordQuality quality)
-	{
-		bool hasSeven = body.Contains('7');
-		bool hasMaj7 = IsMajorSeventhWord(body, "maj")
-			|| IsMajorSeventhWord(body, "Maj")
-			|| body.Contains("M7", StringComparison.Ordinal)
-			|| body.Contains('Δ');
-
-		// The major seventh is tested first because one body can carry both spellings: "dimmaj7"
-		// is the diminished-major seventh, a chord distinct from "dim7", and it is what the
-		// formatter emits for Diminished + Major. Testing the diminished branch first swallowed
-		// it, since "dimmaj7" contains "dim" and a '7' exactly as "dim7" does. "dim7" itself is
-		// unaffected: it carries no "maj".
-		if (hasMaj7)
-		{
-			return SeventhType.Major;
-		}
-
-		// '°' is accepted here as it is for the triad, so "C°7" is the diminished seventh rather than
-		// falling through to a dominant seventh on a diminished triad, which is the half-diminished chord.
-		if (quality == ChordQuality.Diminished && (body.Contains("dim", StringComparison.Ordinal) || body.Contains('°')) && hasSeven)
-		{
-			return SeventhType.Diminished;
-		}
-
-		return hasSeven ? SeventhType.Dominant : SeventhType.None;
-	}
-
-	/// <summary>
-	/// Returns whether "maj" in a chord body names a major seventh. It does only when an extension
-	/// number follows it ("maj7", "maj9", "maj13"): a bare "maj" is a plain major triad, and
-	/// "maj6" a major sixth chord, neither of which carries a seventh.
-	/// </summary>
-	/// <param name="body">The chord body, before the extensions are taken.</param>
-	/// <param name="word">The spelling of "maj" to look for.</param>
-	/// <returns><see langword="true"/> when the word is followed by an extension other than 6.</returns>
-	private static bool IsMajorSeventhWord(string body, string word)
-	{
-		int at = body.IndexOf(word, StringComparison.Ordinal);
-		int next = at + word.Length;
-		return at >= 0 && next < body.Length && body[next] is >= '0' and <= '9' and not '6';
-	}
-
-	private static void ApplyExtensions(ref string body, bool hasAdd9, ref SeventhType seventh, ref ChordTensions tensions)
-	{
-		// Bare extension numbers (9/11/13) imply a dominant seventh and stack the lower tensions.
-		if (hasAdd9)
-		{
-			return;
-		}
-
-		if (Take(ref body, "13"))
-		{
-			tensions |= ChordTensions.Nine | ChordTensions.Eleven | ChordTensions.Thirteen;
-		}
-		else if (Take(ref body, "11"))
-		{
-			tensions |= ChordTensions.Nine | ChordTensions.Eleven;
-		}
-		else if (Take(ref body, "9"))
-		{
-			if (!tensions.HasFlag(ChordTensions.FlatNine) && !tensions.HasFlag(ChordTensions.SharpNine))
-			{
-				tensions |= ChordTensions.Nine;
-			}
-		}
-		else
-		{
-			return;
-		}
-
-		seventh = seventh == SeventhType.None ? SeventhType.Dominant : seventh;
+		return symbol is not null && ChordSymbolReader.TryRead(symbol, out result);
 	}
 
 	/// <summary>Returns the chord's semitone offsets above the root, ascending and de-duplicated.</summary>
@@ -469,7 +73,7 @@ public sealed record Chord
 			{
 				ChordQuality.Sus2 => 2,
 				ChordQuality.Sus4 => 5,
-				ChordQuality.Minor or ChordQuality.Diminished => 3,
+				ChordQuality.Minor or ChordQuality.MinorSharpFive or ChordQuality.Diminished => 3,
 				_ => 4,
 			});
 		}
@@ -479,7 +83,7 @@ public sealed record Chord
 			_ = offsets.Add(Quality switch
 			{
 				ChordQuality.Diminished or ChordQuality.MajorFlatFive => 6,
-				ChordQuality.Augmented => 8,
+				ChordQuality.Augmented or ChordQuality.MinorSharpFive => 8,
 				_ => 7,
 			});
 		}
@@ -562,152 +166,10 @@ public sealed record Chord
 		return pitches;
 	}
 
-	/// <summary>Returns the canonical chord symbol. The formatter is the inverse of <see cref="Parse"/> over the parseable corpus.</summary>
-	/// <returns>The canonical chord symbol (e.g. "Cmaj7", "C/G").</returns>
-	public override string ToString()
-	{
-		System.Text.StringBuilder sb = new();
-		_ = sb.Append(Root.Name);
-		AppendQualityAndSeventh(sb);
-		AppendSixth(sb);
-		AppendTensions(sb);
-		if (Quality == ChordQuality.MajorFlatFive)
-		{
-			// Straight after the root, "b5" would be read back as a flat on the root ("Cb5" is a
-			// C-flat power chord), so the bare triad parenthesises it.
-			_ = sb.Append(sb.Length == Root.Name.Length ? "(b5)" : "b5");
-		}
-
-		AppendOmissions(sb);
-		if (Bass is not null)
-		{
-			_ = sb.Append('/').Append(Bass.Name);
-		}
-
-		return sb.ToString();
-	}
-
-	private void AppendQualityAndSeventh(System.Text.StringBuilder sb)
-	{
-		switch (Quality)
-		{
-			case ChordQuality.Sus2:
-				_ = sb.Append("sus2");
-				AppendPlainSeventh(sb);
-				break;
-			case ChordQuality.Sus4:
-				_ = sb.Append("sus4");
-				AppendPlainSeventh(sb);
-				break;
-			case ChordQuality.Power:
-				_ = sb.Append('5');
-				break;
-			case ChordQuality.Augmented:
-				_ = sb.Append("aug");
-				AppendPlainSeventh(sb);
-				break;
-			case ChordQuality.Minor:
-				_ = sb.Append('m');
-				AppendPlainSeventh(sb);
-				break;
-			case ChordQuality.Diminished:
-				AppendDiminished(sb);
-				break;
-			default:
-				AppendPlainSeventh(sb);
-				break;
-		}
-	}
-
-	private void AppendPlainSeventh(System.Text.StringBuilder sb) => _ = sb.Append(Seventh switch
-	{
-		SeventhType.Major => "maj7",
-		SeventhType.Dominant => "7",
-		SeventhType.Diminished => "7",
-		_ => "",
-	});
-
-	private void AppendDiminished(System.Text.StringBuilder sb) => _ = Seventh switch
-	{
-		SeventhType.Diminished => sb.Append("dim7"),
-		SeventhType.Dominant => sb.Append("m7b5"),
-		SeventhType.Major => sb.Append("dimmaj7"),
-		_ => sb.Append("dim"),
-	};
-
-	private void AppendSixth(System.Text.StringBuilder sb) => _ = Sixth switch
-	{
-		SixthType.Natural => sb.Append('6'),
-		SixthType.Flat => sb.Append("b6"),
-		_ => sb,
-	};
-
-	private void AppendTensions(System.Text.StringBuilder sb)
-	{
-		// Natural extension stack: 13 implies 9+11+13, 11 implies 9+11. With no seventh each natural
-		// tension is an added tone and must be written "addN" so it does not imply a dominant
-		// seventh on reparse.
-		bool hasSeventh = Seventh != SeventhType.None;
-		if (!hasSeventh)
-		{
-			AppendAddedTone(sb, ChordTensions.Nine, "add9");
-			AppendAddedTone(sb, ChordTensions.Eleven, "add11");
-			AppendAddedTone(sb, ChordTensions.Thirteen, "add13");
-		}
-		else if (Tensions.HasFlag(ChordTensions.Thirteen))
-		{
-			_ = sb.Append("13");
-		}
-		else if (Tensions.HasFlag(ChordTensions.Eleven))
-		{
-			_ = sb.Append("11");
-		}
-		else if (Tensions.HasFlag(ChordTensions.Nine))
-		{
-			_ = sb.Append('9');
-		}
-
-		if (Tensions.HasFlag(ChordTensions.FlatNine))
-		{
-			_ = sb.Append("b9");
-		}
-
-		if (Tensions.HasFlag(ChordTensions.SharpNine))
-		{
-			_ = sb.Append("#9");
-		}
-
-		if (Tensions.HasFlag(ChordTensions.SharpEleven))
-		{
-			_ = sb.Append("#11");
-		}
-
-		if (Tensions.HasFlag(ChordTensions.FlatThirteen))
-		{
-			_ = sb.Append("b13");
-		}
-	}
-
-	private void AppendAddedTone(System.Text.StringBuilder sb, ChordTensions flag, string token)
-	{
-		if (Tensions.HasFlag(flag))
-		{
-			_ = sb.Append(token);
-		}
-	}
-
-	private void AppendOmissions(System.Text.StringBuilder sb)
-	{
-		if (Omissions.HasFlag(ChordOmissions.Third))
-		{
-			_ = sb.Append("no3");
-		}
-
-		if (Omissions.HasFlag(ChordOmissions.Fifth))
-		{
-			_ = sb.Append("no5");
-		}
-	}
+	/// <summary>Returns the canonical symbol in the grammar used by <see cref="Parse"/>.</summary>
+	/// <returns>The canonical chord symbol.</returns>
+	/// <remarks><c>Parse(ToString()) == this</c> for every expressible chord.</remarks>
+	public override string ToString() => ChordSymbolWriter.Format(this);
 
 	private void AddTension(SortedSet<int> offsets, ChordTensions flag, int semitones)
 	{
@@ -715,17 +177,5 @@ public sealed record Chord
 		{
 			_ = offsets.Add(semitones);
 		}
-	}
-
-	private static bool Take(ref string body, string token)
-	{
-		int at = body.IndexOf(token, StringComparison.Ordinal);
-		if (at < 0)
-		{
-			return false;
-		}
-
-		body = body.Remove(at, token.Length);
-		return true;
 	}
 }

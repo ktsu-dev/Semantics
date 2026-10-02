@@ -136,7 +136,7 @@ public sealed record Key
 		}
 
 		string numeral = RomanNumerals[degree.Degree - 1];
-		bool lowerCase = chord.Quality is ChordQuality.Minor or ChordQuality.Diminished;
+		bool lowerCase = chord.Quality is ChordQuality.Minor or ChordQuality.MinorSharpFive or ChordQuality.Diminished;
 		_ = sb.Append(lowerCase ? numeral.ToLowerInvariant() : numeral);
 
 		_ = sb.Append(QualitySuffix(chord));
@@ -249,7 +249,12 @@ public sealed record Key
 			_ => "",
 		};
 
-		string fifth = chord.Quality == ChordQuality.MajorFlatFive ? "b5" : "";
+		string fifth = chord.Quality switch
+		{
+			ChordQuality.MajorFlatFive => "b5",
+			ChordQuality.MinorSharpFive => "#5",
+			_ => "",
+		};
 
 		return quality + seventh + fifth;
 	}
