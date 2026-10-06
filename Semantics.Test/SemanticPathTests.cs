@@ -95,6 +95,38 @@ public class SemanticPathTests
 	}
 
 	[TestMethod]
+	[DataRow(new[] { ".", "notes.txt" }, ".txt", ".txt")]
+	[DataRow(new[] { "..", "data", "archive.tar.gz" }, ".gz", ".tar.gz")]
+	[DataRow(new[] { "app.v2", "README" }, "", "")]
+	[DataRow(new[] { "user", ".config", "settings.json" }, ".json", ".json")]
+	[DataRow(new[] { "user", ".bashrc" }, "", "")]
+	[DataRow(new[] { ".bashrc" }, "", "")]
+	[DataRow(new[] { "user", ".config.json" }, ".json", ".json")]
+	public void SemanticFilePath_Extensions_OnlySearchTheFileName(string[] segments, string expectedExtension, string expectedFullExtension)
+	{
+		FilePath filePath = FilePath.Create<FilePath>(TestPaths.Relative(segments));
+
+		Assert.AreEqual(expectedExtension, filePath.FileExtension.ToString());
+		Assert.AreEqual(expectedFullExtension, filePath.FullFileExtension.ToString());
+	}
+
+	[TestMethod]
+	public void SemanticFilePath_Extensions_IgnoreDotsInDirectoriesOfAbsoluteAndRelativePaths()
+	{
+		AbsoluteFilePath absolute = AbsoluteFilePath.Create<AbsoluteFilePath>(TestPaths.Absolute("home", "user", ".config", "settings.json"));
+		Assert.AreEqual(".json", absolute.FileExtension.ToString());
+		Assert.AreEqual(".json", absolute.FullFileExtension.ToString());
+
+		AbsoluteFilePath noExtension = AbsoluteFilePath.Create<AbsoluteFilePath>(TestPaths.Absolute("opt", "app.v2", "README"));
+		Assert.AreEqual("", noExtension.FileExtension.ToString());
+		Assert.AreEqual("", noExtension.FullFileExtension.ToString());
+
+		RelativeFilePath relative = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("..", "data", "archive.tar.gz"));
+		Assert.AreEqual(".gz", relative.FileExtension.ToString());
+		Assert.AreEqual(".tar.gz", relative.FullFileExtension.ToString());
+	}
+
+	[TestMethod]
 	public void SemanticFilePath_FileName_ShouldReturnCorrectFileName()
 	{
 		// Arrange
