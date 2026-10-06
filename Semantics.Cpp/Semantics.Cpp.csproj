@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ktsu.CodeBlocker" VersionOverride="2.3.2" />
     <PackageReference Include="ktsu.Coder" />
     <PackageReference Include="Polyfill" PrivateAssets="all" />
   </ItemGroup>
