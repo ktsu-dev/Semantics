@@ -250,7 +250,7 @@ forms as well, and matching it is a change to every form at once rather than par
 
 ### Can the quantities be generated for languages other than C# and C++?
 
-`SevenTargetProjectionTests` is the probe that answers it, and the answer so far is **six of
+`SevenTargetProjectionTests` is the probe that answers it, and the answer is now **seven of
 seven**. It builds one quantity — the magnitude form of `Length`, read from the real
 `dimensions.json` — as a language-agnostic `ktsu.Coder` AST and writes it in all seven of that
 library's targets. The neutral shape is the whole of what a generated magnitude is: a record struct
@@ -260,21 +260,22 @@ C# comes out as exactly what `QuantitiesGenerator` writes today, which is the re
 the AST is expressive enough for the quantities, so what the other six do is a question about those
 languages rather than about the model.
 
-**One target writes source its own toolchain refuses**, recorded upstream and not fixable here:
+**Two targets used to write source their own toolchain refuses**, both recorded upstream and both
+since fixed there. Each was **pinned** rather than skipped, so the day it was fixed the test failed
+and was updated to assert the fix — which is how both fixes were noticed at all. The tests assert
+the fixes now, so a regression upstream fails the same way round.
 
-| Target | What comes out | Why |
-|---|---|---|
-| Go | `type Length struct` with no parameters, then `func LengthFromMeter(value T) Length[T]` | ktsu-dev/Coder#63 — a generic type is deliberately written down rather than emitted, and the constructor was not given the same treatment. `go vet` says `undefined: T`. |
+**Python was the first to be fixed.** It wrote `class Length(IVector0[Length[T], T])`, which raises
+`NameError` on import because Python evaluates a base list eagerly. ktsu-dev/Coder#64 fixed that to
+the string forward reference `IVector0["Length[T]", T]`, and the first build after the bump from
+ktsu.Coder 3.14.0 to 3.14.3 failed here.
 
-The test **pins** it rather than skipping it, so the day it is fixed upstream the test fails and is
-updated to assert the fix.
-
-**Python was the second, and the pin is what caught the fix.** It wrote
-`class Length(IVector0[Length[T], T])`, which raises `NameError` on import because Python evaluates
-a base list eagerly. ktsu-dev/Coder#64 fixed that to the string forward reference
-`IVector0["Length[T]", T]`, and the first build after the bump from ktsu.Coder 3.14.0 to 3.14.3
-failed here — which is the whole point of pinning rather than skipping, and is how the fix was
-noticed at all. The test asserts the fix now, so a regression upstream fails the same way round.
+**Go was the second.** A generic type is deliberately written down rather than emitted, and the
+constructor was not given the same treatment: it wrote `type Length struct` with no parameters, then
+`func LengthFromMeter(value T) Length[T]`, and `go vet` said `undefined: T`. ktsu-dev/Coder#63 wrote
+everything over the parameter down too — the field is `Value any` and the constructor is
+`func LengthFromMeter(value any) Length` — and the first build after the bump from ktsu.Coder 3.14.3
+to 3.18.12 failed here.
 
 The probe lives in `Semantics.Cpp.Test` because that is where the reader of `dimensions.json` is,
 and that is itself the finding about this repository: `QuantityMetadata` and `MetadataProjection`
