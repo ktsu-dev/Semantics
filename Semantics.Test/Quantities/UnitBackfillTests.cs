@@ -2,6 +2,10 @@
 
 namespace ktsu.Semantics.Test.Quantities;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using ktsu.Semantics.Quantities;
 using ktsu.Semantics.Quantities.Units;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -43,6 +47,75 @@ public sealed class UnitBackfillTests
 	{
 		Temperature<double> t = Temperature<double>.FromRankine(491.67);
 		Assert.AreEqual(273.15, t.Value, Tolerance);
+	}
+
+	// ---- Volume: the litre is not the base unit, so a prefix alone is not enough ----
+
+	[TestMethod]
+	public void Volume_FromMilliliter_Is_1e6_CubicMeters()
+	{
+		Volume<double> v = Volume<double>.FromMilliliter(1.0);
+		Assert.AreEqual(1e-6, v.Value, Tolerance);
+		Assert.AreEqual(1e-6, Units.Milliliter.ToBaseFactor, Tolerance);
+	}
+
+	[TestMethod]
+	public void Volume_FromMilliliter_1000_Is_1_Liter()
+	{
+		Volume<double> v = Volume<double>.FromMilliliter(1000.0);
+		Assert.AreEqual(1.0, v.In(Units.Liter), Tolerance);
+		Assert.AreEqual(1.0, Capacity<double>.FromMilliliter(1000.0).In(Units.Liter), Tolerance);
+	}
+
+	/// <summary>
+	/// Every SI-prefixed unit whose unprefixed form is also in the catalogue is exactly the prefix times
+	/// that unit. A prefixed unit declared with only a magnitude is scaled from the dimension's base unit,
+	/// which is right for Millimeter (from Meter) and wrong for Milliliter (the litre is not m³).
+	/// </summary>
+	[TestMethod]
+	public void EveryPrefixedUnit_Is_ThePrefixTimesItsUnprefixedUnit()
+	{
+		(string Name, double Scale)[] prefixes =
+		[
+			("Pico", 1e-12), ("Nano", 1e-9), ("Micro", 1e-6), ("Milli", 1e-3), ("Centi", 1e-2),
+			("Kilo", 1e3), ("Mega", 1e6),
+		];
+
+		Dictionary<string, IUnit> units = typeof(Units)
+			.GetFields(BindingFlags.Public | BindingFlags.Static)
+			.Select(static field => field.GetValue(null))
+			.OfType<IUnit>()
+			.GroupBy(static unit => unit.Name, StringComparer.Ordinal)
+			.ToDictionary(static group => group.Key, static group => group.First(), StringComparer.Ordinal);
+
+		List<string> checkedUnits = [];
+		List<string> wrong = [];
+		foreach (IUnit unit in units.Values)
+		{
+			foreach ((string prefix, double scale) in prefixes)
+			{
+				if (!unit.Name.StartsWith(prefix, StringComparison.Ordinal) || unit.Name.Length == prefix.Length)
+				{
+					continue;
+				}
+
+				string rest = unit.Name[prefix.Length..];
+				if (!units.TryGetValue(char.ToUpperInvariant(rest[0]) + rest[1..], out IUnit? unprefixed))
+				{
+					continue;
+				}
+
+				checkedUnits.Add(unit.Name);
+				double expected = scale * unprefixed.ToBaseFactor;
+				if (Math.Abs(unit.ToBaseFactor - expected) > Math.Abs(expected) * 1e-12)
+				{
+					wrong.Add($"{unit.Name} ({unit.ToBaseFactor}, expected {expected})");
+				}
+			}
+		}
+
+		CollectionAssert.Contains(checkedUnits, "Milliliter", "The scan should pair Milliliter with Liter.");
+		Assert.IsEmpty(wrong, $"These prefixed units are not the prefix times their unprefixed unit: {string.Join(", ", wrong)}");
 	}
 
 	// ---- Length / Area / Volume ----
