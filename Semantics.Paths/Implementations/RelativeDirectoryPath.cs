@@ -2,11 +2,9 @@
 
 namespace ktsu.Semantics.Paths;
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-#if !NET5_0_OR_GREATER
-using System.Runtime.InteropServices;
-#endif
 
 /// <summary>
 /// Represents a relative directory path
@@ -209,18 +207,26 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 			return this;
 		}
 
-		// Use Path.GetFullPath with a dummy base to normalize relative paths
-#if NET5_0_OR_GREATER
-		string dummyBase = OperatingSystem.IsWindows() ? "C:\\" : "/";
-#else
-		string dummyBase = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "C:\\" : "/";
-#endif
-		string fullPath = Path.GetFullPath(Path.Combine(dummyBase, path));
-#if NETSTANDARD2_0
-		string normalized = PathPolyfill.GetRelativePath(dummyBase, fullPath);
-#else
-		string normalized = Path.GetRelativePath(dummyBase, fullPath);
-#endif
+		// Resolve segments lexically. Resolving against a dummy root would discard every ".." that
+		// climbs above the starting point, changing which directory the path names.
+		List<string> segments = [];
+		foreach (string segment in path.Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries))
+		{
+			if (segment == ".")
+			{
+				continue;
+			}
+
+			if (segment == ".." && segments.Count > 0 && segments[^1] != "..")
+			{
+				segments.RemoveAt(segments.Count - 1);
+				continue;
+			}
+
+			segments.Add(segment);
+		}
+
+		string normalized = segments.Count == 0 ? "." : string.Join(Path.DirectorySeparatorChar.ToString(), segments);
 
 		return Create<RelativeDirectoryPath>(normalized);
 	}

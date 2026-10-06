@@ -111,7 +111,7 @@ public readonly partial record struct Volume<T> : IVector0<Volume<T>, T>, IPhysi
 	/// <param name="value">The value in Milliliter.</param>
 	/// <returns>A new <see cref="Volume{T}"/> instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Volume<T> FromMilliliter(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Milli), nameof(value)));
+	public static Volume<T> FromMilliliter(T value) => Create(Vector0Guards.EnsureNonNegative((value * (MetricMagnitudes.Values<T>.Milli * Units.ConversionConstants.Values<T>.LiterToCubicMeters)), nameof(value)));
 
 	/// <summary>
 	/// Creates a new <see cref="Volume{T}"/> from a value in CubicCentimeter.

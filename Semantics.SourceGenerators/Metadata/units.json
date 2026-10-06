@@ -200,7 +200,8 @@
           "symbol": "mL",
           "description": "Milliliter - 0.001 liters.",
           "system": "SIDerived",
-          "magnitude": "Milli"
+          "magnitude": "Milli",
+          "conversionFactor": "LiterToCubicMeters"
         },
         {
           "name": "Gallon",

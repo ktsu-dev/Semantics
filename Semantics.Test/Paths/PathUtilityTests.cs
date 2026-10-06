@@ -178,8 +178,22 @@ public class PathUtilityTests
 
 		RelativeDirectoryPath normalized = dotPath.Normalize();
 
-		Assert.IsNotNull(normalized);
-		Assert.Contains("folder", normalized.WeakString);
+		Assert.AreEqual(TestPaths.Relative("..", "folder"), normalized.WeakString);
+	}
+
+	[TestMethod]
+	[DataRow(new[] { "..", "sibling" }, new[] { "..", "sibling" })]
+	[DataRow(new[] { "a", "..", "..", "b" }, new[] { "..", "b" })]
+	[DataRow(new[] { "..", "..", "x", "y" }, new[] { "..", "..", "x", "y" })]
+	[DataRow(new[] { "a", ".", "b", "..", "c" }, new[] { "a", "c" })]
+	[DataRow(new[] { "a", ".." }, new[] { "." })]
+	public void Normalize_KeepsParentSegmentsThatClimbAboveTheStart(string[] input, string[] expected)
+	{
+		RelativeDirectoryPath path = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative(input));
+
+		RelativeDirectoryPath normalized = path.Normalize();
+
+		Assert.AreEqual(TestPaths.Relative(expected), normalized.WeakString);
 	}
 
 	[TestMethod]

@@ -32,11 +32,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// before a neutral projection could be a project of its own.
 /// </para>
 /// <para>
-/// <b>One target is still known to produce source its own toolchain refuses</b>, and the test
-/// below pins that rather than skipping it, so the day it is fixed upstream the test fails and
-/// says so. It is recorded against ktsu.Coder as ktsu-dev/Coder#63 and is not anything this
-/// repository can fix. Python was the second such target until ktsu-dev/Coder#64 was fixed; its
-/// pin failed exactly as intended, and it now asserts the fix.
+/// <b>Two targets used to produce source their own toolchains refuse</b>, and each was pinned
+/// rather than skipped, so the day it was fixed upstream its test failed and said so. Python was
+/// fixed by ktsu-dev/Coder#64 and Go by ktsu-dev/Coder#63; both pins failed exactly as intended,
+/// and both now assert the fix, so a regression upstream fails here the same way round.
 /// </para>
 /// </remarks>
 [TestClass]
@@ -120,26 +119,31 @@ public sealed class SevenTargetProjectionTests
 	}
 
 	/// <summary>
-	/// Go writes source the Go toolchain refuses, because it drops the type parameter from the type
-	/// and then spells the type as generic anyway.
+	/// Go writes the generic type down, and everything written over it with it, so nothing names a
+	/// type parameter the type never declared.
 	/// </summary>
 	/// <remarks>
 	/// A generic type is deliberately written down rather than emitted, because a method on one
-	/// needs the parameters in three places and spelled two ways. The constructor was not given the
-	/// same treatment, so it returns <c>Length[T]</c> from a <c>Length</c> that takes no parameters,
-	/// and the field's type <c>T</c> is undefined. `go vet` says `undefined: T`.
+	/// needs the parameters in three places and spelled two ways. The constructor used not to be
+	/// given the same treatment: it returned <c>Length[T]</c> from a <c>Length</c> that takes no
+	/// parameters, and its parameter's type <c>T</c> was undefined, which `go vet` reported as
+	/// `undefined: T`. ktsu.Coder now types a member written over a parameter as <c>any</c> and
+	/// mentions the type without arguments, so the declaration agrees with itself.
 	/// <para>
-	/// Pinned rather than skipped: this asserts the inconsistency exists, so fixing it upstream
-	/// fails here and this test is updated to assert the fix instead. ktsu-dev/Coder#63.
+	/// This was pinned as a defect until ktsu-dev/Coder#63 was fixed, which the bump from
+	/// ktsu.Coder 3.14.3 to 3.18.12 brought in. The pin failed, as it was written to, and asserts
+	/// the fix instead.
 	/// </para>
 	/// </remarks>
 	[TestMethod]
-	public void GoSpellsAGenericTypeItDidNotDeclare()
+	public void GoWritesTheGenericTypeDownAndEverythingOverIt()
 	{
 		string source = Written["go"];
 
 		Assert.Contains("type Length struct", source, "the type is written without parameters");
-		Assert.Contains("Length[T]", source, "and the constructor spells it with one anyway");
+		Assert.Contains("Value any", source, "the field over the parameter is typed any");
+		Assert.Contains("func LengthFromMeter(value any) Length {", source, "and so is the constructor");
+		Assert.DoesNotContain("[T]", source, "nothing spells the type with a parameter it does not declare");
 	}
 
 	/// <summary>

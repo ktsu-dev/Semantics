@@ -162,7 +162,7 @@ The primitive component types `FileName`, `FileExtension`, and `DirectoryName` a
 | `Exists` | `bool` | True if the path is an existing file or directory. |
 | `IsFile` / `IsDirectory` | `bool` | Filesystem-backed checks. |
 | `FileName` | `FileName` | Filename portion (file paths). |
-| `FileExtension` / `FullFileExtension` | `FileExtension` | Last extension / everything from the first dot. |
+| `FileExtension` / `FullFileExtension` | `FileExtension` | Last extension / everything from the first dot, searching the file name only. A leading dot marks a dotfile, not an extension (`.bashrc` has none). |
 | `DirectoryPath` | `DirectoryPath` | Directory portion of a file path. |
 | `Parent` / `Name` / `Depth` / `IsRoot` | directory members | Directory navigation. |
 | `AsAbsolute()` | typed absolute path | Resolve against the current working directory. |
