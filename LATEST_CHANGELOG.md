@@ -1,10 +1,7 @@
-## v5.11.1 (patch)
+## v5.11.2 (patch)
 
-Changes since v5.11.0:
+Changes since v5.11.1:
 
-- Assert the Go fix from ktsu.Coder and sync the SDK's .gitignore ([@Claude](https://github.com/Claude))
-- [patch] Skip empty split entries in a loop, and honour TrimEntries and combined options ([@Claude](https://github.com/Claude))
-- [patch] Scale Milliliter from the litre, not from cubic metres ([@Claude](https://github.com/Claude))
-- [patch] Search only the file name for FileExtension and FullFileExtension ([@Claude](https://github.com/Claude))
-- [patch] Keep ".." segments that climb above the start in RelativeDirectoryPath.Normalize ([@Claude](https://github.com/Claude))
+- Merge main into dependabot/nuget/MSTest.Sdk-4.4.1 ([@Claude](https://github.com/Claude))
+- Use a collection expression for the refused subjects in UnkeepableRelationshipTests ([@Claude](https://github.com/Claude))
 
