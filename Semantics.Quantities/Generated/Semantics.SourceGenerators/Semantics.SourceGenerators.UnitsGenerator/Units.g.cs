@@ -948,7 +948,7 @@ public sealed record Milliliter : IUnit, IVolumeUnit
 	public DimensionInfo Dimension => PhysicalDimensions.Volume;
 
 	/// <summary>Gets the multiplication factor used in the to-base affine conversion.</summary>
-	public double ToBaseFactor => MetricMagnitudes.Milli;
+	public double ToBaseFactor => MetricMagnitudes.Milli * LiterToCubicMeters;
 
 	/// <summary>Gets the additive offset used in the to-base affine conversion.</summary>
 	public double ToBaseOffset => 0d;
@@ -957,7 +957,7 @@ public sealed record Milliliter : IUnit, IVolumeUnit
 	public Milliliter() { }
 
 	/// <inheritdoc/>
-	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Milli;
+	T IUnit.ToBaseFactorAs<T>() => MetricMagnitudes.Values<T>.Milli * ConversionConstants.Values<T>.LiterToCubicMeters;
 
 	/// <inheritdoc/>
 	T IUnit.ToBaseOffsetAs<T>() => T.Zero;

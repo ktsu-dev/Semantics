@@ -112,7 +112,7 @@ public readonly partial record struct Capacity<T> : IVector0<Capacity<T>, T>, IP
 	/// <param name="value">The value in Milliliter.</param>
 	/// <returns>A new Capacity instance.</returns>
 	/// <exception cref="System.ArgumentException">Thrown when the resulting magnitude would be negative.</exception>
-	public static Capacity<T> FromMilliliter(T value) => Create(Vector0Guards.EnsureNonNegative((value * MetricMagnitudes.Values<T>.Milli), nameof(value)));
+	public static Capacity<T> FromMilliliter(T value) => Create(Vector0Guards.EnsureNonNegative((value * (MetricMagnitudes.Values<T>.Milli * Units.ConversionConstants.Values<T>.LiterToCubicMeters)), nameof(value)));
 
 	/// <summary>
 	/// Creates a new Capacity from a value in CubicCentimeter.
