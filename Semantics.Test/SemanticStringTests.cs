@@ -1416,6 +1416,54 @@ public class SemanticStringAdditionalTests
 		Assert.IsTrue(parts.All(string.IsNullOrEmpty), "All parts should be empty");
 	}
 
+	private static readonly string[] expectedOnlyX = ["x"];
+	private static readonly string[] expectedAB = ["a", "b"];
+	private static readonly string[] expectedTrimmed = ["a", "b", "", "c"];
+
+	private static List<string> SplitToList(string value, StringSplitOptions options)
+	{
+		MySemanticString semantic = SemanticString<MySemanticString>.Create<MySemanticString>(value);
+		List<string> parts = [];
+		foreach (ReadOnlySpan<char> part in semantic.Split(',', options))
+		{
+			parts.Add(part.ToString());
+		}
+
+		return parts;
+	}
+
+	[TestMethod]
+	public void SpanSplitEnumerator_RemoveEmptyEntries_LongRunOfSeparators_DoesNotOverflowTheStack()
+	{
+		List<string> parts = SplitToList(new string(',', 1_000_000) + "x", StringSplitOptions.RemoveEmptyEntries);
+
+		Assert.AreSequenceEqual(expectedOnlyX, parts);
+	}
+
+	[TestMethod]
+	public void SpanSplitEnumerator_RemoveEmptyEntriesWithTrimEntries_RemovesWhitespaceEntries()
+	{
+		List<string> parts = SplitToList("a, ,b", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+		Assert.AreSequenceEqual(expectedAB, parts);
+	}
+
+	[TestMethod]
+	public void SpanSplitEnumerator_RemoveEmptyEntriesWithTrimEntries_RemovesEmptyEntries()
+	{
+		List<string> parts = SplitToList("a,,b", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+		Assert.AreSequenceEqual(expectedAB, parts);
+	}
+
+	[TestMethod]
+	public void SpanSplitEnumerator_TrimEntries_TrimsEachEntry()
+	{
+		List<string> parts = SplitToList(" a , b ,  ,c", StringSplitOptions.TrimEntries);
+
+		Assert.AreSequenceEqual(expectedTrimmed, parts);
+	}
+
 	[TestMethod]
 	public void ErrorMessages_ContainTypeInformation()
 	{

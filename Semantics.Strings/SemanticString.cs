@@ -975,6 +975,10 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		private readonly char _separator;
 		private readonly StringSplitOptions _options;
 
+		// StringSplitOptions.TrimEntries, which netstandard2.0/2.1 do not name. The value is the same on
+		// every target, so a caller on .NET 5+ passing the named member is honoured everywhere.
+		private const StringSplitOptions TrimEntries = (StringSplitOptions)2;
+
 		internal SpanSplitEnumerator(ReadOnlySpan<char> span, char separator, StringSplitOptions options)
 		{
 			_remaining = span;
@@ -1000,30 +1004,36 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		/// <returns>true if there is a next segment; otherwise, false.</returns>
 		public bool MoveNext()
 		{
-			if (_remaining.IsEmpty)
+			// A loop, not recursion: a long run of separators with RemoveEmptyEntries would otherwise
+			// take one stack frame per empty entry and overflow the stack.
+			while (!_remaining.IsEmpty)
 			{
-				return false;
+				int separatorIndex = _remaining.IndexOf(_separator);
+				if (separatorIndex >= 0)
+				{
+					Current = _remaining[..separatorIndex];
+					_remaining = _remaining[(separatorIndex + 1)..];
+				}
+				else
+				{
+					Current = _remaining;
+					_remaining = default;
+				}
+
+				if ((_options & TrimEntries) != 0)
+				{
+					Current = Current.Trim();
+				}
+
+				if ((_options & StringSplitOptions.RemoveEmptyEntries) != 0 && Current.IsEmpty)
+				{
+					continue;
+				}
+
+				return true;
 			}
 
-			int separatorIndex = _remaining.IndexOf(_separator);
-			if (separatorIndex >= 0)
-			{
-				Current = _remaining[..separatorIndex];
-				_remaining = _remaining[(separatorIndex + 1)..];
-			}
-			else
-			{
-				Current = _remaining;
-				_remaining = default;
-			}
-
-			// Handle StringSplitOptions.RemoveEmptyEntries
-			if (_options == StringSplitOptions.RemoveEmptyEntries && Current.IsEmpty)
-			{
-				return MoveNext(); // Recursively skip empty entries
-			}
-
-			return true;
+			return false;
 		}
 	}
 }
