@@ -112,9 +112,9 @@ public sealed class UnkeepableRelationshipTests
 	[TestMethod]
 	public void TheSensitivityRelationshipIsNoLongerRefused()
 	{
-		Assert.DoesNotContain(
-			"Sensitivity * Pressure -> ElectricPotential",
-			Vocabulary().Refused.Select(refused => refused.Subject).ToArray());
+		string[] subjects = [.. Vocabulary().Refused.Select(refused => refused.Subject)];
+
+		Assert.DoesNotContain("Sensitivity * Pressure -> ElectricPotential", subjects);
 	}
 
 	/// <summary>
