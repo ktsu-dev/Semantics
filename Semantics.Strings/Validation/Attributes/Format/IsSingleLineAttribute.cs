@@ -40,7 +40,7 @@ public sealed class IsSingleLineAttribute : NativeSemanticStringValidationAttrib
 			}
 
 			// Check for any line break characters
-			bool isValid = !value.Any(c => c == '\n' || c == '\r' || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.LineSeparator);
+			bool isValid = !value.Any(LineBreaks.IsLineBreak);
 
 			return isValid
 				? ValidationResult.Success()
