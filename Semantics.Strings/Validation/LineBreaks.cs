@@ -32,17 +32,12 @@ internal static class LineBreaks
 		int lines = 1;
 		for (int i = 0; i < value.Length; i++)
 		{
-			if (!IsLineBreak(value[i]))
+			// The '\n' of a "\r\n" pair ends the same line its '\r' already counted.
+			bool secondHalfOfCrlf = value[i] == '\n' && i > 0 && value[i - 1] == '\r';
+			if (IsLineBreak(value[i]) && !secondHalfOfCrlf)
 			{
-				continue;
+				lines++;
 			}
-
-			if (value[i] == '\r' && i + 1 < value.Length && value[i + 1] == '\n')
-			{
-				i++;
-			}
-
-			lines++;
 		}
 
 		return lines;
