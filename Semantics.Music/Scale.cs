@@ -72,7 +72,9 @@ public sealed record Scale
 		}
 
 		// Chromatic: spell against the lower neighbour (raised/sharp) or the upper
-		// neighbour (lowered/flat), whichever is closer; tie prefers the flat.
+		// neighbour (lowered/flat), whichever is closer; tie prefers the flat, except
+		// above the last degree, where a flat would wrap to a lowered tonic and the
+		// raised last degree (the minor-key leading tone, #7) is the conventional reading.
 		int lowerIndex = -1;
 		for (int i = 0; i < offsets.Count; i++)
 		{
@@ -98,7 +100,12 @@ public sealed record Scale
 		int flatDegree = upperIndex >= 0 ? upperIndex + 1 : 1;
 		int flatAlteration = semitone - (upperIndex >= 0 ? offsets[upperIndex] : offsets[0] + 12);
 
-		return Math.Abs(flatAlteration) <= Math.Abs(sharpAlteration)
+		bool flatWraps = upperIndex < 0;
+		bool preferFlat = flatWraps
+			? Math.Abs(flatAlteration) < Math.Abs(sharpAlteration)
+			: Math.Abs(flatAlteration) <= Math.Abs(sharpAlteration);
+
+		return preferFlat
 			? new ScaleDegree(flatDegree, flatAlteration)
 			: new ScaleDegree(sharpDegree, sharpAlteration);
 	}
