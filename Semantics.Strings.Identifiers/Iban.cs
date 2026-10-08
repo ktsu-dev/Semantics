@@ -2,6 +2,7 @@
 
 namespace ktsu.Semantics.Strings.Identifiers;
 
+using System.Linq;
 using System.Text;
 
 using ktsu.Semantics.Strings;
@@ -23,12 +24,9 @@ public sealed record Iban : SemanticString<Iban>
 	{
 		Ensure.NotNull(input);
 		StringBuilder canonical = new(input.Length);
-		foreach (char c in input)
+		foreach (char c in input.Where(static ch => !char.IsWhiteSpace(ch)))
 		{
-			if (!char.IsWhiteSpace(c))
-			{
-				canonical.Append(char.ToUpperInvariant(c));
-			}
+			canonical.Append(char.ToUpperInvariant(c));
 		}
 
 		return canonical.ToString();
