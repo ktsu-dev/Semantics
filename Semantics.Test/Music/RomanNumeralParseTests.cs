@@ -46,6 +46,28 @@ public class RomanNumeralParseTests
 	}
 
 	[TestMethod]
+	public void Parse_LeadingToneHalfDiminishedSeventh()
+	{
+		Chord vii = CMajor.ChordFromRomanNumeral("viiø7");
+		Assert.AreEqual(11, vii.Root.Value); // B
+		Assert.AreEqual(Chord.Parse("Bm7b5"), vii);
+	}
+
+	[TestMethod]
+	public void RomanNumeralOf_KeepsTheSeventhOfAFullyDiminishedSeventh()
+	{
+		Assert.AreEqual("vii°", CMajor.RomanNumeralOf(Chord.Parse("Bdim")));
+		Assert.AreEqual("vii°7", CMajor.RomanNumeralOf(Chord.Parse("Bdim7")));
+	}
+
+	[TestMethod]
+	public void RomanNumeralOf_SpellsAHalfDiminishedSeventhWithØ()
+	{
+		Assert.AreEqual("viiø7", CMajor.RomanNumeralOf(Chord.Parse("Bm7b5")));
+		Assert.AreEqual(Chord.Parse("Bm7b5"), CMajor.ChordFromRomanNumeral(CMajor.RomanNumeralOf(Chord.Parse("Bm7b5"))));
+	}
+
+	[TestMethod]
 	public void Parse_FlatSixInMinor()
 	{
 		Chord six = CMinor.ChordFromRomanNumeral("VI");
@@ -56,7 +78,7 @@ public class RomanNumeralParseTests
 	[TestMethod]
 	public void Parse_IsInverseOfRomanNumeralOf()
 	{
-		string[] numerals = ["Imaj7", "ii7", "iii", "IV", "V7", "vi", "vii°"];
+		string[] numerals = ["Imaj7", "ii7", "iii", "IV", "V7", "vi", "vii°", "vii°7", "viiø7"];
 		foreach (string numeral in numerals)
 		{
 			Chord chord = CMajor.ChordFromRomanNumeral(numeral);

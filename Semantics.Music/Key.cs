@@ -145,7 +145,7 @@ public sealed record Key
 
 	/// <summary>Parses a roman-numeral function relative to this key back into a concrete chord.</summary>
 	/// <param name="numeral">
-	/// A roman numeral such as "Imaj7", "ii7", "V7", "bII", or "vii°7": an optional accidental prefix
+	/// A roman numeral such as "Imaj7", "ii7", "V7", "bII", "vii°7", or "viiø7": an optional accidental prefix
 	/// (b/♭ or #/♯), the degree numeral (upper-case major, lower-case minor), then a quality suffix.
 	/// </param>
 	/// <returns>The chord rooted at the resolved scale degree.</returns>
@@ -179,11 +179,16 @@ public sealed record Key
 
 		PitchClass root = PitchClass.Create(pitchClasses[degree - 1].Value + alteration);
 
-		// Normalise the suffix into a chord-symbol body, mapping °/+ onto dim/aug and
-		// supplying a leading "m" for lower-case (minor) numerals.
+		// Normalise the suffix into a chord-symbol body, mapping °/+ onto dim/aug, passing ø
+		// through as half-diminished, and supplying a leading "m" for lower-case (minor) numerals.
 		string suffix = text[index..];
 		string quality;
-		if (suffix.StartsWith('°'))
+		if (suffix.StartsWith('ø'))
+		{
+			quality = "ø";
+			suffix = suffix[1..];
+		}
+		else if (suffix.StartsWith('°'))
 		{
 			quality = "dim";
 			suffix = suffix[1..];
@@ -234,14 +239,18 @@ public sealed record Key
 		string seventh = chord.Seventh switch
 		{
 			SeventhType.Major => "maj7",
-			SeventhType.Dominant => "7",
-			SeventhType.Diminished => chord.Quality == ChordQuality.Diminished ? "" : "7",
+			SeventhType.Dominant or SeventhType.Diminished => "7",
 			_ => "",
 		};
 
+		// A diminished triad under a minor seventh is half-diminished (viiø7), which has to be told
+		// apart from the fully diminished seventh (vii°7): ChordFromRomanNumeral reads ° as dim, so
+		// spelling both with ° would turn a half-diminished chord into a fully diminished one.
+		bool halfDiminished = chord.Quality == ChordQuality.Diminished && chord.Seventh == SeventhType.Dominant;
+
 		string quality = chord.Quality switch
 		{
-			ChordQuality.Diminished => "°",
+			ChordQuality.Diminished => halfDiminished ? "ø" : "°",
 			ChordQuality.Augmented => "+",
 			ChordQuality.Sus2 => "sus2",
 			ChordQuality.Sus4 => "sus4",
