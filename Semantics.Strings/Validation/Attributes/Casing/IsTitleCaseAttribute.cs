@@ -39,8 +39,9 @@ public sealed class IsTitleCaseAttribute : NativeSemanticStringValidationAttribu
 				return ValidationResult.Success();
 			}
 
-			// Use TextInfo.ToTitleCase and compare with original
-			string titleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLowerInvariant());
+			// Title-case with invariant rules, as the lowercasing does, so the result does not depend
+			// on the thread culture (Turkish title-cases "istanbul" to "İstanbul")
+			string titleCase = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(value.ToLowerInvariant());
 			bool isValid = string.Equals(value, titleCase, StringComparison.Ordinal);
 			return isValid
 				? ValidationResult.Success()
