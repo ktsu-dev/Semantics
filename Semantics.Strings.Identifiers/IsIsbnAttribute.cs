@@ -8,8 +8,8 @@ using ktsu.Semantics.Strings;
 
 /// <summary>
 /// Validates that the string is an ISBN-10 (weighted mod-11, final digit may be X) or an ISBN-13
-/// (mod-10), evaluated on the separator-stripped value. Registration-group and publisher ranges are
-/// not validated.
+/// (mod-10, with the <c>978</c> or <c>979</c> Bookland prefix), evaluated on the separator-stripped
+/// value. Registration-group and publisher ranges are not validated.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public sealed class IsIsbnAttribute : NativeSemanticStringValidationAttribute
@@ -63,6 +63,12 @@ public sealed class IsIsbnAttribute : NativeSemanticStringValidationAttribute
 
 		private static bool IsValidIsbn13(string s)
 		{
+			// An ISBN-13 is an EAN-13 in the Bookland range; any other prefix is a non-book barcode.
+			if (!s.StartsWith("978", StringComparison.Ordinal) && !s.StartsWith("979", StringComparison.Ordinal))
+			{
+				return false;
+			}
+
 			int sum = 0;
 			for (int i = 0; i < 13; i++)
 			{

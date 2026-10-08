@@ -41,6 +41,30 @@ public sealed class IsbnTests
 	}
 
 	[TestMethod]
+	public void Create_ValidIsbn13With979Prefix_Succeeds()
+	{
+		Isbn isbn = Isbn.Create("979-10-90636-07-1");
+		Assert.AreEqual("9791090636071", isbn.WeakString);
+	}
+
+	[TestMethod]
+	[DataRow("4006381333931")]
+	[DataRow("5901234123457")]
+	[DataRow("9770317847001")]
+	public void Create_Ean13OutsideBooklandRange_Throws(string ean13)
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => Isbn.Create(ean13));
+	}
+
+	[TestMethod]
+	public void TryCreate_Ean13OutsideBooklandRange_ReturnsFalse()
+	{
+		bool created = Isbn.TryCreate("4006381333931", out Isbn? result);
+		Assert.IsFalse(created);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
 	public void Create_WrongLength_Throws()
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => Isbn.Create("123456789012"));
