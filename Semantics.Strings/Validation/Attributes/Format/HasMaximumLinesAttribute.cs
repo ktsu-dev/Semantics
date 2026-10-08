@@ -3,13 +3,13 @@
 namespace ktsu.Semantics.Strings;
 
 using System;
-using System.Linq;
 
 /// <summary>
 /// Validates that a string has at most the specified maximum number of lines
 /// </summary>
 /// <remarks>
-/// Line count is determined by counting line break characters plus one for the final line.
+/// Line count is the number of line breaks plus one for the final line. <c>\r\n</c> is one break, and so
+/// is a lone <c>\r</c>, <c>\n</c>, U+2028 or U+2029, matching <see cref="IsMultiLineAttribute"/>.
 /// Empty strings are considered to have 0 lines.
 /// A string with no line breaks has 1 line.
 /// </remarks>
@@ -53,16 +53,7 @@ public sealed class HasMaximumLinesAttribute(int maximumLines) : NativeSemanticS
 				return ValidationResult.Success(); // Empty strings have 0 lines, which is <= any positive maximum
 			}
 
-			// Count line breaks and add 1
-			int lineCount = value.Count(c => c == '\n') + 1;
-
-			// Handle Windows-style line endings (\r\n) - don't double count
-			if (value.Contains("\r\n"))
-			{
-				int crlfCount = value.Split(["\r\n"], StringSplitOptions.None).Length - 1;
-				int lfOnlyCount = value.Count(c => c == '\n') - crlfCount;
-				lineCount = crlfCount + lfOnlyCount + 1;
-			}
+			int lineCount = LineBreaks.CountLines(value);
 
 			bool hasValidLineCount = lineCount <= maximumLines;
 			return hasValidLineCount

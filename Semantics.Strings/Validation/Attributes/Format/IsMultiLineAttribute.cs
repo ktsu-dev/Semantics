@@ -40,7 +40,7 @@ public sealed class IsMultiLineAttribute : NativeSemanticStringValidationAttribu
 			}
 
 			// Check for any line break characters
-			bool hasLineBreaks = value.Any(c => c == '\n' || c == '\r' || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.LineSeparator);
+			bool hasLineBreaks = value.Any(LineBreaks.IsLineBreak);
 			return hasLineBreaks
 				? ValidationResult.Success()
 				: ValidationResult.Failure("The value must contain line breaks.");
