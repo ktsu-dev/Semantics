@@ -116,9 +116,9 @@ public abstract record SemanticPath<TDerived> : SemanticString<TDerived>, ICompa
 		// Normalize directory separators to the current platform's preferred separator
 		canonical = canonical.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
-		// Remove trailing directory separator (except for root paths)
+		// Remove every trailing directory separator, so "/a//" is "/a", but stop at a root path
 		string separator = new([Path.DirectorySeparatorChar]);
-		if (canonical.EndsWith(separator) && canonical.Length > separator.Length)
+		while (canonical.EndsWith(separator) && canonical.Length > separator.Length)
 		{
 			// Check if this is a Windows root path (e.g., "C:\")
 #if NET5_0_OR_GREATER
@@ -139,14 +139,16 @@ public abstract record SemanticPath<TDerived> : SemanticString<TDerived>, ICompa
 #endif
 
 			// Only remove trailing separator if it's not a root path
-			if (!isWindowsRoot && !isUnixRoot)
+			if (isWindowsRoot || isUnixRoot)
 			{
-#if NETSTANDARD2_0
-				canonical = canonical.Substring(0, canonical.Length - separator.Length);
-#else
-				canonical = canonical[..^separator.Length];
-#endif
+				break;
 			}
+
+#if NETSTANDARD2_0
+			canonical = canonical.Substring(0, canonical.Length - separator.Length);
+#else
+			canonical = canonical[..^separator.Length];
+#endif
 		}
 
 		return canonical;

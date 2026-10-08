@@ -97,4 +97,29 @@ public class PathContainmentTests
 		Assert.IsFalse(File(TestPaths.Absolute("home2.txt")).IsChildOf(home));
 		Assert.IsFalse(home.IsParentOf(Dir(TestPaths.Absolute("home2"))));
 	}
+
+	[TestMethod]
+	[DataRow(2)]
+	[DataRow(3)]
+	public void RepeatedTrailingSeparators_CanonicalizeToTheSameDirectory(int separatorCount)
+	{
+		string plain = TestPaths.Absolute("home", "user", "a");
+		AbsoluteDirectoryPath doubled = Dir(plain + new string(TestPaths.Separator, separatorCount));
+		AbsoluteDirectoryPath single = Dir(plain);
+
+		Assert.AreEqual(plain, doubled.WeakString);
+		Assert.AreEqual(single, doubled);
+		Assert.IsFalse(doubled.IsChildOf(single));
+		Assert.IsFalse(single.IsChildOf(doubled));
+		Assert.IsFalse(single.IsParentOf(doubled));
+	}
+
+	[TestMethod]
+	public void RootWithRepeatedTrailingSeparators_StaysTheRoot()
+	{
+		AbsoluteDirectoryPath root = Dir(TestPaths.Root + TestPaths.Separator + TestPaths.Separator);
+
+		Assert.AreEqual(TestPaths.Root, root.WeakString);
+		Assert.IsFalse(root.IsChildOf(Dir(TestPaths.Root)));
+	}
 }
