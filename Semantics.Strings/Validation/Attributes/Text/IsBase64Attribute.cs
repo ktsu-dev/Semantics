@@ -39,6 +39,14 @@ public sealed class IsBase64Attribute : NativeSemanticStringValidationAttribute
 				return ValidationResult.Failure("The value must be a valid Base64 string.");
 			}
 
+			// Convert.FromBase64String skips whitespace, which the length check above counts, so a
+			// value with whitespace would pass whenever it made the length a multiple of 4. Only the
+			// Base64 alphabet is accepted, with at most two '=' and only at the end.
+			if (!HasBase64Alphabet(value))
+			{
+				return ValidationResult.Failure("The value must be a valid Base64 string.");
+			}
+
 			// Check for valid Base64 characters and proper padding
 			try
 			{
@@ -49,6 +57,31 @@ public sealed class IsBase64Attribute : NativeSemanticStringValidationAttribute
 			{
 				return ValidationResult.Failure("The value must be a valid Base64 string.");
 			}
+		}
+
+		private static bool HasBase64Alphabet(string value)
+		{
+			int dataLength = value.Length;
+			while (dataLength > 0 && value[dataLength - 1] == '=')
+			{
+				dataLength--;
+			}
+
+			if (value.Length - dataLength > 2)
+			{
+				return false;
+			}
+
+			for (int i = 0; i < dataLength; i++)
+			{
+				char c = value[i];
+				if (c is not ((>= 'A' and <= 'Z') or (>= 'a' and <= 'z') or (>= '0' and <= '9') or '+' or '/'))
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 	}
 }

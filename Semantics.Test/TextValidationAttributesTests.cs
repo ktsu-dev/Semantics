@@ -144,9 +144,31 @@ public class TextValidationAttributesTests
 	}
 
 	[TestMethod]
-	public void IsBase64Attribute_Base64WithSpaces_ShouldThrow()
+	[DataRow("SGVs bG8g V29y bGQ=")]
+	[DataRow("SGVs bG8g V29y bGQ= ")]
+	[DataRow("SGVsbG8gV29ybGQ=    ")]
+	[DataRow("SGVsbG8g\r\nV29ybGQ=\r\n")]
+	[DataRow("SGVsbG8gV29ybGQ=\t\t\t\t")]
+	public void IsBase64Attribute_Base64WithWhitespace_ShouldThrow(string value)
 	{
-		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<Base64String>.Create<Base64String>("SGVs bG8g V29y bGQ="));
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<Base64String>.Create<Base64String>(value));
+	}
+
+	[TestMethod]
+	[DataRow("VGVzdA=a")]
+	[DataRow("VGV=dA==")]
+	[DataRow("VGVzd===")]
+	public void IsBase64Attribute_MisplacedPadding_ShouldThrow(string value)
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<Base64String>.Create<Base64String>(value));
+	}
+
+	[TestMethod]
+	[DataRow("+/+/")]
+	[DataRow("AB+/CD==")]
+	public void IsBase64Attribute_PlusAndSlash_ShouldPass(string value)
+	{
+		Assert.AreEqual(value, SemanticString<Base64String>.Create<Base64String>(value).WeakString);
 	}
 
 	[TestMethod]
