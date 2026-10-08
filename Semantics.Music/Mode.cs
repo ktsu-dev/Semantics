@@ -59,6 +59,8 @@ public sealed record Mode
 	private static readonly Dictionary<string, string> Aliases = new(StringComparer.OrdinalIgnoreCase)
 	{
 		["ionian"] = "major",
+		["minor"] = "aeolian",
+		["natural_minor"] = "aeolian",
 	};
 
 	/// <summary>Gets the canonical lower-case name of the mode.</summary>
@@ -174,7 +176,7 @@ public sealed record Mode
 	}
 
 	/// <summary>Tries to parse a mode by name, case-insensitively.</summary>
-	/// <remarks>An alias such as "ionian" parses to its canonical mode (<see cref="Major"/>).</remarks>
+	/// <remarks>An alias parses to its canonical mode: "ionian" to <see cref="Major"/>, and "minor" or "natural_minor" to <see cref="Aeolian"/>.</remarks>
 	/// <param name="name">The mode name.</param>
 	/// <param name="result">The matching mode, or null on failure.</param>
 	/// <returns><see langword="true"/> when the name is a known mode.</returns>

@@ -104,6 +104,15 @@ public class KeyTests
 	}
 
 	[TestMethod]
+	public void Parse_MinorSpelling_IsTheSameKeyAsAeolian()
+	{
+		Key aMinor = Key.Create(PitchClass.Create(NoteLetter.A, Accidental.Natural), Mode.Aeolian);
+		Assert.AreEqual(aMinor, Key.Parse("A minor"));
+		Assert.IsTrue(Key.TryParse("A minor", out Key? parsed));
+		Assert.AreEqual("A aeolian", parsed!.ToString());
+	}
+
+	[TestMethod]
 	public void TryParseFailsOnUnknownMode()
 	{
 		Assert.IsFalse(Key.TryParse("C bogus", out Key? result));
