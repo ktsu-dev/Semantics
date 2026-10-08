@@ -2,6 +2,8 @@
 
 namespace ktsu.Semantics.Strings.Identifiers;
 
+using System.Text;
+
 using ktsu.Semantics.Strings;
 
 /// <summary>
@@ -12,12 +14,23 @@ using ktsu.Semantics.Strings;
 [IsIban]
 public sealed record Iban : SemanticString<Iban>
 {
-	/// <summary>Normalizes the input by stripping spaces and uppercasing.</summary>
+	/// <summary>
+	/// Normalizes the input by stripping all whitespace (spaces, tabs, line breaks) and uppercasing.
+	/// </summary>
 	/// <param name="input">The raw input string.</param>
 	/// <returns>The canonical IBAN string.</returns>
 	protected override string MakeCanonical(string input)
 	{
 		Ensure.NotNull(input);
-		return input.Replace(" ", string.Empty).ToUpperInvariant();
+		StringBuilder canonical = new(input.Length);
+		foreach (char c in input)
+		{
+			if (!char.IsWhiteSpace(c))
+			{
+				canonical.Append(char.ToUpperInvariant(c));
+			}
+		}
+
+		return canonical.ToString();
 	}
 }

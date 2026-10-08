@@ -20,7 +20,7 @@ public sealed class IsUlidAttribute : NativeSemanticStringValidationAttribute
 
 	private sealed class UlidValidator : ValidationAdapter
 	{
-		private const string Pattern = "^[0-7][0-9A-HJKMNP-TV-Z]{25}$";
+		private const string Pattern = "^[0-7][0-9A-HJKMNP-TV-Z]{25}\\z";
 
 		protected override ValidationResult ValidateValue(string value) =>
 			Regex.IsMatch(value, Pattern, RegexOptions.None, TimeSpan.FromSeconds(1))

@@ -2,6 +2,7 @@
 
 namespace ktsu.Semantics.Test.Identifiers;
 
+using ktsu.Semantics.Strings;
 using ktsu.Semantics.Strings.Identifiers;
 
 [TestClass]
@@ -61,5 +62,20 @@ public sealed class UuidTests
 		Uuid roundTripped = uuid.As<Uuid>();
 		Assert.AreEqual(uuid, roundTripped);
 		Assert.AreEqual(uuid.WeakString, roundTripped.WeakString);
+	}
+
+	// Uuid trims its input, which hides the attribute's own anchoring; a type that applies [IsUuid]
+	// without canonicalizing sees the raw value.
+	[IsUuid]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812", Justification = "Used via generic type references")]
+	private sealed partial record UntrimmedUuid : SemanticString<UntrimmedUuid> { }
+
+	[TestMethod]
+	[DataRow("123e4567-e89b-12d3-a456-426614174000\n")]
+	[DataRow("123e4567-e89b-12d3-a456-426614174000\r\n")]
+	public void IsUuid_OnUntrimmedType_RejectsTrailingNewline(string input)
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<UntrimmedUuid>.Create<UntrimmedUuid>(input));
+		Assert.AreEqual("123e4567-e89b-12d3-a456-426614174000", SemanticString<UntrimmedUuid>.Create<UntrimmedUuid>("123e4567-e89b-12d3-a456-426614174000").WeakString);
 	}
 }

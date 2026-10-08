@@ -44,4 +44,24 @@ public sealed class IbanTests
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => Iban.Create(string.Empty));
 	}
+
+	[TestMethod]
+	[DataRow("GB67WEST12345698765432\n")]
+	[DataRow("GB67WEST12345698765432\r\n")]
+	public void Create_InvalidChecksumWithTrailingNewline_Throws(string input)
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => Iban.Create(input));
+	}
+
+	[TestMethod]
+	[DataRow("GB82WEST12345698765432\n")]
+	[DataRow("GB82WEST12345698765432\t")]
+	[DataRow("\tGB82WEST12345698765432\r\n")]
+	[DataRow("GB82 WEST 1234 5698 7654 32\n")]
+	[DataRow("GB82\u00A0WEST\u00A012345698765432")]
+	public void Create_ValidIbanWithWhitespace_StripsItAndValidates(string input)
+	{
+		Iban iban = Iban.Create(input);
+		Assert.AreEqual("GB82WEST12345698765432", iban.WeakString);
+	}
 }

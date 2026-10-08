@@ -2,6 +2,7 @@
 
 namespace ktsu.Semantics.Test.Identifiers;
 
+using ktsu.Semantics.Strings;
 using ktsu.Semantics.Strings.Identifiers;
 
 [TestClass]
@@ -43,5 +44,20 @@ public sealed class UlidTests
 	public void Create_Empty_Throws()
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => Ulid.Create(string.Empty));
+	}
+
+	// Ulid trims its input, which hides the attribute's own anchoring; a type that applies [IsUlid]
+	// without canonicalizing sees the raw value.
+	[IsUlid]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812", Justification = "Used via generic type references")]
+	private sealed partial record UntrimmedUlid : SemanticString<UntrimmedUlid> { }
+
+	[TestMethod]
+	[DataRow("01ARZ3NDEKTSV4RRFFQ69G5FAV\n")]
+	[DataRow("01ARZ3NDEKTSV4RRFFQ69G5FAV\r\n")]
+	public void IsUlid_OnUntrimmedType_RejectsTrailingNewline(string input)
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<UntrimmedUlid>.Create<UntrimmedUlid>(input));
+		Assert.AreEqual("01ARZ3NDEKTSV4RRFFQ69G5FAV", SemanticString<UntrimmedUlid>.Create<UntrimmedUlid>("01ARZ3NDEKTSV4RRFFQ69G5FAV").WeakString);
 	}
 }

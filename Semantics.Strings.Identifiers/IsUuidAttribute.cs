@@ -20,7 +20,7 @@ public sealed class IsUuidAttribute : NativeSemanticStringValidationAttribute
 
 	private sealed class UuidValidator : ValidationAdapter
 	{
-		private const string Pattern = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$";
+		private const string Pattern = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\z";
 
 		protected override ValidationResult ValidateValue(string value) =>
 			Regex.IsMatch(value, Pattern, RegexOptions.None, TimeSpan.FromSeconds(1))
