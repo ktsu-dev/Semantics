@@ -1,7 +1,8 @@
-## v5.11.2 (patch)
+## v5.11.3 (patch)
 
-Changes since v5.11.1:
+Changes since v5.11.2:
 
-- Merge main into dependabot/nuget/MSTest.Sdk-4.4.1 ([@Claude](https://github.com/Claude))
-- Use a collection expression for the refused subjects in UnkeepableRelationshipTests ([@Claude](https://github.com/Claude))
+- [patch] Spell fully and half-diminished sevenths as vii°7 and viiø7 ([@Claude](https://github.com/Claude))
+- Count CRLF once without advancing the loop counter in CountLines ([@Claude](https://github.com/Claude))
+- [patch] Count every line break in HasMinimumLines, HasMaximumLines and HasExactLines ([@Claude](https://github.com/Claude))
 
