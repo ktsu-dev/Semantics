@@ -55,6 +55,43 @@ public sealed class JwtTokenTests
 	}
 
 	[TestMethod]
+	[DataRow("eyJh bGci OiJI UzI1 NiJ9.eyJzdWIiOiIxIn0.sig")]
+	[DataRow("eyJhbGciOiJIUzI1NiJ9.eyJz dWIi OiIx In0.sig")]
+	[DataRow("eyJhbGciOiJIUzI1NiJ9\n.eyJzdWIiOiIxIn0.sig")]
+	public void Create_SegmentWithWhitespace_Throws(string token)
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create(token));
+	}
+
+	[TestMethod]
+	[DataRow("e30=.e30=.x")]
+	[DataRow("e30.e30=.x")]
+	[DataRow("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.sig=")]
+	public void Create_SegmentWithPadding_Throws(string token)
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create(token));
+	}
+
+	[TestMethod]
+	[DataRow("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0+.sig")]
+	[DataRow("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0/.sig")]
+	[DataRow("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.si+g")]
+	[DataRow("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.si/g")]
+	[DataRow("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.si g")]
+	public void Create_SegmentWithStandardBase64OrOtherCharacters_Throws(string token)
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create(token));
+	}
+
+	[TestMethod]
+	public void Create_UnpaddedBase64UrlSegments_Succeeds()
+	{
+		const string token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.sig";
+		JwtToken jwt = JwtToken.Create(token);
+		Assert.AreEqual(token, jwt.WeakString);
+	}
+
+	[TestMethod]
 	public void Create_Empty_Throws()
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => JwtToken.Create(string.Empty));
