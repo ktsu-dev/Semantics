@@ -196,6 +196,48 @@ public class TextValidationAttributesTests
 		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<PrefixSuffixTestString>.Create<PrefixSuffixTestString>("middle"));
 	}
 
+	[PrefixAndSuffix("\"", "\"")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Used via generic type references")]
+	private sealed partial record QuotedTestString : SemanticString<QuotedTestString> { }
+
+	[PrefixAndSuffix("ab", "ba")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Used via generic type references")]
+	private sealed partial record AbBaTestString : SemanticString<AbBaTestString> { }
+
+	[TestMethod]
+	public void PrefixAndSuffixAttribute_LoneDelimiterServingAsBoth_ShouldThrow()
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<QuotedTestString>.Create<QuotedTestString>("\""));
+	}
+
+	[TestMethod]
+	public void PrefixAndSuffixAttribute_OverlappingPrefixAndSuffix_ShouldThrow()
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<AbBaTestString>.Create<AbBaTestString>("aba"));
+	}
+
+	[TestMethod]
+	public void PrefixAndSuffixAttribute_EmptyString_ShouldThrow()
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<QuotedTestString>.Create<QuotedTestString>(string.Empty));
+	}
+
+	[TestMethod]
+	[DataRow("\"\"")]
+	[DataRow("\"quoted\"")]
+	public void PrefixAndSuffixAttribute_DelimitersEachPresent_ShouldPass(string value)
+	{
+		QuotedTestString quoted = SemanticString<QuotedTestString>.Create<QuotedTestString>(value);
+		Assert.AreEqual(value, quoted.WeakString);
+	}
+
+	[TestMethod]
+	public void PrefixAndSuffixAttribute_AdjacentPrefixAndSuffix_ShouldPass()
+	{
+		AbBaTestString value = SemanticString<AbBaTestString>.Create<AbBaTestString>("abba");
+		Assert.AreEqual("abba", value.WeakString);
+	}
+
 	// Test multiple validation attributes on empty strings
 	[TestMethod]
 	public void ValidationAttributes_EmptyString_ShouldHandleCorrectly()
