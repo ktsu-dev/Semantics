@@ -10,6 +10,9 @@ using System.Collections.Generic;
 /// </summary>
 public sealed record Mode
 {
+	// Named once because the shape table, its aliases and the static instance all refer to it.
+	private const string AeolianName = "aeolian";
+
 	private static readonly Dictionary<string, int[]> Shapes = new(StringComparer.OrdinalIgnoreCase)
 	{
 		// Diatonic modes.
@@ -18,7 +21,7 @@ public sealed record Mode
 		["phrygian"] = [0, 1, 3, 5, 7, 8, 10],
 		["lydian"] = [0, 2, 4, 6, 7, 9, 11],
 		["mixolydian"] = [0, 2, 4, 5, 7, 9, 10],
-		["aeolian"] = [0, 2, 3, 5, 7, 8, 10],
+		[AeolianName] = [0, 2, 3, 5, 7, 8, 10],
 		["locrian"] = [0, 1, 3, 5, 6, 8, 10],
 
 		// Minor scales.
@@ -59,8 +62,8 @@ public sealed record Mode
 	private static readonly Dictionary<string, string> Aliases = new(StringComparer.OrdinalIgnoreCase)
 	{
 		["ionian"] = "major",
-		["minor"] = "aeolian",
-		["natural_minor"] = "aeolian",
+		["minor"] = AeolianName,
+		["natural_minor"] = AeolianName,
 	};
 
 	/// <summary>Gets the canonical lower-case name of the mode.</summary>
@@ -91,7 +94,7 @@ public sealed record Mode
 	public static Mode Mixolydian => new() { Name = "mixolydian" };
 
 	/// <summary>The Aeolian (natural minor) mode.</summary>
-	public static Mode Aeolian => new() { Name = "aeolian" };
+	public static Mode Aeolian => new() { Name = AeolianName };
 
 	/// <summary>The Locrian mode.</summary>
 	public static Mode Locrian => new() { Name = "locrian" };
