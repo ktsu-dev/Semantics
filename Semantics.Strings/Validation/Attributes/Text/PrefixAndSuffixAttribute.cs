@@ -5,7 +5,8 @@ namespace ktsu.Semantics.Strings;
 using System;
 
 /// <summary>
-/// Validates that the string has both the specified prefix and suffix
+/// Validates that the string has both the specified prefix and suffix, without the two overlapping.
+/// An empty string fails, as it does for <see cref="StartsWithAttribute"/> and <see cref="EndsWithAttribute"/>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
 public sealed class PrefixAndSuffixAttribute(string prefix, string suffix, StringComparison comparison = StringComparison.Ordinal) : NativeSemanticStringValidationAttribute
@@ -55,7 +56,13 @@ public sealed class PrefixAndSuffixAttribute(string prefix, string suffix, Strin
 		{
 			if (string.IsNullOrEmpty(value))
 			{
-				return ValidationResult.Success();
+				return ValidationResult.Failure($"The value must start with '{_prefix}' and end with '{_suffix}'.");
+			}
+
+			// The prefix and suffix must each have their own characters, so one '"' cannot be both quotes
+			if (value.Length < _prefix.Length + _suffix.Length)
+			{
+				return ValidationResult.Failure($"The value must start with '{_prefix}' and end with '{_suffix}' without the two overlapping.");
 			}
 
 			// Check prefix
