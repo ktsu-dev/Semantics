@@ -89,7 +89,7 @@ Each type is a `sealed record` deriving from `SemanticString<T>`. None declare t
 | `Iban` | Strip spaces, uppercase | Length 15-34, country/check prefix, ISO 7064 mod-97-10 checksum | Country-specific BBAN structure is not enforced. |
 | `Isbn` | Strip `-` and spaces, uppercase | ISBN-10 (weighted mod-11, `X` allowed) or ISBN-13 (`978`/`979` prefix, mod-10) | Registration-group/publisher ranges are not validated. |
 | `CreditCardNumber` | Strip spaces and hyphens | 13-19 digits, Luhn (mod-10) checksum | Luhn only. No issuer/network detection, no PCI guarantee. The value is sensitive, do not log it. |
-| `JwtToken` | None (stored verbatim, case-sensitive) | Three `.`-separated segments, non-empty header and payload that base64url-decode to UTF-8 text delimited as `{ ... }` | Structural only: the header and payload bodies are not parsed, so malformed JSON between the braces is accepted. Signature is not decoded or verified. `alg`, claims, and expiry are not inspected. |
+| `JwtToken` | None (stored verbatim, case-sensitive) | Three `.`-separated segments in the unpadded base64url alphabet (no whitespace, `=`, `+` or `/`), non-empty header and payload that decode to UTF-8 text delimited as `{ ... }` | Structural only: the header and payload bodies are not parsed, so malformed JSON between the braces is accepted. Signature is not decoded or verified. `alg`, claims, and expiry are not inspected. |
 
 Creation follows the base-type contract: `Create(...)` throws `ArgumentException` on invalid input and `ArgumentNullException` on null, while `TryCreate(...)` returns `false` instead.
 

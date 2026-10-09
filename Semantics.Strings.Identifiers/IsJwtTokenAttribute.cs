@@ -3,6 +3,7 @@
 namespace ktsu.Semantics.Strings.Identifiers;
 
 using System;
+using System.Linq;
 using System.Text;
 
 using ktsu.Semantics.Strings;
@@ -10,7 +11,10 @@ using ktsu.Semantics.Strings;
 /// <summary>
 /// Validates that the string is a structurally well-formed JWT: exactly three '.'-separated segments,
 /// with non-empty header and payload segments that base64url-decode to UTF-8 text delimited as a JSON
-/// object. The signature segment may be empty (e.g. <c>alg=none</c>) and is neither decoded nor verified.
+/// object. Every segment must use only the unpadded base64url alphabet (<c>A-Z</c>, <c>a-z</c>,
+/// <c>0-9</c>, <c>-</c>, <c>_</c>), so whitespace, <c>=</c> padding, <c>+</c> and <c>/</c> are
+/// rejected (RFC 7515 §2). The signature segment may be empty (e.g. <c>alg=none</c>) and is neither
+/// decoded nor verified.
 /// <para>
 /// The check is deliberately structural. The header and payload bodies are not parsed, so malformed
 /// JSON between the braces is accepted, and no claim (not even <c>alg</c>) is inspected. Use a JWT
@@ -44,13 +48,31 @@ public sealed class IsJwtTokenAttribute : NativeSemanticStringValidationAttribut
 				return ValidationResult.Failure("The JWT header must be base64url-encoded JSON object.");
 			}
 
-			return DecodesToJsonObject(parts[1])
+			if (!DecodesToJsonObject(parts[1]))
+			{
+				return ValidationResult.Failure("The JWT payload must be base64url-encoded JSON object.");
+			}
+
+			return IsBase64UrlAlphabet(parts[2])
 				? ValidationResult.Success()
-				: ValidationResult.Failure("The JWT payload must be base64url-encoded JSON object.");
+				: ValidationResult.Failure("The JWT signature must use only base64url characters.");
 		}
+
+		/// <summary>
+		/// Whether every character is in the unpadded base64url alphabet. Checked before decoding
+		/// because <see cref="Convert.FromBase64String(string)"/> skips whitespace and accepts
+		/// <c>+</c>, <c>/</c> and <c>=</c>, none of which a JWT segment may contain.
+		/// </summary>
+		private static bool IsBase64UrlAlphabet(string segment) =>
+			segment.All(c => c is (>= 'A' and <= 'Z') or (>= 'a' and <= 'z') or (>= '0' and <= '9') or '-' or '_');
 
 		private static bool DecodesToJsonObject(string segment)
 		{
+			if (!IsBase64UrlAlphabet(segment))
+			{
+				return false;
+			}
+
 			string base64 = segment.Replace('-', '+').Replace('_', '/');
 			switch (base64.Length % 4)
 			{
