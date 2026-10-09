@@ -42,8 +42,16 @@ public sealed record Pitch
 	/// <param name="octave">The octave number.</param>
 	/// <returns>A new pitch.</returns>
 	/// <exception cref="ArgumentOutOfRangeException">Thrown when the resulting MIDI number is outside 0..127.</exception>
-	public static Pitch Create(NoteLetter letter, Accidental accidental, int octave) =>
-		Create(((octave + 1) * 12) + (int)letter + (int)accidental);
+	public static Pitch Create(NoteLetter letter, Accidental accidental, int octave)
+	{
+		long midi = MidiOf(octave, (int)letter, (int)accidental);
+		if (midi is < 0 or > 127)
+		{
+			throw new ArgumentOutOfRangeException(nameof(octave), octave, "The resulting MIDI note number must be in 0..127.");
+		}
+
+		return new() { Midi = (int)midi };
+	}
 
 	/// <summary>Parses a note name such as "C4", "F#3", or "Bb5".</summary>
 	/// <param name="name">A letter A-G, optional accidentals, then an octave integer.</param>
@@ -78,20 +86,28 @@ public sealed record Pitch
 
 		index++;
 		int accidental = Notation.ReadAccidentalOffset(name, ref index);
-		if (!int.TryParse(name[index..], NumberStyles.Integer, CultureInfo.InvariantCulture, out int octave))
+		// The octave is a bare integer: a leading '-' is allowed for octave -1, but not '+' or
+		// whitespace, which would parse to a pitch that prints back differently.
+		if (index >= name.Length
+			|| name[index] == '+'
+			|| !int.TryParse(name[index..], NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int octave))
 		{
 			return false;
 		}
 
-		int midi = ((octave + 1) * 12) + (int)letter + accidental;
+		long midi = MidiOf(octave, (int)letter, accidental);
 		if (midi is < 0 or > 127)
 		{
 			return false;
 		}
 
-		result = new() { Midi = midi };
+		result = new() { Midi = (int)midi };
 		return true;
 	}
+
+	// Computed in long so an extreme octave cannot wrap back into 0..127.
+	private static long MidiOf(int octave, int letter, int accidental) =>
+		((octave + 1L) * 12) + letter + accidental;
 
 	/// <summary>Returns the canonical note name (e.g. "C4").</summary>
 	/// <returns>The note name.</returns>
