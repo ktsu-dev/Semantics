@@ -47,6 +47,17 @@ public class ModeTests
 	}
 
 	[TestMethod]
+	[DataRow("minor")]
+	[DataRow("Minor")]
+	[DataRow("natural_minor")]
+	public void Parse_MinorAlias_EqualsAeolian(string name)
+	{
+		Mode parsed = Mode.Parse(name);
+		Assert.AreEqual(Mode.Aeolian, parsed);
+		Assert.AreEqual("aeolian", parsed.ToString());
+	}
+
+	[TestMethod]
 	public void Parse_RejectsUnknown()
 	{
 		_ = Assert.ThrowsExactly<FormatException>(() => Mode.Parse("bebop"));
