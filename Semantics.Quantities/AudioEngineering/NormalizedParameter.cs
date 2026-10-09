@@ -47,7 +47,12 @@ public readonly record struct NormalizedParameter<T>
 	/// <param name="min">The value at normalized position <c>0</c>.</param>
 	/// <param name="max">The value at normalized position <c>1</c>.</param>
 	/// <returns>A new linear <see cref="NormalizedParameter{T}"/>.</returns>
-	public static NormalizedParameter<T> Linear(T min, T max) => new(min, max, ParameterTaper.Linear, T.One);
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="min"/> equals <paramref name="max"/>.</exception>
+	public static NormalizedParameter<T> Linear(T min, T max)
+	{
+		EnsureNonZeroWidth(min, max);
+		return new(min, max, ParameterTaper.Linear, T.One);
+	}
 
 	/// <summary>
 	/// Creates a linear parameter range bent by a power-curve skew.
@@ -56,9 +61,10 @@ public readonly record struct NormalizedParameter<T>
 	/// <param name="max">The value at normalized position <c>1</c>.</param>
 	/// <param name="skew">The skew exponent: greater than one biases resolution toward <paramref name="min"/>, less than one toward <paramref name="max"/>.</param>
 	/// <returns>A new skewed <see cref="NormalizedParameter{T}"/>.</returns>
-	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="skew"/> is not positive.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="skew"/> is not positive, or <paramref name="min"/> equals <paramref name="max"/>.</exception>
 	public static NormalizedParameter<T> Skewed(T min, T max, T skew)
 	{
+		EnsureNonZeroWidth(min, max);
 		if (T.IsNaN(skew) || skew <= T.Zero)
 		{
 			throw new ArgumentOutOfRangeException(nameof(skew), skew, "Skew must be a positive value.");
@@ -73,9 +79,10 @@ public readonly record struct NormalizedParameter<T>
 	/// <param name="min">The value at normalized position <c>0</c>.</param>
 	/// <param name="max">The value at normalized position <c>1</c>.</param>
 	/// <returns>A new logarithmic <see cref="NormalizedParameter{T}"/>.</returns>
-	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="min"/> and <paramref name="max"/> are not both non-zero and of the same sign.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="min"/> and <paramref name="max"/> are not both non-zero and of the same sign, or are equal.</exception>
 	public static NormalizedParameter<T> Logarithmic(T min, T max)
 	{
+		EnsureNonZeroWidth(min, max);
 		// Via Math.Sign rather than a direct == 0.0: the zero check has to be exact (a logarithmic
 		// range is undefined at zero but perfectly well defined at 1e-9, so a tolerance band would
 		// reject legitimate ranges), and comparing signs says that without comparing floats.
@@ -154,15 +161,37 @@ public readonly record struct NormalizedParameter<T>
 		double hi = double.CreateChecked(Max);
 
 		double shaped = Taper == ParameterTaper.Logarithmic
-			? Math.Log(v / lo) / Math.Log(hi / lo)
+			? NormalizeLogarithmic(v, lo, hi)
 			: (v - lo) / (hi - lo);
 
-		shaped = Math.Clamp(shaped, 0.0, 1.0);
+		// Math.Clamp passes NaN through, and the host must always get a position in [0, 1].
+		shaped = double.IsNaN(shaped) ? 0.0 : Math.Clamp(shaped, 0.0, 1.0);
 
 		// Invert the power-curve skew.
 		double x = skew == 1.0 ? shaped : Math.Pow(shaped, 1.0 / skew);
 
 		return T.CreateChecked(Math.Clamp(x, 0.0, 1.0));
+	}
+
+	private static double NormalizeLogarithmic(double v, double lo, double hi)
+	{
+		double ratio = v / lo;
+		if (ratio > 0.0 || double.IsNaN(ratio))
+		{
+			return Math.Log(ratio) / Math.Log(hi / lo);
+		}
+
+		// The value is zero or on the other side of zero from the range, where the logarithm is
+		// undefined. The nearer end is the one with the smaller magnitude.
+		return Math.Abs(lo) < Math.Abs(hi) ? 0.0 : 1.0;
+	}
+
+	private static void EnsureNonZeroWidth(T min, T max)
+	{
+		if (T.IsZero(max - min))
+		{
+			throw new ArgumentOutOfRangeException(nameof(max), max, "The range must not be empty: min and max must differ.");
+		}
 	}
 
 	/// <summary>
