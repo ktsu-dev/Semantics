@@ -51,6 +51,17 @@ public class ScaleTests
 	}
 
 	[TestMethod]
+	public void DegreeOf_RaisedSeventhAboveAFlatSeventhIsSharpSeven()
+	{
+		// G# in A aeolian sits between the flat seventh (G) and the octave; it is the
+		// leading tone (#7), not a lowered tonic wrapped round the octave.
+		Scale aMinor = Scale.Create(PitchClass.Parse("A"), Mode.Aeolian);
+		ScaleDegree leadingTone = aMinor.DegreeOf(PitchClass.Parse("G#"));
+		Assert.AreEqual(7, leadingTone.Degree);
+		Assert.AreEqual(1, leadingTone.Alteration);
+	}
+
+	[TestMethod]
 	public void ToStringIsRootSpaceMode()
 	{
 		Scale s = Scale.Create(PitchClass.Create(NoteLetter.C, Accidental.Natural), Mode.Dorian);

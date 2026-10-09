@@ -37,6 +37,23 @@ public class KeyTests
 	}
 
 	[TestMethod]
+	public void RomanNumeral_MinorLeadingToneChordIsSharpSeven()
+	{
+		Key aMinor = Key.Parse("A aeolian");
+		Assert.AreEqual("#vii°", aMinor.RomanNumeralOf(Chord.Parse("G#dim")));
+		Assert.AreEqual("#vii°", Key.Parse("G mixolydian").RomanNumeralOf(Chord.Parse("F#dim")));
+	}
+
+	[TestMethod]
+	public void RomanNumeral_MinorLeadingToneChordRoundTrips()
+	{
+		Key aMinor = Key.Parse("A aeolian");
+		Chord leadingTone = Chord.Parse("G#dim");
+		Chord roundTripped = aMinor.ChordFromRomanNumeral(aMinor.RomanNumeralOf(leadingTone));
+		Assert.AreEqual(leadingTone, roundTripped);
+	}
+
+	[TestMethod]
 	public void RomanNumeral_DistinctDegreesNeverShareALabel()
 	{
 		// The roman numeral table only spells seven degrees, so a mode with more of them has no
