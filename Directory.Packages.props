@@ -10,7 +10,7 @@
     <!-- Test-only: Semantics ships no JSON converter, so the tests register this factory the
          same way a consumer is expected to. Not referenced by any shipping project. -->
     <PackageVersion Include="ktsu.RoundTripStringJsonConverter" Version="1.0.75" />
-    <PackageVersion Include="ktsu.PreciseNumber" Version="2.6.8" />
+    <PackageVersion Include="ktsu.PreciseNumber" Version="2.6.9" />
     <!-- Benchmark-only. -->
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="BenchmarkDotNet.Annotations" Version="0.15.8" />
