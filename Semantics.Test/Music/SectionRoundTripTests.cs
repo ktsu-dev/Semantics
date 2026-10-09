@@ -30,4 +30,26 @@ public class SectionRoundTripTests
 		Section s = Section.Create(SectionType.Chorus, SampleProgression(), "Chorus", Key.Create(PitchClass.Create(NoteLetter.A, Accidental.Natural), Mode.Aeolian));
 		Assert.AreEqual(s, Section.Parse(s.ToString()));
 	}
+
+	[TestMethod]
+	[DataRow("[Verse, Chorus]\n4/4  Dm7 / G7 /")]
+	[DataRow("[42]\n4/4  Dm7 / G7 /")]
+	[DataRow("[-1]\n4/4  Dm7 / G7 /")]
+	[DataRow("[ Verse ]\n4/4  Dm7 / G7 /")]
+	[DataRow("[verse]\n4/4  Dm7 / G7 /")]
+	public void TryParseRejectsHeaderThatIsNotOneSectionTypeName(string text)
+	{
+		Assert.IsFalse(Section.TryParse(text, out Section? result));
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public void TryParseAcceptsEverySectionTypeName()
+	{
+		foreach (SectionType type in Enum.GetValues<SectionType>())
+		{
+			Section s = Section.Create(type, SampleProgression());
+			Assert.AreEqual(s, Section.Parse(s.ToString()));
+		}
+	}
 }

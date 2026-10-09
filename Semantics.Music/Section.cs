@@ -126,7 +126,7 @@ public sealed record Section
 			return false;
 		}
 
-		if (!Enum.TryParse<SectionType>(header[1..close], out SectionType type))
+		if (!TryParseSectionType(header[1..close], out SectionType type))
 		{
 			return false;
 		}
@@ -162,5 +162,26 @@ public sealed record Section
 
 		result = Create(type, progression, label, key);
 		return true;
+	}
+
+	// Enum.TryParse alone also takes integers, comma-separated name lists and padded names, all of
+	// which ToString never writes. Only the exact name of one declared member is a section type.
+	private static bool TryParseSectionType(string name, out SectionType type)
+	{
+		type = default;
+		if (name.Length == 0)
+		{
+			return false;
+		}
+
+		foreach (char c in name)
+		{
+			if (c is not ((>= 'A' and <= 'Z') or (>= 'a' and <= 'z')))
+			{
+				return false;
+			}
+		}
+
+		return Enum.TryParse(name, out type) && Enum.IsDefined(type);
 	}
 }
