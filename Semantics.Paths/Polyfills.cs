@@ -3,7 +3,9 @@
 namespace ktsu.Semantics.Paths;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// Provides polyfill methods for Path class for older frameworks.
@@ -16,34 +18,70 @@ internal static class PathPolyfill
 	/// <param name="relativeTo">The source path the result should be relative to.</param>
 	/// <param name="path">The destination path.</param>
 	/// <returns>The relative path, or path if the paths don't share the same root.</returns>
-	public static string GetRelativePath(string relativeTo, string path)
-	{
+	public static string GetRelativePath(string relativeTo, string path) =>
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-		return Path.GetRelativePath(relativeTo, path);
+		Path.GetRelativePath(relativeTo, path);
 #else
-		// Fallback implementation for netstandard2.0
+		GetRelativePathBySegments(relativeTo, path);
+#endif
+
+	/// <summary>
+	/// Computes a relative path by comparing path segments, for targets without <see cref="Path"/>'s own
+	/// GetRelativePath. Compiled on every target so it can be tested against that method.
+	/// </summary>
+	/// <remarks>
+	/// A file-system path is not a URI: building one from a path decodes a literal <c>%2E</c> in a file
+	/// name into <c>.</c>, so the result can name a different file, or climb out of the base directory.
+	/// Comparing segments keeps every name exactly as written.
+	/// </remarks>
+	/// <param name="relativeTo">The directory the result should be relative to.</param>
+	/// <param name="path">The destination path.</param>
+	/// <returns>The relative path, <c>.</c> when both name the same directory, or <paramref name="path"/> when the roots differ.</returns>
+	internal static string GetRelativePathBySegments(string relativeTo, string path)
+	{
 		relativeTo = Path.GetFullPath(relativeTo);
 		path = Path.GetFullPath(path);
 
-		Uri fromUri = new(AppendDirectorySeparatorChar(relativeTo));
-		Uri toUri = new(AppendDirectorySeparatorChar(path));
+		// Matches Path.GetRelativePath: case-insensitive where the platform's file system usually is.
+		StringComparison comparison =
+			RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+				? StringComparison.OrdinalIgnoreCase
+				: StringComparison.Ordinal;
 
-		if (fromUri.Scheme != toUri.Scheme)
+		string fromRoot = Path.GetPathRoot(relativeTo) ?? string.Empty;
+		string toRoot = Path.GetPathRoot(path) ?? string.Empty;
+		if (!string.Equals(TrimSeparators(fromRoot), TrimSeparators(toRoot), comparison))
 		{
 			return path;
 		}
 
-		Uri relativeUri = fromUri.MakeRelativeUri(toUri);
-		string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+		char[] separators = [Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar];
+		string[] fromSegments = relativeTo.Substring(fromRoot.Length).Split(separators, StringSplitOptions.RemoveEmptyEntries);
+		string[] toSegments = path.Substring(toRoot.Length).Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
-		if (string.Equals(toUri.Scheme, Uri.UriSchemeFile, StringComparison.OrdinalIgnoreCase))
+		int common = 0;
+		while (common < fromSegments.Length && common < toSegments.Length
+			&& string.Equals(fromSegments[common], toSegments[common], comparison))
 		{
-			relativePath = relativePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+			common++;
 		}
 
-		return relativePath;
-#endif
+		List<string> result = [];
+		for (int i = common; i < fromSegments.Length; i++)
+		{
+			result.Add("..");
+		}
+
+		for (int i = common; i < toSegments.Length; i++)
+		{
+			result.Add(toSegments[i]);
+		}
+
+		return result.Count == 0 ? "." : string.Join(Path.DirectorySeparatorChar.ToString(), result);
 	}
+
+	private static string TrimSeparators(string root) =>
+		root.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
 	/// <summary>
 	/// Returns a value that indicates whether a path is fully qualified.
@@ -126,16 +164,6 @@ internal static class PathPolyfill
 	}
 
 #if !(NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
-	private static string AppendDirectorySeparatorChar(string path)
-	{
-		if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-		{
-			return path + Path.DirectorySeparatorChar;
-		}
-
-		return path;
-	}
-
 	private static bool IsDirectorySeparator(char c) =>
 		c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar;
 #endif
