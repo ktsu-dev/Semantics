@@ -202,4 +202,42 @@ public class AudioEngineeringTests
 		Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => NormalizedParameter<double>.Skewed(0.0, 1.0, 0.0));
 		Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => NormalizedParameter<double>.WithCenter(0.0, 10.0, 20.0));
 	}
+
+	[TestMethod]
+	public void NormalizedParameter_Logarithmic_ValueAtOrBelowZero_NormalizesToNearerEnd()
+	{
+		NormalizedParameter<double> rising = NormalizedParameter<double>.Logarithmic(20.0, 20000.0);
+		Assert.AreEqual(0.0, rising.Normalize(-5.0));
+		Assert.AreEqual(0.0, rising.Normalize(0.0));
+
+		// A falling range has its small-magnitude end at position 1, so that is the nearer end.
+		NormalizedParameter<double> falling = NormalizedParameter<double>.Logarithmic(20000.0, 20.0);
+		Assert.AreEqual(1.0, falling.Normalize(-5.0));
+
+		NormalizedParameter<double> negative = NormalizedParameter<double>.Logarithmic(-20.0, -20000.0);
+		Assert.AreEqual(0.0, negative.Normalize(5.0));
+	}
+
+	[TestMethod]
+	public void NormalizedParameter_Logarithmic_Decimal_ValueBelowZero_DoesNotThrow()
+	{
+		NormalizedParameter<decimal> p = NormalizedParameter<decimal>.Logarithmic(20m, 20000m);
+		Assert.AreEqual(0m, p.Normalize(-5m));
+	}
+
+	[TestMethod]
+	public void NormalizedParameter_Normalize_NaN_IsZero()
+	{
+		Assert.AreEqual(0.0, NormalizedParameter<double>.Linear(0.0, 10.0).Normalize(double.NaN));
+		Assert.AreEqual(0.0, NormalizedParameter<double>.Logarithmic(20.0, 20000.0).Normalize(double.NaN));
+	}
+
+	[TestMethod]
+	public void NormalizedParameter_ZeroWidthRange_Throws()
+	{
+		Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => NormalizedParameter<double>.Linear(1.0, 1.0));
+		Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => NormalizedParameter<double>.Skewed(1.0, 1.0, 2.0));
+		Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => NormalizedParameter<double>.Logarithmic(20.0, 20.0));
+		Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => NormalizedParameter<decimal>.Linear(1m, 1m));
+	}
 }
