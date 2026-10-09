@@ -21,25 +21,30 @@ public sealed record Tempo
 	public double SecondsPerBeat => 60.0 / BeatsPerMinute;
 
 	/// <summary>Creates a tempo with a quarter-note beat.</summary>
-	/// <param name="beatsPerMinute">The tempo in beats per minute; must be positive.</param>
+	/// <param name="beatsPerMinute">The tempo in beats per minute; must be positive and finite.</param>
 	/// <returns>A new tempo.</returns>
-	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="beatsPerMinute"/> is not positive.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="beatsPerMinute"/> is not positive and finite.</exception>
 	public static Tempo Create(double beatsPerMinute) => Create(beatsPerMinute, Duration.Quarter);
 
 	/// <summary>Creates a tempo with an explicit beat unit.</summary>
-	/// <param name="beatsPerMinute">The tempo in beats per minute; must be positive.</param>
-	/// <param name="beat">The note duration that counts as one beat.</param>
+	/// <param name="beatsPerMinute">The tempo in beats per minute; must be positive and finite.</param>
+	/// <param name="beat">The note duration that counts as one beat; must be positive.</param>
 	/// <returns>A new tempo.</returns>
-	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="beatsPerMinute"/> is not positive.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="beatsPerMinute"/> is not positive and finite, or <paramref name="beat"/> is not positive.</exception>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="beat"/> is null.</exception>
 	public static Tempo Create(double beatsPerMinute, Duration beat)
 	{
-		if (beatsPerMinute <= 0.0 || double.IsNaN(beatsPerMinute))
+		if (!IsValidBeatsPerMinute(beatsPerMinute))
 		{
-			throw new ArgumentOutOfRangeException(nameof(beatsPerMinute), beatsPerMinute, "Tempo must be positive.");
+			throw new ArgumentOutOfRangeException(nameof(beatsPerMinute), beatsPerMinute, "Tempo must be positive and finite.");
 		}
 
 		Ensure.NotNull(beat);
+		if (!IsValidBeat(beat))
+		{
+			throw new ArgumentOutOfRangeException(nameof(beat), beat, "Beat must be a positive duration.");
+		}
+
 		return new() { BeatsPerMinute = beatsPerMinute, Beat = beat };
 	}
 
@@ -85,8 +90,9 @@ public sealed record Tempo
 		}
 
 		if (!double.TryParse(text[..marker], NumberStyles.Float, CultureInfo.InvariantCulture, out double bpm)
-			|| bpm <= 0.0
-			|| !Duration.TryParse(text[(marker + 4)..], out Duration? beat))
+			|| !IsValidBeatsPerMinute(bpm)
+			|| !Duration.TryParse(text[(marker + 4)..], out Duration? beat)
+			|| !IsValidBeat(beat))
 		{
 			return false;
 		}
@@ -94,6 +100,13 @@ public sealed record Tempo
 		result = Create(bpm, beat);
 		return true;
 	}
+
+	// NaN fails the comparison, so only infinity needs its own check.
+	private static bool IsValidBeatsPerMinute(double beatsPerMinute) =>
+		beatsPerMinute > 0.0 && !double.IsInfinity(beatsPerMinute);
+
+	// Seconds divides by the beat, so a zero beat gives Infinity and a negative one negative time.
+	private static bool IsValidBeat(Duration beat) => beat.Numerator > 0;
 
 	/// <summary>Returns "{bpm}bpm@{beat}" (e.g. "120bpm@1/4").</summary>
 	/// <returns>The canonical tempo text.</returns>
