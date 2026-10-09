@@ -10,6 +10,13 @@
     <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
     <TestingPlatformShowTestsFailureDetails>true</TestingPlatformShowTestsFailureDetails>
     <NoWarn>$(NoWarn);MSTEST0032</NoWarn>
+    <!-- ktsu.Sdk turns on invariant globalization, where every culture but the invariant one fails
+         to construct. The libraries are consumed by projects that do not, so the tests that prove a
+         validator ignores the thread culture (tr-TR, az) need real cultures to set. With it off, the
+         analyzers start flagging culture-sensitive calls (CA1304, CA1307); SemanticStringTests makes
+         those calls on purpose, to cover SemanticString's own culture-default overloads. -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <NoWarn>$(NoWarn);CA1304;CA1307</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,6 +2,7 @@
 
 namespace ktsu.Semantics.Test;
 
+using System.Globalization;
 using ktsu.Semantics.Strings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -64,6 +65,26 @@ public sealed class CasingValidatorsTests
 		Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TitleCaseString>.Create<TitleCaseString>("hello world"));
 		TitleCaseString empty = SemanticString<TitleCaseString>.Create<TitleCaseString>("");
 		Assert.AreEqual("", empty.WeakString);
+	}
+
+	[TestMethod]
+	[DataRow("en-US")]
+	[DataRow("tr-TR")]
+	[DataRow("az-Latn-AZ")]
+	public void TitleCase_DoesNotDependOnThreadCulture(string cultureName)
+	{
+		CultureInfo original = CultureInfo.CurrentCulture;
+		try
+		{
+			CultureInfo.CurrentCulture = new CultureInfo(cultureName);
+			TitleCaseString valid = SemanticString<TitleCaseString>.Create<TitleCaseString>("Istanbul Is Lovely");
+			Assert.AreEqual("Istanbul Is Lovely", valid.WeakString);
+			Assert.ThrowsExactly<ArgumentException>(() => SemanticString<TitleCaseString>.Create<TitleCaseString>("istanbul"));
+		}
+		finally
+		{
+			CultureInfo.CurrentCulture = original;
+		}
 	}
 
 	[TestMethod]
