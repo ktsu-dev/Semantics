@@ -21,7 +21,7 @@ public sealed class IsIbanAttribute : NativeSemanticStringValidationAttribute
 
 	private sealed class IbanValidator : ValidationAdapter
 	{
-		private const string Pattern = "^[A-Z]{2}[0-9]{2}[A-Z0-9]+$";
+		private const string Pattern = "^[A-Z]{2}[0-9]{2}[A-Z0-9]+\\z";
 
 		protected override ValidationResult ValidateValue(string value)
 		{
