@@ -25,8 +25,8 @@ public class RelativePathMakeTests
 
 		RelativePath relative = RelativePath.Make<RelativePath, AbsoluteDirectoryPath, AbsoluteFilePath>(from, to);
 
-		Assert.AreEqual(Path.Combine(folder, "notes.txt"), relative.WeakString);
-		Assert.AreEqual(toValue, Path.GetFullPath(Path.Combine(fromValue, relative.WeakString)));
+		Assert.AreEqual(Path.Join(folder, "notes.txt"), relative.WeakString);
+		Assert.AreEqual(toValue, Path.GetFullPath(Path.Join(fromValue, relative.WeakString)));
 	}
 
 	[TestMethod]
@@ -37,7 +37,7 @@ public class RelativePathMakeTests
 
 		RelativePath relative = RelativePath.Make<RelativePath, AbsoluteFilePath, AbsoluteFilePath>(from, to);
 
-		Assert.AreEqual(Path.Combine("..", "other", "b.txt"), relative.WeakString);
+		Assert.AreEqual(Path.Join("..", "other", "b.txt"), relative.WeakString);
 	}
 
 	[TestMethod]
