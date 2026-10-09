@@ -20,45 +20,21 @@ public abstract record SemanticRelativePath<TDerived> : SemanticPath<TDerived>
 		Ensure.NotNull(from);
 		Ensure.NotNull(to);
 
-		FileInfo fromInfo = new(Path.GetFullPath(from.WeakString));
-		FileInfo toInfo = new(Path.GetFullPath(to.WeakString));
+		string fromPath = Path.GetFullPath(from.WeakString);
+		string toPath = Path.GetFullPath(to.WeakString);
+
+		// A path that is not a directory is resolved from the directory that contains it.
+		string baseDirectory = IsDirectoryPath(from)
+			? fromPath
+			: Path.GetDirectoryName(fromPath) ?? fromPath;
+
+		// Compare paths, not URIs: a URI decodes a literal "%2E" in a file name, which can name a
+		// different file or climb out of the base directory.
+		string relativePath = PathPolyfill.GetRelativePath(baseDirectory, toPath);
 
 		// Use unix-style separators because they work on windows too
 		const string separator = "/";
 		const string altSeparator = "\\";
-
-		string fromPath = Path.GetFullPath(fromInfo.FullName);
-#if NETSTANDARD2_0
-		fromPath = StringPolyfill.Replace(fromPath, altSeparator, separator, StringComparison.Ordinal);
-#else
-		fromPath = fromPath.Replace(altSeparator, separator, StringComparison.Ordinal);
-#endif
-		string toPath = Path.GetFullPath(toInfo.FullName);
-#if NETSTANDARD2_0
-		toPath = StringPolyfill.Replace(toPath, altSeparator, separator, StringComparison.Ordinal);
-#else
-		toPath = toPath.Replace(altSeparator, separator, StringComparison.Ordinal);
-#endif
-
-		// Handle directory paths - ensure they end with separator
-		bool fromIsDirectory = IsDirectoryPath(from);
-		bool toIsDirectory = IsDirectoryPath(to);
-
-		if (fromIsDirectory && !fromPath.EndsWith(separator, StringComparison.Ordinal))
-		{
-			fromPath += separator;
-		}
-
-		if (toIsDirectory && !toPath.EndsWith(separator, StringComparison.Ordinal))
-		{
-			toPath += separator;
-		}
-
-		Uri fromUri = new(fromPath);
-		Uri toUri = new(toPath);
-
-		Uri relativeUri = fromUri.MakeRelativeUri(toUri);
-		string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
 #if NETSTANDARD2_0
 		relativePath = StringPolyfill.Replace(relativePath, altSeparator, separator, StringComparison.Ordinal);
 #else
