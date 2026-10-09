@@ -87,7 +87,7 @@ Each type is a `sealed record` deriving from `SemanticString<T>`. None declare t
 | `Uuid` | Trim, strip wrapping `{}` / `()`, lowercase | Canonical 8-4-4-4-12 hex (RFC 4122 layout) | Any variant/version accepted, including the nil UUID. Not version-checked. |
 | `Ulid` | Trim, uppercase | 26 Crockford base32 chars, first char `0`-`7` | Timestamp is not otherwise decoded. |
 | `Iban` | Strip spaces, uppercase | Length 15-34, country/check prefix, ISO 7064 mod-97-10 checksum | Country-specific BBAN structure is not enforced. |
-| `Isbn` | Strip `-` and spaces, uppercase | ISBN-10 (weighted mod-11, `X` allowed) or ISBN-13 (mod-10) | Registration-group/publisher ranges are not validated. |
+| `Isbn` | Strip `-` and spaces, uppercase | ISBN-10 (weighted mod-11, `X` allowed) or ISBN-13 (`978`/`979` prefix, mod-10) | Registration-group/publisher ranges are not validated. |
 | `CreditCardNumber` | Strip spaces and hyphens | 13-19 digits, Luhn (mod-10) checksum | Luhn only. No issuer/network detection, no PCI guarantee. The value is sensitive, do not log it. |
 | `JwtToken` | None (stored verbatim, case-sensitive) | Three `.`-separated segments, non-empty header and payload that base64url-decode to UTF-8 text delimited as `{ ... }` | Structural only: the header and payload bodies are not parsed, so malformed JSON between the braces is accepted. Signature is not decoded or verified. `alg`, claims, and expiry are not inspected. |
 
