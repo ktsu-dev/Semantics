@@ -1,7 +1,7 @@
-## v5.11.5 (patch)
+## v5.11.6 (patch)
 
-Changes since v5.11.4:
+Changes since v5.11.5:
 
-- [patch] Spell the raised seventh above a flat seventh as #7, not a lowered tonic ([@Claude](https://github.com/Claude))
-- [patch] Title-case [IsTitleCase] values with invariant rules, not the thread culture ([@Claude](https://github.com/Claude))
+- [patch] Reject whitespace in [IsBase64] regardless of total length ([@Claude](https://github.com/Claude))
+- [patch] Reject non-hex characters in Color.FromHex with ArgumentException ([@Claude](https://github.com/Claude))
 
