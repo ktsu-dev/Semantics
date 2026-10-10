@@ -45,7 +45,7 @@ public readonly partial record struct Color
 	/// <param name="hex">The hex color string.</param>
 	/// <returns>The linear-RGB color.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="hex"/> is null.</exception>
-	/// <exception cref="ArgumentException">Thrown when <paramref name="hex"/> is not a recognised hex length.</exception>
+	/// <exception cref="ArgumentException">Thrown when <paramref name="hex"/> is not a recognised hex length, or contains a character that is not a hex digit.</exception>
 	public static Color FromHex(string hex)
 	{
 		Ensure.NotNull(hex);
@@ -60,6 +60,16 @@ public readonly partial record struct Color
 		if (h.Length is not (6 or 8))
 		{
 			throw new ArgumentException("Hex color must be #RGB, #RRGGBB, or #RRGGBBAA.", nameof(hex));
+		}
+
+		// Convert.ToByte(s, 16) accepts a leading '+' and throws FormatException for other bad
+		// characters, so every character is checked here and only hex digits reach it.
+		foreach (char c in h)
+		{
+			if (!IsHexDigit(c))
+			{
+				throw new ArgumentException($"Hex color contains '{c}', which is not a hex digit.", nameof(hex));
+			}
 		}
 
 		byte r = ParseByte(h, 0);
@@ -98,6 +108,9 @@ public readonly partial record struct Color
 
 	private static byte ParseByte(string hex, int index) =>
 		Convert.ToByte(hex.Substring(index, 2), 16);
+
+	private static bool IsHexDigit(char c) =>
+		c is (>= '0' and <= '9') or (>= 'A' and <= 'F') or (>= 'a' and <= 'f');
 
 	/// <summary>Converts this linear color to <see cref="Oklab"/>.</summary>
 	/// <returns>The Oklab equivalent.</returns>

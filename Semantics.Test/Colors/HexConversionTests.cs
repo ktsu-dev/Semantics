@@ -58,4 +58,27 @@ public class HexConversionTests
 	[TestMethod]
 	public void FromHex_InvalidLength_Throws() =>
 		Assert.ThrowsExactly<ArgumentException>(() => Color.FromHex("#12345"));
+
+	[TestMethod]
+	[DataRow("#+F+F+F")]
+	[DataRow("+F+F+F")]
+	[DataRow("#00+F00")]
+	[DataRow("#GGGGGG")]
+	[DataRow("#0x0x0x")]
+	[DataRow("#-1-1-1")]
+	[DataRow("#12345G")]
+	[DataRow("#FFFFFF+F")]
+	[DataRow("#F F")]
+	[DataRow("#G00")]
+	public void FromHex_NonHexCharacter_ThrowsArgumentException(string hex) =>
+		Assert.ThrowsExactly<ArgumentException>(() => Color.FromHex(hex));
+
+	[TestMethod]
+	[DataRow("#abc", "#AABBCC")]
+	[DataRow("#ABC", "#AABBCC")]
+	[DataRow("#3a7bd5", "#3A7BD5")]
+	[DataRow("3A7BD5", "#3A7BD5")]
+	[DataRow("#3a7bd580", "#3A7BD580")]
+	public void FromHex_ValidDigitsInEitherCase_RoundTrip(string hex, string expected) =>
+		Assert.AreEqual(expected, Color.FromHex(hex).ToHex());
 }
