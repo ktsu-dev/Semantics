@@ -241,4 +241,18 @@ public readonly partial record struct Color
 	/// <summary>Returns the per-channel inverse (photographic negative), computed in gamma-encoded sRGB and preserving alpha.</summary>
 	/// <returns>The inverted color.</returns>
 	public Color Invert() => FromSrgb(ToSrgb().Invert(), A);
+
+	/// <summary>
+	/// Simulates how this color looks to a viewer with a color vision deficiency, by applying
+	/// <see cref="ColorVision.Matrix"/> to the linear channels and clamping each to 0..1. Alpha is kept.
+	/// </summary>
+	/// <param name="deficiency">The kind of deficiency.</param>
+	/// <param name="severity">The severity, from 0 (normal vision) to 1 (dichromacy).</param>
+	/// <returns>The color as the viewer perceives it.</returns>
+	/// <exception cref="ArgumentOutOfRangeException">
+	/// <paramref name="severity"/> is outside 0..1 or not a number, or <paramref name="deficiency"/>
+	/// is not a defined value.
+	/// </exception>
+	public Color Simulate(ColorVisionDeficiency deficiency, double severity) =>
+		ColorVision.Matrix(deficiency, severity).Apply(this);
 }

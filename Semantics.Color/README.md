@@ -24,6 +24,7 @@ On top of that foundation the package adds perceptual operations in the Oklab co
 - **Color spaces**: sRGB (`Srgb`), HSL (`Hsl`), HSV (`Hsv`), Oklab (`Oklab`), and Oklch (`Oklch`). Every color type (including `Color`) converts directly to and from every other through `From*` / `To*` methods. Each hop is routed through the nearest shared hub, so a conversion crosses the gamma boundary at most once and never takes a redundant gamma round-trip.
 - **Interop**: hex parse and format (`#RGB`, `#RRGGBB`, `#RRGGBBAA`), 8-bit byte tuples, and linear or sRGB `Vector3` / `Vector4` output (the sRGB vectors are what ImGui expects).
 - **WCAG accessibility**: relative luminance, contrast ratio (1..21), conformance rating against a background, and `AdjustForContrast` which binary-searches Oklab lightness to hit a target while preserving hue and chroma.
+- **Color vision simulation**: `Simulate(deficiency, severity)` shows a color as someone with protan, deutan, or tritan color vision sees it, from the Machado, Oliveira, and Fernandes (2009) matrices at any severity from 0 to 1.
 - **Perceptual operations**: Oklab distance (`DistanceTo`), perceptually uniform mixing (`MixOklab`), and Oklab gradients (`Gradient`), alongside plain linear `Lerp`.
 - **Adjustments**: lighten/darken, saturate/desaturate, hue offset, grayscale, and invert. HSL-based on `Color`, `Hsl`, and `Srgb`; perceptually-uniform (lightness/chroma) variants on `Oklch`.
 - **Named colors**: a CSS/X11 subset with case-insensitive lookup.
@@ -69,6 +70,26 @@ if (level < AccessibilityLevel.AA)
 
 Console.WriteLine(text.ToHex());
 ```
+
+### Simulating color vision deficiencies
+
+```csharp
+using ktsu.Semantics.Color;
+
+Color red = Color.FromHex("#D62728");
+Color green = Color.FromHex("#2CA02C");
+
+// Protanopia (no working red cones): severity 1.0 is the dichromacy, lower is protanomaly
+Color redSeen = red.Simulate(ColorVisionDeficiency.Protan, 1.0);
+Color greenSeen = green.Simulate(ColorVisionDeficiency.Protan, 1.0);
+double apart = redSeen.DistanceTo(greenSeen);   // much smaller than red.DistanceTo(green)
+
+// The matrix itself, to apply to many pixels without re-interpolating
+ColorVisionMatrix mild = ColorVision.Matrix(ColorVisionDeficiency.Deutan, 0.4);
+Color seen = mild.Apply(green);
+```
+
+The matrices are the published tables of Machado, Oliveira, and Fernandes (2009), "A Physiologically-based Model for Simulation of Color Vision Deficiency", for severities 0.0 to 1.0 in steps of 0.1. A severity between two steps interpolates linearly between them. They act on linear RGB, which is what `Color` stores, and the result is clamped to 0..1 with alpha kept. Severity 0 is the identity, and a severity outside 0..1 throws `ArgumentOutOfRangeException`.
 
 ### Perceptually uniform gradients
 
@@ -167,6 +188,7 @@ The canonical color: linear RGBA, each channel `double` in 0..1. A `readonly rec
 | `MixOklab(other, t)` | `Color` | Perceptually uniform mix (`t = 0` returns this, `t = 1` returns other). |
 | `Lerp(other, t)` | `Color` | Linear-RGB interpolation. |
 | `Gradient(to, steps)` | `IReadOnlyList<Color>` | Oklab gradient, inclusive of endpoints (`steps >= 2`). |
+| `Simulate(deficiency, severity)` | `Color` | The color as seen with a color vision deficiency (Machado et al. 2009), severity 0..1. |
 
 #### Adjustments
 
@@ -189,6 +211,9 @@ Convenience adjustments on `Color` operate in HSL and preserve alpha; for percep
 | `Oklab` | Perceptual color space (Ottosson 2020). | `FromColor` / `ToColor`; polar via `ToOklch` / `FromOklch` |
 | `Oklch` | Polar form of Oklab. | `ToOklab` / `FromOklab` |
 | `AccessibilityLevel` | enum: `Fail = 0`, `AA = 1`, `AAA = 2`. | — |
+| `ColorVisionDeficiency` | enum: `Protan`, `Deutan`, `Tritan`. | — |
+| `ColorVision` | `Matrix(deficiency, severity)`: the Machado et al. (2009) simulation matrix, interpolated between the published 0.1 steps. | — |
+| `ColorVisionMatrix` | A 3x3 linear-RGB matrix (`M11`..`M33`) with `Apply(Color)`, which clamps to 0..1 and keeps alpha; `Identity`. | — |
 | `NamedColors` | Common colors (`Black`, `White`, `Red`, `Orange`, `Transparent`, ...), plus `All` and `TryGet(name, out color)` with case-insensitive keys. | — |
 
 The satellite spaces carry their own adjustments: `Hsl` and `Srgb` have the full HSL set (saturation/lightness/hue/grayscale; `Srgb` routes these through HSL and also adds `Invert()`), while `Oklch` exposes perceptually-uniform `WithLightness`/`LightenBy`/`DarkenBy`, chroma ops (`WithChroma`/`MultiplyChroma`/`SaturateBy`/`DesaturateBy`/`ToGrayscale`), and `OffsetHue`. `Color`'s adjustment methods forward to `Hsl`.
