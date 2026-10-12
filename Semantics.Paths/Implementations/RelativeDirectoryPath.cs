@@ -34,8 +34,36 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// <summary>
 	/// Gets the parent directory of this relative directory path.
 	/// </summary>
-	/// <value>A <see cref="RelativeDirectoryPath"/> representing the parent directory, or an empty path if this is a root-relative directory.</value>
-	public RelativeDirectoryPath Parent => _cachedParent ??= Create<RelativeDirectoryPath>(Path.GetDirectoryName(WeakString) ?? "");
+	/// <value>
+	/// A <see cref="RelativeDirectoryPath"/> naming the directory that contains this one: the path with its last
+	/// segment removed, or an empty path for a single-segment path. Paths are normalized lexically first, so the
+	/// parent of <c>a/..</c> is <c>..</c>, and a path that names the starting directory or one above it climbs
+	/// further instead: the parent of <c>.</c> (or the empty path) is <c>..</c>, and the parent of <c>..</c> is
+	/// <c>../..</c>.
+	/// </value>
+	public RelativeDirectoryPath Parent => _cachedParent ??= ComputeParent();
+
+	private RelativeDirectoryPath ComputeParent()
+	{
+		string normalized = Normalize().WeakString;
+		string separator = Path.DirectorySeparatorChar.ToString();
+
+		// Nothing to drop: the path names the starting directory, so its parent is one level up.
+		if (normalized.Length == 0 || normalized == ".")
+		{
+			return Create<RelativeDirectoryPath>("..");
+		}
+
+		// Normalize leaves ".." only as a leading run, so the last segment decides whether there is a
+		// named directory to drop or the path only climbs and the parent must climb one level further.
+		string[] segments = normalized.Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries);
+		if (segments[^1] == "..")
+		{
+			return Create<RelativeDirectoryPath>(normalized + separator + "..");
+		}
+
+		return Create<RelativeDirectoryPath>(string.Join(separator, segments, 0, segments.Length - 1));
+	}
 
 	// Cache for directory name
 	private DirectoryName? _cachedName;
