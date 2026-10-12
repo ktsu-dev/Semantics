@@ -39,6 +39,7 @@ public sealed record Duration
 	/// <param name="denominator">The denominator; must be non-zero.</param>
 	/// <returns>A new, reduced duration with a positive denominator.</returns>
 	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="denominator"/> is 0.</exception>
+	/// <exception cref="OverflowException">Thrown when the reduced fraction does not fit in <see cref="int"/>, as for <c>int.MinValue/-1</c>.</exception>
 	public static Duration Create(int numerator, int denominator)
 	{
 		if (denominator == 0)
@@ -46,32 +47,37 @@ public sealed record Duration
 			throw new ArgumentOutOfRangeException(nameof(denominator), "Denominator must be non-zero.");
 		}
 
-		int sign = denominator < 0 ? -1 : 1;
-		int n = numerator * sign;
-		int d = denominator * sign;
-		int g = Gcd(Math.Abs(n), d);
-		g = g == 0 ? 1 : g;
-		return new() { Numerator = n / g, Denominator = d / g };
+		return Reduce(numerator, denominator);
 	}
 
 	/// <summary>Returns the sum of this duration and another.</summary>
 	/// <param name="other">The duration to add.</param>
 	/// <returns>The summed duration.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="other"/> is null.</exception>
+	/// <exception cref="OverflowException">Thrown when the reduced sum does not fit in <see cref="int"/>.</exception>
 	public Duration Add(Duration other)
 	{
 		Ensure.NotNull(other);
-		return Create((Numerator * other.Denominator) + (other.Numerator * Denominator), Denominator * other.Denominator);
+
+		// Over the least common denominator, so a run of sums grows only as fast as the lcm of the
+		// denominators seen, not their product. Every intermediate fits in long because each factor
+		// is an int.
+		long g = Gcd(Denominator, other.Denominator);
+		long numerator = (Numerator * (other.Denominator / g)) + (other.Numerator * (Denominator / g));
+		long denominator = Denominator / g * other.Denominator;
+		return Reduce(numerator, denominator);
 	}
 
 	/// <summary>Returns this duration multiplied by an integer factor.</summary>
 	/// <param name="factor">The integer factor.</param>
 	/// <returns>The scaled duration.</returns>
-	public Duration Multiply(int factor) => Create(Numerator * factor, Denominator);
+	/// <exception cref="OverflowException">Thrown when the reduced product does not fit in <see cref="int"/>.</exception>
+	public Duration Multiply(int factor) => Reduce((long)Numerator * factor, Denominator);
 
 	/// <summary>Returns this duration with a single augmentation dot (×3/2).</summary>
 	/// <returns>The dotted duration.</returns>
-	public Duration Dotted() => Create(Numerator * 3, Denominator * 2);
+	/// <exception cref="OverflowException">Thrown when the reduced result does not fit in <see cref="int"/>.</exception>
+	public Duration Dotted() => Reduce((long)Numerator * 3, (long)Denominator * 2);
 
 	/// <summary>Parses a fraction "n/d".</summary>
 	/// <param name="text">The fraction text.</param>
@@ -120,7 +126,21 @@ public sealed record Duration
 	public override string ToString() =>
 		$"{Numerator.ToString(CultureInfo.InvariantCulture)}/{Denominator.ToString(CultureInfo.InvariantCulture)}";
 
-	private static int Gcd(int a, int b)
+	/// <summary>
+	/// Reduces a fraction computed in <see cref="long"/> and narrows it to <see cref="int"/>, throwing
+	/// rather than wrapping when it does not fit.
+	/// </summary>
+	private static Duration Reduce(long numerator, long denominator)
+	{
+		long sign = denominator < 0 ? -1 : 1;
+		long n = numerator * sign;
+		long d = denominator * sign;
+		long g = Gcd(Math.Abs(n), d);
+		g = g == 0 ? 1 : g;
+		return new() { Numerator = checked((int)(n / g)), Denominator = checked((int)(d / g)) };
+	}
+
+	private static long Gcd(long a, long b)
 	{
 		while (b != 0)
 		{
