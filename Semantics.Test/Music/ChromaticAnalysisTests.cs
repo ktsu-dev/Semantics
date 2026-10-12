@@ -66,4 +66,31 @@ public class ChromaticAnalysisTests
 	[TestMethod]
 	public void ChromaticAnalysis_Create_RejectsNegativeIndex() =>
 		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ChromaticAnalysis.Create(-1, ChromaticKind.Chromatic, null));
+
+	[TestMethod]
+	[DataRow("G mixolydian", "4/4  G | E | Am", "V/ii")]
+	[DataRow("C lydian", "4/4  C | A | D", "V/II")]
+	[DataRow("D dorian", "4/4  Dm | B | Em", "V/ii")]
+	[DataRow("A aeolian", "4/4  Am | A7 | Dm", "V/iv")]
+	[DataRow("C major", "4/4  C | E7 | Am", "V/vi")]
+	[DataRow("A harmonic_minor", "4/4  Am | G | Am", "V/III+")]
+	public void ChromaticChords_NamesSecondaryDominantTargetByTheModesOwnTriad(string key, string progression, string expected)
+	{
+		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> analyses =
+			Progression.Parse(progression).ChromaticChords(Key.Parse(key));
+		Assert.HasCount(1, analyses);
+		Assert.AreEqual(ChromaticKind.SecondaryDominant, analyses[0].Kind);
+		Assert.AreEqual(expected, analyses[0].Detail);
+	}
+
+	[TestMethod]
+	public void ChromaticChords_DoesNotNameSecondaryDominantsInScalesWithoutSevenDegrees()
+	{
+		// F is a fifth above B♭, degree 8 of C octatonic_hw. Wrapping that degree onto seven used to
+		// label it V/i, the tonic, which is exactly what a secondary dominant excludes.
+		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> analyses =
+			Progression.Parse("4/4  C | F | C").ChromaticChords(Key.Parse("C octatonic_hw"));
+		Assert.HasCount(1, analyses);
+		Assert.AreNotEqual(ChromaticKind.SecondaryDominant, analyses[0].Kind);
+	}
 }
