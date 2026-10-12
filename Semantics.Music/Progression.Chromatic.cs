@@ -7,9 +7,6 @@ using System.Linq;
 
 public sealed partial record Progression
 {
-	private static readonly string[] MajorDegreeRomans = ["I", "ii", "iii", "IV", "V", "vi", "vii°"];
-	private static readonly string[] MinorDegreeRomans = ["i", "ii°", "III", "iv", "v", "VI", "VII"];
-
 	/// <summary>Classifies each non-diatonic chord in the progression relative to a key.</summary>
 	/// <param name="key">The key to analyze against.</param>
 	/// <returns>One entry per non-diatonic chord; diatonic chords are omitted.</returns>
@@ -42,6 +39,30 @@ public sealed partial record Progression
 		return AllTonesInScale(chord, scale);
 	}
 
+	// Names the degree a secondary dominant resolves to by the key's own triad on that degree, so every
+	// seven-degree mode gets its own case and quality (ii in mixolydian, II in lydian) rather than
+	// borrowing the major or natural-minor table. Roman-numeral analysis spells only seven degrees, so a
+	// scale with any other count has no secondary dominants to name, and neither has the tonic, a
+	// chromatic degree, or a degree whose stacked thirds form no recognised triad.
+	private static string? SecondaryTargetNumeral(Key key, PitchClass targetRoot)
+	{
+		if (key.Mode.DegreeCount != 7)
+		{
+			return null;
+		}
+
+		ScaleDegree target = key.Scale.DegreeOf(targetRoot);
+		if (target.Alteration != 0 || target.Degree == 1)
+		{
+			return null;
+		}
+
+		ChordQuality? quality = DiatonicTriadQuality(key.Scale, targetRoot);
+		return quality is null
+			? null
+			: key.RomanNumeralOf(new Chord { Root = targetRoot, Quality = quality.Value });
+	}
+
 	private static (ChromaticKind Kind, string? Detail) ClassifyChromatic(Key key, Chord chord)
 	{
 		// Secondary dominant: a major triad or dominant seventh a perfect fifth above a diatonic degree.
@@ -49,11 +70,10 @@ public sealed partial record Progression
 			&& chord.Seventh is SeventhType.None or SeventhType.Dominant;
 		if (dominantQuality)
 		{
-			ScaleDegree target = key.Scale.DegreeOf(PitchClass.Create(chord.Root.Value - 7));
-			if (target.Alteration == 0 && target.Degree != 1)
+			string? targetNumeral = SecondaryTargetNumeral(key, PitchClass.Create(chord.Root.Value - 7));
+			if (targetNumeral is not null)
 			{
-				string[] table = key.Mode == Mode.Major ? MajorDegreeRomans : MinorDegreeRomans;
-				return (ChromaticKind.SecondaryDominant, "V/" + table[(target.Degree - 1) % 7]);
+				return (ChromaticKind.SecondaryDominant, "V/" + targetNumeral);
 			}
 		}
 
