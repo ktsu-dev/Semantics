@@ -30,6 +30,27 @@ public sealed class UuidTests
 	}
 
 	[TestMethod]
+	public void Create_Parentheses_IsCanonicalized()
+	{
+		Uuid uuid = Uuid.Create("(123e4567-e89b-12d3-a456-426614174000)");
+		Assert.AreEqual("123e4567-e89b-12d3-a456-426614174000", uuid.WeakString);
+	}
+
+	[TestMethod]
+	[DataRow("{123e4567-e89b-12d3-a456-426614174000)")]
+	[DataRow("(123e4567-e89b-12d3-a456-426614174000}")]
+	[DataRow("((((123e4567-e89b-12d3-a456-426614174000")]
+	[DataRow("123e4567-e89b-12d3-a456-426614174000}}}")]
+	[DataRow("{{123e4567-e89b-12d3-a456-426614174000}}")]
+	[DataRow("{123e4567-e89b-12d3-a456-426614174000")]
+	[DataRow("123e4567-e89b-12d3-a456-426614174000)")]
+	public void Create_UnbalancedOrRepeatedWrappers_Throws(string input)
+	{
+		Assert.IsFalse(Guid.TryParse(input, out _));
+		Assert.ThrowsExactly<ArgumentException>(() => Uuid.Create(input));
+	}
+
+	[TestMethod]
 	public void Create_MissingSegment_Throws()
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => Uuid.Create("123e4567-e89b-12d3-a456"));
