@@ -76,7 +76,9 @@ public sealed record Section
 		_ = sb.Append('[').Append(Type).Append(']');
 		if (Label is not null)
 		{
-			_ = sb.Append(" \"").Append(Label).Append('"');
+			_ = sb.Append(" \"");
+			AppendEscapedLabel(sb, Label);
+			_ = sb.Append('"');
 		}
 
 		if (Key is not null)
@@ -132,20 +134,21 @@ public sealed record Section
 		}
 
 		string? label = null;
+		int afterLabel = close;
 		int quote = header.IndexOf('"', close);
 		if (quote >= 0)
 		{
-			int endQuote = header.IndexOf('"', quote + 1);
-			if (endQuote < 0)
+			if (!TryReadEscapedLabel(header, quote + 1, out label, out int endQuote))
 			{
 				return false;
 			}
 
-			label = header[(quote + 1)..endQuote];
+			afterLabel = endQuote;
 		}
 
+		// The key is searched for only after the label, so a "(" inside the label is not taken for it.
 		Key? key = null;
-		int open = header.IndexOf('(', close);
+		int open = header.IndexOf('(', afterLabel);
 		if (open >= 0)
 		{
 			int endParen = header.IndexOf(')', open + 1);
@@ -162,6 +165,62 @@ public sealed record Section
 
 		result = Create(type, progression, label, key);
 		return true;
+	}
+
+	// The label sits between double quotes on the one header line, so a quote, a backslash or a line
+	// break inside it is written as a backslash escape that TryReadEscapedLabel reverses.
+	private static void AppendEscapedLabel(StringBuilder sb, string label)
+	{
+		foreach (char c in label)
+		{
+			_ = c switch
+			{
+				'"' => sb.Append("\\\""),
+				'\\' => sb.Append("\\\\"),
+				'\n' => sb.Append("\\n"),
+				'\r' => sb.Append("\\r"),
+				_ => sb.Append(c),
+			};
+		}
+	}
+
+	// Reads an escaped label starting just after its opening quote, returning the index of the
+	// closing quote. A backslash before anything other than a written escape is kept as it is, so
+	// a label written before escaping existed still reads back the same.
+	private static bool TryReadEscapedLabel(string header, int start, [NotNullWhen(true)] out string? label, out int endQuote)
+	{
+		label = null;
+		endQuote = -1;
+		StringBuilder sb = new();
+		int i = start;
+		while (i < header.Length)
+		{
+			char c = header[i];
+			if (c == '"')
+			{
+				label = sb.ToString();
+				endQuote = i;
+				return true;
+			}
+
+			char next = i + 1 < header.Length ? header[i + 1] : '\0';
+			if (c == '\\' && next is '"' or '\\' or 'n' or 'r')
+			{
+				_ = sb.Append(next switch
+				{
+					'n' => '\n',
+					'r' => '\r',
+					_ => next,
+				});
+				i += 2;
+				continue;
+			}
+
+			_ = sb.Append(c);
+			i++;
+		}
+
+		return false;
 	}
 
 	// Enum.TryParse alone also takes integers, comma-separated name lists and padded names, all of

@@ -33,4 +33,18 @@ public class ArrangementRoundTripTests
 		Arrangement a = Sample();
 		Assert.AreEqual(a, Arrangement.Parse(a.ToString()));
 	}
+
+	[TestMethod]
+	public void RoundTripWithParenthesisedAndQuotedLabels()
+	{
+		Key key = Key.Create(PitchClass.Create(NoteLetter.C, Accidental.Natural), Mode.Major);
+		Progression verse = Progression.Create([Chord.Parse("C"), Chord.Parse("G")], Duration.Half);
+		Arrangement a = Arrangement.Create(key,
+		[
+			Section.Create(SectionType.Verse, verse, "Verse (reprise)"),
+			Section.Create(SectionType.Outro, verse, "Outro (fade)", key),
+			Section.Create(SectionType.Chorus, verse, "The \"big\" one\n\nagain"),
+		]);
+		Assert.AreEqual(a, Arrangement.Parse(a.ToString()));
+	}
 }

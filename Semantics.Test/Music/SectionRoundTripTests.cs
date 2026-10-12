@@ -52,4 +52,36 @@ public class SectionRoundTripTests
 			Assert.AreEqual(s, Section.Parse(s.ToString()));
 		}
 	}
+
+	[TestMethod]
+	[DataRow("Verse (reprise)")]
+	[DataRow("Outro (fade")]
+	[DataRow("Chorus x2)")]
+	[DataRow("The \"big\" one")]
+	[DataRow("Bridge ]")]
+	[DataRow("Back\\slash \\n")]
+	[DataRow("Two\nlines\r")]
+	[DataRow("")]
+	public void RoundTripLabelWithDelimiters(string label)
+	{
+		Key key = Key.Create(PitchClass.Create(NoteLetter.C, Accidental.Natural), Mode.Major);
+		Section withoutKey = Section.Create(SectionType.Verse, SampleProgression(), label);
+		Section withKey = Section.Create(SectionType.Verse, SampleProgression(), label, key);
+		Assert.AreEqual(withoutKey, Section.Parse(withoutKey.ToString()));
+		Assert.AreEqual(withKey, Section.Parse(withKey.ToString()));
+	}
+
+	[TestMethod]
+	public void ToStringEscapesQuoteBackslashAndLineBreaksInLabel()
+	{
+		Section s = Section.Create(SectionType.Verse, SampleProgression(), "a\"b\\c\nd\re");
+		Assert.AreEqual("[Verse] \"a\\\"b\\\\c\\nd\\re\"\n4/4  Dm7 / G7 /", s.ToString());
+	}
+
+	[TestMethod]
+	public void ParseKeepsBackslashThatIsNotAnEscape()
+	{
+		Section s = Section.Parse("[Verse] \"A\\B\"\n4/4  Dm7 / G7 /");
+		Assert.AreEqual("A\\B", s.Label);
+	}
 }
