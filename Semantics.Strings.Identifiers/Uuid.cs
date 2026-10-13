@@ -13,12 +13,27 @@ using ktsu.Semantics.Strings;
 [IsUuid]
 public sealed record Uuid : SemanticString<Uuid>
 {
-	/// <summary>Normalizes the input by trimming wrapping braces/parentheses and lowercasing.</summary>
+	/// <summary>
+	/// Normalizes the input by removing one matched pair of wrapping braces or parentheses and
+	/// lowercasing. Unbalanced or repeated wrappers are left in place, so validation rejects them as
+	/// <see cref="Guid.TryParse(string, out Guid)"/> does.
+	/// </summary>
 	/// <param name="input">The raw input string.</param>
 	/// <returns>The canonical UUID string.</returns>
 	protected override string MakeCanonical(string input)
 	{
 		Ensure.NotNull(input);
-		return input.Trim().Trim('{', '}', '(', ')').ToLowerInvariant();
+		string trimmed = input.Trim();
+		if (trimmed.Length >= 2)
+		{
+			char first = trimmed[0];
+			char last = trimmed[^1];
+			if ((first == '{' && last == '}') || (first == '(' && last == ')'))
+			{
+				trimmed = trimmed[1..^1];
+			}
+		}
+
+		return trimmed.ToLowerInvariant();
 	}
 }
