@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// <item><description>Issue #50: factories reject negative inputs with <see cref="ArgumentException"/>.</description></item>
 /// <item><description>Issue #52: V0 - V0 returns the same V0 of <c>T.Abs(a - b)</c>.</description></item>
 /// <item><description>Issue #285: a V0 has no unary negation, and scaling it by a negative number throws.</description></item>
+/// <item><description>Issue #326: a NaN input is rejected with <see cref="ArgumentException"/>, not <see cref="ArithmeticException"/>.</description></item>
 /// </list>
 /// </summary>
 [TestClass]
@@ -332,4 +333,37 @@ public sealed class Vector0InvariantTests
 	[TestMethod]
 	public void Vector1_Scaled_By_Negative_Scalar_Is_Signed()
 		=> Assert.AreEqual(-6.0, (Velocity1D<double>.FromMeterPerSecond(2.0) * -3.0).Value, Tolerance);
+
+	// =========================================================== #326: NaN is an ArgumentException
+
+	[TestMethod]
+	public void EnsureNonNegative_NaN_Throws_ArgumentException()
+	{
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Vector0Guards.EnsureNonNegative(double.NaN, "value"));
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Vector0Guards.EnsureNonNegative(float.NaN, "value"));
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Vector0Guards.EnsureNonNegative(Half.NaN, "value"));
+	}
+
+	[TestMethod]
+	public void EnsurePositive_NaN_Throws_ArgumentException()
+	{
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Vector0Guards.EnsurePositive(double.NaN, "value"));
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Vector0Guards.EnsurePositive(float.NaN, "value"));
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Vector0Guards.EnsurePositive(Half.NaN, "value"));
+	}
+
+	[TestMethod]
+	public void Generated_Factories_NaN_Throw_ArgumentException()
+	{
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Speed<double>.FromMeterPerSecond(double.NaN));
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Mass<double>.FromKilogram(double.NaN));
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Wavelength<double>.FromMeter(double.NaN));
+	}
+
+	[TestMethod]
+	public void Guards_Accept_Infinity_And_Reject_NegativeInfinity()
+	{
+		Assert.AreEqual(double.PositiveInfinity, Vector0Guards.EnsurePositive(double.PositiveInfinity, "value"));
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Vector0Guards.EnsureNonNegative(double.NegativeInfinity, "value"));
+	}
 }
