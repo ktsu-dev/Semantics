@@ -20,4 +20,7 @@ public sealed record CreditCardNumber : SemanticString<CreditCardNumber>
 		Ensure.NotNull(input);
 		return input.Replace(" ", string.Empty).Replace("-", string.Empty);
 	}
+
+	/// <summary>A rejected value is sensitive, so it is left out of the validation exception message.</summary>
+	protected override bool IncludeValueInErrors => false;
 }
