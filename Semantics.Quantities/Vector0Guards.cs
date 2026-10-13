@@ -27,11 +27,13 @@ public static class Vector0Guards
 	/// <param name="value">The value (already converted to the SI base unit) to validate.</param>
 	/// <param name="paramName">Name of the originating parameter, used for the exception message.</param>
 	/// <returns>The validated, non-negative value.</returns>
-	/// <exception cref="ArgumentException">When <paramref name="value"/> is negative.</exception>
+	/// <exception cref="ArgumentException">When <paramref name="value"/> is NaN or negative.</exception>
 	public static T EnsureNonNegative<T>(T value, string paramName)
 		where T : struct, INumber<T>
 	{
-		if (T.Sign(value) < 0)
+		EnsureNumber(value, paramName);
+
+		if (value < T.Zero)
 		{
 			throw new ArgumentException(
 				$"Magnitude must be non-negative; received {value}.",
@@ -53,11 +55,13 @@ public static class Vector0Guards
 	/// <param name="value">The value (already converted to the SI base unit) to validate.</param>
 	/// <param name="paramName">Name of the originating parameter, used for the exception message.</param>
 	/// <returns>The validated, strictly-positive value.</returns>
-	/// <exception cref="ArgumentException">When <paramref name="value"/> is zero or negative.</exception>
+	/// <exception cref="ArgumentException">When <paramref name="value"/> is NaN, zero or negative.</exception>
 	public static T EnsurePositive<T>(T value, string paramName)
 		where T : struct, INumber<T>
 	{
-		if (T.Sign(value) <= 0)
+		EnsureNumber(value, paramName);
+
+		if (value <= T.Zero)
 		{
 			throw new ArgumentException(
 				$"Value must be strictly positive; received {value}.",
@@ -65,5 +69,19 @@ public static class Vector0Guards
 		}
 
 		return value;
+	}
+
+	/// <summary>
+	/// Throws <see cref="ArgumentException"/> when <paramref name="value"/> is NaN. Checked before the
+	/// sign test because <c>T.Sign(NaN)</c> throws <see cref="ArithmeticException"/> for the IEEE types,
+	/// and a NaN compares false against zero, so neither test rejects it on its own.
+	/// </summary>
+	private static void EnsureNumber<T>(T value, string paramName)
+		where T : struct, INumber<T>
+	{
+		if (T.IsNaN(value))
+		{
+			throw new ArgumentException("Magnitude must be a number; received NaN.", paramName);
+		}
 	}
 }
