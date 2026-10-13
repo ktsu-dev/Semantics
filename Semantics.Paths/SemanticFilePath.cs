@@ -68,6 +68,42 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 	private static int FileNameStart(string path) => path.LastIndexOfAny(['/', '\\']) + 1;
 
 	/// <summary>
+	/// Gets the path with its <see cref="FileExtension"/> removed, so a dotfile such as <c>.bashrc</c>,
+	/// which has no extension, keeps its whole name. A trailing dot after the name (<c>file.</c>) is
+	/// removed too, as <see cref="Path.ChangeExtension(string, string)"/> removes it.
+	/// </summary>
+	private protected string WeakStringWithoutExtension
+	{
+		get
+		{
+			string path = WeakString;
+			int length = path.Length - FileExtension.WeakString.Length;
+			if (length == path.Length && length - 1 > FileNameStart(path) && path[length - 1] == '.')
+			{
+				length--;
+			}
+
+			return path.Substring(0, length);
+		}
+	}
+
+	/// <summary>
+	/// Gets the path with its <see cref="FileExtension"/> replaced by <paramref name="newExtension"/>, or
+	/// with <paramref name="newExtension"/> appended when the path has none, as a dotfile does.
+	/// </summary>
+	/// <param name="newExtension">The new extension, with or without its leading period.</param>
+	/// <returns>The path with the new extension.</returns>
+	private protected string WeakStringWithExtension(FileExtension newExtension)
+	{
+		Ensure.NotNull(newExtension);
+
+		string extension = newExtension.WeakString;
+		return extension.Length > 0 && extension[0] == '.'
+			? WeakStringWithoutExtension + extension
+			: $"{WeakStringWithoutExtension}.{extension}";
+	}
+
+	/// <summary>
 	/// Gets the filename portion of the path
 	/// </summary>
 	public FileName FileName => FileName.Create<FileName>(Path.GetFileName(WeakString));

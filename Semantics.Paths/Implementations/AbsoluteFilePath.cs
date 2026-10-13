@@ -52,7 +52,7 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 		get
 		{
 			return _cachedFileNameWithoutExtension ??= FileName.Create<FileName>(
-				Path.GetFileNameWithoutExtension(WeakString) ?? "");
+				Path.GetFileName(WeakStringWithoutExtension));
 		}
 	}
 
@@ -65,19 +65,14 @@ public sealed record AbsoluteFilePath : SemanticFilePath<AbsoluteFilePath>, IAbs
 	{
 		Ensure.NotNull(newExtension);
 
-		string newPath = Path.ChangeExtension(WeakString, newExtension.WeakString);
-		return Create<AbsoluteFilePath>(newPath);
+		return Create<AbsoluteFilePath>(WeakStringWithExtension(newExtension));
 	}
 
 	/// <summary>
 	/// Removes the file extension from this path.
 	/// </summary>
 	/// <returns>A new <see cref="AbsoluteFilePath"/> without an extension.</returns>
-	public AbsoluteFilePath RemoveExtension()
-	{
-		string pathWithoutExtension = Path.ChangeExtension(WeakString, null) ?? "";
-		return Create<AbsoluteFilePath>(pathWithoutExtension);
-	}
+	public AbsoluteFilePath RemoveExtension() => Create<AbsoluteFilePath>(WeakStringWithoutExtension);
 
 	/// <summary>
 	/// Determines whether this file is inside the specified parent directory.
