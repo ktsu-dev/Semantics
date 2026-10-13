@@ -9,6 +9,8 @@ using System.Linq;
 /// <summary>The structural form of a piece: its section letter-pattern and any recognized named form.</summary>
 public sealed record Form
 {
+	private const int BluesBars = 12;
+
 	private static readonly int[][] BluesTemplates =
 	[
 		[1, 1, 1, 1, 4, 4, 1, 1, 5, 4, 1, 1],
@@ -133,26 +135,41 @@ public sealed record Form
 		return true;
 	}
 
+	// A twelve-bar blues is judged bar by bar, not chord by chord: the section must last exactly twelve bars, and each
+	// bar is represented by the chord sounding on its downbeat. A chord held across several bars counts for each of
+	// them, and a chord that starts after a downbeat does not count for that bar.
 	private static bool IsTwelveBarBlues(Section section, Key key)
 	{
-		IReadOnlyList<ChordEvent> chords = section.Progression.Chords;
-		if (chords.Count != 12)
+		Progression progression = section.Progression;
+		Duration bar = progression.TimeSignature.BarDuration;
+		if (progression.TotalDuration != bar.Multiply(BluesBars))
 		{
 			return false;
 		}
 
-		int[] degrees = new int[12];
-		for (int i = 0; i < 12; i++)
+		int[] degrees = new int[BluesBars];
+		int barIndex = 0;
+		Duration end = Duration.Create(0, 1);
+		foreach (ChordEvent chordEvent in progression.Chords)
 		{
-			ScaleDegree degree = key.FunctionOf(chords[i].Chord.Root);
-			if (degree.Alteration != 0)
-			{
-				return false;
-			}
+			end = end.Add(chordEvent.Duration);
 
-			degrees[i] = degree.Degree;
+			// Every downbeat before this chord ends that an earlier chord has not already claimed falls within this chord.
+			while (barIndex < BluesBars && IsBefore(bar.Multiply(barIndex), end))
+			{
+				ScaleDegree degree = key.FunctionOf(chordEvent.Chord.Root);
+				if (degree.Alteration != 0)
+				{
+					return false;
+				}
+
+				degrees[barIndex++] = degree.Degree;
+			}
 		}
 
 		return BluesTemplates.Any(template => template.SequenceEqual(degrees));
 	}
+
+	private static bool IsBefore(Duration left, Duration right) =>
+		(long)left.Numerator * right.Denominator < (long)right.Numerator * left.Denominator;
 }
