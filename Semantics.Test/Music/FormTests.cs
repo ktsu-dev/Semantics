@@ -41,6 +41,35 @@ public class FormTests
 	}
 
 	[TestMethod]
+	public void Of_TwentySixDistinctSections_RoundTripsThroughParse()
+	{
+		Arrangement arrangement = Arrangement.Create(CMajor, DistinctSections(Form.MaxDistinctSections));
+		Form form = arrangement.Form;
+		Assert.AreEqual("ABCDEFGHIJKLMNOPQRSTUVWXYZ", form.Pattern);
+		Assert.AreEqual(form, Form.Parse(form.ToString()));
+	}
+
+	[TestMethod]
+	public void Of_MoreDistinctSectionsThanLetters_Throws()
+	{
+		Arrangement arrangement = Arrangement.Create(CMajor, DistinctSections(Form.MaxDistinctSections + 1));
+		_ = Assert.ThrowsExactly<ArgumentException>(() => Form.Of(arrangement));
+	}
+
+	[TestMethod]
+	public void Of_RepeatsBeyondTwentySixSections_StillLabelsByStructure()
+	{
+		List<Section> sections = DistinctSections(Form.MaxDistinctSections);
+		sections.Add(sections[0]);
+		Form form = Arrangement.Create(CMajor, sections).Form;
+		Assert.AreEqual("ABCDEFGHIJKLMNOPQRSTUVWXYZA", form.Pattern);
+	}
+
+	// Sections with different chord counts never share a structure, so section i has i + 1 bars of C.
+	private static List<Section> DistinctSections(int count) =>
+		[.. Enumerable.Range(1, count).Select(bars => Section(SectionType.Verse, string.Join(" | ", Enumerable.Repeat("C", bars))))];
+
+	[TestMethod]
 	public void Parse_AppliesLetterRecognition()
 	{
 		Form form = Form.Parse("ABACA");
