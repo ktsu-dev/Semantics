@@ -1,8 +1,9 @@
-## v5.12.1 (patch)
+## v5.12.2 (patch)
 
-Changes since v5.12.0:
+Changes since v5.12.1:
 
-- Name secondary dominant targets by the mode's own triad [patch] ([@Claude](https://github.com/Claude))
-- Escape section labels so ToString round-trips through Parse [patch] ([@Claude](https://github.com/Claude))
-- Stop Duration arithmetic from wrapping silently on int overflow [patch] ([@Claude](https://github.com/Claude))
+- Reject NaN in Vector0 guards with ArgumentException [patch] ([@Claude](https://github.com/Claude))
+- [patch] Resolve . and .. before taking a relative directory's parent ([@Claude](https://github.com/Claude))
+- [patch] Keep a path relative when its left operand is empty ([@Claude](https://github.com/Claude))
+- [patch] Reject unbalanced or repeated UUID braces and parentheses ([@Claude](https://github.com/Claude))
 
