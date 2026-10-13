@@ -302,4 +302,43 @@ public class RelativePathPropertyTests
 
 		Assert.ThrowsExactly<ArgumentNullException>(() => relative.AsAbsolute(null!));
 	}
+
+	[TestMethod]
+	[DataRow("..", "../..")]
+	[DataRow("../..", "../../..")]
+	[DataRow(".", "..")]
+	[DataRow("", "..")]
+	[DataRow("a/..", "..")]
+	[DataRow("a/../..", "../..")]
+	[DataRow("a", "")]
+	[DataRow("a/b", "a")]
+	[DataRow("a/./b", "a")]
+	[DataRow("../a", "..")]
+	public void RelativeDirectoryPath_Parent_ResolvesDotSegments(string path, string expected)
+	{
+		RelativeDirectoryPath parent = RelativeDirectoryPath.Create<RelativeDirectoryPath>(Native(path)).Parent;
+
+		Assert.AreEqual(Native(expected), parent.WeakString);
+	}
+
+	[TestMethod]
+	[DataRow("")]
+	[DataRow(".")]
+	[DataRow("..")]
+	[DataRow("../..")]
+	[DataRow("a")]
+	[DataRow("a/b")]
+	[DataRow("a/..")]
+	[DataRow("a/../..")]
+	[DataRow("../a")]
+	[DataRow("a/./b")]
+	public void RelativeDirectoryPath_Parent_AgreesWithAbsoluteParent(string path)
+	{
+		AbsoluteDirectoryPath baseDirectory = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(TestPaths.Absolute("home", "u", "w"));
+		RelativeDirectoryPath relative = RelativeDirectoryPath.Create<RelativeDirectoryPath>(Native(path));
+
+		Assert.AreEqual(relative.AsAbsolute(baseDirectory).Parent.WeakString, relative.Parent.AsAbsolute(baseDirectory).WeakString);
+	}
+
+	private static string Native(string? path) => (path ?? string.Empty).Replace('/', Path.DirectorySeparatorChar);
 }
