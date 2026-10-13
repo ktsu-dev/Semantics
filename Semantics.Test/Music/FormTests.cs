@@ -41,31 +41,6 @@ public class FormTests
 	}
 
 	[TestMethod]
-	public void Of_RecognizesTwelveBarBlues_WithHeldChords()
-	{
-		Section blues = Section(
-			SectionType.Verse,
-			"C7 / / / / / / / / / / / / / / / | F7 / / / / / / / | C7 / / / / / / / | G7 / / / | F7 / / / | C7 / / / / / / /");
-		Assert.AreEqual(12, blues.Bars);
-		Assert.AreEqual(NamedForm.TwelveBarBlues, Arrangement.Create(CMajor, [blues]).Form.Name);
-	}
-
-	[TestMethod]
-	public void Of_RecognizesTwelveBarBlues_ByDownbeatChord()
-	{
-		Section blues = Section(SectionType.Verse, "C7 / / / | C7 / / / | C7 / / / | C7 / G7 / | F7 / / / | F7 / / / | C7 / / / | C7 / / / | G7 / / / | F7 / / / | C7 / / / | C7 / G7 /");
-		Assert.AreEqual(NamedForm.TwelveBarBlues, Arrangement.Create(CMajor, [blues]).Form.Name);
-	}
-
-	[TestMethod]
-	public void Of_DoesNotCallTwelveQuarterNoteChordsABlues()
-	{
-		Section shortSection = Section(SectionType.Verse, "C7 C7 C7 C7 | F7 F7 C7 C7 | G7 F7 C7 C7");
-		Assert.AreEqual(3, shortSection.Bars);
-		Assert.AreNotEqual(NamedForm.TwelveBarBlues, Arrangement.Create(CMajor, [shortSection]).Form.Name);
-	}
-
-	[TestMethod]
 	public void Parse_AppliesLetterRecognition()
 	{
 		Form form = Form.Parse("ABACA");
@@ -90,5 +65,30 @@ public class FormTests
 	{
 		Assert.IsFalse(Form.TryParse("aaba", out Form? result));
 		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public void Of_RecognizesTwelveBarBlues_WithHeldChords()
+	{
+		Section blues = Section(
+			SectionType.Verse,
+			"C7 / / / / / / / / / / / / / / / | F7 / / / / / / / | C7 / / / / / / / | G7 / / / | F7 / / / | C7 / / / / / / /");
+		Assert.AreEqual(12, blues.Bars);
+		Assert.AreEqual(NamedForm.TwelveBarBlues, Arrangement.Create(CMajor, [blues]).Form.Name);
+	}
+
+	[TestMethod]
+	public void Of_RecognizesTwelveBarBlues_ByDownbeatChord()
+	{
+		Section blues = Section(SectionType.Verse, "C7 / / / | C7 / / / | C7 / / / | C7 / G7 / | F7 / / / | F7 / / / | C7 / / / | C7 / / / | G7 / / / | F7 / / / | C7 / / / | C7 / G7 /");
+		Assert.AreEqual(NamedForm.TwelveBarBlues, Arrangement.Create(CMajor, [blues]).Form.Name);
+	}
+
+	[TestMethod]
+	public void Of_DoesNotCallTwelveQuarterNoteChordsABlues()
+	{
+		Section shortSection = Section(SectionType.Verse, "C7 C7 C7 C7 | F7 F7 C7 C7 | G7 F7 C7 C7");
+		Assert.AreEqual(3, shortSection.Bars);
+		Assert.AreNotEqual(NamedForm.TwelveBarBlues, Arrangement.Create(CMajor, [shortSection]).Form.Name);
 	}
 }
