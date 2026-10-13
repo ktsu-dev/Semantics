@@ -67,11 +67,12 @@ internal static class PooledStringBuilder
 			sb.Append(components[0]);
 			for (int i = 1; i < components.Length; i++)
 			{
-
+				// An empty leading component contributes nothing, so a separator after it would root the
+				// result: "" combined with "x.txt" must be "x.txt", not "/x.txt".
 #if NETSTANDARD2_0
-				if (!SpanPathUtilities.EndsWithDirectorySeparator(sb.ToString()))
+				if (sb.Length > 0 && !SpanPathUtilities.EndsWithDirectorySeparator(sb.ToString()))
 #else
-				if (!SpanPathUtilities.EndsWithDirectorySeparator(sb.ToString().AsSpan()))
+				if (sb.Length > 0 && !SpanPathUtilities.EndsWithDirectorySeparator(sb.ToString().AsSpan()))
 #endif
 				{
 					sb.Append(Path.DirectorySeparatorChar);

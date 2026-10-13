@@ -216,4 +216,23 @@ public class PathOperatorTests
 		Assert.IsTrue(result.IsValid());
 		Assert.Contains("my-app_v2 (beta)", result.WeakString);
 	}
+
+	[TestMethod]
+	public void RelativeDirectoryOperators_EmptyLeftOperand_StayRelative()
+	{
+		// Parent of a single-segment path is the empty path, the usual source of an empty left operand.
+		RelativeDirectoryPath empty = RelativeDirectoryPath.Create<RelativeDirectoryPath>("a").Parent;
+		Assert.AreEqual(string.Empty, empty.WeakString);
+
+		RelativeFilePath file = empty / FileName.Create<FileName>("x.txt");
+		Assert.AreEqual("x.txt", file.WeakString);
+
+		RelativeDirectoryPath directory = empty / RelativeDirectoryPath.Create<RelativeDirectoryPath>("b");
+		Assert.AreEqual("b", directory.WeakString);
+
+		string nested = TestPaths.Relative("c", "d.txt");
+		RelativeFilePath nestedFile = empty / RelativeFilePath.Create<RelativeFilePath>(nested);
+		Assert.AreEqual(nested, nestedFile.WeakString);
+		Assert.IsFalse(Path.IsPathRooted(nestedFile.WeakString));
+	}
 }
