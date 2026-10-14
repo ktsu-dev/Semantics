@@ -19,6 +19,9 @@ public sealed record Form
 		[1, 4, 1, 1, 4, 4, 1, 1, 5, 4, 1, 5],
 	];
 
+	/// <summary>The number of structurally distinct sections a form can label, one per letter A-Z.</summary>
+	public const int MaxDistinctSections = 26;
+
 	/// <summary>Gets the section letter-pattern (e.g. "AABA").</summary>
 	public string Pattern { get; private init; } = "";
 
@@ -44,7 +47,14 @@ public sealed record Form
 	/// <summary>Derives the form of an arrangement from its sections.</summary>
 	/// <param name="arrangement">The arrangement to analyze.</param>
 	/// <returns>The derived form.</returns>
+	/// <remarks>
+	/// Each structurally distinct section takes the next letter from A to Z, so an arrangement can have at most
+	/// <see cref="MaxDistinctSections"/> distinct sections. Beyond that there is no letter <see cref="Parse"/> accepts.
+	/// </remarks>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="arrangement"/> is null.</exception>
+	/// <exception cref="ArgumentException">
+	/// Thrown when <paramref name="arrangement"/> has more than <see cref="MaxDistinctSections"/> structurally distinct sections.
+	/// </exception>
 	public static Form Of(Arrangement arrangement)
 	{
 		Ensure.NotNull(arrangement);
@@ -57,6 +67,13 @@ public sealed record Form
 			int index = representatives.FindIndex(representative => representative.IsSameStructure(section));
 			if (index < 0)
 			{
+				if (representatives.Count == MaxDistinctSections)
+				{
+					throw new ArgumentException(
+						$"A form can label at most {MaxDistinctSections} structurally distinct sections (A-Z).",
+						nameof(arrangement));
+				}
+
 				representatives.Add(section);
 				index = representatives.Count - 1;
 			}

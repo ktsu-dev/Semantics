@@ -33,6 +33,9 @@ public sealed record Arrangement
 	public double TotalBars => Sections.Sum(section => section.Bars);
 
 	/// <summary>Gets the structural form of the arrangement.</summary>
+	/// <exception cref="ArgumentException">
+	/// Thrown when the arrangement has more than <see cref="Form.MaxDistinctSections"/> structurally distinct sections.
+	/// </exception>
 	public Form Form => Form.Of(this);
 
 	/// <summary>Creates an arrangement.</summary>
