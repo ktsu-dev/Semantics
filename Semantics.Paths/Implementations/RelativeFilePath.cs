@@ -52,7 +52,7 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 		get
 		{
 			return _cachedFileNameWithoutExtension ??= FileName.Create<FileName>(
-				Path.GetFileNameWithoutExtension(WeakString) ?? "");
+				Path.GetFileName(WeakStringWithoutExtension));
 		}
 	}
 
@@ -65,19 +65,14 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	{
 		Ensure.NotNull(newExtension);
 
-		string newPath = Path.ChangeExtension(WeakString, newExtension.WeakString);
-		return Create<RelativeFilePath>(newPath);
+		return Create<RelativeFilePath>(WeakStringWithExtension(newExtension));
 	}
 
 	/// <summary>
 	/// Removes the file extension from this path.
 	/// </summary>
 	/// <returns>A new <see cref="RelativeFilePath"/> without an extension.</returns>
-	public RelativeFilePath RemoveExtension()
-	{
-		string pathWithoutExtension = Path.ChangeExtension(WeakString, null) ?? "";
-		return Create<RelativeFilePath>(pathWithoutExtension);
-	}
+	public RelativeFilePath RemoveExtension() => Create<RelativeFilePath>(WeakStringWithoutExtension);
 
 	/// <summary>
 	/// Converts this relative file path to an absolute file path representation.
