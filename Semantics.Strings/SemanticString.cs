@@ -421,6 +421,17 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	public virtual bool ValidateAttributes() => AttributeValidation.ValidateAttributes(this, GetType());
 
+	/// <summary>
+	/// Gets whether the exception thrown for a value that fails validation quotes that value.
+	/// </summary>
+	/// <remarks>
+	/// <see langword="true"/> by default. Override it to return <see langword="false"/> on a type whose
+	/// values are sensitive, such as a card number or a credential, so that a rejected value does not
+	/// reach logs, error trackers or error responses through the exception message. The message still
+	/// names the type and the reasons the validation attributes give.
+	/// </remarks>
+	protected internal virtual bool IncludeValueInErrors => true;
+
 	// Note: Explicit conversion operators were removed in favor of the .As<T>() extension method pattern
 	// for better discoverability, consistency, and clearer intent at call sites.
 
@@ -635,9 +646,25 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	{
 		if (value == null || !value.IsValid())
 		{
-			throw new ArgumentException(message: $"Cannot convert \"{value}\" to {typeof(TDest).Name}");
+			throw new ArgumentException(message: ValidationFailureMessage(value));
 		}
 		return value;
+	}
+
+	/// <summary>
+	/// Builds the message for a value that failed validation: the rejected value, unless the type opts out
+	/// through <see cref="IncludeValueInErrors"/>, followed by the reasons its validation attributes give.
+	/// </summary>
+	/// <typeparam name="TDest">The semantic string type being validated.</typeparam>
+	/// <param name="value">The semantic string instance that failed validation.</param>
+	/// <returns>The exception message.</returns>
+	private static string ValidationFailureMessage<TDest>(TDest? value)
+		where TDest : SemanticString<TDest>
+	{
+		string subject = value is null || value.IncludeValueInErrors ? $"\"{value}\"" : "the value";
+		string message = $"Cannot convert {subject} to {typeof(TDest).Name}";
+		string[] errors = value is null ? [] : [.. AttributeValidation.GetValidationErrors(value, value.GetType())];
+		return errors.Length == 0 ? message : $"{message}: {string.Join(" ", errors)}";
 	}
 
 	/// <summary>

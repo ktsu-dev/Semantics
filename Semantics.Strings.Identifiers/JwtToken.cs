@@ -13,4 +13,6 @@ using ktsu.Semantics.Strings;
 [IsJwtToken]
 public sealed record JwtToken : SemanticString<JwtToken>
 {
+	/// <summary>A rejected value is sensitive, so it is left out of the validation exception message.</summary>
+	protected override bool IncludeValueInErrors => false;
 }
