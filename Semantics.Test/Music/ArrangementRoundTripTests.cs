@@ -61,6 +61,6 @@ public class ArrangementRoundTripTests
 	public void TryParseAcceptsATrailingNewline()
 	{
 		Arrangement a = Sample();
-		Assert.AreEqual(a, Arrangement.Parse(a.ToString() + "\n"));
+		Assert.AreEqual(a, Arrangement.Parse(a + "\n"));
 	}
 }
