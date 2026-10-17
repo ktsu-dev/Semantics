@@ -28,6 +28,26 @@ public sealed class IbanTests
 	}
 
 	[TestMethod]
+	[DataRow("GB98WEST12340000000012")]
+	[DataRow("GB97WEST12340000000030")]
+	[DataRow("GB02WEST00000000000029")]
+	public void Create_CheckDigitsAtEdgeOfRange_Succeeds(string input)
+	{
+		Iban iban = Iban.Create(input);
+		Assert.AreEqual(input, iban.WeakString);
+	}
+
+	[TestMethod]
+	[DataRow("GB01WEST12340000000012")]
+	[DataRow("GB00WEST12340000000030")]
+	[DataRow("GB99WEST00000000000029")]
+	public void Create_CheckDigitsNeverIssued_Throws(string input)
+	{
+		ArgumentException ex = Assert.ThrowsExactly<ArgumentException>(() => Iban.Create(input));
+		Assert.Contains("check digits", ex.Message);
+	}
+
+	[TestMethod]
 	public void Create_BadStructure_Throws()
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => Iban.Create("1234WEST12345698765432"));

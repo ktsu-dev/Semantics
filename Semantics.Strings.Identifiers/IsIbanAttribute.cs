@@ -9,8 +9,8 @@ using ktsu.Semantics.Strings;
 
 /// <summary>
 /// Validates that the string is an IBAN: two letters, two check digits, then alphanumerics, total
-/// length 15-34, satisfying the ISO 7064 mod-97-10 checksum. Country-specific BBAN length/format
-/// tables are not enforced.
+/// length 15-34, with check digits in 02-98 (the only values ISO 13616 issues) and satisfying the
+/// ISO 7064 mod-97-10 checksum. Country-specific BBAN length/format tables are not enforced.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public sealed class IsIbanAttribute : NativeSemanticStringValidationAttribute
@@ -33,6 +33,14 @@ public sealed class IsIbanAttribute : NativeSemanticStringValidationAttribute
 			if (!Regex.IsMatch(value, Pattern, RegexOptions.None, TimeSpan.FromSeconds(1)))
 			{
 				return ValidationResult.Failure("The value must be a valid IBAN (two letters, two check digits, then alphanumerics).");
+			}
+
+			// ISO 13616 issues check digits as 98 - (n mod 97), so only 02-98 occur. 00, 01 and 99 share a
+			// remainder with 97, 98 and 02, so the mod-97 test alone would accept them.
+			int checkDigits = ((value[2] - '0') * 10) + (value[3] - '0');
+			if (checkDigits is < 2 or > 98)
+			{
+				return ValidationResult.Failure("The value must be a valid IBAN (check digits must be 02-98).");
 			}
 
 			return PassesMod97(value)
