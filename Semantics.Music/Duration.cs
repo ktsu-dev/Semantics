@@ -117,7 +117,18 @@ public sealed record Duration
 			return false;
 		}
 
-		result = Create(numerator, denominator);
+		// A negative denominator negates the numerator, so int.MinValue over an odd negative
+		// denominator reduces to a numerator past int.MaxValue. That is bad text, not a bug in the
+		// caller, so it fails the parse rather than escaping a Try method.
+		try
+		{
+			result = Create(numerator, denominator);
+		}
+		catch (OverflowException)
+		{
+			return false;
+		}
+
 		return true;
 	}
 
