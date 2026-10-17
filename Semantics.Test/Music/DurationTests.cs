@@ -130,4 +130,30 @@ public class DurationTests
 		Assert.IsFalse(Duration.TryParse("1/0", out Duration? b));
 		Assert.IsNull(b);
 	}
+
+	[TestMethod]
+	[DataRow("-2147483648/-1")]
+	[DataRow("-2147483648/-3")]
+	public void TryParseFailsWhenTheReducedFractionDoesNotFitInInt(string text)
+	{
+		Assert.IsFalse(Duration.TryParse(text, out Duration? result));
+		Assert.IsNull(result);
+		_ = Assert.ThrowsExactly<FormatException>(() => Duration.Parse(text));
+	}
+
+	[TestMethod]
+	public void TryParseAcceptsIntMinValueOverANegativeDenominatorWhenTheReducedFractionFits()
+	{
+		Assert.IsTrue(Duration.TryParse("-2147483648/-2", out Duration? result));
+		Assert.AreEqual(Duration.Create(1 << 30, 1), result);
+	}
+
+	[TestMethod]
+	public void ContainerTryParseFailsRatherThanThrowingOnAnOverflowingDuration()
+	{
+		Assert.IsFalse(ChordEvent.TryParse("C:-2147483648/-1", out ChordEvent? chordEvent));
+		Assert.IsNull(chordEvent);
+		Assert.IsFalse(Progression.TryParse("4/4  C@-2147483648/-1", out Progression? progression));
+		Assert.IsNull(progression);
+	}
 }
