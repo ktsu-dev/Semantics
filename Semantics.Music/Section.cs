@@ -5,6 +5,7 @@ namespace ktsu.Semantics.Music;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 
 /// <summary>A labeled structural unit of a piece: a role plus its harmonic content.</summary>
@@ -163,20 +164,20 @@ public sealed record Section
 			return false;
 		}
 
-		// The progression is the one line after the header. Anything else is refused rather than
-		// dropped, so a section written across several lines cannot parse as a shorter progression.
-		// Trailing blank lines, such as a file's final newline, carry nothing and are allowed.
-		for (int i = 2; i < lines.Length; i++)
+		if (!OnlyBlankLinesFollowProgression(lines))
 		{
-			if (!string.IsNullOrWhiteSpace(lines[i]))
-			{
-				return false;
-			}
+			return false;
 		}
 
 		result = Create(type, progression, label, key);
 		return true;
 	}
+
+	// The progression is the one line after the header. Anything else is refused rather than
+	// dropped, so a section written across several lines cannot parse as a shorter progression.
+	// Trailing blank lines, such as a file's final newline, carry nothing and are allowed.
+	private static bool OnlyBlankLinesFollowProgression(string[] lines) =>
+		lines.Skip(2).All(string.IsNullOrWhiteSpace);
 
 	// The label sits between double quotes on the one header line, so a quote, a backslash or a line
 	// break inside it is written as a backslash escape that TryReadEscapedLabel reverses.
