@@ -163,6 +163,17 @@ public sealed record Section
 			return false;
 		}
 
+		// The progression is the one line after the header. Anything else is refused rather than
+		// dropped, so a section written across several lines cannot parse as a shorter progression.
+		// Trailing blank lines, such as a file's final newline, carry nothing and are allowed.
+		for (int i = 2; i < lines.Length; i++)
+		{
+			if (!string.IsNullOrWhiteSpace(lines[i]))
+			{
+				return false;
+			}
+		}
+
 		result = Create(type, progression, label, key);
 		return true;
 	}
