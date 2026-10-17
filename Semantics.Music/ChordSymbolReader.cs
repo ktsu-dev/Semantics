@@ -312,15 +312,28 @@ internal sealed class ChordSymbolReader(string text)
 			return false;
 		}
 
-		bool parsed = TryReadAlteration(builder)
-			|| TryReadAdd(builder)
-			|| TryReadOmit(builder);
-		if (!parsed)
+		// A reader can take a token and then have the builder refuse it, so each reader starts from
+		// the modifier's own start. Otherwise the next reader would begin past the refused token and
+		// a valid modifier after it would hide the refusal: "C7b9#9add13" would parse as C7b9add13.
+		if (TryReadAlteration(builder))
 		{
-			index = start;
+			return true;
 		}
 
-		return parsed;
+		index = start;
+		if (TryReadAdd(builder))
+		{
+			return true;
+		}
+
+		index = start;
+		if (TryReadOmit(builder))
+		{
+			return true;
+		}
+
+		index = start;
+		return false;
 	}
 
 	private bool TryReadAlteration(ChordBuilder builder)

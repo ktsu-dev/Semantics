@@ -87,6 +87,12 @@ public class ChordGrammarTests
 	[DataRow("Cmaj5")]
 	[DataRow("C7M+")]
 	[DataRow("Cm7+")]
+	[DataRow("C7b9b9add13")]
+	[DataRow("C7add9add9no3")]
+	[DataRow("C7b5#5no3")]
+	[DataRow("C7b9#9no5")]
+	[DataRow("C7b9#9add13")]
+	[DataRow("C7(b9#9add13)")]
 	public void Parse_RejectsInvalidGrammar(string symbol)
 	{
 		Assert.IsFalse(Chord.TryParse(symbol, out Chord? chord), symbol);
