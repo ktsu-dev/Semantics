@@ -32,6 +32,28 @@ public class SectionRoundTripTests
 	}
 
 	[TestMethod]
+	[DataRow("[Verse]\n4/4 C | G |\nAm | F |")]
+	[DataRow("[Verse]\n4/4 C | G |\nthis is garbage")]
+	[DataRow("[Verse]\n4/4 C | G |\n\nAm | F |")]
+	[DataRow("[Verse]\r\n4/4 C | G |\r\nAm | F |\r\n")]
+	public void TryParseRejectsALineAfterTheProgression(string text)
+	{
+		Assert.IsFalse(Section.TryParse(text, out Section? result));
+		Assert.IsNull(result);
+		Assert.ThrowsExactly<FormatException>(() => Section.Parse(text));
+	}
+
+	[TestMethod]
+	[DataRow("[Verse]\n4/4 C | G |\n")]
+	[DataRow("[Verse]\n4/4 C | G |\n\n")]
+	[DataRow("[Verse]\r\n4/4 C | G |\r\n  \r\n")]
+	public void TryParseAcceptsTrailingBlankLines(string text)
+	{
+		Assert.IsTrue(Section.TryParse(text, out Section? result));
+		Assert.AreEqual(Section.Parse("[Verse]\n4/4 C | G |"), result);
+	}
+
+	[TestMethod]
 	[DataRow("[Verse, Chorus]\n4/4  Dm7 / G7 /")]
 	[DataRow("[42]\n4/4  Dm7 / G7 /")]
 	[DataRow("[-1]\n4/4  Dm7 / G7 /")]

@@ -47,4 +47,20 @@ public class ArrangementRoundTripTests
 		]);
 		Assert.AreEqual(a, Arrangement.Parse(a.ToString()));
 	}
+
+	[TestMethod]
+	public void TryParseRejectsASectionWithALineAfterItsProgression()
+	{
+		const string text = "C major\n\n[Verse]\n4/4 C | G |\nAm | F |\n\n[Chorus]\n4/4 F | G |";
+		Assert.IsFalse(Arrangement.TryParse(text, out Arrangement? result));
+		Assert.IsNull(result);
+		Assert.ThrowsExactly<FormatException>(() => Arrangement.Parse(text));
+	}
+
+	[TestMethod]
+	public void TryParseAcceptsATrailingNewline()
+	{
+		Arrangement a = Sample();
+		Assert.AreEqual(a, Arrangement.Parse(a + "\n"));
+	}
 }
