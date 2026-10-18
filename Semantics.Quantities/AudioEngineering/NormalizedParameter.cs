@@ -123,14 +123,16 @@ public readonly record struct NormalizedParameter<T>
 	/// <summary>
 	/// Maps a host-normalized position in <c>[0, 1]</c> to the corresponding value in the range.
 	/// </summary>
-	/// <param name="normalized">The normalized position; values outside <c>[0, 1]</c> are clamped.</param>
-	/// <returns>The corresponding value between <see cref="Min"/> and <see cref="Max"/>.</returns>
+	/// <param name="normalized">The normalized position; values outside <c>[0, 1]</c> are clamped, and NaN is treated as <c>0</c>.</param>
+	/// <returns>The corresponding value between <see cref="Min"/> and <see cref="Max"/>; <see cref="Min"/> for a NaN position.</returns>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage(
 		"Major Code Smell", "S1244:Do not check floating point equality with exact values, use a range instead",
 		Justification = "The comparison is a fast path, not a numeric test: Math.Pow(x, 1.0) returns x exactly, so skipping it when skew is exactly one is behaviourally identical and a tolerance would change results for skews merely close to one.")]
 	public T Denormalize(T normalized)
 	{
-		double x = Math.Clamp(double.CreateChecked(normalized), 0.0, 1.0);
+		// Math.Clamp passes NaN through, and the effect must always get a value in the range.
+		double position = double.CreateChecked(normalized);
+		double x = double.IsNaN(position) ? 0.0 : Math.Clamp(position, 0.0, 1.0);
 		double skew = double.CreateChecked(Skew);
 		double lo = double.CreateChecked(Min);
 		double hi = double.CreateChecked(Max);

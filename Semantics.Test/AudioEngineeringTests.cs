@@ -233,6 +233,17 @@ public class AudioEngineeringTests
 	}
 
 	[TestMethod]
+	public void NormalizedParameter_Denormalize_NaN_IsMin()
+	{
+		Assert.AreEqual(20.0, NormalizedParameter<double>.Linear(20.0, 20000.0).Denormalize(double.NaN));
+		Assert.AreEqual(1.0, NormalizedParameter<double>.Skewed(1.0, 10.0, 2.0).Denormalize(double.NaN));
+		Assert.AreEqual(20.0, NormalizedParameter<double>.Logarithmic(20.0, 20000.0).Denormalize(double.NaN));
+		Assert.AreEqual(0f, NormalizedParameter<float>.Linear(0f, 1f).Denormalize(float.NaN));
+		Assert.AreEqual(1f, NormalizedParameter<float>.Skewed(1f, 10f, 2f).Denormalize(float.NaN));
+		Assert.AreEqual(20f, NormalizedParameter<float>.Logarithmic(20f, 20000f).Denormalize(float.NaN));
+	}
+
+	[TestMethod]
 	public void NormalizedParameter_ZeroWidthRange_Throws()
 	{
 		Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => NormalizedParameter<double>.Linear(1.0, 1.0));
