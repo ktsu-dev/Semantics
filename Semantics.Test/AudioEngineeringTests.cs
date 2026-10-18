@@ -126,6 +126,53 @@ public class AudioEngineeringTests
 	}
 
 	[TestMethod]
+	public void QFactor_OctaveBandwidth_RoundTripsAcrossRange()
+	{
+		for (double n = 0.05; n <= 4.0; n += 0.05)
+		{
+			Assert.AreEqual(n, QFactor<double>.FromBandwidthInOctaves(n).ToBandwidthInOctaves(), 1e-9, $"{n} octaves");
+		}
+
+		Assert.AreEqual(2.0, (double)QFactor<decimal>.FromBandwidthInOctaves(2m).ToBandwidthInOctaves(), 1e-9);
+	}
+
+	[TestMethod]
+	[DataRow(0.0)]
+	[DataRow(-1.0)]
+	[DataRow(double.NaN)]
+	[DataRow(double.PositiveInfinity)]
+	[DataRow(1e-300)]
+	public void QFactor_FromBandwidthInOctaves_NonPositiveOrNonFinite_Throws(double octaves) =>
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<double>.FromBandwidthInOctaves(octaves));
+
+	[TestMethod]
+	public void QFactor_InvalidInputs_Throw_ForDecimal()
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<decimal>.FromBandwidthInOctaves(0m));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<decimal>.FromBandwidthInOctaves(-1m));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<decimal>.FromBandwidth(1000m, 0m));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<decimal>.FromBandwidth(1000m, -100m));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<decimal>.FromBandwidth(0m, 100m));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<decimal>.Create(0m));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<decimal>.Create(-3m));
+		Assert.ThrowsExactly<ArgumentException>(() => new QFactor<decimal>(0m));
+	}
+
+	[TestMethod]
+	public void QFactor_InvalidInputs_Throw_ForDouble()
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<double>.FromBandwidth(1000.0, 0.0));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<double>.FromBandwidth(1000.0, -100.0));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<double>.FromBandwidth(-1000.0, 100.0));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<double>.FromBandwidth(1000.0, double.NaN));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<double>.Create(0.0));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<double>.Create(-3.0));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<double>.Create(double.PositiveInfinity));
+		Assert.ThrowsExactly<ArgumentException>(() => new QFactor<double>(-1.0));
+		Assert.ThrowsExactly<ArgumentException>(() => QFactor<double>.Create(2.0) with { Value = 0.0 });
+	}
+
+	[TestMethod]
 	public void QFactor_OctaveBandwidthRoundTrip()
 	{
 		QFactor<double> q = QFactor<double>.FromBandwidthInOctaves(1.0);
