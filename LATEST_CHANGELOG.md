@@ -2,6 +2,19 @@
 
 Changes since v5.12.1:
 
+- Apply the Windows path character and length rules only on Windows [patch] (Claude)
+- Report a [RegexMatch] timeout as a validation failure (matt-edmondson)
+- Refuse zero, negative and non-finite input to QFactor (matt-edmondson)
+- Reject ISMNs (979-0) as ISBN-13s (matt-edmondson)
+- Return Min from NormalizedParameter.Denormalize for a NaN position (matt-edmondson)
+- Resolve dot segments before taking an absolute directory's parent (Claude)
+- Fold Interval.MinValue without negating it (Claude)
+- Move the trailing-line check out of Section.TryParse (Claude)
+- Drop a redundant ToString in the arrangement trailing-newline test (Claude)
+- Refuse a section line after the progression instead of dropping it (Claude)
+- Reject IBAN check digits 00, 01 and 99 (Claude)
+- Reject a refused chord modifier even when another modifier follows it [patch] (Claude)
+- Return false from Duration.TryParse when the reduced fraction overflows int [patch] (Claude)
 - Move the bar-based blues tests to the end of FormTests (Claude)
 - Detect a twelve-bar blues by bars, not chord count [patch] (Claude)
 - Refuse a form with more distinct sections than letters [patch] (Claude)
