@@ -59,6 +59,12 @@ public sealed class RegexMatchAttribute(string pattern, RegexOptions options = R
 					? ValidationResult.Success()
 					: ValidationResult.Failure($"The value must match the pattern: {_pattern}");
 			}
+			catch (RegexMatchTimeoutException)
+			{
+				// A timeout derives from TimeoutException, so it would escape TryCreate, which callers use
+				// for untrusted input precisely so they need no exception handling.
+				return ValidationResult.Failure($"The pattern match timed out: {_pattern}");
+			}
 			catch (ArgumentException)
 			{
 				return ValidationResult.Failure($"Invalid regex pattern: {_pattern}");
