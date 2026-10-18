@@ -26,6 +26,27 @@ public sealed class RegexMatchAttributeTests
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Used via generic type references")]
 	private sealed partial record MultilineAnchorsString : SemanticString<MultilineAnchorsString> { }
 
+	[RegexMatch("^(a+)+$", RegexOptions.None)]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Used via generic type references")]
+	private sealed partial record BacktrackingString : SemanticString<BacktrackingString> { }
+
+	private static readonly string BacktrackingInput = new string('a', 40) + "!";
+
+	[TestMethod]
+	public void RegexMatchAttribute_Timeout_TryCreateReturnsFalse()
+	{
+		bool created = BacktrackingString.TryCreate(BacktrackingInput, out BacktrackingString? result);
+		Assert.IsFalse(created);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public void RegexMatchAttribute_Timeout_CreateThrowsArgumentException()
+	{
+		ArgumentException ex = Assert.ThrowsExactly<ArgumentException>(() => BacktrackingString.Create(BacktrackingInput));
+		Assert.Contains("timed out", ex.Message);
+	}
+
 	[TestMethod]
 	public void RegexMatchAttribute_InvalidPattern_ShouldThrow()
 	{
