@@ -31,6 +31,8 @@ public class PathValidationAttributeTests
 	}
 
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void IsPathAttribute_PathWithInvalidChars_ShouldFail()
 	{
 		// Arrange & Act & Assert
@@ -39,6 +41,8 @@ public class PathValidationAttributeTests
 	}
 
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void IsPathAttribute_ExcessivelyLongPath_ShouldFail()
 	{
 		// Arrange
@@ -422,6 +426,8 @@ public class PathValidationAttributeTests
 	}
 
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void IsPathAttribute_PathOverLimit_ShouldFail()
 	{
 		// Using Windows path limit (260) + 100 chars to ensure it's over limit on all platforms

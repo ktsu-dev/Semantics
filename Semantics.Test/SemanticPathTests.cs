@@ -278,6 +278,8 @@ public class SemanticPathTests
 	}
 
 	[TestMethod]
+	[OSCondition(OperatingSystems.Windows)]
+	[TestCategory("OS-Specific")]
 	public void SemanticPath_PathLength_TooLong()
 	{
 		// Test excessively long path (over typical OS limits)
