@@ -116,6 +116,33 @@ public class AbsoluteDirectoryPathParentTests
 			$"Expected the chain up to the root, got [{string.Join(", ", ancestors.Select(a => a.WeakString))}].");
 	}
 
+	/// <summary>
+	/// Regression test for ktsu-dev/Semantics#446. <c>.</c> and <c>..</c> segments were treated as ordinary
+	/// directory names, so the parent of <c>Users/user/..</c> was <c>Users/user</c>, a child of the path itself.
+	/// </summary>
+	[TestMethod]
+	public void Parent_ResolvesDotSegments()
+	{
+		string sep = Path.DirectorySeparatorChar.ToString();
+
+		Assert.AreEqual(Root, Dir(Middle + sep + "..").Parent.WeakString);
+		Assert.AreEqual(BelowRoot, Dir(Middle + sep + ".").Parent.WeakString);
+		Assert.AreEqual(BelowRoot, Dir(Nested + sep + ".." + sep + ".").Parent.WeakString);
+		Assert.AreEqual(Middle, Dir(Middle + sep + ".." + sep + "user" + sep + "Documents").Parent.WeakString);
+	}
+
+	[TestMethod]
+	public void GetAncestors_ResolvesDotSegments()
+	{
+		string sep = Path.DirectorySeparatorChar.ToString();
+		List<AbsoluteDirectoryPath> ancestors = [.. Dir(Nested + sep + "..").GetAncestors()];
+
+		Assert.AreSequenceEqual(
+			new List<string> { BelowRoot, Root },
+			ancestors.Select(a => a.WeakString),
+			$"Expected the resolved chain up to the root, got [{string.Join(", ", ancestors.Select(a => a.WeakString))}].");
+	}
+
 	[TestMethod]
 	public void GetAncestors_OfRoot_IsEmpty()
 	{

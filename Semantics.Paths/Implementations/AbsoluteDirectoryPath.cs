@@ -41,6 +41,11 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// <c>C:\</c>. This keeps every value this property returns a usable absolute directory rather than an empty
 	/// path, which silently reads as "no contents" when passed to the filesystem. Use <see cref="IsRoot"/>, or
 	/// compare the parent against this path, to detect that walking upwards has finished.
+	/// <para>
+	/// <c>.</c> and <c>..</c> segments are resolved before the last segment is dropped, the same way
+	/// <see cref="IsChildOf"/> resolves them, so the parent of <c>/home/user/..</c> is <c>/</c> rather than
+	/// <c>/home/user</c>.
+	/// </para>
 	/// </remarks>
 	public AbsoluteDirectoryPath Parent
 	{
@@ -51,7 +56,7 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 				return _cachedParent;
 			}
 
-			string? parent = Path.GetDirectoryName(WeakString);
+			string? parent = Path.GetDirectoryName(Path.GetFullPath(WeakString));
 			_cachedParent = string.IsNullOrEmpty(parent)
 				? this
 				: Create<AbsoluteDirectoryPath>(InternedPathStrings.InternIfCommon(parent));
