@@ -4,21 +4,25 @@ namespace ktsu.Semantics.Paths;
 
 using System;
 using System.IO;
+#if !NET5_0_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 using ktsu.Semantics.Strings;
 
 /// <summary>
-/// Validates that a string represents a valid path with no invalid path characters and a reasonable length.
+/// Validates that a string represents a valid path for the host platform.
 /// </summary>
 /// <remarks>
 /// This attribute enforces the following rules:
 /// <list type="bullet">
-/// <item><description>Path length must not exceed 256 characters</description></item>
 /// <item><description>Path must not contain any characters returned by <see cref="Path.GetInvalidPathChars()"/></description></item>
-/// <item><description>Path must not contain reserved characters: &lt;, &gt;, |</description></item>
+/// <item><description>On Windows only, path must not contain the reserved characters &lt;, &gt; and |</description></item>
+/// <item><description>On Windows only, path length must not exceed 256 characters</description></item>
 /// <item><description>Empty or null strings are considered valid</description></item>
 /// </list>
-/// The 256-character limit provides a reasonable balance between compatibility and practical usage,
-/// while being more restrictive than the maximum path lengths supported by most file systems.
+/// The reserved characters and the length limit are Windows rules. Linux and macOS allow all three
+/// characters in a file name and paths far longer than 256 characters, so applying them there would
+/// refuse real files the file system or git reports. On those platforms only NUL is refused.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public sealed class IsPathAttribute : NativeSemanticStringValidationAttribute
@@ -34,15 +38,24 @@ public sealed class IsPathAttribute : NativeSemanticStringValidationAttribute
 	/// </summary>
 	private sealed class PathValidator : ValidationAdapter
 	{
-		// Combine system invalid path chars with reserved characters (<, >, |)
-		// These characters are technically returned by GetInvalidPathChars on Windows but not on Unix,
-		// so we explicitly include them for cross-platform consistency.
+		private const int WindowsMaxPathLength = 256;
+
+		private static readonly bool IsWindows =
+#if NET5_0_OR_GREATER
+			OperatingSystem.IsWindows();
+#else
+			RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+#endif
+
+		// On Windows, add the reserved characters (<, >, |) to the system's invalid path chars, since
+		// GetInvalidPathChars does not include them on every runtime. On other platforms they are legal
+		// file name characters, so only the system's own invalid chars apply.
 		private static readonly char[] InvalidPathChars = BuildInvalidCharArray();
 
 		private static char[] BuildInvalidCharArray()
 		{
 			char[] systemInvalid = Path.GetInvalidPathChars();
-			char[] reservedChars = ['<', '>', '|'];
+			char[] reservedChars = IsWindows ? ['<', '>', '|'] : [];
 
 			// Combine arrays, using HashSet to deduplicate in case system already includes reserved chars
 			System.Collections.Generic.HashSet<char> charSet = [.. systemInvalid, .. reservedChars];
@@ -64,10 +77,9 @@ public sealed class IsPathAttribute : NativeSemanticStringValidationAttribute
 				return ValidationResult.Success();
 			}
 
-			// Check path length
-			if (value.Length > 256)
+			if (IsWindows && value.Length > WindowsMaxPathLength)
 			{
-				return ValidationResult.Failure("Path length cannot exceed 256 characters.");
+				return ValidationResult.Failure($"Path length cannot exceed {WindowsMaxPathLength} characters.");
 			}
 
 			// Use efficient span-based search for invalid characters
