@@ -26,6 +26,15 @@ public class IntervalTests
 	}
 
 	[TestMethod]
+	public void Folded_OfExtremeSizesDoesNotOverflow()
+	{
+		Assert.AreEqual(-8, Interval.Create(int.MinValue).Folded.Semitones);
+		Assert.AreEqual(-8, Interval.Parse("-2147483648").Folded.Semitones);
+		Assert.AreEqual(7, Interval.Create(int.MaxValue).Folded.Semitones);
+		Assert.AreEqual(-2, Interval.Create(-14).Folded.Semitones);
+	}
+
+	[TestMethod]
 	public void Direction_IsSign()
 	{
 		Assert.AreEqual(1, Interval.Create(3).Direction);
