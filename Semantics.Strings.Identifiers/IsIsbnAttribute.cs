@@ -8,8 +8,9 @@ using ktsu.Semantics.Strings;
 
 /// <summary>
 /// Validates that the string is an ISBN-10 (weighted mod-11, final digit may be X) or an ISBN-13
-/// (mod-10, with the <c>978</c> or <c>979</c> Bookland prefix), evaluated on the separator-stripped
-/// value. Registration-group and publisher ranges are not validated.
+/// (mod-10, with the <c>978</c> or <c>979</c> Bookland prefix, excluding <c>9790</c>, which is the ISMN
+/// range for printed music), evaluated on the separator-stripped value. Registration-group and
+/// publisher ranges are not validated.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public sealed class IsIsbnAttribute : NativeSemanticStringValidationAttribute
@@ -65,6 +66,12 @@ public sealed class IsIsbnAttribute : NativeSemanticStringValidationAttribute
 		{
 			// An ISBN-13 is an EAN-13 in the Bookland range; any other prefix is a non-book barcode.
 			if (!s.StartsWith("978", StringComparison.Ordinal) && !s.StartsWith("979", StringComparison.Ordinal))
+			{
+				return false;
+			}
+
+			// 979-0 is not an ISBN range: it is the ISMN, which numbers printed music.
+			if (s.StartsWith("9790", StringComparison.Ordinal))
 			{
 				return false;
 			}
