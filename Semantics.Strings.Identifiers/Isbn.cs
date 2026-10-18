@@ -8,8 +8,8 @@ using ktsu.Semantics.Strings;
 /// An International Standard Book Number in ISBN-10 or ISBN-13 form, e.g. <c>0306406152</c> or
 /// <c>9780306406157</c>. Hyphens and spaces are stripped and the value is uppercased (for the ISBN-10
 /// <c>X</c> check digit) on creation. The check digit is validated, and an ISBN-13 must start with
-/// the <c>978</c> or <c>979</c> Bookland prefix; registration-group and publisher ranges are not
-/// validated.
+/// the <c>978</c> or <c>979</c> Bookland prefix, but not <c>9790</c>, which is the ISMN range for printed
+/// music; registration-group and publisher ranges are not validated.
 /// </summary>
 [IsIsbn]
 public sealed record Isbn : SemanticString<Isbn>

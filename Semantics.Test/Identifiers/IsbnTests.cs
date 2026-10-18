@@ -57,6 +57,24 @@ public sealed class IsbnTests
 	}
 
 	[TestMethod]
+	[DataRow("979-0-2600-0043-8")]
+	[DataRow("9790060115615")]
+	public void Create_Ismn_Throws(string ismn)
+	{
+		Assert.ThrowsExactly<ArgumentException>(() => Isbn.Create(ismn));
+	}
+
+	[TestMethod]
+	[DataRow("979-0-2600-0043-8")]
+	[DataRow("9790060115615")]
+	public void TryCreate_Ismn_ReturnsFalse(string ismn)
+	{
+		bool created = Isbn.TryCreate(ismn, out Isbn? result);
+		Assert.IsFalse(created);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
 	public void TryCreate_Ean13OutsideBooklandRange_ReturnsFalse()
 	{
 		bool created = Isbn.TryCreate("4006381333931", out Isbn? result);
