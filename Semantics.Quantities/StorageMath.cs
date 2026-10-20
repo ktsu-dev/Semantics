@@ -205,9 +205,23 @@ public static class StorageMath
 		{
 			// An even root of a negative value has no real answer, so it keeps the behaviour of the
 			// double round trip: NaN where the type has one, and an exception where it does not.
-			return int.IsEvenInteger(n)
-				? T.CreateChecked(Math.Pow(double.CreateChecked(value), 1d / n))
-				: -RootN(-value, n);
+			if (int.IsEvenInteger(n))
+			{
+				return T.CreateChecked(Math.Pow(double.CreateChecked(value), 1d / n));
+			}
+
+			T magnitude = -value;
+			if (!T.IsNegative(magnitude))
+			{
+				return -RootN(magnitude, n);
+			}
+
+			// value is the MinValue of a two's complement integer, whose negation wraps back to itself.
+			// Root the magnitude one below it instead: the floor of the two roots differs only when the
+			// magnitude itself is an exact nth power, and then by one.
+			T root = RootN(-(value + T.One), n);
+			T next = root + T.One;
+			return IsExactPower(value, next, n) ? -next : -root;
 		}
 
 		if (T.IsZero(value) || value == T.One)
@@ -458,6 +472,31 @@ public static class StorageMath
 	private static bool HasFloorDivision<T>()
 		where T : struct, INumber<T>
 		=> T.IsZero(T.One / (T.One + T.One));
+
+	/// <summary>
+	/// Determines whether a negative value is exactly <c>-(root^degree)</c>, by dividing rather than
+	/// multiplying so that nothing overflows.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type, an integer type.</typeparam>
+	/// <param name="value">The negative value to test.</param>
+	/// <param name="root">The candidate root, two or more.</param>
+	/// <param name="degree">The degree of the root.</param>
+	/// <returns><see langword="true"/> if <paramref name="root"/> divides <paramref name="value"/> exactly <paramref name="degree"/> times to leave minus one.</returns>
+	private static bool IsExactPower<T>(T value, T root, int degree)
+		where T : struct, INumber<T>
+	{
+		for (int i = 0; i < degree; i++)
+		{
+			if (!T.IsZero(value % root))
+			{
+				return false;
+			}
+
+			value /= root;
+		}
+
+		return value == -T.One;
+	}
 
 	/// <summary>
 	/// Refines the <paramref name="degree"/>th root of a positive value by Newton steps in
