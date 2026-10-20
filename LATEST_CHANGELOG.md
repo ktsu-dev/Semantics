@@ -2,6 +2,7 @@
 
 Changes since v5.12.1:
 
+- Strip all whitespace from a pasted card number or ISBN [patch] (matt-edmondson)
 - Write the root README's progression example in chart syntax [patch] (Claude)
 - Yield the empty entry after a trailing separator from the span Split [patch] (Claude)
 - Take an odd root of an integer MinValue without recursing forever [patch] (Claude)
