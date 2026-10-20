@@ -116,7 +116,7 @@ Immutable, validated musical value types plus an analysis layer that models harm
 ```csharp
 using ktsu.Semantics.Music;
 
-Progression prog = Progression.Parse("| Dm7 | G7 | Cmaj7 |");
+Progression prog = Progression.Parse("4/4  Dm7 / / / | G7 / / / | Cmaj7 / / /");
 Key key = prog.InferKey()!;                             // C major
 IReadOnlyList<string> roman = prog.RomanNumerals(key);  // ii7, V7, Imaj7
 
