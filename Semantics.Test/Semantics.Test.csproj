@@ -62,6 +62,13 @@
           CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- The READMEs' code examples are checked against the library, so a parser change that breaks
+         one fails a test instead of reaching the package's front page. -->
+    <None Include="..\README.md" Link="Readmes\Root.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Semantics.Music\README.md" Link="Readmes\Music.md" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <!-- The generator bundles its dependencies alongside itself so that they are present when a
        compiler loads it as an analyzer. This project loads it as an ordinary assembly instead, so
        that bundle arrives as compile references it did not ask for, and the netstandard2.0 builds
