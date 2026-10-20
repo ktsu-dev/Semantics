@@ -292,7 +292,9 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// <returns>An enumerable of spans that represent the segments of this string separated by the separator.</returns>
 	/// <remarks>
 	/// This method provides a zero-allocation alternative to Split() when you only need to enumerate
-	/// the parts without creating string objects. Use this for performance-critical scenarios.
+	/// the parts without creating string objects. Use this for performance-critical scenarios. It yields
+	/// the same segments as <see cref="string.Split(char[], StringSplitOptions)"/>, including the empty
+	/// segment after a trailing separator and the single empty segment of an empty string.
 	/// </remarks>
 	public SpanSplitEnumerator Split(char separator, StringSplitOptions options = StringSplitOptions.None) => new(AsSpan(), separator, options);
 
@@ -1002,6 +1004,10 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		private readonly char _separator;
 		private readonly StringSplitOptions _options;
 
+		// Set once the last segment has been read. The remainder alone cannot say so, because it is also
+		// empty when a separator ends the string, and string.Split yields one more, empty, entry then.
+		private bool _finished;
+
 		// StringSplitOptions.TrimEntries, which netstandard2.0/2.1 do not name. The value is the same on
 		// every target, so a caller on .NET 5+ passing the named member is honoured everywhere.
 		private const StringSplitOptions TrimEntries = (StringSplitOptions)2;
@@ -1033,7 +1039,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		{
 			// A loop, not recursion: a long run of separators with RemoveEmptyEntries would otherwise
 			// take one stack frame per empty entry and overflow the stack.
-			while (!_remaining.IsEmpty)
+			while (!_finished)
 			{
 				int separatorIndex = _remaining.IndexOf(_separator);
 				if (separatorIndex >= 0)
@@ -1045,6 +1051,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 				{
 					Current = _remaining;
 					_remaining = default;
+					_finished = true;
 				}
 
 				if ((_options & TrimEntries) != 0)

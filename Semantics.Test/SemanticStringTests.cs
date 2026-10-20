@@ -1381,8 +1381,9 @@ public class SemanticStringAdditionalTests
 			parts.Add(part.ToString());
 		}
 
-		// Empty string split returns no parts in the current implementation
-		Assert.IsEmpty(parts);
+		// string.Split returns one empty part for an empty string
+		Assert.HasCount(1, parts);
+		Assert.AreEqual(string.Empty, parts[0]);
 	}
 	private static readonly string[] expectedSingleCharacter = ["a"];
 
@@ -1411,8 +1412,8 @@ public class SemanticStringAdditionalTests
 			parts.Add(part.ToString());
 		}
 
-		// ",," split by comma returns two empty parts in the current implementation
-		Assert.HasCount(2, parts);
+		// ",," split by comma returns three empty parts, as string.Split does
+		Assert.HasCount(3, parts);
 		Assert.IsTrue(parts.All(string.IsNullOrEmpty), "All parts should be empty");
 	}
 
@@ -1462,6 +1463,33 @@ public class SemanticStringAdditionalTests
 		List<string> parts = SplitToList(" a , b ,  ,c", StringSplitOptions.TrimEntries);
 
 		Assert.AreSequenceEqual(expectedTrimmed, parts);
+	}
+
+	private static readonly string[] SplitParityCorpus =
+	[
+		"", ",", ",,", "a", "a,b", "a,b,", ",a,b", "a,,b", "a,,", " ", " , ", " a , ,b, ",
+	];
+
+	// Iterates the corpus inside the test rather than taking it through [DataRow]: a public test method
+	// that dereferences a string parameter trips CA1062.
+	[TestMethod]
+	public void SpanSplitEnumerator_MatchesStringSplit_UnderEveryOption()
+	{
+		StringSplitOptions[] everyOption =
+		[
+			StringSplitOptions.None,
+			StringSplitOptions.RemoveEmptyEntries,
+			StringSplitOptions.TrimEntries,
+			StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries,
+		];
+
+		foreach (string value in SplitParityCorpus)
+		{
+			foreach (StringSplitOptions options in everyOption)
+			{
+				Assert.AreSequenceEqual(value.Split(',', options), SplitToList(value, options), $"Input: \"{value}\", options: {options}");
+			}
+		}
 	}
 
 	[TestMethod]
