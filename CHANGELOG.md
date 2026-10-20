@@ -2,6 +2,9 @@
 
 Changes since v5.12.1:
 
+- Write the root README's progression example in chart syntax [patch] (Claude)
+- Yield the empty entry after a trailing separator from the span Split [patch] (Claude)
+- Take an odd root of an integer MinValue without recursing forever [patch] (Claude)
 - Apply the Windows path character and length rules only on Windows [patch] (Claude)
 - Report a [RegexMatch] timeout as a validation failure (matt-edmondson)
 - Refuse zero, negative and non-finite input to QFactor (matt-edmondson)
