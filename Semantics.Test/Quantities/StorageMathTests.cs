@@ -223,6 +223,27 @@ public sealed class StorageMathTests
 	}
 
 	/// <summary>
+	/// The <c>MinValue</c> of a signed integer type negates to itself, so an odd root of it used to
+	/// recurse until the stack overflowed. It now gets the floor towards zero of its root, including the
+	/// exact root where the magnitude is a perfect power.
+	/// </summary>
+	[TestMethod]
+	public void OddRootOfIntegerMinValueIsTheExactFloor()
+	{
+		Assert.AreEqual((sbyte)-5, StorageMath.Cbrt(sbyte.MinValue));
+		Assert.AreEqual((sbyte)-2, StorageMath.RootN(sbyte.MinValue, 7));
+		Assert.AreEqual((short)-32, StorageMath.Cbrt(short.MinValue));
+		Assert.AreEqual((short)-8, StorageMath.RootN(short.MinValue, 5));
+		Assert.AreEqual(-1290, StorageMath.Cbrt(int.MinValue));
+		Assert.AreEqual(-73, StorageMath.RootN(int.MinValue, 5));
+		Assert.AreEqual(-2, StorageMath.RootN(int.MinValue, 31));
+		Assert.AreEqual(-2097152L, StorageMath.Cbrt(long.MinValue));
+		Assert.AreEqual(-6208L, StorageMath.RootN(long.MinValue, 5));
+		Assert.AreEqual((Int128)(-5541191377756L), StorageMath.Cbrt(Int128.MinValue));
+		Assert.AreEqual((Int128)(-2), StorageMath.RootN(Int128.MinValue, 127));
+	}
+
+	/// <summary>
 	/// A <see cref="BigInteger"/> beyond the range of <see cref="double"/> gets its exact cube root,
 	/// through the same scaling the square root uses.
 	/// </summary>
