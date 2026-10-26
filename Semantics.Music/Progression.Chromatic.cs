@@ -23,7 +23,8 @@ public sealed partial record Progression
 				continue;
 			}
 
-			(ChromaticKind kind, string? detail) = ClassifyChromatic(key, chord);
+			Chord? next = i + 1 < Chords.Count ? Chords[i + 1].Chord : null;
+			(ChromaticKind kind, string? detail) = ClassifyChromatic(key, chord, next);
 			result.Add(ChromaticAnalysis.Create(i, kind, detail));
 		}
 
@@ -33,10 +34,33 @@ public sealed partial record Progression
 	private static bool AllTonesInScale(Chord chord, Scale scale) =>
 		chord.ChordTones().All(offset => scale.Contains(PitchClass.Create(chord.Root.Value + offset)));
 
-	private static bool IsDiatonic(Key key, Chord chord)
+	private static bool IsDiatonic(Key key, Chord chord) =>
+		AllTonesInScale(chord, key.Scale) || IsHarmonicMinorDominant(key, chord);
+
+	// A minor key's dominant raises its leading tone: E and E7 in A minor are the key's own V and V7,
+	// not chords borrowed from A major, and every other analysis already treats them that way. A key
+	// counts as minor here when its scale has a minor third and a minor seventh, so the raised
+	// seventh is the one tone the dominant adds.
+	private static bool IsHarmonicMinorDominant(Key key, Chord chord)
 	{
+		int tonic = key.Tonic.Value;
 		Scale scale = key.Scale;
-		return AllTonesInScale(chord, scale);
+		if (!scale.Contains(PitchClass.Create(tonic + 3))
+			|| !scale.Contains(PitchClass.Create(tonic + 10))
+			|| scale.Contains(PitchClass.Create(tonic + 11))
+			|| chord.Root.Value != PitchClass.Create(tonic + 7).Value
+			|| chord.Quality != ChordQuality.Major
+			|| chord.Seventh is not (SeventhType.None or SeventhType.Dominant))
+		{
+			return false;
+		}
+
+		int leadingTone = PitchClass.Create(tonic + 11).Value;
+		return chord.ChordTones().All(offset =>
+		{
+			PitchClass tone = PitchClass.Create(chord.Root.Value + offset);
+			return tone.Value == leadingTone || scale.Contains(tone);
+		});
 	}
 
 	// Names the degree a secondary dominant resolves to by the key's own triad on that degree, so every
@@ -57,14 +81,63 @@ public sealed partial record Progression
 			return null;
 		}
 
+		// Only a stable triad can be tonicized: a diminished or augmented degree (vii° in major, ii° or
+		// III+ in minor) is no local tonic, so a chord a fifth above it is merely chromatic.
 		ChordQuality? quality = DiatonicTriadQuality(key.Scale, targetRoot);
-		return quality is null
-			? null
-			: key.RomanNumeralOf(new Chord { Root = targetRoot, Quality = quality.Value });
+		return quality is ChordQuality.Major or ChordQuality.Minor
+			? key.RomanNumeralOf(new Chord { Root = targetRoot, Quality = quality.Value })
+			: null;
 	}
 
-	private static (ChromaticKind Kind, string? Detail) ClassifyChromatic(Key key, Chord chord)
+	// Italian, French and German sixths, all built on the lowered sixth degree. A chord has no
+	// spelling, only pitch classes, so the augmented sixth (F# over Ab in C) is the chord's minor
+	// seventh (Gb) and each variant has the shape of a dominant seventh on that root:
+	//   It+6  Ab C F#     Ab7no5
+	//   Fr+6  Ab C D F#   Ab7b5
+	//   Ger+6 Ab C Eb F#  Ab7
+	// The Italian and French shapes are not otherwise idiomatic there. The German one is exactly a
+	// dominant seventh, so it is read as an augmented sixth only where it resolves the way one does:
+	// to the dominant, or to a tonic chord over the dominant in the bass (the cadential six-four).
+	private static string? AugmentedSixthVariant(Key key, Chord chord, Chord? next)
 	{
+		int tonic = key.Tonic.Value;
+		if (chord.Root.Value != PitchClass.Create(tonic + 8).Value
+			|| chord.Seventh != SeventhType.Dominant
+			|| chord.Sixth != SixthType.None
+			|| chord.Tensions != ChordTensions.None
+			|| chord.Omissions.HasFlag(ChordOmissions.Third))
+		{
+			return null;
+		}
+
+		bool fifthOmitted = chord.Omissions.HasFlag(ChordOmissions.Fifth);
+		if (chord.Quality == ChordQuality.Major && fifthOmitted)
+		{
+			return "It+6";
+		}
+
+		if (chord.Quality == ChordQuality.MajorFlatFive && !fifthOmitted)
+		{
+			return "Fr+6";
+		}
+
+		int dominant = PitchClass.Create(tonic + 7).Value;
+		bool resolvesToDominant = next is not null
+			&& (next.Root.Value == dominant
+				|| (next.Root.Value == tonic && next.Bass?.Value == dominant));
+		return chord.Quality == ChordQuality.Major && !fifthOmitted && resolvesToDominant
+			? "Ger+6"
+			: null;
+	}
+
+	private static (ChromaticKind Kind, string? Detail) ClassifyChromatic(Key key, Chord chord, Chord? next)
+	{
+		string? augmentedSixth = AugmentedSixthVariant(key, chord, next);
+		if (augmentedSixth is not null)
+		{
+			return (ChromaticKind.AugmentedSixth, augmentedSixth);
+		}
+
 		// Secondary dominant: a major triad or dominant seventh a perfect fifth above a diatonic degree.
 		bool dominantQuality = chord.Quality == ChordQuality.Major
 			&& chord.Seventh is SeventhType.None or SeventhType.Dominant;

@@ -137,12 +137,12 @@ using ktsu.Semantics.Music;
 // extends the preceding chord by one beat (so "Cmaj7 / / /" is a whole bar of 4/4).
 Progression prog = Progression.Parse("4/4  Dm7 / / / | G7 / / / | Cmaj7 / / / | Cmaj7 / / /");
 
-Key key = prog.InferKey()!;                                   // C major (quality-weighted fit)
+Key key = prog.InferKey()!;                                   // C major (quality- and chord-tone-weighted fit)
 IReadOnlyList<string> roman = prog.RomanNumerals(key);        // ii7, V7, Imaj7, Imaj7
 IReadOnlyList<HarmonicFunction> fns = prog.Functions(key);    // Predominant, Dominant, Tonic, Tonic
 IReadOnlyList<CadenceInstance> cadences = prog.Cadences(key); // Authentic at the resolution
 
-// Chromatic analysis: secondary dominants, borrowed chords, Neapolitan
+// Chromatic analysis: secondary dominants, borrowed chords, Neapolitan, augmented sixths
 IReadOnlyList<ChromaticAnalysis> chromatic =
     Progression.Parse("4/4  C / / / | A7 / / / | Dm / / / | G7 / / /").ChromaticChords(key); // A7 -> secondary dominant
 
@@ -210,6 +210,14 @@ bool ok = Interval.TryParse("-5", out Interval? descendingFourth);
 | `CadenceInstance` | A cadence at a resolution index. | `Index`, `Type` (`Cadence` enum: Authentic, Plagal, Half, Deceptive) |
 | `ChromaticAnalysis` | A non-diatonic chord classification. | `Index`, `Kind` (`ChromaticKind`), `Detail` |
 | `NamedForm` | enum: ThirtyTwoBarAABA, TwelveBarBlues, Binary, Ternary, Rondo, Strophic, ... | |
+
+Roman numerals, functions and cadences in a mode with fewer than seven degrees (pentatonic, blues,
+whole tone) are spelled against major or natural minor on the same tonic, chosen by the mode's third,
+so G in C major pentatonic is `V` and G → C is authentic. A minor key's own dominant (E or E7 in
+A minor) is diatonic to the chromatic analysis and to key inference. Augmented sixths sit on the
+lowered sixth degree and are told apart by shape, since a chord holds pitch classes rather than
+spellings: `Ab7no5` is `It+6` and `Ab7b5` is `Fr+6` in C, while `Ab7` is `Ger+6` only when it resolves
+to the dominant or to a cadential six-four.
 
 `InferKey()` returns `Key?` (null for all-chromatic input), while `InferKeys()` returns the full ranked `IReadOnlyList<KeyMatch>`. See the [complete library guide](../docs/complete-library-guide.md) for a wider tour.
 

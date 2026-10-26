@@ -73,7 +73,7 @@ public class ChromaticAnalysisTests
 	[DataRow("D dorian", "4/4  Dm | B | Em", "V/ii")]
 	[DataRow("A aeolian", "4/4  Am | A7 | Dm", "V/iv")]
 	[DataRow("C major", "4/4  C | E7 | Am", "V/vi")]
-	[DataRow("A harmonic_minor", "4/4  Am | G | Am", "V/III+")]
+	[DataRow("A harmonic_minor", "4/4  Am | A7 | Dm", "V/iv")]
 	public void ChromaticChords_NamesSecondaryDominantTargetByTheModesOwnTriad(string key, string progression, string expected)
 	{
 		System.Collections.Generic.IReadOnlyList<ChromaticAnalysis> analyses =

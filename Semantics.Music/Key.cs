@@ -3,6 +3,7 @@
 namespace ktsu.Semantics.Music;
 
 using System;
+using System.Linq;
 using System.Text;
 
 /// <summary>
@@ -84,6 +85,31 @@ public sealed record Key
 	/// <returns>The transposed key.</returns>
 	public Key Transpose(int semitones) => Create(PitchClass.Create(Tonic.Value + semitones), Mode);
 
+	/// <summary>
+	/// Gets the seven-degree scale that roman numerals, functions and cadences are spelled against:
+	/// the key's own scale when it has seven degrees, otherwise major or natural minor on the same
+	/// tonic, chosen by the mode's third.
+	/// </summary>
+	/// <remarks>
+	/// A pentatonic, hexatonic or whole-tone mode's own degree index is not a harmonic degree: in C
+	/// major pentatonic G is the fourth note, yet it is the dominant. Spelling against the heptatonic
+	/// reference makes G "V" there, and C "III" in A minor pentatonic. Modes with more than seven
+	/// degrees keep their own scale, so <see cref="RomanNumeralOf"/> still refuses their eighth degree.
+	/// </remarks>
+	internal Scale AnalysisScale
+	{
+		get
+		{
+			if (Mode.DegreeCount >= 7)
+			{
+				return Scale;
+			}
+
+			bool minor = Mode.Intervals.Contains(3) && !Mode.Intervals.Contains(4);
+			return Scale.Create(Tonic, minor ? Mode.Aeolian : Mode.Major);
+		}
+	}
+
 	/// <summary>Resolves a pitch class to its scale-degree function in this key.</summary>
 	/// <param name="root">The pitch class to resolve.</param>
 	/// <returns>The scale degree with any chromatic alteration.</returns>
@@ -111,7 +137,7 @@ public sealed record Key
 	{
 		Ensure.NotNull(chord);
 
-		ScaleDegree degree = Scale.DegreeOf(chord.Root);
+		ScaleDegree degree = AnalysisScale.DegreeOf(chord.Root);
 
 		// Wrapping the degree onto the seven-entry table would hand two distinct degrees the same
 		// numeral, silently. Refuse instead, which is also what ChordFromRomanNumeral already does
@@ -171,7 +197,7 @@ public sealed record Key
 
 		index += length;
 
-		System.Collections.Generic.IReadOnlyList<PitchClass> pitchClasses = Scale.PitchClasses;
+		System.Collections.Generic.IReadOnlyList<PitchClass> pitchClasses = AnalysisScale.PitchClasses;
 		if (degree > pitchClasses.Count)
 		{
 			throw new FormatException($"Degree {degree} is out of range for this key.");
