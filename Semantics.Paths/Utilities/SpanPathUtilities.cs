@@ -150,4 +150,27 @@ internal static class SpanPathUtilities
 			   (path[path.Length - 1] == Path.DirectorySeparatorChar || path[path.Length - 1] == Path.AltDirectorySeparatorChar);
 #endif
 	}
+
+	/// <summary>
+	/// Counts the non-empty segments of a path, so repeated, leading and trailing separators add nothing.
+	/// </summary>
+	/// <param name="path">The path span to count, without its root.</param>
+	/// <returns>The number of segments.</returns>
+	public static int CountSegments(ReadOnlySpan<char> path)
+	{
+		int count = 0;
+		bool inSegment = false;
+		foreach (char c in path)
+		{
+			bool isSeparator = c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar;
+			if (!isSeparator && !inSegment)
+			{
+				count++;
+			}
+
+			inSegment = !isSeparator;
+		}
+
+		return count;
+	}
 }
