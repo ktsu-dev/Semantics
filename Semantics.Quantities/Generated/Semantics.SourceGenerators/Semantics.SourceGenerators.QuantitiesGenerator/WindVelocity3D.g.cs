@@ -160,6 +160,12 @@ public readonly partial record struct WindVelocity3D<T> : IVector3<WindVelocity3
 
 	/// <summary>Negates a vector.</summary>
 	public static WindVelocity3D<T> operator -(WindVelocity3D<T> vector) => new() { X = -vector.X, Y = -vector.Y, Z = -vector.Z };
+	/// <summary>WindVelocity3D * Duration = Displacement3D, through <see cref="Velocity3D{T}"/>.</summary>
+	public static Displacement3D<T> operator *(WindVelocity3D<T> left, Duration<T> right) => (Velocity3D<T>)left * right;
+
+	/// <summary>WindVelocity3D / Duration = Acceleration3D, through <see cref="Velocity3D{T}"/>.</summary>
+	public static Acceleration3D<T> operator /(WindVelocity3D<T> left, Duration<T> right) => (Velocity3D<T>)left / right;
+
 	/// <summary>Implicit conversion to Velocity3D.</summary>
 	public static implicit operator Velocity3D<T>(WindVelocity3D<T> value) => new() { X = value.X, Y = value.Y, Z = value.Z };
 

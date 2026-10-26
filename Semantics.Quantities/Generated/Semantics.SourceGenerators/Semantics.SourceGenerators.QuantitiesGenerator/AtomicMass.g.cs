@@ -174,5 +174,41 @@ public readonly partial record struct AtomicMass<T> : IVector0<AtomicMass<T>, T>
 	/// <summary>Subtracts two AtomicMass values, returning the absolute difference as a non-negative AtomicMass.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static AtomicMass<T> operator -(AtomicMass<T> left, AtomicMass<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>AtomicMass * AccelerationMagnitude = ForceMagnitude, through <see cref="Mass{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(AtomicMass<T> left, AccelerationMagnitude<T> right) => (Mass<T>)left * right;
+
+	/// <summary>AtomicMass * Speed = MomentumMagnitude, through <see cref="Mass{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(AtomicMass<T> left, Speed<T> right) => (Mass<T>)left * right;
+
+	/// <summary>AtomicMass / Volume = Density, through <see cref="Mass{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Density<T> operator /(AtomicMass<T> left, Volume<T> right) => (Mass<T>)left / right;
+
+	/// <summary>AtomicMass / Density = Volume, through <see cref="Mass{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator /(AtomicMass<T> left, Density<T> right) => (Mass<T>)left / right;
+
+	/// <summary>AtomicMass * SpecificHeat = Entropy, through <see cref="Mass{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Entropy<T> operator *(AtomicMass<T> left, SpecificHeat<T> right) => (Mass<T>)left * right;
+
+	/// <summary>AtomicMass / Duration = MassFlowRate, through <see cref="Mass{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MassFlowRate<T> operator /(AtomicMass<T> left, Duration<T> right) => (Mass<T>)left / right;
+
+	/// <summary>AtomicMass / MassFlowRate = Duration, through <see cref="Mass{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(AtomicMass<T> left, MassFlowRate<T> right) => (Mass<T>)left / right;
+
+	/// <summary>AtomicMass / AmountOfSubstance = MolarMass, through <see cref="Mass{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MolarMass<T> operator /(AtomicMass<T> left, AmountOfSubstance<T> right) => (Mass<T>)left / right;
+
+	/// <summary>AtomicMass / MolarMass = AmountOfSubstance, through <see cref="Mass{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AmountOfSubstance<T> operator /(AtomicMass<T> left, MolarMass<T> right) => (Mass<T>)left / right;
 }
 

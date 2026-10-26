@@ -134,5 +134,13 @@ public readonly partial record struct Bandwidth<T> : IVector0<Bandwidth<T>, T>, 
 	/// <summary>Subtracts two Bandwidth values, returning the absolute difference as a non-negative Bandwidth.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Bandwidth<T> operator -(Bandwidth<T> left, Bandwidth<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Bandwidth * Duration = Ratio, through <see cref="Frequency{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(Bandwidth<T> left, Duration<T> right) => (Frequency<T>)left * right;
+
+	/// <summary>Bandwidth * Length = Speed, through <see cref="Frequency{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(Bandwidth<T> left, Length<T> right) => (Frequency<T>)left * right;
 }
 

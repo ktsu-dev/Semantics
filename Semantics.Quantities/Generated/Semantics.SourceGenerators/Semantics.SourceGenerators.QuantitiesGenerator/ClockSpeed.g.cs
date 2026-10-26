@@ -134,5 +134,13 @@ public readonly partial record struct ClockSpeed<T> : IVector0<ClockSpeed<T>, T>
 	/// <summary>Subtracts two ClockSpeed values, returning the absolute difference as a non-negative ClockSpeed.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static ClockSpeed<T> operator -(ClockSpeed<T> left, ClockSpeed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>ClockSpeed * Duration = Ratio, through <see cref="Frequency{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(ClockSpeed<T> left, Duration<T> right) => (Frequency<T>)left * right;
+
+	/// <summary>ClockSpeed * Length = Speed, through <see cref="Frequency{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(ClockSpeed<T> left, Length<T> right) => (Frequency<T>)left * right;
 }
 

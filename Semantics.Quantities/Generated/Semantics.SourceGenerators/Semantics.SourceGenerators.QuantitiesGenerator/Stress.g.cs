@@ -158,5 +158,17 @@ public readonly partial record struct Stress<T> : IVector0<Stress<T>, T>, IPhysi
 	/// <summary>Subtracts two Stress values, returning the absolute difference as a non-negative Stress.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Stress<T> operator -(Stress<T> left, Stress<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Stress * Area = ForceMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(Stress<T> left, Area<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>Stress * Volume = Energy, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Stress<T> left, Volume<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>Stress * Sensitivity = VoltageMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(Stress<T> left, Sensitivity<T> right) => (Pressure<T>)left * right;
 }
 

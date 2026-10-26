@@ -198,5 +198,37 @@ public readonly partial record struct Capacity<T> : IVector0<Capacity<T>, T>, IP
 	/// <summary>Subtracts two Capacity values, returning the absolute difference as a non-negative Capacity.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Capacity<T> operator -(Capacity<T> left, Capacity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Capacity / Length = Area, through <see cref="Volume{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator /(Capacity<T> left, Length<T> right) => (Volume<T>)left / right;
+
+	/// <summary>Capacity / Area = Length, through <see cref="Volume{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(Capacity<T> left, Area<T> right) => (Volume<T>)left / right;
+
+	/// <summary>Capacity * Pressure = Energy, through <see cref="Volume{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Capacity<T> left, Pressure<T> right) => (Volume<T>)left * right;
+
+	/// <summary>Capacity * Density = Mass, through <see cref="Volume{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator *(Capacity<T> left, Density<T> right) => (Volume<T>)left * right;
+
+	/// <summary>Capacity * Concentration = AmountOfSubstance, through <see cref="Volume{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AmountOfSubstance<T> operator *(Capacity<T> left, Concentration<T> right) => (Volume<T>)left * right;
+
+	/// <summary>Capacity / Duration = VolumetricFlowRate, through <see cref="Volume{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VolumetricFlowRate<T> operator /(Capacity<T> left, Duration<T> right) => (Volume<T>)left / right;
+
+	/// <summary>Capacity / VolumetricFlowRate = Duration, through <see cref="Volume{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Capacity<T> left, VolumetricFlowRate<T> right) => (Volume<T>)left / right;
+
+	/// <summary>Capacity * ElectricPowerDensity = Power, through <see cref="Volume{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(Capacity<T> left, ElectricPowerDensity<T> right) => (Volume<T>)left * right;
 }
 

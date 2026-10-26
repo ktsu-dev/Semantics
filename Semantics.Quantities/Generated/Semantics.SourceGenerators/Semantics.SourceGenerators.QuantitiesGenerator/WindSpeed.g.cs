@@ -158,5 +158,33 @@ public readonly partial record struct WindSpeed<T> : IVector0<WindSpeed<T>, T>, 
 	/// <summary>Subtracts two WindSpeed values, returning the absolute difference as a non-negative WindSpeed.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static WindSpeed<T> operator -(WindSpeed<T> left, WindSpeed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>WindSpeed * Mass = MomentumMagnitude, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(WindSpeed<T> left, Mass<T> right) => (Speed<T>)left * right;
+
+	/// <summary>WindSpeed * Duration = Length, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator *(WindSpeed<T> left, Duration<T> right) => (Speed<T>)left * right;
+
+	/// <summary>WindSpeed / Duration = AccelerationMagnitude, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator /(WindSpeed<T> left, Duration<T> right) => (Speed<T>)left / right;
+
+	/// <summary>WindSpeed / AccelerationMagnitude = Duration, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(WindSpeed<T> left, AccelerationMagnitude<T> right) => (Speed<T>)left / right;
+
+	/// <summary>WindSpeed / Length = Frequency, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(WindSpeed<T> left, Length<T> right) => (Speed<T>)left / right;
+
+	/// <summary>WindSpeed / Frequency = Length, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(WindSpeed<T> left, Frequency<T> right) => (Speed<T>)left / right;
+
+	/// <summary>WindSpeed * ForceMagnitude = Power, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(WindSpeed<T> left, ForceMagnitude<T> right) => (Speed<T>)left * right;
 }
 

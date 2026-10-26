@@ -158,5 +158,33 @@ public readonly partial record struct SoundSpeed<T> : IVector0<SoundSpeed<T>, T>
 	/// <summary>Subtracts two SoundSpeed values, returning the absolute difference as a non-negative SoundSpeed.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SoundSpeed<T> operator -(SoundSpeed<T> left, SoundSpeed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SoundSpeed * Mass = MomentumMagnitude, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(SoundSpeed<T> left, Mass<T> right) => (Speed<T>)left * right;
+
+	/// <summary>SoundSpeed * Duration = Length, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator *(SoundSpeed<T> left, Duration<T> right) => (Speed<T>)left * right;
+
+	/// <summary>SoundSpeed / Duration = AccelerationMagnitude, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator /(SoundSpeed<T> left, Duration<T> right) => (Speed<T>)left / right;
+
+	/// <summary>SoundSpeed / AccelerationMagnitude = Duration, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(SoundSpeed<T> left, AccelerationMagnitude<T> right) => (Speed<T>)left / right;
+
+	/// <summary>SoundSpeed / Length = Frequency, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(SoundSpeed<T> left, Length<T> right) => (Speed<T>)left / right;
+
+	/// <summary>SoundSpeed / Frequency = Length, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(SoundSpeed<T> left, Frequency<T> right) => (Speed<T>)left / right;
+
+	/// <summary>SoundSpeed * ForceMagnitude = Power, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(SoundSpeed<T> left, ForceMagnitude<T> right) => (Speed<T>)left * right;
 }
 

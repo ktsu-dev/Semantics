@@ -150,5 +150,13 @@ public readonly partial record struct ApertureAngle<T> : IVector0<ApertureAngle<
 	/// <summary>Subtracts two ApertureAngle values, returning the absolute difference as a non-negative ApertureAngle.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static ApertureAngle<T> operator -(ApertureAngle<T> left, ApertureAngle<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>ApertureAngle / Duration = AngularSpeed, through <see cref="Angle{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularSpeed<T> operator /(ApertureAngle<T> left, Duration<T> right) => (Angle<T>)left / right;
+
+	/// <summary>ApertureAngle / AngularSpeed = Duration, through <see cref="Angle{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(ApertureAngle<T> left, AngularSpeed<T> right) => (Angle<T>)left / right;
 }
 

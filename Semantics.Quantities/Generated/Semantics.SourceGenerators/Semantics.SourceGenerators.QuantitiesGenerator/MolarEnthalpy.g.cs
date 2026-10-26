@@ -134,5 +134,9 @@ public readonly partial record struct MolarEnthalpy<T> : IVector0<MolarEnthalpy<
 	/// <summary>Subtracts two MolarEnthalpy values, returning the absolute difference as a non-negative MolarEnthalpy.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static MolarEnthalpy<T> operator -(MolarEnthalpy<T> left, MolarEnthalpy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>MolarEnthalpy * AmountOfSubstance = Energy, through <see cref="MolarEnergy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(MolarEnthalpy<T> left, AmountOfSubstance<T> right) => (MolarEnergy<T>)left * right;
 }
 

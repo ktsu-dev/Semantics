@@ -202,6 +202,9 @@ public readonly partial record struct Position3D<T> : IVector3<Position3D<T>, T>
 
 	/// <summary>Negates a vector.</summary>
 	public static Position3D<T> operator -(Position3D<T> vector) => new() { X = -vector.X, Y = -vector.Y, Z = -vector.Z };
+	/// <summary>Position3D / Duration = Velocity3D, through <see cref="Displacement3D{T}"/>.</summary>
+	public static Velocity3D<T> operator /(Position3D<T> left, Duration<T> right) => (Displacement3D<T>)left / right;
+
 	/// <summary>Implicit conversion to Displacement3D.</summary>
 	public static implicit operator Displacement3D<T>(Position3D<T> value) => new() { X = value.X, Y = value.Y, Z = value.Z };
 

@@ -182,5 +182,45 @@ public readonly partial record struct Work<T> : IVector0<Work<T>, T>, IPhysicalQ
 	/// <summary>Subtracts two Work values, returning the absolute difference as a non-negative Work.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Work<T> operator -(Work<T> left, Work<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Work / Length = ForceMagnitude, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator /(Work<T> left, Length<T> right) => (Energy<T>)left / right;
+
+	/// <summary>Work / ForceMagnitude = Length, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(Work<T> left, ForceMagnitude<T> right) => (Energy<T>)left / right;
+
+	/// <summary>Work / Volume = Pressure, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Pressure<T> operator /(Work<T> left, Volume<T> right) => (Energy<T>)left / right;
+
+	/// <summary>Work / Pressure = Volume, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator /(Work<T> left, Pressure<T> right) => (Energy<T>)left / right;
+
+	/// <summary>Work / Duration = Power, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator /(Work<T> left, Duration<T> right) => (Energy<T>)left / right;
+
+	/// <summary>Work / Power = Duration, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Work<T> left, Power<T> right) => (Energy<T>)left / right;
+
+	/// <summary>Work / Temperature = Entropy, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Entropy<T> operator /(Work<T> left, Temperature<T> right) => (Energy<T>)left / right;
+
+	/// <summary>Work / Entropy = Temperature, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator /(Work<T> left, Entropy<T> right) => (Energy<T>)left / right;
+
+	/// <summary>Work / AmountOfSubstance = MolarEnergy, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MolarEnergy<T> operator /(Work<T> left, AmountOfSubstance<T> right) => (Energy<T>)left / right;
+
+	/// <summary>Work / MolarEnergy = AmountOfSubstance, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AmountOfSubstance<T> operator /(Work<T> left, MolarEnergy<T> right) => (Energy<T>)left / right;
 }
 

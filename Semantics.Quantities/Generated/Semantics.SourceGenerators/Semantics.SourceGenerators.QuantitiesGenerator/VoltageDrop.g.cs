@@ -126,5 +126,45 @@ public readonly partial record struct VoltageDrop<T> : IVector0<VoltageDrop<T>, 
 	/// <summary>Subtracts two VoltageDrop values, returning the absolute difference as a non-negative VoltageDrop.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static VoltageDrop<T> operator -(VoltageDrop<T> left, VoltageDrop<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>VoltageDrop / Resistance = CurrentMagnitude, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CurrentMagnitude<T> operator /(VoltageDrop<T> left, Resistance<T> right) => (VoltageMagnitude<T>)left / right;
+
+	/// <summary>VoltageDrop / CurrentMagnitude = Resistance, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Resistance<T> operator /(VoltageDrop<T> left, CurrentMagnitude<T> right) => (VoltageMagnitude<T>)left / right;
+
+	/// <summary>VoltageDrop * CurrentMagnitude = Power, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(VoltageDrop<T> left, CurrentMagnitude<T> right) => (VoltageMagnitude<T>)left * right;
+
+	/// <summary>VoltageDrop / Length = ElectricFieldMagnitude, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricFieldMagnitude<T> operator /(VoltageDrop<T> left, Length<T> right) => (VoltageMagnitude<T>)left / right;
+
+	/// <summary>VoltageDrop / ElectricFieldMagnitude = Length, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(VoltageDrop<T> left, ElectricFieldMagnitude<T> right) => (VoltageMagnitude<T>)left / right;
+
+	/// <summary>VoltageDrop * Capacitance = ChargeMagnitude, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ChargeMagnitude<T> operator *(VoltageDrop<T> left, Capacitance<T> right) => (VoltageMagnitude<T>)left * right;
+
+	/// <summary>VoltageDrop * Conductance = CurrentMagnitude, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CurrentMagnitude<T> operator *(VoltageDrop<T> left, Conductance<T> right) => (VoltageMagnitude<T>)left * right;
+
+	/// <summary>VoltageDrop * Duration = MagneticFlux, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFlux<T> operator *(VoltageDrop<T> left, Duration<T> right) => (VoltageMagnitude<T>)left * right;
+
+	/// <summary>VoltageDrop / Pressure = Sensitivity, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Sensitivity<T> operator /(VoltageDrop<T> left, Pressure<T> right) => (VoltageMagnitude<T>)left / right;
+
+	/// <summary>VoltageDrop / Sensitivity = Pressure, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Pressure<T> operator /(VoltageDrop<T> left, Sensitivity<T> right) => (VoltageMagnitude<T>)left / right;
 }
 

@@ -174,5 +174,41 @@ public readonly partial record struct SurfaceArea<T> : IVector0<SurfaceArea<T>, 
 	/// <summary>Subtracts two SurfaceArea values, returning the absolute difference as a non-negative SurfaceArea.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SurfaceArea<T> operator -(SurfaceArea<T> left, SurfaceArea<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SurfaceArea / Length = Length, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(SurfaceArea<T> left, Length<T> right) => (Area<T>)left / right;
+
+	/// <summary>SurfaceArea * Length = Volume, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(SurfaceArea<T> left, Length<T> right) => (Area<T>)left * right;
+
+	/// <summary>SurfaceArea * Pressure = ForceMagnitude, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(SurfaceArea<T> left, Pressure<T> right) => (Area<T>)left * right;
+
+	/// <summary>SurfaceArea * ElectricFieldMagnitude = ElectricFlux, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricFlux<T> operator *(SurfaceArea<T> left, ElectricFieldMagnitude<T> right) => (Area<T>)left * right;
+
+	/// <summary>SurfaceArea * Illuminance = LuminousFlux, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static LuminousFlux<T> operator *(SurfaceArea<T> left, Illuminance<T> right) => (Area<T>)left * right;
+
+	/// <summary>SurfaceArea * MagneticFluxDensityMagnitude = MagneticFlux, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFlux<T> operator *(SurfaceArea<T> left, MagneticFluxDensityMagnitude<T> right) => (Area<T>)left * right;
+
+	/// <summary>SurfaceArea * Irradiance = Power, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(SurfaceArea<T> left, Irradiance<T> right) => (Area<T>)left * right;
+
+	/// <summary>SurfaceArea * Luminance = LuminousIntensity, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static LuminousIntensity<T> operator *(SurfaceArea<T> left, Luminance<T> right) => (Area<T>)left * right;
+
+	/// <summary>SurfaceArea * AccelerationMagnitude = GravitationalParameter, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(SurfaceArea<T> left, AccelerationMagnitude<T> right) => (Area<T>)left * right;
 }
 

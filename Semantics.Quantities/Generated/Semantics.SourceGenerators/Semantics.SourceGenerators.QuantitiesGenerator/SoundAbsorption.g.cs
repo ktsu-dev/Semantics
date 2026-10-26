@@ -190,5 +190,29 @@ public readonly partial record struct SoundAbsorption<T> : IVector0<SoundAbsorpt
 	/// <summary>Subtracts two SoundAbsorption values, returning the absolute difference as a non-negative SoundAbsorption.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SoundAbsorption<T> operator -(SoundAbsorption<T> left, SoundAbsorption<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SoundAbsorption * Ratio = Ratio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(SoundAbsorption<T> left, Ratio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>SoundAbsorption * SignedRatio = SignedRatio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedRatio<T> operator *(SoundAbsorption<T> left, SignedRatio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>SoundAbsorption / Duration = Frequency, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(SoundAbsorption<T> left, Duration<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>SoundAbsorption / Frequency = Duration, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(SoundAbsorption<T> left, Frequency<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>SoundAbsorption / Temperature = ThermalExpansionCoefficient, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ThermalExpansionCoefficient<T> operator /(SoundAbsorption<T> left, Temperature<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>SoundAbsorption / ThermalExpansionCoefficient = Temperature, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator /(SoundAbsorption<T> left, ThermalExpansionCoefficient<T> right) => (Ratio<T>)left / right;
 }
 

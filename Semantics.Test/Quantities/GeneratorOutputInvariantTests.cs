@@ -96,6 +96,21 @@ public sealed class GeneratorOutputInvariantTests
 			}
 		}
 
+		// A semantic overload forwards its base's products with itself on the left (#456). The swapped order
+		// needs no operator of its own: the base's operator is declared on the other operand's type, and the
+		// overload widens to the base there.
+		Dictionary<string, string> baseOf = [];
+		foreach (Type type in types)
+		{
+			foreach (MethodInfo m in type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly))
+			{
+				if (m.Name == "op_Implicit" && m.GetParameters()[0].ParameterType.Name == type.Name && m.ReturnType.Namespace == type.Namespace)
+				{
+					baseOf[type.Name] = m.ReturnType.Name;
+				}
+			}
+		}
+
 		// For every cross-dimensional product (operands of distinct types), the swapped pair
 		// should also be present with the same return. Same-type products (T * T) are exempt
 		// because there is no swap — they're idempotent under reorder.
@@ -107,7 +122,8 @@ public sealed class GeneratorOutputInvariantTests
 				continue;
 			}
 
-			if (!observed.Contains((right, left, result)))
+			bool reachedThroughBase = baseOf.TryGetValue(left, out string? leftBase) && observed.Contains((right, leftBase, result));
+			if (!observed.Contains((right, left, result)) && !reachedThroughBase)
 			{
 				missing.Add($"missing reverse pair: {right} * {left} -> {result} (forward {left} * {right} -> {result} exists)");
 			}

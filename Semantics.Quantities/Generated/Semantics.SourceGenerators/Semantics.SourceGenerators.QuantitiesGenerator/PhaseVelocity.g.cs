@@ -158,5 +158,33 @@ public readonly partial record struct PhaseVelocity<T> : IVector0<PhaseVelocity<
 	/// <summary>Subtracts two PhaseVelocity values, returning the absolute difference as a non-negative PhaseVelocity.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static PhaseVelocity<T> operator -(PhaseVelocity<T> left, PhaseVelocity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>PhaseVelocity * Mass = MomentumMagnitude, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(PhaseVelocity<T> left, Mass<T> right) => (Speed<T>)left * right;
+
+	/// <summary>PhaseVelocity * Duration = Length, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator *(PhaseVelocity<T> left, Duration<T> right) => (Speed<T>)left * right;
+
+	/// <summary>PhaseVelocity / Duration = AccelerationMagnitude, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator /(PhaseVelocity<T> left, Duration<T> right) => (Speed<T>)left / right;
+
+	/// <summary>PhaseVelocity / AccelerationMagnitude = Duration, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(PhaseVelocity<T> left, AccelerationMagnitude<T> right) => (Speed<T>)left / right;
+
+	/// <summary>PhaseVelocity / Length = Frequency, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(PhaseVelocity<T> left, Length<T> right) => (Speed<T>)left / right;
+
+	/// <summary>PhaseVelocity / Frequency = Length, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(PhaseVelocity<T> left, Frequency<T> right) => (Speed<T>)left / right;
+
+	/// <summary>PhaseVelocity * ForceMagnitude = Power, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(PhaseVelocity<T> left, ForceMagnitude<T> right) => (Speed<T>)left * right;
 }
 

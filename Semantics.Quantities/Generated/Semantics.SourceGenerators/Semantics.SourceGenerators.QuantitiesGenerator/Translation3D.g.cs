@@ -202,6 +202,9 @@ public readonly partial record struct Translation3D<T> : IVector3<Translation3D<
 
 	/// <summary>Negates a vector.</summary>
 	public static Translation3D<T> operator -(Translation3D<T> vector) => new() { X = -vector.X, Y = -vector.Y, Z = -vector.Z };
+	/// <summary>Translation3D / Duration = Velocity3D, through <see cref="Displacement3D{T}"/>.</summary>
+	public static Velocity3D<T> operator /(Translation3D<T> left, Duration<T> right) => (Displacement3D<T>)left / right;
+
 	/// <summary>Implicit conversion to Displacement3D.</summary>
 	public static implicit operator Displacement3D<T>(Translation3D<T> value) => new() { X = value.X, Y = value.Y, Z = value.Z };
 

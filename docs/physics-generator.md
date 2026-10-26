@@ -83,11 +83,12 @@ The C# itself is described with the template object model from `ktsu.CodeBlocker
 
 An overload (e.g. `Width`, `Height`, `Depth` on `Length`) emits:
 
-- A record extending the base type but with its own identity: `record Width<T> : Length<T>`.
+- A `readonly record struct` of its own, `Width<T>`, holding the same value its base would. Since 4.0 there is no inheritance between them.
 - Implicit operator widening to the base.
 - Explicit operator narrowing from the base.
 - A `From(base)` factory.
 - Per-relationship `To{Other}()` / `From{Other}()` methods if `relationships` is set.
+- A forwarding copy of every relationship operator its base declares with the base on the left, such as `Speed<T> operator /(Distance<T>, Duration<T>)`, written as a widening and a call to the base's operator (#456). C# looks for an operator only on the two operand types and never widens the left operand to find one, so without these `distance / duration` would not compile while `duration * distance` would. The base on the right needs no copy: that operator is declared on the other operand's type, and the overload widens to the base there. Results stay base types.
 
 Operator preservation (e.g. `Width + Width => Width` vs. `Width + Length => Length`) is generated, and follows the rule "narrowest-shared overload wins; otherwise widen to base".
 

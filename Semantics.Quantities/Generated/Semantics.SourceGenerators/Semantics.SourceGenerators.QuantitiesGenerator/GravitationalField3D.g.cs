@@ -132,6 +132,12 @@ public readonly partial record struct GravitationalField3D<T> : IVector3<Gravita
 
 	/// <summary>Negates a vector.</summary>
 	public static GravitationalField3D<T> operator -(GravitationalField3D<T> vector) => new() { X = -vector.X, Y = -vector.Y, Z = -vector.Z };
+	/// <summary>GravitationalField3D * Duration = Velocity3D, through <see cref="Acceleration3D{T}"/>.</summary>
+	public static Velocity3D<T> operator *(GravitationalField3D<T> left, Duration<T> right) => (Acceleration3D<T>)left * right;
+
+	/// <summary>GravitationalField3D / Duration = Jerk3D, through <see cref="Acceleration3D{T}"/>.</summary>
+	public static Jerk3D<T> operator /(GravitationalField3D<T> left, Duration<T> right) => (Acceleration3D<T>)left / right;
+
 	/// <summary>Implicit conversion to Acceleration3D.</summary>
 	public static implicit operator Acceleration3D<T>(GravitationalField3D<T> value) => new() { X = value.X, Y = value.Y, Z = value.Z };
 

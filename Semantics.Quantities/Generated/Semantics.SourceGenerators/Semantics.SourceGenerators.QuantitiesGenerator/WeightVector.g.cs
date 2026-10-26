@@ -146,6 +146,9 @@ public readonly partial record struct WeightVector<T> : IVector3<WeightVector<T>
 
 	/// <summary>Negates a vector.</summary>
 	public static WeightVector<T> operator -(WeightVector<T> vector) => new() { X = -vector.X, Y = -vector.Y, Z = -vector.Z };
+	/// <summary>WeightVector * Duration = Momentum3D, through <see cref="Force3D{T}"/>.</summary>
+	public static Momentum3D<T> operator *(WeightVector<T> left, Duration<T> right) => (Force3D<T>)left * right;
+
 	/// <summary>Implicit conversion to Force3D.</summary>
 	public static implicit operator Force3D<T>(WeightVector<T> value) => new() { X = value.X, Y = value.Y, Z = value.Z };
 

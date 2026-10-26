@@ -1381,6 +1381,26 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			});
 		}
 
+		// Relationship operators reach an overload by forwarding to its base (#456). C# looks for an operator only
+		// on the two operand types and never widens the left operand to find one, so without these
+		// Distance / Duration did not compile while Duration * Distance did.
+		foreach (OperatorInfo op in ForwardedOperators(baseTypeName, emission))
+		{
+			cls.Members.Add(new MethodTemplate()
+			{
+				Comments = {$"/// <summary>{typeName} {op.Op} {op.RightTypeName} = {op.ReturnTypeName}, through <see cref=\"{baseTypeName}{{T}}\"/>.</summary>"},
+				Attributes = {Emit.PhysicsOperatorSuppression},
+				Keywords = {Emit.Public, Emit.Static, $"{op.ReturnTypeName}<T>"},
+				Name = $"operator {op.Op}",
+				Parameters =
+				{
+					new ParameterTemplate { Type = fullType, Name = "left" },
+					new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = Emit.RightParameter },
+				},
+				BodyFactory = (body) => body.Write($"=> ({baseFullType})left {op.Op} right;"),
+			});
+		}
+
 		// Relationship methods (e.g., Diameter.ToRadius(), Diameter.FromRadius()). The one
 		// thing an overload declares that the vocabulary does not carry: these are C#
 		// expressions written in the metadata and pasted through, so there is nothing in
@@ -1472,6 +1492,14 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			WriteVectorMethods(cb, fullType, components, dims);
 			WriteVectorOperators(cb, fullType, components);
 
+			// Relationship operators, forwarded to the base as the scalar overloads do (#456).
+			foreach (OperatorInfo op in ForwardedOperators(baseTypeName, emission))
+			{
+				cb.WriteLine($"/// <summary>{typeName} {op.Op} {op.RightTypeName} = {op.ReturnTypeName}, through <see cref=\"{baseTypeName}{{T}}\"/>.</summary>");
+				cb.WriteLine($"public static {op.ReturnTypeName}<T> operator {op.Op}({fullType} left, {op.RightTypeName}<T> right) => ({baseFullType})left {op.Op} right;");
+				cb.NewLine();
+			}
+
 			// Implicit widening to base
 			string baseInit = string.Join(", ", components.Select(c => $"{c} = value.{c}"));
 			cb.WriteLine($"/// <summary>Implicit conversion to {baseTypeName}.</summary>");
@@ -1490,6 +1518,41 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	#endregion
 
 	#region Operator Emission Helpers
+
+	/// <summary>
+	/// The relationship operators a base type declares with itself on the left, which an overload of it forwards.
+	/// </summary>
+	/// <remarks>
+	/// Every relationship operator is declared on its left operand's type, so one with the base on the right is
+	/// already reachable from an overload, which widens to it there. Forwarding only the left-hand ones is also
+	/// what keeps a product of two overloads unambiguous: for <c>Width * Height</c> only <c>(Width, Length)</c>
+	/// applies, since <c>Width</c> does not convert to <c>Height</c>. The filter matches what
+	/// <see cref="EmitScalarOperators"/> and <see cref="EmitVectorCrossDimOperators"/> actually write.
+	/// </remarks>
+	private static IEnumerable<OperatorInfo> ForwardedOperators(string baseTypeName, Emission emission)
+	{
+		if (!emission.OperatorsByOwner.TryGetValue(baseTypeName, out List<OperatorInfo>? ops))
+		{
+			yield break;
+		}
+
+		HashSet<string> signatures = [];
+		foreach (OperatorInfo op in ops)
+		{
+			int leftForm = GetFormOrDefault(emission.TypeFormMap, op.LeftTypeName);
+			int rightForm = GetFormOrDefault(emission.TypeFormMap, op.RightTypeName);
+			int resultForm = GetFormOrDefault(emission.TypeFormMap, op.ReturnTypeName);
+
+			bool emitted = (leftForm <= 1 && rightForm <= 1)
+				|| (resultForm >= 2 && leftForm >= 2 && rightForm <= 1)
+				|| (resultForm >= 2 && leftForm <= 1 && rightForm >= 2 && op.Op == "*");
+
+			if (op.LeftTypeName == baseTypeName && emitted && signatures.Add($"{op.Op}:{op.RightTypeName}"))
+			{
+				yield return op;
+			}
+		}
+	}
 
 	private static void EmitScalarOperators(ClassTemplate cls, string ownerTypeName, Emission emission)
 	{

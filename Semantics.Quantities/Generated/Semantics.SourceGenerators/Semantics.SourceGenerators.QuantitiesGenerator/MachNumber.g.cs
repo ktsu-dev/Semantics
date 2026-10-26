@@ -190,5 +190,29 @@ public readonly partial record struct MachNumber<T> : IVector0<MachNumber<T>, T>
 	/// <summary>Subtracts two MachNumber values, returning the absolute difference as a non-negative MachNumber.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static MachNumber<T> operator -(MachNumber<T> left, MachNumber<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>MachNumber * Ratio = Ratio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(MachNumber<T> left, Ratio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>MachNumber * SignedRatio = SignedRatio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedRatio<T> operator *(MachNumber<T> left, SignedRatio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>MachNumber / Duration = Frequency, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(MachNumber<T> left, Duration<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>MachNumber / Frequency = Duration, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(MachNumber<T> left, Frequency<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>MachNumber / Temperature = ThermalExpansionCoefficient, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ThermalExpansionCoefficient<T> operator /(MachNumber<T> left, Temperature<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>MachNumber / ThermalExpansionCoefficient = Temperature, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator /(MachNumber<T> left, ThermalExpansionCoefficient<T> right) => (Ratio<T>)left / right;
 }
 

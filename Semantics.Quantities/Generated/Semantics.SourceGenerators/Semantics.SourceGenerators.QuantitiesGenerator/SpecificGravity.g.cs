@@ -190,5 +190,29 @@ public readonly partial record struct SpecificGravity<T> : IVector0<SpecificGrav
 	/// <summary>Subtracts two SpecificGravity values, returning the absolute difference as a non-negative SpecificGravity.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SpecificGravity<T> operator -(SpecificGravity<T> left, SpecificGravity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SpecificGravity * Ratio = Ratio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(SpecificGravity<T> left, Ratio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>SpecificGravity * SignedRatio = SignedRatio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedRatio<T> operator *(SpecificGravity<T> left, SignedRatio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>SpecificGravity / Duration = Frequency, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(SpecificGravity<T> left, Duration<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>SpecificGravity / Frequency = Duration, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(SpecificGravity<T> left, Frequency<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>SpecificGravity / Temperature = ThermalExpansionCoefficient, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ThermalExpansionCoefficient<T> operator /(SpecificGravity<T> left, Temperature<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>SpecificGravity / ThermalExpansionCoefficient = Temperature, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator /(SpecificGravity<T> left, ThermalExpansionCoefficient<T> right) => (Ratio<T>)left / right;
 }
 
