@@ -2,6 +2,8 @@
 
 namespace ktsu.Semantics.Music;
 
+using System.Globalization;
+
 /// <summary>Shared note-letter and accidental scanning used by pitch, chord, and roman-numeral parsing.</summary>
 internal static class Notation
 {
@@ -41,5 +43,25 @@ internal static class Notation
 		}
 
 		return offset;
+	}
+
+	/// <summary>
+	/// Parses an integer written the way the music types print one: digits only, with no surrounding
+	/// whitespace and no leading '+', so a parsed value always prints back as the text it came from.
+	/// </summary>
+	/// <param name="text">The text to parse.</param>
+	/// <param name="allowNegative">Whether a leading '-' is accepted.</param>
+	/// <param name="value">The parsed value, or 0 on failure.</param>
+	/// <returns><see langword="true"/> when the text is a canonical integer.</returns>
+	internal static bool TryParseInteger(string text, bool allowNegative, out int value)
+	{
+		value = 0;
+		if (text.Length == 0 || text[0] == '+')
+		{
+			return false;
+		}
+
+		NumberStyles styles = allowNegative ? NumberStyles.AllowLeadingSign : NumberStyles.None;
+		return int.TryParse(text, styles, CultureInfo.InvariantCulture, out value);
 	}
 }

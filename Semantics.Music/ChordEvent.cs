@@ -20,10 +20,12 @@ public sealed record ChordEvent : IMusicalEvent
 	/// <param name="duration">The rhythmic duration.</param>
 	/// <returns>A new chord event.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when an argument is null.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="duration"/> is zero or negative.</exception>
 	public static ChordEvent Create(Chord chord, Duration duration)
 	{
 		Ensure.NotNull(chord);
 		Ensure.NotNull(duration);
+		Duration.EnsurePositive(duration, nameof(duration));
 		return new() { Chord = chord, Duration = duration };
 	}
 
@@ -59,7 +61,8 @@ public sealed record ChordEvent : IMusicalEvent
 		}
 
 		if (!Chord.TryParse(text[..colon], out Chord? chord)
-			|| !Duration.TryParse(text[(colon + 1)..], out Duration? duration))
+			|| !Duration.TryParse(text[(colon + 1)..], out Duration? duration)
+			|| !duration.IsPositive)
 		{
 			return false;
 		}

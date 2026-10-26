@@ -7,9 +7,19 @@ using System.Collections.Generic;
 using System.Linq;
 
 /// <summary>The structural form of a piece: its section letter-pattern and any recognized named form.</summary>
+/// <remarks>
+/// <para>
+/// The name is the named form recognized from the letter pattern alone, unless <see cref="Of"/> saw more in the
+/// arrangement: a twelve-bar blues section, verse and chorus sections, or AABA sections that are not eight bars each.
+/// The text form carries the name only when it differs from the one the pattern implies, as <c>"A (TwelveBarBlues)"</c>
+/// or <c>"AABA (Unknown)"</c>, so <c>Form.Parse(form.ToString())</c> equals <c>form</c> for every form.
+/// </para>
+/// </remarks>
 public sealed record Form
 {
 	private const int BluesBars = 12;
+
+	private const int AabaSectionBars = 8;
 
 	private static readonly int[][] BluesTemplates =
 	[
@@ -82,15 +92,79 @@ public sealed record Form
 		}
 
 		string pattern = new([.. letters]);
-		NamedForm name = sections.Any(section => IsTwelveBarBlues(section, section.Key ?? arrangement.Key))
-			? NamedForm.TwelveBarBlues
-			: RecognizePattern(pattern);
-
-		return new() { Pattern = pattern, Letters = letters, Name = name };
+		return new() { Pattern = pattern, Letters = letters, Name = Recognize(arrangement, pattern) };
 	}
 
-	/// <summary>Parses a form from a letter-pattern string.</summary>
-	/// <param name="pattern">A pattern of upper-case letters A-Z (e.g. "ABACA").</param>
+	// Recognition in order of how much of the arrangement each rule reads: a blues section by its bars, verse-chorus
+	// by section types, AABA by the pattern and the section lengths, and everything else by the pattern alone.
+	private static NamedForm Recognize(Arrangement arrangement, string pattern)
+	{
+		IReadOnlyList<Section> sections = arrangement.Sections;
+		if (sections.Any(section => IsTwelveBarBlues(section, section.Key ?? arrangement.Key)))
+		{
+			return NamedForm.TwelveBarBlues;
+		}
+
+		if (IsVerseChorus(sections))
+		{
+			return NamedForm.VerseChorus;
+		}
+
+		if (pattern == "AABA")
+		{
+			// A 32-bar song form is four eight-bar sections; four sections of another length share the letters
+			// but not the form.
+			return sections.All(section => section.Progression.TotalDuration == section.Progression.TimeSignature.BarDuration.Multiply(AabaSectionBars))
+				? NamedForm.ThirtyTwoBarAABA
+				: NamedForm.Unknown;
+		}
+
+		return RecognizePattern(pattern);
+	}
+
+	// Verse-chorus form: at least two verses and two choruses, and every verse is answered by a chorus before the next
+	// verse or the end. Intros, pre- and post-choruses, bridges, solos, interludes, outros and codas may sit anywhere
+	// around them; a refrain or an untyped section means the piece is something else.
+	private static bool IsVerseChorus(IReadOnlyList<Section> sections)
+	{
+		int verses = 0;
+		int choruses = 0;
+		bool awaitingChorus = false;
+		foreach (Section section in sections)
+		{
+			switch (section.Type)
+			{
+				case SectionType.Verse:
+					if (awaitingChorus)
+					{
+						return false;
+					}
+
+					verses++;
+					awaitingChorus = true;
+					break;
+				case SectionType.Chorus:
+					choruses++;
+					awaitingChorus = false;
+					break;
+				case SectionType.Refrain:
+				case SectionType.Other:
+					return false;
+				default:
+					break;
+			}
+		}
+
+		return !awaitingChorus && verses >= 2 && choruses >= 2;
+	}
+
+	/// <summary>Parses a form from a letter-pattern string, optionally followed by a named form in parentheses.</summary>
+	/// <remarks>
+	/// A bare pattern is named from its letters alone: <c>"AABA"</c> is taken as the 32-bar form, since the letters are
+	/// all there is to go on. <see cref="NamedForm.TwelveBarBlues"/> and <see cref="NamedForm.VerseChorus"/> are never
+	/// recognized from letters; they come back only when the text names them, as <see cref="ToString"/> writes it.
+	/// </remarks>
+	/// <param name="pattern">A pattern of upper-case letters A-Z (e.g. "ABACA"), or a pattern and name (e.g. "A (TwelveBarBlues)").</param>
 	/// <returns>The form for the pattern.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="pattern"/> is null.</exception>
 	/// <exception cref="FormatException">Thrown when the pattern is empty or contains a non-upper-case-letter.</exception>
@@ -109,18 +183,56 @@ public sealed record Form
 	public static bool TryParse(string? pattern, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Form? result)
 	{
 		result = null;
-		if (pattern is null || pattern.Length == 0 || !pattern.All(c => c is >= 'A' and <= 'Z'))
+		if (pattern is null)
 		{
 			return false;
 		}
 
-		result = new() { Pattern = pattern, Letters = [.. pattern], Name = RecognizePattern(pattern) };
+		string letters = pattern;
+		NamedForm? name = null;
+		int space = pattern.IndexOf(' ');
+		if (space >= 0)
+		{
+			if (!TryReadName(pattern[(space + 1)..], out NamedForm named))
+			{
+				return false;
+			}
+
+			letters = pattern[..space];
+			name = named;
+		}
+
+		if (letters.Length == 0 || !letters.All(c => c is >= 'A' and <= 'Z'))
+		{
+			return false;
+		}
+
+		result = new() { Pattern = letters, Letters = [.. letters], Name = name ?? RecognizePattern(letters) };
 		return true;
 	}
 
-	/// <summary>Returns the letter-pattern (e.g. "AABA").</summary>
+	// Reads "(Name)", where Name is a NamedForm member spelled exactly; Enum.TryParse alone would also take a number
+	// or a comma-separated list.
+	private static bool TryReadName(string text, out NamedForm name)
+	{
+		name = default;
+		return text.Length > 2
+			&& text[0] == '('
+			&& text[^1] == ')'
+			&& text[1..^1].All(char.IsLetter)
+			&& Enum.TryParse(text[1..^1], ignoreCase: false, out name)
+			&& Enum.IsDefined(name);
+	}
+
+	/// <summary>
+	/// Returns the letter-pattern (e.g. "AABA"), followed by the name in parentheses when it is not the one the pattern
+	/// implies (e.g. "A (TwelveBarBlues)").
+	/// </summary>
 	/// <returns>The canonical form text.</returns>
-	public override string ToString() => Pattern;
+	public override string ToString() =>
+		Name is { } name && name != RecognizePattern(Pattern)
+			? $"{Pattern} ({name})"
+			: Pattern;
 
 	private static NamedForm RecognizePattern(string pattern) => pattern switch
 	{

@@ -142,10 +142,12 @@ public class DurationTests
 	}
 
 	[TestMethod]
-	public void TryParseAcceptsIntMinValueOverANegativeDenominatorWhenTheReducedFractionFits()
+	[DataRow("-2147483648/-2")]
+	[DataRow("1/-4")]
+	public void TryParseRejectsANegativeDenominator_WhichToStringNeverWrites(string text)
 	{
-		Assert.IsTrue(Duration.TryParse("-2147483648/-2", out Duration? result));
-		Assert.AreEqual(Duration.Create(1 << 30, 1), result);
+		Assert.IsFalse(Duration.TryParse(text, out Duration? result));
+		Assert.IsNull(result);
 	}
 
 	[TestMethod]

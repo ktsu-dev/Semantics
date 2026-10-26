@@ -16,9 +16,11 @@ public sealed record Rest : IMusicalEvent
 	/// <param name="duration">The rhythmic duration.</param>
 	/// <returns>A new rest.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="duration"/> is null.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="duration"/> is zero or negative.</exception>
 	public static Rest Create(Duration duration)
 	{
 		Ensure.NotNull(duration);
+		Duration.EnsurePositive(duration, nameof(duration));
 		return new() { Duration = duration };
 	}
 
@@ -57,7 +59,7 @@ public sealed record Rest : IMusicalEvent
 			return false;
 		}
 
-		if (!Duration.TryParse(text[2..], out Duration? duration))
+		if (!Duration.TryParse(text[2..], out Duration? duration) || !duration.IsPositive)
 		{
 			return false;
 		}
