@@ -32,6 +32,46 @@ public class InversionTransposeTests
 	}
 
 	[TestMethod]
+	[DataRow("C9", 4, new[] { 74, 76, 79, 82, 84 })]
+	[DataRow("C13", 4, new[] { 74, 76, 77, 79, 81, 82, 84 })]
+	[DataRow("C13", 6, new[] { 81, 82, 84, 86, 88, 89, 91 })]
+	public void Voice_InversionsReachTheTensions(string symbol, int inversion, int[] expected)
+	{
+		int[] midi = [.. Chord.Parse(symbol).Voice(4, inversion).Select(p => p.Midi)];
+		Assert.AreSequenceEqual(expected, midi);
+	}
+
+	[TestMethod]
+	public void Voice_EveryInversionPutsItsChordToneLowest()
+	{
+		string[] symbols = ["C", "Cmaj7", "Cm9", "C11", "C13", "C13b9#11", "C6/9", "Cmaj7#11", "C7sus4", "Cadd9", "F#m7b5"];
+		foreach (string symbol in symbols)
+		{
+			Chord chord = Chord.Parse(symbol);
+			IReadOnlyList<int> tones = chord.ChordTones();
+			for (int inversion = 0; inversion < tones.Count; inversion++)
+			{
+				IReadOnlyList<Pitch> voicing = chord.Voice(4, inversion);
+				Assert.AreEqual(PitchClass.Create(chord.Root.Value + tones[inversion]), voicing[0].PitchClass, $"{symbol} inversion {inversion}");
+				Assert.AreEqual(tones.Count, voicing.Count, $"{symbol} inversion {inversion}");
+				for (int i = 1; i < voicing.Count; i++)
+				{
+					Assert.IsTrue(voicing[i].Midi > voicing[i - 1].Midi, $"{symbol} inversion {inversion}");
+				}
+			}
+		}
+	}
+
+	[TestMethod]
+	public void Voice_OutOfMidiRangeThrowsOneException()
+	{
+		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Chord.Parse("B").Voice(9));
+		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Chord.Parse("G").Voice(9));
+		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Chord.Parse("C/G").Voice(-1));
+		_ = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Chord.Parse("C").Voice(int.MaxValue));
+	}
+
+	[TestMethod]
 	public void Chord_TransposePreservesQualityAndMovesRootAndBass()
 	{
 		Chord transposed = Chord.Parse("Cmaj7/G").Transpose(2); // up a tone -> D

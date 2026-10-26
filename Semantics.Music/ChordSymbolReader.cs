@@ -6,6 +6,7 @@ internal sealed class ChordSymbolReader(string text)
 {
 	private readonly string text = text;
 	private int index;
+	private int groupDepth;
 
 	internal static bool TryRead(string text, out Chord? chord)
 	{
@@ -24,6 +25,27 @@ internal sealed class ChordSymbolReader(string text)
 		}
 
 		if (reader.index != text.Length || !builder.TryBuild(root!, bass, out chord))
+		{
+			chord = null;
+			return false;
+		}
+
+		return true;
+	}
+
+	/// <summary>Reads a chord body, with no root and no slash bass, against a root already resolved.</summary>
+	/// <remarks>
+	/// A roman numeral resolves its own root, so its suffix has to be read as a body. Gluing the suffix
+	/// onto the root's name instead would let a leading "b" or "#" become the root's accidental: "Vb9"
+	/// in C major would read as F#9 rather than G with a flat nine.
+	/// </remarks>
+	internal static bool TryReadBody(PitchClass root, string body, out Chord? chord)
+	{
+		ChordSymbolReader reader = new(body);
+		chord = null;
+		if (!reader.TryReadBody(out ChordBuilder builder)
+			|| reader.index != body.Length
+			|| !builder.TryBuild(root, null, out chord))
 		{
 			chord = null;
 			return false;
@@ -109,7 +131,10 @@ internal sealed class ChordSymbolReader(string text)
 
 	private void ReadAugmentedQuality(ChordBuilder builder)
 	{
-		if (TryTake("aug") || (Peek('+') && !IsDigit(PeekNext()) && TryTake("+")))
+		// At the start of the body a "+" is the augmented mark even before a number, so "C+7" is an
+		// augmented seventh. Only "+5" is left to the modifiers, where it reads as a raised fifth and
+		// means the same chord; anywhere later a "+" before a number is a sharp ("C7+9" is C7#9).
+		if (TryTake("aug") || (Peek('+') && PeekNext() != '5' && TryTake("+")))
 		{
 			builder.Augmented = true;
 		}
@@ -256,20 +281,28 @@ internal sealed class ChordSymbolReader(string text)
 		}
 
 		bool any = false;
-		while (!Peek(')'))
+		groupDepth++;
+		try
 		{
-			if (!TryReadModifier(builder))
+			while (!Peek(')'))
 			{
-				index = start;
-				return false;
-			}
+				if (!TryReadModifier(builder))
+				{
+					index = start;
+					return false;
+				}
 
-			any = true;
-			if (TryTake(",") && Peek(')'))
-			{
-				index = start;
-				return false;
+				any = true;
+				if (TryTake(",") && Peek(')'))
+				{
+					index = start;
+					return false;
+				}
 			}
+		}
+		finally
+		{
+			groupDepth--;
 		}
 
 		if (!any)
@@ -333,6 +366,53 @@ internal sealed class ChordSymbolReader(string text)
 		}
 
 		index = start;
+		if (groupDepth > 0 && TryReadGroupedTone(builder))
+		{
+			return true;
+		}
+
+		index = start;
+		return false;
+	}
+
+	/// <summary>Reads the lead-sheet spellings only a parenthesised group allows.</summary>
+	/// <remarks>
+	/// A bare tension in parentheses is an added tone, as on a lead sheet: "C7(13)" is C7add13, not C13.
+	/// A major-seventh mark in parentheses supplies the seventh a body without a number lacks, so
+	/// "Cm(maj7)" is Cmmaj7; after a number there is already a seventh, and "C7(maj7)" is refused.
+	/// </remarks>
+	private bool TryReadGroupedTone(ChordBuilder builder)
+	{
+		if (TryTakeEither("maj7", "Maj7") || TryTakeEither("M7", "Δ7"))
+		{
+			if (builder.ExtendedNumber != 0 || builder.MajorMarker || builder.Sixth != SixthType.None)
+			{
+				return false;
+			}
+
+			builder.MajorMarker = true;
+			builder.ExtendedNumber = 7;
+			return true;
+		}
+
+		if (TryTake("9"))
+		{
+			return builder.ExtendedNumber < 9
+				&& builder.SetTension(ChordTensions.Nine, ChordTensions.FlatNine | ChordTensions.SharpNine);
+		}
+
+		if (TryTake("11"))
+		{
+			return builder.ExtendedNumber < 11
+				&& builder.SetTension(ChordTensions.Eleven, ChordTensions.SharpEleven);
+		}
+
+		if (TryTake("13"))
+		{
+			return builder.ExtendedNumber < 13
+				&& builder.SetTension(ChordTensions.Thirteen, ChordTensions.FlatThirteen);
+		}
+
 		return false;
 	}
 
@@ -612,7 +692,8 @@ internal sealed class ChordSymbolReader(string text)
 			&& !(FifthAlteration < 0 && Augmented);
 
 		private bool HasInvalidSuspension() =>
-			Sus is not null && (Minor || Diminished || Augmented || MajorMarker || Power || FifthAlteration != 0);
+			Sus is not null && (Minor || Diminished || Augmented || Power || FifthAlteration != 0
+				|| (MajorMarker && !DeltaMarker && (ExtendedNumber is 0 or 6)));
 
 		private bool HasInvalidMajorMarker() =>
 			(MajorMarker && !DeltaMarker && ExtendedNumber == 0 && (Minor || Diminished || Augmented))
