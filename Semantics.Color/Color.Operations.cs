@@ -10,22 +10,65 @@ public readonly partial record struct Color
 	/// <summary>Gets the WCAG relative luminance of this color (computed on the linear channels).</summary>
 	public double RelativeLuminance => (0.2126 * R) + (0.7152 * G) + (0.0722 * B);
 
-	/// <summary>Computes the WCAG contrast ratio (1..21) between this color and another.</summary>
-	/// <param name="other">The other color.</param>
+	/// <summary>
+	/// Composites this color over a background with the source-over operator, the way CSS and every browser
+	/// blend a translucent color onto what is beneath it.
+	/// </summary>
+	/// <param name="background">The color underneath.</param>
+	/// <returns>
+	/// The blended color, with alpha <c>a + b·(1 − a)</c> for this color's alpha <c>a</c> and the background's
+	/// <c>b</c>. An opaque background gives an opaque result.
+	/// </returns>
+	/// <remarks>
+	/// The blend is computed on the gamma-encoded sRGB channels rather than the linear ones, because that is
+	/// what browsers do and what WCAG contrast checkers such as axe and Chrome DevTools measure, so a contrast
+	/// ratio taken from the result agrees with theirs. Blending in linear light would be physically closer to
+	/// mixing light, and would disagree with every tool a reader checks the ratio against.
+	/// </remarks>
+	public Color CompositeOver(Color background)
+	{
+		double a = Clamp01(A);
+		double b = Clamp01(background.A) * (1.0 - a);
+		double alpha = a + b;
+		if (alpha <= 0.0)
+		{
+			return new Color(0.0, 0.0, 0.0, 0.0);
+		}
+
+		Srgb fg = ToSrgb();
+		Srgb bg = background.ToSrgb();
+		Srgb blended = new(
+			((fg.R * a) + (bg.R * b)) / alpha,
+			((fg.G * a) + (bg.G * b)) / alpha,
+			((fg.B * a) + (bg.B * b)) / alpha);
+		return FromSrgb(blended, alpha);
+	}
+
+	/// <summary>Computes the WCAG contrast ratio (1..21) between this color and a background.</summary>
+	/// <param name="other">The background color. Its own alpha is ignored: it is treated as opaque.</param>
 	/// <returns>The contrast ratio, from 1 (identical luminance) to 21 (black vs white).</returns>
+	/// <remarks>
+	/// A translucent color is first composited over the background with <see cref="CompositeOver"/>, as WCAG
+	/// checkers do, so the ratio measures what is actually seen: fully transparent text rates 1:1 against
+	/// anything. For two opaque colors the ratio is symmetric; when this color is translucent it is not, and
+	/// <paramref name="other"/> is the one underneath.
+	/// </remarks>
 	public double ContrastRatio(Color other)
 	{
-		double l1 = RelativeLuminance;
-		double l2 = other.RelativeLuminance;
+		Color background = other.WithAlpha(1.0);
+		Color seen = A >= 1.0 ? this : CompositeOver(background);
+		double l1 = seen.RelativeLuminance;
+		double l2 = background.RelativeLuminance;
 		double lighter = Math.Max(l1, l2);
 		double darker = Math.Min(l1, l2);
 		return (lighter + 0.05) / (darker + 0.05);
 	}
 
 	/// <summary>Rates the contrast of this color against a background per WCAG.</summary>
-	/// <param name="background">The background color.</param>
+	/// <param name="background">The background color, treated as opaque.</param>
 	/// <param name="largeText">True for large text (lower thresholds).</param>
 	/// <returns>The highest <see cref="AccessibilityLevel"/> the pair satisfies.</returns>
+	/// <remarks>A translucent color is rated as it looks over the background; see <see cref="ContrastRatio"/>.</remarks>
 	public AccessibilityLevel AccessibilityLevelAgainst(Color background, bool largeText = false)
 	{
 		double contrast = ContrastRatio(background);
@@ -41,14 +84,23 @@ public readonly partial record struct Color
 	}
 
 	/// <summary>
-	/// Adjusts this color's Oklab lightness (preserving hue and chroma) until it meets the requested
-	/// contrast level against a background. Returns this color unchanged if already sufficient or if
-	/// no adjustment can reach the target.
+	/// Adjusts this color until it meets the requested contrast level against a background, changing it as
+	/// little as it can.
 	/// </summary>
-	/// <param name="background">The background color.</param>
+	/// <param name="background">The background color, treated as opaque.</param>
 	/// <param name="target">The desired conformance level.</param>
 	/// <param name="largeText">True for large text (lower thresholds).</param>
-	/// <returns>An adjusted color, clamped to gamut.</returns>
+	/// <returns>An adjusted color inside the sRGB gamut, with this color's alpha.</returns>
+	/// <remarks>
+	/// The search first moves Oklab lightness, keeping hue, and keeping chroma wherever the sRGB gamut allows it:
+	/// near black and white a saturated color has no in-gamut form at its own chroma, so chroma is reduced there
+	/// rather than the channels being clipped, which would shift the hue and the luminance. If no lightness
+	/// reaches the target, the color is mixed towards black or white instead, so whenever black or white meets
+	/// the level against this background the result does too. Alpha is kept, and the contrast is measured on the
+	/// color as it looks over the background (see <see cref="ContrastRatio"/>), so a color too transparent to
+	/// reach the target even at black or white is returned unchanged; that, and an already sufficient color,
+	/// are the only cases that return this color as it is.
+	/// </remarks>
 	public Color AdjustForContrast(Color background, AccessibilityLevel target, bool largeText = false)
 	{
 		double required = RequiredContrast(target, largeText);
@@ -60,34 +112,38 @@ public readonly partial record struct Color
 
 		Oklab lab = ToOklab();
 		double alpha = A;
+		Color self = this;
 
 		// Try first the direction whose extreme (white or black) gives the higher contrast against
 		// this background. The two are equal near luminance 0.179, not 0.5, so on a mid-tone
 		// background darkening is usually the only way to reach the target. If the preferred
-		// direction still falls short, fall back to the other one before giving up.
-		double bgLum = background.RelativeLuminance;
+		// direction still falls short, fall back to the other one, then to mixing towards black or
+		// white, before giving up.
+		double bgLum = background.WithAlpha(1.0).RelativeLuminance;
 		bool preferLighter = (1.05 / (bgLum + 0.05)) >= ((bgLum + 0.05) / 0.05);
 
-		return Search(preferLighter) ?? Search(!preferLighter) ?? this;
+		return Search(preferLighter, LightnessCandidate)
+			?? Search(!preferLighter, LightnessCandidate)
+			?? Search(preferLighter, MixCandidate)
+			?? Search(!preferLighter, MixCandidate)
+			?? this;
 
-		Color? Search(bool goLighter)
+		Color? Search(bool goLighter, Func<bool, double, Color> candidateAt)
 		{
-			double lo = goLighter ? lab.L : 0.0;
-			double hi = goLighter ? 1.0 : lab.L;
+			// t runs from 0 (this color) to 1 (the extreme in the chosen direction), and contrast grows
+			// as t does: binary-search the smallest movement that meets the requirement.
+			Color extreme = candidateAt(goLighter, 1.0);
+			if (extreme.ContrastRatio(background) < required)
+			{
+				return null;
+			}
 
-			// Contrast increases monotonically as L moves toward the chosen extreme; binary-search
-			// the smallest movement that meets the requirement.
+			double lo = 0.0;
+			double hi = 1.0;
 			for (int i = 0; i < 30; i++)
 			{
 				double mid = (lo + hi) / 2.0;
-				Color candidate = Candidate(lab, mid);
-				bool meets = candidate.ContrastRatio(background) >= required;
-
-				// The interval always shrinks toward the end that satisfies the requirement. When
-				// lightening that is the upper bound if the midpoint already meets it; when darkening
-				// the roles swap. Both cases reduce to whether the midpoint landed on the goLighter
-				// side, so the four-way branch collapses to one comparison.
-				if (meets == goLighter)
+				if (candidateAt(goLighter, mid).ContrastRatio(background) >= required)
 				{
 					hi = mid;
 				}
@@ -97,13 +153,72 @@ public readonly partial record struct Color
 				}
 			}
 
-			Color result = Candidate(lab, goLighter ? hi : lo);
-			return result.ContrastRatio(background) >= required ? result : null;
+			Color result = candidateAt(goLighter, hi);
+			return result.ContrastRatio(background) >= required ? result : extreme;
 		}
 
-		Color Candidate(Oklab source, double lightness) =>
-			FromOklab(new Oklab(lightness, source.A, source.B), alpha).Clamp();
+		Color LightnessCandidate(bool goLighter, double t)
+		{
+			double end = goLighter ? 1.0 : 0.0;
+			return GamutMapped(new Oklab(lab.L + ((end - lab.L) * t), lab.A, lab.B), alpha);
+		}
+
+		Color MixCandidate(bool goLighter, double t)
+		{
+			Color end = goLighter ? new Color(1.0, 1.0, 1.0, alpha) : new Color(0.0, 0.0, 0.0, alpha);
+			return self.Clamp().Lerp(end, t).WithAlpha(alpha);
+		}
 	}
+
+	/// <summary>
+	/// Converts an Oklab color to the nearest in-gamut linear color of the same lightness and hue, reducing
+	/// chroma until it fits, as CSS Color 4 gamut-maps. Lightness at or past 0 or 1 gives black or white.
+	/// </summary>
+	/// <param name="lab">The Oklab color.</param>
+	/// <param name="alpha">The straight alpha for the result.</param>
+	/// <returns>A color with every channel in 0..1.</returns>
+	internal static Color GamutMapped(Oklab lab, double alpha)
+	{
+		const double tolerance = 1e-6;
+
+		if (lab.L >= 1.0)
+		{
+			return new Color(1.0, 1.0, 1.0, Clamp01(alpha));
+		}
+
+		if (lab.L <= 0.0)
+		{
+			return new Color(0.0, 0.0, 0.0, Clamp01(alpha));
+		}
+
+		Color direct = lab.ToColor(alpha);
+		if (IsInGamut(direct, tolerance))
+		{
+			return direct.Clamp();
+		}
+
+		double lo = 0.0;
+		double hi = 1.0;
+		for (int i = 0; i < 30; i++)
+		{
+			double mid = (lo + hi) / 2.0;
+			if (IsInGamut(new Oklab(lab.L, lab.A * mid, lab.B * mid).ToColor(alpha), tolerance))
+			{
+				lo = mid;
+			}
+			else
+			{
+				hi = mid;
+			}
+		}
+
+		return new Oklab(lab.L, lab.A * lo, lab.B * lo).ToColor(alpha).Clamp();
+	}
+
+	private static bool IsInGamut(Color color, double tolerance) =>
+		color.R >= -tolerance && color.R <= 1.0 + tolerance
+		&& color.G >= -tolerance && color.G <= 1.0 + tolerance
+		&& color.B >= -tolerance && color.B <= 1.0 + tolerance;
 
 	/// <summary>
 	/// The WCAG contrast ratio a foreground/background pair must reach to satisfy
@@ -135,7 +250,12 @@ public readonly partial record struct Color
 	/// <summary>Mixes this color with another in Oklab space (perceptually uniform).</summary>
 	/// <param name="other">The other color.</param>
 	/// <param name="t">The interpolation factor, 0 = this, 1 = other.</param>
-	/// <returns>The mixed color.</returns>
+	/// <returns>The mixed color, inside the sRGB gamut.</returns>
+	/// <remarks>
+	/// A straight line in Oklab between two in-gamut colors can leave the sRGB gamut, as cyan to blue does, so
+	/// the mix is gamut-mapped by reducing its chroma at the same lightness and hue. Without that, every HSL
+	/// adjustment made to the result afterwards would start from channels outside 0..1.
+	/// </remarks>
 	public Color MixOklab(Color other, double t)
 	{
 		Oklab a = ToOklab();
@@ -145,7 +265,7 @@ public readonly partial record struct Color
 			(a.L * inv) + (b.L * t),
 			(a.A * inv) + (b.A * t),
 			(a.B * inv) + (b.B * t));
-		return FromOklab(mixed, (A * inv) + (other.A * t));
+		return GamutMapped(mixed, (A * inv) + (other.A * t));
 	}
 
 	/// <summary>Linearly interpolates this color with another in linear-RGB space.</summary>
@@ -165,7 +285,7 @@ public readonly partial record struct Color
 	/// <summary>Builds a perceptually-uniform (Oklab) gradient from this color to another.</summary>
 	/// <param name="to">The end color.</param>
 	/// <param name="steps">The number of colors to produce (at least 2).</param>
-	/// <returns>The gradient, inclusive of both endpoints.</returns>
+	/// <returns>The gradient, inclusive of both endpoints; every interior stop is inside the sRGB gamut (see <see cref="MixOklab"/>).</returns>
 	/// <exception cref="ArgumentException">Thrown when <paramref name="steps"/> is less than 2.</exception>
 	public IReadOnlyList<Color> Gradient(Color to, int steps)
 	{
