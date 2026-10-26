@@ -195,7 +195,7 @@ public class StrictParsingTests
 	public void Arrangement_AcceptsBlankLinesAroundTheChart()
 	{
 		Arrangement arrangement = Sample();
-		Assert.AreEqual(arrangement, Arrangement.Parse("\n\n" + arrangement.ToString() + "\n\n"));
+		Assert.AreEqual(arrangement, Arrangement.Parse($"\n\n{arrangement}\n\n"));
 	}
 
 	private static Arrangement Sample()
