@@ -105,7 +105,7 @@ internal static class StorageLiteral
 		double expected = double.Parse(literal, NumberStyles.Float, CultureInfo.InvariantCulture);
 		T value = TryParseLiteral(literal, out T parsed) ? parsed : T.CreateChecked(expected);
 
-		if (expected != 0.0 && !KeepsPrecision(value, expected))
+		if (expected is not 0.0 && !KeepsPrecision(value, expected))
 		{
 			throw new ArithmeticException(string.Format(
 				CultureInfo.InvariantCulture,

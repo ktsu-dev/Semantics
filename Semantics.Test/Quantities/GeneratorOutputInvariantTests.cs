@@ -102,12 +102,10 @@ public sealed class GeneratorOutputInvariantTests
 		Dictionary<string, string> baseOf = [];
 		foreach (Type type in types)
 		{
-			foreach (MethodInfo m in type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly))
+			foreach (MethodInfo m in type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+				.Where(m => m.Name == "op_Implicit" && m.GetParameters()[0].ParameterType.Name == type.Name && m.ReturnType.Namespace == type.Namespace))
 			{
-				if (m.Name == "op_Implicit" && m.GetParameters()[0].ParameterType.Name == type.Name && m.ReturnType.Namespace == type.Namespace)
-				{
-					baseOf[type.Name] = m.ReturnType.Name;
-				}
+				baseOf[type.Name] = m.ReturnType.Name;
 			}
 		}
 

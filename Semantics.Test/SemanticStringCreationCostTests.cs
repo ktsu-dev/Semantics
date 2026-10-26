@@ -14,18 +14,23 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [TestClass]
 public sealed class SemanticStringCreationCostTests
 {
-	[ThreadStatic]
-	private static int exceptionsOnThisThread;
-
-	private static void Count(object? sender, FirstChanceExceptionEventArgs e) => exceptionsOnThisThread++;
-
 	[TestMethod]
 	public void TryCreate_RejectsWithoutThrowing()
 	{
+		// Tests run in parallel, so only exceptions thrown on this test's own thread count.
+		int thisThread = Environment.CurrentManagedThreadId;
+		int exceptionsOnThisThread = 0;
+		void Count(object? sender, FirstChanceExceptionEventArgs e)
+		{
+			if (Environment.CurrentManagedThreadId == thisThread)
+			{
+				exceptionsOnThisThread++;
+			}
+		}
+
 		AppDomain.CurrentDomain.FirstChanceException += Count;
 		try
 		{
-			exceptionsOnThisThread = 0;
 
 			bool fromString = StartsWithValidSemanticString.TryCreate("Nope", out StartsWithValidSemanticString? a);
 			bool fromChars = StartsWithValidSemanticString.TryCreate("Nope".ToCharArray(), out StartsWithValidSemanticString? b);
