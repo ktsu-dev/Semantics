@@ -135,9 +135,8 @@ public class RomanNumeralParseTests
 		{
 			foreach (PitchClass degree in key.Scale.PitchClasses)
 			{
-				foreach (string body in bodies)
+				foreach (Chord chord in bodies.Select(body => Chord.Parse(degree.Name + body)))
 				{
-					Chord chord = Chord.Parse(degree.Name + body);
 					string numeral = key.RomanNumeralOf(chord);
 					Assert.AreEqual(chord, key.ChordFromRomanNumeral(numeral), $"{chord} in {key} -> {numeral}");
 				}
