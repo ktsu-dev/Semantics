@@ -42,10 +42,21 @@ namespace @NAMESPACE@
 		{
 		}
 
-		// Widening the representation of the same dimension is safe and implicit.
+		// Widening the representation of the same dimension is safe and implicit. Widening is what
+		// list-initialisation accepts, which refuses double to float and anything to an integer, so
+		// the conversion runs one way only and float + double resolves to double rather than being
+		// ambiguous.
 		template <typename R2>
-			requires(!std::is_same_v<R2, Rep> && std::is_convertible_v<R2, Rep>)
+			requires(!std::is_same_v<R2, Rep> && requires(R2 r) { Rep{ r }; })
 		constexpr Quantity(Quantity<D, R2> other) noexcept
+			: value_(other.count())
+		{
+		}
+
+		// Narrowing is allowed, but only when it is written down.
+		template <typename R2>
+			requires(!std::is_same_v<R2, Rep> && std::is_convertible_v<R2, Rep> && !requires(R2 r) { Rep{ r }; })
+		explicit constexpr Quantity(Quantity<D, R2> other) noexcept
 			: value_(static_cast<Rep>(other.count()))
 		{
 		}
