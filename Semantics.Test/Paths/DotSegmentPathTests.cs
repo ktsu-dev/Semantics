@@ -147,13 +147,13 @@ public class DotSegmentPathTests
 	[TestMethod]
 	public void GetContents_SkipsAnEntryThatFailsValidation()
 	{
-		string root = Path.Combine(Path.GetTempPath(), "semantics-contents-" + Guid.NewGuid().ToString("N"));
+		string root = Path.Join(Path.GetTempPath(), "semantics-contents-" + Guid.NewGuid().ToString("N"));
 		Directory.CreateDirectory(root);
 		try
 		{
-			File.WriteAllText(Path.Combine(root, "ok.txt"), "ok");
-			Directory.CreateDirectory(Path.Combine(root, "sub"));
-			File.WriteAllText(Path.Combine(root, "bad.txt"), "rejected");
+			File.WriteAllText(Path.Join(root, "ok.txt"), "ok");
+			Directory.CreateDirectory(Path.Join(root, "sub"));
+			File.WriteAllText(Path.Join(root, "bad.txt"), "rejected");
 
 			PickyDirectoryPath dir = PickyDirectoryPath.Create<PickyDirectoryPath>(root);
 			List<string> names = [.. dir.GetContents().Select(p => Path.GetFileName(p.ToString()) ?? "")];
@@ -172,13 +172,13 @@ public class DotSegmentPathTests
 	[TestCategory("OS-Specific")]
 	public void GetContents_SkipsAnEntryPastTheWindowsLengthLimit()
 	{
-		string root = Path.Combine(Path.GetTempPath(), "semantics-contents-" + Guid.NewGuid().ToString("N"));
+		string root = Path.Join(Path.GetTempPath(), "semantics-contents-" + Guid.NewGuid().ToString("N"));
 		Directory.CreateDirectory(root);
 		try
 		{
-			File.WriteAllText(Path.Combine(root, "ok.txt"), "ok");
-			Directory.CreateDirectory(Path.Combine(root, "sub"));
-			File.WriteAllText(Path.Combine(root, new string('x', 250) + ".txt"), "too long");
+			File.WriteAllText(Path.Join(root, "ok.txt"), "ok");
+			Directory.CreateDirectory(Path.Join(root, "sub"));
+			File.WriteAllText(Path.Join(root, new string('x', 250) + ".txt"), "too long");
 
 			List<string> names = [.. Absolute(root).GetContents().Select(p => Path.GetFileName(p.ToString()) ?? "")];
 
