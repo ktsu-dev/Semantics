@@ -53,10 +53,10 @@ public class InversionTransposeTests
 			{
 				IReadOnlyList<Pitch> voicing = chord.Voice(4, inversion);
 				Assert.AreEqual(PitchClass.Create(chord.Root.Value + tones[inversion]), voicing[0].PitchClass, $"{symbol} inversion {inversion}");
-				Assert.AreEqual(tones.Count, voicing.Count, $"{symbol} inversion {inversion}");
+				Assert.HasCount(tones.Count, voicing, $"{symbol} inversion {inversion}");
 				for (int i = 1; i < voicing.Count; i++)
 				{
-					Assert.IsTrue(voicing[i].Midi > voicing[i - 1].Midi, $"{symbol} inversion {inversion}");
+					Assert.IsGreaterThan(voicing[i - 1].Midi, voicing[i].Midi, $"{symbol} inversion {inversion}");
 				}
 			}
 		}

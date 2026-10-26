@@ -32,7 +32,7 @@ public class AnalysisFixesTests
 	public void Cadences_VToV7IsNotAHalfCadence()
 	{
 		IReadOnlyList<CadenceInstance> cadences = Progression.Parse("4/4  C | G | G7 | C").Cadences(CMajor);
-		Assert.IsFalse(cadences.Any(cadence => cadence.Index == 2), string.Join(", ", cadences));
+		Assert.DoesNotContain(cadence => cadence.Index == 2, cadences, string.Join(", ", cadences));
 		Assert.AreEqual(Cadence.Authentic, cadences[^1].Type);
 	}
 
@@ -44,7 +44,7 @@ public class AnalysisFixesTests
 		Assert.AreSequenceEqual(PentatonicFunctions, [.. progression.Functions(CMajorPentatonic)]);
 
 		IReadOnlyList<CadenceInstance> cadences = progression.Cadences(CMajorPentatonic);
-		Assert.IsFalse(cadences.Any(cadence => cadence.Type == Cadence.Plagal));
+		Assert.DoesNotContain(cadence => cadence.Type == Cadence.Plagal, cadences);
 		Assert.AreEqual(Cadence.Authentic, cadences.Single(cadence => cadence.Index == 3).Type);
 		Assert.AreEqual(Cadence.Half, cadences.Single(cadence => cadence.Index == 2).Type);
 	}
@@ -67,7 +67,7 @@ public class AnalysisFixesTests
 	public void ChromaticChords_ADominantOfADiminishedTriadIsNotSecondary(string chart, string key)
 	{
 		IReadOnlyList<ChromaticAnalysis> analyses = Progression.Parse(chart).ChromaticChords(Key.Parse(key));
-		Assert.IsFalse(analyses.Any(a => a.Kind == ChromaticKind.SecondaryDominant), string.Join(", ", analyses));
+		Assert.DoesNotContain(a => a.Kind == ChromaticKind.SecondaryDominant, analyses, string.Join(", ", analyses));
 	}
 
 	[TestMethod]
