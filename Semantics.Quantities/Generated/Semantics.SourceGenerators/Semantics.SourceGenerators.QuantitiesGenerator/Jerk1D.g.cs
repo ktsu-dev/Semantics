@@ -128,6 +128,6 @@ public readonly partial record struct Jerk1D<T> : IVector1<Jerk1D<T>, T>, IPhysi
 	/// Divides Jerk1D by Duration to produce Snap1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Snap1D<T> operator /(Jerk1D<T> left, Duration<T> right) => Snap1D<T>.Create(left.Quantity / right.Quantity);
+	public static Snap1D<T> operator /(Jerk1D<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Snap1D<T>.Create(left.Quantity / right.Quantity);
 }
 

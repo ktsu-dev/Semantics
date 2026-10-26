@@ -184,13 +184,13 @@ public readonly partial record struct Mass<T> : IVector0<Mass<T>, T>, IPhysicalQ
 	/// Divides Mass by Volume to produce Density.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Density<T> operator /(Mass<T> left, Volume<T> right) => Density<T>.Create(left.Quantity / right.Quantity);
+	public static Density<T> operator /(Mass<T> left, Volume<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Density<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Mass by Density to produce Volume.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Volume<T> operator /(Mass<T> left, Density<T> right) => Volume<T>.Create(left.Quantity / right.Quantity);
+	public static Volume<T> operator /(Mass<T> left, Density<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Volume<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies Mass by SpecificHeat to produce Entropy.
@@ -202,24 +202,24 @@ public readonly partial record struct Mass<T> : IVector0<Mass<T>, T>, IPhysicalQ
 	/// Divides Mass by Duration to produce MassFlowRate.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MassFlowRate<T> operator /(Mass<T> left, Duration<T> right) => MassFlowRate<T>.Create(left.Quantity / right.Quantity);
+	public static MassFlowRate<T> operator /(Mass<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : MassFlowRate<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Mass by MassFlowRate to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(Mass<T> left, MassFlowRate<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(Mass<T> left, MassFlowRate<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Mass by AmountOfSubstance to produce MolarMass.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MolarMass<T> operator /(Mass<T> left, AmountOfSubstance<T> right) => MolarMass<T>.Create(left.Quantity / right.Quantity);
+	public static MolarMass<T> operator /(Mass<T> left, AmountOfSubstance<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : MolarMass<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Mass by MolarMass to produce AmountOfSubstance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AmountOfSubstance<T> operator /(Mass<T> left, MolarMass<T> right) => AmountOfSubstance<T>.Create(left.Quantity / right.Quantity);
+	public static AmountOfSubstance<T> operator /(Mass<T> left, MolarMass<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : AmountOfSubstance<T>.Create(left.Quantity / right.Quantity);
 }
 

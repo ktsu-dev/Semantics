@@ -116,12 +116,12 @@ public readonly partial record struct LuminousFlux<T> : IVector0<LuminousFlux<T>
 	/// Divides LuminousFlux by Area to produce Illuminance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Illuminance<T> operator /(LuminousFlux<T> left, Area<T> right) => Illuminance<T>.Create(left.Quantity / right.Quantity);
+	public static Illuminance<T> operator /(LuminousFlux<T> left, Area<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Illuminance<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides LuminousFlux by Illuminance to produce Area.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Area<T> operator /(LuminousFlux<T> left, Illuminance<T> right) => Area<T>.Create(left.Quantity / right.Quantity);
+	public static Area<T> operator /(LuminousFlux<T> left, Illuminance<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Area<T>.Create(left.Quantity / right.Quantity);
 }
 

@@ -54,17 +54,17 @@ public readonly partial record struct Period<T> : IVector0<Period<T>, T>, IPhysi
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Period<T> operator +(Period<T> left, Period<T> right) => Create(left.Quantity + right.Quantity);
 
-	/// <summary>Scales a <see cref="Period{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
+	/// <summary>Scales a <see cref="Period{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the result is not positive.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Period<T> operator *(Period<T> left, T right) => Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)));
+	public static Period<T> operator *(Period<T> left, T right) => Create(Vector0Guards.EnsurePositive(left.Quantity * right, nameof(right)));
 
-	/// <summary>Scales a <see cref="Period{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
+	/// <summary>Scales a <see cref="Period{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the result is not positive.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Period<T> operator *(T left, Period<T> right) => Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)));
+	public static Period<T> operator *(T left, Period<T> right) => Create(Vector0Guards.EnsurePositive(left * right.Quantity, nameof(left)));
 
-	/// <summary>Divides a <see cref="Period{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
+	/// <summary>Divides a <see cref="Period{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the result is not positive.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Period<T> operator /(Period<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)));
+	public static Period<T> operator /(Period<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsurePositive(left.Quantity / right, nameof(right)));
 
 	/// <summary>Divides one <see cref="Period{T}"/> by another, giving the bare ratio.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
@@ -173,14 +173,14 @@ public readonly partial record struct Period<T> : IVector0<Period<T>, T>, IPhysi
 	/// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(Period<T> value) => Duration<T>.Create(value.Value);
 
-	/// <summary>Explicit conversion from Duration.</summary>
-	public static explicit operator Period<T>(Duration<T> value) => Create(value.Value);
+	/// <summary>Explicit conversion from Duration. Throws <see cref="System.ArgumentException"/> when the value is zero, which a Period cannot be.</summary>
+	public static explicit operator Period<T>(Duration<T> value) => Create(Vector0Guards.EnsurePositive(value.Value, nameof(value)));
 
-	/// <summary>Creates a Period from a Duration value.</summary>
-	public static Period<T> From(Duration<T> value) => Create(value.Value);
+	/// <summary>Creates a Period from a Duration value. Throws <see cref="System.ArgumentException"/> when the value is zero, which a Period cannot be.</summary>
+	public static Period<T> From(Duration<T> value) => Create(Vector0Guards.EnsurePositive(value.Value, nameof(value)));
 
-	/// <summary>Subtracts two Period values, returning the absolute difference as a non-negative Period.</summary>
+	/// <summary>Subtracts two Period values, returning the absolute difference as a positive Period. Throws <see cref="System.ArgumentException"/> when the two are equal, since a Period cannot be zero; widen to <see cref="Duration{T}"/> first for a difference that may be.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Period<T> operator -(Period<T> left, Period<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+	public static Period<T> operator -(Period<T> left, Period<T> right) => Create(Vector0Guards.EnsurePositive(T.Abs(left.Quantity - right.Quantity), nameof(right)));
 }
 

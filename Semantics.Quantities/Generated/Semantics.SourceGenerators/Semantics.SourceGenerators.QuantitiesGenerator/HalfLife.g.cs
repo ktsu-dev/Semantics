@@ -54,17 +54,17 @@ public readonly partial record struct HalfLife<T> : IVector0<HalfLife<T>, T>, IP
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static HalfLife<T> operator +(HalfLife<T> left, HalfLife<T> right) => Create(left.Quantity + right.Quantity);
 
-	/// <summary>Scales a <see cref="HalfLife{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
+	/// <summary>Scales a <see cref="HalfLife{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the result is not positive.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static HalfLife<T> operator *(HalfLife<T> left, T right) => Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)));
+	public static HalfLife<T> operator *(HalfLife<T> left, T right) => Create(Vector0Guards.EnsurePositive(left.Quantity * right, nameof(right)));
 
-	/// <summary>Scales a <see cref="HalfLife{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
+	/// <summary>Scales a <see cref="HalfLife{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the result is not positive.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static HalfLife<T> operator *(T left, HalfLife<T> right) => Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)));
+	public static HalfLife<T> operator *(T left, HalfLife<T> right) => Create(Vector0Guards.EnsurePositive(left * right.Quantity, nameof(left)));
 
-	/// <summary>Divides a <see cref="HalfLife{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
+	/// <summary>Divides a <see cref="HalfLife{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the result is not positive.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static HalfLife<T> operator /(HalfLife<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)));
+	public static HalfLife<T> operator /(HalfLife<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsurePositive(left.Quantity / right, nameof(right)));
 
 	/// <summary>Divides one <see cref="HalfLife{T}"/> by another, giving the bare ratio.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
@@ -173,14 +173,14 @@ public readonly partial record struct HalfLife<T> : IVector0<HalfLife<T>, T>, IP
 	/// <summary>Implicit conversion to Duration.</summary>
 	public static implicit operator Duration<T>(HalfLife<T> value) => Duration<T>.Create(value.Value);
 
-	/// <summary>Explicit conversion from Duration.</summary>
-	public static explicit operator HalfLife<T>(Duration<T> value) => Create(value.Value);
+	/// <summary>Explicit conversion from Duration. Throws <see cref="System.ArgumentException"/> when the value is zero, which a HalfLife cannot be.</summary>
+	public static explicit operator HalfLife<T>(Duration<T> value) => Create(Vector0Guards.EnsurePositive(value.Value, nameof(value)));
 
-	/// <summary>Creates a HalfLife from a Duration value.</summary>
-	public static HalfLife<T> From(Duration<T> value) => Create(value.Value);
+	/// <summary>Creates a HalfLife from a Duration value. Throws <see cref="System.ArgumentException"/> when the value is zero, which a HalfLife cannot be.</summary>
+	public static HalfLife<T> From(Duration<T> value) => Create(Vector0Guards.EnsurePositive(value.Value, nameof(value)));
 
-	/// <summary>Subtracts two HalfLife values, returning the absolute difference as a non-negative HalfLife.</summary>
+	/// <summary>Subtracts two HalfLife values, returning the absolute difference as a positive HalfLife. Throws <see cref="System.ArgumentException"/> when the two are equal, since a HalfLife cannot be zero; widen to <see cref="Duration{T}"/> first for a difference that may be.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static HalfLife<T> operator -(HalfLife<T> left, HalfLife<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+	public static HalfLife<T> operator -(HalfLife<T> left, HalfLife<T> right) => Create(Vector0Guards.EnsurePositive(T.Abs(left.Quantity - right.Quantity), nameof(right)));
 }
 

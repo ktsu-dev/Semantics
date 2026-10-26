@@ -54,11 +54,8 @@ public readonly partial record struct Snap2D<T> : IVector2<Snap2D<T>, T>
 	public (T X, T Y) In(global::ktsu.Semantics.Quantities.ISnapUnit unit) => (unit.FromBase(X), unit.FromBase(Y));
 
 	/// <summary>Calculates the length of the vector.</summary>
-	public T Length()
-	{
-		T sum = (X * X) + (Y * Y);
-		return StorageMath.Sqrt(sum);
-	}
+	/// <remarks>Computed without squaring the components outright, so a length the storage type can hold is returned even when the squares of the components are past its range.</remarks>
+	public T Length() => StorageMath.Hypot(X, Y);
 
 	/// <summary>Calculates the squared length of the vector.</summary>
 	public T LengthSquared() => (X * X) + (Y * Y);
@@ -71,8 +68,7 @@ public readonly partial record struct Snap2D<T> : IVector2<Snap2D<T>, T>
 	{
 		T dX = X - other.X;
 		T dY = Y - other.Y;
-		T sum = (dX * dX) + (dY * dY);
-		return StorageMath.Sqrt(sum);
+		return StorageMath.Hypot(dX, dY);
 	}
 
 	/// <summary>Calculates the squared distance between two vectors.</summary>
@@ -84,9 +80,15 @@ public readonly partial record struct Snap2D<T> : IVector2<Snap2D<T>, T>
 	}
 
 	/// <summary>Returns a normalized version of the vector.</summary>
+	/// <exception cref="System.DivideByZeroException">The vector has zero length, so it has no direction.</exception>
 	public Snap2D<T> Normalize()
 	{
 		T len = Length();
+		if (T.IsZero(len))
+		{
+			throw new System.DivideByZeroException("Cannot normalize a zero-length vector.");
+		}
+
 		return new() { X = X / len, Y = Y / len };
 	}
 
@@ -103,7 +105,8 @@ public readonly partial record struct Snap2D<T> : IVector2<Snap2D<T>, T>
 	public static Snap2D<T> operator *(T scalar, Snap2D<T> vector) => new() { X = scalar * vector.X, Y = scalar * vector.Y };
 
 	/// <summary>Divides a vector by a scalar.</summary>
-	public static Snap2D<T> operator /(Snap2D<T> vector, T scalar) => new() { X = vector.X / scalar, Y = vector.Y / scalar };
+	/// <exception cref="System.DivideByZeroException"><paramref name="scalar"/> is zero.</exception>
+	public static Snap2D<T> operator /(Snap2D<T> vector, T scalar) => T.IsZero(scalar) ? throw new System.DivideByZeroException("Cannot divide by zero.") : new() { X = vector.X / scalar, Y = vector.Y / scalar };
 
 	/// <summary>Negates a vector.</summary>
 	public static Snap2D<T> operator -(Snap2D<T> vector) => new() { X = -vector.X, Y = -vector.Y };

@@ -81,6 +81,69 @@ internal static class StorageLiteral
 	}
 
 	/// <summary>
+	/// Materialises a physical constant's literal into <typeparamref name="T"/>, for the generated
+	/// <c>PhysicalConstants</c> accessors, which call it once per constant and closed generic type.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <param name="literal">The literal as written in the metadata.</param>
+	/// <param name="name">The constant's name, for the exception message.</param>
+	/// <returns>The constant in <typeparamref name="T"/>.</returns>
+	/// <exception cref="OverflowException">The constant is too large for <typeparamref name="T"/>.</exception>
+	/// <exception cref="ArithmeticException">
+	/// <typeparamref name="T"/> holds the constant with less than about six significant digits: an integer type
+	/// truncating 9.80665 to 9, or <see cref="decimal"/> rounding 6.62607015e-34 to zero.
+	/// </exception>
+	/// <remarks>
+	/// Each constant is materialised on its own, so a constant <typeparamref name="T"/> cannot hold fails alone
+	/// rather than taking every other constant of its domain with it, which is what one shared static
+	/// initializer did. Integer types are allowed every constant that is a whole number in range, such as the
+	/// speed of light in a <see cref="long"/>.
+	/// </remarks>
+	internal static T Constant<T>(string literal, string name)
+		where T : struct, INumber<T>
+	{
+		double expected = double.Parse(literal, NumberStyles.Float, CultureInfo.InvariantCulture);
+		T value = TryParseLiteral(literal, out T parsed) ? parsed : T.CreateChecked(expected);
+
+		if (expected != 0.0 && !KeepsPrecision(value, expected))
+		{
+			throw new ArithmeticException(string.Format(
+				CultureInfo.InvariantCulture,
+				"{0} ({1}) cannot be represented in {2} without losing its precision; it would read as {3}.",
+				name,
+				literal,
+				typeof(T).Name,
+				value));
+		}
+
+		return value;
+	}
+
+	/// <summary>
+	/// Reports whether a materialised constant agrees with its <see cref="double"/> value to a relative 1e-6.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <param name="value">The constant in <typeparamref name="T"/>.</param>
+	/// <param name="expected">The constant as a <see cref="double"/>.</param>
+	/// <returns><see langword="true"/> unless the value lost precision a <see cref="float"/> would keep.</returns>
+	private static bool KeepsPrecision<T>(T value, double expected)
+		where T : struct, INumber<T>
+	{
+		double actual;
+		try
+		{
+			actual = double.CreateChecked(value);
+		}
+		catch (NotSupportedException)
+		{
+			// A type that cannot say what it holds as a double is trusted, as its parse was.
+			return true;
+		}
+
+		return Math.Abs(actual - expected) <= Math.Abs(expected) * 1e-6;
+	}
+
+	/// <summary>
 	/// Parses a literal with <see cref="NumberStyles.Float"/>, treating a parse that throws for that style
 	/// the same as one that returns <see langword="false"/>.
 	/// </summary>

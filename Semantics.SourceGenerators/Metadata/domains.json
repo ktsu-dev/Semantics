@@ -36,12 +36,12 @@
         },
         {
           "name": "PermittivityOfFreeSpace",
-          "description": "Electric permittivity of free space: 8.8541878128 × 10⁻¹² F/m (exact, derived)",
+          "description": "Electric permittivity of free space: 8.8541878128 × 10⁻¹² F/m (CODATA 2018; measured, not exact, since the 2019 SI redefinition)",
           "value": "8.8541878128e-12"
         },
         {
           "name": "PermeabilityOfFreeSpace",
-          "description": "Magnetic permeability of free space: 4π × 10⁻⁷ H/m (exact by definition)",
+          "description": "Magnetic permeability of free space: 1.25663706212 × 10⁻⁶ H/m (CODATA 2018; close to but no longer exactly 4π × 10⁻⁷ since the 2019 SI redefinition)",
           "value": "1.25663706212e-6"
         },
         {
@@ -133,8 +133,8 @@
       "constants": [
         {
           "name": "AbsoluteZeroInCelsius",
-          "description": "Absolute zero in Celsius: 273.15 K (exact by definition)",
-          "value": "273.15"
+          "description": "Absolute zero in Celsius: −273.15 °C (exact by definition)",
+          "value": "-273.15"
         },
         {
           "name": "WaterTriplePoint",
@@ -223,12 +223,12 @@
         {
           "name": "WaterIonProduct",
           "description": "Water ion product (Kw) at 25°C: 1.0 × 10⁻¹⁴ (pKw = 14.0)",
-          "value": "14.0"
+          "value": "1.0e-14"
         },
         {
           "name": "MolarVolumeSTP",
-          "description": "Molar volume of ideal gas at STP: 22.413969545014137 L/mol (calculated from R*T/P at 273.15K, 101325Pa)",
-          "value": "22.413969545014137"
+          "description": "Molar volume of ideal gas at STP: 0.022413969545014137 m³/mol, or 22.413969545014137 L/mol (calculated from R*T/P at 273.15K, 101325Pa)",
+          "value": "0.022413969545014137"
         },
         {
           "name": "Ln2",

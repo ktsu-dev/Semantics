@@ -216,13 +216,13 @@ public readonly partial record struct Length<T> : IVector0<Length<T>, T>, IPhysi
 	/// Divides Length by Duration to produce Speed.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Speed<T> operator /(Length<T> left, Duration<T> right) => Speed<T>.Create(left.Quantity / right.Quantity);
+	public static Speed<T> operator /(Length<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Speed<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Length by Speed to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(Length<T> left, Speed<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(Length<T> left, Speed<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies Length by Frequency to produce Speed.

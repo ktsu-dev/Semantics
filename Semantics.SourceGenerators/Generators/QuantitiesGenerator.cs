@@ -783,7 +783,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	/// <c>T.Abs(left - right)</c>, per the locked decision in #52 — so the plain one is skipped
 	/// rather than emitted twice.
 	/// </param>
-	private static void AddValueTypeCore(ClassTemplate cls, string fullType, bool isV0)
+	private static void AddValueTypeCore(ClassTemplate cls, string fullType, bool isV0, bool strictPositive = false)
 	{
 		// A doc comment is XML, so the type argument is spelled with braces: Mass{T}, not Mass<T>.
 		string docRef = $"<see cref=\"{fullType.Replace('<', '{').Replace('>', '}')}\"/>";
@@ -888,10 +888,17 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			});
 		}
 
-		string scaledLeft = isV0 ? "Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)))" : "Create(left.Quantity * right)";
-		string scaledRight = isV0 ? "Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)))" : "Create(left * right.Quantity)";
-		string divided = isV0 ? "Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)))" : "Create(left.Quantity / right)";
-		string scaleRemark = isV0 ? " Throws <see cref=\"System.ArgumentException\"/> when the number is negative." : string.Empty;
+		// A strictly positive overload (#51) keeps its stricter rule through scaling too (#354), so
+		// w * 0 and w / infinity cannot produce the zero its factories refuse.
+		string guard = strictPositive ? "EnsurePositive" : "EnsureNonNegative";
+		string scaledLeft = isV0 ? $"Create(Vector0Guards.{guard}(left.Quantity * right, nameof(right)))" : "Create(left.Quantity * right)";
+		string scaledRight = isV0 ? $"Create(Vector0Guards.{guard}(left * right.Quantity, nameof(left)))" : "Create(left * right.Quantity)";
+		string divided = isV0 ? $"Create(Vector0Guards.{guard}(left.Quantity / right, nameof(right)))" : "Create(left.Quantity / right)";
+		string scaleRemark = !isV0
+			? string.Empty
+			: strictPositive
+				? " Throws <see cref=\"System.ArgumentException\"/> when the result is not positive."
+				: " Throws <see cref=\"System.ArgumentException\"/> when the number is negative.";
 
 		AddBinaryOperator(cls, fullType, "*", fullType, "T", $"=> {scaledLeft};",
 			$"Scales a {docRef} by a bare number.{scaleRemark}");
@@ -1279,8 +1286,10 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			Constraints = {"where T : struct, INumber<T>"},
 		};
 
+		bool strictPositive = type.Magnitude == Magnitude.Positive;
+
 		// Everything a quantity used to inherit from the PhysicalQuantity record.
-		AddValueTypeCore(cls, fullType, isV0: vectorForm == 0);
+		AddValueTypeCore(cls, fullType, isV0: vectorForm == 0, strictPositive: strictPositive);
 
 		// Zero property
 		cls.Members.Add(new FieldTemplate()
@@ -1296,7 +1305,6 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		// dimensions.json (#51, e.g. Wavelength, Period, HalfLife) get the stricter
 		// EnsurePositive guard so a zero input is rejected too. V1 overloads accept
 		// any sign, and like their V1 base hold a difference, so they leave out the unit offset (#283).
-		bool strictPositive = type.Magnitude == Magnitude.Positive;
 		AddUnitFactories(
 			cls,
 			dim.AvailableUnits,
@@ -1319,35 +1327,48 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			BodyFactory = (body) => body.Write($"=> {baseFullType}.Create(value.Value);"),
 		});
 
+		// Narrowing takes the overload's own rule with it: a strictly positive overload refuses a zero
+		// base (#354). The base already guarantees anything weaker.
+		string narrowed = strictPositive ? "Create(Vector0Guards.EnsurePositive(value.Value, nameof(value)))" : "Create(value.Value)";
+		string narrowRemark = strictPositive ? $" Throws <see cref=\"System.ArgumentException\"/> when the value is zero, which a {typeName} cannot be." : string.Empty;
+
 		// Explicit narrowing from base type
 		cls.Members.Add(new MethodTemplate()
 		{
-			Comments = {$"/// <summary>Explicit conversion from {baseTypeName}.</summary>"},
+			Comments = {$"/// <summary>Explicit conversion from {baseTypeName}.{narrowRemark}</summary>"},
 			Keywords = {Emit.Public, Emit.Static, "explicit", "operator"},
 			Name = fullType,
 			Parameters = {new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }},
-			BodyFactory = (body) => body.Write($"=> Create(value.Value);"),
+			BodyFactory = (body) => body.Write($"=> {narrowed};"),
 		});
 
 		// Factory-style narrowing from base
 		cls.Members.Add(new MethodTemplate()
 		{
-			Comments = {$"/// <summary>Creates a {typeName} from a {baseTypeName} value.</summary>"},
+			Comments = {$"/// <summary>Creates a {typeName} from a {baseTypeName} value.{narrowRemark}</summary>"},
 			Keywords = {Emit.Public, Emit.Static, fullType},
 			Name = "From",
 			Parameters = {new ParameterTemplate { Type = baseFullType, Name = Emit.ValueParameter }},
-			BodyFactory = (body) => body.Write("=> Create(value.Value);"),
+			BodyFactory = (body) => body.Write($"=> {narrowed};"),
 		});
 
 		// V0 overload subtraction returns the same V0 of T.Abs(left - right) (locked
 		// in #52). The overload-typed operator hides the base PhysicalQuantity's plain
 		// subtraction so overloads stay in their own type and the magnitude invariant
 		// is preserved.
+		// For a strictly positive overload the difference of two equal values is zero, which the type
+		// cannot hold, so it throws like every other path to zero (#354).
 		if (vectorForm == 0)
 		{
+			string difference = strictPositive
+				? "=> Create(Vector0Guards.EnsurePositive(T.Abs(left.Quantity - right.Quantity), nameof(right)));"
+				: "=> Create(T.Abs(left.Quantity - right.Quantity));";
+			string differenceSummary = strictPositive
+				? $"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a positive {typeName}. Throws <see cref=\"System.ArgumentException\"/> when the two are equal, since a {typeName} cannot be zero; widen to <see cref=\"{baseTypeName}{{T}}\"/> first for a difference that may be.</summary>"
+				: $"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.</summary>";
 			cls.Members.Add(new MethodTemplate()
 			{
-				Comments = {$"/// <summary>Subtracts two {typeName} values, returning the absolute difference as a non-negative {typeName}.</summary>"},
+				Comments = {differenceSummary},
 				Attributes = {Emit.PhysicsOperatorSuppression},
 				Keywords = {Emit.Public, Emit.Static, fullType},
 				Name = "operator -",
@@ -1356,7 +1377,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 					new ParameterTemplate { Type = fullType, Name = "left" },
 					new ParameterTemplate { Type = fullType, Name = Emit.RightParameter },
 				},
-				BodyFactory = (body) => body.Write("=> Create(T.Abs(left.Quantity - right.Quantity));"),
+				BodyFactory = (body) => body.Write(difference),
 			});
 		}
 
@@ -1504,8 +1525,9 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 						new ParameterTemplate { Type = $"{op.LeftTypeName}<T>", Name = "left" },
 						new ParameterTemplate { Type = $"{op.RightTypeName}<T>", Name = Emit.RightParameter },
 					},
-					BodyFactory = (body) => body.Write(
-						$"=> {op.ReturnTypeName}<T>.Create(left.Quantity {op.Op} right.Quantity);"),
+					BodyFactory = (body) => body.Write(op.Op == "/"
+						? $"=> {DivideByZeroGuard("right.Quantity")}{op.ReturnTypeName}<T>.Create(left.Quantity / right.Quantity);"
+						: $"=> {op.ReturnTypeName}<T>.Create(left.Quantity {op.Op} right.Quantity);"),
 				});
 			}
 			else
@@ -1542,7 +1564,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		{
 			// VN op V0: component-wise with right.Value
 			string initExpr = string.Join(", ", resultComponents.Select(c => $"{c} = left.{c} {op.Op} right.Value"));
-			bodyExpr = $"=> new() {{ {initExpr} }};";
+			string guard = op.Op == "/" ? DivideByZeroGuard("right.Value") : string.Empty;
+			bodyExpr = $"=> {guard}new() {{ {initExpr} }};";
 		}
 		else if (leftForm <= 1 && rightForm >= 2)
 		{
@@ -1608,8 +1631,9 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 			{
 				// VN * V0 or VN / V0 => VN result
 				string initExpr = string.Join(", ", resultComponents.Select(c => $"{c} = left.{c} {op.Op} right.Value"));
+				string guard = op.Op == "/" ? DivideByZeroGuard("right.Value") : string.Empty;
 				cb.WriteLine($"/// <summary>{op.LeftTypeName} {op.Op} {op.RightTypeName} = {op.ReturnTypeName}.</summary>");
-				cb.WriteLine($"public static {op.ReturnTypeName}<T> operator {op.Op}({op.LeftTypeName}<T> left, {op.RightTypeName}<T> right) => new() {{ {initExpr} }};");
+				cb.WriteLine($"public static {op.ReturnTypeName}<T> operator {op.Op}({op.LeftTypeName}<T> left, {op.RightTypeName}<T> right) => {guard}new() {{ {initExpr} }};");
 				cb.NewLine();
 			}
 			else if (leftForm <= 1 && rightForm >= 2 && op.Op == "*")
@@ -1815,13 +1839,11 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	{
 		string sumOfSquares = string.Join(" + ", components.Select(c => $"({c} * {c})"));
 
+		// The norm is scaled by the largest component rather than squared and summed, so a vector
+		// whose squares leave the storage type still has its length (#327).
 		cb.WriteLine("/// <summary>Calculates the length of the vector.</summary>");
-		cb.WriteLine("public T Length()");
-		using (new Scope(cb))
-		{
-			cb.WriteLine($"T sum = {sumOfSquares};");
-			cb.WriteLine("return StorageMath.Sqrt(sum);");
-		}
+		cb.WriteLine("/// <remarks>Computed without squaring the components outright, so a length the storage type can hold is returned even when the squares of the components are past its range.</remarks>");
+		cb.WriteLine($"public T Length() => StorageMath.Hypot({string.Join(", ", components)});");
 
 		cb.NewLine();
 
@@ -1855,9 +1877,7 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 				cb.WriteLine($"T d{comp} = {comp} - other.{comp};");
 			}
 
-			string distSum = string.Join(" + ", components.Select(c => $"(d{c} * d{c})"));
-			cb.WriteLine($"T sum = {distSum};");
-			cb.WriteLine("return StorageMath.Sqrt(sum);");
+			cb.WriteLine($"return StorageMath.Hypot({string.Join(", ", components.Select(c => $"d{c}"))});");
 		}
 
 		cb.NewLine();
@@ -1878,10 +1898,18 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 		cb.NewLine();
 
 		cb.WriteLine("/// <summary>Returns a normalized version of the vector.</summary>");
+		cb.WriteLine("/// <exception cref=\"System.DivideByZeroException\">The vector has zero length, so it has no direction.</exception>");
 		cb.WriteLine($"public {fullType} Normalize()");
 		using (new Scope(cb))
 		{
 			cb.WriteLine("T len = Length();");
+			cb.WriteLine("if (T.IsZero(len))");
+			using (new Scope(cb))
+			{
+				cb.WriteLine("throw new System.DivideByZeroException(\"Cannot normalize a zero-length vector.\");");
+			}
+
+			cb.NewLine();
 			string normInit = string.Join(", ", components.Select(c => $"{c} = {c} / len"));
 			cb.WriteLine($"return new() {{ {normInit} }};");
 		}
@@ -1913,7 +1941,8 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 
 		string divInit = string.Join(", ", components.Select(c => $"{c} = vector.{c} / scalar"));
 		cb.WriteLine("/// <summary>Divides a vector by a scalar.</summary>");
-		cb.WriteLine($"public static {fullType} operator /({fullType} vector, T scalar) => new() {{ {divInit} }};");
+		cb.WriteLine("/// <exception cref=\"System.DivideByZeroException\"><paramref name=\"scalar\"/> is zero.</exception>");
+		cb.WriteLine($"public static {fullType} operator /({fullType} vector, T scalar) => {DivideByZeroGuard("scalar")}new() {{ {divInit} }};");
 		cb.NewLine();
 
 		string negInit = string.Join(", ", components.Select(c => $"{c} = -vector.{c}"));
@@ -1924,6 +1953,16 @@ public class QuantitiesGenerator : SemanticsMultiFileGenerator
 	#endregion
 
 	#region Helper Methods
+
+	/// <summary>
+	/// The start of an expression body that throws <see cref="DivideByZeroException"/> when
+	/// <paramref name="divisor"/> is zero, the same way the same-dimension operators do (#480), so a
+	/// quotient never holds an infinity or a NaN that the factories would have refused.
+	/// </summary>
+	/// <param name="divisor">The expression divided by.</param>
+	/// <returns>A conditional to put before the quotient.</returns>
+	private static string DivideByZeroGuard(string divisor) =>
+		$"T.IsZero({divisor}) ? throw new System.DivideByZeroException(\"Cannot divide by zero.\") : ";
 
 	private static VectorFormDefinition? GetFormDef(PhysicalDimension dim, int form) => form switch
 	{

@@ -175,8 +175,9 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 		cb.WriteLine($"/// {conversion.FromSummary ?? $"Creates a value from the linear {linear}."}");
 		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine($"/// <param name=\"linear\">The linear <see cref=\"{linear}{{T}}\"/>.</param>");
-		cb.WriteLine($"/// <returns>A new <see cref=\"{scale.Name}{{T}}\"/>. A linear value of zero maps to negative infinity.</returns>");
+		cb.WriteLine($"/// <returns>A new <see cref=\"{scale.Name}{{T}}\"/>. A linear value of zero maps to negative infinity where <typeparamref name=\"T\"/> can hold it.</returns>");
 		WriteDoublePrecisionRemarks(cb);
+		cb.WriteLine("/// <exception cref=\"ArgumentOutOfRangeException\"><typeparamref name=\"T\"/> cannot hold the result, as for a linear value of zero with <see langword=\"decimal\"/> or integer storage.</exception>");
 		cb.WriteLine($"public static {fullType} {fromName}({linear}<T> linear)");
 		using (new Scope(cb))
 		{
@@ -186,7 +187,7 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 				cb.WriteLine($"double reference = {referenceExpr};");
 			}
 
-			cb.WriteLine($"return new(T.CreateChecked({multiplier} * {logExpr}));");
+			cb.WriteLine($"return new(LogarithmicStorage.FromLinear<T>({multiplier} * {logExpr}, nameof(linear)));");
 		}
 
 		cb.NewLine();
@@ -201,6 +202,7 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 		cb.WriteLine(Emit.SummaryClose);
 		cb.WriteLine($"/// <returns>The linear <see cref=\"{linear}{{T}}\"/>.</returns>");
 		WriteDoublePrecisionRemarks(cb);
+		cb.WriteLine("/// <exception cref=\"OverflowException\"><typeparamref name=\"T\"/> cannot hold the linear value of a level this high.</exception>");
 		cb.WriteLine($"public {linear}<T> {toName}()");
 		using (new Scope(cb))
 		{
@@ -210,7 +212,7 @@ public class LogarithmicScalesGenerator : SemanticsGenerator<LogarithmicMetadata
 				cb.WriteLine($"double reference = {referenceExpr};");
 			}
 
-			cb.WriteLine($"return {linear}<T>.Create(T.CreateChecked({inverseExpr}));");
+			cb.WriteLine($"return {linear}<T>.Create(LogarithmicStorage.ToLinear<T>({inverseExpr}));");
 		}
 
 		cb.NewLine();

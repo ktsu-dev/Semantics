@@ -124,24 +124,24 @@ public readonly partial record struct ChargeMagnitude<T> : IVector0<ChargeMagnit
 	/// Divides ChargeMagnitude by Duration to produce CurrentMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static CurrentMagnitude<T> operator /(ChargeMagnitude<T> left, Duration<T> right) => CurrentMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static CurrentMagnitude<T> operator /(ChargeMagnitude<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : CurrentMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides ChargeMagnitude by CurrentMagnitude to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(ChargeMagnitude<T> left, CurrentMagnitude<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(ChargeMagnitude<T> left, CurrentMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides ChargeMagnitude by VoltageMagnitude to produce Capacitance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Capacitance<T> operator /(ChargeMagnitude<T> left, VoltageMagnitude<T> right) => Capacitance<T>.Create(left.Quantity / right.Quantity);
+	public static Capacitance<T> operator /(ChargeMagnitude<T> left, VoltageMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Capacitance<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides ChargeMagnitude by Capacitance to produce VoltageMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator /(ChargeMagnitude<T> left, Capacitance<T> right) => VoltageMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static VoltageMagnitude<T> operator /(ChargeMagnitude<T> left, Capacitance<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : VoltageMagnitude<T>.Create(left.Quantity / right.Quantity);
 }
 

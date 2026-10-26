@@ -140,13 +140,13 @@ public readonly partial record struct ForceMagnitude<T> : IVector0<ForceMagnitud
 	/// Divides ForceMagnitude by AccelerationMagnitude to produce Mass.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Mass<T> operator /(ForceMagnitude<T> left, AccelerationMagnitude<T> right) => Mass<T>.Create(left.Quantity / right.Quantity);
+	public static Mass<T> operator /(ForceMagnitude<T> left, AccelerationMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Mass<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides ForceMagnitude by Mass to produce AccelerationMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AccelerationMagnitude<T> operator /(ForceMagnitude<T> left, Mass<T> right) => AccelerationMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static AccelerationMagnitude<T> operator /(ForceMagnitude<T> left, Mass<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : AccelerationMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies ForceMagnitude by Length to produce Energy.
@@ -170,18 +170,18 @@ public readonly partial record struct ForceMagnitude<T> : IVector0<ForceMagnitud
 	/// Divides ForceMagnitude by Area to produce Pressure.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Pressure<T> operator /(ForceMagnitude<T> left, Area<T> right) => Pressure<T>.Create(left.Quantity / right.Quantity);
+	public static Pressure<T> operator /(ForceMagnitude<T> left, Area<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Pressure<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides ForceMagnitude by Length to produce SurfaceTension.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SurfaceTension<T> operator /(ForceMagnitude<T> left, Length<T> right) => SurfaceTension<T>.Create(left.Quantity / right.Quantity);
+	public static SurfaceTension<T> operator /(ForceMagnitude<T> left, Length<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : SurfaceTension<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides ForceMagnitude by SurfaceTension to produce Length.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Length<T> operator /(ForceMagnitude<T> left, SurfaceTension<T> right) => Length<T>.Create(left.Quantity / right.Quantity);
+	public static Length<T> operator /(ForceMagnitude<T> left, SurfaceTension<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Length<T>.Create(left.Quantity / right.Quantity);
 }
 

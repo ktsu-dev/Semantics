@@ -122,6 +122,6 @@ public readonly partial record struct Momentum1D<T> : IVector1<Momentum1D<T>, T>
 	/// Divides Momentum1D by Duration to produce Force1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Force1D<T> operator /(Momentum1D<T> left, Duration<T> right) => Force1D<T>.Create(left.Quantity / right.Quantity);
+	public static Force1D<T> operator /(Momentum1D<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Force1D<T>.Create(left.Quantity / right.Quantity);
 }
 

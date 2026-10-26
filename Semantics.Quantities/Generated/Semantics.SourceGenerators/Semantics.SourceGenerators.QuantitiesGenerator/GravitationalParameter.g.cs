@@ -124,12 +124,12 @@ public readonly partial record struct GravitationalParameter<T> : IVector0<Gravi
 	/// Divides GravitationalParameter by Area to produce AccelerationMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AccelerationMagnitude<T> operator /(GravitationalParameter<T> left, Area<T> right) => AccelerationMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static AccelerationMagnitude<T> operator /(GravitationalParameter<T> left, Area<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : AccelerationMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides GravitationalParameter by Length to produce SpecificEnergyMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SpecificEnergyMagnitude<T> operator /(GravitationalParameter<T> left, Length<T> right) => SpecificEnergyMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static SpecificEnergyMagnitude<T> operator /(GravitationalParameter<T> left, Length<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : SpecificEnergyMagnitude<T>.Create(left.Quantity / right.Quantity);
 }
 

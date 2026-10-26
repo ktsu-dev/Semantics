@@ -140,25 +140,25 @@ public readonly partial record struct Power<T> : IVector0<Power<T>, T>, IPhysica
 	/// Divides Power by VoltageMagnitude to produce CurrentMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static CurrentMagnitude<T> operator /(Power<T> left, VoltageMagnitude<T> right) => CurrentMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static CurrentMagnitude<T> operator /(Power<T> left, VoltageMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : CurrentMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by CurrentMagnitude to produce VoltageMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator /(Power<T> left, CurrentMagnitude<T> right) => VoltageMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static VoltageMagnitude<T> operator /(Power<T> left, CurrentMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : VoltageMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by Speed to produce ForceMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ForceMagnitude<T> operator /(Power<T> left, Speed<T> right) => ForceMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static ForceMagnitude<T> operator /(Power<T> left, Speed<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : ForceMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by ForceMagnitude to produce Speed.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Speed<T> operator /(Power<T> left, ForceMagnitude<T> right) => Speed<T>.Create(left.Quantity / right.Quantity);
+	public static Speed<T> operator /(Power<T> left, ForceMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Speed<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies Power by Duration to produce Energy.
@@ -170,24 +170,24 @@ public readonly partial record struct Power<T> : IVector0<Power<T>, T>, IPhysica
 	/// Divides Power by Area to produce Irradiance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Irradiance<T> operator /(Power<T> left, Area<T> right) => Irradiance<T>.Create(left.Quantity / right.Quantity);
+	public static Irradiance<T> operator /(Power<T> left, Area<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Irradiance<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by Irradiance to produce Area.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Area<T> operator /(Power<T> left, Irradiance<T> right) => Area<T>.Create(left.Quantity / right.Quantity);
+	public static Area<T> operator /(Power<T> left, Irradiance<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Area<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by Volume to produce ElectricPowerDensity.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ElectricPowerDensity<T> operator /(Power<T> left, Volume<T> right) => ElectricPowerDensity<T>.Create(left.Quantity / right.Quantity);
+	public static ElectricPowerDensity<T> operator /(Power<T> left, Volume<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : ElectricPowerDensity<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Power by ElectricPowerDensity to produce Volume.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Volume<T> operator /(Power<T> left, ElectricPowerDensity<T> right) => Volume<T>.Create(left.Quantity / right.Quantity);
+	public static Volume<T> operator /(Power<T> left, ElectricPowerDensity<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Volume<T>.Create(left.Quantity / right.Quantity);
 }
 
