@@ -129,12 +129,12 @@ public readonly partial record struct Voltage<T> : IVector1<Voltage<T>, T>, IPhy
 	/// Divides Voltage by Resistance to produce Current1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Current1D<T> operator /(Voltage<T> left, Resistance<T> right) => Current1D<T>.Create(left.Quantity / right.Quantity);
+	public static Current1D<T> operator /(Voltage<T> left, Resistance<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Current1D<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Voltage by Length to produce ElectricField1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ElectricField1D<T> operator /(Voltage<T> left, Length<T> right) => ElectricField1D<T>.Create(left.Quantity / right.Quantity);
+	public static ElectricField1D<T> operator /(Voltage<T> left, Length<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : ElectricField1D<T>.Create(left.Quantity / right.Quantity);
 }
 

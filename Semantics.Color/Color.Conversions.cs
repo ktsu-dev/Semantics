@@ -120,6 +120,11 @@ public readonly partial record struct Color
 	/// <param name="oklab">The Oklab color.</param>
 	/// <param name="a">Straight alpha (default 1.0).</param>
 	/// <returns>The linear-RGB color.</returns>
+	/// <remarks>
+	/// The conversion is exact and does not gamut-map, so an Oklab value outside sRGB, or a round trip that lands
+	/// a rounding error past white, gives channels outside 0..1. Call <see cref="Clamp"/> on the result when an
+	/// in-gamut color is needed; <see cref="MixOklab"/> and <see cref="Gradient"/> already return one.
+	/// </remarks>
 	public static Color FromOklab(Oklab oklab, double a = 1.0) => oklab.ToColor(a);
 
 	/// <summary>Converts this linear color to <see cref="Oklch"/>.</summary>
@@ -130,6 +135,11 @@ public readonly partial record struct Color
 	/// <param name="oklch">The Oklch color.</param>
 	/// <param name="a">Straight alpha (default 1.0).</param>
 	/// <returns>The linear-RGB color.</returns>
+	/// <remarks>
+	/// The conversion is exact and does not gamut-map, so an Oklab value outside sRGB, or a round trip that lands
+	/// a rounding error past white, gives channels outside 0..1. Call <see cref="Clamp"/> on the result when an
+	/// in-gamut color is needed; <see cref="MixOklab"/> and <see cref="Gradient"/> already return one.
+	/// </remarks>
 	public static Color FromOklch(Oklch oklch, double a = 1.0) => oklch.ToOklab().ToColor(a);
 
 	/// <summary>Converts this linear color to <see cref="Hsl"/> (via sRGB).</summary>

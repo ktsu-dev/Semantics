@@ -355,7 +355,7 @@ dimension check can catch that, since a cross product and its negation have iden
 
 ### How Semantic Overloads Participate
 
-Semantic overloads participate in cross-dimensional operations through implicit widening to their base type. The resolution chain:
+Semantic overloads participate in cross-dimensional operations through forwarding operators and implicit widening to their base type. C# looks for an operator only on the two operand types, and never widens the left operand to find one, so each overload declares a copy of every relationship operator its base has with the base on the left (#456). The resolution chain:
 
 ```csharp
 // User writes:
@@ -364,10 +364,10 @@ Height h = Height.FromMeter(10.0);       // V0 overload of Length
 Energy e = w * h;                         // How does this work?
 
 // Resolution:
-// 1. Weight implicitly converts to ForceMagnitude (base)
+// 1. Weight declares operator *(Weight, Length), forwarded from ForceMagnitude * Length
 // 2. Height implicitly converts to Length (base)
-// 3. ForceMagnitude * Length = Energy (generated operator)
-// 4. Result: Energy
+// 3. The forward widens Weight to ForceMagnitude and calls ForceMagnitude * Length = Energy
+// 4. Result: Energy (always the base type, never an overload)
 ```
 
 ```csharp

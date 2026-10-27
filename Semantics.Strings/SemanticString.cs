@@ -7,7 +7,6 @@ using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Reflection;
 using System.Text;
 
 /// <summary>
@@ -533,7 +532,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		where TDest : SemanticString<TDest>
 	{
 		TDest newInstance = FromStringInternal<TDest>(value: value);
-		return PerformValidation(value: newInstance);
+		return newInstance.IsValid() ? newInstance : throw new ArgumentException(message: ValidationFailureMessage(newInstance));
 	}
 
 	/// <summary>
@@ -629,28 +628,21 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	{
 		Ensure.NotNull(value);
 
-		Type typeOfTDest = typeof(TDest);
-		TDest newInstance = (TDest)Ensure.NotNull(Activator.CreateInstance(type: typeOfTDest));
-		PropertyInfo weakStringProperty = Ensure.NotNull(typeOfTDest.GetProperty(name: nameof(WeakString)));
-		weakStringProperty.SetValue(obj: newInstance, value: newInstance.MakeCanonical(value));
+		TDest newInstance = Ensure.NotNull(Activator.CreateInstance<TDest>());
+		WeakStringSetter<TDest>.Set(newInstance, newInstance.MakeCanonical(value));
 		return newInstance;
 	}
 
 	/// <summary>
-	/// Validates a semantic string instance and throws an exception if validation fails.
+	/// The <see cref="WeakString"/> init accessor as a delegate, looked up once per type rather than per value (#444).
 	/// </summary>
-	/// <typeparam name="TDest">The semantic string type being validated.</typeparam>
-	/// <param name="value">The semantic string instance to validate.</param>
-	/// <returns>The validated semantic string instance.</returns>
-	/// <exception cref="ArgumentException">The semantic string instance is null or fails validation.</exception>
-	private static TDest PerformValidation<TDest>(TDest? value)
+	/// <typeparam name="TDest">The semantic string type to set the value of.</typeparam>
+	private static class WeakStringSetter<TDest>
 		where TDest : SemanticString<TDest>
 	{
-		if (value == null || !value.IsValid())
-		{
-			throw new ArgumentException(message: ValidationFailureMessage(value));
-		}
-		return value;
+		internal static readonly Action<TDest, string> Set = (Action<TDest, string>)Delegate.CreateDelegate(
+			typeof(Action<TDest, string>),
+			Ensure.NotNull(typeof(TDest).GetProperty(name: nameof(WeakString))?.GetSetMethod()));
 	}
 
 	/// <summary>
@@ -796,14 +788,23 @@ public abstract record SemanticString<TDerived> : ISemanticString
 		where TDest : SemanticString<TDest>
 	{
 		result = null;
+		if (value is null)
+		{
+			return false;
+		}
+
+		// A rejected value is the expected case here, so it is reported by the return value rather than by an
+		// exception, and its reasons are never put into words (#443). The catch is only for a MakeCanonical or a
+		// validator that rejects its input by throwing, as Create would report it.
 		try
 		{
-			if (value is null)
+			TDest instance = FromStringInternal<TDest>(value);
+			if (!instance.IsValid())
 			{
 				return false;
 			}
 
-			result = Create<TDest>(value);
+			result = instance;
 			return true;
 		}
 		catch (ArgumentException)
@@ -825,23 +826,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	private static bool TryFromCharArray<TDest>(char[]? value, out TDest? result)
 		where TDest : SemanticString<TDest>
-	{
-		result = null;
-		try
-		{
-			if (value is null)
-			{
-				return false;
-			}
-
-			result = Create<TDest>(value);
-			return true;
-		}
-		catch (ArgumentException)
-		{
-			return false;
-		}
-	}
+		=> TryFromString(value is null ? null : new string(value: value), out result);
 
 	/// <summary>
 	/// Attempts to create a new instance of the specified semantic string type from a read-only character span without throwing exceptions.
@@ -857,18 +842,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// </remarks>
 	private static bool TryFromReadOnlySpan<TDest>(ReadOnlySpan<char> value, out TDest? result)
 		where TDest : SemanticString<TDest>
-	{
-		result = null;
-		try
-		{
-			result = Create<TDest>(value);
-			return true;
-		}
-		catch (ArgumentException)
-		{
-			return false;
-		}
-	}
+		=> TryFromString(value.ToString(), out result);
 
 	/// <summary>
 	/// Gets this semantic string as a read-only span without allocation.

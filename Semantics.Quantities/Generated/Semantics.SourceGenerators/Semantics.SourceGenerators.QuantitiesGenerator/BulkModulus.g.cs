@@ -158,5 +158,17 @@ public readonly partial record struct BulkModulus<T> : IVector0<BulkModulus<T>, 
 	/// <summary>Subtracts two BulkModulus values, returning the absolute difference as a non-negative BulkModulus.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static BulkModulus<T> operator -(BulkModulus<T> left, BulkModulus<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>BulkModulus * Area = ForceMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(BulkModulus<T> left, Area<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>BulkModulus * Volume = Energy, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(BulkModulus<T> left, Volume<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>BulkModulus * Sensitivity = VoltageMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(BulkModulus<T> left, Sensitivity<T> right) => (Pressure<T>)left * right;
 }
 

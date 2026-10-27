@@ -134,5 +134,9 @@ public readonly partial record struct ActivationEnergy<T> : IVector0<ActivationE
 	/// <summary>Subtracts two ActivationEnergy values, returning the absolute difference as a non-negative ActivationEnergy.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static ActivationEnergy<T> operator -(ActivationEnergy<T> left, ActivationEnergy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>ActivationEnergy * AmountOfSubstance = Energy, through <see cref="MolarEnergy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(ActivationEnergy<T> left, AmountOfSubstance<T> right) => (MolarEnergy<T>)left * right;
 }
 

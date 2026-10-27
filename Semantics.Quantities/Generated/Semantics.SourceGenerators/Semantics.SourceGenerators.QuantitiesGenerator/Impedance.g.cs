@@ -134,5 +134,13 @@ public readonly partial record struct Impedance<T> : IVector0<Impedance<T>, T>, 
 	/// <summary>Subtracts two Impedance values, returning the absolute difference as a non-negative Impedance.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Impedance<T> operator -(Impedance<T> left, Impedance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Impedance * CurrentMagnitude = VoltageMagnitude, through <see cref="Resistance{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(Impedance<T> left, CurrentMagnitude<T> right) => (Resistance<T>)left * right;
+
+	/// <summary>Impedance * Current1D = Voltage, through <see cref="Resistance{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Voltage<T> operator *(Impedance<T> left, Current1D<T> right) => (Resistance<T>)left * right;
 }
 

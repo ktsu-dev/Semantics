@@ -12,13 +12,28 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	/// <summary>
 	/// Gets the parent directory of this directory path.
 	/// </summary>
-	/// <value>A <see cref="DirectoryPath"/> representing the parent directory, or an empty path if this is a root directory.</value>
+	/// <value>
+	/// A <see cref="DirectoryPath"/> naming the directory that contains this one, or an empty path when this path
+	/// resolves to a root directory.
+	/// </value>
+	/// <remarks>
+	/// <c>.</c> and <c>..</c> segments are resolved before the last segment is dropped, so the parent of
+	/// <c>/home/user/..</c> is <c>/</c> rather than <c>/home/user</c>. A rooted path is resolved as
+	/// <see cref="AbsoluteDirectoryPath.Parent"/> resolves it, and a relative one is normalized lexically as
+	/// <see cref="RelativeDirectoryPath.Parent"/> normalizes it, so it is never resolved against the working
+	/// directory: the parent of <c>a/..</c> is <c>..</c>, and the parent of <c>..</c> is <c>../..</c>.
+	/// </remarks>
 	public DirectoryPath Parent
 	{
 		get
 		{
-			string? parentPath = Path.GetDirectoryName(WeakString);
-			return Create<DirectoryPath>(parentPath ?? "");
+			if (Path.IsPathRooted(WeakString))
+			{
+				string? parent = Path.GetDirectoryName(Path.GetFullPath(WeakString));
+				return Create<DirectoryPath>(parent ?? "");
+			}
+
+			return Create<DirectoryPath>(RelativeDirectoryPath.Create<RelativeDirectoryPath>(WeakString).Parent.WeakString);
 		}
 	}
 

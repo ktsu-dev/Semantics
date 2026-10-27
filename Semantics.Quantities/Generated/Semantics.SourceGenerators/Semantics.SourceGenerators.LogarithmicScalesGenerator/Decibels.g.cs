@@ -41,7 +41,7 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// Creates a level from an amplitude gain using dB = 20·log10(gain).
 	/// </summary>
 	/// <param name="linear">The linear <see cref="Gain{T}"/>.</param>
-	/// <returns>A new <see cref="Decibels{T}"/>. A linear value of zero maps to negative infinity.</returns>
+	/// <returns>A new <see cref="Decibels{T}"/>. A linear value of zero maps to negative infinity where <typeparamref name="T"/> can hold it.</returns>
 	/// <remarks>
 	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
 	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
@@ -49,10 +49,11 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="ArgumentOutOfRangeException"><typeparamref name="T"/> cannot hold the result, as for a linear value of zero with <see langword="decimal"/> or integer storage.</exception>
 	public static Decibels<T> FromGain(Gain<T> linear)
 	{
 		double linearValue = double.CreateChecked(linear.Value);
-		return new(T.CreateChecked(20.0 * Math.Log10(linearValue)));
+		return new(LogarithmicStorage.FromLinear<T>(20.0 * Math.Log10(linearValue), nameof(linear)));
 	}
 
 	/// <summary>
@@ -66,17 +67,18 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="OverflowException"><typeparamref name="T"/> cannot hold the linear value of a level this high.</exception>
 	public Gain<T> ToAmplitude()
 	{
 		double scaleValue = double.CreateChecked(Value);
-		return Gain<T>.Create(T.CreateChecked(Math.Pow(10.0, scaleValue / 20.0)));
+		return Gain<T>.Create(LogarithmicStorage.ToLinear<T>(Math.Pow(10.0, scaleValue / 20.0)));
 	}
 
 	/// <summary>
 	/// Creates a level from a linear power ratio using dB = 10·log10(ratio).
 	/// </summary>
 	/// <param name="linear">The linear <see cref="Ratio{T}"/>.</param>
-	/// <returns>A new <see cref="Decibels{T}"/>. A linear value of zero maps to negative infinity.</returns>
+	/// <returns>A new <see cref="Decibels{T}"/>. A linear value of zero maps to negative infinity where <typeparamref name="T"/> can hold it.</returns>
 	/// <remarks>
 	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
 	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
@@ -84,10 +86,11 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="ArgumentOutOfRangeException"><typeparamref name="T"/> cannot hold the result, as for a linear value of zero with <see langword="decimal"/> or integer storage.</exception>
 	public static Decibels<T> FromPowerRatio(Ratio<T> linear)
 	{
 		double linearValue = double.CreateChecked(linear.Value);
-		return new(T.CreateChecked(10.0 * Math.Log10(linearValue)));
+		return new(LogarithmicStorage.FromLinear<T>(10.0 * Math.Log10(linearValue), nameof(linear)));
 	}
 
 	/// <summary>
@@ -101,10 +104,11 @@ public readonly partial record struct Decibels<T>(T Value) : IComparable<Decibel
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="OverflowException"><typeparamref name="T"/> cannot hold the linear value of a level this high.</exception>
 	public Ratio<T> ToPower()
 	{
 		double scaleValue = double.CreateChecked(Value);
-		return Ratio<T>.Create(T.CreateChecked(Math.Pow(10.0, scaleValue / 10.0)));
+		return Ratio<T>.Create(LogarithmicStorage.ToLinear<T>(Math.Pow(10.0, scaleValue / 10.0)));
 	}
 
 	/// <summary>Adds two values in log space (cascading two linear stages multiplies them).</summary>

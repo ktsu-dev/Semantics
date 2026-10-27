@@ -34,7 +34,8 @@ public readonly partial record struct Gain<T>
 	/// <summary>
 	/// Converts this gain to a level in decibels using the amplitude convention <c>dB = 20·log10(gain)</c>.
 	/// </summary>
-	/// <returns>The equivalent <see cref="Decibels{T}"/>. Silence maps to negative infinity.</returns>
+	/// <returns>The equivalent <see cref="Decibels{T}"/>. Silence maps to negative infinity where <typeparamref name="T"/> can hold it.</returns>
+	/// <exception cref="ArgumentOutOfRangeException"><typeparamref name="T"/> cannot hold the level, as for silence with <see langword="decimal"/> or integer storage.</exception>
 	public Decibels<T> ToDecibels() => Decibels<T>.FromGain(this);
 
 	/// <summary>Multiplies two gains (cascading two stages).</summary>

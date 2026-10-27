@@ -158,5 +158,17 @@ public readonly partial record struct YoungsModulus<T> : IVector0<YoungsModulus<
 	/// <summary>Subtracts two YoungsModulus values, returning the absolute difference as a non-negative YoungsModulus.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static YoungsModulus<T> operator -(YoungsModulus<T> left, YoungsModulus<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>YoungsModulus * Area = ForceMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(YoungsModulus<T> left, Area<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>YoungsModulus * Volume = Energy, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(YoungsModulus<T> left, Volume<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>YoungsModulus * Sensitivity = VoltageMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(YoungsModulus<T> left, Sensitivity<T> right) => (Pressure<T>)left * right;
 }
 

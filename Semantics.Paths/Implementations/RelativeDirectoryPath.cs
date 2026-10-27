@@ -78,33 +78,28 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	private int? _cachedDepth;
 
 	/// <summary>
-	/// Gets the depth of this relative directory path (number of directory levels).
+	/// Gets the depth of this relative directory path: the number of levels below its first segment.
 	/// </summary>
-	/// <value>The depth of the directory path.</value>
-	public int Depth => _cachedDepth ??= CalculateDepth(WeakString);
+	/// <value>
+	/// 0 for <c>a</c>, 1 for <c>a/b</c>, 2 for <c>a/b/c</c>. The path is normalized first, the same way as
+	/// <see cref="Normalize"/>, so <c>./a</c> has the same depth as <c>a</c>, a trailing separator does not add a
+	/// level, and <c>a/..</c>, <c>.</c> and the empty path, which all name the starting directory, have depth 0.
+	/// </value>
+	public int Depth => _cachedDepth ??= CalculateDepth();
 
 	/// <summary>
-	/// Calculates directory depth using span semantics for optimal performance.
+	/// Counts the segments of the normalized path, less the first.
 	/// </summary>
-	/// <param name="path">The path to analyze.</param>
 	/// <returns>The directory depth.</returns>
-	private static int CalculateDepth(string path)
+	private int CalculateDepth()
 	{
-		if (string.IsNullOrEmpty(path))
+		string normalized = Normalize().WeakString;
+		if (normalized.Length == 0 || normalized == ".")
 		{
 			return 0;
 		}
 
-		ReadOnlySpan<char> span = path.AsSpan();
-		int depth = 0;
-		for (int i = 0; i < span.Length; i++)
-		{
-			if (span[i] == Path.DirectorySeparatorChar || span[i] == Path.AltDirectorySeparatorChar)
-			{
-				depth++;
-			}
-		}
-		return depth;
+		return SpanPathUtilities.CountSegments(normalized.AsSpan()) - 1;
 	}
 
 	/// <summary>

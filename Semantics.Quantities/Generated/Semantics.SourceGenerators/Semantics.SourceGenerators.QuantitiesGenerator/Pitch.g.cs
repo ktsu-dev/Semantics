@@ -134,5 +134,13 @@ public readonly partial record struct Pitch<T> : IVector0<Pitch<T>, T>, IPhysica
 	/// <summary>Subtracts two Pitch values, returning the absolute difference as a non-negative Pitch.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Pitch<T> operator -(Pitch<T> left, Pitch<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Pitch * Duration = Ratio, through <see cref="Frequency{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(Pitch<T> left, Duration<T> right) => (Frequency<T>)left * right;
+
+	/// <summary>Pitch * Length = Speed, through <see cref="Frequency{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(Pitch<T> left, Length<T> right) => (Frequency<T>)left * right;
 }
 

@@ -184,5 +184,13 @@ public readonly partial record struct ReflectionCoefficient<T> : IVector1<Reflec
 
 	/// <summary>Creates a ReflectionCoefficient from a SignedRatio value.</summary>
 	public static ReflectionCoefficient<T> From(SignedRatio<T> value) => Create(value.Value);
+
+	/// <summary>ReflectionCoefficient * Ratio = SignedRatio, through <see cref="SignedRatio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedRatio<T> operator *(ReflectionCoefficient<T> left, Ratio<T> right) => (SignedRatio<T>)left * right;
+
+	/// <summary>ReflectionCoefficient / Ratio = SignedRatio, through <see cref="SignedRatio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedRatio<T> operator /(ReflectionCoefficient<T> left, Ratio<T> right) => (SignedRatio<T>)left / right;
 }
 

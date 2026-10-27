@@ -191,6 +191,6 @@ public readonly partial record struct SignedRatio<T> : IVector1<SignedRatio<T>, 
 	/// Divides SignedRatio by Ratio to produce SignedRatio.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SignedRatio<T> operator /(SignedRatio<T> left, Ratio<T> right) => SignedRatio<T>.Create(left.Quantity / right.Quantity);
+	public static SignedRatio<T> operator /(SignedRatio<T> left, Ratio<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : SignedRatio<T>.Create(left.Quantity / right.Quantity);
 }
 

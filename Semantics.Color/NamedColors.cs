@@ -5,7 +5,11 @@ namespace ktsu.Semantics.Color;
 using System;
 using System.Collections.Generic;
 
-/// <summary>A small table of common named colors (CSS/X11 subset), as linear <see cref="Color"/>.</summary>
+/// <summary>
+/// A small table of common CSS named colors, as linear <see cref="Color"/>. Every entry has the value CSS Color
+/// Module Level 4 gives it, so a name resolves to the same color it does in a browser: <c>green</c> is CSS's
+/// <c>#008000</c>, not X11's <c>#00FF00</c>, which CSS calls <c>lime</c>.
+/// </summary>
 public static class NamedColors
 {
 	/// <summary>Opaque black (#000000).</summary>
@@ -17,8 +21,11 @@ public static class NamedColors
 	/// <summary>Opaque red (#FF0000).</summary>
 	public static Color Red => Color.FromHex("#FF0000");
 
-	/// <summary>Opaque green (#00FF00).</summary>
-	public static Color Green => Color.FromHex("#00FF00");
+	/// <summary>Opaque green (#008000), as CSS defines it. Full-intensity green is <see cref="Lime"/>.</summary>
+	public static Color Green => Color.FromHex("#008000");
+
+	/// <summary>Opaque lime (#00FF00), full-intensity green.</summary>
+	public static Color Lime => Color.FromHex("#00FF00");
 
 	/// <summary>Opaque blue (#0000FF).</summary>
 	public static Color Blue => Color.FromHex("#0000FF");
@@ -50,6 +57,7 @@ public static class NamedColors
 		["white"] = White,
 		["red"] = Red,
 		["green"] = Green,
+		["lime"] = Lime,
 		["blue"] = Blue,
 		["yellow"] = Yellow,
 		["cyan"] = Cyan,

@@ -282,6 +282,82 @@ public static class StorageMath
 	}
 
 	/// <summary>
+	/// The length of a three-component vector, scaled the way <see cref="Hypot{T}(T, T)"/> is so components
+	/// whose squares leave the range of <typeparamref name="T"/> still have their length (#327).
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <param name="x">The first component.</param>
+	/// <param name="y">The second component.</param>
+	/// <param name="z">The third component.</param>
+	/// <returns>The square root of <c>x² + y² + z²</c>, or its floor for an integer type.</returns>
+	internal static T Hypot<T>(T x, T y, T z)
+		where T : struct, INumber<T>
+	{
+		if (IsRoundedThroughDouble<T>())
+		{
+			double dx = double.CreateChecked(x);
+			double dy = double.CreateChecked(y);
+			double dz = double.CreateChecked(z);
+			return T.CreateChecked(double.Hypot(double.Hypot(dx, dy), dz));
+		}
+
+		T larger = T.Max(T.Abs(x), T.Max(T.Abs(y), T.Abs(z)));
+		if (T.IsZero(larger))
+		{
+			return T.Zero;
+		}
+
+		if (HasFloorDivision<T>())
+		{
+			return Sqrt((x * x) + (y * y) + (z * z));
+		}
+
+		T rx = x / larger;
+		T ry = y / larger;
+		T rz = z / larger;
+		return larger * Sqrt((rx * rx) + (ry * ry) + (rz * rz));
+	}
+
+	/// <summary>
+	/// The length of a four-component vector, scaled as <see cref="Hypot{T}(T, T, T)"/> is.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <param name="x">The first component.</param>
+	/// <param name="y">The second component.</param>
+	/// <param name="z">The third component.</param>
+	/// <param name="w">The fourth component.</param>
+	/// <returns>The square root of <c>x² + y² + z² + w²</c>, or its floor for an integer type.</returns>
+	internal static T Hypot<T>(T x, T y, T z, T w)
+		where T : struct, INumber<T>
+	{
+		if (IsRoundedThroughDouble<T>())
+		{
+			double dx = double.CreateChecked(x);
+			double dy = double.CreateChecked(y);
+			double dz = double.CreateChecked(z);
+			double dw = double.CreateChecked(w);
+			return T.CreateChecked(double.Hypot(double.Hypot(dx, dy), double.Hypot(dz, dw)));
+		}
+
+		T larger = T.Max(T.Max(T.Abs(x), T.Abs(y)), T.Max(T.Abs(z), T.Abs(w)));
+		if (T.IsZero(larger))
+		{
+			return T.Zero;
+		}
+
+		if (HasFloorDivision<T>())
+		{
+			return Sqrt((x * x) + (y * y) + (z * z) + (w * w));
+		}
+
+		T rx = x / larger;
+		T ry = y / larger;
+		T rz = z / larger;
+		T rw = w / larger;
+		return larger * Sqrt((rx * rx) + (ry * ry) + (rz * rz) + (rw * rw));
+	}
+
+	/// <summary>
 	/// Reports whether <typeparamref name="T"/> is one of the primitives whose square root has always
 	/// been taken through <see cref="double"/>.
 	/// </summary>
@@ -593,8 +669,19 @@ public static class StorageMath
 	/// <returns>The root, to the precision the type holds.</returns>
 	/// <exception cref="ArithmeticException">The estimate does not settle within <see cref="MaximumIterations"/> steps.</exception>
 	/// <remarks>
+	/// <para>
 	/// On the same terms as <see cref="Sqrt{T}(T)"/>: an estimate that stops changing is the root, and
 	/// one alternating between two neighbours is rounding, so the smaller of the two is taken.
+	/// </para>
+	/// <para>
+	/// A type with no fixed precision, such as <c>PreciseNumber</c>, never does either: its products keep
+	/// every digit, so each estimate is about twice as long as the last and never repeats, and a step
+	/// cost four times the one before until the thread hung (#457). Such a type stops once a step moves
+	/// the estimate by less than one part in 10^60, which Newton's quadratic convergence reaches from the
+	/// <see cref="double"/> seed in about three steps. A fixed-precision type cannot hold that tolerance
+	/// (it is zero in <see cref="decimal"/>), so it settles exactly as before. A step no smaller than the
+	/// one before it has stopped converging too, and the estimate is returned there.
+	/// </para>
 	/// </remarks>
 	private static T RootBySettling<T>(T value, int degree, T two)
 		where T : struct, INumber<T>
@@ -603,6 +690,8 @@ public static class StorageMath
 		T countLessOne = count - T.One;
 		T estimate = SeedForRoot(value, degree, two);
 		T previous = estimate;
+		T? lastStep = null;
+		T tolerance = RelativeTolerance<T>();
 
 		for (int iteration = 0; iteration < MaximumIterations; iteration++)
 		{
@@ -626,11 +715,46 @@ public static class StorageMath
 				return T.Min(estimate, next);
 			}
 
+			T step = T.Abs(next - estimate);
+			if (step <= T.Abs(next) * tolerance)
+			{
+				return next;
+			}
+
+			// A step no smaller than the last one has stopped converging: what is left is rounding.
+			if (lastStep is T last && step >= last)
+			{
+				return estimate;
+			}
+
+			lastStep = step;
 			previous = estimate;
 			estimate = next;
 		}
 
 		throw new ArithmeticException($"The root of degree {degree} did not settle within {MaximumIterations} Newton steps.");
+	}
+
+	/// <summary>
+	/// The relative step below which <see cref="RootBySettling{T}"/> stops for a type that never settles.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <returns>10^-60 in <typeparamref name="T"/>, or zero where the type cannot hold it.</returns>
+	private static T RelativeTolerance<T>()
+		where T : struct, INumber<T>
+	{
+		try
+		{
+			return T.CreateChecked(1e-60);
+		}
+		catch (NotSupportedException)
+		{
+			return T.Zero;
+		}
+		catch (OverflowException)
+		{
+			return T.Zero;
+		}
 	}
 
 	/// <summary>

@@ -118,5 +118,17 @@ public readonly partial record struct HeatCapacity<T> : IVector0<HeatCapacity<T>
 	/// <summary>Subtracts two HeatCapacity values, returning the absolute difference as a non-negative HeatCapacity.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static HeatCapacity<T> operator -(HeatCapacity<T> left, HeatCapacity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>HeatCapacity * Temperature = Energy, through <see cref="Entropy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(HeatCapacity<T> left, Temperature<T> right) => (Entropy<T>)left * right;
+
+	/// <summary>HeatCapacity / Mass = SpecificHeat, through <see cref="Entropy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SpecificHeat<T> operator /(HeatCapacity<T> left, Mass<T> right) => (Entropy<T>)left / right;
+
+	/// <summary>HeatCapacity / SpecificHeat = Mass, through <see cref="Entropy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator /(HeatCapacity<T> left, SpecificHeat<T> right) => (Entropy<T>)left / right;
 }
 

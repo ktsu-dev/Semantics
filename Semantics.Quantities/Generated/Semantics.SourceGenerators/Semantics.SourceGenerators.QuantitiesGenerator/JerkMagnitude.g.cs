@@ -122,12 +122,12 @@ public readonly partial record struct JerkMagnitude<T> : IVector0<JerkMagnitude<
 	/// Divides JerkMagnitude by Duration to produce SnapMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SnapMagnitude<T> operator /(JerkMagnitude<T> left, Duration<T> right) => SnapMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static SnapMagnitude<T> operator /(JerkMagnitude<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : SnapMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides JerkMagnitude by SnapMagnitude to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(JerkMagnitude<T> left, SnapMagnitude<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(JerkMagnitude<T> left, SnapMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 }
 

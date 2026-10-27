@@ -124,12 +124,12 @@ public readonly partial record struct LuminousIntensity<T> : IVector0<LuminousIn
 	/// Divides LuminousIntensity by Area to produce Luminance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Luminance<T> operator /(LuminousIntensity<T> left, Area<T> right) => Luminance<T>.Create(left.Quantity / right.Quantity);
+	public static Luminance<T> operator /(LuminousIntensity<T> left, Area<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Luminance<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides LuminousIntensity by Luminance to produce Area.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Area<T> operator /(LuminousIntensity<T> left, Luminance<T> right) => Area<T>.Create(left.Quantity / right.Quantity);
+	public static Area<T> operator /(LuminousIntensity<T> left, Luminance<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Area<T>.Create(left.Quantity / right.Quantity);
 }
 

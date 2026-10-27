@@ -142,5 +142,41 @@ public readonly partial record struct SoundPower<T> : IVector0<SoundPower<T>, T>
 	/// <summary>Subtracts two SoundPower values, returning the absolute difference as a non-negative SoundPower.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SoundPower<T> operator -(SoundPower<T> left, SoundPower<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SoundPower / VoltageMagnitude = CurrentMagnitude, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CurrentMagnitude<T> operator /(SoundPower<T> left, VoltageMagnitude<T> right) => (Power<T>)left / right;
+
+	/// <summary>SoundPower / CurrentMagnitude = VoltageMagnitude, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator /(SoundPower<T> left, CurrentMagnitude<T> right) => (Power<T>)left / right;
+
+	/// <summary>SoundPower / Speed = ForceMagnitude, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator /(SoundPower<T> left, Speed<T> right) => (Power<T>)left / right;
+
+	/// <summary>SoundPower / ForceMagnitude = Speed, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator /(SoundPower<T> left, ForceMagnitude<T> right) => (Power<T>)left / right;
+
+	/// <summary>SoundPower * Duration = Energy, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(SoundPower<T> left, Duration<T> right) => (Power<T>)left * right;
+
+	/// <summary>SoundPower / Area = Irradiance, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Irradiance<T> operator /(SoundPower<T> left, Area<T> right) => (Power<T>)left / right;
+
+	/// <summary>SoundPower / Irradiance = Area, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator /(SoundPower<T> left, Irradiance<T> right) => (Power<T>)left / right;
+
+	/// <summary>SoundPower / Volume = ElectricPowerDensity, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricPowerDensity<T> operator /(SoundPower<T> left, Volume<T> right) => (Power<T>)left / right;
+
+	/// <summary>SoundPower / ElectricPowerDensity = Volume, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator /(SoundPower<T> left, ElectricPowerDensity<T> right) => (Power<T>)left / right;
 }
 

@@ -116,12 +116,12 @@ public readonly partial record struct ElectricFlux<T> : IVector0<ElectricFlux<T>
 	/// Divides ElectricFlux by Area to produce ElectricFieldMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ElectricFieldMagnitude<T> operator /(ElectricFlux<T> left, Area<T> right) => ElectricFieldMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static ElectricFieldMagnitude<T> operator /(ElectricFlux<T> left, Area<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : ElectricFieldMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides ElectricFlux by ElectricFieldMagnitude to produce Area.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Area<T> operator /(ElectricFlux<T> left, ElectricFieldMagnitude<T> right) => Area<T>.Create(left.Quantity / right.Quantity);
+	public static Area<T> operator /(ElectricFlux<T> left, ElectricFieldMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Area<T>.Create(left.Quantity / right.Quantity);
 }
 

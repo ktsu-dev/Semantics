@@ -190,5 +190,29 @@ public readonly partial record struct NoiseReductionCoefficient<T> : IVector0<No
 	/// <summary>Subtracts two NoiseReductionCoefficient values, returning the absolute difference as a non-negative NoiseReductionCoefficient.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static NoiseReductionCoefficient<T> operator -(NoiseReductionCoefficient<T> left, NoiseReductionCoefficient<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>NoiseReductionCoefficient * Ratio = Ratio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(NoiseReductionCoefficient<T> left, Ratio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>NoiseReductionCoefficient * SignedRatio = SignedRatio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedRatio<T> operator *(NoiseReductionCoefficient<T> left, SignedRatio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>NoiseReductionCoefficient / Duration = Frequency, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(NoiseReductionCoefficient<T> left, Duration<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>NoiseReductionCoefficient / Frequency = Duration, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(NoiseReductionCoefficient<T> left, Frequency<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>NoiseReductionCoefficient / Temperature = ThermalExpansionCoefficient, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ThermalExpansionCoefficient<T> operator /(NoiseReductionCoefficient<T> left, Temperature<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>NoiseReductionCoefficient / ThermalExpansionCoefficient = Temperature, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator /(NoiseReductionCoefficient<T> left, ThermalExpansionCoefficient<T> right) => (Ratio<T>)left / right;
 }
 

@@ -129,6 +129,6 @@ public readonly partial record struct Charge<T> : IVector1<Charge<T>, T>, IPhysi
 	/// Divides Charge by Duration to produce Current1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Current1D<T> operator /(Charge<T> left, Duration<T> right) => Current1D<T>.Create(left.Quantity / right.Quantity);
+	public static Current1D<T> operator /(Charge<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Current1D<T>.Create(left.Quantity / right.Quantity);
 }
 

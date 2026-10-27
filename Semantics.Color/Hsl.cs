@@ -13,18 +13,30 @@ using System;
 /// <param name="L">Lightness, 0..1.</param>
 public readonly record struct Hsl(double H, double S, double L)
 {
+	/// <summary>The channel spread below which a color is treated as gray, so rounding noise has no hue.</summary>
+	internal const double AchromaticTolerance = 1e-6;
+
 	/// <summary>Converts a gamma-encoded <see cref="Srgb"/> color to HSL.</summary>
 	/// <param name="srgb">The sRGB color.</param>
 	/// <returns>The HSL equivalent.</returns>
+	/// <remarks>
+	/// HSL is only defined inside the sRGB gamut, so each channel is clamped to 0..1 first. Without that an
+	/// out-of-gamut input, such as a slightly-over-white Oklab round trip, gives a saturation far above 1 that
+	/// every later HSL adjustment carries into its result. Channels within 1e-6 of each other, far below
+	/// anything an 8-bit or 16-bit channel can hold, are treated as gray.
+	/// </remarks>
 	public static Hsl FromSrgb(Srgb srgb)
 	{
+		srgb = srgb.Clamp();
 		double max = Math.Max(srgb.R, Math.Max(srgb.G, srgb.B));
 		double min = Math.Min(srgb.R, Math.Min(srgb.G, srgb.B));
 		double l = (max + min) / 2.0;
 		double h = 0.0;
 		double s = 0.0;
 
-		if (max > min)
+		// Channels a rounding error apart are gray: near white or black the saturation formula divides by
+		// almost nothing, so a difference of 1e-7 would otherwise read as full saturation.
+		if (max - min > AchromaticTolerance)
 		{
 			double d = max - min;
 			s = l > 0.5 ? d / (2.0 - max - min) : d / (max + min);

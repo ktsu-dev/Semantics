@@ -26,8 +26,8 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 {
 	/// <summary>
 	/// Name of the private nested holder that caches the parsed value of each constant per closed
-	/// generic type. A static field on a generic type is initialised once per <c>T</c>, so callers
-	/// pay the parse exactly once regardless of how hot the accessor is.
+	/// generic type. A static field on a generic type exists once per <c>T</c>, so callers pay the
+	/// parse once per constant regardless of how hot the accessor is.
 	/// </summary>
 	private const string HolderName = "Values";
 
@@ -37,12 +37,10 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 	private const string NumericConstraint = "where T : struct, INumber<T>";
 
 	/// <summary>
-	/// Styles accepted when parsing a constant literal. <see cref="System.Globalization.NumberStyles.Float"/>
-	/// covers the exponent forms used in the metadata (for example <c>6.62607015e-34</c>); the default
-	/// <c>Parse(string, IFormatProvider)</c> overload resolves to <c>NumberStyles.Number</c> for some
-	/// numeric types, which rejects an exponent, so the style is always passed explicitly.
+	/// Prefix of the private field caching each constant once it has been materialised. Each constant is
+	/// materialised on its own, through <c>StorageLiteral.Constant</c>, when it is first read.
 	/// </summary>
-	private const string ParseStyles = "NumberStyles.Float";
+	private const string CachePrefix = "cached";
 
 	public PhysicalConstantsGenerator() : base("domains.json") { }
 
@@ -60,7 +58,6 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 			Namespace = "ktsu.Semantics.Quantities",
 			Usings =
 			{
-				"System.Globalization",
 				"System.Numerics",
 			},
 		};
@@ -125,12 +122,20 @@ public class PhysicalConstantsGenerator : SemanticsGenerator<DomainsMetadata>
 					BodyFactory = (body) => body.Write($" {NumericConstraint} => {HolderName}<T>.{constant.Name};"),
 				});
 
+				// One lazily filled field per constant, so a constant T cannot hold throws from its own accessor
+				// rather than failing the shared static initializer for every constant of the domain.
 				holderClass.Members.Add(new FieldTemplate()
 				{
 					Comments = {$"/// <summary>{constant.Description}</summary>"},
-					Keywords = {Emit.Internal, Emit.Static, "readonly", "T"},
-					Name = constant.Name,
-					DefaultValue = $"T.Parse(\"{constant.Value}\", {ParseStyles}, CultureInfo.InvariantCulture)",
+					Keywords = {Emit.Internal, Emit.Static, "T"},
+					Name = $"{constant.Name} => {CachePrefix}{constant.Name} ??= StorageLiteral.Constant<T>(\"{constant.Value}\", \"{constant.Name}\")",
+				});
+
+				holderClass.Members.Add(new FieldTemplate()
+				{
+					Comments = {$"/// <summary>{constant.Name} once materialised into <typeparamref name=\"T\"/>.</summary>"},
+					Keywords = {"private", Emit.Static, "T?"},
+					Name = $"{CachePrefix}{constant.Name}",
 				});
 			}
 

@@ -72,20 +72,33 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// Gets the name of this directory (the last component of the path).
 	/// </summary>
 	/// <value>A <see cref="FileName"/> representing just the directory name.</value>
+	/// <remarks>
+	/// This is the last component as written, not as resolved: the name of <c>/home/user/..</c> is <c>..</c>.
+	/// Resolve the path first, for example through <see cref="Parent"/> of a child, when the directory's own
+	/// name is wanted.
+	/// </remarks>
 	public FileName Name => _cachedName ??= FileName.Create<FileName>(Path.GetFileName(WeakString) ?? "");
 
 	// Cache for depth calculation
 	private int? _cachedDepth;
 
 	/// <summary>
-	/// Gets the depth of this directory path (number of directory separators).
-	/// For example, "a/b/c" has depth 2, "a" has depth 0.
+	/// Gets the depth of this directory below its root: the number of directories between the root and this one,
+	/// counting this one.
 	/// </summary>
-	/// <value>The number of directory separators in the path.</value>
+	/// <value>
+	/// 0 for a root such as <c>/</c> or <c>C:\</c>, 1 for <c>/home</c>, 2 for <c>/home/user</c>. <c>.</c> and
+	/// <c>..</c> segments are resolved first, so <c>/home/user/..</c> has depth 1, and a trailing separator
+	/// does not add a level.
+	/// </value>
+	/// <remarks>
+	/// The depth always agrees with <see cref="Parent"/>: a path that is not a root is exactly one level deeper
+	/// than its parent.
+	/// </remarks>
 	public int Depth => _cachedDepth ??= CalculateDepth(WeakString);
 
 	/// <summary>
-	/// Calculates directory depth using span semantics for optimal performance.
+	/// Counts the segments after the root of the resolved path.
 	/// </summary>
 	/// <param name="path">The path to analyze.</param>
 	/// <returns>The directory depth.</returns>
@@ -96,16 +109,9 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 			return 0;
 		}
 
-		ReadOnlySpan<char> span = path.AsSpan();
-		int depth = 0;
-		for (int i = 0; i < span.Length; i++)
-		{
-			if (span[i] == Path.DirectorySeparatorChar || span[i] == Path.AltDirectorySeparatorChar)
-			{
-				depth++;
-			}
-		}
-		return depth;
+		string full = Path.GetFullPath(path);
+		string root = Path.GetPathRoot(full) ?? string.Empty;
+		return SpanPathUtilities.CountSegments(full.AsSpan(root.Length));
 	}
 
 	// Cache for root check
@@ -114,8 +120,12 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	/// <summary>
 	/// Determines whether this directory is a root directory.
 	/// </summary>
-	/// <value><c>true</c> if this is a root directory; otherwise, <c>false</c>.</value>
-	public bool IsRoot => _cachedIsRoot ??= Path.GetPathRoot(WeakString) == WeakString;
+	/// <value>
+	/// <see langword="true"/> if this path resolves to a root, which is exactly when <see cref="Parent"/> returns
+	/// this same path; otherwise, <see langword="false"/>. <c>.</c> and <c>..</c> segments are resolved first, so
+	/// <c>/home/..</c> is a root.
+	/// </value>
+	public bool IsRoot => _cachedIsRoot ??= ReferenceEquals(Parent, this);
 
 	/// <summary>
 	/// Creates an absolute file path for files in this directory.

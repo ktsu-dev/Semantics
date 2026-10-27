@@ -200,24 +200,24 @@ public readonly partial record struct Ratio<T> : IVector0<Ratio<T>, T>, IPhysica
 	/// Divides Ratio by Duration to produce Frequency.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Frequency<T> operator /(Ratio<T> left, Duration<T> right) => Frequency<T>.Create(left.Quantity / right.Quantity);
+	public static Frequency<T> operator /(Ratio<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Frequency<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Ratio by Frequency to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(Ratio<T> left, Frequency<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(Ratio<T> left, Frequency<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Ratio by Temperature to produce ThermalExpansionCoefficient.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ThermalExpansionCoefficient<T> operator /(Ratio<T> left, Temperature<T> right) => ThermalExpansionCoefficient<T>.Create(left.Quantity / right.Quantity);
+	public static ThermalExpansionCoefficient<T> operator /(Ratio<T> left, Temperature<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : ThermalExpansionCoefficient<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Ratio by ThermalExpansionCoefficient to produce Temperature.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Temperature<T> operator /(Ratio<T> left, ThermalExpansionCoefficient<T> right) => Temperature<T>.Create(left.Quantity / right.Quantity);
+	public static Temperature<T> operator /(Ratio<T> left, ThermalExpansionCoefficient<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Temperature<T>.Create(left.Quantity / right.Quantity);
 }
 

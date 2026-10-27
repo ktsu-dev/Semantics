@@ -126,5 +126,9 @@ public readonly partial record struct ThermalDiffusivity<T> : IVector0<ThermalDi
 	/// <summary>Subtracts two ThermalDiffusivity values, returning the absolute difference as a non-negative ThermalDiffusivity.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static ThermalDiffusivity<T> operator -(ThermalDiffusivity<T> left, ThermalDiffusivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>ThermalDiffusivity * Density = DynamicViscosity, through <see cref="KinematicViscosity{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static DynamicViscosity<T> operator *(ThermalDiffusivity<T> left, Density<T> right) => (KinematicViscosity<T>)left * right;
 }
 

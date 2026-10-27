@@ -116,6 +116,6 @@ public readonly partial record struct AngularMomentumMagnitude<T> : IVector0<Ang
 	/// Divides AngularMomentumMagnitude by Duration to produce TorqueMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static TorqueMagnitude<T> operator /(AngularMomentumMagnitude<T> left, Duration<T> right) => TorqueMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static TorqueMagnitude<T> operator /(AngularMomentumMagnitude<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : TorqueMagnitude<T>.Create(left.Quantity / right.Quantity);
 }
 

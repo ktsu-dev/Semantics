@@ -54,17 +54,17 @@ public readonly partial record struct Wavelength<T> : IVector0<Wavelength<T>, T>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Wavelength<T> operator +(Wavelength<T> left, Wavelength<T> right) => Create(left.Quantity + right.Quantity);
 
-	/// <summary>Scales a <see cref="Wavelength{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
+	/// <summary>Scales a <see cref="Wavelength{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the result is not positive.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Wavelength<T> operator *(Wavelength<T> left, T right) => Create(Vector0Guards.EnsureNonNegative(left.Quantity * right, nameof(right)));
+	public static Wavelength<T> operator *(Wavelength<T> left, T right) => Create(Vector0Guards.EnsurePositive(left.Quantity * right, nameof(right)));
 
-	/// <summary>Scales a <see cref="Wavelength{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
+	/// <summary>Scales a <see cref="Wavelength{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the result is not positive.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Wavelength<T> operator *(T left, Wavelength<T> right) => Create(Vector0Guards.EnsureNonNegative(left * right.Quantity, nameof(left)));
+	public static Wavelength<T> operator *(T left, Wavelength<T> right) => Create(Vector0Guards.EnsurePositive(left * right.Quantity, nameof(left)));
 
-	/// <summary>Divides a <see cref="Wavelength{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the number is negative.</summary>
+	/// <summary>Divides a <see cref="Wavelength{T}"/> by a bare number. Throws <see cref="System.ArgumentException"/> when the result is not positive.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Wavelength<T> operator /(Wavelength<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsureNonNegative(left.Quantity / right, nameof(right)));
+	public static Wavelength<T> operator /(Wavelength<T> left, T right) => T.IsZero(right) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Create(Vector0Guards.EnsurePositive(left.Quantity / right, nameof(right)));
 
 	/// <summary>Divides one <see cref="Wavelength{T}"/> by another, giving the bare ratio.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
@@ -197,14 +197,54 @@ public readonly partial record struct Wavelength<T> : IVector0<Wavelength<T>, T>
 	/// <summary>Implicit conversion to Length.</summary>
 	public static implicit operator Length<T>(Wavelength<T> value) => Length<T>.Create(value.Value);
 
-	/// <summary>Explicit conversion from Length.</summary>
-	public static explicit operator Wavelength<T>(Length<T> value) => Create(value.Value);
+	/// <summary>Explicit conversion from Length. Throws <see cref="System.ArgumentException"/> when the value is zero, which a Wavelength cannot be.</summary>
+	public static explicit operator Wavelength<T>(Length<T> value) => Create(Vector0Guards.EnsurePositive(value.Value, nameof(value)));
 
-	/// <summary>Creates a Wavelength from a Length value.</summary>
-	public static Wavelength<T> From(Length<T> value) => Create(value.Value);
+	/// <summary>Creates a Wavelength from a Length value. Throws <see cref="System.ArgumentException"/> when the value is zero, which a Wavelength cannot be.</summary>
+	public static Wavelength<T> From(Length<T> value) => Create(Vector0Guards.EnsurePositive(value.Value, nameof(value)));
 
-	/// <summary>Subtracts two Wavelength values, returning the absolute difference as a non-negative Wavelength.</summary>
+	/// <summary>Subtracts two Wavelength values, returning the absolute difference as a positive Wavelength. Throws <see cref="System.ArgumentException"/> when the two are equal, since a Wavelength cannot be zero; widen to <see cref="Length{T}"/> first for a difference that may be.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Wavelength<T> operator -(Wavelength<T> left, Wavelength<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+	public static Wavelength<T> operator -(Wavelength<T> left, Wavelength<T> right) => Create(Vector0Guards.EnsurePositive(T.Abs(left.Quantity - right.Quantity), nameof(right)));
+
+	/// <summary>Wavelength * Length = Area, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator *(Wavelength<T> left, Length<T> right) => (Length<T>)left * right;
+
+	/// <summary>Wavelength * Area = Volume, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(Wavelength<T> left, Area<T> right) => (Length<T>)left * right;
+
+	/// <summary>Wavelength / Duration = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator /(Wavelength<T> left, Duration<T> right) => (Length<T>)left / right;
+
+	/// <summary>Wavelength / Speed = Duration, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Wavelength<T> left, Speed<T> right) => (Length<T>)left / right;
+
+	/// <summary>Wavelength * Frequency = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(Wavelength<T> left, Frequency<T> right) => (Length<T>)left * right;
+
+	/// <summary>Wavelength * ForceMagnitude = Energy, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Wavelength<T> left, ForceMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Wavelength * ElectricFieldMagnitude = VoltageMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(Wavelength<T> left, ElectricFieldMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Wavelength * ElectricField1D = Voltage, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Voltage<T> operator *(Wavelength<T> left, ElectricField1D<T> right) => (Length<T>)left * right;
+
+	/// <summary>Wavelength * SurfaceTension = ForceMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(Wavelength<T> left, SurfaceTension<T> right) => (Length<T>)left * right;
+
+	/// <summary>Wavelength * SpecificEnergyMagnitude = GravitationalParameter, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(Wavelength<T> left, SpecificEnergyMagnitude<T> right) => (Length<T>)left * right;
 }
 

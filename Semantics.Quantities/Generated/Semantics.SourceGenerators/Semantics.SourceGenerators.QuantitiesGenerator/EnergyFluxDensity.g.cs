@@ -118,5 +118,9 @@ public readonly partial record struct EnergyFluxDensity<T> : IVector0<EnergyFlux
 	/// <summary>Subtracts two EnergyFluxDensity values, returning the absolute difference as a non-negative EnergyFluxDensity.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static EnergyFluxDensity<T> operator -(EnergyFluxDensity<T> left, EnergyFluxDensity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>EnergyFluxDensity * Area = Power, through <see cref="Irradiance{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(EnergyFluxDensity<T> left, Area<T> right) => (Irradiance<T>)left * right;
 }
 

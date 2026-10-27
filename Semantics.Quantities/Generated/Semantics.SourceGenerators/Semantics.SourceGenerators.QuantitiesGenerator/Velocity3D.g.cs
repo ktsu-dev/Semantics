@@ -96,11 +96,8 @@ public readonly partial record struct Velocity3D<T> : IVector3<Velocity3D<T>, T>
 	public (T X, T Y, T Z) In(global::ktsu.Semantics.Quantities.IVelocityUnit unit) => (unit.FromBase(X), unit.FromBase(Y), unit.FromBase(Z));
 
 	/// <summary>Calculates the length of the vector.</summary>
-	public T Length()
-	{
-		T sum = (X * X) + (Y * Y) + (Z * Z);
-		return StorageMath.Sqrt(sum);
-	}
+	/// <remarks>Computed without squaring the components outright, so a length the storage type can hold is returned even when the squares of the components are past its range.</remarks>
+	public T Length() => StorageMath.Hypot(X, Y, Z);
 
 	/// <summary>Calculates the squared length of the vector.</summary>
 	public T LengthSquared() => (X * X) + (Y * Y) + (Z * Z);
@@ -120,8 +117,7 @@ public readonly partial record struct Velocity3D<T> : IVector3<Velocity3D<T>, T>
 		T dX = X - other.X;
 		T dY = Y - other.Y;
 		T dZ = Z - other.Z;
-		T sum = (dX * dX) + (dY * dY) + (dZ * dZ);
-		return StorageMath.Sqrt(sum);
+		return StorageMath.Hypot(dX, dY, dZ);
 	}
 
 	/// <summary>Calculates the squared distance between two vectors.</summary>
@@ -134,9 +130,15 @@ public readonly partial record struct Velocity3D<T> : IVector3<Velocity3D<T>, T>
 	}
 
 	/// <summary>Returns a normalized version of the vector.</summary>
+	/// <exception cref="System.DivideByZeroException">The vector has zero length, so it has no direction.</exception>
 	public Velocity3D<T> Normalize()
 	{
 		T len = Length();
+		if (T.IsZero(len))
+		{
+			throw new System.DivideByZeroException("Cannot normalize a zero-length vector.");
+		}
+
 		return new() { X = X / len, Y = Y / len, Z = Z / len };
 	}
 
@@ -153,7 +155,8 @@ public readonly partial record struct Velocity3D<T> : IVector3<Velocity3D<T>, T>
 	public static Velocity3D<T> operator *(T scalar, Velocity3D<T> vector) => new() { X = scalar * vector.X, Y = scalar * vector.Y, Z = scalar * vector.Z };
 
 	/// <summary>Divides a vector by a scalar.</summary>
-	public static Velocity3D<T> operator /(Velocity3D<T> vector, T scalar) => new() { X = vector.X / scalar, Y = vector.Y / scalar, Z = vector.Z / scalar };
+	/// <exception cref="System.DivideByZeroException"><paramref name="scalar"/> is zero.</exception>
+	public static Velocity3D<T> operator /(Velocity3D<T> vector, T scalar) => T.IsZero(scalar) ? throw new System.DivideByZeroException("Cannot divide by zero.") : new() { X = vector.X / scalar, Y = vector.Y / scalar, Z = vector.Z / scalar };
 
 	/// <summary>Negates a vector.</summary>
 	public static Velocity3D<T> operator -(Velocity3D<T> vector) => new() { X = -vector.X, Y = -vector.Y, Z = -vector.Z };
@@ -161,6 +164,6 @@ public readonly partial record struct Velocity3D<T> : IVector3<Velocity3D<T>, T>
 	public static Displacement3D<T> operator *(Velocity3D<T> left, Duration<T> right) => new() { X = left.X * right.Value, Y = left.Y * right.Value, Z = left.Z * right.Value };
 
 	/// <summary>Velocity3D / Duration = Acceleration3D.</summary>
-	public static Acceleration3D<T> operator /(Velocity3D<T> left, Duration<T> right) => new() { X = left.X / right.Value, Y = left.Y / right.Value, Z = left.Z / right.Value };
+	public static Acceleration3D<T> operator /(Velocity3D<T> left, Duration<T> right) => T.IsZero(right.Value) ? throw new System.DivideByZeroException("Cannot divide by zero.") : new() { X = left.X / right.Value, Y = left.Y / right.Value, Z = left.Z / right.Value };
 
 };

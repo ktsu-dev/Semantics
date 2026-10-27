@@ -134,5 +134,13 @@ public readonly partial record struct SamplingRate<T> : IVector0<SamplingRate<T>
 	/// <summary>Subtracts two SamplingRate values, returning the absolute difference as a non-negative SamplingRate.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SamplingRate<T> operator -(SamplingRate<T> left, SamplingRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SamplingRate * Duration = Ratio, through <see cref="Frequency{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(SamplingRate<T> left, Duration<T> right) => (Frequency<T>)left * right;
+
+	/// <summary>SamplingRate * Length = Speed, through <see cref="Frequency{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(SamplingRate<T> left, Length<T> right) => (Frequency<T>)left * right;
 }
 

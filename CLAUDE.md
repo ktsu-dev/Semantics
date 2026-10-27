@@ -298,12 +298,21 @@ PhysicalConstants.Generic.PlanckConstant<T>()
 PhysicalConstants.Generic.DegreesPerRadian<T>()
 ```
 
-Each constant is emitted as `T.Parse(literal, NumberStyles.Float, CultureInfo.InvariantCulture)`
-into a private `Values<T>` holder nested in its domain class, so the literal is parsed once per
-closed generic type and the package needs no arbitrary-precision dependency. `NumberStyles.Float`
-is mandatory, not incidental: several literals are in exponent form (`6.62607015e-34`, `20e-6`),
-and the `Parse(string, IFormatProvider)` overload resolves to `NumberStyles.Number` for some
-numeric types, which rejects an exponent.
+Each constant is emitted as a property over its own lazily filled field in a private `Values<T>`
+holder nested in its domain class, filled by `StorageLiteral.Constant<T>(literal, name)` the first
+time it is read, so the literal is parsed once per constant and closed generic type and the package
+needs no arbitrary-precision dependency. The literal is parsed with `NumberStyles.Float`, which is
+mandatory, not incidental: several literals are in exponent form (`6.62607015e-34`, `20e-6`), and the
+`Parse(string, IFormatProvider)` overload resolves to `NumberStyles.Number` for some numeric types,
+which rejects an exponent.
+
+**Keep constants out of a shared initializer**, for the same reason as conversion factors below
+(#392): with every constant of a domain in one static initializer, one literal `int` could not hold
+made every constant of that domain throw `TypeInitializationException`, so `PH<int>.Neutral` failed
+because `GasConstant` has a fraction. Now a constant `T` cannot hold throws from its own accessor:
+`OverflowException` when it is too large, and `ArithmeticException` when `T` keeps less than about six
+significant digits of it (`StandardGravity<int>` truncating to 9, `PlanckConstant<decimal>` rounding
+to zero). A whole number in range, such as `SpeedOfLight<long>()`, works.
 
 ### Conversion factors and square roots at the storage type's precision
 
@@ -347,13 +356,20 @@ converted with the 15 significant digits that conversion keeps.
   written outside the library needs nothing new. They are not named `Get…`, because CA1721 rejects
   a `GetToBaseFactor` method next to the `ToBaseFactor` property.
 
-Vector `Length()` and `Distance()` call `StorageMath.Sqrt`. The binary floating point and integer
-primitives take the `Math.Sqrt` round trip the generated code always inlined, so their results are
-unchanged. Any other type is seeded from that root and refined with Newton steps in its own
+Vector `Length()` and `Distance()` call `StorageMath.Hypot`, never a raw sum of squares (#327): the
+two-component form is the public `Hypot`, and three and four components go through internal overloads
+of it. A fractional type is scaled by its largest component first, so `Position3D<decimal>` at 1e15 m
+still has a length, and the primitives take `double.Hypot`, so an `int` component of 65536 no longer
+squares to zero. `Normalize()` of a zero-length vector throws `DivideByZeroException`, as every
+generated division by zero does (#480). The square root itself is `StorageMath.Sqrt`: the binary
+floating point and integer primitives take the `Math.Sqrt` round trip. Any other type is seeded from that root and refined with Newton steps in its own
 arithmetic, so a `decimal` length has 28 significant digits. A value a `double` cannot hold, such as a
 `BigInteger` of 2^2048, is scaled by powers of four into [1, 4) for the seed, and the root is scaled
 back by the matching power of two. A root that does not settle throws `ArithmeticException` rather
-than returning an estimate. The logarithmic scales and the hand-written audio types still compute
+than returning an estimate. A type with no fixed precision, such as `PreciseNumber`, never settles,
+because its products keep every digit and each Newton estimate doubles in length; `Cbrt` and `RootN`
+stop it once a step moves the estimate by less than one part in 10^60 (#457), a tolerance a
+fixed-precision type rounds to zero and so never sees. The logarithmic scales and the hand-written audio types still compute
 through `double`, and as of #235 every generated conversion says so in its own XML `<remarks>`
 rather than only here — the method tooltip is where a `decimal` or `PreciseNumber` consumer spends
 the precision, so that is where the cost is stated. `SourceGeneratorTests` counts the remarks

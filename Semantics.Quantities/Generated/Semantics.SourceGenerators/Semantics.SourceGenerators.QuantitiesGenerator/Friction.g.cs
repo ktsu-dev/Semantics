@@ -142,5 +142,37 @@ public readonly partial record struct Friction<T> : IVector0<Friction<T>, T>, IP
 	/// <summary>Subtracts two Friction values, returning the absolute difference as a non-negative Friction.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Friction<T> operator -(Friction<T> left, Friction<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Friction / AccelerationMagnitude = Mass, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator /(Friction<T> left, AccelerationMagnitude<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>Friction / Mass = AccelerationMagnitude, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator /(Friction<T> left, Mass<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>Friction * Length = Energy, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Friction<T> left, Length<T> right) => (ForceMagnitude<T>)left * right;
+
+	/// <summary>Friction * Duration = MomentumMagnitude, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(Friction<T> left, Duration<T> right) => (ForceMagnitude<T>)left * right;
+
+	/// <summary>Friction * Speed = Power, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(Friction<T> left, Speed<T> right) => (ForceMagnitude<T>)left * right;
+
+	/// <summary>Friction / Area = Pressure, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Pressure<T> operator /(Friction<T> left, Area<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>Friction / Length = SurfaceTension, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SurfaceTension<T> operator /(Friction<T> left, Length<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>Friction / SurfaceTension = Length, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(Friction<T> left, SurfaceTension<T> right) => (ForceMagnitude<T>)left / right;
 }
 
