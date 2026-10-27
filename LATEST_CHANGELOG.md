@@ -1,7 +1,21 @@
-## v5.12.2 (patch)
+## v5.13.0 (minor)
 
-Changes since v5.12.1:
+Changes since v5.12.0:
 
+- Address code-quality findings: zero pattern, local exception counter, explicit Where (Claude)
+- Use the specific MSTest assertions Sonar asks for (Claude)
+- Use Path.Join for test fixture paths (Claude)
+- [patch] Strings: TryCreate rejects without exceptions; validation attributes and the WeakString setter cached per type (#443, #444) (Claude)
+- [patch] C++ prelude: a representation widens implicitly and narrows only explicitly (#451) (Claude)
+- [patch] Quantities: overloads forward their base's relationship operators (#456) (Claude)
+- [patch] Quantities: constants per field, decimal logs, positive guards, division by zero, scaled vector lengths, bounded roots (Claude)
+- Drop a redundant ToString in a test (Claude)
+- Map roman-numeral round-trip bodies with Select (Claude)
+- Parse music charts strictly and write their bar lines where the bars are [minor] (Claude)
+- Spell pentatonic keys against a seven-degree scale, weigh every chord tone in key inference, and detect augmented sixths [patch] (Claude)
+- [minor] Color: CSS named colors, alpha-aware contrast, gamut-mapped Oklab mixes (Claude)
+- Read C+7, Cmaj7sus4 and lead-sheet groups, voice extended inversions, and keep a chord's body in its roman numeral [patch] (Claude)
+- [patch] Resolve dot segments in IsRoot, DirectoryPath.Parent and Depth; skip unrepresentable entries in GetContents (Claude)
 - Strip all whitespace from a pasted card number or ISBN [patch] (matt-edmondson)
 - Write the root README's progression example in chart syntax [patch] (Claude)
 - Yield the empty entry after a trailing separator from the span Split [patch] (Claude)
@@ -28,4 +42,7 @@ Changes since v5.12.1:
 - [patch] Resolve . and .. before taking a relative directory's parent (Claude)
 - [patch] Keep a path relative when its left operand is empty (Claude)
 - [patch] Reject unbalanced or repeated UUID braces and parentheses (Claude)
+- Name secondary dominant targets by the mode's own triad [patch] (Claude)
+- Escape section labels so ToString round-trips through Parse [patch] (Claude)
+- Stop Duration arithmetic from wrapping silently on int overflow [patch] (Claude)
 
