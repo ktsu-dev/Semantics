@@ -142,8 +142,8 @@ IReadOnlyList<ChromaticAnalysis> chromatic =
     Progression.Parse("4/4  C / / / | A7 / / / | Dm / / / | G7 / / /").ChromaticChords(key); // A7 -> secondary dominant
 
 // Structure: sections -> arrangement -> form
-Progression verse  = Progression.Parse("4/4  C / / / | G / / / | Am / / / | F / / /");
-Progression bridge = Progression.Parse("4/4  F / / / | C / / / | G / / / | C / / /");
+Progression verse  = Progression.Parse("4/4  C / / / | G / / / | Am / / / | F / / / | C / / / | G / / / | F / / / | C / / /");
+Progression bridge = Progression.Parse("4/4  F / / / | C / / / | G / / / | C / / / | F / / / | C / / / | D / / / | G / / /");
 Arrangement song = Arrangement.Create(key,
 [
     Section.Create(SectionType.Verse,  verse,  "Verse 1"),
@@ -151,7 +151,7 @@ Arrangement song = Arrangement.Create(key,
     Section.Create(SectionType.Bridge, bridge, "Bridge"),
     Section.Create(SectionType.Verse,  verse,  "Verse 3"),
 ]);
-Form form = song.Form;   // Pattern "AABA", Name NamedForm.ThirtyTwoBarAABA
+Form form = song.Form;   // Pattern "AABA", Name NamedForm.ThirtyTwoBarAABA (four eight-bar sections)
 ```
 
 ### Type-safe construction and round-trippable text
@@ -204,7 +204,7 @@ bool ok = Interval.TryParse("-5", out Interval? descendingFourth);
 | `HarmonicFunction` | enum: Tonic, Predominant, Dominant, Chromatic. | |
 | `CadenceInstance` | A cadence at a resolution index. | `Index`, `Type` (`Cadence` enum: Authentic, Plagal, Half, Deceptive) |
 | `ChromaticAnalysis` | A non-diatonic chord classification. | `Index`, `Kind` (`ChromaticKind`), `Detail` |
-| `NamedForm` | enum: ThirtyTwoBarAABA, TwelveBarBlues, Binary, Ternary, Rondo, Strophic, ... | |
+| `NamedForm` | enum: ThirtyTwoBarAABA, TwelveBarBlues, VerseChorus, Binary, Ternary, Rondo, Strophic, ... | |
 
 `InferKey()` returns `Key?` (null for all-chromatic input), while `InferKeys()` returns the full ranked `IReadOnlyList<KeyMatch>`. See the [complete library guide](../docs/complete-library-guide.md) for a wider tour.
 

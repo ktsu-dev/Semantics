@@ -89,8 +89,7 @@ public sealed record Pitch
 		// The octave is a bare integer: a leading '-' is allowed for octave -1, but not '+' or
 		// whitespace, which would parse to a pitch that prints back differently.
 		if (index >= name.Length
-			|| name[index] == '+'
-			|| !int.TryParse(name[index..], NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int octave))
+			|| !Notation.TryParseInteger(name[index..], allowNegative: true, out int octave))
 		{
 			return false;
 		}

@@ -58,7 +58,7 @@ public sealed record Interval
 	/// <returns><see langword="true"/> when parsing succeeds.</returns>
 	public static bool TryParse(string? text, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Interval? result)
 	{
-		if (text is not null && int.TryParse(text, NumberStyles.Integer | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int semitones))
+		if (text is not null && Notation.TryParseInteger(text, allowNegative: true, out int semitones))
 		{
 			result = Create(semitones);
 			return true;

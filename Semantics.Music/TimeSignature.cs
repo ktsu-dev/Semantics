@@ -73,8 +73,8 @@ public sealed record TimeSignature
 			return false;
 		}
 
-		if (!int.TryParse(text[..slash], NumberStyles.Integer, CultureInfo.InvariantCulture, out int beats)
-			|| !int.TryParse(text[(slash + 1)..], NumberStyles.Integer, CultureInfo.InvariantCulture, out int beatUnit)
+		if (!Notation.TryParseInteger(text[..slash], allowNegative: false, out int beats)
+			|| !Notation.TryParseInteger(text[(slash + 1)..], allowNegative: false, out int beatUnit)
 			|| beats <= 0 || beatUnit <= 0)
 		{
 			return false;

@@ -24,11 +24,13 @@ public sealed record Note : IMusicalEvent
 	/// <param name="velocity">The velocity.</param>
 	/// <returns>A new note.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when an argument is null.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="duration"/> is zero or negative.</exception>
 	public static Note Create(Pitch pitch, Duration duration, Velocity velocity)
 	{
 		Ensure.NotNull(pitch);
 		Ensure.NotNull(duration);
 		Ensure.NotNull(velocity);
+		Duration.EnsurePositive(duration, nameof(duration));
 		return new() { Pitch = pitch, Duration = duration, Velocity = velocity };
 	}
 
@@ -75,6 +77,7 @@ public sealed record Note : IMusicalEvent
 
 		if (!Pitch.TryParse(parts[0], out Pitch? pitch)
 			|| !Duration.TryParse(parts[1], out Duration? duration)
+			|| !duration.IsPositive
 			|| !Velocity.TryParse(parts[2][1..], out Velocity? velocity))
 		{
 			return false;
