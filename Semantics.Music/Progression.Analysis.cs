@@ -34,7 +34,7 @@ public sealed partial record Progression
 	/// <summary>Classifies a single chord's function in a key by its root scale degree.</summary>
 	private static HarmonicFunction FunctionOf(Key key, Chord chord)
 	{
-		ScaleDegree degree = key.FunctionOf(chord.Root);
+		ScaleDegree degree = key.AnalysisScale.DegreeOf(chord.Root);
 		if (degree.Alteration != 0)
 		{
 			return HarmonicFunction.Chromatic;

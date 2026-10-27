@@ -24,7 +24,7 @@ Above the single-event types sits an analysis layer that models harmony nested i
 - **Scales and modes**: `Mode` with roughly 29 presets (diatonic, jazz, symmetric, pentatonic, blues), `Scale` rooting a mode at a pitch class, with `Contains` and `DegreeOf`.
 - **Chord-symbol parsing**: `Chord.Parse` handles triads, sixths, sevenths (including `m7b5`, the half-diminished `ø7`, `mmaj7`, and a flat fifth over a major third such as `7b5` and `maj7b5`), extensions and altered tensions (`9`/`11`/`13`, `b9`/`#9`/`#11`/`b13`), suspensions, power chords, omissions (`no3`/`no5`), the six-nine idiom (`C6/9`), and slash bass.
 - **Chord realization**: `ChordTones()` and `Voice(octave)` / `Voice(octave, inversion)`, plus `Transpose`.
-- **Roman-numeral analysis both directions**: `Key.RomanNumeralOf(chord)` and `Key.ChordFromRomanNumeral(numeral)`.
+- **Roman-numeral analysis both directions**: `Key.RomanNumeralOf(chord)` and `Key.ChordFromRomanNumeral(numeral)`. A numeral carries the chord's whole body, sixths, tensions and suspensions included (`I6`, `V13`, `V7b9`, `Imaj7sus4`), so the two are inverses for any chord without a slash bass. The bass is dropped, because `I6` already means an added sixth.
 - **Rhythm and real time**: rational `Duration`, `TimeSignature`, `Tempo`, and `Note` / `Rest` / `ChordEvent` events that convert to seconds.
 - **Analysis layer**: `Progression` (roman numerals, functions, cadences, key inference, chromatic chords), `Section`, `Arrangement`, and `Form` with named-form recognition.
 
@@ -97,7 +97,8 @@ extension   = [ majorWord ] number | number "M" | "Δ"
 number      = "7" | "9" | "11" | "13"
 suspension  = "sus2" | "sus4" | "sus"
 modifier    = alteration | add | omit | "b6" | "♭6"
-            | "(" modifier { [ "," ] modifier } ")"
+            | "(" grouped { [ "," ] grouped } ")"
+grouped     = modifier | "9" | "11" | "13" | majorWord "7"
 alteration  = ("b" | "♭" | "-") ( "5" | "9" | "13" )
             | ("#" | "♯" | "+") ( "5" | "9" | "11" )
 add         = "add" ( "9" | "11" | "13" | "6" | "b6" )
@@ -109,7 +110,11 @@ implies a seventh and its natural lower stack tones unless an alteration replace
 `addN` adds only that tone. `M`/`maj` before an extension or an `M` suffix on its number marks a
 major seventh. A small compatibility reader also accepts previously printed forms
 such as `C79`, `Cmaj79`, `Csus47`, and `C6add9`; a bare `+` after a numbered chord remains an
-augmentation mark. `ToString()` emits the canonical form, for example `C13b9`, `C7sus4`, `C6/9`,
+augmentation mark. A `+` at the start of the body is the augmented mark before a number too, so
+`C+7` is `Caug7` and `Cm+7` is `Cm7#5`; only `C+5` reads as a raised fifth. A suspension can follow
+a major seventh (`Cmaj7sus4`, `Cmaj9sus4`). Inside parentheses, a bare `9`, `11` or `13` is an added
+tone as on a lead sheet (`C7(13)` is `C7add13`), and a major-seventh mark supplies the seventh a body
+without a number lacks (`Cm(maj7)` is `Cmmaj7`). `ToString()` emits the canonical form, for example `C13b9`, `C7sus4`, `C6/9`,
 and `C(#11)`.
 
 ### Roman numerals, both directions
@@ -132,12 +137,12 @@ using ktsu.Semantics.Music;
 // extends the preceding chord by one beat (so "Cmaj7 / / /" is a whole bar of 4/4).
 Progression prog = Progression.Parse("4/4  Dm7 / / / | G7 / / / | Cmaj7 / / / | Cmaj7 / / /");
 
-Key key = prog.InferKey()!;                                   // C major (quality-weighted fit)
+Key key = prog.InferKey()!;                                   // C major (quality- and chord-tone-weighted fit)
 IReadOnlyList<string> roman = prog.RomanNumerals(key);        // ii7, V7, Imaj7, Imaj7
 IReadOnlyList<HarmonicFunction> fns = prog.Functions(key);    // Predominant, Dominant, Tonic, Tonic
 IReadOnlyList<CadenceInstance> cadences = prog.Cadences(key); // Authentic at the resolution
 
-// Chromatic analysis: secondary dominants, borrowed chords, Neapolitan
+// Chromatic analysis: secondary dominants, borrowed chords, Neapolitan, augmented sixths
 IReadOnlyList<ChromaticAnalysis> chromatic =
     Progression.Parse("4/4  C / / / | A7 / / / | Dm / / / | G7 / / /").ChromaticChords(key); // A7 -> secondary dominant
 
@@ -205,6 +210,14 @@ bool ok = Interval.TryParse("-5", out Interval? descendingFourth);
 | `CadenceInstance` | A cadence at a resolution index. | `Index`, `Type` (`Cadence` enum: Authentic, Plagal, Half, Deceptive) |
 | `ChromaticAnalysis` | A non-diatonic chord classification. | `Index`, `Kind` (`ChromaticKind`), `Detail` |
 | `NamedForm` | enum: ThirtyTwoBarAABA, TwelveBarBlues, VerseChorus, Binary, Ternary, Rondo, Strophic, ... | |
+
+Roman numerals, functions and cadences in a mode with fewer than seven degrees (pentatonic, blues,
+whole tone) are spelled against major or natural minor on the same tonic, chosen by the mode's third,
+so G in C major pentatonic is `V` and G → C is authentic. A minor key's own dominant (E or E7 in
+A minor) is diatonic to the chromatic analysis and to key inference. Augmented sixths sit on the
+lowered sixth degree and are told apart by shape, since a chord holds pitch classes rather than
+spellings: `Ab7no5` is `It+6` and `Ab7b5` is `Fr+6` in C, while `Ab7` is `Ger+6` only when it resolves
+to the dominant or to a cadential six-four.
 
 `InferKey()` returns `Key?` (null for all-chromatic input), while `InferKeys()` returns the full ranked `IReadOnlyList<KeyMatch>`. See the [complete library guide](../docs/complete-library-guide.md) for a wider tour.
 

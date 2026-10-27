@@ -15,8 +15,10 @@ public enum ChromaticKind
 	Neapolitan,
 
 	/// <summary>
-	/// An augmented-sixth chord. Reserved: detection is not implemented because the chord model does
-	/// not carry the interval spelling needed to identify Italian/French/German sixths reliably.
+	/// An augmented-sixth chord on the lowered sixth degree: Italian ("It+6", the shape of a dominant
+	/// seventh with no fifth), French ("Fr+6", a dominant seventh with a flat fifth) or German ("Ger+6",
+	/// a dominant seventh, reported only when it resolves to the dominant or to a cadential six-four,
+	/// since otherwise it is indistinguishable from the dominant seventh it sounds like).
 	/// </summary>
 	AugmentedSixth,
 
