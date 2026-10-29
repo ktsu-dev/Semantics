@@ -66,18 +66,18 @@ public sealed record AbsoluteDirectoryPath : SemanticDirectoryPath<AbsoluteDirec
 	}
 
 	// Cache for directory name
-	private FileName? _cachedName;
+	private DirectoryName? _cachedName;
 
 	/// <summary>
 	/// Gets the name of this directory (the last component of the path).
 	/// </summary>
-	/// <value>A <see cref="FileName"/> representing just the directory name.</value>
+	/// <value>A <see cref="DirectoryName"/> representing just the directory name, so <c>Parent / Name</c> is this directory again.</value>
 	/// <remarks>
 	/// This is the last component as written, not as resolved: the name of <c>/home/user/..</c> is <c>..</c>.
 	/// Resolve the path first, for example through <see cref="Parent"/> of a child, when the directory's own
 	/// name is wanted.
 	/// </remarks>
-	public FileName Name => _cachedName ??= FileName.Create<FileName>(Path.GetFileName(WeakString) ?? "");
+	public DirectoryName Name => _cachedName ??= DirectoryName.Create<DirectoryName>(Path.GetFileName(WeakString) ?? "");
 
 	// Cache for depth calculation
 	private int? _cachedDepth;
