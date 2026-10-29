@@ -12,8 +12,8 @@ set -euo pipefail
 : "${SUBJECTS:?SUBJECTS must hold the subject table from benchmark-history.yml}"
 
 while IFS='|' read -r subject history chart _filter; do
-  [ -n "$subject" ] || continue
-  if [ ! -f "$history" ]; then
+  [[ -n "$subject" ]] || continue
+  if [[ ! -f "$history" ]]; then
     echo "No history for $subject yet; nothing to draw."
     continue
   fi
