@@ -60,6 +60,7 @@ env:
   BENCHMARK_JOB: short
   # One line per chart: name|history|chart|filter. An environment variable cannot hold an array,
   # and three steps need the same three triples, so this is the one place they are written.
+  # verify-charts.yml reads this value from here too, so it stays the only copy.
   #
   # The quantities filter names one operation per panel. The strings and paths filters name whole
   # classes instead, so they measure more than they draw: ingest stores every row and only render
@@ -203,19 +204,10 @@ jobs:
             done <<< "$SUBJECTS"
           done
 
+      # The same script verify-charts.yml runs, so the charts this commits are the ones it checks.
       - name: Redraw the charts
         shell: bash
-        run: |
-          set -euo pipefail
-          while IFS='|' read -r subject history chart filter; do
-            [ -n "$subject" ] || continue
-            if [ ! -f "$history" ]; then
-              echo "No history for $subject yet; nothing to draw."
-              continue
-            fi
-            dotnet run scripts/benchmark-history.cs -- render \
-              --subject "$subject" --history "$history" --out "$chart" </dev/null
-          done <<< "$SUBJECTS"
+        run: bash scripts/render-benchmark-charts.sh
 
       - name: Commit the history and the chart
         shell: bash
