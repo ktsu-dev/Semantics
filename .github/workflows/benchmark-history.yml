@@ -51,8 +51,9 @@ on:
         default: "quantities strings paths"
         type: string
 
+# Read-only by default. Only the measure job, which pushes the results, asks for write.
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: benchmark-history
@@ -86,18 +87,20 @@ jobs:
   # published, or nothing, and the measure job runs only when there is something to measure.
   resolve:
     name: Find the release
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    # Only a CI run of this repository's own code: a pull request from a fork whose branch is
+    # also called main would otherwise match the branches filter. Nothing here checks out the
+    # triggering run's code either way; a workflow_run job checks out the default branch.
+    if: >-
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.conclusion == 'success'
+      && github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    permissions:
-      contents: read
     outputs:
       tag: ${{ steps.find.outputs.tag }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.repository.default_branch }}
 
       - name: Find the release this CI run published
         id: find
@@ -138,8 +141,15 @@ jobs:
     name: Measure and chart
     needs: resolve
     # `always()` because resolve is skipped on a dispatch, and a skipped need otherwise skips this.
-    if: always() && (github.event_name == 'workflow_dispatch' || needs.resolve.outputs.tag != '')
+    # Only on the default branch, since the results are pushed there. A workflow_run job always
+    # runs there; a dispatch runs on whatever branch it was started from.
+    if: >-
+      always()
+      && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+      && (github.event_name == 'workflow_dispatch' || needs.resolve.outputs.tag != '')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     # Three subjects rather than one. The dispatch's `subjects` input is the intended way to split
     # a long backfill across runs; raising this number further is not.
     timeout-minutes: 360
@@ -148,10 +158,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v7
         with:
-          # The default branch, not the released tag: the results are committed back here, and
-          # checking out the tag would leave the checkout detached at it, so the push at the end
-          # would be asking the default branch to move backwards.
-          ref: ${{ github.event.repository.default_branch }}
+          # No ref: the default branch, which the job's condition guarantees, not the released
+          # tag. The results are committed back here, and checking out the tag would leave the
+          # checkout detached at it, so the push at the end would ask the branch to move backwards.
           fetch-depth: 0
 
       - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
