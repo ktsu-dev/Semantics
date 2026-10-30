@@ -141,10 +141,7 @@ internal static class PathPolyfill
 		return Path.GetFullPath(path, basePath);
 #else
 		// Fallback implementation for netstandard2.0 and netcoreapp2.0
-		if (string.IsNullOrEmpty(path))
-		{
-			throw new ArgumentException("Path cannot be empty.", nameof(path));
-		}
+		Ensure.NotNull(path);
 
 		if (string.IsNullOrEmpty(basePath))
 		{
@@ -152,6 +149,12 @@ internal static class PathPolyfill
 		}
 
 		basePath = Path.GetFullPath(basePath);
+
+		// The BCL overload on newer frameworks resolves an empty path to the base path itself.
+		if (path.Length == 0)
+		{
+			return basePath;
+		}
 
 		if (IsPathFullyQualified(path))
 		{

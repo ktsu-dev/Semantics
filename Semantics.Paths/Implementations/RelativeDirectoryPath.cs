@@ -36,7 +36,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// </summary>
 	/// <value>
 	/// A <see cref="RelativeDirectoryPath"/> naming the directory that contains this one: the path with its last
-	/// segment removed, or an empty path for a single-segment path. Paths are normalized lexically first, so the
+	/// segment removed, or <c>.</c> (the starting directory, as <see cref="Normalize"/> writes it)
+	/// for a single-segment path. Paths are normalized lexically first, so the
 	/// parent of <c>a/..</c> is <c>..</c>, and a path that names the starting directory or one above it climbs
 	/// further instead: the parent of <c>.</c> (or the empty path) is <c>..</c>, and the parent of <c>..</c> is
 	/// <c>../..</c>.
@@ -62,7 +63,11 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 			return Create<RelativeDirectoryPath>(normalized + separator + "..");
 		}
 
-		return Create<RelativeDirectoryPath>(string.Join(separator, segments, 0, segments.Length - 1));
+		// One segment leaves the starting directory, which is "." rather than "": the empty path is
+		// rejected by Path.GetFullPath and reads as missing to Directory.Exists.
+		return segments.Length == 1
+			? Create<RelativeDirectoryPath>(".")
+			: Create<RelativeDirectoryPath>(string.Join(separator, segments, 0, segments.Length - 1));
 	}
 
 	// Cache for directory name

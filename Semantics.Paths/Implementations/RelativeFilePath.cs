@@ -35,8 +35,10 @@ public sealed record RelativeFilePath : SemanticFilePath<RelativeFilePath>, IRel
 	{
 		get
 		{
+			// A bare file name lives in the starting directory, written "." so that AsAbsolute and
+			// IsDirectory can resolve it; the BCL rejects or misreads the empty path.
 			return _cachedDirectoryPath ??= RelativeDirectoryPath.Create<RelativeDirectoryPath>(
-				Path.GetDirectoryName(WeakString) ?? "");
+				Path.GetDirectoryName(WeakString) is { Length: > 0 } directory ? directory : ".");
 		}
 	}
 

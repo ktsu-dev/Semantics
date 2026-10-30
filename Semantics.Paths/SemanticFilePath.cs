@@ -111,5 +111,10 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 	/// <summary>
 	/// Gets the directory portion of the path
 	/// </summary>
-	public DirectoryPath DirectoryPath => DirectoryPath.Create<DirectoryPath>(Path.GetDirectoryName(WeakString) ?? "");
+	/// <remarks>A bare file name's directory is the starting directory, written <c>.</c>.</remarks>
+	public DirectoryPath DirectoryPath => DirectoryPath.Create<DirectoryPath>(Path.GetDirectoryName(WeakString) switch
+	{
+		"" => ".",
+		var directory => directory ?? "",
+	});
 }
