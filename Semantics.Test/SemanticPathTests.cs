@@ -397,12 +397,13 @@ public class SemanticPathTests
 	}
 
 	[TestMethod]
-	public void SemanticFilePath_DirectoryPath_WithEmptyResult_ShouldReturnEmpty()
+	public void SemanticFilePath_DirectoryPath_OfABareFileName_IsTheStartingDirectory()
 	{
-		// Test when GetDirectoryName returns null/empty
+		// GetDirectoryName returns "" for a bare file name; "." is what Path.GetFullPath and
+		// Directory.Exists can resolve.
 		FilePath filePath = FilePath.Create<FilePath>("file.txt");
 		DirectoryPath directoryPath = filePath.DirectoryPath;
-		Assert.AreEqual("", directoryPath.ToString());
+		Assert.AreEqual(".", directoryPath.ToString());
 	}
 
 	[TestMethod]
