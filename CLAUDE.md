@@ -398,7 +398,12 @@ does not. Adding a storage type is one derived class.
 
 `Semantics.Benchmarks` measures three libraries. `.github/workflows/benchmark-history.yml` runs a
 fixed set once per release, appends to a history file per subject under `docs/benchmarks/`, and
-redraws the chart the README shows. Four things about it are not guessable from the code:
+redraws the chart the README shows. Five things about it are not guessable from the code:
+
+- **It starts from `workflow_run` on CI, not from `release: published`.** The shared pipeline publishes
+  releases with `GITHUB_TOKEN`, and an event caused by `GITHUB_TOKEN` starts no workflow, so a release
+  trigger never fired (#320). The `resolve` job takes the newest release, measures it only if it was
+  published after the CI run started, and skips a version the history already has.
 
 - **`BenchmarkAgainstVersion` must be set in the environment, never with `-p:`.** BenchmarkDotNet
   generates and builds a project of its own for each run, which a property passed on the command line

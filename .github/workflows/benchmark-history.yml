@@ -4,8 +4,13 @@ name: Benchmark History
 # history file, and redraws the chart the README shows.
 #
 # Two ways in:
-#   * a published release, which measures that version and adds one point;
+#   * a CI run on main that published a release, which measures that version and adds one point;
 #   * a manual dispatch listing versions, which measures each of them in ONE job and backfills.
+#
+# Why not `release: published`: the shared pipeline publishes releases with GITHUB_TOKEN, and an
+# event caused by GITHUB_TOKEN starts no workflow run, so that trigger never fired once (#320).
+# `workflow_run` on CI does fire, because the CI run itself was started by the push to main. The
+# resolve job then asks whether that run published a release, and which one.
 #
 # A backfill version is measured as a published package, through BenchmarkAgainstVersion: no tag
 # before this workflow carries a benchmark project, so there is no older source to run. A release
@@ -29,8 +34,10 @@ name: Benchmark History
 # split by subject across runs rather than by raising the timeout.
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       versions:
@@ -44,8 +51,9 @@ on:
         default: "quantities strings paths"
         type: string
 
+# Read-only by default. Only the measure job, which pushes the results, asks for write.
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: benchmark-history
@@ -75,9 +83,74 @@ env:
     paths|docs/benchmarks/paths-history.json|docs/benchmarks/paths-performance.svg|*PathCreationBenchmarks* *PathOperationBenchmarks*
 
 jobs:
+  # A CI run on main finishes whether or not it released anything: the version gate skips a
+  # release for commits that change nothing shipped. This job names the release the run
+  # published, or nothing, and the measure job runs only when there is something to measure.
+  resolve:
+    name: Find the release
+    # Only a CI run of this repository's own code: a pull request from a fork whose branch is
+    # also called main would otherwise match the branches filter. Nothing here checks out the
+    # triggering run's code either way; a workflow_run job checks out the default branch.
+    if: >-
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.conclusion == 'success'
+      && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      tag: ${{ steps.find.outputs.tag }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      - name: Find the release this CI run published
+        id: find
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_STARTED: ${{ github.event.workflow_run.run_started_at }}
+        run: |
+          set -euo pipefail
+          release=$(gh release list --repo "$GITHUB_REPOSITORY" --exclude-drafts --limit 1 \
+            --json tagName,publishedAt --jq '.[0] // empty')
+          if [ -z "$release" ]; then
+            echo "No published release; nothing to measure."
+            exit 0
+          fi
+          tag=$(jq -r '.tagName' <<< "$release")
+          published=$(jq -r '.publishedAt' <<< "$release")
+
+          # ISO-8601 UTC timestamps in one format compare correctly as strings. A release
+          # published before this run started came from an earlier run.
+          if [[ "$published" < "$RUN_STARTED" ]]; then
+            echo "Latest release $tag ($published) predates this run ($RUN_STARTED); nothing to measure."
+            exit 0
+          fi
+
+          # A rerun of the CI run, or a dispatch that already backfilled the version, must not
+          # add a second point for it.
+          version="${tag#v}"
+          if jq -e --arg v "$version" '.entries | any(.version == $v)' docs/benchmarks/history.json >/dev/null; then
+            echo "$version is already in the history; nothing to measure."
+            exit 0
+          fi
+
+          echo "CI run published $tag; measuring it."
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
   measure:
     name: Measure and chart
+    needs: resolve
+    # `always()` because resolve is skipped on a dispatch, and a skipped need otherwise skips this.
+    # Only on the default branch, since the results are pushed there. A workflow_run job always
+    # runs there; a dispatch runs on whatever branch it was started from.
+    if: >-
+      always()
+      && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+      && (github.event_name == 'workflow_dispatch' || needs.resolve.outputs.tag != '')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     # Three subjects rather than one. The dispatch's `subjects` input is the intended way to split
     # a long backfill across runs; raising this number further is not.
     timeout-minutes: 360
@@ -86,10 +159,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v7
         with:
-          # The default branch, not the released tag: the results are committed back here, and a
-          # release event would otherwise leave the checkout detached at the tag, so the push at
-          # the end would be asking the default branch to move backwards.
-          ref: ${{ github.event.repository.default_branch }}
+          # No ref: the default branch, which the job's condition guarantees, not the released
+          # tag. The results are committed back here, and checking out the tag would leave the
+          # checkout detached at it, so the push at the end would ask the branch to move backwards.
           fetch-depth: 0
 
       - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
@@ -113,10 +185,10 @@ jobs:
           echo "ns=$ns" >> "$GITHUB_OUTPUT"
 
       - name: Measure the released version
-        if: github.event_name == 'release'
+        if: github.event_name == 'workflow_run'
         shell: bash
         env:
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ needs.resolve.outputs.tag }}
         run: |
           set -euo pipefail
           version="${TAG#v}"
