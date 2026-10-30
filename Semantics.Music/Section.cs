@@ -134,29 +134,9 @@ public sealed record Section
 			return false;
 		}
 
-		string? label = null;
-		int afterLabel = close;
-		int quote = header.IndexOf('"', close);
-		if (quote >= 0)
+		if (!TryParseHeaderTail(header, close + 1, out string? label, out Key? key))
 		{
-			if (!TryReadEscapedLabel(header, quote + 1, out label, out int endQuote))
-			{
-				return false;
-			}
-
-			afterLabel = endQuote;
-		}
-
-		// The key is searched for only after the label, so a "(" inside the label is not taken for it.
-		Key? key = null;
-		int open = header.IndexOf('(', afterLabel);
-		if (open >= 0)
-		{
-			int endParen = header.IndexOf(')', open + 1);
-			if (endParen < 0 || !Key.TryParse(header[(open + 1)..endParen], out key))
-			{
-				return false;
-			}
+			return false;
 		}
 
 		if (!Progression.TryParse(lines[1], out Progression? progression))
@@ -171,6 +151,69 @@ public sealed record Section
 
 		result = Create(type, progression, label, key);
 		return true;
+	}
+
+	// After "]" the header is exactly one of: nothing, ` "<label>"`, ` (<key>)` or ` "<label>" (<key>)`.
+	// Anything else is refused, so a key written before the label cannot be dropped and junk cannot hide
+	// in the header.
+	private static bool TryParseHeaderTail(string header, int position, out string? label, out Key? key)
+	{
+		label = null;
+		key = null;
+		if (position == header.Length)
+		{
+			return true;
+		}
+
+		if (!TrySkipSeparator(header, ref position))
+		{
+			return false;
+		}
+
+		if (header[position] == '"')
+		{
+			if (!TryReadEscapedLabel(header, position + 1, out label, out int endQuote))
+			{
+				return false;
+			}
+
+			position = endQuote + 1;
+
+			// Only a key may follow the label, after a single space.
+			if (position == header.Length)
+			{
+				return true;
+			}
+
+			if (!TrySkipSeparator(header, ref position))
+			{
+				return false;
+			}
+		}
+
+		return TryReadKey(header, position, out key);
+	}
+
+	// Steps over the single space between header parts, which has to be followed by something.
+	private static bool TrySkipSeparator(string header, ref int position)
+	{
+		if (header[position] != ' ' || position + 1 >= header.Length)
+		{
+			return false;
+		}
+
+		position++;
+		return true;
+	}
+
+	// Reads ` (<key>)` from its opening parenthesis to the end of the header line. The closing
+	// parenthesis has to end the line, so nothing can trail the key.
+	private static bool TryReadKey(string header, int open, [NotNullWhen(true)] out Key? key)
+	{
+		key = null;
+		return header[open] == '('
+			&& header[^1] == ')'
+			&& Key.TryParse(header[(open + 1)..^1], out key);
 	}
 
 	// The progression is the one line after the header. Anything else is refused rather than

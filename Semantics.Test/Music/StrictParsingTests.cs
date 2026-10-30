@@ -209,4 +209,26 @@ public class StrictParsingTests
 			Section.Create(SectionType.Chorus, chorus),
 		]);
 	}
+
+	[TestMethod]
+	[DataRow("[Verse] (C major) \"Verse 1\"\n4/4  C / / /")]
+	[DataRow("[Verse]garbage\n4/4  C / / /")]
+	[DataRow("[Verse] \"V\" trailing junk\n4/4  C / / /")]
+	[DataRow("[Verse] (C major) junk\n4/4  C / / /")]
+	[DataRow("[Verse] \n4/4  C / / /")]
+	[DataRow("[Verse]  \"V\"\n4/4  C / / /")]
+	[DataRow("[Verse] \"V\" \n4/4  C / / /")]
+	[DataRow("[Verse] \"V\"(C major)\n4/4  C / / /")]
+	[DataRow("[Verse](C major)\n4/4  C / / /")]
+	public void Section_RejectsAHeaderOutsideTheGrammar(string text) =>
+		Assert.IsFalse(Section.TryParse(text, out _));
+
+	[TestMethod]
+	public void Section_StillParsesALabelAndKey()
+	{
+		Assert.IsTrue(Section.TryParse("[Verse] \"Verse 1\" (C major)\n4/4  C / / /", out Section? section));
+		Assert.AreEqual(SectionType.Verse, section.Type);
+		Assert.AreEqual("Verse 1", section.Label);
+		Assert.AreEqual(Key.Parse("C major"), section.Key);
+	}
 }
