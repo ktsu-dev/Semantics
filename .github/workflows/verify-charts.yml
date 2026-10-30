@@ -1,0 +1,67 @@
+name: Verify Benchmark Charts
+
+# The benchmark SVGs under docs/benchmarks/ are committed output, drawn from the history JSON
+# beside them. This job redraws every chart from the committed history and fails if any byte
+# differs, so a hand-edited history or a renderer change can't leave the README charts showing
+# something the data does not say (#303).
+#
+# It redraws through scripts/render-benchmark-charts.sh, the step benchmark-history.yml runs, and
+# reads the subject table from benchmark-history.yml's env, so the guard and the recorder cannot
+# drift apart.
+
+on:
+  pull_request:
+    paths:
+      - "docs/benchmarks/**"
+      - "scripts/benchmark-history.cs"
+      - "scripts/render-benchmark-charts.sh"
+      - ".github/workflows/benchmark-history.yml"
+      - ".github/workflows/verify-charts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-charts-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-charts:
+    name: Benchmark charts match their history
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Redraw every chart from its committed history
+        shell: bash
+        run: |
+          set -euo pipefail
+          # yq ships on the GitHub-hosted Ubuntu images.
+          SUBJECTS=$(yq '.env.SUBJECTS' .github/workflows/benchmark-history.yml)
+          export SUBJECTS
+          bash scripts/render-benchmark-charts.sh
+
+      - name: Fail if a committed chart differs
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Untracked files count too: a chart the history draws but nobody committed is drift.
+          drift=$(git status --porcelain -- docs/benchmarks/)
+          if [ -n "$drift" ]; then
+            echo "::error::These benchmark charts differ from what their committed history draws:"
+            while read -r _ file; do
+              echo "::error file=$file::$file is stale"
+            done <<< "$drift"
+            git diff --stat -- docs/benchmarks/
+            echo "Run 'bash scripts/render-benchmark-charts.sh' with SUBJECTS set from benchmark-history.yml, and commit the result." >&2
+            exit 1
+          fi
+          echo "Every benchmark chart matches its history."

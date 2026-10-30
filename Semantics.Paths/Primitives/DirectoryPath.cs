@@ -40,8 +40,8 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 	/// <summary>
 	/// Gets the name of this directory (the last component of the path).
 	/// </summary>
-	/// <value>A <see cref="FileName"/> representing just the directory name.</value>
-	public FileName Name => FileName.Create<FileName>(Path.GetFileName(WeakString));
+	/// <value>A <see cref="DirectoryName"/> representing just the directory name, so <c>Parent / Name</c> is this directory again.</value>
+	public DirectoryName Name => DirectoryName.Create<DirectoryName>(Path.GetFileName(WeakString));
 
 	/// <summary>
 	/// Converts this directory path to an absolute directory path representation.

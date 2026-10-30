@@ -398,7 +398,12 @@ does not. Adding a storage type is one derived class.
 
 `Semantics.Benchmarks` measures three libraries. `.github/workflows/benchmark-history.yml` runs a
 fixed set once per release, appends to a history file per subject under `docs/benchmarks/`, and
-redraws the chart the README shows. Four things about it are not guessable from the code:
+redraws the chart the README shows. Five things about it are not guessable from the code:
+
+- **It starts from `workflow_run` on CI, not from `release: published`.** The shared pipeline publishes
+  releases with `GITHUB_TOKEN`, and an event caused by `GITHUB_TOKEN` starts no workflow, so a release
+  trigger never fired (#320). The `resolve` job takes the newest release, measures it only if it was
+  published after the CI run started, and skips a version the history already has.
 
 - **`BenchmarkAgainstVersion` must be set in the environment, never with `-p:`.** BenchmarkDotNet
   generates and builds a project of its own for each run, which a property passed on the command line
@@ -409,7 +414,9 @@ redraws the chart the README shows. Four things about it are not guessable from 
   version across every package.
 - **The histories and the SVG files are committed output that a bot pushes.** A local `render` must be
   diffed before commit rather than assumed. The quantities chart in particular is a regression test:
-  a change to the renderer that moves a byte in it has broken something.
+  a change to the renderer that moves a byte in it has broken something. `verify-charts.yml` enforces
+  this on pull requests: it redraws every chart through `scripts/render-benchmark-charts.sh`, the step
+  the recorder runs, and fails on any difference.
 - **Nothing here touches an internal member.** The `InternalsVisibleTo` that would expose one names
   only the test assembly, and a benchmark built on internals could only ever measure the working copy,
   never a published package — which would make the release history impossible to backfill.
@@ -533,3 +540,4 @@ This file is the entry point. For deeper material:
 - `docs/migration-guide-3.1.md` — 3.0 → 3.1 upgrade guide (JSON converter is now opt-in, `PhysicalConstants` domain fields became generic accessors).
 - `docs/migration-guide-4.0.md` — 3.x → 4.0 upgrade guide (every quantity became a `readonly record struct`).
 - `docs/migration-guide-5.0.md` — 4.x → 5.0 upgrade guide (the four dimensionally unkeepable relationships no longer generate operators).
+- `docs/migration-guide-6.0.md` — 5.x → 6.0 upgrade guide (a directory's `Name` is a `DirectoryName` on every directory type).
