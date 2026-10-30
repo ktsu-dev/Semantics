@@ -114,16 +114,24 @@ public readonly partial record struct Color
 		double alpha = A;
 		Color self = this;
 
-		// Try first the direction whose extreme (white or black) gives the higher contrast against
-		// this background. The two are equal near luminance 0.179, not 0.5, so on a mid-tone
-		// background darkening is usually the only way to reach the target. If the preferred
-		// direction still falls short, fall back to the other one, then to mixing towards black or
-		// white, before giving up.
+		// Move lightness in whichever direction reaches the target. When both do, keep the one closer to
+		// this color: which extreme (white or black) has more headroom against the background says
+		// nothing about where this color starts, so on a background just below luminance 0.179 a dark
+		// color that needs only a nudge darker would otherwise be inverted to a light one. If neither
+		// direction reaches it, mix towards black or white instead, trying first the extreme that gives
+		// the higher contrast against this background, before giving up.
+		Color? lighter = Search(goLighter: true, LightnessCandidate);
+		Color? darker = Search(goLighter: false, LightnessCandidate);
+		if (lighter is Color up && darker is Color down)
+		{
+			return DistanceTo(up) <= DistanceTo(down) ? up : down;
+		}
+
 		double bgLum = background.WithAlpha(1.0).RelativeLuminance;
 		bool preferLighter = (1.05 / (bgLum + 0.05)) >= ((bgLum + 0.05) / 0.05);
 
-		return Search(preferLighter, LightnessCandidate)
-			?? Search(!preferLighter, LightnessCandidate)
+		return lighter
+			?? darker
 			?? Search(preferLighter, MixCandidate)
 			?? Search(!preferLighter, MixCandidate)
 			?? this;
