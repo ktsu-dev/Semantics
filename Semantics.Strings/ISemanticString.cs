@@ -27,8 +27,10 @@ public interface ISemanticString : IComparable, IComparable<ISemanticString>, IE
 	/// <remarks>
 	/// Use this property when you need to interoperate with APIs that expect regular strings.
 	/// The name "WeakString" emphasizes that this breaks the type safety guarantees.
+	/// The value is read-only through this interface: it is set when the semantic string is created,
+	/// which is where it is canonicalized and validated (#310).
 	/// </remarks>
-	public string WeakString { get; init; }
+	public string WeakString { get; }
 
 	// System.String interface
 

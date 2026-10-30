@@ -71,7 +71,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 
 	// ISemanticString implementation
 	/// <summary>
-	/// Gets or initializes the underlying string value for interoperability with non-semantic string operations.
+	/// Gets the underlying string value for interoperability with non-semantic string operations.
 	/// </summary>
 	/// <value>
 	/// The raw string value contained within this semantic string. Defaults to <see cref="string.Empty"/>.
@@ -80,9 +80,12 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	/// Use this property when you need to interoperate with APIs that expect regular strings.
 	/// The name "WeakString" emphasizes that accessing this property breaks the type safety guarantees
 	/// that semantic strings provide. Consider using implicit conversion to string instead when possible.
-	/// This property is init-only to support record initialization while maintaining immutability.
+	/// The init accessor is protected so that a value can only arrive through <c>Create</c>, which
+	/// canonicalizes and validates it. A public one let <c>uuid with { WeakString = "not a uuid" }</c>
+	/// build an instance that never passed either (#310). A derived type may still set it from its own
+	/// constructor.
 	/// </remarks>
-	public string WeakString { get; init; } = string.Empty;
+	public string WeakString { get; protected init; } = string.Empty;
 
 	/// <inheritdoc/>
 	public int Length => WeakString.Length;
@@ -635,6 +638,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 
 	/// <summary>
 	/// The <see cref="WeakString"/> init accessor as a delegate, looked up once per type rather than per value (#444).
+	/// The accessor is protected (#310), so the lookup asks for non-public accessors too.
 	/// </summary>
 	/// <typeparam name="TDest">The semantic string type to set the value of.</typeparam>
 	private static class WeakStringSetter<TDest>
@@ -642,7 +646,7 @@ public abstract record SemanticString<TDerived> : ISemanticString
 	{
 		internal static readonly Action<TDest, string> Set = (Action<TDest, string>)Delegate.CreateDelegate(
 			typeof(Action<TDest, string>),
-			Ensure.NotNull(typeof(TDest).GetProperty(name: nameof(WeakString))?.GetSetMethod()));
+			Ensure.NotNull(typeof(TDest).GetProperty(name: nameof(WeakString))?.GetSetMethod(nonPublic: true)));
 	}
 
 	/// <summary>
