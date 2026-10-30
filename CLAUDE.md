@@ -409,7 +409,9 @@ redraws the chart the README shows. Four things about it are not guessable from 
   version across every package.
 - **The histories and the SVG files are committed output that a bot pushes.** A local `render` must be
   diffed before commit rather than assumed. The quantities chart in particular is a regression test:
-  a change to the renderer that moves a byte in it has broken something.
+  a change to the renderer that moves a byte in it has broken something. `verify-charts.yml` enforces
+  this on pull requests: it redraws every chart through `scripts/render-benchmark-charts.sh`, the step
+  the recorder runs, and fails on any difference.
 - **Nothing here touches an internal member.** The `InternalsVisibleTo` that would expose one names
   only the test assembly, and a benchmark built on internals could only ever measure the working copy,
   never a published package — which would make the release history impossible to backfill.
