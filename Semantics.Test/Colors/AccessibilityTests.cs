@@ -65,8 +65,8 @@ public class AccessibilityTests
 		Assert.IsTrue(
 			adjusted.AccessibilityLevelAgainst(background, largeText: true) >= AccessibilityLevel.AA,
 			$"contrast was {adjusted.ContrastRatio(background)}");
-		Assert.IsTrue(adjusted.RelativeLuminance < dark.RelativeLuminance, $"adjusted to {adjusted.ToHex()}");
-		Assert.IsTrue(dark.DistanceTo(adjusted) < 0.05, $"moved {dark.DistanceTo(adjusted)} to {adjusted.ToHex()}");
+		Assert.IsLessThan(dark.RelativeLuminance, adjusted.RelativeLuminance, $"adjusted to {adjusted.ToHex()}");
+		Assert.IsLessThan(0.05, dark.DistanceTo(adjusted), $"moved {dark.DistanceTo(adjusted)} to {adjusted.ToHex()}");
 	}
 
 	[TestMethod]

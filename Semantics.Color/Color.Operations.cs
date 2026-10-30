@@ -120,18 +120,12 @@ public readonly partial record struct Color
 		// color that needs only a nudge darker would otherwise be inverted to a light one. If neither
 		// direction reaches it, mix towards black or white instead, trying first the extreme that gives
 		// the higher contrast against this background, before giving up.
-		Color? lighter = Search(goLighter: true, LightnessCandidate);
-		Color? darker = Search(goLighter: false, LightnessCandidate);
-		if (lighter is Color up && darker is Color down)
-		{
-			return DistanceTo(up) <= DistanceTo(down) ? up : down;
-		}
+		Color? byLightness = NearerOf(Search(goLighter: true, LightnessCandidate), Search(goLighter: false, LightnessCandidate));
 
 		double bgLum = background.WithAlpha(1.0).RelativeLuminance;
 		bool preferLighter = (1.05 / (bgLum + 0.05)) >= ((bgLum + 0.05) / 0.05);
 
-		return lighter
-			?? darker
+		return byLightness
 			?? Search(preferLighter, MixCandidate)
 			?? Search(!preferLighter, MixCandidate)
 			?? this;
@@ -177,6 +171,15 @@ public readonly partial record struct Color
 			return self.Clamp().Lerp(end, t).WithAlpha(alpha);
 		}
 	}
+
+	/// <summary>Returns whichever of two candidates is closer to this color, or the one that exists.</summary>
+	/// <param name="first">The first candidate, or <c>null</c>.</param>
+	/// <param name="second">The second candidate, or <c>null</c>.</param>
+	/// <returns>The nearer candidate; <paramref name="first"/> on a tie; <c>null</c> if neither exists.</returns>
+	private Color? NearerOf(Color? first, Color? second) =>
+		first is Color a && second is Color b
+			? (DistanceTo(a) <= DistanceTo(b) ? a : b)
+			: first ?? second;
 
 	/// <summary>
 	/// Converts an Oklab color to the nearest in-gamut linear color of the same lightness and hue, reducing
