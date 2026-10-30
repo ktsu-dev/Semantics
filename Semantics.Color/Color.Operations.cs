@@ -176,10 +176,15 @@ public readonly partial record struct Color
 	/// <param name="first">The first candidate, or <c>null</c>.</param>
 	/// <param name="second">The second candidate, or <c>null</c>.</param>
 	/// <returns>The nearer candidate; <paramref name="first"/> on a tie; <c>null</c> if neither exists.</returns>
-	private Color? NearerOf(Color? first, Color? second) =>
-		first is Color a && second is Color b
-			? (DistanceTo(a) <= DistanceTo(b) ? a : b)
-			: first ?? second;
+	private Color? NearerOf(Color? first, Color? second)
+	{
+		if (first is not Color a || second is not Color b)
+		{
+			return first ?? second;
+		}
+
+		return DistanceTo(a) <= DistanceTo(b) ? a : b;
+	}
 
 	/// <summary>
 	/// Converts an Oklab color to the nearest in-gamut linear color of the same lightness and hue, reducing
