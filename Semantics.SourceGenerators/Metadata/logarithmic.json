@@ -151,6 +151,25 @@
           "toSummary": "Converts this pH to the equivalent hydrogen-ion concentration using [H⁺] = 10^(−pH) mol/L."
         }
       ]
+    },
+    {
+      "name": "POH",
+      "description": "Represents basicity on the pOH scale: pOH = −log10([OH⁻]) with the hydroxide-ion activity in mol/L.",
+      "remarks": "pOH is a logarithmic scale over the linear Concentration quantity (stored in the SI base mol/m³; 1 mol/L = 1000 mol/m³).",
+      "displayFormat": "pOH {0}",
+      "scalarFactory": "Create",
+      "arithmetic": false,
+      "conversions": [
+        {
+          "linear": "Concentration",
+          "multiplier": "-1",
+          "reference": { "value": "1000" },
+          "fromName": "FromHydroxideConcentration",
+          "toName": "ToHydroxideConcentration",
+          "fromSummary": "Creates a pOH from a hydroxide-ion concentration using pOH = −log10([OH⁻] in mol/L).",
+          "toSummary": "Converts this pOH to the equivalent hydroxide-ion concentration using [OH⁻] = 10^(−pOH) mol/L."
+        }
+      ]
     }
   ]
 }
