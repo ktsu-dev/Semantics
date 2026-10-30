@@ -533,3 +533,4 @@ This file is the entry point. For deeper material:
 - `docs/migration-guide-3.1.md` — 3.0 → 3.1 upgrade guide (JSON converter is now opt-in, `PhysicalConstants` domain fields became generic accessors).
 - `docs/migration-guide-4.0.md` — 3.x → 4.0 upgrade guide (every quantity became a `readonly record struct`).
 - `docs/migration-guide-5.0.md` — 4.x → 5.0 upgrade guide (the four dimensionally unkeepable relationships no longer generate operators).
+- `docs/migration-guide-6.0.md` — 5.x → 6.0 upgrade guide (a directory's `Name` is a `DirectoryName` on every directory type).
