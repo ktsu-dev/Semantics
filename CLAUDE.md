@@ -362,7 +362,8 @@ of it. A fractional type is scaled by its largest component first, so `Position3
 still has a length, and the primitives take `double.Hypot`, so an `int` component of 65536 no longer
 squares to zero. `Normalize()` of a zero-length vector throws `DivideByZeroException`, as every
 generated division by zero does (#480). The square root itself is `StorageMath.Sqrt`: the binary
-floating point and integer primitives take the `Math.Sqrt` round trip. Any other type is seeded from that root and refined with Newton steps in its own
+floating point and integer primitives take the `Math.Sqrt` round trip, corrected to the exact floor
+for the 64-bit and 128-bit integers. Any other type is seeded from that root and refined with Newton steps in its own
 arithmetic, so a `decimal` length has 28 significant digits. A value a `double` cannot hold, such as a
 `BigInteger` of 2^2048, is scaled by powers of four into [1, 4) for the seed, and the root is scaled
 back by the matching power of two. A root that does not settle throws `ArithmeticException` rather
@@ -381,8 +382,12 @@ should be removed with the `double` path rather than left to rot.
 `StorageMath` is public API, not just the generator's helper (#239): an application doing its own
 vector math over quantities would otherwise reimplement the root, and worse. `Cbrt`, `RootN` and
 `Hypot` ship alongside `Sqrt` on the same seeding and the same Newton loop. `Sqrt` keeps its round
-trip through `double` for every primitive, integers included, because the generated code always
-inlined it; `Cbrt` and `RootN` take that route only for the binary floating point primitives and
+trip through `double` for the floating point primitives and the integers up to 32 bits, because the
+generated code always inlined it. For `long`, `ulong`, a 64-bit `nint`/`nuint`, `Int128` and
+`UInt128`, which hold more bits than a `double`, that root is only the seed: integer Newton steps in
+the type's own arithmetic correct it to the exact floor, and `Hypot` over those types sums its
+squares in `T` when every component is within ±2^30 and in `BigInteger` otherwise, so
+`Hypot(long.MaxValue, 0)` is `long.MaxValue` rather than an overflow (#520); `Cbrt` and `RootN` take that route only for the binary floating point primitives and
 refine every integer type in integer arithmetic, so their floor is exact rather than whatever
 `Math.Pow` rounded to. `Hypot` computes a fractional type from the ratio of its legs, so a pair whose
 squares leave the type still has its hypotenuse, and squares an integer type directly, since the
