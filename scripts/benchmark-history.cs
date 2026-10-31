@@ -451,34 +451,81 @@ internal static partial class BenchmarkHistory
 		return history;
 	}
 
-	/// <summary>Orders versions numerically, keeping anything unparseable first in name order.</summary>
+	/// <summary>Orders versions by SemVer 2.0 precedence, keeping anything unparseable first in name order.</summary>
+	/// <remarks>
+	/// The numeric core compares first, and a version with a prerelease sorts before the same core
+	/// without one, so <c>5.11.1-pre.1</c> charts before <c>5.11.1</c> (#515). Prerelease identifiers
+	/// compare numerically when both are numeric, a numeric one sorts before an alphanumeric one, and
+	/// the rest compare ordinally. Build metadata takes no part in precedence.
+	/// </remarks>
 	private sealed class VersionOrder : IComparer<string>
 	{
 		internal static readonly VersionOrder Instance = new();
 
 		public int Compare(string? left, string? right)
 		{
-			int[] first = Numbers(left);
-			int[] second = Numbers(right);
+			Match first = SemanticVersion().Match(left ?? "");
+			Match second = SemanticVersion().Match(right ?? "");
+			if (!first.Success || !second.Success)
+			{
+				return first.Success == second.Success
+					? string.CompareOrdinal(left, right)
+					: first.Success ? 1 : -1;
+			}
+
+			int order = CompareIdentifiers(first.Groups["core"].Value.Split('.'), second.Groups["core"].Value.Split('.'));
+			if (order == 0)
+			{
+				order = ComparePrerelease(first.Groups["pre"], second.Groups["pre"]);
+			}
+
+			return order != 0 ? order : string.CompareOrdinal(left, right);
+		}
+
+		private static int ComparePrerelease(Group first, Group second) =>
+			(first.Success, second.Success) switch
+			{
+				(false, false) => 0,
+				(false, true) => 1,
+				(true, false) => -1,
+				_ => CompareIdentifiers(first.Value.Split('.'), second.Value.Split('.')),
+			};
+
+		/// <summary>Compares dot-separated identifiers in turn; on a shared prefix, the shorter list is lower.</summary>
+		private static int CompareIdentifiers(string[] first, string[] second)
+		{
 			for (int index = 0; index < Math.Min(first.Length, second.Length); index++)
 			{
-				if (first[index] != second[index])
+				int order = CompareIdentifier(first[index], second[index]);
+				if (order != 0)
 				{
-					return first[index].CompareTo(second[index]);
+					return order;
 				}
 			}
 
-			return first.Length != second.Length
-				? first.Length.CompareTo(second.Length)
-				: string.CompareOrdinal(left, right);
+			return first.Length.CompareTo(second.Length);
 		}
 
-		private static int[] Numbers(string? text) =>
-			[.. DigitRun().Matches(text ?? "").Select(match => int.Parse(match.Value, CultureInfo.InvariantCulture))];
+		private static int CompareIdentifier(string first, string second)
+		{
+			bool firstNumeric = first.All(char.IsAsciiDigit);
+			bool secondNumeric = second.All(char.IsAsciiDigit);
+			if (firstNumeric && secondNumeric)
+			{
+				// By length and then digit by digit, so an identifier too long for an int still compares.
+				string a = first.TrimStart('0');
+				string b = second.TrimStart('0');
+				return a.Length != b.Length ? a.Length.CompareTo(b.Length) : string.CompareOrdinal(a, b);
+			}
+
+			return firstNumeric != secondNumeric
+				? firstNumeric ? -1 : 1
+				: string.CompareOrdinal(first, second);
+		}
 	}
 
-	[GeneratedRegex("[0-9]+")]
-	private static partial Regex DigitRun();
+	[GeneratedRegex(@"^v?(?<core>[0-9]+(?:\.[0-9]+)*)(?:-(?<pre>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.-]*)?$")]
+	private static partial Regex SemanticVersion();
 
 	private static int Render(Dictionary<string, string> options)
 	{
