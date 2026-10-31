@@ -255,37 +255,62 @@ public readonly partial record struct Color
 	/// A straight line in Oklab between two in-gamut colors can leave the sRGB gamut, as cyan to blue does, so
 	/// the mix is gamut-mapped by reducing its chroma at the same lightness and hue. Without that, every HSL
 	/// adjustment made to the result afterwards would start from channels outside 0..1.
+	/// <para>
+	/// The interpolation is premultiplied, as CSS Color 4 specifies: each color's L, a and b count in proportion
+	/// to its alpha, so a fully transparent end contributes no color, only its alpha. Mixing from
+	/// <see cref="NamedColors.Transparent"/> to an opaque color gives that color at alpha <paramref name="t"/>
+	/// rather than passing through dark grey. Colors are still stored with straight alpha.
+	/// </para>
 	/// </remarks>
 	public Color MixOklab(Color other, double t)
 	{
 		Oklab a = ToOklab();
 		Oklab b = other.ToOklab();
-		double inv = 1.0 - t;
+		double wa = Clamp01(A) * (1.0 - t);
+		double wb = Clamp01(other.A) * t;
+		double alpha = wa + wb;
+		if (alpha <= 0.0)
+		{
+			return new Color(0.0, 0.0, 0.0, 0.0);
+		}
+
 		Oklab mixed = new(
-			(a.L * inv) + (b.L * t),
-			(a.A * inv) + (b.A * t),
-			(a.B * inv) + (b.B * t));
-		return GamutMapped(mixed, (A * inv) + (other.A * t));
+			((a.L * wa) + (b.L * wb)) / alpha,
+			((a.A * wa) + (b.A * wb)) / alpha,
+			((a.B * wa) + (b.B * wb)) / alpha);
+		return GamutMapped(mixed, alpha);
 	}
 
 	/// <summary>Linearly interpolates this color with another in linear-RGB space.</summary>
 	/// <param name="other">The other color.</param>
 	/// <param name="t">The interpolation factor, 0 = this, 1 = other.</param>
 	/// <returns>The interpolated color.</returns>
+	/// <remarks>
+	/// The interpolation is premultiplied: each color's linear channels count in proportion to its alpha, so a
+	/// fully transparent end contributes no color, only its alpha, and a result with alpha 0 is transparent
+	/// black. Colors are still stored with straight alpha.
+	/// </remarks>
 	public Color Lerp(Color other, double t)
 	{
-		double inv = 1.0 - t;
+		double wa = Clamp01(A) * (1.0 - t);
+		double wb = Clamp01(other.A) * t;
+		double alpha = wa + wb;
+		if (alpha <= 0.0)
+		{
+			return new Color(0.0, 0.0, 0.0, 0.0);
+		}
+
 		return new Color(
-			(R * inv) + (other.R * t),
-			(G * inv) + (other.G * t),
-			(B * inv) + (other.B * t),
-			(A * inv) + (other.A * t));
+			((R * wa) + (other.R * wb)) / alpha,
+			((G * wa) + (other.G * wb)) / alpha,
+			((B * wa) + (other.B * wb)) / alpha,
+			alpha);
 	}
 
 	/// <summary>Builds a perceptually-uniform (Oklab) gradient from this color to another.</summary>
 	/// <param name="to">The end color.</param>
 	/// <param name="steps">The number of colors to produce (at least 2).</param>
-	/// <returns>The gradient, inclusive of both endpoints; every interior stop is inside the sRGB gamut (see <see cref="MixOklab"/>).</returns>
+	/// <returns>The gradient, inclusive of both endpoints; every interior stop is inside the sRGB gamut and interpolated premultiplied (see <see cref="MixOklab"/>).</returns>
 	/// <exception cref="ArgumentException">Thrown when <paramref name="steps"/> is less than 2.</exception>
 	public IReadOnlyList<Color> Gradient(Color to, int steps)
 	{
