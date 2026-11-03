@@ -89,4 +89,21 @@ public class PitchTests
 	[DataRow(int.MinValue)]
 	public void Create_FromLetter_RejectsOctaveThatWouldWrap(int octave) =>
 		Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Pitch.Create(NoteLetter.C, Accidental.Natural, octave));
+
+	[TestMethod]
+	public void Create_FromLetter_RejectsAnUndefinedLetter()
+	{
+		ArgumentOutOfRangeException ex = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Pitch.Create((NoteLetter)1, Accidental.Natural, 4));
+		Assert.AreEqual("letter", ex.ParamName);
+	}
+
+	[TestMethod]
+	[DataRow(7)]
+	[DataRow(3)]
+	[DataRow(-3)]
+	public void Create_FromLetter_RejectsAnUndefinedAccidental(int accidental)
+	{
+		ArgumentOutOfRangeException ex = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Pitch.Create(NoteLetter.C, (Accidental)accidental, 4));
+		Assert.AreEqual("accidental", ex.ParamName);
+	}
 }

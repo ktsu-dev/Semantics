@@ -2,11 +2,29 @@
 
 namespace ktsu.Semantics.Music;
 
+using System;
 using System.Globalization;
 
 /// <summary>Shared note-letter and accidental scanning used by pitch, chord, and roman-numeral parsing.</summary>
 internal static class Notation
 {
+	/// <summary>Throws when a note letter or accidental is not a defined value, so a cast int can't silently name another note.</summary>
+	/// <param name="letter">The note letter; its parameter name is the one the public factories use.</param>
+	/// <param name="accidental">The accidental; its parameter name is the one the public factories use.</param>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when either value is undefined.</exception>
+	internal static void EnsureDefined(NoteLetter letter, Accidental accidental)
+	{
+		if (!Enum.IsDefined(letter))
+		{
+			throw new ArgumentOutOfRangeException(nameof(letter), letter, "Note letter must be a defined NoteLetter value.");
+		}
+
+		if (!Enum.IsDefined(accidental))
+		{
+			throw new ArgumentOutOfRangeException(nameof(accidental), accidental, "Accidental must be a defined Accidental value.");
+		}
+	}
+
 	/// <summary>Maps a note-letter character (case-insensitive) to a <see cref="NoteLetter"/>.</summary>
 	/// <param name="c">The character to read.</param>
 	/// <param name="letter">The parsed note letter, or default on failure.</param>
