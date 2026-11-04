@@ -126,7 +126,7 @@ public class PathIntegrationTests
 		Assert.Contains("c", parent1.WeakString);
 		Assert.Contains("b", parent2.WeakString);
 		Assert.AreEqual("a", parent3.WeakString);
-		Assert.AreEqual("", parent4.WeakString); // Should be empty at root
+		Assert.AreEqual(".", parent4.WeakString); // The starting directory
 	}
 
 	[TestMethod]
