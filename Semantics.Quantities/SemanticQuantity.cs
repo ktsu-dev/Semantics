@@ -89,11 +89,16 @@ public record SemanticQuantity<TSelf, TStorage>
 	/// <param name="self">The dividend quantity.</param>
 	/// <param name="other">The divisor quantity.</param>
 	/// <returns>The quotient of the two quantities.</returns>
+	/// <exception cref="DivideByZeroException">The divisor is zero.</exception>
 	public static TResult Divide<TResult>(SemanticQuantity<TStorage> self, SemanticQuantity<TStorage> other)
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
 		Ensure.NotNull(self);
 		Ensure.NotNull(other);
+		if (TStorage.IsZero(other.Quantity))
+		{
+			throw new DivideByZeroException("Cannot divide by zero.");
+		}
 		return Create<TResult>(self.Quantity / other.Quantity);
 	}
 
@@ -104,10 +109,15 @@ public record SemanticQuantity<TSelf, TStorage>
 	/// <param name="self">The quantity.</param>
 	/// <param name="other">The scalar value.</param>
 	/// <returns>The quotient of the quantity and the scalar.</returns>
+	/// <exception cref="DivideByZeroException">The divisor is zero.</exception>
 	public static TResult Divide<TResult>(SemanticQuantity<TStorage> self, TStorage other)
 		where TResult : SemanticQuantity<TStorage>, new()
 	{
 		Ensure.NotNull(self);
+		if (TStorage.IsZero(other))
+		{
+			throw new DivideByZeroException("Cannot divide by zero.");
+		}
 		return Create<TResult>(self.Quantity / other);
 	}
 
@@ -192,8 +202,7 @@ public record SemanticQuantity<TSelf, TStorage>
 	public static TSelf operator *(TStorage left, SemanticQuantity<TSelf, TStorage> right) => Multiply<TSelf>(right, left);
 
 	/// <inheritdoc/>
-	public static TSelf operator /(SemanticQuantity<TSelf, TStorage> left, TStorage right)
-		=> TStorage.IsZero(right) ? throw new DivideByZeroException("Cannot divide by zero.") : Divide<TSelf>(left, right);
+	public static TSelf operator /(SemanticQuantity<TSelf, TStorage> left, TStorage right) => Divide<TSelf>(left, right);
 
 	/// <inheritdoc/>
 	public static TStorage operator /(SemanticQuantity<TSelf, TStorage> left, SemanticQuantity<TSelf, TStorage> right) => DivideToStorage(left, right);

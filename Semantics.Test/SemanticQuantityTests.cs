@@ -19,6 +19,7 @@ public class SemanticQuantityTests
 	}
 	public record Time : SemanticQuantity<Time, double> { }
 	public record Speed : SemanticQuantity<Speed, double> { }
+	public record Count : SemanticQuantity<Count, int> { }
 
 	[TestMethod]
 	public void BaseQuantity_CreateMethod_ReturnsInstanceWithCorrectValue()
@@ -364,6 +365,43 @@ public class SemanticQuantityTests
 
 		// Act & Assert
 		Assert.ThrowsExactly<DivideByZeroException>(() => distance / 0.0);
+	}
+
+	[TestMethod]
+	public void StaticDivide_ByZeroQuantity_ThrowsDivideByZeroException()
+	{
+		Distance distance = Distance.Create(10.0);
+
+		DivideByZeroException ex = Assert.ThrowsExactly<DivideByZeroException>(() =>
+			SemanticQuantity<Distance, double>.Divide<Speed>(distance, Time.Create(0.0)));
+		Assert.AreEqual("Cannot divide by zero.", ex.Message);
+
+		Assert.ThrowsExactly<DivideByZeroException>(() =>
+			SemanticQuantity<Distance, double>.Divide<Speed>(Distance.Create(0.0), Time.Create(0.0)));
+	}
+
+	[TestMethod]
+	public void StaticDivide_ByZeroScalar_ThrowsDivideByZeroException()
+	{
+		Distance distance = Distance.Create(10.0);
+
+		DivideByZeroException ex = Assert.ThrowsExactly<DivideByZeroException>(() =>
+			SemanticQuantity<Distance, double>.Divide<Distance>(distance, 0.0));
+		Assert.AreEqual("Cannot divide by zero.", ex.Message);
+	}
+
+	[TestMethod]
+	public void StaticDivide_ByZero_WithIntegerStorage_ThrowsLibraryDivideByZeroException()
+	{
+		Count quantity = Count.Create(10);
+
+		DivideByZeroException byQuantity = Assert.ThrowsExactly<DivideByZeroException>(() =>
+			SemanticQuantity<Count, int>.Divide<Count>(quantity, Count.Create(0)));
+		Assert.AreEqual("Cannot divide by zero.", byQuantity.Message);
+
+		DivideByZeroException byScalar = Assert.ThrowsExactly<DivideByZeroException>(() =>
+			SemanticQuantity<Count, int>.Divide<Count>(quantity, 0));
+		Assert.AreEqual("Cannot divide by zero.", byScalar.Message);
 	}
 
 	[TestMethod]
