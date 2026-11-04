@@ -86,6 +86,43 @@ public sealed class StorageMathTests
 	public void IntegerIsUnchanged() => Assert.AreEqual(int.CreateChecked(Math.Sqrt(26d)), StorageMath.Sqrt(26));
 
 	/// <summary>
+	/// The 64-bit and 128-bit integers hold more bits than a <see cref="double"/>, so the
+	/// <see cref="double"/> root is only their seed: the answer is still the exact floor (#520).
+	/// </summary>
+	[TestMethod]
+	public void WideIntegerSquareRootIsTheExactFloor()
+	{
+		Int128 large = Int128.Parse("1000000000000000001", System.Globalization.CultureInfo.InvariantCulture);
+
+		Assert.AreEqual(2147483647L, StorageMath.Sqrt((1L << 62) - 1));
+		Assert.AreEqual(94906264L, StorageMath.Sqrt(9007199136250224L));
+		Assert.AreEqual(94906265L, StorageMath.Sqrt(9007199136250225L));
+		Assert.AreEqual(3037000499L, StorageMath.Sqrt(long.MaxValue));
+		Assert.AreEqual(4294967295UL, StorageMath.Sqrt(ulong.MaxValue));
+		Assert.AreEqual(large, StorageMath.Sqrt(large * large));
+		Assert.AreEqual(large - Int128.One, StorageMath.Sqrt((large * large) - Int128.One));
+		Assert.AreEqual((UInt128)ulong.MaxValue, StorageMath.Sqrt(UInt128.MaxValue));
+		if (nint.Size == 8)
+		{
+			Assert.AreEqual(nint.CreateChecked(94906264L), StorageMath.Sqrt(nint.CreateChecked(9007199136250224L)));
+		}
+
+		Assert.AreEqual(0L, StorageMath.Sqrt(0L));
+		Assert.AreEqual(1UL, StorageMath.Sqrt(3UL));
+		Assert.ThrowsExactly<OverflowException>(static () => StorageMath.Sqrt(-1L));
+	}
+
+	/// <summary>
+	/// The 32-bit and smaller integers keep the <see cref="double"/> round trip, which is exact for them.
+	/// </summary>
+	[TestMethod]
+	public void NarrowIntegerSquareRootIsUnchanged()
+	{
+		Assert.AreEqual(int.CreateChecked(Math.Sqrt(int.MaxValue)), StorageMath.Sqrt(int.MaxValue));
+		Assert.AreEqual(uint.CreateChecked(Math.Sqrt(uint.MaxValue)), StorageMath.Sqrt(uint.MaxValue));
+	}
+
+	/// <summary>
 	/// An integer type outside the primitives is refined in integer arithmetic and settles on the
 	/// floor of the root, which is what truncating the <see cref="double"/> root gave for values small
 	/// enough to fit one.
@@ -143,7 +180,7 @@ public sealed class StorageMathTests
 		Assert.IsTrue(typeof(StorageMath).IsPublic, "StorageMath itself has to be reachable from outside the assembly.");
 
 		string[] contract = [nameof(StorageMath.Sqrt), nameof(StorageMath.Cbrt), nameof(StorageMath.RootN), nameof(StorageMath.Hypot)];
-		string[] workings = ["IsRoundedThroughDouble", "IsBinaryFloatingPoint", "HasFloorDivision", "Seed", "SeedForRoot", "TryRootThroughDouble", "RootThroughDouble", "RootByNewton", "RootByDescent", "RootBySettling", "TryPower"];
+		string[] workings = ["IsRoundedThroughDouble", "IsBinaryFloatingPoint", "HasFloorDivision", "Seed", "SeedForRoot", "TryRootThroughDouble", "RootThroughDouble", "RootByNewton", "RootByDescent", "RootBySettling", "TryPower", "IsWideInteger", "FloorSqrtOfWideInteger", "HypotOfWideInteger"];
 
 		foreach (string name in contract)
 		{
@@ -347,6 +384,41 @@ public sealed class StorageMathTests
 		decimal expected = leg * StorageMath.Sqrt(2m);
 
 		Assert.IsLessThan(1e6m, Math.Abs(hypotenuse - expected));
+	}
+
+	/// <summary>
+	/// A 64-bit or 128-bit leg near the type's maximum has a hypotenuse the type holds, and gets it as
+	/// the exact floor, where rounding the leg to <see cref="double"/> used to overflow converting back (#520).
+	/// </summary>
+	[TestMethod]
+	public void WideIntegerHypotenuseIsTheExactFloor()
+	{
+		Assert.AreEqual(long.MaxValue, StorageMath.Hypot(long.MaxValue, 0L));
+		Assert.AreEqual(long.MaxValue, StorageMath.Hypot(0L, -long.MaxValue));
+		Assert.AreEqual(ulong.MaxValue, StorageMath.Hypot(ulong.MaxValue, 0UL));
+		Assert.AreEqual(ulong.MaxValue, StorageMath.Hypot(ulong.MaxValue, 1UL, 1UL));
+		Assert.AreEqual(Int128.MaxValue, StorageMath.Hypot(Int128.MaxValue, Int128.Zero));
+		Assert.AreEqual(5L, StorageMath.Hypot(3L, -4L));
+		Assert.AreEqual(2L, StorageMath.Hypot(2L, 1L));
+
+		// The legs round to double, so the double hypotenuse comes out at 2624990630713340416.
+		Assert.AreEqual(2624990630713340405L, StorageMath.Hypot(2624990630713340405L, 271041745L));
+		Assert.AreEqual(4294967294L, StorageMath.Hypot(3037000499L, 3037000499L));
+		Assert.AreEqual(long.MaxValue, StorageMath.Hypot(long.MaxValue, 1L, 1L));
+		Assert.AreEqual(long.MaxValue, StorageMath.Hypot(long.MaxValue, 0L, 0L, 1L));
+		Assert.AreEqual(13L, StorageMath.Hypot(3L, 4L, 12L));
+		Assert.AreEqual(2L, StorageMath.Hypot(1L, 1L, 1L, 1L));
+	}
+
+	/// <summary>
+	/// A wide-integer hypotenuse the type cannot hold is an overflow, as it was before (#520).
+	/// </summary>
+	[TestMethod]
+	public void WideIntegerHypotenuseOutsideTheTypeOverflows()
+	{
+		Assert.ThrowsExactly<OverflowException>(static () => StorageMath.Hypot(long.MaxValue, long.MaxValue));
+		Assert.ThrowsExactly<OverflowException>(static () => StorageMath.Hypot(long.MinValue, 0L));
+		Assert.ThrowsExactly<OverflowException>(static () => StorageMath.Hypot(ulong.MaxValue, ulong.MaxValue, 1UL));
 	}
 
 	/// <summary>

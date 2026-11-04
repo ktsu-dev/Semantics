@@ -37,7 +37,8 @@ using System.Numerics;
 /// <item>
 /// An integer type returns the floor of the root. <see cref="Sqrt{T}(T)"/> reaches it through
 /// <see cref="double"/> for the integer primitives, which is the route the generated code always
-/// inlined; <see cref="Cbrt{T}(T)"/> and <see cref="RootN{T}(T, int)"/> refine every integer type in
+/// inlined, and corrects that root in integer arithmetic for the 64-bit and 128-bit ones, which hold
+/// more bits than a <see cref="double"/> (#520); <see cref="Cbrt{T}(T)"/> and <see cref="RootN{T}(T, int)"/> refine every integer type in
 /// integer arithmetic, so their floor is exact rather than whatever
 /// <see cref="Math.Pow(double, double)"/> happened to round to.
 /// </item>
@@ -76,10 +77,17 @@ public static class StorageMath
 	/// </exception>
 	/// <remarks>
 	/// <para>
-	/// The binary floating point and integer primitives take the route every generated
-	/// <c>Length()</c> and <c>Distance()</c> took before this helper existed, a round trip through
-	/// <see cref="Math.Sqrt(double)"/>, so their results are unchanged. For them that route is
+	/// The binary floating point primitives and the integers up to 32 bits take the route every
+	/// generated <c>Length()</c> and <c>Distance()</c> took before this helper existed, a round trip
+	/// through <see cref="Math.Sqrt(double)"/>, so their results are unchanged. For them that route is
 	/// already as precise as the type.
+	/// </para>
+	/// <para>
+	/// The 64-bit and 128-bit integers (<see cref="long"/>, <see cref="ulong"/>, a 64-bit
+	/// <see cref="nint"/> or <see cref="nuint"/>, <see cref="Int128"/> and <see cref="UInt128"/>) hold
+	/// more bits than a <see cref="double"/> does, so the <see cref="Math.Sqrt(double)"/> root is only
+	/// their seed. Integer Newton steps in the type's own arithmetic then correct it to the exact floor
+	/// (#520).
 	/// </para>
 	/// <para>
 	/// Any other type is refined in its own arithmetic: seeded near the root, then Newton steps
@@ -96,6 +104,11 @@ public static class StorageMath
 	public static T Sqrt<T>(T value)
 		where T : struct, INumber<T>
 	{
+		if (IsWideInteger<T>() && !T.IsNegative(value))
+		{
+			return FloorSqrtOfWideInteger(value);
+		}
+
 		if (IsRoundedThroughDouble<T>() || T.IsNegative(value))
 		{
 			return T.CreateChecked(Math.Sqrt(double.CreateChecked(value)));
@@ -253,12 +266,20 @@ public static class StorageMath
 	/// </para>
 	/// <para>
 	/// The primitives take the <see cref="double"/> round trip, so <c>Hypot&lt;double&gt;</c> is exactly
-	/// <see cref="double.Hypot(double, double)"/>.
+	/// <see cref="double.Hypot(double, double)"/>. The 64-bit and 128-bit integers do not: they sum their
+	/// squares in <see cref="BigInteger"/> when they could overflow <typeparamref name="T"/>, and return
+	/// the exact floor, which throws <see cref="OverflowException"/> only when <typeparamref name="T"/>
+	/// cannot hold it (#520).
 	/// </para>
 	/// </remarks>
 	public static T Hypot<T>(T x, T y)
 		where T : struct, INumber<T>
 	{
+		if (IsWideInteger<T>())
+		{
+			return HypotOfWideInteger(x, y, T.Zero, T.Zero);
+		}
+
 		if (IsRoundedThroughDouble<T>())
 		{
 			return T.CreateChecked(double.Hypot(double.CreateChecked(x), double.CreateChecked(y)));
@@ -293,6 +314,11 @@ public static class StorageMath
 	internal static T Hypot<T>(T x, T y, T z)
 		where T : struct, INumber<T>
 	{
+		if (IsWideInteger<T>())
+		{
+			return HypotOfWideInteger(x, y, z, T.Zero);
+		}
+
 		if (IsRoundedThroughDouble<T>())
 		{
 			double dx = double.CreateChecked(x);
@@ -330,6 +356,11 @@ public static class StorageMath
 	internal static T Hypot<T>(T x, T y, T z, T w)
 		where T : struct, INumber<T>
 	{
+		if (IsWideInteger<T>())
+		{
+			return HypotOfWideInteger(x, y, z, w);
+		}
+
 		if (IsRoundedThroughDouble<T>())
 		{
 			double dx = double.CreateChecked(x);
@@ -384,6 +415,96 @@ public static class StorageMath
 			|| typeof(T) == typeof(nuint)
 			|| typeof(T) == typeof(Int128)
 			|| typeof(T) == typeof(UInt128);
+
+	/// <summary>
+	/// Reports whether <typeparamref name="T"/> is an integer primitive wider than the 53 bits a
+	/// <see cref="double"/> holds, so that rounding through one can miss the floor of its root.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <returns>
+	/// <see langword="true"/> for <see cref="long"/>, <see cref="ulong"/>, <see cref="Int128"/>,
+	/// <see cref="UInt128"/>, and <see cref="nint"/> and <see cref="nuint"/> on a 64-bit process.
+	/// </returns>
+	private static bool IsWideInteger<T>()
+		where T : struct, INumber<T>
+		=> typeof(T) == typeof(long)
+			|| typeof(T) == typeof(ulong)
+			|| typeof(T) == typeof(Int128)
+			|| typeof(T) == typeof(UInt128)
+			|| ((typeof(T) == typeof(nint) || typeof(T) == typeof(nuint)) && nint.Size == 8);
+
+	/// <summary>
+	/// The exact floor of the square root of a non-negative wide integer.
+	/// </summary>
+	/// <typeparam name="T">A type <see cref="IsWideInteger{T}"/> accepts.</typeparam>
+	/// <param name="value">The non-negative value to take the root of.</param>
+	/// <returns>The largest <c>r</c> with <c>r * r &lt;= value</c>.</returns>
+	/// <remarks>
+	/// The <see cref="double"/> root is within a few parts in 2^53 of the answer, and is never larger
+	/// than <typeparamref name="T"/> can hold, because the root of a type's maximum is far below it.
+	/// One integer Newton step from any positive estimate lands on or above the floor. From there each
+	/// step falls until it stops falling, and the last estimate is the floor. Nothing overflows on the
+	/// way, because <c>r + value / r</c> stays within twice the root.
+	/// </remarks>
+	private static T FloorSqrtOfWideInteger<T>(T value)
+		where T : struct, INumber<T>
+	{
+		if (T.IsZero(value))
+		{
+			return T.Zero;
+		}
+
+		T two = T.One + T.One;
+		T estimate = T.Max(T.One, T.CreateSaturating(Math.Sqrt(double.CreateChecked(value))));
+		estimate = (estimate + (value / estimate)) / two;
+
+		for (int iteration = 0; iteration < MaximumIterations; iteration++)
+		{
+			T next = (estimate + (value / estimate)) / two;
+			if (next >= estimate)
+			{
+				return estimate;
+			}
+
+			estimate = next;
+		}
+
+		throw new ArithmeticException($"The square root did not settle within {MaximumIterations} Newton steps.");
+	}
+
+	/// <summary>
+	/// The exact floor of <c>sqrt(x² + y² + z² + w²)</c> for a wide integer type.
+	/// </summary>
+	/// <typeparam name="T">A type <see cref="IsWideInteger{T}"/> accepts.</typeparam>
+	/// <param name="x">The first component.</param>
+	/// <param name="y">The second component.</param>
+	/// <param name="z">The third component, zero for fewer components.</param>
+	/// <param name="w">The fourth component, zero for fewer components.</param>
+	/// <returns>The floor of the length.</returns>
+	/// <exception cref="OverflowException">The length does not fit in <typeparamref name="T"/>.</exception>
+	/// <remarks>
+	/// Components within ±2^30 square and sum within 2^62, which every wide type holds, so they stay
+	/// in <typeparamref name="T"/>. Anything larger is summed in <see cref="BigInteger"/>, since four
+	/// squares of a <see cref="long"/> already need 128 bits.
+	/// </remarks>
+	private static T HypotOfWideInteger<T>(T x, T y, T z, T w)
+		where T : struct, INumber<T>
+	{
+		T limit = T.CreateChecked(1 << 30);
+		if (IsWithin(x, limit) && IsWithin(y, limit) && IsWithin(z, limit) && IsWithin(w, limit))
+		{
+			return FloorSqrtOfWideInteger((x * x) + (y * y) + (z * z) + (w * w));
+		}
+
+		BigInteger bx = BigInteger.CreateChecked(x);
+		BigInteger by = BigInteger.CreateChecked(y);
+		BigInteger bz = BigInteger.CreateChecked(z);
+		BigInteger bw = BigInteger.CreateChecked(w);
+		return T.CreateChecked(Sqrt((bx * bx) + (by * by) + (bz * bz) + (bw * bw)));
+
+		// Compared against -limit rather than by negating value, which wraps for MinValue.
+		static bool IsWithin(T value, T limit) => value <= limit && (!T.IsNegative(value) || value >= -limit);
+	}
 
 	/// <summary>
 	/// Chooses the first Newton estimate for a positive value.
