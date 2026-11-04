@@ -2,6 +2,16 @@
 
 Changes since v5.0.0:
 
+- Reject undefined enum values in the Pitch, PitchClass and Section factories [patch] (#535) (matt-edmondson)
+- Throw DivideByZeroException from Divide\<TResult\> on a zero divisor [patch] (#534) (matt-edmondson)
+- Count a minor key's vii° and vii°7 as diatonic dominants [patch] (#529) (matt-edmondson)
+- Interpolate MixOklab, Lerp and Gradient premultiplied, so a transparent end adds no color [minor] (#528) (matt-edmondson)
+- Return the exact floor from Sqrt and Hypot for 64-bit and 128-bit integers (#524) (matt-edmondson)
+- Order benchmark history by SemVer precedence, so a prerelease charts before its release (#523) (matt-edmondson)
+- Add CompatibilitySuppressions.xml to Color, Cpp, Music and Strings.Identifiers [patch] (#519) (matt-edmondson)
+- Darken rather than invert a color already darker than the background in AdjustForContrast [patch] (#509) (matt-edmondson)
+- Name the starting directory "." in Parent and a bare file's directory [patch] (#504) (matt-edmondson)
+- Return a POH from PH.ToPOH instead of a pOH dressed as a pH [major] (#496) (matt-edmondson)
 - Return a DirectoryName from every directory type's Name [major] (Claude)
 - Refuse a section header outside the documented grammar (Claude)
 - Use [[ ]] in the chart render script (Claude)
