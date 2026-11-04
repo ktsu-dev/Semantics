@@ -33,9 +33,16 @@ public sealed record Section
 	/// <param name="key">An optional local key.</param>
 	/// <returns>A new section.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="progression"/> is null.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="type"/> is not a defined <see cref="SectionType"/>.</exception>
 	public static Section Create(SectionType type, Progression progression, string? label = null, Key? key = null)
 	{
 		Ensure.NotNull(progression);
+		if (!Enum.IsDefined(type))
+		{
+			// An undefined type would print as a number, which Parse refuses, breaking the round trip.
+			throw new ArgumentOutOfRangeException(nameof(type), type, "Section type must be a defined SectionType value.");
+		}
+
 		return new() { Type = type, Progression = progression, Label = label, Key = key };
 	}
 

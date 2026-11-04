@@ -8,6 +8,20 @@ using ktsu.Semantics.Music;
 public class PitchClassTests
 {
 	[TestMethod]
+	public void Create_FromLetter_RejectsAnUndefinedLetter()
+	{
+		ArgumentOutOfRangeException ex = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => PitchClass.Create((NoteLetter)1, Accidental.Natural));
+		Assert.AreEqual("letter", ex.ParamName);
+	}
+
+	[TestMethod]
+	public void Create_FromLetter_RejectsAnUndefinedAccidental()
+	{
+		ArgumentOutOfRangeException ex = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => PitchClass.Create(NoteLetter.C, (Accidental)7));
+		Assert.AreEqual("accidental", ex.ParamName);
+	}
+
+	[TestMethod]
 	public void Create_WrapsValuesIntoZeroToEleven()
 	{
 		Assert.AreEqual(0, PitchClass.Create(12).Value);

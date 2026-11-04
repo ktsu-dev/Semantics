@@ -28,8 +28,12 @@ public sealed record PitchClass
 	/// <param name="letter">The natural note letter.</param>
 	/// <param name="accidental">The accidental.</param>
 	/// <returns>The folded pitch class.</returns>
-	public static PitchClass Create(NoteLetter letter, Accidental accidental) =>
-		Create((int)letter + (int)accidental);
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="letter"/> or <paramref name="accidental"/> is not a defined value.</exception>
+	public static PitchClass Create(NoteLetter letter, Accidental accidental)
+	{
+		Notation.EnsureDefined(letter, accidental);
+		return Create((int)letter + (int)accidental);
+	}
 
 	/// <summary>Parses a pitch-class name such as "C", "F#", or "Bb".</summary>
 	/// <param name="text">A note letter A-G with optional accidentals; no octave.</param>
