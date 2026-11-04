@@ -90,6 +90,33 @@ public class AnalysisFixesTests
 		Assert.IsEmpty(Progression.Parse(chart).ChromaticChords(AMinor));
 
 	[TestMethod]
+	[DataRow("4/4  Am / / / | E7 / / / | G#dim7 / / / | Am / / /")]
+	[DataRow("4/4  Am / / / | E7 / / / | G#dim / / / | Am / / /")]
+	public void ChromaticChords_AMinorKeysLeadingToneChordIsDiatonic(string chart) =>
+		Assert.IsEmpty(Progression.Parse(chart).ChromaticChords(Key.Parse("A aeolian")));
+
+	[TestMethod]
+	[DataRow("4/4  Am / / / | E7 / / / | G#dim7 / / / | Am / / /")]
+	[DataRow("4/4  Am / / / | E7 / / / | G#dim / / / | Am / / /")]
+	public void Functions_AMinorKeysLeadingToneChordIsDominant(string chart)
+	{
+		HarmonicFunction[] expected = [HarmonicFunction.Tonic, HarmonicFunction.Dominant, HarmonicFunction.Dominant, HarmonicFunction.Tonic];
+		CollectionAssert.AreEqual(expected, Progression.Parse(chart).Functions(Key.Parse("A aeolian")).ToArray());
+	}
+
+	[TestMethod]
+	[DataRow("4/4  C | G#dim7 | Am", "C major")]
+	[DataRow("4/4  Am | G#m | Am", "A aeolian")]
+	[DataRow("4/4  Am | G# | Am", "A aeolian")]
+	public void LeadingToneAllowance_IsOnlyForAMinorKeysDiminishedChords(string chart, string key)
+	{
+		Key parsed = Key.Parse(key);
+		Progression progression = Progression.Parse(chart);
+		Assert.AreEqual(1, progression.ChromaticChords(parsed).Single().Index);
+		Assert.AreEqual(HarmonicFunction.Chromatic, progression.Functions(parsed)[1]);
+	}
+
+	[TestMethod]
 	public void ChromaticChords_BorrowedChordsAreUnchanged()
 	{
 		ChromaticAnalysis fm = Progression.Parse("4/4  C | Fm | C").ChromaticChords(CMajor).Single();

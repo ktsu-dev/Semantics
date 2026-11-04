@@ -35,31 +35,45 @@ public sealed partial record Progression
 		chord.ChordTones().All(offset => scale.Contains(PitchClass.Create(chord.Root.Value + offset)));
 
 	private static bool IsDiatonic(Key key, Chord chord) =>
-		AllTonesInScale(chord, key.Scale) || IsHarmonicMinorDominant(key, chord);
+		AllTonesInScale(chord, key.Scale) || IsHarmonicMinorDominant(key, chord) || IsHarmonicMinorLeadingToneChord(key, chord);
 
 	// A minor key's dominant raises its leading tone: E and E7 in A minor are the key's own V and V7,
 	// not chords borrowed from A major, and every other analysis already treats them that way. A key
 	// counts as minor here when its scale has a minor third and a minor seventh, so the raised
 	// seventh is the one tone the dominant adds.
-	private static bool IsHarmonicMinorDominant(Key key, Chord chord)
+	private static bool IsHarmonicMinorDominant(Key key, Chord chord) =>
+		IsMinorWithoutLeadingTone(key)
+		&& chord.Root.Value == PitchClass.Create(key.Tonic.Value + 7).Value
+		&& chord.Quality == ChordQuality.Major
+		&& chord.Seventh is SeventhType.None or SeventhType.Dominant
+		&& OnlyAddsLeadingTone(key, chord);
+
+	// The chord built on that raised seventh belongs to the key for the same reason: G#dim and G#dim7
+	// in A minor are its vii° and vii°7, which the analysis spec files under Dominant with V. A
+	// half-diminished seventh qualifies too, provided the leading tone is still the only tone it adds.
+	private static bool IsHarmonicMinorLeadingToneChord(Key key, Chord chord) =>
+		IsMinorWithoutLeadingTone(key)
+		&& chord.Root.Value == PitchClass.Create(key.Tonic.Value + 11).Value
+		&& chord.Quality == ChordQuality.Diminished
+		&& chord.Seventh is SeventhType.None or SeventhType.Diminished or SeventhType.Dominant
+		&& OnlyAddsLeadingTone(key, chord);
+
+	private static bool IsMinorWithoutLeadingTone(Key key)
 	{
 		int tonic = key.Tonic.Value;
 		Scale scale = key.Scale;
-		if (!scale.Contains(PitchClass.Create(tonic + 3))
-			|| !scale.Contains(PitchClass.Create(tonic + 10))
-			|| scale.Contains(PitchClass.Create(tonic + 11))
-			|| chord.Root.Value != PitchClass.Create(tonic + 7).Value
-			|| chord.Quality != ChordQuality.Major
-			|| chord.Seventh is not (SeventhType.None or SeventhType.Dominant))
-		{
-			return false;
-		}
+		return scale.Contains(PitchClass.Create(tonic + 3))
+			&& scale.Contains(PitchClass.Create(tonic + 10))
+			&& !scale.Contains(PitchClass.Create(tonic + 11));
+	}
 
-		int leadingTone = PitchClass.Create(tonic + 11).Value;
+	private static bool OnlyAddsLeadingTone(Key key, Chord chord)
+	{
+		int leadingTone = PitchClass.Create(key.Tonic.Value + 11).Value;
 		return chord.ChordTones().All(offset =>
 		{
 			PitchClass tone = PitchClass.Create(chord.Root.Value + offset);
-			return tone.Value == leadingTone || scale.Contains(tone);
+			return tone.Value == leadingTone || key.Scale.Contains(tone);
 		});
 	}
 
