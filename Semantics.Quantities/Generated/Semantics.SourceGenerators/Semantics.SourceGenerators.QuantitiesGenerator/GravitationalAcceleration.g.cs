@@ -126,5 +126,25 @@ public readonly partial record struct GravitationalAcceleration<T> : IVector0<Gr
 	/// <summary>Subtracts two GravitationalAcceleration values, returning the absolute difference as a non-negative GravitationalAcceleration.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static GravitationalAcceleration<T> operator -(GravitationalAcceleration<T> left, GravitationalAcceleration<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>GravitationalAcceleration * Mass = ForceMagnitude, through <see cref="AccelerationMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(GravitationalAcceleration<T> left, Mass<T> right) => (AccelerationMagnitude<T>)left * right;
+
+	/// <summary>GravitationalAcceleration * Duration = Speed, through <see cref="AccelerationMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(GravitationalAcceleration<T> left, Duration<T> right) => (AccelerationMagnitude<T>)left * right;
+
+	/// <summary>GravitationalAcceleration / Duration = JerkMagnitude, through <see cref="AccelerationMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static JerkMagnitude<T> operator /(GravitationalAcceleration<T> left, Duration<T> right) => (AccelerationMagnitude<T>)left / right;
+
+	/// <summary>GravitationalAcceleration / JerkMagnitude = Duration, through <see cref="AccelerationMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(GravitationalAcceleration<T> left, JerkMagnitude<T> right) => (AccelerationMagnitude<T>)left / right;
+
+	/// <summary>GravitationalAcceleration * Area = GravitationalParameter, through <see cref="AccelerationMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(GravitationalAcceleration<T> left, Area<T> right) => (AccelerationMagnitude<T>)left * right;
 }
 

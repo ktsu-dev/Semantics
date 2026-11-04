@@ -149,5 +149,9 @@ public readonly partial record struct Rotation<T> : IVector1<Rotation<T>, T>, IP
 
 	/// <summary>Creates a Rotation from a SignedAngle value.</summary>
 	public static Rotation<T> From(SignedAngle<T> value) => Create(value.Value);
+
+	/// <summary>Rotation / Duration = AngularVelocity1D, through <see cref="SignedAngle{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularVelocity1D<T> operator /(Rotation<T> left, Duration<T> right) => (SignedAngle<T>)left / right;
 }
 

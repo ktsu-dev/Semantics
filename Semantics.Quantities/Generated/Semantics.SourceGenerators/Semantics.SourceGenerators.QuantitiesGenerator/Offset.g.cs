@@ -198,5 +198,9 @@ public readonly partial record struct Offset<T> : IVector1<Offset<T>, T>, IPhysi
 
 	/// <summary>Creates a Offset from a Displacement1D value.</summary>
 	public static Offset<T> From(Displacement1D<T> value) => Create(value.Value);
+
+	/// <summary>Offset / Duration = Velocity1D, through <see cref="Displacement1D{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Velocity1D<T> operator /(Offset<T> left, Duration<T> right) => (Displacement1D<T>)left / right;
 }
 

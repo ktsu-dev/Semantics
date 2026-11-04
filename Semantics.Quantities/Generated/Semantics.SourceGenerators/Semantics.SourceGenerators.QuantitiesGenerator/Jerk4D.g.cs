@@ -68,11 +68,8 @@ public readonly partial record struct Jerk4D<T> : IVector4<Jerk4D<T>, T>
 	public (T X, T Y, T Z, T W) In(global::ktsu.Semantics.Quantities.IJerkUnit unit) => (unit.FromBase(X), unit.FromBase(Y), unit.FromBase(Z), unit.FromBase(W));
 
 	/// <summary>Calculates the length of the vector.</summary>
-	public T Length()
-	{
-		T sum = (X * X) + (Y * Y) + (Z * Z) + (W * W);
-		return StorageMath.Sqrt(sum);
-	}
+	/// <remarks>Computed without squaring the components outright, so a length the storage type can hold is returned even when the squares of the components are past its range.</remarks>
+	public T Length() => StorageMath.Hypot(X, Y, Z, W);
 
 	/// <summary>Calculates the squared length of the vector.</summary>
 	public T LengthSquared() => (X * X) + (Y * Y) + (Z * Z) + (W * W);
@@ -87,8 +84,7 @@ public readonly partial record struct Jerk4D<T> : IVector4<Jerk4D<T>, T>
 		T dY = Y - other.Y;
 		T dZ = Z - other.Z;
 		T dW = W - other.W;
-		T sum = (dX * dX) + (dY * dY) + (dZ * dZ) + (dW * dW);
-		return StorageMath.Sqrt(sum);
+		return StorageMath.Hypot(dX, dY, dZ, dW);
 	}
 
 	/// <summary>Calculates the squared distance between two vectors.</summary>
@@ -102,9 +98,15 @@ public readonly partial record struct Jerk4D<T> : IVector4<Jerk4D<T>, T>
 	}
 
 	/// <summary>Returns a normalized version of the vector.</summary>
+	/// <exception cref="System.DivideByZeroException">The vector has zero length, so it has no direction.</exception>
 	public Jerk4D<T> Normalize()
 	{
 		T len = Length();
+		if (T.IsZero(len))
+		{
+			throw new System.DivideByZeroException("Cannot normalize a zero-length vector.");
+		}
+
 		return new() { X = X / len, Y = Y / len, Z = Z / len, W = W / len };
 	}
 
@@ -121,7 +123,8 @@ public readonly partial record struct Jerk4D<T> : IVector4<Jerk4D<T>, T>
 	public static Jerk4D<T> operator *(T scalar, Jerk4D<T> vector) => new() { X = scalar * vector.X, Y = scalar * vector.Y, Z = scalar * vector.Z, W = scalar * vector.W };
 
 	/// <summary>Divides a vector by a scalar.</summary>
-	public static Jerk4D<T> operator /(Jerk4D<T> vector, T scalar) => new() { X = vector.X / scalar, Y = vector.Y / scalar, Z = vector.Z / scalar, W = vector.W / scalar };
+	/// <exception cref="System.DivideByZeroException"><paramref name="scalar"/> is zero.</exception>
+	public static Jerk4D<T> operator /(Jerk4D<T> vector, T scalar) => T.IsZero(scalar) ? throw new System.DivideByZeroException("Cannot divide by zero.") : new() { X = vector.X / scalar, Y = vector.Y / scalar, Z = vector.Z / scalar, W = vector.W / scalar };
 
 	/// <summary>Negates a vector.</summary>
 	public static Jerk4D<T> operator -(Jerk4D<T> vector) => new() { X = -vector.X, Y = -vector.Y, Z = -vector.Z, W = -vector.W };
@@ -129,6 +132,6 @@ public readonly partial record struct Jerk4D<T> : IVector4<Jerk4D<T>, T>
 	public static Acceleration4D<T> operator *(Jerk4D<T> left, Duration<T> right) => new() { X = left.X * right.Value, Y = left.Y * right.Value, Z = left.Z * right.Value, W = left.W * right.Value };
 
 	/// <summary>Jerk4D / Duration = Snap4D.</summary>
-	public static Snap4D<T> operator /(Jerk4D<T> left, Duration<T> right) => new() { X = left.X / right.Value, Y = left.Y / right.Value, Z = left.Z / right.Value, W = left.W / right.Value };
+	public static Snap4D<T> operator /(Jerk4D<T> left, Duration<T> right) => T.IsZero(right.Value) ? throw new System.DivideByZeroException("Cannot divide by zero.") : new() { X = left.X / right.Value, Y = left.Y / right.Value, Z = left.Z / right.Value, W = left.W / right.Value };
 
 };

@@ -142,5 +142,37 @@ public readonly partial record struct Drag<T> : IVector0<Drag<T>, T>, IPhysicalQ
 	/// <summary>Subtracts two Drag values, returning the absolute difference as a non-negative Drag.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Drag<T> operator -(Drag<T> left, Drag<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Drag / AccelerationMagnitude = Mass, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator /(Drag<T> left, AccelerationMagnitude<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>Drag / Mass = AccelerationMagnitude, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator /(Drag<T> left, Mass<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>Drag * Length = Energy, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Drag<T> left, Length<T> right) => (ForceMagnitude<T>)left * right;
+
+	/// <summary>Drag * Duration = MomentumMagnitude, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(Drag<T> left, Duration<T> right) => (ForceMagnitude<T>)left * right;
+
+	/// <summary>Drag * Speed = Power, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(Drag<T> left, Speed<T> right) => (ForceMagnitude<T>)left * right;
+
+	/// <summary>Drag / Area = Pressure, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Pressure<T> operator /(Drag<T> left, Area<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>Drag / Length = SurfaceTension, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SurfaceTension<T> operator /(Drag<T> left, Length<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>Drag / SurfaceTension = Length, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(Drag<T> left, SurfaceTension<T> right) => (ForceMagnitude<T>)left / right;
 }
 

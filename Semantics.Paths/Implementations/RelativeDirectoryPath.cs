@@ -36,7 +36,8 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	/// </summary>
 	/// <value>
 	/// A <see cref="RelativeDirectoryPath"/> naming the directory that contains this one: the path with its last
-	/// segment removed, or an empty path for a single-segment path. Paths are normalized lexically first, so the
+	/// segment removed, or <c>.</c> (the starting directory, as <see cref="Normalize"/> writes it)
+	/// for a single-segment path. Paths are normalized lexically first, so the
 	/// parent of <c>a/..</c> is <c>..</c>, and a path that names the starting directory or one above it climbs
 	/// further instead: the parent of <c>.</c> (or the empty path) is <c>..</c>, and the parent of <c>..</c> is
 	/// <c>../..</c>.
@@ -62,7 +63,11 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 			return Create<RelativeDirectoryPath>(normalized + separator + "..");
 		}
 
-		return Create<RelativeDirectoryPath>(string.Join(separator, segments, 0, segments.Length - 1));
+		// One segment leaves the starting directory, which is "." rather than "": the empty path is
+		// rejected by Path.GetFullPath and reads as missing to Directory.Exists.
+		return segments.Length == 1
+			? Create<RelativeDirectoryPath>(".")
+			: Create<RelativeDirectoryPath>(string.Join(separator, segments, 0, segments.Length - 1));
 	}
 
 	// Cache for directory name
@@ -78,33 +83,28 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 	private int? _cachedDepth;
 
 	/// <summary>
-	/// Gets the depth of this relative directory path (number of directory levels).
+	/// Gets the depth of this relative directory path: the number of levels below its first segment.
 	/// </summary>
-	/// <value>The depth of the directory path.</value>
-	public int Depth => _cachedDepth ??= CalculateDepth(WeakString);
+	/// <value>
+	/// 0 for <c>a</c>, 1 for <c>a/b</c>, 2 for <c>a/b/c</c>. The path is normalized first, the same way as
+	/// <see cref="Normalize"/>, so <c>./a</c> has the same depth as <c>a</c>, a trailing separator does not add a
+	/// level, and <c>a/..</c>, <c>.</c> and the empty path, which all name the starting directory, have depth 0.
+	/// </value>
+	public int Depth => _cachedDepth ??= CalculateDepth();
 
 	/// <summary>
-	/// Calculates directory depth using span semantics for optimal performance.
+	/// Counts the segments of the normalized path, less the first.
 	/// </summary>
-	/// <param name="path">The path to analyze.</param>
 	/// <returns>The directory depth.</returns>
-	private static int CalculateDepth(string path)
+	private int CalculateDepth()
 	{
-		if (string.IsNullOrEmpty(path))
+		string normalized = Normalize().WeakString;
+		if (normalized.Length == 0 || normalized == ".")
 		{
 			return 0;
 		}
 
-		ReadOnlySpan<char> span = path.AsSpan();
-		int depth = 0;
-		for (int i = 0; i < span.Length; i++)
-		{
-			if (span[i] == Path.DirectorySeparatorChar || span[i] == Path.AltDirectorySeparatorChar)
-			{
-				depth++;
-			}
-		}
-		return depth;
+		return SpanPathUtilities.CountSegments(normalized.AsSpan()) - 1;
 	}
 
 	/// <summary>
@@ -153,6 +153,22 @@ public sealed record RelativeDirectoryPath : SemanticDirectoryPath<RelativeDirec
 
 		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return RelativeFilePath.Create<RelativeFilePath>(combinedPath);
+	}
+
+	/// <summary>
+	/// Combines a relative directory path with a directory name using the '/' operator.
+	/// </summary>
+	/// <param name="left">The base relative directory path.</param>
+	/// <param name="right">The directory name to append.</param>
+	/// <returns>A new <see cref="RelativeDirectoryPath"/> representing the combined path.</returns>
+	[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Path combination is the semantic meaning, not mathematical division")]
+	public static RelativeDirectoryPath operator /(RelativeDirectoryPath left, DirectoryName right)
+	{
+		Ensure.NotNull(left);
+		Ensure.NotNull(right);
+
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
+		return Create<RelativeDirectoryPath>(combinedPath);
 	}
 
 	/// <summary>

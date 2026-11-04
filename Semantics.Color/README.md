@@ -23,11 +23,11 @@ On top of that foundation the package adds perceptual operations in the Oklab co
 - **Linear RGB as the hub**: `Color` stores linear RGBA in 0..1, and all mixing, interpolation, and luminance math happens there.
 - **Color spaces**: sRGB (`Srgb`), HSL (`Hsl`), HSV (`Hsv`), Oklab (`Oklab`), and Oklch (`Oklch`). Every color type (including `Color`) converts directly to and from every other through `From*` / `To*` methods. Each hop is routed through the nearest shared hub, so a conversion crosses the gamma boundary at most once and never takes a redundant gamma round-trip.
 - **Interop**: hex parse and format (`#RGB`, `#RRGGBB`, `#RRGGBBAA`), 8-bit byte tuples, and linear or sRGB `Vector3` / `Vector4` output (the sRGB vectors are what ImGui expects).
-- **WCAG accessibility**: relative luminance, contrast ratio (1..21), conformance rating against a background, and `AdjustForContrast` which binary-searches Oklab lightness to hit a target while preserving hue and chroma.
+- **WCAG accessibility**: relative luminance, contrast ratio (1..21), conformance rating against a background, and `AdjustForContrast` which binary-searches Oklab lightness to hit a target while preserving hue, reducing chroma only where the sRGB gamut requires it and mixing towards black or white when lightness alone cannot reach the target. A translucent foreground is measured as it looks composited over the background, as WCAG checkers do.
 - **Color vision simulation**: `Simulate(deficiency, severity)` shows a color as someone with protan, deutan, or tritan color vision sees it, from the Machado, Oliveira, and Fernandes (2009) matrices at any severity from 0 to 1.
 - **Perceptual operations**: Oklab distance (`DistanceTo`), perceptually uniform mixing (`MixOklab`), and Oklab gradients (`Gradient`), alongside plain linear `Lerp`.
 - **Adjustments**: lighten/darken, saturate/desaturate, hue offset, grayscale, and invert. HSL-based on `Color`, `Hsl`, and `Srgb`; perceptually-uniform (lightness/chroma) variants on `Oklch`.
-- **Named colors**: a CSS/X11 subset with case-insensitive lookup.
+- **Named colors**: a subset of the CSS named colors, with CSS's values (`green` is `#008000`, `lime` is `#00FF00`) and case-insensitive lookup.
 
 ## Installation
 
@@ -181,11 +181,12 @@ The canonical color: linear RGBA, each channel `double` in 0..1. A `readonly rec
 | Name | Return Type | Description |
 |------|-------------|-------------|
 | `RelativeLuminance` | `double` | WCAG luminance. |
-| `ContrastRatio(other)` | `double` | WCAG ratio, 1..21. |
+| `CompositeOver(background)` | `Color` | Source-over blend in gamma sRGB, as browsers blend. |
+| `ContrastRatio(other)` | `double` | WCAG ratio, 1..21, with a translucent color composited over `other` first. |
 | `AccessibilityLevelAgainst(background, largeText = false)` | `AccessibilityLevel` | Conformance rating. |
-| `AdjustForContrast(background, target, largeText = false)` | `Color` | Nudge lightness to meet a target level. |
+| `AdjustForContrast(background, target, largeText = false)` | `Color` | Nudge lightness (or mix towards black or white) to meet a target level. |
 | `DistanceTo(other)` | `double` | Perceptual Oklab distance. |
-| `MixOklab(other, t)` | `Color` | Perceptually uniform mix (`t = 0` returns this, `t = 1` returns other). |
+| `MixOklab(other, t)` | `Color` | Perceptually uniform mix (`t = 0` returns this, `t = 1` returns other), gamut-mapped into sRGB. |
 | `Lerp(other, t)` | `Color` | Linear-RGB interpolation. |
 | `Gradient(to, steps)` | `IReadOnlyList<Color>` | Oklab gradient, inclusive of endpoints (`steps >= 2`). |
 | `Simulate(deficiency, severity)` | `Color` | The color as seen with a color vision deficiency (Machado et al. 2009), severity 0..1. |

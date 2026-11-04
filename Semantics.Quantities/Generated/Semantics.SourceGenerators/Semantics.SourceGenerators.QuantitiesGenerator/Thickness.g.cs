@@ -206,5 +206,45 @@ public readonly partial record struct Thickness<T> : IVector0<Thickness<T>, T>, 
 	/// <summary>Subtracts two Thickness values, returning the absolute difference as a non-negative Thickness.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Thickness<T> operator -(Thickness<T> left, Thickness<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Thickness * Length = Area, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator *(Thickness<T> left, Length<T> right) => (Length<T>)left * right;
+
+	/// <summary>Thickness * Area = Volume, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(Thickness<T> left, Area<T> right) => (Length<T>)left * right;
+
+	/// <summary>Thickness / Duration = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator /(Thickness<T> left, Duration<T> right) => (Length<T>)left / right;
+
+	/// <summary>Thickness / Speed = Duration, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Thickness<T> left, Speed<T> right) => (Length<T>)left / right;
+
+	/// <summary>Thickness * Frequency = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(Thickness<T> left, Frequency<T> right) => (Length<T>)left * right;
+
+	/// <summary>Thickness * ForceMagnitude = Energy, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Thickness<T> left, ForceMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Thickness * ElectricFieldMagnitude = VoltageMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(Thickness<T> left, ElectricFieldMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Thickness * ElectricField1D = Voltage, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Voltage<T> operator *(Thickness<T> left, ElectricField1D<T> right) => (Length<T>)left * right;
+
+	/// <summary>Thickness * SurfaceTension = ForceMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(Thickness<T> left, SurfaceTension<T> right) => (Length<T>)left * right;
+
+	/// <summary>Thickness * SpecificEnergyMagnitude = GravitationalParameter, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(Thickness<T> left, SpecificEnergyMagnitude<T> right) => (Length<T>)left * right;
 }
 

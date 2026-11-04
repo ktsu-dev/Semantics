@@ -41,7 +41,7 @@ public readonly partial record struct PH<T>(T Value) : IComparable<PH<T>>
 	/// Creates a pH from a hydrogen-ion concentration using pH = −log10([H⁺] in mol/L).
 	/// </summary>
 	/// <param name="linear">The linear <see cref="Concentration{T}"/>.</param>
-	/// <returns>A new <see cref="PH{T}"/>. A linear value of zero maps to negative infinity.</returns>
+	/// <returns>A new <see cref="PH{T}"/>. A linear value of zero maps to negative infinity where <typeparamref name="T"/> can hold it.</returns>
 	/// <remarks>
 	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
 	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
@@ -49,11 +49,12 @@ public readonly partial record struct PH<T>(T Value) : IComparable<PH<T>>
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="ArgumentOutOfRangeException"><typeparamref name="T"/> cannot hold the result, as for a linear value of zero with <see langword="decimal"/> or integer storage.</exception>
 	public static PH<T> FromHydrogenConcentration(Concentration<T> linear)
 	{
 		double linearValue = double.CreateChecked(linear.Value);
 		double reference = 1000.0;
-		return new(T.CreateChecked(-1.0 * Math.Log10(linearValue / reference)));
+		return new(LogarithmicStorage.FromLinear<T>(-1.0 * Math.Log10(linearValue / reference), nameof(linear)));
 	}
 
 	/// <summary>
@@ -67,11 +68,12 @@ public readonly partial record struct PH<T>(T Value) : IComparable<PH<T>>
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="OverflowException"><typeparamref name="T"/> cannot hold the linear value of a level this high.</exception>
 	public Concentration<T> ToHydrogenConcentration()
 	{
 		double scaleValue = double.CreateChecked(Value);
 		double reference = 1000.0;
-		return Concentration<T>.Create(T.CreateChecked(reference * Math.Pow(10.0, scaleValue / -1.0)));
+		return Concentration<T>.Create(LogarithmicStorage.ToLinear<T>(reference * Math.Pow(10.0, scaleValue / -1.0)));
 	}
 
 	/// <inheritdoc/>

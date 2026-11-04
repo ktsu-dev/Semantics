@@ -65,7 +65,7 @@ public sealed record Velocity
 	public static bool TryParse(string? text, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Velocity? result)
 	{
 		if (text is not null
-			&& int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int value)
+			&& Notation.TryParseInteger(text, allowNegative: false, out int value)
 			&& value is >= 0 and <= 127)
 		{
 			result = Create(value);

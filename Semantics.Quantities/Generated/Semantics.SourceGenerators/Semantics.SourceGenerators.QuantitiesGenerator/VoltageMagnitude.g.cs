@@ -124,13 +124,13 @@ public readonly partial record struct VoltageMagnitude<T> : IVector0<VoltageMagn
 	/// Divides VoltageMagnitude by Resistance to produce CurrentMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static CurrentMagnitude<T> operator /(VoltageMagnitude<T> left, Resistance<T> right) => CurrentMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static CurrentMagnitude<T> operator /(VoltageMagnitude<T> left, Resistance<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : CurrentMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides VoltageMagnitude by CurrentMagnitude to produce Resistance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Resistance<T> operator /(VoltageMagnitude<T> left, CurrentMagnitude<T> right) => Resistance<T>.Create(left.Quantity / right.Quantity);
+	public static Resistance<T> operator /(VoltageMagnitude<T> left, CurrentMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Resistance<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies VoltageMagnitude by CurrentMagnitude to produce Power.
@@ -142,13 +142,13 @@ public readonly partial record struct VoltageMagnitude<T> : IVector0<VoltageMagn
 	/// Divides VoltageMagnitude by Length to produce ElectricFieldMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ElectricFieldMagnitude<T> operator /(VoltageMagnitude<T> left, Length<T> right) => ElectricFieldMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static ElectricFieldMagnitude<T> operator /(VoltageMagnitude<T> left, Length<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : ElectricFieldMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides VoltageMagnitude by ElectricFieldMagnitude to produce Length.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Length<T> operator /(VoltageMagnitude<T> left, ElectricFieldMagnitude<T> right) => Length<T>.Create(left.Quantity / right.Quantity);
+	public static Length<T> operator /(VoltageMagnitude<T> left, ElectricFieldMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Length<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies VoltageMagnitude by Capacitance to produce ChargeMagnitude.
@@ -172,12 +172,12 @@ public readonly partial record struct VoltageMagnitude<T> : IVector0<VoltageMagn
 	/// Divides VoltageMagnitude by Pressure to produce Sensitivity.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Sensitivity<T> operator /(VoltageMagnitude<T> left, Pressure<T> right) => Sensitivity<T>.Create(left.Quantity / right.Quantity);
+	public static Sensitivity<T> operator /(VoltageMagnitude<T> left, Pressure<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Sensitivity<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides VoltageMagnitude by Sensitivity to produce Pressure.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Pressure<T> operator /(VoltageMagnitude<T> left, Sensitivity<T> right) => Pressure<T>.Create(left.Quantity / right.Quantity);
+	public static Pressure<T> operator /(VoltageMagnitude<T> left, Sensitivity<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Pressure<T>.Create(left.Quantity / right.Quantity);
 }
 

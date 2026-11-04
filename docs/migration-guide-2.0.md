@@ -96,8 +96,9 @@ Force1D<double> net = thrustSigned - brakeSigned;
 
 A `Weight<T>` is implicitly a `ForceMagnitude<T>`; converting back requires
 `Weight<T>.From(force)` or an explicit cast. Cross-dimensional operators are
-defined on the base types and apply to overloads through widening — Ohm's law
-works with an `Impedance` because it widens to `Resistance`.
+defined on the base types, and each overload carries forwarding copies of the
+ones with its base on the left, so Ohm's law works with an `Impedance` in either
+operand position. (From 4.0 until #456 an overload on the left did not compile.)
 
 ### Storage-unit fixes (silent value changes!)
 

@@ -132,6 +132,6 @@ public readonly partial record struct DynamicViscosity<T> : IVector0<DynamicVisc
 	/// Divides DynamicViscosity by Density to produce KinematicViscosity.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static KinematicViscosity<T> operator /(DynamicViscosity<T> left, Density<T> right) => KinematicViscosity<T>.Create(left.Quantity / right.Quantity);
+	public static KinematicViscosity<T> operator /(DynamicViscosity<T> left, Density<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : KinematicViscosity<T>.Create(left.Quantity / right.Quantity);
 }
 

@@ -41,9 +41,12 @@ public sealed record Pitch
 	/// <param name="accidental">The accidental.</param>
 	/// <param name="octave">The octave number.</param>
 	/// <returns>A new pitch.</returns>
-	/// <exception cref="ArgumentOutOfRangeException">Thrown when the resulting MIDI number is outside 0..127.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">
+	/// Thrown when <paramref name="letter"/> or <paramref name="accidental"/> is not a defined value, or the resulting MIDI number is outside 0..127.
+	/// </exception>
 	public static Pitch Create(NoteLetter letter, Accidental accidental, int octave)
 	{
+		Notation.EnsureDefined(letter, accidental);
 		long midi = MidiOf(octave, (int)letter, (int)accidental);
 		if (midi is < 0 or > 127)
 		{
@@ -89,8 +92,7 @@ public sealed record Pitch
 		// The octave is a bare integer: a leading '-' is allowed for octave -1, but not '+' or
 		// whitespace, which would parse to a pitch that prints back differently.
 		if (index >= name.Length
-			|| name[index] == '+'
-			|| !int.TryParse(name[index..], NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int octave))
+			|| !Notation.TryParseInteger(name[index..], allowNegative: true, out int octave))
 		{
 			return false;
 		}

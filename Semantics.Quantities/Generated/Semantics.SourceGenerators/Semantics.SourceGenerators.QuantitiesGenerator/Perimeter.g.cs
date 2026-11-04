@@ -206,5 +206,45 @@ public readonly partial record struct Perimeter<T> : IVector0<Perimeter<T>, T>, 
 	/// <summary>Subtracts two Perimeter values, returning the absolute difference as a non-negative Perimeter.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Perimeter<T> operator -(Perimeter<T> left, Perimeter<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Perimeter * Length = Area, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator *(Perimeter<T> left, Length<T> right) => (Length<T>)left * right;
+
+	/// <summary>Perimeter * Area = Volume, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(Perimeter<T> left, Area<T> right) => (Length<T>)left * right;
+
+	/// <summary>Perimeter / Duration = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator /(Perimeter<T> left, Duration<T> right) => (Length<T>)left / right;
+
+	/// <summary>Perimeter / Speed = Duration, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Perimeter<T> left, Speed<T> right) => (Length<T>)left / right;
+
+	/// <summary>Perimeter * Frequency = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(Perimeter<T> left, Frequency<T> right) => (Length<T>)left * right;
+
+	/// <summary>Perimeter * ForceMagnitude = Energy, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Perimeter<T> left, ForceMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Perimeter * ElectricFieldMagnitude = VoltageMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(Perimeter<T> left, ElectricFieldMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Perimeter * ElectricField1D = Voltage, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Voltage<T> operator *(Perimeter<T> left, ElectricField1D<T> right) => (Length<T>)left * right;
+
+	/// <summary>Perimeter * SurfaceTension = ForceMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(Perimeter<T> left, SurfaceTension<T> right) => (Length<T>)left * right;
+
+	/// <summary>Perimeter * SpecificEnergyMagnitude = GravitationalParameter, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(Perimeter<T> left, SpecificEnergyMagnitude<T> right) => (Length<T>)left * right;
 }
 

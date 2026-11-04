@@ -118,5 +118,9 @@ public readonly partial record struct Admittance<T> : IVector0<Admittance<T>, T>
 	/// <summary>Subtracts two Admittance values, returning the absolute difference as a non-negative Admittance.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Admittance<T> operator -(Admittance<T> left, Admittance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Admittance * VoltageMagnitude = CurrentMagnitude, through <see cref="Conductance{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CurrentMagnitude<T> operator *(Admittance<T> left, VoltageMagnitude<T> right) => (Conductance<T>)left * right;
 }
 

@@ -78,6 +78,10 @@ public readonly record struct Srgb(double R, double G, double B)
 	/// <returns>The inverted color.</returns>
 	public Srgb Invert() => new(1.0 - R, 1.0 - G, 1.0 - B);
 
+	/// <summary>Returns a copy with every channel clamped to the 0..1 range.</summary>
+	/// <returns>The clamped color.</returns>
+	public Srgb Clamp() => new(Color.Clamp01(R), Color.Clamp01(G), Color.Clamp01(B));
+
 	// Cylindrical adjustments. sRGB has no saturation/lightness/hue axes of its own, so these route
 	// through HSL (a within-family hop, no gamma round-trip) and return sRGB. Same semantics as the
 	// HSL operations of the same name.

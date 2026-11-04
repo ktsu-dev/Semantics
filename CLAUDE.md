@@ -110,7 +110,7 @@ These are now baked into the generator and enforced by tests. **Do not reopen wi
 2. **Dimensionless and angular quantities have both `Ratio` (V0) and `SignedRatio` (V1) bases.** Ratios that semantically must be non-negative (e.g. `RefractiveIndex`, `MachNumber`, `SpecificGravity`) are V0 overloads of `Ratio`.
 3. **Semantic overloads widen implicitly to their base, narrow explicitly from it.** A `Weight` is implicitly a `ForceMagnitude`; the reverse requires `Weight.From(forceMagnitude)` or an explicit cast.
 4. **Physical constraints are enforced structurally via the V0 (magnitude) form.** `Vector0` factories run `Vector0Guards.EnsureNonNegative` and throw `ArgumentException` on a negative value. That covers absolute zero (Temperature is V0, so Kelvin must be ≥ 0), non-negative frequency, non-negative absolute pressure, etc. A V0 *overload* can opt into a stricter rule by declaring `physicalConstraints: { "minExclusive": "0" }` in `dimensions.json` (#51); the generator then emits `Vector0Guards.EnsurePositive` and rejects zero too. Used today for `Wavelength`, `Period`, and `HalfLife` — quantities for which zero is unphysical.
-5. **Logarithmic-scale quantities are generated from `logarithmic.json`, not declared as dimensions.** Decibel scales (`Decibels`, `SoundPressureLevel`, `SoundIntensityLevel`, `SoundPowerLevel`, `DirectionalityIndex`), pitch intervals (`Cents`, `Semitones`), and `PH` don't obey linear arithmetic, so they are emitted by `LogarithmicScalesGenerator` as standalone `readonly partial record struct`s built around `scale = multiplier · log_base(linear / reference)`, converting to and from their linear generated counterparts (`Gain`, `Ratio`, `SoundPressure`, `SoundIntensity`, `SoundPower`, `Concentration`). Bespoke members (named constants like `PH.Neutral`, cross-scale conversions like `Cents`↔`Semitones`) live in hand-written partials next to the metadata-generated core. Adding a new log-scale quantity means adding a `logarithmic.json` entry, plus a partial only if it needs bespoke members.
+5. **Logarithmic-scale quantities are generated from `logarithmic.json`, not declared as dimensions.** Decibel scales (`Decibels`, `SoundPressureLevel`, `SoundIntensityLevel`, `SoundPowerLevel`, `DirectionalityIndex`), pitch intervals (`Cents`, `Semitones`), and `PH`/`POH` don't obey linear arithmetic, so they are emitted by `LogarithmicScalesGenerator` as standalone `readonly partial record struct`s built around `scale = multiplier · log_base(linear / reference)`, converting to and from their linear generated counterparts (`Gain`, `Ratio`, `SoundPressure`, `SoundIntensity`, `SoundPower`, `Concentration`). Bespoke members (named constants like `PH.Neutral`, cross-scale conversions like `Cents`↔`Semitones` and `PH`↔`POH`) live in hand-written partials next to the metadata-generated core. Adding a new log-scale quantity means adding a `logarithmic.json` entry, plus a partial only if it needs bespoke members.
 
 ### The C++ projection
 
@@ -298,12 +298,21 @@ PhysicalConstants.Generic.PlanckConstant<T>()
 PhysicalConstants.Generic.DegreesPerRadian<T>()
 ```
 
-Each constant is emitted as `T.Parse(literal, NumberStyles.Float, CultureInfo.InvariantCulture)`
-into a private `Values<T>` holder nested in its domain class, so the literal is parsed once per
-closed generic type and the package needs no arbitrary-precision dependency. `NumberStyles.Float`
-is mandatory, not incidental: several literals are in exponent form (`6.62607015e-34`, `20e-6`),
-and the `Parse(string, IFormatProvider)` overload resolves to `NumberStyles.Number` for some
-numeric types, which rejects an exponent.
+Each constant is emitted as a property over its own lazily filled field in a private `Values<T>`
+holder nested in its domain class, filled by `StorageLiteral.Constant<T>(literal, name)` the first
+time it is read, so the literal is parsed once per constant and closed generic type and the package
+needs no arbitrary-precision dependency. The literal is parsed with `NumberStyles.Float`, which is
+mandatory, not incidental: several literals are in exponent form (`6.62607015e-34`, `20e-6`), and the
+`Parse(string, IFormatProvider)` overload resolves to `NumberStyles.Number` for some numeric types,
+which rejects an exponent.
+
+**Keep constants out of a shared initializer**, for the same reason as conversion factors below
+(#392): with every constant of a domain in one static initializer, one literal `int` could not hold
+made every constant of that domain throw `TypeInitializationException`, so `PH<int>.Neutral` failed
+because `GasConstant` has a fraction. Now a constant `T` cannot hold throws from its own accessor:
+`OverflowException` when it is too large, and `ArithmeticException` when `T` keeps less than about six
+significant digits of it (`StandardGravity<int>` truncating to 9, `PlanckConstant<decimal>` rounding
+to zero). A whole number in range, such as `SpeedOfLight<long>()`, works.
 
 ### Conversion factors and square roots at the storage type's precision
 
@@ -347,13 +356,21 @@ converted with the 15 significant digits that conversion keeps.
   written outside the library needs nothing new. They are not named `Get…`, because CA1721 rejects
   a `GetToBaseFactor` method next to the `ToBaseFactor` property.
 
-Vector `Length()` and `Distance()` call `StorageMath.Sqrt`. The binary floating point and integer
-primitives take the `Math.Sqrt` round trip the generated code always inlined, so their results are
-unchanged. Any other type is seeded from that root and refined with Newton steps in its own
+Vector `Length()` and `Distance()` call `StorageMath.Hypot`, never a raw sum of squares (#327): the
+two-component form is the public `Hypot`, and three and four components go through internal overloads
+of it. A fractional type is scaled by its largest component first, so `Position3D<decimal>` at 1e15 m
+still has a length, and the primitives take `double.Hypot`, so an `int` component of 65536 no longer
+squares to zero. `Normalize()` of a zero-length vector throws `DivideByZeroException`, as every
+generated division by zero does (#480). The square root itself is `StorageMath.Sqrt`: the binary
+floating point and integer primitives take the `Math.Sqrt` round trip, corrected to the exact floor
+for the 64-bit and 128-bit integers. Any other type is seeded from that root and refined with Newton steps in its own
 arithmetic, so a `decimal` length has 28 significant digits. A value a `double` cannot hold, such as a
 `BigInteger` of 2^2048, is scaled by powers of four into [1, 4) for the seed, and the root is scaled
 back by the matching power of two. A root that does not settle throws `ArithmeticException` rather
-than returning an estimate. The logarithmic scales and the hand-written audio types still compute
+than returning an estimate. A type with no fixed precision, such as `PreciseNumber`, never settles,
+because its products keep every digit and each Newton estimate doubles in length; `Cbrt` and `RootN`
+stop it once a step moves the estimate by less than one part in 10^60 (#457), a tolerance a
+fixed-precision type rounds to zero and so never sees. The logarithmic scales and the hand-written audio types still compute
 through `double`, and as of #235 every generated conversion says so in its own XML `<remarks>`
 rather than only here — the method tooltip is where a `decimal` or `PreciseNumber` consumer spends
 the precision, so that is where the cost is stated. `SourceGeneratorTests` counts the remarks
@@ -365,8 +382,12 @@ should be removed with the `double` path rather than left to rot.
 `StorageMath` is public API, not just the generator's helper (#239): an application doing its own
 vector math over quantities would otherwise reimplement the root, and worse. `Cbrt`, `RootN` and
 `Hypot` ship alongside `Sqrt` on the same seeding and the same Newton loop. `Sqrt` keeps its round
-trip through `double` for every primitive, integers included, because the generated code always
-inlined it; `Cbrt` and `RootN` take that route only for the binary floating point primitives and
+trip through `double` for the floating point primitives and the integers up to 32 bits, because the
+generated code always inlined it. For `long`, `ulong`, a 64-bit `nint`/`nuint`, `Int128` and
+`UInt128`, which hold more bits than a `double`, that root is only the seed: integer Newton steps in
+the type's own arithmetic correct it to the exact floor, and `Hypot` over those types sums its
+squares in `T` when every component is within ±2^30 and in `BigInteger` otherwise, so
+`Hypot(long.MaxValue, 0)` is `long.MaxValue` rather than an overflow (#520); `Cbrt` and `RootN` take that route only for the binary floating point primitives and
 refine every integer type in integer arithmetic, so their floor is exact rather than whatever
 `Math.Pow` rounded to. `Hypot` computes a fractional type from the ratio of its legs, so a pair whose
 squares leave the type still has its hypotenuse, and squares an integer type directly, since the
@@ -382,7 +403,12 @@ does not. Adding a storage type is one derived class.
 
 `Semantics.Benchmarks` measures three libraries. `.github/workflows/benchmark-history.yml` runs a
 fixed set once per release, appends to a history file per subject under `docs/benchmarks/`, and
-redraws the chart the README shows. Four things about it are not guessable from the code:
+redraws the chart the README shows. Five things about it are not guessable from the code:
+
+- **It starts from `workflow_run` on CI, not from `release: published`.** The shared pipeline publishes
+  releases with `GITHUB_TOKEN`, and an event caused by `GITHUB_TOKEN` starts no workflow, so a release
+  trigger never fired (#320). The `resolve` job takes the newest release, measures it only if it was
+  published after the CI run started, and skips a version the history already has.
 
 - **`BenchmarkAgainstVersion` must be set in the environment, never with `-p:`.** BenchmarkDotNet
   generates and builds a project of its own for each run, which a property passed on the command line
@@ -393,7 +419,9 @@ redraws the chart the README shows. Four things about it are not guessable from 
   version across every package.
 - **The histories and the SVG files are committed output that a bot pushes.** A local `render` must be
   diffed before commit rather than assumed. The quantities chart in particular is a regression test:
-  a change to the renderer that moves a byte in it has broken something.
+  a change to the renderer that moves a byte in it has broken something. `verify-charts.yml` enforces
+  this on pull requests: it redraws every chart through `scripts/render-benchmark-charts.sh`, the step
+  the recorder runs, and fails on any difference.
 - **Nothing here touches an internal member.** The `InternalsVisibleTo` that would expose one names
   only the test assembly, and a benchmark built on internals could only ever measure the working copy,
   never a published package — which would make the release history impossible to backfill.
@@ -517,3 +545,4 @@ This file is the entry point. For deeper material:
 - `docs/migration-guide-3.1.md` — 3.0 → 3.1 upgrade guide (JSON converter is now opt-in, `PhysicalConstants` domain fields became generic accessors).
 - `docs/migration-guide-4.0.md` — 3.x → 4.0 upgrade guide (every quantity became a `readonly record struct`).
 - `docs/migration-guide-5.0.md` — 4.x → 5.0 upgrade guide (the four dimensionally unkeepable relationships no longer generate operators).
+- `docs/migration-guide-6.0.md` — 5.x → 6.0 upgrade guide (a directory's `Name` is a `DirectoryName` on every directory type).

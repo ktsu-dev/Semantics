@@ -182,5 +182,45 @@ public readonly partial record struct ThermalEnergy<T> : IVector0<ThermalEnergy<
 	/// <summary>Subtracts two ThermalEnergy values, returning the absolute difference as a non-negative ThermalEnergy.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static ThermalEnergy<T> operator -(ThermalEnergy<T> left, ThermalEnergy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>ThermalEnergy / Length = ForceMagnitude, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator /(ThermalEnergy<T> left, Length<T> right) => (Energy<T>)left / right;
+
+	/// <summary>ThermalEnergy / ForceMagnitude = Length, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(ThermalEnergy<T> left, ForceMagnitude<T> right) => (Energy<T>)left / right;
+
+	/// <summary>ThermalEnergy / Volume = Pressure, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Pressure<T> operator /(ThermalEnergy<T> left, Volume<T> right) => (Energy<T>)left / right;
+
+	/// <summary>ThermalEnergy / Pressure = Volume, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator /(ThermalEnergy<T> left, Pressure<T> right) => (Energy<T>)left / right;
+
+	/// <summary>ThermalEnergy / Duration = Power, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator /(ThermalEnergy<T> left, Duration<T> right) => (Energy<T>)left / right;
+
+	/// <summary>ThermalEnergy / Power = Duration, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(ThermalEnergy<T> left, Power<T> right) => (Energy<T>)left / right;
+
+	/// <summary>ThermalEnergy / Temperature = Entropy, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Entropy<T> operator /(ThermalEnergy<T> left, Temperature<T> right) => (Energy<T>)left / right;
+
+	/// <summary>ThermalEnergy / Entropy = Temperature, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator /(ThermalEnergy<T> left, Entropy<T> right) => (Energy<T>)left / right;
+
+	/// <summary>ThermalEnergy / AmountOfSubstance = MolarEnergy, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MolarEnergy<T> operator /(ThermalEnergy<T> left, AmountOfSubstance<T> right) => (Energy<T>)left / right;
+
+	/// <summary>ThermalEnergy / MolarEnergy = AmountOfSubstance, through <see cref="Energy{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AmountOfSubstance<T> operator /(ThermalEnergy<T> left, MolarEnergy<T> right) => (Energy<T>)left / right;
 }
 

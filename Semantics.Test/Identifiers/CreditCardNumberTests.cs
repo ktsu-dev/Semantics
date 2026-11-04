@@ -44,4 +44,16 @@ public sealed class CreditCardNumberTests
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => CreditCardNumber.Create(string.Empty));
 	}
+
+	[TestMethod]
+	[DataRow("4111111111111111\n")]
+	[DataRow("4111111111111111\r\n")]
+	[DataRow("4111\t1111\t1111\t1111")]
+	[DataRow("4111\u00A01111\u00A01111\u00A01111")]
+	[DataRow(" 4111-1111 1111-1111\t")]
+	public void Create_WithWhitespace_StripsItAndValidates(string input)
+	{
+		CreditCardNumber card = CreditCardNumber.Create(input);
+		Assert.AreEqual("4111111111111111", card.WeakString);
+	}
 }

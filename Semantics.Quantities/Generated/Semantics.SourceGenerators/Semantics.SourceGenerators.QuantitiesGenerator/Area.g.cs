@@ -172,7 +172,7 @@ public readonly partial record struct Area<T> : IVector0<Area<T>, T>, IPhysicalQ
 	/// Divides Area by Length to produce Length.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Length<T> operator /(Area<T> left, Length<T> right) => Length<T>.Create(left.Quantity / right.Quantity);
+	public static Length<T> operator /(Area<T> left, Length<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Length<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies Area by Length to produce Volume.

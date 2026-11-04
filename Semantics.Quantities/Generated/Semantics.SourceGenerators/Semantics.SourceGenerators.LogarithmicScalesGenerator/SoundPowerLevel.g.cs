@@ -41,7 +41,7 @@ public readonly partial record struct SoundPowerLevel<T>(T Value) : IComparable<
 	/// Creates a level from a linear sound power using SWL = 10·log10(P / P₀).
 	/// </summary>
 	/// <param name="linear">The linear <see cref="SoundPower{T}"/>.</param>
-	/// <returns>A new <see cref="SoundPowerLevel{T}"/>. A linear value of zero maps to negative infinity.</returns>
+	/// <returns>A new <see cref="SoundPowerLevel{T}"/>. A linear value of zero maps to negative infinity where <typeparamref name="T"/> can hold it.</returns>
 	/// <remarks>
 	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
 	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
@@ -49,11 +49,12 @@ public readonly partial record struct SoundPowerLevel<T>(T Value) : IComparable<
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="ArgumentOutOfRangeException"><typeparamref name="T"/> cannot hold the result, as for a linear value of zero with <see langword="decimal"/> or integer storage.</exception>
 	public static SoundPowerLevel<T> FromSoundPower(SoundPower<T> linear)
 	{
 		double linearValue = double.CreateChecked(linear.Value);
 		double reference = PhysicalConstants.Generic.ReferenceSoundPower<double>();
-		return new(T.CreateChecked(10.0 * Math.Log10(linearValue / reference)));
+		return new(LogarithmicStorage.FromLinear<T>(10.0 * Math.Log10(linearValue / reference), nameof(linear)));
 	}
 
 	/// <summary>
@@ -67,11 +68,12 @@ public readonly partial record struct SoundPowerLevel<T>(T Value) : IComparable<
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="OverflowException"><typeparamref name="T"/> cannot hold the linear value of a level this high.</exception>
 	public SoundPower<T> ToSoundPower()
 	{
 		double scaleValue = double.CreateChecked(Value);
 		double reference = PhysicalConstants.Generic.ReferenceSoundPower<double>();
-		return SoundPower<T>.Create(T.CreateChecked(reference * Math.Pow(10.0, scaleValue / 10.0)));
+		return SoundPower<T>.Create(LogarithmicStorage.ToLinear<T>(reference * Math.Pow(10.0, scaleValue / 10.0)));
 	}
 
 	/// <summary>Adds two values in log space (cascading two linear stages multiplies them).</summary>

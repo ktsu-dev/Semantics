@@ -118,5 +118,9 @@ public readonly partial record struct SoundIntensity<T> : IVector0<SoundIntensit
 	/// <summary>Subtracts two SoundIntensity values, returning the absolute difference as a non-negative SoundIntensity.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SoundIntensity<T> operator -(SoundIntensity<T> left, SoundIntensity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SoundIntensity * Area = Power, through <see cref="Irradiance{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(SoundIntensity<T> left, Area<T> right) => (Irradiance<T>)left * right;
 }
 

@@ -158,5 +158,33 @@ public readonly partial record struct GroundSpeed<T> : IVector0<GroundSpeed<T>, 
 	/// <summary>Subtracts two GroundSpeed values, returning the absolute difference as a non-negative GroundSpeed.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static GroundSpeed<T> operator -(GroundSpeed<T> left, GroundSpeed<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>GroundSpeed * Mass = MomentumMagnitude, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(GroundSpeed<T> left, Mass<T> right) => (Speed<T>)left * right;
+
+	/// <summary>GroundSpeed * Duration = Length, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator *(GroundSpeed<T> left, Duration<T> right) => (Speed<T>)left * right;
+
+	/// <summary>GroundSpeed / Duration = AccelerationMagnitude, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator /(GroundSpeed<T> left, Duration<T> right) => (Speed<T>)left / right;
+
+	/// <summary>GroundSpeed / AccelerationMagnitude = Duration, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(GroundSpeed<T> left, AccelerationMagnitude<T> right) => (Speed<T>)left / right;
+
+	/// <summary>GroundSpeed / Length = Frequency, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(GroundSpeed<T> left, Length<T> right) => (Speed<T>)left / right;
+
+	/// <summary>GroundSpeed / Frequency = Length, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(GroundSpeed<T> left, Frequency<T> right) => (Speed<T>)left / right;
+
+	/// <summary>GroundSpeed * ForceMagnitude = Power, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(GroundSpeed<T> left, ForceMagnitude<T> right) => (Speed<T>)left * right;
 }
 

@@ -128,6 +128,6 @@ public readonly partial record struct AngularAcceleration1D<T> : IVector1<Angula
 	/// Divides AngularAcceleration1D by Duration to produce AngularJerk1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularJerk1D<T> operator /(AngularAcceleration1D<T> left, Duration<T> right) => AngularJerk1D<T>.Create(left.Quantity / right.Quantity);
+	public static AngularJerk1D<T> operator /(AngularAcceleration1D<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : AngularJerk1D<T>.Create(left.Quantity / right.Quantity);
 }
 

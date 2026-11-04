@@ -126,5 +126,13 @@ public readonly partial record struct StandardGravitationalParameter<T> : IVecto
 	/// <summary>Subtracts two StandardGravitationalParameter values, returning the absolute difference as a non-negative StandardGravitationalParameter.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static StandardGravitationalParameter<T> operator -(StandardGravitationalParameter<T> left, StandardGravitationalParameter<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>StandardGravitationalParameter / Area = AccelerationMagnitude, through <see cref="GravitationalParameter{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator /(StandardGravitationalParameter<T> left, Area<T> right) => (GravitationalParameter<T>)left / right;
+
+	/// <summary>StandardGravitationalParameter / Length = SpecificEnergyMagnitude, through <see cref="GravitationalParameter{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SpecificEnergyMagnitude<T> operator /(StandardGravitationalParameter<T> left, Length<T> right) => (GravitationalParameter<T>)left / right;
 }
 

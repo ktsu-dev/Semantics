@@ -14,10 +14,11 @@ public sealed partial record Progression
 	{
 		Ensure.NotNull(key);
 		List<CadenceInstance> result = [];
+		Scale scale = key.AnalysisScale;
 		for (int i = 0; i + 1 < Chords.Count; i++)
 		{
-			ScaleDegree from = key.FunctionOf(Chords[i].Chord.Root);
-			ScaleDegree to = key.FunctionOf(Chords[i + 1].Chord.Root);
+			ScaleDegree from = scale.DegreeOf(Chords[i].Chord.Root);
+			ScaleDegree to = scale.DegreeOf(Chords[i + 1].Chord.Root);
 			if (from.Alteration != 0 || to.Alteration != 0)
 			{
 				continue;
@@ -38,6 +39,10 @@ public sealed partial record Progression
 		(5, 1) => Cadence.Authentic,
 		(5, 6) => Cadence.Deceptive,
 		(4, 1) => Cadence.Plagal,
+
+		// V to V prolongs the dominant rather than arriving on it, so a held dominant is one half
+		// cadence where it arrives, not one per bar.
+		(5, 5) => null,
 		(_, 5) => Cadence.Half,
 		_ => null,
 	};

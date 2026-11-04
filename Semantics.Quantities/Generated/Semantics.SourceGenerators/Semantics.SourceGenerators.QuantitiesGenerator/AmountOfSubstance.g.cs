@@ -132,13 +132,13 @@ public readonly partial record struct AmountOfSubstance<T> : IVector0<AmountOfSu
 	/// Divides AmountOfSubstance by Volume to produce Concentration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Concentration<T> operator /(AmountOfSubstance<T> left, Volume<T> right) => Concentration<T>.Create(left.Quantity / right.Quantity);
+	public static Concentration<T> operator /(AmountOfSubstance<T> left, Volume<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Concentration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides AmountOfSubstance by Concentration to produce Volume.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Volume<T> operator /(AmountOfSubstance<T> left, Concentration<T> right) => Volume<T>.Create(left.Quantity / right.Quantity);
+	public static Volume<T> operator /(AmountOfSubstance<T> left, Concentration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Volume<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies AmountOfSubstance by MolarMass to produce Mass.
@@ -150,13 +150,13 @@ public readonly partial record struct AmountOfSubstance<T> : IVector0<AmountOfSu
 	/// Divides AmountOfSubstance by Duration to produce CatalyticActivity.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static CatalyticActivity<T> operator /(AmountOfSubstance<T> left, Duration<T> right) => CatalyticActivity<T>.Create(left.Quantity / right.Quantity);
+	public static CatalyticActivity<T> operator /(AmountOfSubstance<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : CatalyticActivity<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides AmountOfSubstance by CatalyticActivity to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(AmountOfSubstance<T> left, CatalyticActivity<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(AmountOfSubstance<T> left, CatalyticActivity<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies AmountOfSubstance by MolarEnergy to produce Energy.

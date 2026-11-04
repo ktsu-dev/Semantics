@@ -40,10 +40,17 @@ public sealed partial record Progression
 		];
 	}
 
-	// Scores one chord's fit to a key: 1.0 when its root is diatonic AND its triad quality matches the
-	// diatonic triad at that degree, 0.5 when the root is diatonic but the quality differs (or has no
-	// comparable third), 0.0 when the root is not in the scale. Quality-weighting is what distinguishes
-	// a key from its relative/parallel neighbours, which share the same chord roots.
+	// Scores one chord's fit to a key in two parts, multiplied together.
+	//
+	// The root and its triad: 0.0 when the root is not in the scale; 1.0 when the chord's triad quality
+	// matches the diatonic triad on that degree, or has no third to compare (sus, power and altered
+	// fifths) or the degree forms no recognised triad; 0.5 when the qualities differ. Quality-weighting
+	// is what separates a key from its relative and parallel neighbours, which share the same roots.
+	//
+	// Every other tone: the fraction of the chord's pitch classes, slash bass included, that are in the
+	// scale. Without it C7 and Cmaj7 score alike everywhere, and the Bb that makes C7 the dominant of F
+	// costs C major nothing. A minor key's dominant (E or E7 in A minor) scores as diatonic, raised
+	// leading tone and all, since that is the key's own V.
 	private static double ScoreChord(Key key, Chord chord)
 	{
 		Scale scale = key.Scale;
@@ -52,15 +59,28 @@ public sealed partial record Progression
 			return 0.0;
 		}
 
+		if (IsHarmonicMinorDominant(key, chord))
+		{
+			return ToneFit(scale, chord, PitchClass.Create(key.Tonic.Value + 11));
+		}
+
 		ChordQuality? diatonic = DiatonicTriadQuality(scale, chord.Root);
 		bool comparable = chord.Quality is ChordQuality.Major or ChordQuality.Minor
 			or ChordQuality.Diminished or ChordQuality.Augmented;
-		if (!comparable || diatonic is null)
+		double triad = !comparable || diatonic is null || chord.Quality == diatonic.Value ? 1.0 : 0.5;
+		return triad * ToneFit(scale, chord, null);
+	}
+
+	private static double ToneFit(Scale scale, Chord chord, PitchClass? alsoDiatonic)
+	{
+		List<int> tones = [.. chord.ChordTones().Select(offset => PitchClass.Create(chord.Root.Value + offset).Value)];
+		if (chord.Bass is not null && !tones.Contains(chord.Bass.Value))
 		{
-			return 1.0;
+			tones.Add(chord.Bass.Value);
 		}
 
-		return chord.Quality == diatonic.Value ? 1.0 : 0.5;
+		int inScale = tones.Count(tone => tone == alsoDiatonic?.Value || scale.Contains(PitchClass.Create(tone)));
+		return inScale / (double)tones.Count;
 	}
 
 	// Returns the diatonic triad quality built on a scale degree by stacking scale thirds, or null when

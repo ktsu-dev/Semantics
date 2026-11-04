@@ -190,5 +190,29 @@ public readonly partial record struct SoundTransmissionClass<T> : IVector0<Sound
 	/// <summary>Subtracts two SoundTransmissionClass values, returning the absolute difference as a non-negative SoundTransmissionClass.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SoundTransmissionClass<T> operator -(SoundTransmissionClass<T> left, SoundTransmissionClass<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SoundTransmissionClass * Ratio = Ratio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(SoundTransmissionClass<T> left, Ratio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>SoundTransmissionClass * SignedRatio = SignedRatio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedRatio<T> operator *(SoundTransmissionClass<T> left, SignedRatio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>SoundTransmissionClass / Duration = Frequency, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(SoundTransmissionClass<T> left, Duration<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>SoundTransmissionClass / Frequency = Duration, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(SoundTransmissionClass<T> left, Frequency<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>SoundTransmissionClass / Temperature = ThermalExpansionCoefficient, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ThermalExpansionCoefficient<T> operator /(SoundTransmissionClass<T> left, Temperature<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>SoundTransmissionClass / ThermalExpansionCoefficient = Temperature, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator /(SoundTransmissionClass<T> left, ThermalExpansionCoefficient<T> right) => (Ratio<T>)left / right;
 }
 

@@ -190,5 +190,29 @@ public readonly partial record struct RefractiveIndex<T> : IVector0<RefractiveIn
 	/// <summary>Subtracts two RefractiveIndex values, returning the absolute difference as a non-negative RefractiveIndex.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static RefractiveIndex<T> operator -(RefractiveIndex<T> left, RefractiveIndex<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>RefractiveIndex * Ratio = Ratio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(RefractiveIndex<T> left, Ratio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>RefractiveIndex * SignedRatio = SignedRatio, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedRatio<T> operator *(RefractiveIndex<T> left, SignedRatio<T> right) => (Ratio<T>)left * right;
+
+	/// <summary>RefractiveIndex / Duration = Frequency, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(RefractiveIndex<T> left, Duration<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>RefractiveIndex / Frequency = Duration, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(RefractiveIndex<T> left, Frequency<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>RefractiveIndex / Temperature = ThermalExpansionCoefficient, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ThermalExpansionCoefficient<T> operator /(RefractiveIndex<T> left, Temperature<T> right) => (Ratio<T>)left / right;
+
+	/// <summary>RefractiveIndex / ThermalExpansionCoefficient = Temperature, through <see cref="Ratio{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Temperature<T> operator /(RefractiveIndex<T> left, ThermalExpansionCoefficient<T> right) => (Ratio<T>)left / right;
 }
 

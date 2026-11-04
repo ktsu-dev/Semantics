@@ -110,26 +110,32 @@ public sealed record Duration
 			return false;
 		}
 
-		if (!int.TryParse(text[..slash], NumberStyles.Integer | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int numerator)
-			|| !int.TryParse(text[(slash + 1)..], NumberStyles.Integer | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int denominator)
+		// Both parts are written as ToString writes them: no whitespace, no '+', and a denominator
+		// that is never negative, so a parsed duration prints back as the text it came from.
+		if (!Notation.TryParseInteger(text[..slash], allowNegative: true, out int numerator)
+			|| !Notation.TryParseInteger(text[(slash + 1)..], allowNegative: false, out int denominator)
 			|| denominator == 0)
 		{
 			return false;
 		}
 
-		// A negative denominator negates the numerator, so int.MinValue over an odd negative
-		// denominator reduces to a numerator past int.MaxValue. That is bad text, not a bug in the
-		// caller, so it fails the parse rather than escaping a Try method.
-		try
-		{
-			result = Create(numerator, denominator);
-		}
-		catch (OverflowException)
-		{
-			return false;
-		}
-
+		result = Create(numerator, denominator);
 		return true;
+	}
+
+	/// <summary>Gets whether the duration is longer than zero, which every sounding note, rest and chord must be.</summary>
+	internal bool IsPositive => Numerator > 0;
+
+	/// <summary>Throws when a duration given for a sounding event is zero or negative.</summary>
+	/// <param name="duration">The duration to check.</param>
+	/// <param name="paramName">The name of the parameter it was passed as.</param>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="duration"/> is not positive.</exception>
+	internal static void EnsurePositive(Duration duration, string paramName)
+	{
+		if (!duration.IsPositive)
+		{
+			throw new ArgumentOutOfRangeException(paramName, duration, "Duration must be longer than zero.");
+		}
 	}
 
 	/// <summary>Returns the reduced fraction (e.g. "1/4").</summary>

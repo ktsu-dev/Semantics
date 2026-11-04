@@ -96,14 +96,14 @@ public sealed record Arrangement
 			return false;
 		}
 
-		string[] blocks = text.Replace("\r", string.Empty).Split(["\n\n"], System.StringSplitOptions.RemoveEmptyEntries);
-		if (blocks.Length < 2 || !Key.TryParse(blocks[0].Trim(), out Key? key))
+		List<string> blocks = SplitBlocks(text);
+		if (blocks.Count < 2 || !Key.TryParse(blocks[0].Trim(), out Key? key))
 		{
 			return false;
 		}
 
 		List<Section> sections = [];
-		for (int i = 1; i < blocks.Length; i++)
+		for (int i = 1; i < blocks.Count; i++)
 		{
 			if (!Section.TryParse(blocks[i], out Section? section))
 			{
@@ -115,5 +115,40 @@ public sealed record Arrangement
 
 		result = Create(key, sections);
 		return true;
+	}
+
+	// Any run of empty or whitespace-only lines separates two blocks, so an extra blank line between sections, or
+	// one an editor left holding a space, still reads as one separator.
+	private static List<string> SplitBlocks(string text)
+	{
+		List<string> blocks = [];
+		StringBuilder block = new();
+		foreach (string line in text.Replace("\r", string.Empty).Split('\n'))
+		{
+			if (string.IsNullOrWhiteSpace(line))
+			{
+				AddBlock(blocks, block);
+				continue;
+			}
+
+			if (block.Length > 0)
+			{
+				_ = block.Append('\n');
+			}
+
+			_ = block.Append(line);
+		}
+
+		AddBlock(blocks, block);
+		return blocks;
+	}
+
+	private static void AddBlock(List<string> blocks, StringBuilder block)
+	{
+		if (block.Length > 0)
+		{
+			blocks.Add(block.ToString());
+			_ = block.Clear();
+		}
 	}
 }

@@ -42,8 +42,7 @@ internal static class AttributeValidation
 	{
 		Ensure.NotNull(type);
 
-		foreach (SemanticStringValidationAttribute attribute in type.GetCustomAttributes(typeof(SemanticStringValidationAttribute), true)
-			.Cast<SemanticStringValidationAttribute>()
+		foreach (SemanticStringValidationAttribute attribute in ValidationAttributeCache.Attributes(type)
 			.Where(attribute => !attribute.Validate(semanticString)))
 		{
 			string[] errors = attribute is NativeSemanticStringValidationAttribute native

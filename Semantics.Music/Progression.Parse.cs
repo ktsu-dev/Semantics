@@ -11,43 +11,52 @@ public sealed partial record Progression
 {
 	/// <summary>Returns the chart-style progression line, e.g. "4/4  Dm7 / G7 / | Cmaj7 / / /".</summary>
 	/// <returns>The canonical progression text.</returns>
+	/// <remarks>
+	/// A chord lasting a whole number of beats is written as the chord and one <c>/</c> per further beat; any
+	/// other length is written <c>chord@n/d</c>. A <c>|</c> is written wherever a bar ends between two tokens,
+	/// including between the slashes of a chord held across the bar line (<c>G | /</c>). A bar that ends inside a
+	/// <c>chord@n/d</c> cell, or inside a beat because an earlier cell left the chart off the beat, has no token
+	/// boundary to carry it and gets no bar line.
+	/// </remarks>
 	public override string ToString()
 	{
 		StringBuilder sb = new();
 		_ = sb.Append(TimeSignature).Append("  ");
 
-		int beatUnit = TimeSignature.BeatUnit;
-		int beatsPerBar = TimeSignature.Beats;
-		int beatCursor = 0;
+		Duration bar = TimeSignature.BarDuration;
+		Duration beat = TimeSignature.BeatDuration;
+		Duration position = Duration.Create(0, 1);
 		bool first = true;
 
 		foreach (ChordEvent ev in Chords)
 		{
-			if (!first && beatCursor % beatsPerBar == 0)
+			if (!first && IsMultipleOf(position, bar))
 			{
 				_ = sb.Append("| ");
 			}
 
 			first = false;
+			_ = sb.Append(ev.Chord);
 
-			double beatsExact = ev.Duration.AsWholeNotes * beatUnit;
-			int beats = (int)System.Math.Round(beatsExact);
-			bool wholeBeats = beats >= 1 && System.Math.Abs(beatsExact - beats) < 1e-9;
-
-			if (wholeBeats)
+			if (TryCountWholeBeats(ev.Duration, TimeSignature.BeatUnit, out int beats))
 			{
-				_ = sb.Append(ev.Chord);
 				for (int i = 1; i < beats; i++)
 				{
+					position = position.Add(beat);
+					if (IsMultipleOf(position, bar))
+					{
+						_ = sb.Append(" |");
+					}
+
 					_ = sb.Append(" /");
 				}
 
-				beatCursor += beats;
+				position = position.Add(beat);
 			}
 			else
 			{
-				_ = sb.Append(ev.Chord).Append('@').Append(ev.Duration);
-				beatCursor = 0; // sub-beat durations reset bar tracking (cosmetic only)
+				_ = sb.Append('@').Append(ev.Duration);
+				position = position.Add(ev.Duration);
 			}
 
 			_ = sb.Append(' ');
@@ -56,7 +65,31 @@ public sealed partial record Progression
 		return sb.ToString().TrimEnd();
 	}
 
+	// Whether a duration is a whole number of beats, at least one, and so can be written as a chord and slashes.
+	private static bool TryCountWholeBeats(Duration duration, int beatUnit, out int beats)
+	{
+		long scaled = (long)duration.Numerator * beatUnit;
+		beats = 0;
+		if (scaled <= 0 || scaled % duration.Denominator != 0 || scaled / duration.Denominator > int.MaxValue)
+		{
+			return false;
+		}
+
+		beats = (int)(scaled / duration.Denominator);
+		return true;
+	}
+
+	// Whether a position is a whole number of bars from the start: (n/d) / (b/u) is an integer.
+	private static bool IsMultipleOf(Duration position, Duration bar) =>
+		(long)position.Numerator * bar.Denominator % ((long)position.Denominator * bar.Numerator) == 0;
+
 	/// <summary>Parses a chart-style progression line.</summary>
+	/// <remarks>
+	/// Each bare chord lasts one beat and each <c>/</c> extends it by one more. A <c>chord@n/d</c> cell has its length
+	/// stated outright, so a <c>/</c> after one is rejected rather than silently dropped. A <c>|</c> is read as a
+	/// visual aid and ignored: the shorthand <c>"4/4  C | G"</c> is two one-beat chords, and lengths come from the
+	/// chord and slash tokens alone.
+	/// </remarks>
 	/// <param name="text">The progression text.</param>
 	/// <returns>The parsed progression.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
@@ -116,7 +149,8 @@ public sealed partial record Progression
 
 			if (token == "/")
 			{
-				if (current is null)
+				// A chord@n/d cell states its whole length, so a slash after it has nothing to extend.
+				if (current is null || explicitDuration is not null)
 				{
 					return false;
 				}
@@ -146,7 +180,9 @@ public sealed partial record Progression
 		int at = token.IndexOf('@');
 		if (at >= 0)
 		{
-			return Chord.TryParse(token[..at], out chord) && Duration.TryParse(token[(at + 1)..], out explicitDuration);
+			return Chord.TryParse(token[..at], out chord)
+				&& Duration.TryParse(token[(at + 1)..], out explicitDuration)
+				&& explicitDuration.IsPositive;
 		}
 
 		if (!Chord.TryParse(token, out chord))

@@ -60,15 +60,25 @@ public class RelativePathPropertyTests
 	}
 
 	[TestMethod]
-	public void RelativeDirectoryPath_Parent_WithSingleComponent_ReturnsEmpty()
+	public void RelativeDirectoryPath_Parent_WithSingleComponent_ReturnsStartingDirectory()
 	{
-		// Test Parent property with single directory
 		RelativeDirectoryPath path = RelativeDirectoryPath.Create<RelativeDirectoryPath>("myapp");
 
 		RelativeDirectoryPath parent = path.Parent;
 
-		Assert.IsNotNull(parent);
-		Assert.AreEqual("", parent.WeakString);
+		Assert.AreEqual(".", parent.WeakString);
+		Assert.AreEqual(Path.GetFullPath("."), parent.AsAbsolute().WeakString);
+		Assert.IsTrue(parent.IsDirectory);
+	}
+
+	[TestMethod]
+	public void RelativeDirectoryPath_Parent_WithSingleComponent_ResolvesAgainstABase()
+	{
+		AbsoluteDirectoryPath baseDirectory = AbsoluteDirectoryPath.Create<AbsoluteDirectoryPath>(Path.GetTempPath());
+
+		RelativeDirectoryPath parent = RelativeDirectoryPath.Create<RelativeDirectoryPath>("myapp").Parent;
+
+		Assert.AreEqual(Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar), parent.AsAbsolute(baseDirectory).WeakString.TrimEnd(Path.DirectorySeparatorChar));
 	}
 
 	[TestMethod]
@@ -108,15 +118,23 @@ public class RelativePathPropertyTests
 	}
 
 	[TestMethod]
-	public void RelativeFilePath_RelativeDirectoryPath_WithFileInRoot_ReturnsEmpty()
+	public void RelativeFilePath_RelativeDirectoryPath_WithBareFileName_ReturnsStartingDirectory()
 	{
-		// Test RelativeDirectoryPath property with file in root
 		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>("file.txt");
 
 		RelativeDirectoryPath dir = file.RelativeDirectoryPath;
 
-		Assert.IsNotNull(dir);
-		Assert.AreEqual("", dir.WeakString);
+		Assert.AreEqual(".", dir.WeakString);
+		Assert.AreEqual(Path.GetFullPath("."), dir.AsAbsolute().WeakString);
+	}
+
+	[TestMethod]
+	public void RelativeFilePath_DirectoryPath_WithBareFileName_ReturnsStartingDirectory()
+	{
+		RelativeFilePath file = RelativeFilePath.Create<RelativeFilePath>("file.txt");
+
+		Assert.AreEqual(".", file.DirectoryPath.WeakString);
+		Assert.IsTrue(file.DirectoryPath.IsDirectory);
 	}
 
 	[TestMethod]
@@ -310,7 +328,7 @@ public class RelativePathPropertyTests
 	[DataRow("", "..")]
 	[DataRow("a/..", "..")]
 	[DataRow("a/../..", "../..")]
-	[DataRow("a", "")]
+	[DataRow("a", ".")]
 	[DataRow("a/b", "a")]
 	[DataRow("a/./b", "a")]
 	[DataRow("../a", "..")]

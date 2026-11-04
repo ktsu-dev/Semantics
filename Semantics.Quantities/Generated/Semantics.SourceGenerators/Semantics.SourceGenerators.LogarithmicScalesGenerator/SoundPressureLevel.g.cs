@@ -41,7 +41,7 @@ public readonly partial record struct SoundPressureLevel<T>(T Value) : IComparab
 	/// Creates a level from a linear sound pressure using SPL = 20·log10(p / p₀).
 	/// </summary>
 	/// <param name="linear">The linear <see cref="SoundPressure{T}"/>.</param>
-	/// <returns>A new <see cref="SoundPressureLevel{T}"/>. A linear value of zero maps to negative infinity.</returns>
+	/// <returns>A new <see cref="SoundPressureLevel{T}"/>. A linear value of zero maps to negative infinity where <typeparamref name="T"/> can hold it.</returns>
 	/// <remarks>
 	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
 	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
@@ -49,11 +49,12 @@ public readonly partial record struct SoundPressureLevel<T>(T Value) : IComparab
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="ArgumentOutOfRangeException"><typeparamref name="T"/> cannot hold the result, as for a linear value of zero with <see langword="decimal"/> or integer storage.</exception>
 	public static SoundPressureLevel<T> FromSoundPressure(SoundPressure<T> linear)
 	{
 		double linearValue = double.CreateChecked(linear.Value);
 		double reference = PhysicalConstants.Generic.ReferenceSoundPressure<double>();
-		return new(T.CreateChecked(20.0 * Math.Log10(linearValue / reference)));
+		return new(LogarithmicStorage.FromLinear<T>(20.0 * Math.Log10(linearValue / reference), nameof(linear)));
 	}
 
 	/// <summary>
@@ -67,11 +68,12 @@ public readonly partial record struct SoundPressureLevel<T>(T Value) : IComparab
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="OverflowException"><typeparamref name="T"/> cannot hold the linear value of a level this high.</exception>
 	public SoundPressure<T> ToSoundPressure()
 	{
 		double scaleValue = double.CreateChecked(Value);
 		double reference = PhysicalConstants.Generic.ReferenceSoundPressure<double>();
-		return SoundPressure<T>.Create(T.CreateChecked(reference * Math.Pow(10.0, scaleValue / 20.0)));
+		return SoundPressure<T>.Create(LogarithmicStorage.ToLinear<T>(reference * Math.Pow(10.0, scaleValue / 20.0)));
 	}
 
 	/// <summary>Adds two values in log space (cascading two linear stages multiplies them).</summary>

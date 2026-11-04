@@ -118,5 +118,9 @@ public readonly partial record struct HeatFlux<T> : IVector0<HeatFlux<T>, T>, IP
 	/// <summary>Subtracts two HeatFlux values, returning the absolute difference as a non-negative HeatFlux.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static HeatFlux<T> operator -(HeatFlux<T> left, HeatFlux<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>HeatFlux * Area = Power, through <see cref="Irradiance{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(HeatFlux<T> left, Area<T> right) => (Irradiance<T>)left * right;
 }
 

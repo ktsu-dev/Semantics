@@ -150,5 +150,13 @@ public readonly partial record struct FieldOfView<T> : IVector0<FieldOfView<T>, 
 	/// <summary>Subtracts two FieldOfView values, returning the absolute difference as a non-negative FieldOfView.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static FieldOfView<T> operator -(FieldOfView<T> left, FieldOfView<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>FieldOfView / Duration = AngularSpeed, through <see cref="Angle{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularSpeed<T> operator /(FieldOfView<T> left, Duration<T> right) => (Angle<T>)left / right;
+
+	/// <summary>FieldOfView / AngularSpeed = Duration, through <see cref="Angle{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(FieldOfView<T> left, AngularSpeed<T> right) => (Angle<T>)left / right;
 }
 

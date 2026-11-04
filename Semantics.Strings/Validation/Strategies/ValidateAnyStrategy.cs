@@ -12,8 +12,20 @@ public sealed class ValidateAnyStrategy : IValidationStrategy
 	{
 		Ensure.NotNull(type);
 
-		SemanticStringValidationAttribute[] validationAttributes = [.. type.GetCustomAttributes(typeof(SemanticStringValidationAttribute), true)
-			.Cast<SemanticStringValidationAttribute>()];
-		return validationAttributes.Length == 0 || validationAttributes.Any(attr => attr.Validate(semanticString));
+		SemanticStringValidationAttribute[] validationAttributes = ValidationAttributeCache.Attributes(type);
+		if (validationAttributes.Length == 0)
+		{
+			return true;
+		}
+
+		foreach (SemanticStringValidationAttribute attribute in validationAttributes)
+		{
+			if (attribute.Validate(semanticString))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

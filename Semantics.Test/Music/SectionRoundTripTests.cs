@@ -18,6 +18,23 @@ public class SectionRoundTripTests
 	}
 
 	[TestMethod]
+	public void CreateRejectsAnUndefinedSectionType()
+	{
+		ArgumentOutOfRangeException ex = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Section.Create((SectionType)42, SampleProgression()));
+		Assert.AreEqual("type", ex.ParamName);
+	}
+
+	[TestMethod]
+	public void RoundTripsEveryDefinedSectionType()
+	{
+		foreach (SectionType type in Enum.GetValues<SectionType>())
+		{
+			Section s = Section.Create(type, SampleProgression());
+			Assert.AreEqual(s, Section.Parse(s.ToString()), $"{type} did not round-trip.");
+		}
+	}
+
+	[TestMethod]
 	public void RoundTripMinimal()
 	{
 		Section s = Section.Create(SectionType.Intro, SampleProgression());

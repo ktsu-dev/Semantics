@@ -182,5 +182,189 @@ public readonly partial record struct DecayTime<T> : IVector0<DecayTime<T>, T>, 
 	/// <summary>Subtracts two DecayTime values, returning the absolute difference as a non-negative DecayTime.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static DecayTime<T> operator -(DecayTime<T> left, DecayTime<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>DecayTime * CurrentMagnitude = ChargeMagnitude, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ChargeMagnitude<T> operator *(DecayTime<T> left, CurrentMagnitude<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Current1D = Charge, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Charge<T> operator *(DecayTime<T> left, Current1D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Speed = Length, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator *(DecayTime<T> left, Speed<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Velocity1D = Displacement1D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Displacement1D<T> operator *(DecayTime<T> left, Velocity1D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Velocity2D = Displacement2D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Displacement2D<T> operator *(DecayTime<T> left, Velocity2D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Velocity3D = Displacement3D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Displacement3D<T> operator *(DecayTime<T> left, Velocity3D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Velocity4D = Displacement4D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Displacement4D<T> operator *(DecayTime<T> left, Velocity4D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * AccelerationMagnitude = Speed, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(DecayTime<T> left, AccelerationMagnitude<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Acceleration1D = Velocity1D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Velocity1D<T> operator *(DecayTime<T> left, Acceleration1D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Acceleration2D = Velocity2D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Velocity2D<T> operator *(DecayTime<T> left, Acceleration2D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Acceleration3D = Velocity3D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Velocity3D<T> operator *(DecayTime<T> left, Acceleration3D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Acceleration4D = Velocity4D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Velocity4D<T> operator *(DecayTime<T> left, Acceleration4D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * JerkMagnitude = AccelerationMagnitude, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator *(DecayTime<T> left, JerkMagnitude<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Jerk1D = Acceleration1D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Acceleration1D<T> operator *(DecayTime<T> left, Jerk1D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Jerk2D = Acceleration2D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Acceleration2D<T> operator *(DecayTime<T> left, Jerk2D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Jerk3D = Acceleration3D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Acceleration3D<T> operator *(DecayTime<T> left, Jerk3D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Jerk4D = Acceleration4D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Acceleration4D<T> operator *(DecayTime<T> left, Jerk4D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * SnapMagnitude = JerkMagnitude, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static JerkMagnitude<T> operator *(DecayTime<T> left, SnapMagnitude<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Snap1D = Jerk1D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Jerk1D<T> operator *(DecayTime<T> left, Snap1D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Snap2D = Jerk2D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Jerk2D<T> operator *(DecayTime<T> left, Snap2D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Snap3D = Jerk3D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Jerk3D<T> operator *(DecayTime<T> left, Snap3D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Snap4D = Jerk4D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Jerk4D<T> operator *(DecayTime<T> left, Snap4D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Frequency = Ratio, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Ratio<T> operator *(DecayTime<T> left, Frequency<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * AngularSpeed = Angle, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Angle<T> operator *(DecayTime<T> left, AngularSpeed<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * AngularVelocity1D = SignedAngle, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SignedAngle<T> operator *(DecayTime<T> left, AngularVelocity1D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * AngularVelocity3D = AngularDisplacement3D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularDisplacement3D<T> operator *(DecayTime<T> left, AngularVelocity3D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * AngularAccelerationMagnitude = AngularSpeed, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularSpeed<T> operator *(DecayTime<T> left, AngularAccelerationMagnitude<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * AngularAcceleration1D = AngularVelocity1D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularVelocity1D<T> operator *(DecayTime<T> left, AngularAcceleration1D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * AngularAcceleration3D = AngularVelocity3D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularVelocity3D<T> operator *(DecayTime<T> left, AngularAcceleration3D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * AngularJerkMagnitude = AngularAccelerationMagnitude, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularAccelerationMagnitude<T> operator *(DecayTime<T> left, AngularJerkMagnitude<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * AngularJerk1D = AngularAcceleration1D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularAcceleration1D<T> operator *(DecayTime<T> left, AngularJerk1D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * AngularJerk3D = AngularAcceleration3D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularAcceleration3D<T> operator *(DecayTime<T> left, AngularJerk3D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * TorqueMagnitude = AngularMomentumMagnitude, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularMomentumMagnitude<T> operator *(DecayTime<T> left, TorqueMagnitude<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Torque1D = AngularMomentum1D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularMomentum1D<T> operator *(DecayTime<T> left, Torque1D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Torque3D = AngularMomentum3D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularMomentum3D<T> operator *(DecayTime<T> left, Torque3D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * ForceMagnitude = MomentumMagnitude, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(DecayTime<T> left, ForceMagnitude<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Force1D = Momentum1D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Momentum1D<T> operator *(DecayTime<T> left, Force1D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Force2D = Momentum2D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Momentum2D<T> operator *(DecayTime<T> left, Force2D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Force3D = Momentum3D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Momentum3D<T> operator *(DecayTime<T> left, Force3D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Force4D = Momentum4D, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Momentum4D<T> operator *(DecayTime<T> left, Force4D<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * Power = Energy, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(DecayTime<T> left, Power<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * VolumetricFlowRate = Volume, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(DecayTime<T> left, VolumetricFlowRate<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * MassFlowRate = Mass, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator *(DecayTime<T> left, MassFlowRate<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * CatalyticActivity = AmountOfSubstance, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AmountOfSubstance<T> operator *(DecayTime<T> left, CatalyticActivity<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * ReactionRate = Concentration, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Concentration<T> operator *(DecayTime<T> left, ReactionRate<T> right) => (Duration<T>)left * right;
+
+	/// <summary>DecayTime * VoltageMagnitude = MagneticFlux, through <see cref="Duration{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFlux<T> operator *(DecayTime<T> left, VoltageMagnitude<T> right) => (Duration<T>)left * right;
 }
 

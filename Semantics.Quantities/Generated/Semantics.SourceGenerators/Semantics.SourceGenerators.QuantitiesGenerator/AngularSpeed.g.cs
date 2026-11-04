@@ -130,12 +130,12 @@ public readonly partial record struct AngularSpeed<T> : IVector0<AngularSpeed<T>
 	/// Divides AngularSpeed by Duration to produce AngularAccelerationMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularAccelerationMagnitude<T> operator /(AngularSpeed<T> left, Duration<T> right) => AngularAccelerationMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static AngularAccelerationMagnitude<T> operator /(AngularSpeed<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : AngularAccelerationMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides AngularSpeed by AngularAccelerationMagnitude to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(AngularSpeed<T> left, AngularAccelerationMagnitude<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(AngularSpeed<T> left, AngularAccelerationMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 }
 

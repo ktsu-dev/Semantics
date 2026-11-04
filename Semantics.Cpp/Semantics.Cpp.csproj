@@ -7,6 +7,10 @@
          a project of its own rather than part of Semantics.Quantities. The same constraint put
          ktsu.Schema.Cpp outside ktsu.Schema. -->
     <TargetFrameworks>net10.0;net9.0</TargetFrameworks>
+    <!-- Package validation is on (ktsu.Sdk default). The Polyfill shims compiled into the older TFMs
+         differ from the in-box types on newer ones, so the by-design differences are captured in
+         CompatibilitySuppressions.xml. Regenerate that file with:
+         dotnet pack -p:ApiCompatGenerateSuppressionFile=true -->
   </PropertyGroup>
 
   <ItemGroup>

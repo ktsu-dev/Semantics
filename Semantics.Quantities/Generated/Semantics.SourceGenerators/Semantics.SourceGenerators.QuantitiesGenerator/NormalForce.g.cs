@@ -142,5 +142,37 @@ public readonly partial record struct NormalForce<T> : IVector0<NormalForce<T>, 
 	/// <summary>Subtracts two NormalForce values, returning the absolute difference as a non-negative NormalForce.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static NormalForce<T> operator -(NormalForce<T> left, NormalForce<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>NormalForce / AccelerationMagnitude = Mass, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Mass<T> operator /(NormalForce<T> left, AccelerationMagnitude<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>NormalForce / Mass = AccelerationMagnitude, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator /(NormalForce<T> left, Mass<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>NormalForce * Length = Energy, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(NormalForce<T> left, Length<T> right) => (ForceMagnitude<T>)left * right;
+
+	/// <summary>NormalForce * Duration = MomentumMagnitude, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(NormalForce<T> left, Duration<T> right) => (ForceMagnitude<T>)left * right;
+
+	/// <summary>NormalForce * Speed = Power, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(NormalForce<T> left, Speed<T> right) => (ForceMagnitude<T>)left * right;
+
+	/// <summary>NormalForce / Area = Pressure, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Pressure<T> operator /(NormalForce<T> left, Area<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>NormalForce / Length = SurfaceTension, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static SurfaceTension<T> operator /(NormalForce<T> left, Length<T> right) => (ForceMagnitude<T>)left / right;
+
+	/// <summary>NormalForce / SurfaceTension = Length, through <see cref="ForceMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(NormalForce<T> left, SurfaceTension<T> right) => (ForceMagnitude<T>)left / right;
 }
 

@@ -174,5 +174,41 @@ public readonly partial record struct CrossSectionalArea<T> : IVector0<CrossSect
 	/// <summary>Subtracts two CrossSectionalArea values, returning the absolute difference as a non-negative CrossSectionalArea.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static CrossSectionalArea<T> operator -(CrossSectionalArea<T> left, CrossSectionalArea<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>CrossSectionalArea / Length = Length, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(CrossSectionalArea<T> left, Length<T> right) => (Area<T>)left / right;
+
+	/// <summary>CrossSectionalArea * Length = Volume, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(CrossSectionalArea<T> left, Length<T> right) => (Area<T>)left * right;
+
+	/// <summary>CrossSectionalArea * Pressure = ForceMagnitude, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(CrossSectionalArea<T> left, Pressure<T> right) => (Area<T>)left * right;
+
+	/// <summary>CrossSectionalArea * ElectricFieldMagnitude = ElectricFlux, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricFlux<T> operator *(CrossSectionalArea<T> left, ElectricFieldMagnitude<T> right) => (Area<T>)left * right;
+
+	/// <summary>CrossSectionalArea * Illuminance = LuminousFlux, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static LuminousFlux<T> operator *(CrossSectionalArea<T> left, Illuminance<T> right) => (Area<T>)left * right;
+
+	/// <summary>CrossSectionalArea * MagneticFluxDensityMagnitude = MagneticFlux, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFlux<T> operator *(CrossSectionalArea<T> left, MagneticFluxDensityMagnitude<T> right) => (Area<T>)left * right;
+
+	/// <summary>CrossSectionalArea * Irradiance = Power, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(CrossSectionalArea<T> left, Irradiance<T> right) => (Area<T>)left * right;
+
+	/// <summary>CrossSectionalArea * Luminance = LuminousIntensity, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static LuminousIntensity<T> operator *(CrossSectionalArea<T> left, Luminance<T> right) => (Area<T>)left * right;
+
+	/// <summary>CrossSectionalArea * AccelerationMagnitude = GravitationalParameter, through <see cref="Area{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(CrossSectionalArea<T> left, AccelerationMagnitude<T> right) => (Area<T>)left * right;
 }
 

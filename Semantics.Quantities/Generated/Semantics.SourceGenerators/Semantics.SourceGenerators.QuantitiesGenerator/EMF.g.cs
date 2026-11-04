@@ -126,5 +126,45 @@ public readonly partial record struct EMF<T> : IVector0<EMF<T>, T>, IPhysicalQua
 	/// <summary>Subtracts two EMF values, returning the absolute difference as a non-negative EMF.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static EMF<T> operator -(EMF<T> left, EMF<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>EMF / Resistance = CurrentMagnitude, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CurrentMagnitude<T> operator /(EMF<T> left, Resistance<T> right) => (VoltageMagnitude<T>)left / right;
+
+	/// <summary>EMF / CurrentMagnitude = Resistance, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Resistance<T> operator /(EMF<T> left, CurrentMagnitude<T> right) => (VoltageMagnitude<T>)left / right;
+
+	/// <summary>EMF * CurrentMagnitude = Power, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(EMF<T> left, CurrentMagnitude<T> right) => (VoltageMagnitude<T>)left * right;
+
+	/// <summary>EMF / Length = ElectricFieldMagnitude, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricFieldMagnitude<T> operator /(EMF<T> left, Length<T> right) => (VoltageMagnitude<T>)left / right;
+
+	/// <summary>EMF / ElectricFieldMagnitude = Length, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(EMF<T> left, ElectricFieldMagnitude<T> right) => (VoltageMagnitude<T>)left / right;
+
+	/// <summary>EMF * Capacitance = ChargeMagnitude, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ChargeMagnitude<T> operator *(EMF<T> left, Capacitance<T> right) => (VoltageMagnitude<T>)left * right;
+
+	/// <summary>EMF * Conductance = CurrentMagnitude, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CurrentMagnitude<T> operator *(EMF<T> left, Conductance<T> right) => (VoltageMagnitude<T>)left * right;
+
+	/// <summary>EMF * Duration = MagneticFlux, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MagneticFlux<T> operator *(EMF<T> left, Duration<T> right) => (VoltageMagnitude<T>)left * right;
+
+	/// <summary>EMF / Pressure = Sensitivity, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Sensitivity<T> operator /(EMF<T> left, Pressure<T> right) => (VoltageMagnitude<T>)left / right;
+
+	/// <summary>EMF / Sensitivity = Pressure, through <see cref="VoltageMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Pressure<T> operator /(EMF<T> left, Sensitivity<T> right) => (VoltageMagnitude<T>)left / right;
 }
 

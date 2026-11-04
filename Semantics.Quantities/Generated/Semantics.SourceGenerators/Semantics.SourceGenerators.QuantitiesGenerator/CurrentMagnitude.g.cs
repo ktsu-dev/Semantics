@@ -150,13 +150,13 @@ public readonly partial record struct CurrentMagnitude<T> : IVector0<CurrentMagn
 	/// Divides CurrentMagnitude by VoltageMagnitude to produce Conductance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Conductance<T> operator /(CurrentMagnitude<T> left, VoltageMagnitude<T> right) => Conductance<T>.Create(left.Quantity / right.Quantity);
+	public static Conductance<T> operator /(CurrentMagnitude<T> left, VoltageMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Conductance<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides CurrentMagnitude by Conductance to produce VoltageMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator /(CurrentMagnitude<T> left, Conductance<T> right) => VoltageMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static VoltageMagnitude<T> operator /(CurrentMagnitude<T> left, Conductance<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : VoltageMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies CurrentMagnitude by Inductance to produce MagneticFlux.

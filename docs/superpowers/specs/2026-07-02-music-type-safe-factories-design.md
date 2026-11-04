@@ -93,7 +93,7 @@ Hard rename, no `[Obsolete]` shims. `Create` = compiler-enforced construction; `
 | `Scale` | `{root} {mode}` | `C dorian` | single-space split |
 | `Key` | `{tonic} {mode}` | `A aeolian` | same shape as `Scale`, distinct type/`Parse` |
 | `Chord` | canonical symbol | `Cmaj7`, `C/G` | see round-trip caveat below |
-| `Form` | `Pattern` | `AABA` | already round-trips |
+| `Form` | `Pattern`, plus ` (Name)` when the name is not the one the pattern implies | `AABA`, `A (TwelveBarBlues)` | round-trips, name included (#447) |
 
 ### Score composites (single-line scalars, context-free explicit durations)
 
@@ -118,7 +118,7 @@ Structure is carried by chart idioms (bracket section headers, bar lines, blank 
 (Dm7 two beats, G7 two beats, Cmaj7 a full 4/4 bar.) All-one-beat is bare chords: `4/4  Am7 Dm7 | E7 Am7`.
 
 - A beat slash is a whole `/` token (space-delimited), so it never collides with a slash chord `C/G` or a duration `1/4`.
-- Bar lines ` | ` are cosmetic: `ToString` inserts them at bar boundaries; `Parse` derives duration from the slashes and treats `|` as validation.
+- Bar lines ` | ` are cosmetic: `ToString` inserts them wherever a bar ends between two tokens, including between the slashes of a held chord (`G | /`); `Parse` derives duration from the chord and slash tokens and ignores `|`, so the shorthand `4/4  C | G` (two one-beat chords) keeps parsing. A `/` after a `chord@n/d` cell is rejected, since that cell states its length outright (#328, #475).
 - Beat = `1/BeatUnit`. Round-trips exactly whenever each chord's duration is a whole number of beats (the normal case). Sub-beat durations use an explicit escape `Chord@n/d` (e.g. `Cmaj7@1/8`) so the format is total.
 - `Progression.ToString` owns this chart rendering; it does **not** concatenate `ChordEvent.ToString()` (which is context-free and has no time signature to count beats against).
 

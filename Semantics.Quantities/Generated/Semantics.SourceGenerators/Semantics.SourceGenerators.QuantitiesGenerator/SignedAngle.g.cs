@@ -150,6 +150,6 @@ public readonly partial record struct SignedAngle<T> : IVector1<SignedAngle<T>, 
 	/// Divides SignedAngle by Duration to produce AngularVelocity1D.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AngularVelocity1D<T> operator /(SignedAngle<T> left, Duration<T> right) => AngularVelocity1D<T>.Create(left.Quantity / right.Quantity);
+	public static AngularVelocity1D<T> operator /(SignedAngle<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : AngularVelocity1D<T>.Create(left.Quantity / right.Quantity);
 }
 

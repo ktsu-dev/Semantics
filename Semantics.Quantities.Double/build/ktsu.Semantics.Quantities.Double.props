@@ -145,6 +145,7 @@
 		<Using Include="ktsu.Semantics.Quantities.Phase&lt;double&gt;" Alias="Phase" />
 		<Using Include="ktsu.Semantics.Quantities.PhaseVelocity&lt;double&gt;" Alias="PhaseVelocity" />
 		<Using Include="ktsu.Semantics.Quantities.Pitch&lt;double&gt;" Alias="Pitch" />
+		<Using Include="ktsu.Semantics.Quantities.POH&lt;double&gt;" Alias="POH" />
 		<Using Include="ktsu.Semantics.Quantities.Position3D&lt;double&gt;" Alias="Position3D" />
 		<Using Include="ktsu.Semantics.Quantities.PotentialEnergy&lt;double&gt;" Alias="PotentialEnergy" />
 		<Using Include="ktsu.Semantics.Quantities.Power&lt;double&gt;" Alias="Power" />

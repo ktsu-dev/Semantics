@@ -179,6 +179,65 @@ public sealed class GeneratedCppCompilesTests
 		Assert.AreNotEqual(0, exitCode, "a componentwise product whose exponents do not match the result type should be refused");
 	}
 
+	/// <summary>
+	/// A representation widens implicitly and narrows only when asked to. Issue #451.
+	/// </summary>
+	[TestMethod]
+	public void TheRepresentationWidensImplicitlyAndNarrowsExplicitly()
+	{
+		string directory = Emit();
+		File.WriteAllText(Path.Join(directory, "widening.cpp"), """
+			#include "quantities.hpp"
+			#include <type_traits>
+
+			using L = holo::Dimension<1>;
+			using F = holo::Quantity<L, float>;
+			using D = holo::Quantity<L, double>;
+
+			static_assert(std::is_convertible_v<F, D>);
+			static_assert(!std::is_convertible_v<D, F>);
+			static_assert(std::is_constructible_v<F, D>);
+			static_assert(!std::is_convertible_v<D, holo::Quantity<L, int>>);
+
+			// float + double was ambiguous while each converted to the other.
+			static_assert(std::is_same_v<decltype(F{ 1.0f } + D{ 2.0 }), D>);
+			static_assert((F{ 1.0f } + D{ 2.0 }).count() == 3.0);
+			static_assert(F{ D{ 0.5 } }.count() == 0.5f);
+
+			int main() { return 0; }
+			""");
+
+		(int exitCode, string output) = Compile(directory, "widening.cpp");
+
+		Assert.AreEqual(0, exitCode, $"widening should be implicit and mixed sums should resolve:\n{output}");
+	}
+
+	/// <summary>
+	/// Copy-initialising a narrower representation is refused rather than silently losing precision.
+	/// </summary>
+	[TestMethod]
+	public void AnImplicitNarrowingDoesNotCompile()
+	{
+		string directory = Emit();
+		File.WriteAllText(Path.Join(directory, "narrowing.cpp"), """
+			#include "quantities.hpp"
+
+			using L = holo::Dimension<1>;
+
+			holo::Quantity<L, float> narrowed()
+			{
+				holo::Quantity<L, float> f = holo::Quantity<L, double>{ 1e40 };
+				return f;
+			}
+
+			int main() { return 0; }
+			""");
+
+		(int exitCode, _) = Compile(directory, "narrowing.cpp");
+
+		Assert.AreNotEqual(0, exitCode, "double to float should need an explicit conversion");
+	}
+
 	private static string Emit()
 	{
 		string directory = Path.Join(Path.GetTempPath(), $"semantics-cpp-{Guid.NewGuid():N}");

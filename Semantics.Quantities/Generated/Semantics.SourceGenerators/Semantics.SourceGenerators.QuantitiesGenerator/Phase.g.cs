@@ -149,5 +149,9 @@ public readonly partial record struct Phase<T> : IVector1<Phase<T>, T>, IPhysica
 
 	/// <summary>Creates a Phase from a SignedAngle value.</summary>
 	public static Phase<T> From(SignedAngle<T> value) => Create(value.Value);
+
+	/// <summary>Phase / Duration = AngularVelocity1D, through <see cref="SignedAngle{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularVelocity1D<T> operator /(Phase<T> left, Duration<T> right) => (SignedAngle<T>)left / right;
 }
 

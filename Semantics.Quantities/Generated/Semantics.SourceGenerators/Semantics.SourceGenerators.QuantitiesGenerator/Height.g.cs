@@ -206,5 +206,45 @@ public readonly partial record struct Height<T> : IVector0<Height<T>, T>, IPhysi
 	/// <summary>Subtracts two Height values, returning the absolute difference as a non-negative Height.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Height<T> operator -(Height<T> left, Height<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Height * Length = Area, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator *(Height<T> left, Length<T> right) => (Length<T>)left * right;
+
+	/// <summary>Height * Area = Volume, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(Height<T> left, Area<T> right) => (Length<T>)left * right;
+
+	/// <summary>Height / Duration = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator /(Height<T> left, Duration<T> right) => (Length<T>)left / right;
+
+	/// <summary>Height / Speed = Duration, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Height<T> left, Speed<T> right) => (Length<T>)left / right;
+
+	/// <summary>Height * Frequency = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(Height<T> left, Frequency<T> right) => (Length<T>)left * right;
+
+	/// <summary>Height * ForceMagnitude = Energy, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Height<T> left, ForceMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Height * ElectricFieldMagnitude = VoltageMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(Height<T> left, ElectricFieldMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Height * ElectricField1D = Voltage, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Voltage<T> operator *(Height<T> left, ElectricField1D<T> right) => (Length<T>)left * right;
+
+	/// <summary>Height * SurfaceTension = ForceMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(Height<T> left, SurfaceTension<T> right) => (Length<T>)left * right;
+
+	/// <summary>Height * SpecificEnergyMagnitude = GravitationalParameter, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(Height<T> left, SpecificEnergyMagnitude<T> right) => (Length<T>)left * right;
 }
 

@@ -122,12 +122,12 @@ public readonly partial record struct Entropy<T> : IVector0<Entropy<T>, T>, IPhy
 	/// Divides Entropy by Mass to produce SpecificHeat.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static SpecificHeat<T> operator /(Entropy<T> left, Mass<T> right) => SpecificHeat<T>.Create(left.Quantity / right.Quantity);
+	public static SpecificHeat<T> operator /(Entropy<T> left, Mass<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : SpecificHeat<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Entropy by SpecificHeat to produce Mass.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Mass<T> operator /(Entropy<T> left, SpecificHeat<T> right) => Mass<T>.Create(left.Quantity / right.Quantity);
+	public static Mass<T> operator /(Entropy<T> left, SpecificHeat<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Mass<T>.Create(left.Quantity / right.Quantity);
 }
 

@@ -93,4 +93,16 @@ public sealed class IsbnTests
 	{
 		Assert.ThrowsExactly<ArgumentException>(() => Isbn.Create(string.Empty));
 	}
+
+	[TestMethod]
+	[DataRow("978-0-306-40615-7\n", "9780306406157")]
+	[DataRow("978-0-306-40615-7\r\n", "9780306406157")]
+	[DataRow("978\t0306406157", "9780306406157")]
+	[DataRow("978\u00A00\u00A0306\u00A040615\u00A07", "9780306406157")]
+	[DataRow("\t0-8044-2957-x\n", "080442957X")]
+	public void Create_WithWhitespace_StripsItAndValidates(string input, string expected)
+	{
+		Isbn isbn = Isbn.Create(input);
+		Assert.AreEqual(expected, isbn.WeakString);
+	}
 }

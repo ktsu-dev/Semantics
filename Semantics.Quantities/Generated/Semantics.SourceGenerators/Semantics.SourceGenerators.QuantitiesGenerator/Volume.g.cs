@@ -196,13 +196,13 @@ public readonly partial record struct Volume<T> : IVector0<Volume<T>, T>, IPhysi
 	/// Divides Volume by Length to produce Area.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Area<T> operator /(Volume<T> left, Length<T> right) => Area<T>.Create(left.Quantity / right.Quantity);
+	public static Area<T> operator /(Volume<T> left, Length<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Area<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Volume by Area to produce Length.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Length<T> operator /(Volume<T> left, Area<T> right) => Length<T>.Create(left.Quantity / right.Quantity);
+	public static Length<T> operator /(Volume<T> left, Area<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Length<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies Volume by Pressure to produce Energy.
@@ -226,13 +226,13 @@ public readonly partial record struct Volume<T> : IVector0<Volume<T>, T>, IPhysi
 	/// Divides Volume by Duration to produce VolumetricFlowRate.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VolumetricFlowRate<T> operator /(Volume<T> left, Duration<T> right) => VolumetricFlowRate<T>.Create(left.Quantity / right.Quantity);
+	public static VolumetricFlowRate<T> operator /(Volume<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : VolumetricFlowRate<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Volume by VolumetricFlowRate to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(Volume<T> left, VolumetricFlowRate<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(Volume<T> left, VolumetricFlowRate<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies Volume by ElectricPowerDensity to produce Power.

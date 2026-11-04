@@ -206,5 +206,45 @@ public readonly partial record struct Distance<T> : IVector0<Distance<T>, T>, IP
 	/// <summary>Subtracts two Distance values, returning the absolute difference as a non-negative Distance.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Distance<T> operator -(Distance<T> left, Distance<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>Distance * Length = Area, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator *(Distance<T> left, Length<T> right) => (Length<T>)left * right;
+
+	/// <summary>Distance * Area = Volume, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(Distance<T> left, Area<T> right) => (Length<T>)left * right;
+
+	/// <summary>Distance / Duration = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator /(Distance<T> left, Duration<T> right) => (Length<T>)left / right;
+
+	/// <summary>Distance / Speed = Duration, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Distance<T> left, Speed<T> right) => (Length<T>)left / right;
+
+	/// <summary>Distance * Frequency = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(Distance<T> left, Frequency<T> right) => (Length<T>)left * right;
+
+	/// <summary>Distance * ForceMagnitude = Energy, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Distance<T> left, ForceMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Distance * ElectricFieldMagnitude = VoltageMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(Distance<T> left, ElectricFieldMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Distance * ElectricField1D = Voltage, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Voltage<T> operator *(Distance<T> left, ElectricField1D<T> right) => (Length<T>)left * right;
+
+	/// <summary>Distance * SurfaceTension = ForceMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(Distance<T> left, SurfaceTension<T> right) => (Length<T>)left * right;
+
+	/// <summary>Distance * SpecificEnergyMagnitude = GravitationalParameter, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(Distance<T> left, SpecificEnergyMagnitude<T> right) => (Length<T>)left * right;
 }
 

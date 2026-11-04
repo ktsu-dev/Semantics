@@ -17,8 +17,8 @@ public readonly partial record struct PH<T>
 	/// <summary>
 	/// Gets the complementary pOH at 25 °C using <c>pOH = 14 − pH</c>.
 	/// </summary>
-	/// <returns>The pOH as a <see cref="PH{T}"/> scale value.</returns>
-	public PH<T> ToPOH() => new(T.CreateChecked(14) - Value);
+	/// <returns>The pOH as a <see cref="POH{T}"/> scale value.</returns>
+	public POH<T> ToPOH() => POH<T>.Create(T.CreateChecked(14) - Value);
 
 	/// <summary>Gets whether this value describes an acid (pH below 7).</summary>
 	public bool IsAcidic => Value < PhysicalConstants.Generic.NeutralPH<T>();

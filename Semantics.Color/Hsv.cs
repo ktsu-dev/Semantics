@@ -16,13 +16,16 @@ public readonly record struct Hsv(double H, double S, double V)
 	/// <summary>Converts a gamma-encoded <see cref="Srgb"/> color to HSV.</summary>
 	/// <param name="srgb">The sRGB color.</param>
 	/// <returns>The HSV equivalent.</returns>
+	/// <remarks>HSV is only defined inside the sRGB gamut, so each channel is clamped to 0..1 first.</remarks>
 	public static Hsv FromSrgb(Srgb srgb)
 	{
+		srgb = srgb.Clamp();
 		double max = Math.Max(srgb.R, Math.Max(srgb.G, srgb.B));
 		double min = Math.Min(srgb.R, Math.Min(srgb.G, srgb.B));
 		double d = max - min;
-		double h = d > 0.0 ? Hsl.HueDegrees(srgb, max, d) : 0.0;
-		double s = max > 0.0 ? d / max : 0.0;
+		bool chromatic = d > Hsl.AchromaticTolerance;
+		double h = chromatic ? Hsl.HueDegrees(srgb, max, d) : 0.0;
+		double s = chromatic && max > 0.0 ? d / max : 0.0;
 		return new Hsv(h, s, max);
 	}
 

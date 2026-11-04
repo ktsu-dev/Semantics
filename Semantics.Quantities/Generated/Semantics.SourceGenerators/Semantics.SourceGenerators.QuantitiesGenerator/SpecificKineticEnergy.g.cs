@@ -118,5 +118,9 @@ public readonly partial record struct SpecificKineticEnergy<T> : IVector0<Specif
 	/// <summary>Subtracts two SpecificKineticEnergy values, returning the absolute difference as a non-negative SpecificKineticEnergy.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SpecificKineticEnergy<T> operator -(SpecificKineticEnergy<T> left, SpecificKineticEnergy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SpecificKineticEnergy * Length = GravitationalParameter, through <see cref="SpecificEnergyMagnitude{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(SpecificKineticEnergy<T> left, Length<T> right) => (SpecificEnergyMagnitude<T>)left * right;
 }
 

@@ -158,5 +158,33 @@ public readonly partial record struct GroupVelocity<T> : IVector0<GroupVelocity<
 	/// <summary>Subtracts two GroupVelocity values, returning the absolute difference as a non-negative GroupVelocity.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static GroupVelocity<T> operator -(GroupVelocity<T> left, GroupVelocity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>GroupVelocity * Mass = MomentumMagnitude, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static MomentumMagnitude<T> operator *(GroupVelocity<T> left, Mass<T> right) => (Speed<T>)left * right;
+
+	/// <summary>GroupVelocity * Duration = Length, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator *(GroupVelocity<T> left, Duration<T> right) => (Speed<T>)left * right;
+
+	/// <summary>GroupVelocity / Duration = AccelerationMagnitude, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AccelerationMagnitude<T> operator /(GroupVelocity<T> left, Duration<T> right) => (Speed<T>)left / right;
+
+	/// <summary>GroupVelocity / AccelerationMagnitude = Duration, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(GroupVelocity<T> left, AccelerationMagnitude<T> right) => (Speed<T>)left / right;
+
+	/// <summary>GroupVelocity / Length = Frequency, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Frequency<T> operator /(GroupVelocity<T> left, Length<T> right) => (Speed<T>)left / right;
+
+	/// <summary>GroupVelocity / Frequency = Length, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Length<T> operator /(GroupVelocity<T> left, Frequency<T> right) => (Speed<T>)left / right;
+
+	/// <summary>GroupVelocity * ForceMagnitude = Power, through <see cref="Speed{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Power<T> operator *(GroupVelocity<T> left, ForceMagnitude<T> right) => (Speed<T>)left * right;
 }
 

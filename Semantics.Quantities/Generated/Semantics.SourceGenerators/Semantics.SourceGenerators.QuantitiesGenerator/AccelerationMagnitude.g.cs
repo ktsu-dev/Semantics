@@ -136,13 +136,13 @@ public readonly partial record struct AccelerationMagnitude<T> : IVector0<Accele
 	/// Divides AccelerationMagnitude by Duration to produce JerkMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static JerkMagnitude<T> operator /(AccelerationMagnitude<T> left, Duration<T> right) => JerkMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static JerkMagnitude<T> operator /(AccelerationMagnitude<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : JerkMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides AccelerationMagnitude by JerkMagnitude to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(AccelerationMagnitude<T> left, JerkMagnitude<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(AccelerationMagnitude<T> left, JerkMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Multiplies AccelerationMagnitude by Area to produce GravitationalParameter.

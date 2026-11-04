@@ -19,8 +19,6 @@ public static class ValidationStrategyFactory
 	{
 		Ensure.NotNull(type);
 
-		// Check for ValidateAny attribute
-		object[] validateAnyAttributes = type.GetCustomAttributes(typeof(ValidateAnyAttribute), true);
-		return validateAnyAttributes.Length > 0 ? AnyStrategy : AllStrategy;
+		return ValidationAttributeCache.ValidatesAny(type) ? AnyStrategy : AllStrategy;
 	}
 }

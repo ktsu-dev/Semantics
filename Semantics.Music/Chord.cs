@@ -4,7 +4,6 @@ namespace ktsu.Semantics.Music;
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 /// <summary>
@@ -135,32 +134,41 @@ public sealed record Chord
 	/// <summary>Voices the chord at the given octave and inversion.</summary>
 	/// <param name="octave">The octave for the root (e.g. 4 places the root at C4 for a C chord).</param>
 	/// <param name="inversion">
-	/// The inversion: 0 root position, 1 first inversion, and so on. Each step raises the next-lowest
-	/// chord tone by an octave; the value wraps modulo the number of chord tones.
+	/// The inversion: 0 root position, 1 first inversion, and so on. Inversion <c>k</c> puts the
+	/// <c>k</c>-th entry of <see cref="ChordTones"/> lowest, raising every tone below it by whole octaves
+	/// until it sits above that bass; the value wraps modulo the number of chord tones.
 	/// </param>
 	/// <returns>The pitches, lowest first; a slash bass (if any) sounds one octave below the root.</returns>
+	/// <exception cref="ArgumentOutOfRangeException">
+	/// Thrown when <paramref name="octave"/> puts any pitch of the voicing outside MIDI 0..127.
+	/// </exception>
 	public IReadOnlyList<Pitch> Voice(int octave, int inversion)
 	{
 		List<int> tones = [.. ChordTones()];
 		int count = tones.Count;
 		if (count > 0)
 		{
+			// Raising only the tones before the bass by one octave is not enough once tensions are
+			// involved: a raised root at 12 still sits below a ninth at 14, and would sort back under it.
 			int rotation = ((inversion % count) + count) % count;
+			int bass = tones[rotation];
 			for (int i = 0; i < rotation; i++)
 			{
-				tones[i] += 12;
+				while (tones[i] <= bass)
+				{
+					tones[i] += 12;
+				}
 			}
 
 			tones.Sort();
 		}
 
-		Pitch rootPitch = Pitch.Parse(Root.Name + octave.ToString(CultureInfo.InvariantCulture));
-		List<Pitch> pitches = [.. tones.Select(offset => rootPitch.Transpose(offset))];
+		long rootMidi = (((long)octave + 1) * 12) + Root.Value;
+		List<Pitch> pitches = [.. tones.Select(offset => PitchAt(rootMidi + offset, octave))];
 
 		if (Bass is not null)
 		{
-			Pitch bassPitch = Pitch.Parse(Bass.Name + (octave - 1).ToString(CultureInfo.InvariantCulture));
-			pitches.Insert(0, bassPitch);
+			pitches.Insert(0, PitchAt(((long)octave * 12) + Bass.Value, octave));
 		}
 
 		return pitches;
@@ -170,6 +178,11 @@ public sealed record Chord
 	/// <returns>The canonical chord symbol.</returns>
 	/// <remarks><c>Parse(ToString()) == this</c> for every expressible chord.</remarks>
 	public override string ToString() => ChordSymbolWriter.Format(this);
+
+	private static Pitch PitchAt(long midi, int octave) =>
+		midi is >= 0 and <= 127
+			? Pitch.Create((int)midi)
+			: throw new ArgumentOutOfRangeException(nameof(octave), octave, "The voicing would leave MIDI 0..127.");
 
 	private void AddTension(SortedSet<int> offsets, ChordTensions flag, int semitones)
 	{

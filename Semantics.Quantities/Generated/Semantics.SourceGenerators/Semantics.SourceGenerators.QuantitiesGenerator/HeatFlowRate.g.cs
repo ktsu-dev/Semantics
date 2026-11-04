@@ -142,5 +142,41 @@ public readonly partial record struct HeatFlowRate<T> : IVector0<HeatFlowRate<T>
 	/// <summary>Subtracts two HeatFlowRate values, returning the absolute difference as a non-negative HeatFlowRate.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static HeatFlowRate<T> operator -(HeatFlowRate<T> left, HeatFlowRate<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>HeatFlowRate / VoltageMagnitude = CurrentMagnitude, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static CurrentMagnitude<T> operator /(HeatFlowRate<T> left, VoltageMagnitude<T> right) => (Power<T>)left / right;
+
+	/// <summary>HeatFlowRate / CurrentMagnitude = VoltageMagnitude, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator /(HeatFlowRate<T> left, CurrentMagnitude<T> right) => (Power<T>)left / right;
+
+	/// <summary>HeatFlowRate / Speed = ForceMagnitude, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator /(HeatFlowRate<T> left, Speed<T> right) => (Power<T>)left / right;
+
+	/// <summary>HeatFlowRate / ForceMagnitude = Speed, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator /(HeatFlowRate<T> left, ForceMagnitude<T> right) => (Power<T>)left / right;
+
+	/// <summary>HeatFlowRate * Duration = Energy, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(HeatFlowRate<T> left, Duration<T> right) => (Power<T>)left * right;
+
+	/// <summary>HeatFlowRate / Area = Irradiance, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Irradiance<T> operator /(HeatFlowRate<T> left, Area<T> right) => (Power<T>)left / right;
+
+	/// <summary>HeatFlowRate / Irradiance = Area, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator /(HeatFlowRate<T> left, Irradiance<T> right) => (Power<T>)left / right;
+
+	/// <summary>HeatFlowRate / Volume = ElectricPowerDensity, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ElectricPowerDensity<T> operator /(HeatFlowRate<T> left, Volume<T> right) => (Power<T>)left / right;
+
+	/// <summary>HeatFlowRate / ElectricPowerDensity = Volume, through <see cref="Power{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator /(HeatFlowRate<T> left, ElectricPowerDensity<T> right) => (Power<T>)left / right;
 }
 

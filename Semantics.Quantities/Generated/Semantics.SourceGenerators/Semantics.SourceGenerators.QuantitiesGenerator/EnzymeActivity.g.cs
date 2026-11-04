@@ -126,5 +126,9 @@ public readonly partial record struct EnzymeActivity<T> : IVector0<EnzymeActivit
 	/// <summary>Subtracts two EnzymeActivity values, returning the absolute difference as a non-negative EnzymeActivity.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static EnzymeActivity<T> operator -(EnzymeActivity<T> left, EnzymeActivity<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>EnzymeActivity * Duration = AmountOfSubstance, through <see cref="CatalyticActivity{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AmountOfSubstance<T> operator *(EnzymeActivity<T> left, Duration<T> right) => (CatalyticActivity<T>)left * right;
 }
 

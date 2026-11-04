@@ -89,7 +89,9 @@ public sealed record Tempo
 			return false;
 		}
 
-		if (!double.TryParse(text[..marker], NumberStyles.Float, CultureInfo.InvariantCulture, out double bpm)
+		// No whitespace or leading sign, which ToString never writes; the exponent stays, because the
+		// round-trip format writes one for a very large or very small tempo.
+		if (!double.TryParse(text[..marker], NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out double bpm)
 			|| !IsValidBeatsPerMinute(bpm)
 			|| !Duration.TryParse(text[(marker + 4)..], out Duration? beat)
 			|| !IsValidBeat(beat))

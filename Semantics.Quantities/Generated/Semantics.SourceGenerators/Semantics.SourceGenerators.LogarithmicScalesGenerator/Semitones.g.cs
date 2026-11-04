@@ -41,7 +41,7 @@ public readonly partial record struct Semitones<T>(T Value) : IComparable<Semito
 	/// Creates an interval from a frequency ratio using semitones = 12·log2(ratio).
 	/// </summary>
 	/// <param name="linear">The linear <see cref="Ratio{T}"/>.</param>
-	/// <returns>A new <see cref="Semitones{T}"/>. A linear value of zero maps to negative infinity.</returns>
+	/// <returns>A new <see cref="Semitones{T}"/>. A linear value of zero maps to negative infinity where <typeparamref name="T"/> can hold it.</returns>
 	/// <remarks>
 	/// Computes in <see langword="double"/> whatever <typeparamref name="T"/> is: the value is
 	/// converted to <see langword="double"/>, the logarithm or power is taken there, and the
@@ -49,10 +49,11 @@ public readonly partial record struct Semitones<T>(T Value) : IComparable<Semito
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="ArgumentOutOfRangeException"><typeparamref name="T"/> cannot hold the result, as for a linear value of zero with <see langword="decimal"/> or integer storage.</exception>
 	public static Semitones<T> FromFrequencyRatio(Ratio<T> linear)
 	{
 		double linearValue = double.CreateChecked(linear.Value);
-		return new(T.CreateChecked(12.0 * Math.Log2(linearValue)));
+		return new(LogarithmicStorage.FromLinear<T>(12.0 * Math.Log2(linearValue), nameof(linear)));
 	}
 
 	/// <summary>
@@ -66,10 +67,11 @@ public readonly partial record struct Semitones<T>(T Value) : IComparable<Semito
 	/// <see langword="decimal"/>, or <c>PreciseNumber</c> — therefore keeps about fifteen
 	/// significant digits across this conversion, rather than the precision it is capable of.
 	/// </remarks>
+	/// <exception cref="OverflowException"><typeparamref name="T"/> cannot hold the linear value of a level this high.</exception>
 	public Ratio<T> ToFrequencyRatio()
 	{
 		double scaleValue = double.CreateChecked(Value);
-		return Ratio<T>.Create(T.CreateChecked(Math.Pow(2.0, scaleValue / 12.0)));
+		return Ratio<T>.Create(LogarithmicStorage.ToLinear<T>(Math.Pow(2.0, scaleValue / 12.0)));
 	}
 
 	/// <summary>Adds two values in log space (cascading two linear stages multiplies them).</summary>

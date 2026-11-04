@@ -116,24 +116,24 @@ public readonly partial record struct MomentumMagnitude<T> : IVector0<MomentumMa
 	/// Divides MomentumMagnitude by Speed to produce Mass.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Mass<T> operator /(MomentumMagnitude<T> left, Speed<T> right) => Mass<T>.Create(left.Quantity / right.Quantity);
+	public static Mass<T> operator /(MomentumMagnitude<T> left, Speed<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Mass<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides MomentumMagnitude by Mass to produce Speed.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Speed<T> operator /(MomentumMagnitude<T> left, Mass<T> right) => Speed<T>.Create(left.Quantity / right.Quantity);
+	public static Speed<T> operator /(MomentumMagnitude<T> left, Mass<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Speed<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides MomentumMagnitude by Duration to produce ForceMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ForceMagnitude<T> operator /(MomentumMagnitude<T> left, Duration<T> right) => ForceMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static ForceMagnitude<T> operator /(MomentumMagnitude<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : ForceMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides MomentumMagnitude by ForceMagnitude to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(MomentumMagnitude<T> left, ForceMagnitude<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(MomentumMagnitude<T> left, ForceMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 }
 

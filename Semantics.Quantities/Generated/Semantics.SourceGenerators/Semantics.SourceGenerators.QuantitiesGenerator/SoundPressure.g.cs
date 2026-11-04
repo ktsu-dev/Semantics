@@ -158,5 +158,17 @@ public readonly partial record struct SoundPressure<T> : IVector0<SoundPressure<
 	/// <summary>Subtracts two SoundPressure values, returning the absolute difference as a non-negative SoundPressure.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SoundPressure<T> operator -(SoundPressure<T> left, SoundPressure<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SoundPressure * Area = ForceMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(SoundPressure<T> left, Area<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>SoundPressure * Volume = Energy, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(SoundPressure<T> left, Volume<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>SoundPressure * Sensitivity = VoltageMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(SoundPressure<T> left, Sensitivity<T> right) => (Pressure<T>)left * right;
 }
 

@@ -64,7 +64,13 @@ internal static class PooledStringBuilder
 		StringBuilder sb = Get();
 		try
 		{
-			sb.Append(components[0]);
+			// The starting directory, ".", contributes nothing either, so the parent of a single-segment
+			// path combined with its name gives back that path ("a", not "./a").
+			if (components[0] != ".")
+			{
+				sb.Append(components[0]);
+			}
+
 			for (int i = 1; i < components.Length; i++)
 			{
 				// An empty leading component contributes nothing, so a separator after it would root the

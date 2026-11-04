@@ -149,5 +149,9 @@ public readonly partial record struct Heading<T> : IVector1<Heading<T>, T>, IPhy
 
 	/// <summary>Creates a Heading from a SignedAngle value.</summary>
 	public static Heading<T> From(SignedAngle<T> value) => Create(value.Value);
+
+	/// <summary>Heading / Duration = AngularVelocity1D, through <see cref="SignedAngle{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static AngularVelocity1D<T> operator /(Heading<T> left, Duration<T> right) => (SignedAngle<T>)left / right;
 }
 

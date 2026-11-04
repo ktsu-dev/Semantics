@@ -207,6 +207,46 @@ public readonly partial record struct Diameter<T> : IVector0<Diameter<T>, T>, IP
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static Diameter<T> operator -(Diameter<T> left, Diameter<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
 
+	/// <summary>Diameter * Length = Area, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Area<T> operator *(Diameter<T> left, Length<T> right) => (Length<T>)left * right;
+
+	/// <summary>Diameter * Area = Volume, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Volume<T> operator *(Diameter<T> left, Area<T> right) => (Length<T>)left * right;
+
+	/// <summary>Diameter / Duration = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator /(Diameter<T> left, Duration<T> right) => (Length<T>)left / right;
+
+	/// <summary>Diameter / Speed = Duration, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Duration<T> operator /(Diameter<T> left, Speed<T> right) => (Length<T>)left / right;
+
+	/// <summary>Diameter * Frequency = Speed, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Speed<T> operator *(Diameter<T> left, Frequency<T> right) => (Length<T>)left * right;
+
+	/// <summary>Diameter * ForceMagnitude = Energy, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(Diameter<T> left, ForceMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Diameter * ElectricFieldMagnitude = VoltageMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(Diameter<T> left, ElectricFieldMagnitude<T> right) => (Length<T>)left * right;
+
+	/// <summary>Diameter * ElectricField1D = Voltage, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Voltage<T> operator *(Diameter<T> left, ElectricField1D<T> right) => (Length<T>)left * right;
+
+	/// <summary>Diameter * SurfaceTension = ForceMagnitude, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(Diameter<T> left, SurfaceTension<T> right) => (Length<T>)left * right;
+
+	/// <summary>Diameter * SpecificEnergyMagnitude = GravitationalParameter, through <see cref="Length{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static GravitationalParameter<T> operator *(Diameter<T> left, SpecificEnergyMagnitude<T> right) => (Length<T>)left * right;
+
 	/// <summary>Converts this Diameter to a Radius.</summary>
 	public Radius<T> ToRadius() => Radius<T>.Create(Value / T.CreateChecked(2));
 

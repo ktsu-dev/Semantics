@@ -118,5 +118,9 @@ public readonly partial record struct SpecificEntropy<T> : IVector0<SpecificEntr
 	/// <summary>Subtracts two SpecificEntropy values, returning the absolute difference as a non-negative SpecificEntropy.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static SpecificEntropy<T> operator -(SpecificEntropy<T> left, SpecificEntropy<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>SpecificEntropy * Mass = Entropy, through <see cref="SpecificHeat{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Entropy<T> operator *(SpecificEntropy<T> left, Mass<T> right) => (SpecificHeat<T>)left * right;
 }
 

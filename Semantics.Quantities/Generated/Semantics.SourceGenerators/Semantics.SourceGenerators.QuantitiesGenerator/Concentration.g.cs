@@ -146,12 +146,12 @@ public readonly partial record struct Concentration<T> : IVector0<Concentration<
 	/// Divides Concentration by Duration to produce ReactionRate.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ReactionRate<T> operator /(Concentration<T> left, Duration<T> right) => ReactionRate<T>.Create(left.Quantity / right.Quantity);
+	public static ReactionRate<T> operator /(Concentration<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : ReactionRate<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Concentration by ReactionRate to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(Concentration<T> left, ReactionRate<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(Concentration<T> left, ReactionRate<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 }
 

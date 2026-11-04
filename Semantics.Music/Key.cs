@@ -3,6 +3,7 @@
 namespace ktsu.Semantics.Music;
 
 using System;
+using System.Linq;
 using System.Text;
 
 /// <summary>
@@ -84,6 +85,31 @@ public sealed record Key
 	/// <returns>The transposed key.</returns>
 	public Key Transpose(int semitones) => Create(PitchClass.Create(Tonic.Value + semitones), Mode);
 
+	/// <summary>
+	/// Gets the seven-degree scale that roman numerals, functions and cadences are spelled against:
+	/// the key's own scale when it has seven degrees, otherwise major or natural minor on the same
+	/// tonic, chosen by the mode's third.
+	/// </summary>
+	/// <remarks>
+	/// A pentatonic, hexatonic or whole-tone mode's own degree index is not a harmonic degree: in C
+	/// major pentatonic G is the fourth note, yet it is the dominant. Spelling against the heptatonic
+	/// reference makes G "V" there, and C "III" in A minor pentatonic. Modes with more than seven
+	/// degrees keep their own scale, so <see cref="RomanNumeralOf"/> still refuses their eighth degree.
+	/// </remarks>
+	internal Scale AnalysisScale
+	{
+		get
+		{
+			if (Mode.DegreeCount >= 7)
+			{
+				return Scale;
+			}
+
+			bool minor = Mode.Intervals.Contains(3) && !Mode.Intervals.Contains(4);
+			return Scale.Create(Tonic, minor ? Mode.Aeolian : Mode.Major);
+		}
+	}
+
 	/// <summary>Resolves a pitch class to its scale-degree function in this key.</summary>
 	/// <param name="root">The pitch class to resolve.</param>
 	/// <returns>The scale degree with any chromatic alteration.</returns>
@@ -111,7 +137,7 @@ public sealed record Key
 	{
 		Ensure.NotNull(chord);
 
-		ScaleDegree degree = Scale.DegreeOf(chord.Root);
+		ScaleDegree degree = AnalysisScale.DegreeOf(chord.Root);
 
 		// Wrapping the degree onto the seven-entry table would hand two distinct degrees the same
 		// numeral, silently. Refuse instead, which is also what ChordFromRomanNumeral already does
@@ -171,7 +197,7 @@ public sealed record Key
 
 		index += length;
 
-		System.Collections.Generic.IReadOnlyList<PitchClass> pitchClasses = Scale.PitchClasses;
+		System.Collections.Generic.IReadOnlyList<PitchClass> pitchClasses = AnalysisScale.PitchClasses;
 		if (degree > pitchClasses.Count)
 		{
 			throw new FormatException($"Degree {degree} is out of range for this key.");
@@ -213,7 +239,9 @@ public sealed record Key
 			quality = upper ? string.Empty : "m";
 		}
 
-		return Chord.Parse(root.Name + quality + suffix);
+		return ChordSymbolReader.TryReadBody(root, quality + suffix, out Chord? chord)
+			? chord!
+			: throw new FormatException($"Invalid roman numeral '{numeral}'.");
 	}
 
 	private static (int Degree, int Length, bool Upper) ParseNumeral(string text, int start)
@@ -234,37 +262,32 @@ public sealed record Key
 		return (0, 0, false);
 	}
 
+	/// <summary>Writes the chord's body in roman-numeral form: the chord symbol after its root, with the
+	/// quality carried by the numeral's case or by °, ø and +.</summary>
+	/// <remarks>
+	/// The body is the chord symbol's own, so sixths, tensions and suspensions survive the trip and
+	/// <see cref="ChordFromRomanNumeral"/> reads back the chord it was given. The slash bass is dropped:
+	/// "I6" already means an added sixth, so figured-bass inversions would collide with it.
+	/// </remarks>
 	private static string QualitySuffix(Chord chord)
 	{
-		string seventh = chord.Seventh switch
+		string body = ChordSymbolWriter.Format(chord with { Bass = null })[chord.Root.Name.Length..];
+		switch (chord.Quality)
 		{
-			SeventhType.Major => "maj7",
-			SeventhType.Dominant or SeventhType.Diminished => "7",
-			_ => "",
-		};
-
-		// A diminished triad under a minor seventh is half-diminished (viiø7), which has to be told
-		// apart from the fully diminished seventh (vii°7): ChordFromRomanNumeral reads ° as dim, so
-		// spelling both with ° would turn a half-diminished chord into a fully diminished one.
-		bool halfDiminished = chord.Quality == ChordQuality.Diminished && chord.Seventh == SeventhType.Dominant;
-
-		string quality = chord.Quality switch
-		{
-			ChordQuality.Diminished => halfDiminished ? "ø" : "°",
-			ChordQuality.Augmented => "+",
-			ChordQuality.Sus2 => "sus2",
-			ChordQuality.Sus4 => "sus4",
-			ChordQuality.Power => "5",
-			_ => "",
-		};
-
-		string fifth = chord.Quality switch
-		{
-			ChordQuality.MajorFlatFive => "b5",
-			ChordQuality.MinorSharpFive => "#5",
-			_ => "",
-		};
-
-		return quality + seventh + fifth;
+			case ChordQuality.Minor:
+			case ChordQuality.MinorSharpFive:
+				return body[1..];
+			case ChordQuality.Diminished when chord.Seventh == SeventhType.Dominant:
+				// The writer spells a half-diminished chord "m7b5"; the numeral says "ø7", which
+				// ChordFromRomanNumeral passes through, rather than "°7", which it reads as fully diminished.
+				int flatFive = body.IndexOf("b5", StringComparison.Ordinal);
+				return "ø" + body[1..flatFive] + body[(flatFive + 2)..];
+			case ChordQuality.Diminished:
+				return "°" + body["dim".Length..];
+			case ChordQuality.Augmented:
+				return "+" + body["aug".Length..];
+			default:
+				return body;
+		}
 	}
 }

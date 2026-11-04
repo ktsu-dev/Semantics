@@ -178,6 +178,27 @@ public sealed class QuantityBackfillTests
 	}
 
 	[TestMethod]
+	public void POH_Of_An_Acid_Is_A_POH_And_Converts_Back()
+	{
+		// #482: ToPOH returned a PH, so pH 3 reported its pOH as a basic "pH 11".
+		POH<double> poh = PH<double>.Create(3.0).ToPOH();
+		Assert.AreEqual(11.0, poh.Value, Tolerance);
+		Assert.StartsWith("pOH ", poh.ToString());
+		Assert.AreEqual(Concentration<double>.FromMolar(1e-11).Value, poh.ToHydroxideConcentration().Value, 1e-20);
+		Assert.AreEqual(3.0, poh.ToPH().Value, Tolerance);
+		Assert.IsTrue(poh.ToPH().IsAcidic);
+	}
+
+	[TestMethod]
+	public void POH_From_Hydroxide_Concentration_And_Back()
+	{
+		POH<double> poh = POH<double>.FromHydroxideConcentration(Concentration<double>.FromMolar(1e-4));
+		Assert.AreEqual(4.0, poh.Value, 1e-9);
+		Assert.AreEqual(10.0, poh.ToPH().Value, 1e-9);
+		Assert.AreEqual(Concentration<double>.FromMolar(1e-4).Value, poh.ToHydroxideConcentration().Value, 1e-12);
+	}
+
+	[TestMethod]
 	public void Levels_Compare_And_Add_In_Decibel_Space()
 	{
 		SoundPressureLevel<double> quiet = SoundPressureLevel<double>.FromDecibels(40.0);

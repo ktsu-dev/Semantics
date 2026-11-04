@@ -158,5 +158,17 @@ public readonly partial record struct AtmosphericPressure<T> : IVector0<Atmosphe
 	/// <summary>Subtracts two AtmosphericPressure values, returning the absolute difference as a non-negative AtmosphericPressure.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static AtmosphericPressure<T> operator -(AtmosphericPressure<T> left, AtmosphericPressure<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>AtmosphericPressure * Area = ForceMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(AtmosphericPressure<T> left, Area<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>AtmosphericPressure * Volume = Energy, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(AtmosphericPressure<T> left, Volume<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>AtmosphericPressure * Sensitivity = VoltageMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(AtmosphericPressure<T> left, Sensitivity<T> right) => (Pressure<T>)left * right;
 }
 

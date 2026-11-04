@@ -158,5 +158,17 @@ public readonly partial record struct ShearModulus<T> : IVector0<ShearModulus<T>
 	/// <summary>Subtracts two ShearModulus values, returning the absolute difference as a non-negative ShearModulus.</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
 	public static ShearModulus<T> operator -(ShearModulus<T> left, ShearModulus<T> right) => Create(T.Abs(left.Quantity - right.Quantity));
+
+	/// <summary>ShearModulus * Area = ForceMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static ForceMagnitude<T> operator *(ShearModulus<T> left, Area<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>ShearModulus * Volume = Energy, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static Energy<T> operator *(ShearModulus<T> left, Volume<T> right) => (Pressure<T>)left * right;
+
+	/// <summary>ShearModulus * Sensitivity = VoltageMagnitude, through <see cref="Pressure{T}"/>.</summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
+	public static VoltageMagnitude<T> operator *(ShearModulus<T> left, Sensitivity<T> right) => (Pressure<T>)left * right;
 }
 

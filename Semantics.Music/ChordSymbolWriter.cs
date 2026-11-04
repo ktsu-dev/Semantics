@@ -124,11 +124,6 @@ internal static class ChordSymbolWriter
 			return false;
 		}
 
-		if ((chord.Quality is ChordQuality.Sus2 or ChordQuality.Sus4) && chord.Seventh == SeventhType.Major)
-		{
-			return false;
-		}
-
 		return chord.Quality != ChordQuality.Power
 			|| (chord.Seventh == SeventhType.None
 				&& chord.Sixth == SixthType.None

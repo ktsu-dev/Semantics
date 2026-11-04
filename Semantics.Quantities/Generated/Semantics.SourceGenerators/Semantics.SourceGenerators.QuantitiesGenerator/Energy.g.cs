@@ -180,60 +180,60 @@ public readonly partial record struct Energy<T> : IVector0<Energy<T>, T>, IPhysi
 	/// Divides Energy by Length to produce ForceMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static ForceMagnitude<T> operator /(Energy<T> left, Length<T> right) => ForceMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static ForceMagnitude<T> operator /(Energy<T> left, Length<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : ForceMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Energy by ForceMagnitude to produce Length.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Length<T> operator /(Energy<T> left, ForceMagnitude<T> right) => Length<T>.Create(left.Quantity / right.Quantity);
+	public static Length<T> operator /(Energy<T> left, ForceMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Length<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Energy by Volume to produce Pressure.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Pressure<T> operator /(Energy<T> left, Volume<T> right) => Pressure<T>.Create(left.Quantity / right.Quantity);
+	public static Pressure<T> operator /(Energy<T> left, Volume<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Pressure<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Energy by Pressure to produce Volume.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Volume<T> operator /(Energy<T> left, Pressure<T> right) => Volume<T>.Create(left.Quantity / right.Quantity);
+	public static Volume<T> operator /(Energy<T> left, Pressure<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Volume<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Energy by Duration to produce Power.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Power<T> operator /(Energy<T> left, Duration<T> right) => Power<T>.Create(left.Quantity / right.Quantity);
+	public static Power<T> operator /(Energy<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Power<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Energy by Power to produce Duration.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Duration<T> operator /(Energy<T> left, Power<T> right) => Duration<T>.Create(left.Quantity / right.Quantity);
+	public static Duration<T> operator /(Energy<T> left, Power<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Duration<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Energy by Temperature to produce Entropy.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Entropy<T> operator /(Energy<T> left, Temperature<T> right) => Entropy<T>.Create(left.Quantity / right.Quantity);
+	public static Entropy<T> operator /(Energy<T> left, Temperature<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Entropy<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Energy by Entropy to produce Temperature.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Temperature<T> operator /(Energy<T> left, Entropy<T> right) => Temperature<T>.Create(left.Quantity / right.Quantity);
+	public static Temperature<T> operator /(Energy<T> left, Entropy<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Temperature<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Energy by AmountOfSubstance to produce MolarEnergy.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MolarEnergy<T> operator /(Energy<T> left, AmountOfSubstance<T> right) => MolarEnergy<T>.Create(left.Quantity / right.Quantity);
+	public static MolarEnergy<T> operator /(Energy<T> left, AmountOfSubstance<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : MolarEnergy<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides Energy by MolarEnergy to produce AmountOfSubstance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static AmountOfSubstance<T> operator /(Energy<T> left, MolarEnergy<T> right) => AmountOfSubstance<T>.Create(left.Quantity / right.Quantity);
+	public static AmountOfSubstance<T> operator /(Energy<T> left, MolarEnergy<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : AmountOfSubstance<T>.Create(left.Quantity / right.Quantity);
 }
 

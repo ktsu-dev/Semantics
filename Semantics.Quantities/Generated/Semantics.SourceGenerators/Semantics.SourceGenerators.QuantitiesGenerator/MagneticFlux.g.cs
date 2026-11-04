@@ -116,30 +116,30 @@ public readonly partial record struct MagneticFlux<T> : IVector0<MagneticFlux<T>
 	/// Divides MagneticFlux by Area to produce MagneticFluxDensityMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static MagneticFluxDensityMagnitude<T> operator /(MagneticFlux<T> left, Area<T> right) => MagneticFluxDensityMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static MagneticFluxDensityMagnitude<T> operator /(MagneticFlux<T> left, Area<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : MagneticFluxDensityMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides MagneticFlux by MagneticFluxDensityMagnitude to produce Area.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Area<T> operator /(MagneticFlux<T> left, MagneticFluxDensityMagnitude<T> right) => Area<T>.Create(left.Quantity / right.Quantity);
+	public static Area<T> operator /(MagneticFlux<T> left, MagneticFluxDensityMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Area<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides MagneticFlux by Duration to produce VoltageMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static VoltageMagnitude<T> operator /(MagneticFlux<T> left, Duration<T> right) => VoltageMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static VoltageMagnitude<T> operator /(MagneticFlux<T> left, Duration<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : VoltageMagnitude<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides MagneticFlux by CurrentMagnitude to produce Inductance.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static Inductance<T> operator /(MagneticFlux<T> left, CurrentMagnitude<T> right) => Inductance<T>.Create(left.Quantity / right.Quantity);
+	public static Inductance<T> operator /(MagneticFlux<T> left, CurrentMagnitude<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : Inductance<T>.Create(left.Quantity / right.Quantity);
 
 	/// <summary>
 	/// Divides MagneticFlux by Inductance to produce CurrentMagnitude.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Physics quantity operator")]
-	public static CurrentMagnitude<T> operator /(MagneticFlux<T> left, Inductance<T> right) => CurrentMagnitude<T>.Create(left.Quantity / right.Quantity);
+	public static CurrentMagnitude<T> operator /(MagneticFlux<T> left, Inductance<T> right) => T.IsZero(right.Quantity) ? throw new System.DivideByZeroException("Cannot divide by zero.") : CurrentMagnitude<T>.Create(left.Quantity / right.Quantity);
 }
 
