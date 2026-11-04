@@ -55,6 +55,21 @@ public class AccessibilityTests
 	}
 
 	[TestMethod]
+	public void AdjustForContrast_DarkensADarkColorOnABackgroundJustBelowTheCrossover()
+	{
+		// Luminance ~0.171: white has slightly more headroom than black, but #303030 is already darker
+		// than the background and one small step darker (#2A2A2A) meets 3:1. It was inverted to #CECECE.
+		Color background = Color.FromHex("#737373");
+		Color dark = Color.FromHex("#303030");
+		Color adjusted = dark.AdjustForContrast(background, AccessibilityLevel.AA, largeText: true);
+		Assert.IsTrue(
+			adjusted.AccessibilityLevelAgainst(background, largeText: true) >= AccessibilityLevel.AA,
+			$"contrast was {adjusted.ContrastRatio(background)}");
+		Assert.IsLessThan(dark.RelativeLuminance, adjusted.RelativeLuminance, $"adjusted to {adjusted.ToHex()}");
+		Assert.IsLessThan(0.05, dark.DistanceTo(adjusted), $"moved {dark.DistanceTo(adjusted)} to {adjusted.ToHex()}");
+	}
+
+	[TestMethod]
 	public void AdjustForContrast_ReachesLargeTextAAOnUpperMidToneBackground()
 	{
 		// Luminance ~0.45: white tops out below 3:1, black clears it comfortably.

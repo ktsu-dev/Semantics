@@ -114,16 +114,18 @@ public readonly partial record struct Color
 		double alpha = A;
 		Color self = this;
 
-		// Try first the direction whose extreme (white or black) gives the higher contrast against
-		// this background. The two are equal near luminance 0.179, not 0.5, so on a mid-tone
-		// background darkening is usually the only way to reach the target. If the preferred
-		// direction still falls short, fall back to the other one, then to mixing towards black or
-		// white, before giving up.
+		// Move lightness in whichever direction reaches the target. When both do, keep the one closer to
+		// this color: which extreme (white or black) has more headroom against the background says
+		// nothing about where this color starts, so on a background just below luminance 0.179 a dark
+		// color that needs only a nudge darker would otherwise be inverted to a light one. If neither
+		// direction reaches it, mix towards black or white instead, trying first the extreme that gives
+		// the higher contrast against this background, before giving up.
+		Color? byLightness = NearerOf(Search(goLighter: true, LightnessCandidate), Search(goLighter: false, LightnessCandidate));
+
 		double bgLum = background.WithAlpha(1.0).RelativeLuminance;
 		bool preferLighter = (1.05 / (bgLum + 0.05)) >= ((bgLum + 0.05) / 0.05);
 
-		return Search(preferLighter, LightnessCandidate)
-			?? Search(!preferLighter, LightnessCandidate)
+		return byLightness
 			?? Search(preferLighter, MixCandidate)
 			?? Search(!preferLighter, MixCandidate)
 			?? this;
@@ -168,6 +170,20 @@ public readonly partial record struct Color
 			Color end = goLighter ? new Color(1.0, 1.0, 1.0, alpha) : new Color(0.0, 0.0, 0.0, alpha);
 			return self.Clamp().Lerp(end, t).WithAlpha(alpha);
 		}
+	}
+
+	/// <summary>Returns whichever of two candidates is closer to this color, or the one that exists.</summary>
+	/// <param name="first">The first candidate, or <c>null</c>.</param>
+	/// <param name="second">The second candidate, or <c>null</c>.</param>
+	/// <returns>The nearer candidate; <paramref name="first"/> on a tie; <c>null</c> if neither exists.</returns>
+	private Color? NearerOf(Color? first, Color? second)
+	{
+		if (first is not Color a || second is not Color b)
+		{
+			return first ?? second;
+		}
+
+		return DistanceTo(a) <= DistanceTo(b) ? a : b;
 	}
 
 	/// <summary>
