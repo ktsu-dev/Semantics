@@ -198,6 +198,62 @@ public class ColorGamutAndAlphaTests
 		Assert.IsTrue(hsv.S is >= 0.0 and <= 1.0 && hsv.V is >= 0.0 and <= 1.0, hsv.ToString());
 	}
 
+	[TestMethod]
+	public void MixOklabAndLerp_FromTransparent_KeepTheOtherColorsHue()
+	{
+		Color transparent = NamedColors.Transparent;
+		Color[] opaques = [White, NamedColors.Red, NamedColors.Blue, Color.FromHex("#336699")];
+		double[] factors = [0.25, 0.5, 0.75];
+		foreach (Color opaque in opaques)
+		{
+			foreach (double t in factors)
+			{
+				Color expected = opaque.WithAlpha(t);
+				Assert.AreEqual(expected.ToHex(), transparent.MixOklab(opaque, t).ToHex(), $"MixOklab to {opaque.ToHex()} at {t}");
+				Assert.AreEqual(expected.ToHex(), transparent.Lerp(opaque, t).ToHex(), $"Lerp to {opaque.ToHex()} at {t}");
+				Assert.AreEqual(expected.ToHex(), opaque.MixOklab(transparent, 1.0 - t).ToHex(), $"MixOklab from {opaque.ToHex()} at {t}");
+			}
+		}
+	}
+
+	[TestMethod]
+	public void Gradient_FromTransparent_FadesInWithoutDarkening()
+	{
+		IReadOnlyList<Color> stops = NamedColors.Transparent.Gradient(White, 5);
+		string[] expected = ["#00000000", "#FFFFFF40", "#FFFFFF80", "#FFFFFFBF", "#FFFFFF"];
+		string[] actual = [stops[0].ToHex(), stops[1].ToHex(), stops[2].ToHex(), stops[3].ToHex(), stops[4].ToHex()];
+		CollectionAssert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void MixOklab_InvisibleEnd_ContributesNoColor()
+	{
+		Color mixed = NamedColors.Red.WithAlpha(0.0).MixOklab(NamedColors.Blue, 0.5);
+		Assert.AreEqual(NamedColors.Blue.WithAlpha(0.5).ToHex(), mixed.ToHex());
+	}
+
+	[TestMethod]
+	public void MixOklabAndLerp_BothTransparent_AreTransparentBlack()
+	{
+		Color clearRed = NamedColors.Red.WithAlpha(0.0);
+		Color clearBlue = NamedColors.Blue.WithAlpha(0.0);
+		Assert.AreEqual("#00000000", clearRed.MixOklab(clearBlue, 0.5).ToHex());
+		Assert.AreEqual("#00000000", clearRed.Lerp(clearBlue, 0.5).ToHex());
+	}
+
+	[TestMethod]
+	public void MixOklabAndLerp_OpaqueInputs_MatchStraightInterpolation()
+	{
+		Color a = Color.FromHex("#336699");
+		Color b = Color.FromHex("#FFCC00");
+		Oklab la = a.ToOklab();
+		Oklab lb = b.ToOklab();
+		Color straightMix = Color.FromOklab(new Oklab((la.L + lb.L) / 2, (la.A + lb.A) / 2, (la.B + lb.B) / 2));
+		Color straightLerp = new((a.R + b.R) / 2, (a.G + b.G) / 2, (a.B + b.B) / 2, 1.0);
+		Assert.AreEqual(straightMix.ToHex(), a.MixOklab(b, 0.5).ToHex());
+		Assert.AreEqual(straightLerp.ToHex(), a.Lerp(b, 0.5).ToHex());
+	}
+
 	private static void AssertInGamut(Color color)
 	{
 		Assert.IsTrue(
