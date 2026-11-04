@@ -60,6 +60,18 @@ public sealed class StorageMathPreciseAndVectorTests
 	}
 
 	[TestMethod]
+	public void IntegerVectorLengthsOfPerfectSquaresAreExact()
+	{
+		// 36 + 1681 + 1764 = 3481 = 59², and 9 + 9 + 9 + 9 = 36 = 6² (#537).
+		Position3D<int> position = Position3D<int>.FromMeter(6, 41, 42);
+		Assert.AreEqual(59, position.Length());
+		Assert.AreEqual(59, position.Magnitude().Value);
+		Assert.AreEqual(59, position.DistanceTo(Position3D<int>.Zero).Value);
+		Assert.AreEqual((short)59, Position3D<short>.FromMeter(6, 41, 42).Length());
+		Assert.AreEqual(6, new Acceleration4D<int> { X = 3, Y = 3, Z = 3, W = 3 }.Length());
+	}
+
+	[TestMethod]
 	public void DecimalVectorLengthPastTheSquareOfItsRange()
 	{
 		Position3D<decimal> far = Position3D<decimal>.FromMeter(1e15m, 0m, 0m);

@@ -265,11 +265,12 @@ public static class StorageMath
 	/// therefore bounded by the type exactly as the caller's own <c>x * x + y * y</c> would be.
 	/// </para>
 	/// <para>
-	/// The primitives take the <see cref="double"/> round trip, so <c>Hypot&lt;double&gt;</c> is exactly
-	/// <see cref="double.Hypot(double, double)"/>. The 64-bit and 128-bit integers do not: they sum their
-	/// squares in <see cref="BigInteger"/> when they could overflow <typeparamref name="T"/>, and return
-	/// the exact floor, which throws <see cref="OverflowException"/> only when <typeparamref name="T"/>
-	/// cannot hold it (#520).
+	/// The floating point primitives take the <see cref="double"/> round trip, so <c>Hypot&lt;double&gt;</c>
+	/// is exactly <see cref="double.Hypot(double, double)"/>. The integer primitives do not: the 64-bit and
+	/// 128-bit ones sum their squares in <see cref="BigInteger"/> when they could overflow
+	/// <typeparamref name="T"/> (#520), the narrower ones sum theirs in <see cref="Int128"/> (#537), and
+	/// both return the exact floor, which throws <see cref="OverflowException"/> only when
+	/// <typeparamref name="T"/> cannot hold it.
 	/// </para>
 	/// </remarks>
 	public static T Hypot<T>(T x, T y)
@@ -278,6 +279,11 @@ public static class StorageMath
 		if (IsWideInteger<T>())
 		{
 			return HypotOfWideInteger(x, y, T.Zero, T.Zero);
+		}
+
+		if (IsNarrowInteger<T>())
+		{
+			return HypotOfNarrowInteger(x, y, T.Zero, T.Zero);
 		}
 
 		if (IsRoundedThroughDouble<T>())
@@ -317,6 +323,11 @@ public static class StorageMath
 		if (IsWideInteger<T>())
 		{
 			return HypotOfWideInteger(x, y, z, T.Zero);
+		}
+
+		if (IsNarrowInteger<T>())
+		{
+			return HypotOfNarrowInteger(x, y, z, T.Zero);
 		}
 
 		if (IsRoundedThroughDouble<T>())
@@ -359,6 +370,11 @@ public static class StorageMath
 		if (IsWideInteger<T>())
 		{
 			return HypotOfWideInteger(x, y, z, w);
+		}
+
+		if (IsNarrowInteger<T>())
+		{
+			return HypotOfNarrowInteger(x, y, z, w);
 		}
 
 		if (IsRoundedThroughDouble<T>())
@@ -432,6 +448,52 @@ public static class StorageMath
 			|| typeof(T) == typeof(Int128)
 			|| typeof(T) == typeof(UInt128)
 			|| ((typeof(T) == typeof(nint) || typeof(T) == typeof(nuint)) && nint.Size == 8);
+
+	/// <summary>
+	/// Reports whether <typeparamref name="T"/> is an integer primitive of 32 bits or fewer, whose
+	/// squares and their sums fit in <see cref="Int128"/> however large the components are.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type.</typeparam>
+	/// <returns>
+	/// <see langword="true"/> for <see cref="byte"/>, <see cref="sbyte"/>, <see cref="short"/>,
+	/// <see cref="ushort"/>, <see cref="int"/>, <see cref="uint"/>, and <see cref="nint"/> and
+	/// <see cref="nuint"/> on a 32-bit process.
+	/// </returns>
+	private static bool IsNarrowInteger<T>()
+		where T : struct, INumber<T>
+		=> typeof(T) == typeof(byte)
+			|| typeof(T) == typeof(sbyte)
+			|| typeof(T) == typeof(short)
+			|| typeof(T) == typeof(ushort)
+			|| typeof(T) == typeof(int)
+			|| typeof(T) == typeof(uint)
+			|| ((typeof(T) == typeof(nint) || typeof(T) == typeof(nuint)) && nint.Size == 4);
+
+	/// <summary>
+	/// The exact floor of <c>sqrt(x² + y² + z² + w²)</c> for a narrow integer type.
+	/// </summary>
+	/// <typeparam name="T">A type <see cref="IsNarrowInteger{T}"/> accepts.</typeparam>
+	/// <param name="x">The first component.</param>
+	/// <param name="y">The second component.</param>
+	/// <param name="z">The third component, zero for fewer components.</param>
+	/// <param name="w">The fourth component, zero for fewer components.</param>
+	/// <returns>The floor of the length.</returns>
+	/// <exception cref="OverflowException">The length does not fit in <typeparamref name="T"/>.</exception>
+	/// <remarks>
+	/// Each component is at most 2^32 in magnitude, so four squares sum within 2^66, which
+	/// <see cref="Int128"/> holds exactly. Nesting <see cref="double.Hypot(double, double)"/> instead
+	/// rounds once per call, which can leave an exact length one ulp low, and truncating that back to
+	/// <typeparamref name="T"/> then answers one too low on a perfect square (#537).
+	/// </remarks>
+	private static T HypotOfNarrowInteger<T>(T x, T y, T z, T w)
+		where T : struct, INumber<T>
+	{
+		Int128 wx = Int128.CreateChecked(x);
+		Int128 wy = Int128.CreateChecked(y);
+		Int128 wz = Int128.CreateChecked(z);
+		Int128 ww = Int128.CreateChecked(w);
+		return T.CreateChecked(FloorSqrtOfWideInteger((wx * wx) + (wy * wy) + (wz * wz) + (ww * ww)));
+	}
 
 	/// <summary>
 	/// The exact floor of the square root of a non-negative wide integer.
