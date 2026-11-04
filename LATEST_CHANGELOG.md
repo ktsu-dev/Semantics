@@ -2,6 +2,7 @@
 
 Changes since v5.0.0:
 
+- Add a SessionStart hook for Claude Code cloud sessions (#483) (matt-edmondson)
 - Reject undefined enum values in the Pitch, PitchClass and Section factories [patch] (#535) (matt-edmondson)
 - Throw DivideByZeroException from Divide\<TResult\> on a zero divisor [patch] (#534) (matt-edmondson)
 - Count a minor key's vii° and vii°7 as diatonic dominants [patch] (#529) (matt-edmondson)
