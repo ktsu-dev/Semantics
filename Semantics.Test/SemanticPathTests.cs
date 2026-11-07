@@ -111,6 +111,23 @@ public class SemanticPathTests
 	}
 
 	[TestMethod]
+	[DataRow("report.", "", "", "report")]
+	[DataRow("archive.tar.", "", ".tar", "archive.tar")]
+	[DataRow(".bashrc.", "", "", ".bashrc")]
+	public void SemanticFilePath_Extensions_IgnoreATrailingDot(string fileName, string expectedExtension, string expectedFullExtension, string expectedWithoutExtension)
+	{
+		AbsoluteFilePath absolute = AbsoluteFilePath.Create<AbsoluteFilePath>(TestPaths.Absolute("home", "u", fileName));
+		Assert.AreEqual(expectedExtension, absolute.FileExtension.ToString());
+		Assert.AreEqual(expectedFullExtension, absolute.FullFileExtension.ToString());
+		Assert.AreEqual(TestPaths.Absolute("home", "u", expectedWithoutExtension), absolute.RemoveExtension().ToString());
+
+		RelativeFilePath relative = RelativeFilePath.Create<RelativeFilePath>(TestPaths.Relative("..", "data", fileName));
+		Assert.AreEqual(expectedExtension, relative.FileExtension.ToString());
+		Assert.AreEqual(expectedFullExtension, relative.FullFileExtension.ToString());
+		Assert.AreEqual(TestPaths.Relative("..", "data", expectedWithoutExtension), relative.RemoveExtension().ToString());
+	}
+
+	[TestMethod]
 	public void SemanticFilePath_Extensions_IgnoreDotsInDirectoriesOfAbsoluteAndRelativePaths()
 	{
 		AbsoluteFilePath absolute = AbsoluteFilePath.Create<AbsoluteFilePath>(TestPaths.Absolute("home", "user", ".config", "settings.json"));
