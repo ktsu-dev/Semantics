@@ -20,8 +20,9 @@
 	two. build/ binds exactly where the reference is, which is what the rule says.
 
 	The catalog of quantity types is the set of committed source-generator outputs
-	(every quantity is emitted as a `<Type>.g.cs`), so this script stays in sync
-	with the generator automatically. It writes nothing but the .props files and is
+	(every generated quantity is emitted as a `<Type>.g.cs`), so this script stays in
+	sync with the generator automatically, plus the short list of hand-written generic
+	quantity types in $handWrittenTypes, which have no generated file. It writes nothing but the .props files and is
 	verified in CI (see .github/workflows/verify-generated.yml).
 #>
 [CmdletBinding()]
@@ -46,7 +47,16 @@ $typeNames = foreach ($dir in $catalogDirs) {
 	}
 }
 
-$typeNames = $typeNames | Sort-Object -Unique -Culture ([System.Globalization.CultureInfo]::InvariantCulture)
+# Public generic quantity types that are written by hand, with no generated core, so no <Type>.g.cs
+# names them. Hand-written partials of generated types (Gain, Decibels, Cents, ...) need no entry:
+# their .g.cs already puts them in the catalogue. AliasPropsPackagingTests fails if a public generic
+# value type in ktsu.Semantics.Quantities has no alias, so a new hand-written type is added here.
+$handWrittenTypes = @(
+	'NormalizedParameter',
+	'QFactor'
+)
+
+$typeNames = @($typeNames) + $handWrittenTypes | Sort-Object -Unique -Culture ([System.Globalization.CultureInfo]::InvariantCulture)
 
 if ($typeNames.Count -eq 0) {
 	throw "No quantity types found under $generatedRoot. Build Semantics.Quantities first so the generated files exist."
