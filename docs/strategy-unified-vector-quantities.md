@@ -158,6 +158,11 @@ VN · VN → V0       Force3D · Displacement3D = Energy
                     Velocity3D · Velocity3D  = Speed² (not a named type)
 ```
 
+> **Superseded in 5.0.** A dot product is signed, and `Energy` has only a magnitude form, so
+> `Force{2,3,4}D.Dot(Displacement{2,3,4}D) -> Energy` was removed and the generator now refuses a
+> `dotProducts` entry whose result has no signed form (`SignedResultInMagnitudeForm`). See the
+> [5.0 migration guide](migration-guide-5.0.md#2-force-dotted-with-displacement).
+
 **3. Cross product** (`.Cross()`) - two V3 operands, result is V3:
 
 ```
@@ -340,7 +345,12 @@ public Energy Force1D.Dot(Displacement1D other);     // V1·V1 → V0
 public Energy Force3D.Dot(Displacement3D other);     // V3·V3 → V0
 ```
 
-This is how `Force3D * Displacement3D = Energy` is expressed: not as a `*` operator (which would be ambiguous) but as an explicit `.Dot()` call that always returns V0.
+This is how `Force3D * Displacement3D = Energy` was expressed: not as a `*` operator (which would be ambiguous) but as an explicit `.Dot()` call that always returns V0.
+
+> **Superseded in 5.0.** A dot product is signed, and `Energy` has only a magnitude form, so
+> `Force{2,3,4}D.Dot(Displacement{2,3,4}D) -> Energy` was removed and the generator now refuses a
+> `dotProducts` entry whose result has no signed form (`SignedResultInMagnitudeForm`). See the
+> [5.0 migration guide](migration-guide-5.0.md#2-force-dotted-with-displacement).
 
 **Cross product methods from `crossProducts`:**
 
@@ -375,18 +385,23 @@ Energy e = w * h;                         // How does this work?
 WeightVector wv = WeightVector.Create(0, -9.8, 0);  // V3 overload of Force3D
 Displacement3D d = Displacement3D.Create(5, 0, 0);
 
-// Dot product:
+// Dot product (superseded in 5.0, see below):
 Energy e = wv.Dot(d);
 // 1. WeightVector widens to Force3D
 // 2. Force3D.Dot(Displacement3D) = Energy
 // 3. Result: Energy
 
 // Cross product:
-Torque3D t = wv.Cross(d);
+Torque3D t = d.Cross(wv);
 // 1. WeightVector widens to Force3D
-// 2. Force3D.Cross(Displacement3D) = Torque3D
+// 2. Displacement3D.Cross(Force3D) = Torque3D (r × F)
 // 3. Result: Torque3D
 ```
+
+> **Superseded in 5.0.** A dot product is signed, and `Energy` has only a magnitude form, so
+> `Force{2,3,4}D.Dot(Displacement{2,3,4}D) -> Energy` was removed and the generator now refuses a
+> `dotProducts` entry whose result has no signed form (`SignedResultInMagnitudeForm`). See the
+> [5.0 migration guide](migration-guide-5.0.md#2-force-dotted-with-displacement).
 
 **The result of a cross-dimensional operation is always a base type**, never a semantic overload. This is consistent with rule 5 from the semantic overloads section. If the user wants to assert the result is a specific overload, they use explicit narrowing:
 
@@ -458,11 +473,11 @@ Velocity3D * Duration → Displacement3D
 Speed / Duration → AccelerationMagnitude
 Velocity3D / Duration → Acceleration3D
 
-// Dot product:
+// Dot product (removed in 5.0: signed value, magnitude result):
 Force3D.Dot(Displacement3D) → Energy
 
-// Cross product:
-Force3D.Cross(Displacement3D) → Torque3D
+// Cross product (r × F):
+Displacement3D.Cross(Force3D) → Torque3D
 ```
 
 These are distinct because same-dimension `*` by `T` is always available, while cross-dimension `*` by another quantity type is only available when a relationship is declared.

@@ -67,6 +67,8 @@
          one fails a test instead of reaching the package's front page. -->
     <None Include="..\README.md" Link="Readmes\Root.md" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\Semantics.Music\README.md" Link="Readmes\Music.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Semantics.Quantities\README.md" Link="Readmes\Quantities.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\Semantics.Strings.Identifiers\README.md" Link="Readmes\Identifiers.md" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- The generator bundles its dependencies alongside itself so that they are present when a

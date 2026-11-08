@@ -34,7 +34,7 @@ Every quantity is a vector, and the dimensionality of its direction space is par
 
 - **Compile-time dimensional safety**: illegal combinations do not compile, and cross-dimensional operators produce the correct result type.
 - **Generated unit conversions**: `From{Unit}` factories per declared unit (`Mass.FromKilogram`, `Speed.FromMeterPerSecond`, `Length.FromFoot`), converting to the SI base unit on construction, with `In(unit)` to convert back.
-- **Unified vector model**: `IVector0` through `IVector4`, with `Magnitude()`, `Dot`, `Cross`, `Normalize`, and typed cross-quantity results (`Force3D.Dot(Displacement3D)` returns `Energy`).
+- **Unified vector model**: `IVector0` through `IVector4`, with `Magnitude()`, `Dot`, `Cross`, `Normalize`, and typed cross-quantity results (`Displacement3D.Cross(Force3D)` returns `Torque3D`).
 - **Construction-time invariants**: `IVector0` magnitudes are guarded non-negative, and quantities where zero is unphysical (`Wavelength`, `Period`, `HalfLife`) are guarded strictly positive.
 - **Physical constants**: `PhysicalConstants` with domain-grouped generic accessors that materialize into any `T : INumber<T>`.
 - **Generator diagnostics**: metadata problems (`SEM001`-`SEM005`) are caught at build time.
@@ -92,10 +92,15 @@ ForceMagnitude<double> mag = f.Magnitude();     // matching Vector0 quantity, va
 Force3D<double> unit = f.Normalize();
 
 Displacement3D<double> d = new() { X = 1.0, Y = 0.0, Z = 0.0 };
-Energy<double> work = f.Dot(d);                 // typed dot: Force . Displacement = Energy
-Torque3D<double> torque = f.Cross(d);           // typed cross: Force x Displacement = Torque
+double work = (f.X * d.X) + (f.Y * d.Y) + (f.Z * d.Z); // signed work in joules, 3.0
+Torque3D<double> torque = d.Cross(f);           // typed cross: r x F = Torque, (0, 0, 4)
 Momentum3D<double> impulse = f * Duration<double>.Create(2.0);
 ```
+
+Force and displacement have no typed dot product. Work is signed, and `Energy` has only a magnitude
+form, so the work comes back as a bare number. Wrap it with `Energy<double>.FromJoule(Math.Abs(work))`
+if you only need its size. The [5.0 migration guide](../docs/migration-guide-5.0.md#2-force-dotted-with-displacement)
+explains why.
 
 ### Physical constants
 

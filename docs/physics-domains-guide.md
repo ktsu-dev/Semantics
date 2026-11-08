@@ -175,7 +175,7 @@ Speed<double>      s = v.Magnitude();   // 5.0, always >= 0
 ```csharp
 Force3D<double>        F = new() { X = 0.0, Y = 10.0, Z = 0.0 };
 Displacement3D<double> r = new() { X = 0.5, Y = 0.0,  Z = 0.0 };
-Torque3D<double>       τ = F.Cross(r);
+Torque3D<double>       τ = r.Cross(F);   // r × F, (0, 0, 5)
 ```
 
 ### Dot product
@@ -183,8 +183,12 @@ Torque3D<double>       τ = F.Cross(r);
 ```csharp
 Force3D<double>        F = new() { X = 10.0, Y = 0.0, Z = 0.0 };
 Displacement3D<double> r = new() { X =  2.0, Y = 0.0, Z = 0.0 };
-Energy<double>         work = F.Dot(r);   // 20 J
+double                 work = (F.X * r.X) + (F.Y * r.Y) + (F.Z * r.Z);   // 20 J, signed
 ```
+
+Force and displacement have no typed dot product. Work is signed, and `Energy` has only a magnitude
+form, so 5.0 removed `Force3D.Dot(Displacement3D)`. See the
+[5.0 migration guide](migration-guide-5.0.md#2-force-dotted-with-displacement).
 
 ### Semantic overload narrowing
 
