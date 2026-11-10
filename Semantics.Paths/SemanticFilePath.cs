@@ -39,8 +39,9 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 	/// Gets all trailing period-delimited segments including the leading period, or empty if no extensions.
 	/// </summary>
 	/// <remarks>
-	/// Follows the same rules as <see cref="FileExtension"/>: only the file-name segment is searched, and
-	/// a leading dot in the file name is not an extension, so <c>.bashrc</c> has none.
+	/// Follows the same rules as <see cref="FileExtension"/>: only the file-name segment is searched,
+	/// a leading dot in the file name is not an extension, so <c>.bashrc</c> has none, and a trailing dot
+	/// is not part of one, so <c>report.</c> has none and <c>archive.tar.</c> has <c>.tar</c>.
 	/// </remarks>
 	public FileExtension FullFileExtension
 	{
@@ -49,14 +50,22 @@ public abstract record SemanticFilePath<TDerived> : SemanticPath<TDerived>
 			string path = WeakString;
 			int nameStart = FileNameStart(path);
 
+			// A trailing dot is not an extension, as FileExtension treats it
+			int end = path.Length;
+			if (end - 1 > nameStart && path[end - 1] == '.')
+			{
+				end--;
+			}
+
 			// Skip the name's first character, so a dotfile's leading dot is not taken as an extension
-			int firstDotIndex = nameStart + 1 < path.Length ? path.IndexOf('.', nameStart + 1) : -1;
+			int searchStart = nameStart + 1;
+			int firstDotIndex = searchStart < end ? path.IndexOf('.', searchStart, end - searchStart) : -1;
 			if (firstDotIndex == -1)
 			{
 				return FileExtension.Create<FileExtension>("");
 			}
 
-			return FileExtension.Create<FileExtension>(path.AsSpan(firstDotIndex));
+			return FileExtension.Create<FileExtension>(path.AsSpan(firstDotIndex, end - firstDotIndex));
 		}
 	}
 
