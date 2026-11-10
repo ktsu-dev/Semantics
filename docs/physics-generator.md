@@ -76,7 +76,7 @@ The C# itself is described with the template object model from `ktsu.CodeBlocker
 - **Vector0**: enforces non-negativity. `V0 - V0` returns the same V0 of `T.Abs(a - b)` (decision locked). Generator emits `Magnitude()` only on V≥1 forms.
 - **Vector1**: signed scalar. Magnitude extraction returns the V0 base (`Velocity1D.Magnitude() => Speed`).
 - **Vector2/3/4**: per-component-signed. `Magnitude()` returns the V0 base via Euclidean norm.
-- **Dot products**: emitted on the higher-dimensional form, returning the V0 base of the result dimension. Example: `Force3D.Dot(Displacement3D) => Energy`.
+- **Dot products**: emitted on the higher-dimensional form, returning the V0 base of the result dimension. A dot product is signed, so an entry whose result has only a magnitude form is refused (`SignedResultInMagnitudeForm`). That is why 5.0 removed `Force3D.Dot(Displacement3D) => Energy`, and no typed dot product is emitted today. See the [5.0 migration guide](migration-guide-5.0.md#2-force-dotted-with-displacement).
 - **Cross products**: emitted on V3 only (V2 cross is intentionally unsupported). Result is the V3 of the result dimension.
 
 ### Semantic overloads

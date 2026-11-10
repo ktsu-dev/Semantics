@@ -64,6 +64,7 @@ Uuid.Create("not-a-uuid"); // throws ArgumentException
 ### Safe creation and normalization
 
 ```csharp
+using ktsu.Semantics.Strings;             // the As<T>() extension
 using ktsu.Semantics.Strings.Identifiers;
 
 // TryCreate never throws
