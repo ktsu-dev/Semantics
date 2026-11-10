@@ -85,7 +85,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 		Ensure.NotNull(left);
 		Ensure.NotNull(right);
 
-		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return Create<DirectoryPath>(combinedPath);
 	}
 
@@ -101,7 +101,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 		Ensure.NotNull(left);
 		Ensure.NotNull(right);
 
-		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return FilePath.Create<FilePath>(combinedPath);
 	}
 
@@ -117,7 +117,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 		Ensure.NotNull(left);
 		Ensure.NotNull(right);
 
-		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return Create<DirectoryPath>(combinedPath);
 	}
 
@@ -133,7 +133,7 @@ public sealed record DirectoryPath : SemanticDirectoryPath<DirectoryPath>, IDire
 		Ensure.NotNull(left);
 		Ensure.NotNull(right);
 
-		string combinedPath = Path.Combine(left.WeakString, right.WeakString);
+		string combinedPath = PooledStringBuilder.CombinePaths(left.WeakString, right.WeakString);
 		return FilePath.Create<FilePath>(combinedPath);
 	}
 }
