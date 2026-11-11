@@ -852,6 +852,77 @@
           }
         }
       }
+    },
+    {
+      "version": "6.0.1-pre.1",
+      "commit": "edf88cf",
+      "date": "2026-11-11",
+      "cpu": "AMD EPYC 9V45",
+      "runtime": ".NET 10.0.15 (10.0.15, 10.0.1526.53008)",
+      "baselineNs": 348.8575,
+      "runId": "43118926862",
+      "benchmarks": {
+        "PathCreationBenchmarks.AbsoluteDirectoryPath": {
+          "": {
+            "meanNs": 42.1836,
+            "allocatedBytes": 184
+          }
+        },
+        "PathCreationBenchmarks.AbsoluteFilePath": {
+          "": {
+            "meanNs": 47.3921,
+            "allocatedBytes": 256
+          }
+        },
+        "PathCreationBenchmarks.FileNameType": {
+          "": {
+            "meanNs": 21.7141,
+            "allocatedBytes": 56
+          }
+        },
+        "PathCreationBenchmarks.RelativeFilePath": {
+          "": {
+            "meanNs": 37.2797,
+            "allocatedBytes": 128
+          }
+        },
+        "PathOperationBenchmarks.AsAbsolute": {
+          "": {
+            "meanNs": 88.1765,
+            "allocatedBytes": 352
+          }
+        },
+        "PathOperationBenchmarks.AsRelative": {
+          "": {
+            "meanNs": 106.5417,
+            "allocatedBytes": 176
+          }
+        },
+        "PathOperationBenchmarks.DirectoryPath": {
+          "": {
+            "meanNs": 48.6728,
+            "allocatedBytes": 152
+          }
+        },
+        "PathOperationBenchmarks.FileName": {
+          "": {
+            "meanNs": 34.4717,
+            "allocatedBytes": 104
+          }
+        },
+        "PathOperationBenchmarks.FileNameWithoutExtension": {
+          "": {
+            "meanNs": 0.4462,
+            "allocatedBytes": 0
+          }
+        },
+        "PathOperationBenchmarks.RemoveExtension": {
+          "": {
+            "meanNs": 97.7557,
+            "allocatedBytes": 488
+          }
+        }
+      }
     }
   ]
 }
