@@ -180,7 +180,7 @@ public sealed class StorageMathTests
 		Assert.IsTrue(typeof(StorageMath).IsPublic, "StorageMath itself has to be reachable from outside the assembly.");
 
 		string[] contract = [nameof(StorageMath.Sqrt), nameof(StorageMath.Cbrt), nameof(StorageMath.RootN), nameof(StorageMath.Hypot)];
-		string[] workings = ["IsRoundedThroughDouble", "IsBinaryFloatingPoint", "HasFloorDivision", "Seed", "SeedForRoot", "TryRootThroughDouble", "RootThroughDouble", "RootByNewton", "RootByDescent", "RootBySettling", "TryPower", "IsWideInteger", "FloorSqrtOfWideInteger", "HypotOfWideInteger"];
+		string[] workings = ["IsRoundedThroughDouble", "IsBinaryFloatingPoint", "HasFloorDivision", "Seed", "SeedForRoot", "TryRootThroughDouble", "RootThroughDouble", "RootByNewton", "RootByDescent", "RootBySettling", "TryPower", "IsWideInteger", "FloorSqrtOfWideInteger", "HypotOfWideInteger", "IsNarrowInteger", "HypotOfNarrowInteger"];
 
 		foreach (string name in contract)
 		{
@@ -408,6 +408,77 @@ public sealed class StorageMathTests
 		Assert.AreEqual(long.MaxValue, StorageMath.Hypot(long.MaxValue, 0L, 0L, 1L));
 		Assert.AreEqual(13L, StorageMath.Hypot(3L, 4L, 12L));
 		Assert.AreEqual(2L, StorageMath.Hypot(1L, 1L, 1L, 1L));
+	}
+
+	/// <summary>
+	/// A 32-bit-or-narrower integer vector whose length is a perfect square gets that length, not one
+	/// less: nesting <see cref="double.Hypot(double, double)"/> rounds twice and can land one ulp low,
+	/// which truncation then turned into an off-by-one (#537).
+	/// </summary>
+	[TestMethod]
+	public void NarrowIntegerHypotenuseIsTheExactFloor()
+	{
+		Assert.AreEqual(59, StorageMath.Hypot(6, 41, 42));
+		Assert.AreEqual(59, StorageMath.Hypot(-6, 41, -42));
+		Assert.AreEqual(59, StorageMath.Hypot(14, 39, 42));
+		Assert.AreEqual((short)59, StorageMath.Hypot((short)6, (short)41, (short)42));
+		Assert.AreEqual(59u, StorageMath.Hypot(6u, 41u, 42u));
+		Assert.AreEqual(6, StorageMath.Hypot(3, 3, 3, 3));
+		Assert.AreEqual((short)6, StorageMath.Hypot((short)3, (short)3, (short)3, (short)3));
+		Assert.AreEqual((byte)15, StorageMath.Hypot((byte)2, (byte)3, (byte)4, (byte)14));
+		Assert.AreEqual(15, StorageMath.Hypot(1, 4, 8, 12));
+		Assert.AreEqual(5, StorageMath.Hypot(3, -4));
+
+		// Squares of the extremes sum far past 64 bits, and the length still fits the type.
+		Assert.AreEqual(uint.MaxValue, StorageMath.Hypot(uint.MaxValue, 0u, 0u, 0u));
+		Assert.AreEqual(int.MaxValue, StorageMath.Hypot(int.MinValue + 1, 0, 0));
+		Assert.ThrowsExactly<OverflowException>(static () => StorageMath.Hypot(int.MinValue, 0, 0));
+		Assert.ThrowsExactly<OverflowException>(static () => StorageMath.Hypot(uint.MaxValue, uint.MaxValue, uint.MaxValue, uint.MaxValue));
+	}
+
+	/// <summary>
+	/// A narrow integer gets the exact floor wherever the components lie: every 3D vector with
+	/// components up to 60, and every 4D vector up to 20, agrees with an integer square root of the
+	/// integer sum of squares (#537).
+	/// </summary>
+	[TestMethod]
+	public void NarrowIntegerHypotenuseMatchesTheIntegerRootEverywhere()
+	{
+		for (int x = 0; x <= 60; x++)
+		{
+			for (int y = 0; y <= 60; y++)
+			{
+				for (int z = 0; z <= 60; z++)
+				{
+					Assert.AreEqual(FloorSqrt((x * x) + (y * y) + (z * z)), StorageMath.Hypot(x, y, z), $"({x}, {y}, {z})");
+				}
+			}
+		}
+
+		for (int x = 0; x <= 20; x++)
+		{
+			for (int y = 0; y <= 20; y++)
+			{
+				for (int z = 0; z <= 20; z++)
+				{
+					for (int w = 0; w <= 20; w++)
+					{
+						Assert.AreEqual(FloorSqrt((x * x) + (y * y) + (z * z) + (w * w)), StorageMath.Hypot(x, y, z, w), $"({x}, {y}, {z}, {w})");
+					}
+				}
+			}
+		}
+
+		static int FloorSqrt(int value)
+		{
+			int root = 0;
+			while ((root + 1) * (root + 1) <= value)
+			{
+				root++;
+			}
+
+			return root;
+		}
 	}
 
 	/// <summary>
