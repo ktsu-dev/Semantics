@@ -2,6 +2,10 @@
 
 Changes since v5.0.0:
 
+- Return the exact floor from 3D and 4D Hypot for 32-bit and narrower integers [patch] (#538) (matt-edmondson)
+- Drop the "." parent when DirectoryPath's / operators combine [patch] (#540) (matt-edmondson)
+- Ignore a trailing dot in FullFileExtension, as FileExtension does [patch] (#544) (matt-edmondson)
+- Make the README vector and identifier examples compile, and test them [patch] (#546) (matt-edmondson)
 - Add a SessionStart hook for Claude Code cloud sessions (#483) (matt-edmondson)
 - Reject undefined enum values in the Pitch, PitchClass and Section factories [patch] (#535) (matt-edmondson)
 - Throw DivideByZeroException from Divide\<TResult\> on a zero divisor [patch] (#534) (matt-edmondson)
