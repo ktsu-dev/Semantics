@@ -168,8 +168,8 @@ var work       = ForceMagnitude<double>.FromNewton(10.0) * distance;            
 var power      = work / Duration<double>.FromSecond(2.0);                             // W/t = Power
 
 // Vector ops
-var workScalar = force3d.Dot(disp3d);                          // Energy (V0)
-var torque     = force3d.Cross(disp3d);                        // Torque3D (V3)
+var workScalar = (force3d.X * disp3d.X) + (force3d.Y * disp3d.Y) + (force3d.Z * disp3d.Z); // signed work, a bare number
+var torque     = disp3d.Cross(force3d);                        // Torque3D (V3), r × F
 var magnitude  = disp3d.Magnitude();                           // Length (V0, always >= 0)
 
 // Type safety

@@ -39,6 +39,45 @@ public class DirectoryNameRebuildTests
 	}
 
 	[TestMethod]
+	public void DirectoryPath_SingleSegment_ParentSlashName_IsTheSameDirectory()
+	{
+		// The parent of "a" is "." (#504); combining it back must not give "./a" (#539).
+		DirectoryPath dir = DirectoryPath.Create<DirectoryPath>("a");
+
+		DirectoryPath rebuilt = dir.Parent / dir.Name;
+
+		Assert.AreEqual("a", rebuilt.WeakString);
+		Assert.AreEqual(dir, rebuilt);
+	}
+
+	[TestMethod]
+	public void FilePath_BareFileName_DirectorySlashFileName_IsTheSameFile()
+	{
+		FilePath file = FilePath.Create<FilePath>("x.txt");
+
+		FilePath rebuilt = file.DirectoryPath / file.FileName;
+
+		Assert.AreEqual("x.txt", rebuilt.WeakString);
+		Assert.AreEqual(file, rebuilt);
+	}
+
+	[TestMethod]
+	public void DirectoryPath_Dot_SlashRelativeFilePath_IsTheRelativeFilePath()
+	{
+		FilePath combined = DirectoryPath.Create<DirectoryPath>(".") / RelativeFilePath.Create<RelativeFilePath>("x.txt");
+
+		Assert.AreEqual("x.txt", combined.WeakString);
+	}
+
+	[TestMethod]
+	public void DirectoryPath_Dot_SlashRelativeDirectoryPath_IsTheRelativeDirectoryPath()
+	{
+		DirectoryPath combined = DirectoryPath.Create<DirectoryPath>(".") / RelativeDirectoryPath.Create<RelativeDirectoryPath>("a");
+
+		Assert.AreEqual("a", combined.WeakString);
+	}
+
+	[TestMethod]
 	public void RelativeDirectoryPath_ParentSlashName_IsTheSameDirectory()
 	{
 		RelativeDirectoryPath dir = RelativeDirectoryPath.Create<RelativeDirectoryPath>(TestPaths.Relative("projects", "app", "src"));
