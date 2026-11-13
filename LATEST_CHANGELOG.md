@@ -1,6 +1,8 @@
-## v6.0.1-pre.2 (prerelease)
+## v6.0.1 (patch)
 
-Changes since v6.0.1-pre.1:
+Changes since v6.0.0:
 
-- Bump MSTest.Sdk from 4.5.2 to 4.5.3 (dependabot[bot])
+- Reject "." and ".." as a file name and as a file path's last segment [patch] (#555) (matt-edmondson)
+- Bisect instead of halving when RootN's estimate overflows [patch] (#558) (matt-edmondson)
+- Test Oklab and relative luminance against published reference values (#559) (matt-edmondson)
 
