@@ -15,6 +15,21 @@ public class AccessibilityTests
 		Assert.AreEqual(21.0, black.ContrastRatio(white), 1e-2);
 	}
 
+	/// <summary>
+	/// Each pure primary's relative luminance is its WCAG weight, so a swapped or mistyped weight fails
+	/// here although black on white still measures 21:1 (#556).
+	/// </summary>
+	/// <param name="r">The sRGB red channel.</param>
+	/// <param name="g">The sRGB green channel.</param>
+	/// <param name="b">The sRGB blue channel.</param>
+	/// <param name="expected">The WCAG weight of the primary.</param>
+	[TestMethod]
+	[DataRow(1.0, 0.0, 0.0, 0.2126, DisplayName = "red")]
+	[DataRow(0.0, 1.0, 0.0, 0.7152, DisplayName = "green")]
+	[DataRow(0.0, 0.0, 1.0, 0.0722, DisplayName = "blue")]
+	public void PurePrimary_HasItsWcagRelativeLuminance(double r, double g, double b, double expected)
+		=> Assert.AreEqual(expected, Color.FromSrgb(r, g, b).RelativeLuminance, 1e-4);
+
 	[TestMethod]
 	public void SameColor_HasUnitContrast()
 	{
