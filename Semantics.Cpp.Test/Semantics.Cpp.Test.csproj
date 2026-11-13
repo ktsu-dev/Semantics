@@ -13,6 +13,7 @@
   <ItemGroup>
     <!-- Driven with the real production metadata rather than a fixture, so these tests fail if a
          metadata change breaks the C++ projection. The same reason Semantics.Test does it. -->
+    <PackageReference Include="ktsu.CodeBlocker" VersionOverride="2.4.2" />
     <None Include="..\Semantics.SourceGenerators\Metadata\dimensions.json"
           Link="Metadata\dimensions.json"
           CopyToOutputDirectory="PreserveNewest" />
