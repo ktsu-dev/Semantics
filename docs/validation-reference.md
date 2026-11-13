@@ -116,7 +116,7 @@ These live in `Semantics.Paths` and require `using ktsu.Semantics.Paths;`.
 | `[IsRelativePath]` | Not absolute. |
 | `[IsFilePath]` | Refers to a file: a fully qualified path must not name an existing directory. |
 | `[IsDirectoryPath]` | Refers to a directory: a fully qualified path must not name an existing file. |
-| `[IsFileName]` | Filename without separators. |
+| `[IsFileName]` | Filename without separators, and not `.` or `..`. File path types reject a final `.` or `..` segment too, so a valid file path always has a valid `FileName`. |
 | `[IsValidFileName]` | Stricter filename validation. |
 | `[IsExtension]` | File extension including the leading dot. |
 | `[DoesExist]` | The path exists at validation time. Use sparingly — couples the type to the file system. |

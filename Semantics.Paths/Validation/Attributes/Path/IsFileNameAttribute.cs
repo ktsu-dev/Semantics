@@ -7,7 +7,8 @@ using System.IO;
 using ktsu.Semantics.Strings;
 
 /// <summary>
-/// Validates that a string represents a valid filename (contains only valid filename characters).
+/// Validates that a string represents a valid filename: it contains only valid filename characters and is
+/// not <c>.</c> or <c>..</c>, which name the current and parent directory on every platform.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public sealed class IsFileNameAttribute : NativeSemanticStringValidationAttribute
@@ -35,6 +36,11 @@ public sealed class IsFileNameAttribute : NativeSemanticStringValidationAttribut
 			if (string.IsNullOrEmpty(value))
 			{
 				return ValidationResult.Success();
+			}
+
+			if (FileNameSegment.IsDotSegment(value))
+			{
+				return ValidationResult.Failure(FileNameSegment.DotSegmentError);
 			}
 
 			// Use span-based search for invalid characters
