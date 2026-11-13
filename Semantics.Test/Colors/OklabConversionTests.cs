@@ -17,6 +17,29 @@ public class OklabConversionTests
 		Assert.AreEqual(0.0, lab.B, 1e-4);
 	}
 
+	/// <summary>
+	/// The sRGB primaries land on the published Oklab reference values (Ottosson's matrices, as tabulated
+	/// for <c>red</c>, <c>lime</c> and <c>blue</c> in CSS Color 4), so a mistyped coefficient fails here
+	/// although white and every round trip still pass (#556).
+	/// </summary>
+	/// <param name="r">The sRGB red channel.</param>
+	/// <param name="g">The sRGB green channel.</param>
+	/// <param name="b">The sRGB blue channel.</param>
+	/// <param name="expectedL">The reference lightness.</param>
+	/// <param name="expectedA">The reference green–red axis.</param>
+	/// <param name="expectedB">The reference blue–yellow axis.</param>
+	[TestMethod]
+	[DataRow(1.0, 0.0, 0.0, 0.62796, 0.22486, 0.12585, DisplayName = "red")]
+	[DataRow(0.0, 1.0, 0.0, 0.86644, -0.23389, 0.17950, DisplayName = "lime")]
+	[DataRow(0.0, 0.0, 1.0, 0.45201, -0.03246, -0.31153, DisplayName = "blue")]
+	public void SrgbPrimaries_MatchPublishedOklabValues(double r, double g, double b, double expectedL, double expectedA, double expectedB)
+	{
+		Oklab lab = Color.FromSrgb(r, g, b).ToOklab();
+		Assert.AreEqual(expectedL, lab.L, 1e-4);
+		Assert.AreEqual(expectedA, lab.A, 1e-4);
+		Assert.AreEqual(expectedB, lab.B, 1e-4);
+	}
+
 	[TestMethod]
 	public void OklabRoundTrip_IsIdentity()
 	{
