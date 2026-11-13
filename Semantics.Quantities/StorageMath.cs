@@ -837,16 +837,8 @@ public static class StorageMath
 				}
 
 				T middle = below + ((estimate - below) / two);
-
-				if (TryPower(middle, degree, out T middleRaised) && middleRaised < value)
-				{
-					below = middle;
-				}
-				else
-				{
-					estimate = middle;
-				}
-
+				bool middleIsBelow = TryPower(middle, degree, out T middleRaised) && middleRaised < value;
+				(below, estimate) = middleIsBelow ? (middle, estimate) : (below, middle);
 				continue;
 			}
 

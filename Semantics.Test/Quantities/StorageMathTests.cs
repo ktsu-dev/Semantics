@@ -357,11 +357,15 @@ public sealed class StorageMathTests
 		Assert.AreEqual(19, StorageMath.RootN(893871739, 7));
 		Assert.AreEqual(20, StorageMath.RootN(1280000000, 7));
 		Assert.AreEqual(21, StorageMath.RootN(1801088541, 7));
+		Assert.AreEqual((byte)3, StorageMath.RootN((byte)244, 5));
+		Assert.AreEqual(5, StorageMath.RootN(1220703126, 13));
 	}
 
 	/// <summary>
-	/// Every exact power the narrow integer types hold, and the value one below it, roots to the
-	/// <see cref="BigInteger"/> floor of its root for degrees four to ten.
+	/// Every exact power the narrow integer types hold, and the values one either side of it, root to
+	/// the <see cref="BigInteger"/> floor of their root for degrees three to sixteen. One above an exact
+	/// power is where the bisection closes on the floor from an estimate whose power overflows, as
+	/// <c>RootN((byte)244, 5)</c> and <c>RootN(1220703126, 13)</c> do.
 	/// </summary>
 	[TestMethod]
 	public void TheNarrowIntegerTypesRootEveryExactPowerToItsFloor()
@@ -379,14 +383,19 @@ public sealed class StorageMathTests
 	{
 		BigInteger maximum = BigInteger.CreateChecked(T.MaxValue);
 
-		for (int degree = 4; degree <= 10; degree++)
+		for (int degree = 3; degree <= 16; degree++)
 		{
 			for (BigInteger root = 2; BigInteger.Pow(root, degree) <= maximum; root++)
 			{
 				BigInteger power = BigInteger.Pow(root, degree);
 
-				foreach (BigInteger value in (BigInteger[])[power, power - 1])
+				foreach (BigInteger value in (BigInteger[])[power - 1, power, power + 1])
 				{
+					if (value > maximum)
+					{
+						continue;
+					}
+
 					BigInteger expected = FloorRoot(value, degree);
 					T actual = StorageMath.RootN(T.CreateChecked(value), degree);
 					Assert.AreEqual(expected, BigInteger.CreateChecked(actual), $"{typeof(T).Name}: RootN({value}, {degree})");
