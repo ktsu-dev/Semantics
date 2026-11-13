@@ -812,10 +812,15 @@ public static class StorageMath
 		T countLessOne = count - T.One;
 		T estimate = SeedForRoot(value, degree, two);
 
+		// The largest estimate known to be at or below the floor of the root. One is, since the value is
+		// greater than one.
+		T below = T.One;
+
 		// An estimate whose own power overflows is above the root, since the root's power divides a
 		// value the type holds, so the lift stops there as well as on a power that exceeds the value.
 		while (TryPower(estimate, degree, out T raised) && raised < value)
 		{
+			below = estimate;
 			estimate *= two;
 		}
 
@@ -823,9 +828,15 @@ public static class StorageMath
 		{
 			if (!TryPower(estimate, degree - 1, out T power) || T.IsZero(power))
 			{
-				// The estimate is too large for its own power to be taken in the type. Halving reaches a
-				// range the type holds, and stays at or above the root.
-				estimate = (estimate + T.One) / two;
+				// The estimate is too large for its own power to be taken in the type, so it is above the
+				// root. Halving it could drop below the root, and a descent from there stops at once on a
+				// stale answer (#557), so bisect between it and the bound known to be at or below the floor.
+				if (estimate - below <= T.One)
+				{
+					return below;
+				}
+
+				(below, estimate) = Bisect(value, degree, two, below, estimate);
 				continue;
 			}
 
@@ -840,6 +851,26 @@ public static class StorageMath
 		}
 
 		throw new ArithmeticException($"The root of degree {degree} did not reach its floor within {MaximumIterations} Newton steps.");
+	}
+
+	/// <summary>
+	/// Halves the range the floor of a root is known to lie in.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type, whose division floors.</typeparam>
+	/// <param name="value">The value to take the root of.</param>
+	/// <param name="degree">The degree of the root.</param>
+	/// <param name="two">Two, in <typeparamref name="T"/>.</param>
+	/// <param name="below">An estimate at or below the floor of the root.</param>
+	/// <param name="above">An estimate above the root, at least two more than <paramref name="below"/>.</param>
+	/// <returns>The narrower range: the midpoint replaces whichever bound it falls on the same side as.</returns>
+	private static (T Below, T Above) Bisect<T>(T value, int degree, T two, T below, T above)
+		where T : struct, INumber<T>
+	{
+		T middle = below + ((above - below) / two);
+
+		return TryPower(middle, degree, out T raised) && raised < value
+			? (middle, above)
+			: (below, middle);
 	}
 
 	/// <summary>

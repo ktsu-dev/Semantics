@@ -345,6 +345,78 @@ public sealed class StorageMathTests
 	}
 
 	/// <summary>
+	/// An exact power whose root the lift doubles past in a narrow type still roots to itself (#557):
+	/// the estimate's own power overflows there, and halving it used to drop below the root, so the
+	/// descent stopped at once one short of it.
+	/// </summary>
+	[TestMethod]
+	public void AnExactPowerInANarrowTypeRootsToItsRoot()
+	{
+		Assert.AreEqual((short)5, StorageMath.RootN((short)15625, 6));
+		Assert.AreEqual((short)4, StorageMath.RootN((short)16384, 7));
+		Assert.AreEqual(19, StorageMath.RootN(893871739, 7));
+		Assert.AreEqual(20, StorageMath.RootN(1280000000, 7));
+		Assert.AreEqual(21, StorageMath.RootN(1801088541, 7));
+		Assert.AreEqual((byte)3, StorageMath.RootN((byte)244, 5));
+		Assert.AreEqual(5, StorageMath.RootN(1220703126, 13));
+	}
+
+	/// <summary>
+	/// Every exact power the narrow integer types hold, and the values one either side of it, root to
+	/// the <see cref="BigInteger"/> floor of their root for degrees three to sixteen. One above an exact
+	/// power is where the bisection closes on the floor from an estimate whose power overflows, as
+	/// <c>RootN((byte)244, 5)</c> and <c>RootN(1220703126, 13)</c> do.
+	/// </summary>
+	[TestMethod]
+	public void TheNarrowIntegerTypesRootEveryExactPowerToItsFloor()
+	{
+		AssertFloorRootsAtExactPowers<sbyte>();
+		AssertFloorRootsAtExactPowers<byte>();
+		AssertFloorRootsAtExactPowers<short>();
+		AssertFloorRootsAtExactPowers<ushort>();
+		AssertFloorRootsAtExactPowers<int>();
+		AssertFloorRootsAtExactPowers<uint>();
+	}
+
+	private static void AssertFloorRootsAtExactPowers<T>()
+		where T : struct, IBinaryInteger<T>, IMinMaxValue<T>
+	{
+		BigInteger maximum = BigInteger.CreateChecked(T.MaxValue);
+
+		for (int degree = 3; degree <= 16; degree++)
+		{
+			for (BigInteger root = 2; BigInteger.Pow(root, degree) <= maximum; root++)
+			{
+				BigInteger power = BigInteger.Pow(root, degree);
+
+				foreach (BigInteger value in (BigInteger[])[power - 1, power, power + 1])
+				{
+					if (value > maximum)
+					{
+						continue;
+					}
+
+					BigInteger expected = FloorRoot(value, degree);
+					T actual = StorageMath.RootN(T.CreateChecked(value), degree);
+					Assert.AreEqual(expected, BigInteger.CreateChecked(actual), $"{typeof(T).Name}: RootN({value}, {degree})");
+				}
+			}
+		}
+	}
+
+	private static BigInteger FloorRoot(BigInteger value, int degree)
+	{
+		BigInteger root = 0;
+
+		while (BigInteger.Pow(root + 1, degree) <= value)
+		{
+			root++;
+		}
+
+		return root;
+	}
+
+	/// <summary>
 	/// An even root of a negative value has no real answer, and says so exactly as the square root does.
 	/// </summary>
 	[TestMethod]
