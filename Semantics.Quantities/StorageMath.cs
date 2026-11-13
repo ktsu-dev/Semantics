@@ -812,10 +812,15 @@ public static class StorageMath
 		T countLessOne = count - T.One;
 		T estimate = SeedForRoot(value, degree, two);
 
+		// The largest estimate known to be at or below the floor of the root. One is, since the value is
+		// greater than one.
+		T below = T.One;
+
 		// An estimate whose own power overflows is above the root, since the root's power divides a
 		// value the type holds, so the lift stops there as well as on a power that exceeds the value.
 		while (TryPower(estimate, degree, out T raised) && raised < value)
 		{
+			below = estimate;
 			estimate *= two;
 		}
 
@@ -823,9 +828,25 @@ public static class StorageMath
 		{
 			if (!TryPower(estimate, degree - 1, out T power) || T.IsZero(power))
 			{
-				// The estimate is too large for its own power to be taken in the type. Halving reaches a
-				// range the type holds, and stays at or above the root.
-				estimate = (estimate + T.One) / two;
+				// The estimate is too large for its own power to be taken in the type, so it is above the
+				// root. Halving it could drop below the root, and a descent from there stops at once on a
+				// stale answer (#557), so bisect between it and the bound known to be at or below the floor.
+				if (estimate - below <= T.One)
+				{
+					return below;
+				}
+
+				T middle = below + ((estimate - below) / two);
+
+				if (TryPower(middle, degree, out T middleRaised) && middleRaised < value)
+				{
+					below = middle;
+				}
+				else
+				{
+					estimate = middle;
+				}
+
 				continue;
 			}
 
