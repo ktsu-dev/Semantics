@@ -836,9 +836,7 @@ public static class StorageMath
 					return below;
 				}
 
-				T middle = below + ((estimate - below) / two);
-				bool middleIsBelow = TryPower(middle, degree, out T middleRaised) && middleRaised < value;
-				(below, estimate) = middleIsBelow ? (middle, estimate) : (below, middle);
+				(below, estimate) = Bisect(value, degree, two, below, estimate);
 				continue;
 			}
 
@@ -853,6 +851,26 @@ public static class StorageMath
 		}
 
 		throw new ArithmeticException($"The root of degree {degree} did not reach its floor within {MaximumIterations} Newton steps.");
+	}
+
+	/// <summary>
+	/// Halves the range the floor of a root is known to lie in.
+	/// </summary>
+	/// <typeparam name="T">The numeric storage type, whose division floors.</typeparam>
+	/// <param name="value">The value to take the root of.</param>
+	/// <param name="degree">The degree of the root.</param>
+	/// <param name="two">Two, in <typeparamref name="T"/>.</param>
+	/// <param name="below">An estimate at or below the floor of the root.</param>
+	/// <param name="above">An estimate above the root, at least two more than <paramref name="below"/>.</param>
+	/// <returns>The narrower range: the midpoint replaces whichever bound it falls on the same side as.</returns>
+	private static (T Below, T Above) Bisect<T>(T value, int degree, T two, T below, T above)
+		where T : struct, INumber<T>
+	{
+		T middle = below + ((above - below) / two);
+
+		return TryPower(middle, degree, out T raised) && raised < value
+			? (middle, above)
+			: (below, middle);
 	}
 
 	/// <summary>
