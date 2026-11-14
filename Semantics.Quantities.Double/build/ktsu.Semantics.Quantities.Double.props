@@ -135,6 +135,7 @@
 		<Using Include="ktsu.Semantics.Quantities.MomentumMagnitude&lt;double&gt;" Alias="MomentumMagnitude" />
 		<Using Include="ktsu.Semantics.Quantities.NoiseReductionCoefficient&lt;double&gt;" Alias="NoiseReductionCoefficient" />
 		<Using Include="ktsu.Semantics.Quantities.NormalForce&lt;double&gt;" Alias="NormalForce" />
+		<Using Include="ktsu.Semantics.Quantities.NormalizedParameter&lt;double&gt;" Alias="NormalizedParameter" />
 		<Using Include="ktsu.Semantics.Quantities.NuclearCrossSection&lt;double&gt;" Alias="NuclearCrossSection" />
 		<Using Include="ktsu.Semantics.Quantities.Offset&lt;double&gt;" Alias="Offset" />
 		<Using Include="ktsu.Semantics.Quantities.OpticalPower&lt;double&gt;" Alias="OpticalPower" />
@@ -150,6 +151,7 @@
 		<Using Include="ktsu.Semantics.Quantities.PotentialEnergy&lt;double&gt;" Alias="PotentialEnergy" />
 		<Using Include="ktsu.Semantics.Quantities.Power&lt;double&gt;" Alias="Power" />
 		<Using Include="ktsu.Semantics.Quantities.Pressure&lt;double&gt;" Alias="Pressure" />
+		<Using Include="ktsu.Semantics.Quantities.QFactor&lt;double&gt;" Alias="QFactor" />
 		<Using Include="ktsu.Semantics.Quantities.RadioactiveActivity&lt;double&gt;" Alias="RadioactiveActivity" />
 		<Using Include="ktsu.Semantics.Quantities.Radius&lt;double&gt;" Alias="Radius" />
 		<Using Include="ktsu.Semantics.Quantities.RateConstant&lt;double&gt;" Alias="RateConstant" />

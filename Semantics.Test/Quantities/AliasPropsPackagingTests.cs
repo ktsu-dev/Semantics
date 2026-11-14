@@ -96,6 +96,54 @@ public class AliasPropsPackagingTests
 			"regenerates and diffs them. Offenders: " + string.Join("; ", offenders));
 	}
 
+	[TestMethod]
+	public void EveryAliasPackageAliasesEveryPublicGenericQuantityType()
+	{
+		// Every public, non-nested generic value type with one type parameter in the quantities assembly
+		// is a quantity the alias packages promise to bind, whether generated or written by hand.
+		List<string> quantityTypes =
+		[
+			.. typeof(ktsu.Semantics.Quantities.Mass<>).Assembly.GetExportedTypes()
+				.Where(type => type.IsValueType && type.IsGenericTypeDefinition && !type.IsNested)
+				.Where(type => type.GetGenericArguments().Length == 1)
+				.Where(type => type.Namespace == "ktsu.Semantics.Quantities")
+				.Select(type => type.Name[..type.Name.IndexOf('`', StringComparison.Ordinal)])
+				.Order(StringComparer.Ordinal)
+		];
+
+		Assert.IsNotEmpty(quantityTypes, "Found no generic quantity types to check.");
+
+		List<string> offenders = [];
+
+		foreach (string suffix in StorageSuffixes)
+		{
+			string props = Path.Combine(
+				RepositoryRoot(),
+				$"Semantics.Quantities.{suffix}",
+				"build",
+				$"ktsu.Semantics.Quantities.{suffix}.props");
+
+			HashSet<string> aliases =
+			[
+				.. XDocument.Load(props)
+					.Descendants()
+					.Where(element => element.Name.LocalName == "Using")
+					.Select(element => element.Attribute("Alias")?.Value ?? "")
+			];
+
+			offenders.AddRange(quantityTypes
+				.Where(name => !aliases.Contains(name))
+				.Select(name => $"Semantics.Quantities.{suffix}: {name}"));
+		}
+
+		Assert.IsEmpty(
+			offenders,
+			"An alias package has no alias for a public generic quantity type, so a consumer of that " +
+			"package can't write the bare name. A hand-written type with no generated .g.cs belongs in " +
+			"$handWrittenTypes in scripts/Generate-AliasProps.ps1; rerun the script afterwards. " +
+			"Offenders: " + string.Join("; ", offenders));
+	}
+
 	/// <summary>
 	/// Yields the single packed props item from each alias project, failing if a project does not
 	/// have exactly one — the whole package is that file, so none or several is itself the defect.
