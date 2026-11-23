@@ -1,8 +1,6 @@
-## v6.0.1 (patch)
+## v6.0.2-pre.1 (prerelease)
 
-Changes since v6.0.0:
+Changes since v6.0.1:
 
-- Reject "." and ".." as a file name and as a file path's last segment [patch] (#555) (matt-edmondson)
-- Bisect instead of halving when RootN's estimate overflows [patch] (#558) (matt-edmondson)
-- Test Oklab and relative luminance against published reference values (#559) (matt-edmondson)
+- Bump Polyfill from 11.4.5 to 12.0.0 (dependabot[bot])
 
